@@ -1,0 +1,54 @@
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Trading System - Python Dependencies
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Core Framework
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+python-dotenv>=1.0.0
+
+# Async Runtime
+asyncio>=3.4.3
+uvloop>=0.19.0;sys_platform!='win32'
+
+# Messaging - NATS JetStream
+nats-py>=2.6.0
+
+# Database - PostgreSQL
+asyncpg>=0.29.0
+sqlalchemy[asyncio]>=2.0.23
+alembic>=1.13.0
+
+# Database - QuestDB
+requests>=2.31.0
+
+# API Framework
+fastapi>=0.108.0
+uvicorn>=0.25.0
+httpx>=0.26.0
+
+# Crypto Exchange - Binance
+python-binance>=1.0.19
+websockets>=12.0
+
+# Data Processing
+numpy>=1.26.0
+pandas>=2.1.0
+
+# Logging & Monitoring
+structlog>=23.2.0
+python-json-logger>=2.0.7
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.23.0
+pytest-cov>=4.1.0
+
+# Code Quality
+pylint>=3.0.0
+mypy>=1.8.0
+black>=23.12.0
+isort>=5.13.0
+
+# Type Stubs
+types-requests>=2.31.0
