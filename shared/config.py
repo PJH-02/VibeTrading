@@ -95,6 +95,34 @@ class BinanceSettings(BaseSettings):
         return "wss://stream.binance.com:9443/ws"
 
 
+class KISSettings(BaseSettings):
+    """Korea Investment & Securities (KIS) API settings."""
+    model_config = SettingsConfigDict(env_prefix="KIS_", extra="ignore")
+    
+    app_key: str = ""
+    app_secret: str = ""
+    account_number: str = ""
+    account_product_code: str = ""
+    use_mock: bool = True  # True for virtual account, False for real account
+    
+    @property
+    def base_url(self) -> str:
+        """Get appropriate base URL."""
+        if self.use_mock:
+            return "https://openapivts.koreainvestment.com:29443"
+        return "https://openapi.koreainvestment.com:9443"
+
+
+class KiwoomSettings(BaseSettings):
+    """Kiwoom Securities API settings."""
+    model_config = SettingsConfigDict(env_prefix="KIWOOM_", extra="ignore")
+    
+    account_number: str = ""
+    account_password: str = ""
+    cert_password: str = ""
+    use_mock: bool = True  # True for simulated trading, False for real account
+
+
 class RiskSettings(BaseSettings):
     """Risk control settings."""
     model_config = SettingsConfigDict(extra="ignore")
@@ -149,6 +177,8 @@ class TradingSettings(BaseSettings):
     nats: NatsSettings = Field(default_factory=NatsSettings)
     redis: RedisSettings = Field(default_factory=RedisSettings)
     binance: BinanceSettings = Field(default_factory=BinanceSettings)
+    kis: KISSettings = Field(default_factory=KISSettings)
+    kiwoom: KiwoomSettings = Field(default_factory=KiwoomSettings)
     risk: RiskSettings = Field(default_factory=RiskSettings)
     fill_logic: FillLogicSettings = Field(default_factory=FillLogicSettings)
     logging: LoggingSettings = Field(default_factory=LoggingSettings)

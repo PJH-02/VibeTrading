@@ -26,6 +26,7 @@ requests>=2.31.0
 fastapi>=0.108.0
 uvicorn>=0.25.0
 httpx>=0.26.0
+aiohttp>=3.9.0
 
 # Crypto Exchange - Binance
 python-binance>=1.0.19
