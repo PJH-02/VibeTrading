@@ -100,6 +100,28 @@ graph TB
 
 ---
 
+## 🧭 V2 팀 기반 백테스팅 라우팅
+
+V2부터 백테스팅은 팀 단위로 분리됩니다.
+
+- `--team trading` → Trading Backtest Engine
+- `--team portfolio` → Portfolio Backtest Engine
+- `--team arbitrage` → Arbitrage Backtest Engine
+
+실행 예시:
+
+```bash
+python scripts/run_backtest.py backtest \
+  --team trading \
+  --strategy turtle_breakout \
+  --market crypto \
+  --symbols BTCUSDT \
+  --start 2022-01-01 \
+  --end 2023-01-01
+```
+
+---
+
 ## 📁 프로젝트 구조
 
 ### 디렉토리 개요
