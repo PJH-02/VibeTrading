@@ -19,7 +19,7 @@ VibeTrading 시스템은 다음 3개 시장을 지원합니다:
 
 - **한국 주식 시장 (KR)**: 한국투자증권 KIS API 사용
 - **미국 주식 시장 (US)**: 한국투자증권 KIS API 사용 (해외주식 API)
-- **암호화폐 시장 (CRYPTO)**: Binance API 사용
+- **암호화폐 시장 (CRYPTO)**: Binance/Bybit Public WebSocket + Binance REST 사용
 
 각 시장별로 실시간 데이터 스트리밍과 과거 데이터 조회를 지원합니다.
 
@@ -131,10 +131,14 @@ Candle(
 
 ### 사용 API
 
-**Binance API**
-- 공식 문서: https://binance-docs.github.io/apidocs/spot/en/
-- 현물 거래 시세 조회
-- WebSocket 스트리밍
+**Binance + Bybit**
+- Binance 문서: https://binance-docs.github.io/apidocs/spot/en/
+- Bybit 문서: https://bybit-exchange.github.io/docs/v5/ws/connect
+- 공용 WebSocket 스트리밍 (API 키 없이 가능)
+- Binance WS (mainnet): `wss://stream.binance.com:9443/stream`
+- Binance WS (testnet): `wss://testnet.binance.vision/stream`
+- Bybit WS (mainnet): `wss://stream.bybit.com/v5/public/spot`
+- Bybit WS (testnet): `wss://stream-testnet.bybit.com/v5/public/spot`
 
 ### API 키 발급 방법
 
@@ -196,12 +200,15 @@ KIS_ACCOUNT_PRODUCT_CODE=01
 KIS_USE_MOCK=true  # 모의투자: true, 실전투자: false
 ```
 
-#### Binance API (암호화폐 시장)
+#### Crypto API / Public WebSocket (암호화폐 시장)
 
 ```env
 BINANCE_API_KEY=your_binance_api_key
 BINANCE_API_SECRET=your_binance_api_secret
 BINANCE_TESTNET=true  # 테스트넷: true, 메인넷: false
+CRYPTO_EXCHANGE=binance  # binance | bybit
+CRYPTO_WS_URL=  # optional: public websocket URL override
+BYBIT_TESTNET=true
 ```
 
 ### 3. 의존성 설치
@@ -302,7 +309,7 @@ from datetime import datetime, timedelta
 from services.data_feed.crypto_feed import CryptoDataFeed
 
 async def main():
-    feed = CryptoDataFeed()
+    feed = CryptoDataFeed()  # uses CRYPTO_EXCHANGE / CRYPTO_WS_URL
     
     # 연결
     await feed.connect()
