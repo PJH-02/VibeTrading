@@ -27,6 +27,7 @@ from shared.models import (
     Signal,
     SignalAction,
     TradingMode,
+    TeamType,
 )
 from services.execution.broker_stub import BrokerStub
 from services.signal_gen.engine import SignalGenerationEngine
@@ -42,6 +43,7 @@ class BacktestConfig:
     symbols: List[str]
     start_date: datetime
     end_date: datetime
+    team: TeamType = TeamType.TRADING
     initial_capital: Decimal = Decimal("100000")
     random_seed: int = 42  # For reproducible fills
     slippage_bps: Decimal = Decimal("5")
@@ -114,6 +116,7 @@ class BacktestEngine:
             market=config.market,
             mode=TradingMode.BACKTEST,
             strategy_name=config.strategy_name,
+            team=config.team,
         )
         
         # State tracking

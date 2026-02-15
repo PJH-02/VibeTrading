@@ -13,9 +13,10 @@ from datetime import datetime, timedelta
 from decimal import Decimal
 from typing import Iterator, List, Optional, Tuple
 
-from shared.models import Candle, Market
+from shared.models import Candle, Market, TeamType
 
-from .engine import BacktestConfig, BacktestEngine, BacktestResult
+from .engine import BacktestConfig, BacktestResult
+from .engine_router import resolve_backtest_engine
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +39,7 @@ class WalkForwardConfig:
     symbols: List[str]
     start_date: datetime
     end_date: datetime
+    team: TeamType = TeamType.TRADING
     
     # Window sizes (in days)
     in_sample_days: int = 252  # 1 trading year
@@ -192,6 +194,7 @@ class WalkForwardValidator:
         config = BacktestConfig(
             market=self._config.market,
             strategy_name=self._config.strategy_name,
+            team=self._config.team,
             symbols=self._config.symbols,
             start_date=start,
             end_date=end,
@@ -199,7 +202,7 @@ class WalkForwardValidator:
             random_seed=self._config.random_seed,
         )
         
-        engine = BacktestEngine(config)
+        engine = resolve_backtest_engine(self._config.team)(config)
         
         # Get candles for window
         candles = self._candle_provider(
@@ -251,6 +254,7 @@ def generate_report(result: WalkForwardResult) -> str:
         "WALK-FORWARD VALIDATION REPORT",
         "=" * 60,
         f"Strategy: {result.config.strategy_name}",
+        f"Team: {result.config.team.value}",
         f"Period: {result.config.start_date.date()} to {result.config.end_date.date()}",
         f"Windows: {len(result.windows)}",
         f"IS Period: {result.config.in_sample_days} days",

@@ -100,6 +100,28 @@ graph TB
 
 ---
 
+## 🧭 V2 팀 기반 백테스팅 라우팅
+
+V2부터 백테스팅은 팀 단위로 분리됩니다.
+
+- `--team trading` → Trading Backtest Engine
+- `--team portfolio` → Portfolio Backtest Engine
+- `--team arbitrage` → Arbitrage Backtest Engine
+
+실행 예시:
+
+```bash
+python scripts/run_backtest.py backtest \
+  --team trading \
+  --strategy turtle_breakout \
+  --market crypto \
+  --symbols BTCUSDT \
+  --start 2022-01-01 \
+  --end 2023-01-01
+```
+
+---
+
 ## 📁 프로젝트 구조
 
 ### 디렉토리 개요
@@ -357,7 +379,13 @@ VibeTrading/
 - `stream_candles()`: 캔들 스트림 제공
 
 ##### `crypto_feed.py`
-**목적**: 암호화폐 거래소 (Binance) 데이터 피드 구현
+**목적**: 암호화폐 거래소 (Binance/Bybit) 데이터 피드 구현
+
+**Public WebSocket URL**:
+- Binance (mainnet): `wss://stream.binance.com:9443/stream`
+- Binance (testnet): `wss://testnet.binance.vision/stream`
+- Bybit (mainnet): `wss://stream.bybit.com/v5/public/spot`
+- Bybit (testnet): `wss://stream-testnet.bybit.com/v5/public/spot`
 
 ##### `kr_feed.py`
 **목적**: 한국 주식 데이터 피드 (구현 예정)
@@ -1153,6 +1181,11 @@ BINANCE_API_KEY=your_testnet_api_key
 BINANCE_API_SECRET=your_testnet_api_secret
 BINANCE_TESTNET=true
 
+# Crypto WebSocket 설정
+CRYPTO_EXCHANGE=binance  # binance | bybit
+CRYPTO_WS_URL=  # optional: public websocket URL override
+BYBIT_TESTNET=true
+
 # 리스크 설정
 MAX_DRAWDOWN_PCT=10.0
 DAILY_LOSS_LIMIT_PCT=3.0
@@ -1201,6 +1234,7 @@ TRADING_MODE=live
 BINANCE_TESTNET=false
 BINANCE_API_KEY=your_live_api_key
 BINANCE_API_SECRET=your_live_api_secret
+CRYPTO_EXCHANGE=binance
 ```
 
 **실행 전 체크리스트**:
@@ -1323,4 +1357,3 @@ docker-compose down -v
 ---
 
 **마지막 업데이트**: 2024-02-02
-

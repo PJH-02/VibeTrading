@@ -32,6 +32,14 @@ class TradingMode(str, Enum):
     LIVE = "live"
 
 
+class TeamType(str, Enum):
+    """Team scope for strategy and backtesting routing."""
+
+    PORTFOLIO = "portfolio"
+    TRADING = "trading"
+    ARBITRAGE = "arbitrage"
+
+
 class OrderSide(str, Enum):
     """Order side enum."""
     BUY = "buy"

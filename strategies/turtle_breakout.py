@@ -22,6 +22,7 @@ from shared.models import (
     SignalAction,
     StrategyContext,
     StrategyResult,
+    TeamType,
 )
 
 logger = logging.getLogger(__name__)
@@ -50,6 +51,7 @@ class Strategy:
     """
     
     name = "turtle_breakout"
+    TEAM_TYPE = TeamType.TRADING
     
     def __init__(self) -> None:
         """Initialize strategy."""

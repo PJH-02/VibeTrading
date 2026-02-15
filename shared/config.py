@@ -6,7 +6,7 @@ Uses Pydantic Settings with .env loading.
 import os
 from decimal import Decimal
 from functools import lru_cache
-from typing import Optional
+from typing import Literal, Optional
 
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -88,11 +88,30 @@ class BinanceSettings(BaseSettings):
         return "https://api.binance.com"
     
     @property
-    def ws_url(self) -> str:
-        """Get WebSocket URL."""
+    def ws_base_url(self) -> str:
+        """Get Binance WebSocket base URL."""
         if self.testnet:
-            return "wss://testnet.binance.vision/ws"
-        return "wss://stream.binance.com:9443/ws"
+            return "wss://testnet.binance.vision"
+        return "wss://stream.binance.com:9443"
+
+    @property
+    def ws_stream_url(self) -> str:
+        """Get Binance combined stream URL."""
+        return f"{self.ws_base_url}/stream"
+
+
+class BybitSettings(BaseSettings):
+    """Bybit API settings."""
+    model_config = SettingsConfigDict(env_prefix="BYBIT_", extra="ignore")
+
+    testnet: bool = True
+
+    @property
+    def ws_public_url(self) -> str:
+        """Get Bybit public spot WebSocket URL."""
+        if self.testnet:
+            return "wss://stream-testnet.bybit.com/v5/public/spot"
+        return "wss://stream.bybit.com/v5/public/spot"
 
 
 class KISSettings(BaseSettings):
@@ -170,6 +189,11 @@ class TradingSettings(BaseSettings):
     # Core settings
     mode: TradingMode = Field(default=TradingMode.PAPER, alias="TRADING_MODE")
     market: Market = Field(default=Market.CRYPTO, alias="TRADING_MARKET")
+    crypto_exchange: Literal["binance", "bybit"] = Field(
+        default="binance",
+        alias="CRYPTO_EXCHANGE",
+    )
+    crypto_ws_url: str = Field(default="", alias="CRYPTO_WS_URL")
     
     # Sub-settings (loaded from same .env)
     database: DatabaseSettings = Field(default_factory=DatabaseSettings)
@@ -177,6 +201,7 @@ class TradingSettings(BaseSettings):
     nats: NatsSettings = Field(default_factory=NatsSettings)
     redis: RedisSettings = Field(default_factory=RedisSettings)
     binance: BinanceSettings = Field(default_factory=BinanceSettings)
+    bybit: BybitSettings = Field(default_factory=BybitSettings)
     kis: KISSettings = Field(default_factory=KISSettings)
     kiwoom: KiwoomSettings = Field(default_factory=KiwoomSettings)
     risk: RiskSettings = Field(default_factory=RiskSettings)

@@ -14,7 +14,7 @@ import importlib
 import logging
 from typing import Any, Callable, Dict, Optional, Protocol
 
-from shared.models import Candle, Position, Signal, StrategyContext, StrategyResult
+from shared.models import Candle, Position, Signal, StrategyContext, StrategyResult, TeamType
 
 logger = logging.getLogger(__name__)
 
@@ -115,7 +115,7 @@ class StrategyWrapper:
             raise AttributeError(f"Strategy '{self._name}' has no 'on_candle' method")
 
 
-def load_strategy(strategy_name: str) -> StrategyWrapper:
+def load_strategy(strategy_name: str, expected_team: TeamType | None = None) -> StrategyWrapper:
     """
     Load a strategy by name via direct import.
     
@@ -123,6 +123,7 @@ def load_strategy(strategy_name: str) -> StrategyWrapper:
     
     Args:
         strategy_name: Name of the strategy module (without .py)
+        expected_team: Optional team type contract for validation
         
     Returns:
         StrategyWrapper instance
@@ -150,6 +151,16 @@ def load_strategy(strategy_name: str) -> StrategyWrapper:
             # Use the module itself as the strategy
             strategy_obj = module
         
+        # Team contract validation
+
+        declared_team = getattr(strategy_obj, "TEAM_TYPE", TeamType.TRADING)
+        if isinstance(declared_team, str):
+            declared_team = TeamType(declared_team)
+        if expected_team is not None and declared_team != expected_team:
+            raise ValueError(
+                f"Strategy '{strategy_name}' declares team '{declared_team.value}' but expected '{expected_team.value}'"
+            )
+
         # Get name
         name = getattr(strategy_obj, "name", strategy_name)
         
@@ -170,7 +181,7 @@ def load_strategy(strategy_name: str) -> StrategyWrapper:
 _loaded_strategies: Dict[str, StrategyWrapper] = {}
 
 
-def get_strategy(strategy_name: str) -> StrategyWrapper:
+def get_strategy(strategy_name: str, expected_team: TeamType | None = None) -> StrategyWrapper:
     """
     Get a strategy, loading it if necessary.
     
@@ -180,9 +191,10 @@ def get_strategy(strategy_name: str) -> StrategyWrapper:
     Returns:
         Cached or newly loaded StrategyWrapper
     """
-    if strategy_name not in _loaded_strategies:
-        _loaded_strategies[strategy_name] = load_strategy(strategy_name)
-    return _loaded_strategies[strategy_name]
+    cache_key = f"{strategy_name}:{expected_team.value if expected_team else 'auto'}"
+    if cache_key not in _loaded_strategies:
+        _loaded_strategies[cache_key] = load_strategy(strategy_name, expected_team=expected_team)
+    return _loaded_strategies[cache_key]
 
 
 def clear_strategy_cache() -> None:
