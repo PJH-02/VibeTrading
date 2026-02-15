@@ -104,6 +104,7 @@ graph TB
 
 V2부터 백테스팅은 팀 단위로 분리됩니다.
 
+- 기본값 `--team auto` → 전략 파일의 `TEAM_TYPE`로 엔진 자동 선택
 - `--team trading` → Trading Backtest Engine
 - `--team portfolio` → Portfolio Backtest Engine
 - `--team arbitrage` → Arbitrage Backtest Engine
@@ -112,7 +113,6 @@ V2부터 백테스팅은 팀 단위로 분리됩니다.
 
 ```bash
 python scripts/run_backtest.py backtest \
-  --team trading \
   --strategy turtle_breakout \
   --market crypto \
   --symbols BTCUSDT \
@@ -588,6 +588,12 @@ python scripts/run_backtest.py backtest \
   --start 2023-01-01 \
   --end 2023-12-31 \
   --capital 100000
+```
+
+전략 파일에 `TEAM_TYPE`을 선언하면 엔진이 자동 선택됩니다:
+```python
+from shared.models import TeamType
+TEAM_TYPE = TeamType.TRADING  # portfolio | trading | arbitrage
 ```
 
 #### `init_db.py`
