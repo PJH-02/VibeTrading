@@ -21,6 +21,7 @@ from shared.models import (
     Signal,
     StrategyContext,
     TradingMode,
+    TeamType,
 )
 
 from .strategy_loader import StrategyWrapper, get_strategy
@@ -46,6 +47,7 @@ class SignalGenerationEngine:
         market: Market,
         mode: TradingMode,
         strategy_name: str,
+        team: TeamType = TeamType.TRADING,
     ) -> None:
         """
         Initialize signal generation engine.
@@ -58,6 +60,7 @@ class SignalGenerationEngine:
         self._market = market
         self._mode = mode
         self._strategy_name = strategy_name
+        self._team = team
         self._strategy: Optional[StrategyWrapper] = None
         self._running = False
         self._positions: Dict[str, Position] = {}  # symbol -> position
@@ -83,7 +86,7 @@ class SignalGenerationEngine:
         logger.info(f"Starting signal gen engine: market={self._market}, strategy={self._strategy_name}")
         
         # Load strategy
-        self._strategy = get_strategy(self._strategy_name)
+        self._strategy = get_strategy(self._strategy_name, expected_team=self._team)
         self._strategy.initialize()
         
         # Subscribe to candle stream
@@ -215,7 +218,7 @@ class SignalGenerationEngine:
             List of generated signals
         """
         if not self._strategy:
-            self._strategy = get_strategy(self._strategy_name)
+            self._strategy = get_strategy(self._strategy_name, expected_team=self._team)
             self._strategy.initialize()
         
         self._last_prices[candle.symbol] = candle.close

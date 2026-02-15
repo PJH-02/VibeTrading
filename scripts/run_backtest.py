@@ -11,10 +11,11 @@ from datetime import datetime
 from decimal import Decimal
 
 from shared.config import get_settings
-from shared.models import Market, TradingMode
+from shared.models import Market, TeamType, TradingMode
 
 from backtest.data_loader import BacktestDataLoader, create_candle_provider
-from backtest.engine import BacktestConfig, BacktestEngine, BacktestResult
+from backtest.engine import BacktestConfig, BacktestResult
+from backtest.engine_router import resolve_backtest_engine
 from backtest.walk_forward import WalkForwardConfig, WalkForwardValidator, generate_report
 
 logging.basicConfig(
@@ -31,6 +32,7 @@ def print_result(result: BacktestResult) -> None:
     print("BACKTEST RESULTS")
     print("=" * 60)
     print(f"Strategy: {result.config.strategy_name}")
+    print(f"Team: {getattr(result.config, 'team', TeamType.TRADING.value)}")
     print(f"Period: {result.config.start_date.date()} to {result.config.end_date.date()}")
     print(f"Symbols: {', '.join(result.config.symbols)}")
     print("-" * 60)
@@ -51,6 +53,7 @@ def run_backtest(args) -> int:
     config = BacktestConfig(
         market=Market(args.market),
         strategy_name=args.strategy,
+        team=TeamType(args.team),
         symbols=args.symbols.split(","),
         start_date=datetime.fromisoformat(args.start),
         end_date=datetime.fromisoformat(args.end),
@@ -58,7 +61,8 @@ def run_backtest(args) -> int:
         random_seed=args.seed,
     )
     
-    engine = BacktestEngine(config)
+    engine_class = resolve_backtest_engine(TeamType(args.team))
+    engine = engine_class(config)
     
     # Load data
     loader = BacktestDataLoader(Market(args.market))
@@ -83,6 +87,7 @@ def run_walk_forward(args) -> int:
     config = WalkForwardConfig(
         market=Market(args.market),
         strategy_name=args.strategy,
+        team=TeamType(args.team),
         symbols=args.symbols.split(","),
         start_date=datetime.fromisoformat(args.start),
         end_date=datetime.fromisoformat(args.end),
@@ -120,6 +125,7 @@ def main() -> int:
     bt_parser = subparsers.add_parser("backtest", help="Run single backtest")
     bt_parser.add_argument("--strategy", required=True, help="Strategy name")
     bt_parser.add_argument("--market", default="crypto", choices=["crypto", "kr", "us"])
+    bt_parser.add_argument("--team", default="trading", choices=["portfolio", "trading", "arbitrage"])
     bt_parser.add_argument("--symbols", required=True, help="Comma-separated symbols")
     bt_parser.add_argument("--start", required=True, help="Start date (YYYY-MM-DD)")
     bt_parser.add_argument("--end", required=True, help="End date (YYYY-MM-DD)")
@@ -132,6 +138,7 @@ def main() -> int:
     wf_parser = subparsers.add_parser("walkforward", help="Run walk-forward validation")
     wf_parser.add_argument("--strategy", required=True, help="Strategy name")
     wf_parser.add_argument("--market", default="crypto", choices=["crypto", "kr", "us"])
+    wf_parser.add_argument("--team", default="trading", choices=["portfolio", "trading", "arbitrage"])
     wf_parser.add_argument("--symbols", required=True, help="Comma-separated symbols")
     wf_parser.add_argument("--start", required=True, help="Start date (YYYY-MM-DD)")
     wf_parser.add_argument("--end", required=True, help="End date (YYYY-MM-DD)")
