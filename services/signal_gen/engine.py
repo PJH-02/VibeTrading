@@ -7,13 +7,15 @@ import asyncio
 import logging
 from datetime import datetime
 from decimal import Decimal
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
-from nats.aio.msg import Msg
+try:
+    from nats.aio.msg import Msg
+except ImportError:
+    Msg = Any  # type: ignore
 
 from shared.config import get_settings
 from shared.database import get_postgres
-from shared.messaging import Subjects, deserialize_message, ensure_connected
 from shared.models import (
     Candle,
     Market,
@@ -27,6 +29,13 @@ from shared.models import (
 from .strategy_loader import StrategyWrapper, get_strategy
 
 logger = logging.getLogger(__name__)
+
+try:
+    from shared.messaging import Subjects, deserialize_message, ensure_connected
+except ImportError:
+    Subjects = None  # type: ignore
+    deserialize_message = None  # type: ignore
+    ensure_connected = None  # type: ignore
 
 
 class SignalGenerationEngine:
@@ -84,6 +93,9 @@ class SignalGenerationEngine:
     async def start(self) -> None:
         """Start the signal generation engine."""
         logger.info(f"Starting signal gen engine: market={self._market}, strategy={self._strategy_name}")
+
+        if Subjects is None or ensure_connected is None:
+            raise RuntimeError("NATS dependencies are not installed")
         
         # Load strategy
         self._strategy = get_strategy(self._strategy_name, expected_team=self._team)
@@ -108,6 +120,9 @@ class SignalGenerationEngine:
     
     async def _on_candle_message(self, msg: Msg) -> None:
         """Handle incoming candle message."""
+        if deserialize_message is None:
+            raise RuntimeError("NATS dependencies are not installed")
+
         try:
             candle = deserialize_message(msg.data, Candle)
             await self._process_candle(candle)
@@ -148,6 +163,9 @@ class SignalGenerationEngine:
     
     async def _publish_signal(self, signal: Signal) -> None:
         """Publish signal to NATS."""
+        if ensure_connected is None or Subjects is None:
+            return
+
         try:
             messaging = await ensure_connected()
             await messaging.publish(

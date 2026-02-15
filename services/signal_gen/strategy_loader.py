@@ -115,6 +115,23 @@ class StrategyWrapper:
             raise AttributeError(f"Strategy '{self._name}' has no 'on_candle' method")
 
 
+def _resolve_strategy_object(module: Any) -> Any:
+    """Resolve strategy object from imported module."""
+    if hasattr(module, "strategy"):
+        return module.strategy
+    if hasattr(module, "Strategy"):
+        return module.Strategy()
+    return module
+
+
+def _resolve_declared_team(strategy_obj: Any) -> TeamType:
+    """Resolve declared strategy team, defaulting to trading."""
+    declared_team = getattr(strategy_obj, "TEAM_TYPE", TeamType.TRADING)
+    if isinstance(declared_team, str):
+        declared_team = TeamType(declared_team)
+    return declared_team
+
+
 def load_strategy(strategy_name: str, expected_team: TeamType | None = None) -> StrategyWrapper:
     """
     Load a strategy by name via direct import.
@@ -137,25 +154,8 @@ def load_strategy(strategy_name: str, expected_team: TeamType | None = None) -> 
     try:
         logger.info(f"Loading strategy from '{module_path}'")
         module = importlib.import_module(module_path)
-        
-        # Look for strategy class or instance
-        strategy_obj = None
-        
-        # Check for explicit strategy attribute
-        if hasattr(module, "strategy"):
-            strategy_obj = module.strategy
-        elif hasattr(module, "Strategy"):
-            # Instantiate class
-            strategy_obj = module.Strategy()
-        else:
-            # Use the module itself as the strategy
-            strategy_obj = module
-        
-        # Team contract validation
-
-        declared_team = getattr(strategy_obj, "TEAM_TYPE", TeamType.TRADING)
-        if isinstance(declared_team, str):
-            declared_team = TeamType(declared_team)
+        strategy_obj = _resolve_strategy_object(module)
+        declared_team = _resolve_declared_team(strategy_obj)
         if expected_team is not None and declared_team != expected_team:
             raise ValueError(
                 f"Strategy '{strategy_name}' declares team '{declared_team.value}' but expected '{expected_team.value}'"
@@ -179,6 +179,7 @@ def load_strategy(strategy_name: str, expected_team: TeamType | None = None) -> 
 
 # Cache for loaded strategies
 _loaded_strategies: Dict[str, StrategyWrapper] = {}
+_strategy_declared_teams: Dict[str, TeamType] = {}
 
 
 def get_strategy(strategy_name: str, expected_team: TeamType | None = None) -> StrategyWrapper:
@@ -200,3 +201,41 @@ def get_strategy(strategy_name: str, expected_team: TeamType | None = None) -> S
 def clear_strategy_cache() -> None:
     """Clear the strategy cache (for testing)."""
     _loaded_strategies.clear()
+    _strategy_declared_teams.clear()
+
+
+def get_strategy_team(strategy_name: str) -> TeamType:
+    """
+    Read the strategy's declared team.
+
+    Strategy may declare:
+    - TEAM_TYPE = TeamType.TRADING
+    - TEAM_TYPE = "trading"
+    """
+    if strategy_name in _strategy_declared_teams:
+        return _strategy_declared_teams[strategy_name]
+
+    module = importlib.import_module(f"strategies.{strategy_name}")
+    strategy_obj = _resolve_strategy_object(module)
+    team = _resolve_declared_team(strategy_obj)
+    _strategy_declared_teams[strategy_name] = team
+    return team
+
+
+def resolve_strategy_team(
+    strategy_name: str,
+    requested_team: TeamType | None = None,
+) -> TeamType:
+    """
+    Resolve effective team for a strategy.
+
+    If requested_team is provided, validates against strategy TEAM_TYPE.
+    Otherwise, uses strategy TEAM_TYPE (default trading).
+    """
+    declared_team = get_strategy_team(strategy_name)
+    if requested_team is not None and declared_team != requested_team:
+        raise ValueError(
+            f"Strategy '{strategy_name}' declares team '{declared_team.value}' "
+            f"but requested '{requested_team.value}'"
+        )
+    return declared_team

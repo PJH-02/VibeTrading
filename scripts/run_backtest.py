@@ -4,19 +4,18 @@ Command-line interface for running backtests and validation.
 """
 
 import argparse
-import asyncio
 import logging
 import sys
 from datetime import datetime
 from decimal import Decimal
 
-from shared.config import get_settings
-from shared.models import Market, TeamType, TradingMode
+from shared.models import Market, TeamType
 
 from backtest.data_loader import BacktestDataLoader, create_candle_provider
 from backtest.engine import BacktestConfig, BacktestResult
 from backtest.engine_router import resolve_backtest_engine
 from backtest.walk_forward import WalkForwardConfig, WalkForwardValidator, generate_report
+from services.signal_gen.strategy_loader import resolve_strategy_team
 
 logging.basicConfig(
     level=logging.INFO,
@@ -32,7 +31,10 @@ def print_result(result: BacktestResult) -> None:
     print("BACKTEST RESULTS")
     print("=" * 60)
     print(f"Strategy: {result.config.strategy_name}")
-    print(f"Team: {getattr(result.config, 'team', TeamType.TRADING.value)}")
+    team = getattr(result.config, "team", TeamType.TRADING)
+    if isinstance(team, TeamType):
+        team = team.value
+    print(f"Team: {team}")
     print(f"Period: {result.config.start_date.date()} to {result.config.end_date.date()}")
     print(f"Symbols: {', '.join(result.config.symbols)}")
     print("-" * 60)
@@ -50,10 +52,13 @@ def print_result(result: BacktestResult) -> None:
 
 def run_backtest(args) -> int:
     """Run a single backtest."""
+    requested_team = None if args.team == "auto" else TeamType(args.team)
+    team = resolve_strategy_team(args.strategy, requested_team=requested_team)
+
     config = BacktestConfig(
         market=Market(args.market),
         strategy_name=args.strategy,
-        team=TeamType(args.team),
+        team=team,
         symbols=args.symbols.split(","),
         start_date=datetime.fromisoformat(args.start),
         end_date=datetime.fromisoformat(args.end),
@@ -61,8 +66,14 @@ def run_backtest(args) -> int:
         random_seed=args.seed,
     )
     
-    engine_class = resolve_backtest_engine(TeamType(args.team))
+    engine_class = resolve_backtest_engine(team)
     engine = engine_class(config)
+    logger.info(
+        "Resolved backtest engine: strategy=%s team=%s engine=%s",
+        args.strategy,
+        team.value,
+        engine_class.__name__,
+    )
     
     # Load data
     loader = BacktestDataLoader(Market(args.market))
@@ -84,10 +95,13 @@ def run_backtest(args) -> int:
 
 def run_walk_forward(args) -> int:
     """Run walk-forward validation."""
+    requested_team = None if args.team == "auto" else TeamType(args.team)
+    team = resolve_strategy_team(args.strategy, requested_team=requested_team)
+
     config = WalkForwardConfig(
         market=Market(args.market),
         strategy_name=args.strategy,
-        team=TeamType(args.team),
+        team=team,
         symbols=args.symbols.split(","),
         start_date=datetime.fromisoformat(args.start),
         end_date=datetime.fromisoformat(args.end),
@@ -125,7 +139,12 @@ def main() -> int:
     bt_parser = subparsers.add_parser("backtest", help="Run single backtest")
     bt_parser.add_argument("--strategy", required=True, help="Strategy name")
     bt_parser.add_argument("--market", default="crypto", choices=["crypto", "kr", "us"])
-    bt_parser.add_argument("--team", default="trading", choices=["portfolio", "trading", "arbitrage"])
+    bt_parser.add_argument(
+        "--team",
+        default="auto",
+        choices=["auto", "portfolio", "trading", "arbitrage"],
+        help="Backtest team (default: auto from strategy TEAM_TYPE)",
+    )
     bt_parser.add_argument("--symbols", required=True, help="Comma-separated symbols")
     bt_parser.add_argument("--start", required=True, help="Start date (YYYY-MM-DD)")
     bt_parser.add_argument("--end", required=True, help="End date (YYYY-MM-DD)")
@@ -138,7 +157,12 @@ def main() -> int:
     wf_parser = subparsers.add_parser("walkforward", help="Run walk-forward validation")
     wf_parser.add_argument("--strategy", required=True, help="Strategy name")
     wf_parser.add_argument("--market", default="crypto", choices=["crypto", "kr", "us"])
-    wf_parser.add_argument("--team", default="trading", choices=["portfolio", "trading", "arbitrage"])
+    wf_parser.add_argument(
+        "--team",
+        default="auto",
+        choices=["auto", "portfolio", "trading", "arbitrage"],
+        help="Backtest team (default: auto from strategy TEAM_TYPE)",
+    )
     wf_parser.add_argument("--symbols", required=True, help="Comma-separated symbols")
     wf_parser.add_argument("--start", required=True, help="Start date (YYYY-MM-DD)")
     wf_parser.add_argument("--end", required=True, help="End date (YYYY-MM-DD)")
