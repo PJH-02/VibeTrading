@@ -301,9 +301,14 @@ class CryptoDataFeed(DataFeedProvider):
         return candles
     
     async def _persist_candle(self, candle: Candle) -> None:
-        """Persist candle to QuestDB."""
+        """Persist candle to QuestDB (skipped in standalone mode)."""
         if not candle.is_closed:
             return  # Only persist closed candles
+        
+        # Skip if standalone mode (no QuestDB)
+        settings = get_settings()
+        if settings.standalone_mode:
+            return
         
         try:
             questdb = get_questdb()
@@ -328,8 +333,13 @@ class CryptoDataFeed(DataFeedProvider):
             logger.error(f"Error persisting candle: {e}")
     
     async def _publish_candle(self, candle: Candle) -> None:
-        """Publish candle to NATS."""
+        """Publish candle to NATS (skipped in standalone mode)."""
         if ensure_connected is None or Subjects is None:
+            return
+
+        # Skip if standalone mode (no NATS)
+        settings = get_settings()
+        if settings.standalone_mode:
             return
 
         try:

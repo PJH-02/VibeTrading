@@ -149,14 +149,8 @@ class FillSimulator:
         """
         notional = quantity * price
         
-        # Fee rates by market (conservative estimates)
-        fee_rates = {
-            Market.CRYPTO: Decimal("0.001"),   # 0.1% (10 bps)
-            Market.KR: Decimal("0.00015"),     # 0.015% base + tax
-            Market.US: Decimal("0.0001"),      # $0.01/share or 0.01%
-        }
-        
-        rate = fee_rates.get(market, Decimal("0.001"))
+        # Fee rates from settings (configurable via .env)
+        rate = self._settings.get_commission_rate(market)
         commission = notional * rate
         
         # Commission asset (typically quote currency)

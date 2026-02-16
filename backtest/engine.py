@@ -16,6 +16,7 @@ from decimal import Decimal
 from typing import Dict, Iterator, List, Optional, Tuple
 
 from shared.fill_logic import FillResult, get_fill_simulator
+from shared.config import get_settings
 from shared.models import (
     Candle,
     Fill,
@@ -248,9 +249,10 @@ class BacktestEngine:
         side: OrderSide,
     ) -> None:
         """Open a new position."""
-        # Calculate position size
+        # Calculate position size (from settings)
         balance = self._config.initial_capital  # Simplified
-        position_value = balance * Decimal("0.1")  # 10% per position
+        position_size_pct = get_settings().position_size_pct / Decimal("100")
+        position_value = balance * position_size_pct
         quantity = position_value / candle.close
         
         # Simulate fill

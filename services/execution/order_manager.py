@@ -97,21 +97,26 @@ class OrderManager:
         # Connect broker
         await self._broker.start()
         
-        # Subscribe to signals
-        messaging = await ensure_connected()
-        await messaging.subscribe(
-            subject=Subjects.signals(self._market.value),
-            handler=self._on_signal_message,
-            durable=f"order_manager_{self._market.value}",
-            queue="order_managers",
-        )
-        
-        # Subscribe to kill switch
-        await messaging.subscribe(
-            subject=Subjects.KILL_SWITCH,
-            handler=self._on_kill_switch,
-            durable=f"kill_switch_{self._market.value}",
-        )
+        # In standalone mode, skip NATS subscriptions
+        settings = get_settings()
+        if not settings.standalone_mode:
+            # Subscribe to signals
+            messaging = await ensure_connected()
+            await messaging.subscribe(
+                subject=Subjects.signals(self._market.value),
+                handler=self._on_signal_message,
+                durable=f"order_manager_{self._market.value}",
+                queue="order_managers",
+            )
+            
+            # Subscribe to kill switch
+            await messaging.subscribe(
+                subject=Subjects.KILL_SWITCH,
+                handler=self._on_kill_switch,
+                durable=f"kill_switch_{self._market.value}",
+            )
+        else:
+            logger.info("Order manager started (standalone mode - no NATS)")
         
         self._running = True
         logger.info("Order manager started")
@@ -195,9 +200,9 @@ class OrderManager:
         else:
             side = OrderSide.SELL
         
-        # Get position size (simplified - would use risk engine in production)
+        # Get position size (from settings)
         settings = get_settings()
-        balance = Decimal("10000")  # Would query from broker
+        balance = settings.initial_balance  # Configurable via INITIAL_BALANCE
         position_size_pct = settings.risk.max_position_size_pct / Decimal("100")
         notional = balance * position_size_pct
         quantity = notional / signal.price_at_signal
@@ -217,6 +222,15 @@ class OrderManager:
     def _on_fill(self, fill: Fill) -> None:
         """Handle fill notification from broker."""
         asyncio.create_task(self._handle_fill_async(fill))
+    
+    async def submit_signal_direct(self, signal: Signal) -> None:
+        """
+        Process a signal directly (for standalone mode without NATS).
+        
+        Args:
+            signal: Trading signal to process
+        """
+        await self._process_signal(signal)
     
     async def _handle_fill_async(self, fill: Fill) -> None:
         """Async fill handling."""
@@ -244,7 +258,11 @@ class OrderManager:
             self._pending_orders.pop(order.id, None)
     
     async def _persist_order(self, order: Order) -> None:
-        """Persist order to PostgreSQL."""
+        """Persist order to PostgreSQL (skipped in standalone mode)."""
+        settings = get_settings()
+        if settings.standalone_mode:
+            return
+        
         try:
             postgres = get_postgres()
             async with postgres.session() as session:
@@ -301,7 +319,11 @@ class OrderManager:
             logger.error(f"Error persisting order: {e}")
     
     async def _persist_fill(self, fill: Fill) -> None:
-        """Persist fill to PostgreSQL."""
+        """Persist fill to PostgreSQL (skipped in standalone mode)."""
+        settings = get_settings()
+        if settings.standalone_mode:
+            return
+        
         try:
             postgres = get_postgres()
             async with postgres.session() as session:
@@ -341,7 +363,11 @@ class OrderManager:
             logger.error(f"Error persisting fill: {e}")
     
     async def _publish_order_event(self, order: Order, event_type: str) -> None:
-        """Publish order event to NATS."""
+        """Publish order event to NATS (skipped in standalone mode)."""
+        settings = get_settings()
+        if settings.standalone_mode:
+            return
+        
         try:
             messaging = await ensure_connected()
             
@@ -359,7 +385,11 @@ class OrderManager:
             logger.error(f"Error publishing order event: {e}")
     
     async def _publish_fill(self, fill: Fill) -> None:
-        """Publish fill to NATS."""
+        """Publish fill to NATS (skipped in standalone mode)."""
+        settings = get_settings()
+        if settings.standalone_mode:
+            return
+        
         try:
             messaging = await ensure_connected()
             await messaging.publish(
