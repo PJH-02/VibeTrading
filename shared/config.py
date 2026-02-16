@@ -160,12 +160,26 @@ class FillLogicSettings(BaseSettings):
     slippage_bps_us: int = Field(default=3, alias="SLIPPAGE_BPS_US")
     min_latency_ms: int = Field(default=50, alias="MIN_LATENCY_MS")
     
+    # Commission rates (per-market)
+    commission_rate_crypto: Decimal = Field(default=Decimal("0.001"), alias="COMMISSION_RATE_CRYPTO")   # 0.1%
+    commission_rate_kr: Decimal = Field(default=Decimal("0.00015"), alias="COMMISSION_RATE_KR")        # 0.015%
+    commission_rate_us: Decimal = Field(default=Decimal("0.0001"), alias="COMMISSION_RATE_US")         # 0.01%
+    
     def get_slippage_bps(self, market: Market) -> int:
         """Get slippage in basis points for a market."""
         mapping = {
             Market.CRYPTO: self.slippage_bps_crypto,
             Market.KR: self.slippage_bps_kr,
             Market.US: self.slippage_bps_us,
+        }
+        return mapping[market]
+    
+    def get_commission_rate(self, market: Market) -> Decimal:
+        """Get commission rate for a market."""
+        mapping = {
+            Market.CRYPTO: self.commission_rate_crypto,
+            Market.KR: self.commission_rate_kr,
+            Market.US: self.commission_rate_us,
         }
         return mapping[market]
 
@@ -189,11 +203,22 @@ class TradingSettings(BaseSettings):
     # Core settings
     mode: TradingMode = Field(default=TradingMode.PAPER, alias="TRADING_MODE")
     market: Market = Field(default=Market.CRYPTO, alias="TRADING_MARKET")
+    kr_broker: Literal["kis", "kiwoom", "both"] = Field(
+        default="kis",
+        alias="KR_BROKER",
+    )
     crypto_exchange: Literal["binance", "bybit"] = Field(
         default="binance",
         alias="CRYPTO_EXCHANGE",
     )
     crypto_ws_url: str = Field(default="", alias="CRYPTO_WS_URL")
+    
+    # Standalone mode (no NATS/DB dependencies — set by run_strategy.py)
+    standalone_mode: bool = Field(default=False, alias="STANDALONE_MODE")
+    
+    # Capital & Position sizing (overridable by strategy config)
+    initial_balance: Decimal = Field(default=Decimal("100000"), alias="INITIAL_BALANCE")
+    position_size_pct: Decimal = Field(default=Decimal("10.0"), alias="POSITION_SIZE_PCT")
     
     # Sub-settings (loaded from same .env)
     database: DatabaseSettings = Field(default_factory=DatabaseSettings)
@@ -235,3 +260,78 @@ def reload_settings() -> TradingSettings:
     """Force reload settings (clears cache)."""
     get_settings.cache_clear()
     return get_settings()
+
+
+def apply_strategy_config(strategy_config: dict) -> TradingSettings:
+    """
+    전략의 STRATEGY_CONFIG를 시스템 설정에 적용합니다.
+    환경변수를 덮어써서 get_settings()가 전략 설정을 반영하도록 합니다.
+
+    Args:
+        strategy_config: 전략 파일의 STRATEGY_CONFIG dict
+
+    Returns:
+        적용된 TradingSettings
+    """
+    import os
+
+    # 항상 standalone 모드
+    os.environ["STANDALONE_MODE"] = "true"
+
+    # 마켓 / 모드
+    if "market" in strategy_config:
+        os.environ["TRADING_MARKET"] = strategy_config["market"]
+    if "mode" in strategy_config:
+        os.environ["TRADING_MODE"] = strategy_config["mode"]
+
+    # 거래소 / 브로커
+    if "crypto_exchange" in strategy_config:
+        os.environ["CRYPTO_EXCHANGE"] = strategy_config["crypto_exchange"]
+    if "kr_broker" in strategy_config:
+        os.environ["KR_BROKER"] = strategy_config["kr_broker"]
+
+    # 자본금 / 포지션
+    if "initial_balance" in strategy_config:
+        os.environ["INITIAL_BALANCE"] = str(strategy_config["initial_balance"])
+    if "position_size_pct" in strategy_config:
+        os.environ["POSITION_SIZE_PCT"] = str(strategy_config["position_size_pct"])
+
+    # API 키 (비어있지 않은 값만 덮어씀)
+    api_mappings = {
+        "binance_api_key": "BINANCE_API_KEY",
+        "binance_api_secret": "BINANCE_API_SECRET",
+        "kis_app_key": "KIS_APP_KEY",
+        "kis_app_secret": "KIS_APP_SECRET",
+        "kis_account_number": "KIS_ACCOUNT_NUMBER",
+    }
+    for cfg_key, env_key in api_mappings.items():
+        val = strategy_config.get(cfg_key, "")
+        if val:
+            os.environ[env_key] = val
+
+    if "binance_testnet" in strategy_config:
+        os.environ["BINANCE_TESTNET"] = str(strategy_config["binance_testnet"]).lower()
+    if "kis_use_mock" in strategy_config:
+        os.environ["KIS_USE_MOCK"] = str(strategy_config["kis_use_mock"]).lower()
+
+    # 슬리피지 / 수수료
+    market = strategy_config.get("market", "crypto")
+    if "slippage_bps" in strategy_config:
+        env_key = f"SLIPPAGE_BPS_{market.upper()}"
+        os.environ[env_key] = str(strategy_config["slippage_bps"])
+    if "commission_rate" in strategy_config:
+        env_key = f"COMMISSION_RATE_{market.upper()}"
+        os.environ[env_key] = str(strategy_config["commission_rate"])
+    if "min_latency_ms" in strategy_config:
+        os.environ["MIN_LATENCY_MS"] = str(strategy_config["min_latency_ms"])
+
+    # 리스크
+    if "max_drawdown_pct" in strategy_config:
+        os.environ["MAX_DRAWDOWN_PCT"] = str(strategy_config["max_drawdown_pct"])
+    if "max_position_size_pct" in strategy_config:
+        os.environ["MAX_POSITION_SIZE_PCT"] = str(strategy_config["max_position_size_pct"])
+    if "daily_loss_limit_pct" in strategy_config:
+        os.environ["DAILY_LOSS_LIMIT_PCT"] = str(strategy_config["daily_loss_limit_pct"])
+
+    # 설정 리로드
+    return reload_settings()

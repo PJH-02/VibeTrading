@@ -9,6 +9,7 @@ import sys
 from datetime import datetime
 from decimal import Decimal
 
+from shared.config import get_settings
 from shared.models import Market, TeamType
 
 from backtest.data_loader import BacktestDataLoader, create_candle_provider
@@ -52,8 +53,17 @@ def print_result(result: BacktestResult) -> None:
 
 def run_backtest(args) -> int:
     """Run a single backtest."""
-    requested_team = None if args.team == "auto" else TeamType(args.team)
+    settings = get_settings()
+    
+    # --team=auto: 전략 파일의 TEAM_TYPE에서 자동 결정
+    if args.team == "auto":
+        requested_team = None
+    else:
+        requested_team = TeamType(args.team)
     team = resolve_strategy_team(args.strategy, requested_team=requested_team)
+    
+    # Use settings initial_balance as default
+    capital = Decimal(args.capital) if args.capital != "auto" else settings.initial_balance
 
     config = BacktestConfig(
         market=Market(args.market),
@@ -62,7 +72,7 @@ def run_backtest(args) -> int:
         symbols=args.symbols.split(","),
         start_date=datetime.fromisoformat(args.start),
         end_date=datetime.fromisoformat(args.end),
-        initial_capital=Decimal(args.capital),
+        initial_capital=capital,
         random_seed=args.seed,
     )
     

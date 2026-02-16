@@ -94,12 +94,19 @@ class SignalGenerationEngine:
         """Start the signal generation engine."""
         logger.info(f"Starting signal gen engine: market={self._market}, strategy={self._strategy_name}")
 
-        if Subjects is None or ensure_connected is None:
-            raise RuntimeError("NATS dependencies are not installed")
-        
         # Load strategy
         self._strategy = get_strategy(self._strategy_name, expected_team=self._team)
         self._strategy.initialize()
+
+        # In standalone mode, skip NATS subscriptions
+        settings = get_settings()
+        if settings.standalone_mode:
+            self._running = True
+            logger.info("Signal generation engine started (standalone mode - no NATS)")
+            return
+
+        if Subjects is None or ensure_connected is None:
+            raise RuntimeError("NATS dependencies are not installed")
         
         # Subscribe to candle stream
         messaging = await ensure_connected()
@@ -162,8 +169,13 @@ class SignalGenerationEngine:
             await self._publish_signal(signal)
     
     async def _publish_signal(self, signal: Signal) -> None:
-        """Publish signal to NATS."""
+        """Publish signal to NATS (skipped in standalone mode)."""
         if ensure_connected is None or Subjects is None:
+            return
+        
+        settings = get_settings()
+        if settings.standalone_mode:
+            logger.info(f"Signal (standalone): {signal.action} {signal.symbol}")
             return
 
         try:
@@ -182,7 +194,11 @@ class SignalGenerationEngine:
             logger.error(f"Error publishing signal: {e}")
     
     async def _persist_signal(self, signal: Signal) -> None:
-        """Persist signal to PostgreSQL."""
+        """Persist signal to PostgreSQL (skipped in standalone mode)."""
+        settings = get_settings()
+        if settings.standalone_mode:
+            return
+        
         try:
             postgres = get_postgres()
             async with postgres.session() as session:

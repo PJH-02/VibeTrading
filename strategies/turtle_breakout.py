@@ -28,6 +28,60 @@ from shared.models import (
 logger = logging.getLogger(__name__)
 
 
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 전략 설정 (Strategy Config)
+# run_strategy.py 가 이 설정을 읽어 파이프라인을 구성합니다.
+# 새 전략을 만들 때 이 블록을 복사하여 값만 바꾸면 됩니다.
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STRATEGY_CONFIG = {
+    # ── 기본 정보 ──
+    "name": "turtle_breakout",
+    "description": "Turtle Breakout: 20일 고가 돌파 매수, 10일 저가 이탈 매도",
+
+    # ── 마켓 / 모드 ──
+    "market": "crypto",              # crypto | kr | us
+    "mode": "paper",                 # backtest | paper | live
+    "symbols": ["BTCUSDT"],          # 거래 심볼 목록
+    "interval": "1m",                # 캔들 인터벌
+
+    # ── 엔진 / 팀 ──
+    "team": "trading",               # trading | portfolio | arbitrage
+
+    # ── 자본금 & 포지션 ──
+    "initial_balance": "100000",     # 초기 자본금
+    "position_size_pct": "10.0",     # 포지션 비율 (% of 자본금)
+
+    # ── 거래소 / 브로커 ──
+    "crypto_exchange": "binance",    # binance | bybit
+    "kr_broker": "kis",              # kis | kiwoom | both (kr 마켓일 때만)
+
+    # ── API 키 (비워두면 .env에서 읽음) ──
+    "binance_api_key": "",
+    "binance_api_secret": "",
+    "binance_testnet": True,
+    "kis_app_key": "",
+    "kis_app_secret": "",
+    "kis_account_number": "",
+    "kis_use_mock": True,
+
+    # ── 슬리피지 & 수수료 ──
+    "slippage_bps": 10,              # 슬리피지 (basis points)
+    "commission_rate": "0.001",      # 수수료율 (0.1% = 10 bps)
+    "min_latency_ms": 50,            # 최소 지연 (ms)
+
+    # ── 리스크 ──
+    "max_drawdown_pct": "10.0",
+    "max_position_size_pct": "5.0",
+    "daily_loss_limit_pct": "3.0",
+}
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 전략 구현
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
 @dataclass
 class SymbolState:
     """Per-symbol strategy state."""
