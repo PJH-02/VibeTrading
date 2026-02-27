@@ -1,0 +1,141 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1771906909684,
+  "projectRoot": "/Users/ohrumpark/Desktop/testing/VibeTrading-1",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "docs"
+    ],
+    "gitBranches": {
+      "defaultBranch": "main",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "cli": {
+      "path": "cli",
+      "purpose": null,
+      "fileCount": 4,
+      "lastAccessed": 1771906909670,
+      "keyFiles": [
+        "__init__.py",
+        "backtest.py",
+        "live.py",
+        "paper.py"
+      ]
+    },
+    "data": {
+      "path": "data",
+      "purpose": "Data files",
+      "fileCount": 0,
+      "lastAccessed": 1771906909670,
+      "keyFiles": []
+    },
+    "docs": {
+      "path": "docs",
+      "purpose": "Documentation",
+      "fileCount": 1,
+      "lastAccessed": 1771906909670,
+      "keyFiles": [
+        "vibetrading_refactor_spec.md"
+      ]
+    },
+    "strategies": {
+      "path": "strategies",
+      "purpose": null,
+      "fileCount": 2,
+      "lastAccessed": 1771906909671,
+      "keyFiles": [
+        "__init__.py",
+        "turtle_breakout.py"
+      ]
+    },
+    "vibetrading_V1": {
+      "path": "vibetrading_V1",
+      "purpose": null,
+      "fileCount": 6,
+      "lastAccessed": 1771906909674,
+      "keyFiles": [
+        "README.md",
+        "docker-compose.yml",
+        "requirements.txt",
+        "run_strategy.py"
+      ]
+    },
+    "vibetrading_V2": {
+      "path": "vibetrading_V2",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1771906909674,
+      "keyFiles": [
+        "__init__.py"
+      ]
+    },
+    "vibetrading_V1/scripts": {
+      "path": "vibetrading_V1/scripts",
+      "purpose": "Build/utility scripts",
+      "fileCount": 6,
+      "lastAccessed": 1771906909676,
+      "keyFiles": [
+        "init_db.py",
+        "init_nats.py",
+        "init_postgres.sql"
+      ]
+    },
+    "vibetrading_V1/services": {
+      "path": "vibetrading_V1/services",
+      "purpose": "Business logic services",
+      "fileCount": 1,
+      "lastAccessed": 1771906909676,
+      "keyFiles": [
+        "broker_factory.py"
+      ]
+    },
+    "vibetrading_V2/data": {
+      "path": "vibetrading_V2/data",
+      "purpose": "Data files",
+      "fileCount": 3,
+      "lastAccessed": 1771906909676,
+      "keyFiles": [
+        "__init__.py",
+        "catalog.py",
+        "parquet_source.py"
+      ]
+    },
+    "vibetrading_V2/tests": {
+      "path": "vibetrading_V2/tests",
+      "purpose": "Test files",
+      "fileCount": 5,
+      "lastAccessed": 1771906909676,
+      "keyFiles": [
+        "test_parquet_source.py",
+        "test_policy_merge.py",
+        "test_runner_flow.py"
+      ]
+    }
+  },
+  "hotPaths": [],
+  "userDirectives": []
+}

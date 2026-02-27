@@ -1,0 +1,14 @@
+{
+  "workerTurnCountByName": {
+    "worker-1": 0,
+    "worker-2": 0,
+    "worker-3": 0,
+    "worker-4": 0
+  },
+  "workerTaskByName": {
+    "worker-1": "",
+    "worker-2": "",
+    "worker-3": "",
+    "worker-4": ""
+  }
+}

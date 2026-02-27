@@ -1,0 +1,10 @@
+{
+  "name": "worker-2",
+  "index": 2,
+  "role": "executor",
+  "assigned_tasks": [
+    "2"
+  ],
+  "pid": 2840,
+  "pane_id": "%18"
+}
