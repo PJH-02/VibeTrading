@@ -1,0 +1,5 @@
+{"timestamp":"2026-02-24T00:46:27.636Z","type":"watcher_start","cwd":"/Users/ohrumpark/Desktop/testing/VibeTrading-1","notify_script":"/opt/homebrew/lib/node_modules/oh-my-codex/scripts/notify-hook.js","poll_ms":700,"once":false}
+{"timestamp":"2026-02-24T01:45:34.950Z","type":"watcher_stop","signal":"SIGTERM"}
+{"timestamp":"2026-02-24T01:45:34.986Z","type":"watcher_start","cwd":"/Users/ohrumpark/Desktop/testing/VibeTrading-1","notify_script":"/opt/homebrew/lib/node_modules/oh-my-codex/scripts/notify-hook.js","poll_ms":700,"once":false}
+{"timestamp":"2026-02-24T02:16:10.213Z","type":"fallback_notify","ok":true,"thread_id":"019c8d52-be8c-7222-a871-5a4900d3eb06","turn_id":"019c8d6b-021d-74c3-bd6a-4db25eb0b943","file":"/Users/ohrumpark/.codex/sessions/2026/02/24/rollout-2026-02-24T10-45-36-019c8d52-be8c-7222-a871-5a4900d3eb06.jsonl","reason":"sent"}
+{"timestamp":"2026-02-24T10:31:30.089Z","type":"watcher_stop","signal":"SIGTERM"}

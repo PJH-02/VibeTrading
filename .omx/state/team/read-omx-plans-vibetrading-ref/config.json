@@ -1,0 +1,49 @@
+{
+  "name": "read-omx-plans-vibetrading-ref",
+  "task": "Read .omx/plans/vibetrading_refactor_prd.md AND .omx/plans/vibetrading_import_hotspots.md. Generate data/, execution/, runner/, strategies/ folder as suggested Target tree in vibetrading_V2/.",
+  "agent_type": "executor",
+  "worker_count": 5,
+  "max_workers": 20,
+  "workers": [
+    {
+      "name": "worker-1",
+      "index": 1,
+      "role": "executor",
+      "assigned_tasks": [],
+      "pane_id": "%17"
+    },
+    {
+      "name": "worker-2",
+      "index": 2,
+      "role": "executor",
+      "assigned_tasks": [],
+      "pane_id": "%18"
+    },
+    {
+      "name": "worker-3",
+      "index": 3,
+      "role": "executor",
+      "assigned_tasks": [],
+      "pane_id": "%19"
+    },
+    {
+      "name": "worker-4",
+      "index": 4,
+      "role": "executor",
+      "assigned_tasks": [],
+      "pane_id": "%20"
+    },
+    {
+      "name": "worker-5",
+      "index": 5,
+      "role": "executor",
+      "assigned_tasks": [],
+      "pane_id": "%21"
+    }
+  ],
+  "created_at": "2026-02-21T11:12:40.715Z",
+  "tmux_session": "omx-vibetrading-1-38-1771669373648-pq9cs9:0",
+  "next_task_id": 1,
+  "leader_pane_id": "%0",
+  "hud_pane_id": "%22"
+}

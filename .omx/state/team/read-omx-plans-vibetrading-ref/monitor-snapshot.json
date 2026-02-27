@@ -1,0 +1,38 @@
+{
+  "taskStatusById": {
+    "1": "pending",
+    "2": "pending",
+    "3": "pending",
+    "4": "pending",
+    "5": "pending"
+  },
+  "workerAliveByName": {
+    "worker-1": true,
+    "worker-2": true,
+    "worker-3": true,
+    "worker-4": true,
+    "worker-5": true
+  },
+  "workerStateByName": {
+    "worker-1": "unknown",
+    "worker-2": "unknown",
+    "worker-3": "unknown",
+    "worker-4": "unknown",
+    "worker-5": "unknown"
+  },
+  "workerTurnCountByName": {
+    "worker-1": 0,
+    "worker-2": 0,
+    "worker-3": 0,
+    "worker-4": 0,
+    "worker-5": 0
+  },
+  "workerTaskIdByName": {
+    "worker-1": "",
+    "worker-2": "",
+    "worker-3": "",
+    "worker-4": "",
+    "worker-5": ""
+  },
+  "mailboxNotifiedByMessageId": {}
+}

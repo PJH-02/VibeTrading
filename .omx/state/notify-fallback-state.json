@@ -1,0 +1,9 @@
+{
+  "pid": 33671,
+  "started_at": "2026-02-24T01:45:34.986Z",
+  "cwd": "/Users/ohrumpark/Desktop/testing/VibeTrading-1",
+  "notify_script": "/opt/homebrew/lib/node_modules/oh-my-codex/scripts/notify-hook.js",
+  "poll_ms": 700,
+  "tracked_files": 1,
+  "seen_turns": 1
+}

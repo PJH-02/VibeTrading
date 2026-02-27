@@ -1,0 +1,2 @@
+{"timestamp":"2026-02-23T07:17:53.733Z","type":"tmux_hook","mode":null,"reason":"mode_not_allowed","turn_id":"019c895c-97ba-7082-9860-0d3f112f664e","thread_id":"019c895c-9487-77e3-9835-ed506363edda","target":{"type":"pane","value":"%0"},"dry_run":false,"sent":false,"event":"injection_skipped"}
+{"timestamp":"2026-02-23T07:57:47.705Z","type":"all_workers_idle_notification","team":"context-pack-generation-read-o","tmux_target":"6:0","worker":"worker-1","worker_count":4}
