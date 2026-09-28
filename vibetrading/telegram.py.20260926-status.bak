@@ -1,0 +1,198 @@
+from __future__ import annotations
+
+import asyncio
+import logging
+import time
+from typing import Any
+
+import aiohttp
+
+from .bus import NatsJetStreamBus
+from .session_alerts import SESSIONS, session_state
+from .settings import RuntimeSettings, get_settings
+from .status import runtime_status
+from .sqlite_store import RuntimeStore
+
+logger = logging.getLogger(__name__)
+
+
+class TelegramController:
+    """Minimal allowlisted control/observability loop; inactive without credentials."""
+
+    def __init__(self, settings: RuntimeSettings | None = None) -> None:
+        self.settings = settings or get_settings()
+        self.token = self.settings.env.get("TELEGRAM_BOT_TOKEN")
+        self.allowed_id = str(self.settings.telegram_user_id or "")
+        self.base_url = f"https://api.telegram.org/bot{self.token}" if self.token else ""
+        self._offset = 0
+        self._sent_session: set[str] = set()
+
+    @property
+    def enabled(self) -> bool:
+        return bool(self.token and self.allowed_id)
+
+    async def run(self, poll_seconds: int = 25) -> None:
+        if not self.enabled:
+            logger.warning("Telegram controller disabled: TELEGRAM_BOT_TOKEN/TELEGRAM_USER_ID missing")
+            return
+        timeout = aiohttp.ClientTimeout(total=poll_seconds + 10)
+        async with aiohttp.ClientSession(timeout=timeout) as session:
+            bus = NatsJetStreamBus(self.settings)
+            await bus.connect()
+            try:
+                await asyncio.gather(self._poll_loop(session, poll_seconds), self._event_bridge(session, bus), self._session_loop(session))
+            finally:
+                await bus.close()
+
+    async def _poll_loop(self, session: aiohttp.ClientSession, poll_seconds: int) -> None:
+        while True:
+            response = await self._api(session, "getUpdates", {"timeout": poll_seconds, "offset": self._offset})
+            for update in response.get("result", []):
+                self._offset = max(self._offset, int(update.get("update_id", 0)) + 1)
+                await self._handle(session, update)
+
+    async def _event_bridge(self, session: aiohttp.ClientSession, bus: NatsJetStreamBus) -> None:
+        # Never consume the high-volume market-data subjects here.  A single
+        # catch-all consumer can get buried behind ticks and then discard
+        # collector lifecycle events as "old" before Telegram sees them.
+        # Operational subjects have independent durable cursors so a market
+        # burst cannot delay alerts or order/signal notifications.
+        subjects = ("system.>", "signal.>", "order.>", "md.data_gap.>")
+        await asyncio.gather(*(
+            self._event_bridge_subject(session, bus, subject, f"telegram-event-bridge-{index}")
+            for index, subject in enumerate(subjects)
+        ))
+
+    async def _event_bridge_subject(self, session: aiohttp.ClientSession, bus: NatsJetStreamBus, subject: str, durable: str) -> None:
+        async for message in bus.subscribe(subject, durable=durable, batch=100):
+            data = message.data
+            # A durable bridge may be recreated after a long outage.  Do not
+            # replay historical market ticks into Telegram; storage consumers
+            # retain the complete history in Parquet.
+            kind = str(data.get("kind") or data.get("event_type") or "")
+            if message.subject.startswith("md.trade.") or message.subject.startswith("md.order_book.") or message.subject.startswith("md.index_quote."):
+                # Market data is stored in Parquet, not pushed to Telegram.
+                await message.ack()
+                continue
+            elif message.subject.startswith("md.data_gap"):
+                kind = "gap"
+            elif message.subject.startswith("signal."):
+                kind = "signal"
+            elif message.subject.startswith("order."):
+                destination = str(data.get("destination", "")).lower()
+                # Timefolio intents are operationally important even before
+                # submission; real-account notifications exclude blocked and
+                # pre-submit records.
+                if destination == "timefolio":
+                    kind = "timefolio_intent"
+                elif destination == "real" and str(data.get("status", "")).lower() not in {"created", "blocked"}:
+                    kind = "execution"
+                else:
+                    await message.ack()
+                    continue
+            elif message.subject.startswith("system."):
+                kind = str(data.get("kind") or "system")
+                if kind not in {"collector_start", "collector_stop", "collector_error", "storage_error", "compactor_error"}:
+                    await message.ack()
+                    continue
+            else:
+                await message.ack(); continue
+            # Operational events must not be dropped merely because the
+            # market-data bridge was behind. They are isolated now, so a
+            # bounded replay window safely prevents stale deployment-era
+            # errors from being delivered as current incidents.
+            ts_ns = int(data.get("created_ts_ns") or data.get("event_ts_ns") or data.get("ts_ns") or 0)
+            try:
+                max_age_seconds = max(60, int(self.settings.env.get("TELEGRAM_EVENT_MAX_AGE_SECONDS", "300")))
+            except ValueError:
+                max_age_seconds = 300
+            if ts_ns and time.time_ns() - ts_ns > max_age_seconds * 1_000_000_000:
+                await message.ack()
+                continue
+            try:
+                await self._send(session, self.allowed_id, self._format_event(kind, data))
+            except aiohttp.ClientResponseError as exc:
+                # Telegram allows only a small outbound rate.  A throttled
+                # notification is intentionally dropped; the market event is
+                # already durable in NATS/Parquet and should not block acks.
+                if exc.status != 429:
+                    logger.warning("Telegram event push failed subject=%s status=%s", message.subject, exc.status)
+            except Exception:
+                logger.exception("Telegram event push failed subject=%s", message.subject)
+            await message.ack()
+
+    async def _session_loop(self, session: aiohttp.ClientSession) -> None:
+        while True:
+            for group in SESSIONS:
+                active, day = session_state(group)
+                state = "OPEN" if active else "CLOSED"
+                key = f"{group}:{day}:{state}"
+                if key not in self._sent_session:
+                    self._sent_session.add(key)
+                    # Do not emit a wall of CLOSED messages when the bot first
+                    # starts outside market hours; emit OPEN immediately and
+                    # subsequent OPEN/CLOSED transitions exactly once.
+                    prior = f"{group}:{day}:{'CLOSED' if active else 'OPEN'}"
+                    if active or prior in self._sent_session:
+                        await self._send(session, self.allowed_id, f"[MARKET {state}] {group} ({day})")
+            await asyncio.sleep(20)
+
+    @staticmethod
+    def _format_event(kind: str, data: dict[str, Any]) -> str:
+        if kind == "gap":
+            return f"[DATA GAP] provider={data.get('provider')} instrument={data.get('instrument', {}).get('std_symbol', '?')} reason={data.get('reason', '')} seq={data.get('missing_from_sequence')}..{data.get('missing_to_sequence')}"
+        if kind == "signal":
+            return f"[SIGNAL] {data.get('strategy_id')} {data.get('action')} {data.get('instrument', {}).get('std_symbol', '?')}"
+        if kind == "timefolio_intent":
+            return f"[TIMEFOLIO INTENT] job={data.get('job_id')} {data.get('side')} {data.get('instrument', {}).get('std_symbol', '?')} status={data.get('status')}"
+        if kind == "execution":
+            return f"[REAL ORDER] job={data.get('job_id')} {data.get('side')} {data.get('instrument', {}).get('std_symbol', '?')} status={data.get('status')} client={data.get('client_order_id')}"
+        if kind == "collector_start":
+            return f"[COLLECTOR START] provider={data.get('provider')} symbols={data.get('symbols') or 'auto'}"
+        if kind == "collector_stop":
+            suffix = f" reason={data.get('reason')}" if data.get("reason") else ""
+            return f"[COLLECTOR STOP] provider={data.get('provider')} symbols={data.get('symbols') or 'auto'}{suffix}"
+        reason = data.get("error") or data.get("message") or data.get("kind", "")
+        cause = f" cause={data.get('cause')}" if data.get("cause") else ""
+        failures = data.get("consecutive_failures")
+        outage = data.get("outage_seconds")
+        state = f" failures={failures} outage={outage}s" if failures is not None else ""
+        return f"[COLLECTOR ERROR] provider={data.get('provider', '')} reason={reason}{cause}{state}"
+
+    async def _handle(self, session: aiohttp.ClientSession, update: dict[str, Any]) -> None:
+        message = update.get("message") or {}
+        sender = str((message.get("from") or {}).get("id", ""))
+        if sender != self.allowed_id:
+            return
+        text = str(message.get("text") or "").strip().lower()
+        chat_id = message.get("chat", {}).get("id")
+        if text == "/status":
+            await self._send(session, chat_id, str(runtime_status(self.settings)))
+        elif text == "/kill confirm":
+            store = RuntimeStore(self.settings)
+            try:
+                store.set_kill_switch("global", True, "telegram", sender)
+            finally:
+                store.close()
+            await self._send(session, chat_id, "global kill switch active")
+        elif text == "/restart":
+            store = RuntimeStore(self.settings)
+            try:
+                store.set_kill_switch("global", False, "telegram restart", sender)
+            finally:
+                store.close()
+            await self._send(session, chat_id, "kill switch cleared; workers restart independently")
+        elif text in {"/help", "/start"}:
+            await self._send(session, chat_id, "/status, /kill confirm, /restart")
+
+    async def _send(self, session: aiohttp.ClientSession, chat_id: Any, text: str) -> None:
+        await self._api(session, "sendMessage", {"chat_id": chat_id, "text": text[:3900]})
+
+    async def _api(self, session: aiohttp.ClientSession, method: str, params: dict[str, Any]) -> dict[str, Any]:
+        async with session.get(f"{self.base_url}/{method}", params=params) as response:
+            response.raise_for_status()
+            payload = await response.json()
+            if not payload.get("ok"):
+                raise RuntimeError(f"Telegram API failed: {payload}")
+            return payload
+

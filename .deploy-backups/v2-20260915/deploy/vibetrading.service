@@ -1,0 +1,19 @@
+[Unit]
+Description=VibeTrading market-data services
+Requires=docker.service
+After=docker.service network-online.target
+RequiresMountsFor=/srv/vibetrading-data
+ConditionPathIsMountPoint=/srv/vibetrading-data
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/opt/vibetrading
+EnvironmentFile=/etc/vibetrading/compose.env
+ExecStartPre=/opt/vibetrading/deploy/preflight-data-disk.sh
+ExecStart=/usr/bin/docker compose --env-file /etc/vibetrading/compose.env run --rm nats-init
+ExecStart=/usr/bin/docker compose --env-file /etc/vibetrading/compose.env up -d --remove-orphans
+ExecStop=/usr/bin/docker compose --env-file /etc/vibetrading/compose.env stop
+
+[Install]
+WantedBy=multi-user.target

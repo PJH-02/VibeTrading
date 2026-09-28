@@ -1,0 +1,98 @@
+# One instrument policy. Add manually managed stocks/ETFs/tokenized securities
+# here. Expiring and top-N universes are resolved dynamically below.
+instruments:
+  - symbol: "069500"
+    asset_class: etf
+    providers: [kiwoom]
+    underlying: KOSPI200
+  - symbol: "229200"
+    asset_class: etf
+    providers: [kiwoom]
+    underlying: KOSDAQ150
+  # Toss uses an explicit market prefix for US symbols.
+  - symbol: "US:SPY"
+    asset_class: etf
+    providers: [toss]
+    market: US
+    proxy_for: SP500
+  - symbol: "US:QQQ"
+    asset_class: etf
+    providers: [toss]
+    market: US
+    proxy_for: NASDAQ100
+
+  # Add ordinary stocks, ETFs, or Hyperliquid tokenized securities here.
+  - symbol: "005930"
+    asset_class: equity
+    providers: [kiwoom, toss]
+  - symbol: "000660"
+    asset_class: equity
+    providers: [kiwoom, toss]
+  # User-facing aliases are mapped to Hyperliquid's actual HIP-3 perp names.
+  # These are derivatives (not spot security tokens), so funding is available.
+  - symbol: "SKHYNIX-USDC"
+    provider_symbol: "xyz:SKHX"
+    asset_class: future
+    security_kind: stock_derivative
+    underlying: "SKHYNIX"
+    currency: "USDC"
+    exchange: "HYPERLIQUID_XYZ"
+    providers: [hyperliquid]
+  - symbol: "SAMSUNG-USDC"
+    provider_symbol: "xyz:SMSN"
+    asset_class: future
+    security_kind: stock_derivative
+    underlying: "SAMSUNG"
+    currency: "USDC"
+    exchange: "HYPERLIQUID_XYZ"
+    providers: [hyperliquid]
+  - symbol: "SKHY-USDC"
+    provider_symbol: "xyz:SKHY"
+    asset_class: future
+    security_kind: stock_derivative
+    underlying: "SKHYNIX"
+    currency: "USDC"
+    exchange: "HYPERLIQUID_XYZ"
+    providers: [hyperliquid]
+  # Binance TradFi USD-M perpetuals.  No ordinary crypto or SKHYUSDT is
+  # admitted by this explicit allowlist.
+  - symbol: "SAMSUNG-USDT"
+    provider_symbol: "SAMSUNGUSDT"
+    asset_class: future
+    security_kind: stock_derivative
+    underlying: "SAMSUNG"
+    currency: "USDT"
+    exchange: "BINANCE_FUTURES"
+    providers: [binance]
+  - symbol: "SKHYNIX-USDT"
+    provider_symbol: "SKHYNIXUSDT"
+    asset_class: future
+    security_kind: stock_derivative
+    underlying: "SKHYNIX"
+    currency: "USDT"
+    exchange: "BINANCE_FUTURES"
+    providers: [binance]
+  - symbol: "SKHY-USDT"
+    provider_symbol: "SKHYUSDT"
+    asset_class: future
+    security_kind: stock_derivative
+    underlying: "SKHYNIX"
+    currency: "USDT"
+    exchange: "BINANCE_FUTURES"
+    providers: [binance]    
+
+dynamic:
+  kis_index_derivatives:
+    underlyings: [KOSPI200, KOSDAQ150]
+    option_expiries: 2
+    strikes_each_side: 1
+  kis_commodity_futures: [B10, USD]
+  kis_overseas_futures: [NQ]
+  # KIS FHPTJ04030000: market-level futures/options investor flow.  The
+  # endpoint is REST-only and publishes an undated cumulative snapshot, so it
+  # is sampled once per minute and stored with the polling wall clock.
+  kis_participant_flow:
+    enabled: true
+    market_code: K2I
+    market_subcodes: ["0001"]
+    interval_seconds: 60

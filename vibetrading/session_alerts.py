@@ -1,0 +1,29 @@
+from __future__ import annotations
+
+from datetime import datetime, time, timedelta, timezone
+
+KST = timezone(timedelta(hours=9))
+
+# One notification per market group and state transition.  Overnight US hours
+# are keyed to the date on which the session starts (22:30 KST).
+SESSIONS = {
+    "KR_EQUITY_ETF": (time(9, 0), time(15, 30)),
+    "KR_DERIVATIVES": (time(8, 45), time(15, 45)),
+    "US_EQUITY_ETF": (time(22, 30), time(5, 0)),
+    "US_FUTURES": (time(8, 0), time(7, 0)),
+}
+
+
+def session_state(group: str, now: datetime | None = None) -> tuple[bool, str]:
+    now = (now or datetime.now(KST)).astimezone(KST)
+    start, end = SESSIONS[group]
+    if start < end:
+        active = start <= now.time() < end
+        session_day = now.date()
+    else:
+        active = now.time() >= start or now.time() < end
+        session_day = now.date() if now.time() >= start else (now - timedelta(days=1)).date()
+    if session_day.weekday() >= 5:
+        active = False
+    return active, session_day.strftime("%Y-%m-%d")
+
