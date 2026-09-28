@@ -1,0 +1,7 @@
+SHELL=/bin/bash
+VIBETRADING_HOME=/opt/vibetrading
+
+* * * * * cd "$VIBETRADING_HOME" && flock -n /tmp/vibetrading-binance.lock python main.py collector --provider binance >> runtime_data/logs/binance.log 2>&1
+* * * * * cd "$VIBETRADING_HOME" && flock -n /tmp/vibetrading-storage.lock python main.py storage-worker >> runtime_data/logs/storage.log 2>&1
+* * * * * cd "$VIBETRADING_HOME" && flock -n /tmp/vibetrading-compactor.lock python main.py compactor --once >> runtime_data/logs/compactor.log 2>&1
+* * * * * cd "$VIBETRADING_HOME" && flock -n /tmp/vibetrading-status.lock python main.py status >> runtime_data/logs/status.log 2>&1

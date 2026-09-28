@@ -1,0 +1,10 @@
+# Public USDT perpetual feeds only. Start with the Docker crypto profile after
+# capacity validation; no trading credentials are required for collection.
+collectors:
+  - provider: binance-perp
+    symbols: "@crypto"
+  - provider: bitget-perp
+    symbols: "@crypto"
+  - provider: bybit-perp
+    symbols: "@crypto"
+strategies: []

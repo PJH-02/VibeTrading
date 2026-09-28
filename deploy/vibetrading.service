@@ -1,0 +1,23 @@
+[Unit]
+Description=VibeTrading durable market data pipeline
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+RequiresMountsFor=/srv/vibetrading-data
+ConditionPathIsMountPoint=/srv/vibetrading-data
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/opt/vibetrading/current
+EnvironmentFile=/etc/vibetrading/compose.env
+ExecStartPre=/opt/vibetrading/deploy/preflight-data-disk.sh
+ExecStartPre=/usr/bin/docker compose --project-name vibetrading --project-directory /opt/vibetrading/current --env-file /etc/vibetrading/compose.env run --rm nats-init
+ExecStart=/usr/bin/docker compose --project-name vibetrading --project-directory /opt/vibetrading/current --env-file /etc/vibetrading/compose.env up -d --remove-orphans
+ExecStop=/usr/bin/docker compose --project-name vibetrading --project-directory /opt/vibetrading/current --env-file /etc/vibetrading/compose.env stop
+TimeoutStartSec=0
+TimeoutStopSec=120
+
+[Install]
+WantedBy=multi-user.target
+

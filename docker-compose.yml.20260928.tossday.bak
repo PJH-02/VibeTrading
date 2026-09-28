@@ -1,0 +1,92 @@
+services:
+  nats:
+    image: nats:2.10-alpine
+    command: ["-c", "/etc/nats/nats.conf"]
+    ports: ["127.0.0.1:8222:8222"]
+    volumes: ["${VIBETRADING_HOST_NATS_ROOT:?set in compose.env}:/data", "./deploy/nats.conf:/etc/nats/nats.conf:ro"]
+    mem_limit: 512m
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8222/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    logging: &logging
+      driver: local
+      options: {max-size: 10m, max-file: "3"}
+  nats-init:
+    image: vibetrading-app:latest
+    build: .
+    env_file: ["${VIBETRADING_APP_ENV_FILE:-.env}"]
+    command: ["python", "main.py", "nats-init"]
+    environment: {NATS_URL: "nats://nats:4222", VIBETRADING_DATA_ROOT: /data}
+    volumes: ["${VIBETRADING_HOST_DATA_ROOT:?set in compose.env}:/data", "./config:/app/config:ro"]
+    depends_on:
+      nats:
+        condition: service_healthy
+    restart: "no"
+    logging: *logging
+  collectors:
+    image: vibetrading-app:latest
+    env_file: ["${VIBETRADING_APP_ENV_FILE:-.env}"]
+    command: ["python", "main.py", "run", "--config", "/app/config/runtime.yaml", "--role", "collectors"]
+    environment: {NATS_URL: "nats://nats:4222", VIBETRADING_DATA_ROOT: /data, VIBETRADING_LOG_DIR: /tmp/logs}
+    volumes: ["${VIBETRADING_HOST_DATA_ROOT:?set in compose.env}:/data", "./config:/app/config:ro"]
+    depends_on:
+      nats-init:
+        condition: service_completed_successfully
+    mem_limit: 768m
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "main.py", "health-check", "--component", "collectors", "--max-age-seconds", "120"]
+      interval: 30s
+      timeout: 10s
+      retries: 4
+    logging: *logging
+  storage:
+    image: vibetrading-app:latest
+    env_file: ["${VIBETRADING_APP_ENV_FILE:-.env}"]
+    command: ["python", "main.py", "run", "--role", "storage"]
+    environment: {NATS_URL: "nats://nats:4222", VIBETRADING_DATA_ROOT: /data, VIBETRADING_LOG_DIR: /tmp/logs}
+    volumes: ["${VIBETRADING_HOST_DATA_ROOT:?set in compose.env}:/data"]
+    depends_on:
+      nats-init:
+        condition: service_completed_successfully
+    mem_limit: 1024m
+    stop_grace_period: 90s
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "main.py", "health-check", "--component", "storage", "--max-age-seconds", "120"]
+      interval: 30s
+      timeout: 10s
+      retries: 4
+    logging: *logging
+  maintenance:
+    image: vibetrading-app:latest
+    env_file: ["${VIBETRADING_APP_ENV_FILE:-.env}"]
+    command: ["python", "main.py", "run", "--role", "maintenance"]
+    environment: {NATS_URL: "nats://nats:4222", VIBETRADING_DATA_ROOT: /data, VIBETRADING_LOG_DIR: /tmp/logs, ARROW_NUM_THREADS: "1", OMP_NUM_THREADS: "1", ARCHIVE_WORKER_ENABLED: "true", ARCHIVE_ACCESS_KEY_FILE: /run/secrets/archive_access_key, ARCHIVE_SECRET_KEY_FILE: /run/secrets/archive_secret_key}
+    volumes: ["${VIBETRADING_HOST_DATA_ROOT:?set in compose.env}:/data"]
+    secrets: [archive_access_key, archive_secret_key]
+    depends_on: {}
+    mem_limit: 512m
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "main.py", "health-check", "--component", "maintenance", "--max-age-seconds", "420"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+    logging: *logging
+  telegram:
+    image: vibetrading-telegram-stable:20260926
+    env_file: ["${VIBETRADING_APP_ENV_FILE:-.env}"]
+    command: ["python", "main.py", "telegram"]
+    environment: {NATS_URL: "nats://nats:4222", VIBETRADING_DATA_ROOT: /data, VIBETRADING_LOG_DIR: /tmp/logs, ARCHIVE_WORKER_ENABLED: "true"}
+    volumes: ["${VIBETRADING_HOST_DATA_ROOT:?set in compose.env}:/data", "./vibetrading/telegram.py:/app/vibetrading/telegram.py:ro"]
+    depends_on: {}
+    mem_limit: 256m
+    restart: unless-stopped
+    logging: *logging
+secrets:
+  archive_access_key: {file: "${ARCHIVE_ACCESS_KEY_FILE:?set in compose.env}"}
+  archive_secret_key: {file: "${ARCHIVE_SECRET_KEY_FILE:?set in compose.env}"}

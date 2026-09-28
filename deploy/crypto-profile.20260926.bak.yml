@@ -1,0 +1,84 @@
+# Add to the existing server Compose file with -f deploy/crypto-profile.yml.
+# Only these services use the new crypto image; existing market services stay pinned.
+services:
+  crypto-storage:
+    image: vibetrading-crypto:20260926
+    env_file: ["${VIBETRADING_APP_ENV_FILE:-.env}"]
+    command: ["python", "main.py", "run", "--role", "crypto-storage"]
+    environment:
+      NATS_URL: nats://nats:4222
+      VIBETRADING_DATA_ROOT: /data
+      VIBETRADING_STATE_DIR: /data/crypto_state
+      PARQUET_DATA_ROOT: /data/crypto_market_data
+      VIBETRADING_LOG_DIR: /tmp/logs
+      ARCHIVE_WORKER_ENABLED: "true"
+      CRYPTO_NATS_MAX_BYTES: "134217728"
+      STORAGE_MAX_PENDING_BEFORE_FLUSH: "16384"
+      STORAGE_FLUSH_BUFFER_BYTES: "67108864"
+      STORAGE_FLUSH_SECONDS: "60"
+      PARQUET_RSS_FLUSH_BYTES: "419430400"
+      PARQUET_RSS_PAUSE_BYTES: "629145600"
+    volumes: ["${VIBETRADING_HOST_DATA_ROOT:?set in compose.env}:/data"]
+    mem_limit: 768m
+    stop_grace_period: 90s
+    restart: on-failure:3
+    healthcheck:
+      test: ["CMD", "python", "main.py", "health-check", "--component", "crypto-storage", "--max-age-seconds", "120"]
+      interval: 30s
+      timeout: 10s
+      retries: 4
+
+  crypto-maintenance:
+    image: vibetrading-crypto:20260926
+    env_file: ["${VIBETRADING_APP_ENV_FILE:-.env}"]
+    command: ["python", "main.py", "run", "--role", "crypto-maintenance"]
+    environment:
+      NATS_URL: nats://nats:4222
+      VIBETRADING_DATA_ROOT: /data
+      VIBETRADING_STATE_DIR: /data/crypto_state
+      PARQUET_DATA_ROOT: /data/crypto_market_data
+      ARCHIVE_PREFIX: vibetrading/crypto
+      ARCHIVE_LOCAL_RETENTION_SECONDS: "7200"
+      ARCHIVE_UPLOAD_AFTER_SECONDS: "300"
+      ARCHIVE_UPLOAD_BATCH: "128"
+      COMPACTOR_JOBS_PER_CYCLE: "1"
+      VIBETRADING_LOG_DIR: /tmp/logs
+      ARROW_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      ARCHIVE_WORKER_ENABLED: "true"
+      ARCHIVE_ACCESS_KEY_FILE: /run/secrets/archive_access_key
+      ARCHIVE_SECRET_KEY_FILE: /run/secrets/archive_secret_key
+    volumes: ["${VIBETRADING_HOST_DATA_ROOT:?set in compose.env}:/data"]
+    secrets: [archive_access_key, archive_secret_key]
+    mem_limit: 512m
+    restart: on-failure:3
+    healthcheck:
+      test: ["CMD", "python", "main.py", "health-check", "--component", "maintenance", "--max-age-seconds", "420"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+
+  crypto-collectors:
+    image: vibetrading-crypto:20260926
+    env_file: ["${VIBETRADING_APP_ENV_FILE:-.env}"]
+    command: ["python", "main.py", "run", "--config", "/app/config/crypto_runtime.yaml", "--role", "crypto-collectors"]
+    environment:
+      NATS_URL: nats://nats:4222
+      VIBETRADING_DATA_ROOT: /data
+      VIBETRADING_LOG_DIR: /tmp/logs
+      ARCHIVE_WORKER_ENABLED: "true"
+      CRYPTO_NATS_MAX_BYTES: "134217728"
+    volumes:
+      - "${VIBETRADING_HOST_DATA_ROOT:?set in compose.env}:/data"
+      - "./config/crypto_runtime.yaml:/app/config/crypto_runtime.yaml:ro"
+    mem_limit: 512m
+    restart: on-failure:3
+    healthcheck:
+      test: ["CMD", "python", "main.py", "health-check", "--component", "crypto-collectors", "--max-age-seconds", "120"]
+      interval: 30s
+      timeout: 10s
+      retries: 4
+
+secrets:
+  archive_access_key: {file: "${ARCHIVE_ACCESS_KEY_FILE:?set in compose.env}"}
+  archive_secret_key: {file: "${ARCHIVE_SECRET_KEY_FILE:?set in compose.env}"}
