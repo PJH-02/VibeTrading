@@ -1,0 +1,11 @@
+# Long-lived read-only market-data jobs. Credentials are loaded from .env.
+collectors:
+  # One coordinated KIS job prevents independent commodity/option sessions
+  # from racing each other's subscription registrations.
+  - provider: kis
+    symbols: "auto:all"
+  - provider: kiwoom
+    symbols: "@universe"
+  - provider: toss
+    symbols: "@universe"
+strategies: []
