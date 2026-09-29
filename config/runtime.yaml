@@ -4,10 +4,6 @@ collectors:
   # from racing each other's subscription registrations.
   - provider: kis
     symbols: "auto:all"
-  # Separate from KIS WebSockets so a socket reconnect never interrupts the
-  # one-minute, rate-limited investor-flow REST schedule.
-  - provider: kis-flow
-    symbols: "@configured"
   - provider: kiwoom
     symbols: "@universe"
   - provider: toss
