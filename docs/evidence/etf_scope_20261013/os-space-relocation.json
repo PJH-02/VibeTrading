@@ -1,0 +1,8 @@
+{
+  "source": "/opt/vibetrading/experiments/fv-pilot-20261004",
+  "destination": "/srv/vibetrading-capacity/experiments/fv-pilot-20261004",
+  "files": 107,
+  "bytes": 1738344756,
+  "verified_sha256": true,
+  "completed_ns": 1791881275288893868
+}

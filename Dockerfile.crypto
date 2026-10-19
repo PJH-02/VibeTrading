@@ -1,0 +1,17 @@
+ARG VIBETRADING_BASE_IMAGE=vibetrading-app:latest
+FROM ${VIBETRADING_BASE_IMAGE}
+
+ARG VIBETRADING_BUILD_REVISION=unknown
+ARG VIBETRADING_CONFIG_HASH=unknown
+LABEL org.opencontainers.image.revision=${VIBETRADING_BUILD_REVISION} \
+      org.vibetrading.config-hash=${VIBETRADING_CONFIG_HASH}
+ENV VIBETRADING_BUILD_REVISION=${VIBETRADING_BUILD_REVISION} \
+    VIBETRADING_BUILD_CONFIG_HASH=${VIBETRADING_CONFIG_HASH}
+
+USER root
+RUN pip install --no-cache-dir exchange-calendars==4.13.2
+COPY --chown=10001:10001 vibetrading /app/vibetrading
+COPY --chown=10001:10001 config /app/config
+COPY --chown=10001:10001 strategies /app/strategies
+COPY --chown=10001:10001 main.py /app/main.py
+USER vibetrading

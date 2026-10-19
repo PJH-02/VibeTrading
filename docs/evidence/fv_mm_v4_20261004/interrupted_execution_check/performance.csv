@@ -1,0 +1,9 @@
+﻿venue_strategy,asset,submitted_orders,fills,full_round_trips,fees_usdt,funding_usdt,net_pnl_usdt,observed_max_drawdown_usdt,end_signed_inventory
+bybit:S1,BTC,0,0,0,0.0,0,0.0,0.0,0.0
+bybit:S2,ETH,0,0,0,0.0,0,0.0,0.0,0.0
+bybit:S3,SOL,0,0,0,0.0,0,0.0,0.0,0.0
+bybit:S4,XRP,0,0,0,0.0,0,0.0,0.0,0.0
+grvt:S1,BTC,0,0,0,0.0,0,0.0,0.0,0.0
+grvt:S2,ETH,4,2,1,0.066502,0,0.11389799999999167,0.09689899999999524,0.0
+grvt:S3,SOL,0,0,0,0.0,0,0.0,0.0,0.0
+grvt:S4,XRP,0,0,0,0.0,0,0.0,0.0,0.0

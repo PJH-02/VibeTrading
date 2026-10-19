@@ -1,0 +1,1265 @@
+{
+  "utc": "2026-10-02T06:18:25.797970+00:00",
+  "monotonic": 2501693.894470004,
+  "containers": {
+    "nats": {
+      "status": "running",
+      "health": "healthy",
+      "pid": 1397129,
+      "restarts": 0,
+      "image": "sha256:b83efabe3e7def1e0a4a31ec6e078999bb17c80363f881df35edc70fcb6bb927",
+      "io": {
+        "253:0": {
+          "rbytes": 4096,
+          "wbytes": 0,
+          "rios": 1,
+          "wios": 0,
+          "dbytes": 0,
+          "dios": 0
+        },
+        "253:16": {
+          "rbytes": 136372224,
+          "wbytes": 2983034880,
+          "rios": 734,
+          "wios": 23471,
+          "dbytes": 0,
+          "dios": 0
+        }
+      },
+      "mounts": {
+        "/data": "/srv/vibetrading-data/nats",
+        "/etc/nats/nats.conf": "/opt/vibetrading/releases/crypto-relief-final-20261002/deploy/nats.conf"
+      },
+      "oom_kill": "0",
+      "memory_bytes": 410062848
+    },
+    "storage": {
+      "status": "running",
+      "health": "healthy",
+      "pid": 1405895,
+      "restarts": 0,
+      "image": "sha256:c8689b8f46e9e79cf8c43c4460f5465dc724095b0c5223d2554eedb682f011f2",
+      "io": {
+        "253:16": {
+          "rbytes": 63602688,
+          "wbytes": 172015616,
+          "rios": 15396,
+          "wios": 19036,
+          "dbytes": 0,
+          "dios": 0
+        }
+      },
+      "mounts": {
+        "/data": "/srv/vibetrading-data/runtime_data"
+      },
+      "oom_kill": "0",
+      "memory_bytes": 333791232
+    },
+    "crypto-storage": {
+      "status": "running",
+      "health": "healthy",
+      "pid": 1397276,
+      "restarts": 0,
+      "image": "sha256:a0832388c6645b63c2a551001434671c809000e282da85a09031a24142fdcab8",
+      "io": {
+        "253:0": {
+          "rbytes": 710021120,
+          "wbytes": 26304512,
+          "rios": 20727,
+          "wios": 1730,
+          "dbytes": 0,
+          "dios": 0
+        },
+        "253:16": {
+          "rbytes": 5255168,
+          "wbytes": 123236352,
+          "rios": 889,
+          "wios": 368,
+          "dbytes": 0,
+          "dios": 0
+        }
+      },
+      "mounts": {
+        "/data": "/srv/vibetrading-data/runtime_data",
+        "/data/crypto_state": "/srv/vibetrading-crypto-state"
+      },
+      "oom_kill": "0",
+      "memory_bytes": 899375104
+    },
+    "maintenance": {
+      "status": "running",
+      "health": "healthy",
+      "pid": 1397541,
+      "restarts": 0,
+      "image": "sha256:c8689b8f46e9e79cf8c43c4460f5465dc724095b0c5223d2554eedb682f011f2",
+      "io": {
+        "253:16": {
+          "rbytes": 389120,
+          "wbytes": 4694016,
+          "rios": 81,
+          "wios": 1146,
+          "dbytes": 0,
+          "dios": 0
+        }
+      },
+      "mounts": {
+        "/data": "/srv/vibetrading-data/runtime_data",
+        "/run/secrets/archive_access_key": "/etc/vibetrading/secrets/archive_access_key",
+        "/run/secrets/archive_secret_key": "/etc/vibetrading/secrets/archive_secret_key"
+      },
+      "oom_kill": "0",
+      "memory_bytes": 37781504
+    },
+    "crypto-maintenance": {
+      "status": "running",
+      "health": "healthy",
+      "pid": 1398059,
+      "restarts": 0,
+      "image": "sha256:a0832388c6645b63c2a551001434671c809000e282da85a09031a24142fdcab8",
+      "io": {
+        "253:16": {
+          "rbytes": 143245312,
+          "wbytes": 11071488,
+          "rios": 1157,
+          "wios": 2703,
+          "dbytes": 0,
+          "dios": 0
+        },
+        "253:0": {
+          "rbytes": 379166720,
+          "wbytes": 1294200832,
+          "rios": 23848,
+          "wios": 34361,
+          "dbytes": 0,
+          "dios": 0
+        }
+      },
+      "mounts": {
+        "/data": "/srv/vibetrading-data/runtime_data",
+        "/data/crypto_state": "/srv/vibetrading-crypto-state",
+        "/run/secrets/archive_access_key": "/etc/vibetrading/secrets/archive_access_key",
+        "/run/secrets/archive_secret_key": "/etc/vibetrading/secrets/archive_secret_key"
+      },
+      "oom_kill": "0",
+      "memory_bytes": 443150336
+    },
+    "crypto-collector-binance": {
+      "status": "running",
+      "health": "healthy",
+      "pid": 1397815,
+      "restarts": 0,
+      "image": "sha256:a0832388c6645b63c2a551001434671c809000e282da85a09031a24142fdcab8",
+      "io": {
+        "253:16": {
+          "rbytes": 4096,
+          "wbytes": 765952,
+          "rios": 1,
+          "wios": 187,
+          "dbytes": 0,
+          "dios": 0
+        }
+      },
+      "mounts": {
+        "/data": "/srv/vibetrading-data/runtime_data",
+        "/data/crypto_state": "/srv/vibetrading-crypto-state"
+      },
+      "oom_kill": "0",
+      "memory_bytes": 61288448
+    },
+    "crypto-collector-bitget": {
+      "status": "running",
+      "health": "healthy",
+      "pid": 1397896,
+      "restarts": 0,
+      "image": "sha256:a0832388c6645b63c2a551001434671c809000e282da85a09031a24142fdcab8",
+      "io": {
+        "253:16": {
+          "rbytes": 344064,
+          "wbytes": 765952,
+          "rios": 23,
+          "wios": 187,
+          "dbytes": 0,
+          "dios": 0
+        }
+      },
+      "mounts": {
+        "/data": "/srv/vibetrading-data/runtime_data",
+        "/data/crypto_state": "/srv/vibetrading-crypto-state"
+      },
+      "oom_kill": "0",
+      "memory_bytes": 60502016
+    },
+    "crypto-collector-bybit": {
+      "status": "running",
+      "health": "healthy",
+      "pid": 1397978,
+      "restarts": 0,
+      "image": "sha256:a0832388c6645b63c2a551001434671c809000e282da85a09031a24142fdcab8",
+      "io": {
+        "253:16": {
+          "rbytes": 0,
+          "wbytes": 765952,
+          "rios": 0,
+          "wios": 187,
+          "dbytes": 0,
+          "dios": 0
+        }
+      },
+      "mounts": {
+        "/data": "/srv/vibetrading-data/runtime_data",
+        "/data/crypto_state": "/srv/vibetrading-crypto-state"
+      },
+      "oom_kill": "0",
+      "memory_bytes": 71028736
+    },
+    "collectors": {
+      "status": "running",
+      "health": "unhealthy",
+      "pid": 1397621,
+      "restarts": 0,
+      "image": "sha256:c8689b8f46e9e79cf8c43c4460f5465dc724095b0c5223d2554eedb682f011f2",
+      "io": {
+        "253:16": {
+          "rbytes": 12333056,
+          "wbytes": 2641920,
+          "rios": 555,
+          "wios": 645,
+          "dbytes": 0,
+          "dios": 0
+        }
+      },
+      "mounts": {
+        "/data": "/srv/vibetrading-data/runtime_data",
+        "/app/config": "/root/vibetrading/config"
+      },
+      "oom_kill": "0",
+      "memory_bytes": 123138048
+    },
+    "telegram": {
+      "status": "running",
+      "health": null,
+      "pid": 1397701,
+      "restarts": 0,
+      "image": "sha256:0832b867807372ca0b16851527ddd8753211c1bb879b3ebaa01681704921005a",
+      "io": {
+        "253:0": {
+          "rbytes": 24576,
+          "wbytes": 0,
+          "rios": 2,
+          "wios": 0,
+          "dbytes": 0,
+          "dios": 0
+        },
+        "253:16": {
+          "rbytes": 1015808,
+          "wbytes": 0,
+          "rios": 78,
+          "wios": 0,
+          "dbytes": 0,
+          "dios": 0
+        }
+      },
+      "mounts": {
+        "/data": "/srv/vibetrading-data/runtime_data",
+        "/app/vibetrading/health.py": "/root/vibetrading/vibetrading/health.py",
+        "/app/vibetrading/telegram.py": "/root/vibetrading/vibetrading/telegram.py"
+      },
+      "oom_kill": "0",
+      "memory_bytes": 39849984
+    }
+  },
+  "health": {
+    "state/collectors-bybit-perp": {
+      "component": "collectors-bybit-perp",
+      "state": "running",
+      "ts_ns": 1790921900347638204,
+      "build": {
+        "build_revision": "r2-split-db-938b277a55e1e480",
+        "build_config_hash": "91add7baac988358bfdcceeb200e47f768dd474fb02319135bb2141ce283bd51",
+        "image_id": "sha256:a0832388c6645b63c2a551001434671c809000e282da85a09031a24142fdcab8",
+        "runtime_config_hash": "02dabb590ccd365454143fc859f476a848a0d5ca24511ab6a5b454fc5d89cbdb"
+      },
+      "provider": "bybit-perp",
+      "phase": "publishing",
+      "last_event_ts_ns": 1790921900326865121,
+      "published_count": 212512,
+      "published_bytes": 364874513,
+      "symbol_last_seen_ns": {
+        "BTCUSDT": 1790921900064398549,
+        "SOLUSDT": 1790921900050035196,
+        "ETHUSDT": 1790921900326865121
+      },
+      "event_age_seconds": 0.2,
+      "stream_probe": {
+        "status": "fresh",
+        "stream": "CRYPTO_DATA",
+        "bytes": 15437625,
+        "max_bytes": 134217728,
+        "ratio": 0.11501926928758621,
+        "generation": "2026-09-26 10:23:10.911121+00:00",
+        "observed_age_seconds": 0.06737250415608287,
+        "last_success_age_seconds": 0.06737250415608287,
+        "error": null,
+        "config_mismatch": false,
+        "consecutive_failures": 0
+      },
+      "disk": {
+        "used_ratio": 0.7054,
+        "free_bytes": 6174298112,
+        "reserve_bytes": 4294967296,
+        "resume_margin_bytes": 536870912,
+        "warning": true,
+        "upload_priority": true,
+        "direct_upload": false,
+        "fail_closed": false,
+        "probe_error": null,
+        "state_free_bytes": 1893707776,
+        "state_reserve_bytes": 1073741824,
+        "state_resume_margin_bytes": 268435456
+      },
+      "publisher": {
+        "accepted": 212538,
+        "published": 212512,
+        "failed": 0,
+        "pending": 26,
+        "queued_bytes": 40286
+      },
+      "age_seconds": 5.29
+    },
+    "state/storage": {
+      "component": "storage",
+      "state": "running",
+      "ts_ns": 1790921863879282928,
+      "build": {
+        "build_revision": "r1-8299908cbf057b73ebf6",
+        "build_config_hash": "e1d4f8a5943ebfd48da5fc425ffe4998a938a22bd34956f9b7812053bb9a78a2",
+        "image_id": "sha256:c8689b8f46e9e79cf8c43c4460f5465dc724095b0c5223d2554eedb682f011f2",
+        "runtime_config_hash": "fb981b3065c43eef2a8e833e33892de185a0a4464930de37ac2be6fa30dc2d64"
+      },
+      "pending": 635,
+      "buffer_bytes": 543777,
+      "pending_alias_handles": 0,
+      "pending_alias_bytes": 0,
+      "rss_bytes": 306032640,
+      "cgroup_used_bytes": 256438272,
+      "cgroup_limit_bytes": 1073741824,
+      "sqlite_writer_pragmas": {
+        "journal_mode": "wal",
+        "synchronous": 2,
+        "cache_size": -131072,
+        "wal_autocheckpoint_pages": 1000,
+        "page_size": 4096
+      },
+      "disk": {
+        "used_ratio": 0.7051,
+        "free_bytes": 6180630528,
+        "reserve_bytes": 4294967296,
+        "resume_margin_bytes": 536870912,
+        "warning": true,
+        "upload_priority": true,
+        "direct_upload": false,
+        "fail_closed": false,
+        "probe_error": null
+      },
+      "messages": 11398,
+      "acked": 10763,
+      "deduplicated": 122,
+      "flushes": 32,
+      "files": 189,
+      "last_commit_ms": 0,
+      "last_ack_ms": 4,
+      "age_seconds": 41.76
+    },
+    "state/collectors-binance-perp": {
+      "component": "collectors-binance-perp",
+      "state": "running",
+      "ts_ns": 1790921900346615354,
+      "build": {
+        "build_revision": "r2-split-db-938b277a55e1e480",
+        "build_config_hash": "91add7baac988358bfdcceeb200e47f768dd474fb02319135bb2141ce283bd51",
+        "image_id": "sha256:a0832388c6645b63c2a551001434671c809000e282da85a09031a24142fdcab8",
+        "runtime_config_hash": "02dabb590ccd365454143fc859f476a848a0d5ca24511ab6a5b454fc5d89cbdb"
+      },
+      "provider": "binance-perp",
+      "phase": "publishing",
+      "last_event_ts_ns": 1790921900048127745,
+      "published_count": 94129,
+      "published_bytes": 419043874,
+      "symbol_last_seen_ns": {
+        "ETHUSDT": 1790921900048127745,
+        "BTCUSDT": 1790921900042448516,
+        "SOLUSDT": 1790921900044337188
+      },
+      "event_age_seconds": 0.2,
+      "stream_probe": {
+        "status": "fresh",
+        "stream": "CRYPTO_DATA",
+        "bytes": 15437625,
+        "max_bytes": 134217728,
+        "ratio": 0.11501926928758621,
+        "generation": "2026-09-26 10:23:10.911121+00:00",
+        "observed_age_seconds": 0.11573218507692218,
+        "last_success_age_seconds": 0.11573218507692218,
+        "error": null,
+        "config_mismatch": false,
+        "consecutive_failures": 0
+      },
+      "disk": {
+        "used_ratio": 0.7054,
+        "free_bytes": 6174302208,
+        "reserve_bytes": 4294967296,
+        "resume_margin_bytes": 536870912,
+        "warning": true,
+        "upload_priority": true,
+        "direct_upload": false,
+        "fail_closed": false,
+        "probe_error": null,
+        "state_free_bytes": 1893707776,
+        "state_reserve_bytes": 1073741824,
+        "state_resume_margin_bytes": 268435456
+      },
+      "publisher": {
+        "accepted": 94144,
+        "published": 94129,
+        "failed": 0,
+        "pending": 15,
+        "queued_bytes": 44128
+      },
+      "age_seconds": 5.29
+    },
+    "state/maintenance": {
+      "component": "maintenance",
+      "state": "running",
+      "ts_ns": 1790921895321678472,
+      "build": {
+        "build_revision": "r1-8299908cbf057b73ebf6",
+        "build_config_hash": "e1d4f8a5943ebfd48da5fc425ffe4998a938a22bd34956f9b7812053bb9a78a2",
+        "image_id": "sha256:c8689b8f46e9e79cf8c43c4460f5465dc724095b0c5223d2554eedb682f011f2",
+        "runtime_config_hash": "c732544dc944fd21fc951f5ef8c7063f82fcd56d7a1957dfd8d5946186454165"
+      },
+      "stage": "idle",
+      "archive": {
+        "ran": false,
+        "reason": "storage_or_io_busy",
+        "heavy_maintenance": {
+          "storage_age_seconds": 12.3,
+          "io_full_avg10": 41.38,
+          "reason": "storage_or_io_busy"
+        }
+      },
+      "age_seconds": 10.31
+    },
+    "state/collectors-bitget-perp": {
+      "component": "collectors-bitget-perp",
+      "state": "running",
+      "ts_ns": 1790921900348812030,
+      "build": {
+        "build_revision": "r2-split-db-938b277a55e1e480",
+        "build_config_hash": "91add7baac988358bfdcceeb200e47f768dd474fb02319135bb2141ce283bd51",
+        "image_id": "sha256:a0832388c6645b63c2a551001434671c809000e282da85a09031a24142fdcab8",
+        "runtime_config_hash": "02dabb590ccd365454143fc859f476a848a0d5ca24511ab6a5b454fc5d89cbdb"
+      },
+      "provider": "bitget-perp",
+      "phase": "publishing",
+      "last_event_ts_ns": 1790921900021146396,
+      "published_count": 118545,
+      "published_bytes": 348755917,
+      "symbol_last_seen_ns": {
+        "SOLUSDT": 1790921900020398160,
+        "BTCUSDT": 1790921900021146396,
+        "ETHUSDT": 1790921900020058198
+      },
+      "event_age_seconds": 0.2,
+      "stream_probe": {
+        "status": "fresh",
+        "stream": "CRYPTO_DATA",
+        "bytes": 15437625,
+        "max_bytes": 134217728,
+        "ratio": 0.11501926928758621,
+        "generation": "2026-09-26 10:23:10.911121+00:00",
+        "observed_age_seconds": 0.08655959879979491,
+        "last_success_age_seconds": 0.08655959879979491,
+        "error": null,
+        "config_mismatch": false,
+        "consecutive_failures": 0
+      },
+      "disk": {
+        "used_ratio": 0.7054,
+        "free_bytes": 6174289920,
+        "reserve_bytes": 4294967296,
+        "resume_margin_bytes": 536870912,
+        "warning": true,
+        "upload_priority": true,
+        "direct_upload": false,
+        "fail_closed": false,
+        "probe_error": null,
+        "state_free_bytes": 1893707776,
+        "state_reserve_bytes": 1073741824,
+        "state_resume_margin_bytes": 268435456
+      },
+      "publisher": {
+        "accepted": 118571,
+        "published": 118545,
+        "failed": 0,
+        "pending": 26,
+        "queued_bytes": 53352
+      },
+      "age_seconds": 5.29
+    },
+    "crypto_state/crypto-storage": {
+      "component": "crypto-storage",
+      "state": "running",
+      "ts_ns": 1790921898277656816,
+      "build": {
+        "build_revision": "r2-split-db-938b277a55e1e480",
+        "build_config_hash": "91add7baac988358bfdcceeb200e47f768dd474fb02319135bb2141ce283bd51",
+        "image_id": "sha256:a0832388c6645b63c2a551001434671c809000e282da85a09031a24142fdcab8",
+        "runtime_config_hash": "76f0d80dbcafca76960342d9d42507c7c1af4dac022938e8046428bcc7ebac0d"
+      },
+      "ready": true,
+      "pending": 5892,
+      "buffer_bytes": 14092611,
+      "pending_alias_handles": 0,
+      "pending_alias_bytes": 0,
+      "rss_bytes": 571076608,
+      "cgroup_used_bytes": 536084480,
+      "cgroup_limit_bytes": 1073741824,
+      "sqlite_writer_pragmas": {
+        "journal_mode": "wal",
+        "synchronous": 2,
+        "cache_size": -131072,
+        "wal_autocheckpoint_pages": 1000,
+        "page_size": 4096,
+        "event_index_format": "immutable-runs-v1"
+      },
+      "event_index": {
+        "enabled": true,
+        "validated_entries": 11296327,
+        "validated_through_run": 5318,
+        "global_filter_bytes": 33554432,
+        "cache_rebuild_running": false,
+        "cache_rebuild_failed": false
+      },
+      "disk": {
+        "used_ratio": 0.7053,
+        "free_bytes": 6176075776,
+        "reserve_bytes": 4294967296,
+        "resume_margin_bytes": 536870912,
+        "warning": true,
+        "upload_priority": true,
+        "direct_upload": false,
+        "fail_closed": false,
+        "probe_error": null,
+        "state_free_bytes": 1893707776,
+        "state_reserve_bytes": 1073741824,
+        "state_resume_margin_bytes": 268435456
+      },
+      "messages": 424671,
+      "acked": 418779,
+      "deduplicated": 0,
+      "flushes": 168,
+      "files": 365,
+      "last_commit_ms": 0,
+      "last_ack_ms": 19,
+      "age_seconds": 7.36
+    },
+    "crypto_state/maintenance": {
+      "component": "maintenance",
+      "state": "running",
+      "ts_ns": 1790921901266841289,
+      "build": {
+        "build_revision": "r2-split-db-938b277a55e1e480",
+        "build_config_hash": "91add7baac988358bfdcceeb200e47f768dd474fb02319135bb2141ce283bd51",
+        "image_id": "sha256:a0832388c6645b63c2a551001434671c809000e282da85a09031a24142fdcab8",
+        "runtime_config_hash": "b5d54234493477af79d6fbaa3a51f241e88e90cc21717e8f54bb2192b0e4f4c2"
+      },
+      "stage": "idle",
+      "archive": {
+        "ran": true,
+        "uploaded": 2,
+        "upload_candidates": 2,
+        "reclaimed": {
+          "files": 2,
+          "bytes": 596563
+        },
+        "reclaim_batch_full": false,
+        "pruned_deliveries": 8192,
+        "delivery_history_prune_enabled": true,
+        "delivery_prune_reason": "complete",
+        "ledger": {
+          "measured": false,
+          "reason": "not_sampled_in_maintenance"
+        },
+        "phase_seconds": {
+          "start": 0.0,
+          "reclaim_before_upload": 0.037,
+          "wal_checkpoint": 0.0,
+          "upload_candidates": 0.0,
+          "upload": 0.638,
+          "crypto_recovery_archive": 0.369,
+          "backup": 0.0,
+          "reclaim_after_upload": 0.191,
+          "orphan_cleanup": 0.0,
+          "delivery_prune": 0.047,
+          "crypto_event_run_retirement": 0.158
+        },
+        "disk": {
+          "used_ratio": 0.7054,
+          "free_bytes": 6174523392,
+          "reserve_bytes": 4294967296,
+          "resume_margin_bytes": 536870912,
+          "warning": true,
+          "upload_priority": true,
+          "direct_upload": false,
+          "fail_closed": false,
+          "probe_error": null,
+          "state_free_bytes": 1893707776,
+          "state_reserve_bytes": 1073741824,
+          "state_resume_margin_bytes": 268435456
+        },
+        "wal_checkpoint": {
+          "ran": false,
+          "reason": "crypto_autocheckpoint_enabled"
+        },
+        "recovery_blocks": {
+          "candidates": 2,
+          "uploaded": 2,
+          "batch_limit": 8,
+          "scan_progressed": false
+        },
+        "sqlite_backup": {
+          "reason": "bulk_io_busy",
+          "io_full_avg10": 47.96,
+          "max_io_pressure": 5.0,
+          "ran": false
+        },
+        "orphan_cleanup": {
+          "reason": "bulk_io_busy",
+          "io_full_avg10": 47.96,
+          "max_io_pressure": 5.0,
+          "files": 0,
+          "bytes": 0,
+          "ran": false
+        },
+        "event_run_retirement": {
+          "retired_runs": 3,
+          "retired_entries": 6900,
+          "candidate_count": 3,
+          "limit": 8
+        },
+        "heavy_maintenance": {
+          "reason": "quiet"
+        },
+        "cycle_seconds": 1.442
+      },
+      "age_seconds": 4.37
+    }
+  },
+  "jsz": {
+    "memory": 0,
+    "storage": 270444937,
+    "reserved_memory": 0,
+    "reserved_storage": 1275068416,
+    "accounts": 1,
+    "ha_assets": 0,
+    "api": {
+      "total": 2953,
+      "errors": 0
+    },
+    "server_id": "NDDQAXCH43PAXOY4XKLKTRMO4AYMSQGJKWONKF6DWLJX7LRXW7BYGMLB",
+    "now": "2026-10-02T06:18:25.664093055Z",
+    "config": {
+      "max_memory": 134217728,
+      "max_storage": 1342177280,
+      "store_dir": "/data/jetstream",
+      "sync_interval": 1000000000,
+      "compress_ok": true
+    },
+    "streams": 3,
+    "consumers": 6,
+    "messages": 132354,
+    "bytes": 270466772,
+    "account_details": [
+      {
+        "name": "$G",
+        "id": "$G",
+        "memory": 0,
+        "storage": 270466772,
+        "reserved_memory": 18446744073709551615,
+        "reserved_storage": 18446744073709551615,
+        "accounts": 0,
+        "ha_assets": 0,
+        "api": {
+          "total": 2953,
+          "errors": 0
+        },
+        "stream_detail": [
+          {
+            "name": "CRYPTO_DATA",
+            "created": "2026-09-26T10:23:10.911121827Z",
+            "cluster": {
+              "leader": "NDDQAXCH43PAXOY4XKLKTRMO4AYMSQGJKWONKF6DWLJX7LRXW7BYGMLB"
+            },
+            "config": {
+              "name": "CRYPTO_DATA",
+              "subjects": [
+                "crypto.trade.>",
+                "crypto.order_book.>",
+                "crypto.funding_rate.>",
+                "crypto.open_interest.>"
+              ],
+              "retention": "workqueue",
+              "max_consumers": -1,
+              "max_msgs": -1,
+              "max_bytes": 134217728,
+              "max_age": 0,
+              "max_msgs_per_subject": -1,
+              "max_msg_size": -1,
+              "discard": "new",
+              "storage": "file",
+              "num_replicas": 1,
+              "duplicate_window": 120000000000,
+              "compression": "none",
+              "allow_direct": false,
+              "mirror_direct": false,
+              "sealed": false,
+              "deny_delete": false,
+              "deny_purge": false,
+              "allow_rollup_hdrs": false,
+              "consumer_limits": {}
+            },
+            "state": {
+              "messages": 7675,
+              "bytes": 18738713,
+              "first_seq": 27195285,
+              "first_ts": "2026-10-02T06:17:31.396769439Z",
+              "last_seq": 27211934,
+              "last_ts": "2026-10-02T06:18:25.776053201Z",
+              "num_subjects": 33,
+              "num_deleted": 8975,
+              "consumer_count": 1
+            },
+            "consumer_detail": [
+              {
+                "stream_name": "CRYPTO_DATA",
+                "name": "crypto-parquet-storage",
+                "created": "2026-09-26T10:23:10.918695863Z",
+                "config": {
+                  "durable_name": "crypto-parquet-storage",
+                  "deliver_policy": "all",
+                  "ack_policy": "explicit",
+                  "ack_wait": 1200000000000,
+                  "max_deliver": -1,
+                  "filter_subject": "crypto.>",
+                  "replay_policy": "instant",
+                  "max_waiting": 512,
+                  "max_ack_pending": 65536,
+                  "num_replicas": 0
+                },
+                "delivered": {
+                  "consumer_seq": 27228094,
+                  "stream_seq": 27211940,
+                  "last_active": "2026-10-02T06:18:25.777220478Z"
+                },
+                "ack_floor": {
+                  "consumer_seq": 27211438,
+                  "stream_seq": 27195284,
+                  "last_active": "2026-10-02T06:18:08.431905388Z"
+                },
+                "num_ack_pending": 7681,
+                "num_redelivered": 0,
+                "num_waiting": 0,
+                "num_pending": 0,
+                "ts": "2026-10-02T06:18:25.7772287Z"
+              }
+            ]
+          },
+          {
+            "name": "MARKET_DATA",
+            "created": "2026-09-25T05:16:08.990402386Z",
+            "cluster": {
+              "leader": "NDDQAXCH43PAXOY4XKLKTRMO4AYMSQGJKWONKF6DWLJX7LRXW7BYGMLB"
+            },
+            "config": {
+              "name": "MARKET_DATA",
+              "subjects": [
+                "md.trade.>",
+                "md.order_book.>",
+                "md.bar_1m.>",
+                "md.funding_rate.>",
+                "md.open_interest.>",
+                "md.participant_flow.>",
+                "md.index_quote.>"
+              ],
+              "retention": "workqueue",
+              "max_consumers": -1,
+              "max_msgs": -1,
+              "max_bytes": 1073741824,
+              "max_age": 0,
+              "max_msgs_per_subject": -1,
+              "max_msg_size": -1,
+              "discard": "new",
+              "storage": "file",
+              "num_replicas": 1,
+              "duplicate_window": 120000000000,
+              "compression": "none",
+              "allow_direct": false,
+              "mirror_direct": false,
+              "sealed": false,
+              "deny_delete": false,
+              "deny_purge": false,
+              "allow_rollup_hdrs": false,
+              "consumer_limits": {}
+            },
+            "state": {
+              "messages": 122963,
+              "bytes": 251208503,
+              "first_seq": 19080867,
+              "first_ts": "2026-10-02T05:20:16.880443749Z",
+              "last_seq": 19215870,
+              "last_ts": "2026-10-02T06:18:25.748993054Z",
+              "num_subjects": 67,
+              "num_deleted": 12041,
+              "consumer_count": 1
+            },
+            "consumer_detail": [
+              {
+                "stream_name": "MARKET_DATA",
+                "name": "parquet-storage",
+                "created": "2026-09-15T01:15:05.936797311Z",
+                "config": {
+                  "durable_name": "parquet-storage",
+                  "deliver_policy": "all",
+                  "ack_policy": "explicit",
+                  "ack_wait": 1200000000000,
+                  "max_deliver": -1,
+                  "filter_subject": "md.>",
+                  "replay_policy": "instant",
+                  "max_waiting": 512,
+                  "max_ack_pending": 65536,
+                  "num_replicas": 0
+                },
+                "delivered": {
+                  "consumer_seq": 16179186,
+                  "stream_seq": 19093666,
+                  "last_active": "2026-10-02T06:18:00.722955383Z"
+                },
+                "ack_floor": {
+                  "consumer_seq": 16166386,
+                  "stream_seq": 19080866,
+                  "last_active": "2026-10-02T06:18:02.26900795Z"
+                },
+                "num_ack_pending": 759,
+                "num_redelivered": 0,
+                "num_waiting": 0,
+                "num_pending": 122204,
+                "ts": "2026-10-02T06:18:25.777231745Z"
+              }
+            ]
+          },
+          {
+            "name": "OPERATIONS",
+            "created": "2026-09-25T05:16:08.99256433Z",
+            "cluster": {
+              "leader": "NDDQAXCH43PAXOY4XKLKTRMO4AYMSQGJKWONKF6DWLJX7LRXW7BYGMLB"
+            },
+            "config": {
+              "name": "OPERATIONS",
+              "subjects": [
+                "md.data_gap.>",
+                "crypto.data_gap.>",
+                "signal.>",
+                "order.>",
+                "system.>"
+              ],
+              "retention": "limits",
+              "max_consumers": -1,
+              "max_msgs": -1,
+              "max_bytes": 67108864,
+              "max_age": 0,
+              "max_msgs_per_subject": -1,
+              "max_msg_size": -1,
+              "discard": "old",
+              "storage": "file",
+              "num_replicas": 1,
+              "duplicate_window": 120000000000,
+              "compression": "none",
+              "allow_direct": false,
+              "mirror_direct": false,
+              "sealed": false,
+              "deny_delete": false,
+              "deny_purge": false,
+              "allow_rollup_hdrs": false,
+              "consumer_limits": {}
+            },
+            "state": {
+              "messages": 1719,
+              "bytes": 526448,
+              "first_seq": 1,
+              "first_ts": "2026-09-08T05:22:00.981120765Z",
+              "last_seq": 13018,
+              "last_ts": "2026-10-02T05:56:34.356426626Z",
+              "num_subjects": 16,
+              "num_deleted": 11299,
+              "consumer_count": 4
+            },
+            "consumer_detail": [
+              {
+                "stream_name": "OPERATIONS",
+                "name": "telegram-event-bridge-0",
+                "created": "2026-09-08T05:23:54.517060419Z",
+                "config": {
+                  "durable_name": "telegram-event-bridge-0",
+                  "name": "telegram-event-bridge-0",
+                  "deliver_policy": "all",
+                  "ack_policy": "explicit",
+                  "ack_wait": 30000000000,
+                  "max_deliver": -1,
+                  "filter_subject": "system.>",
+                  "replay_policy": "instant",
+                  "max_waiting": 512,
+                  "max_ack_pending": 1000,
+                  "num_replicas": 0
+                },
+                "delivered": {
+                  "consumer_seq": 1552,
+                  "stream_seq": 13018,
+                  "last_active": "2026-10-02T05:56:34.356459926Z"
+                },
+                "ack_floor": {
+                  "consumer_seq": 1552,
+                  "stream_seq": 13018,
+                  "last_active": "2026-10-02T05:56:36.161045762Z"
+                },
+                "num_ack_pending": 0,
+                "num_redelivered": 0,
+                "num_waiting": 1,
+                "num_pending": 0,
+                "ts": "2026-10-02T06:18:25.777233608Z"
+              },
+              {
+                "stream_name": "OPERATIONS",
+                "name": "telegram-event-bridge-1",
+                "created": "2026-09-08T05:23:54.521793144Z",
+                "config": {
+                  "durable_name": "telegram-event-bridge-1",
+                  "name": "telegram-event-bridge-1",
+                  "deliver_policy": "all",
+                  "ack_policy": "explicit",
+                  "ack_wait": 30000000000,
+                  "max_deliver": -1,
+                  "filter_subject": "signal.>",
+                  "replay_policy": "instant",
+                  "max_waiting": 512,
+                  "max_ack_pending": 1000,
+                  "num_replicas": 0
+                },
+                "delivered": {
+                  "consumer_seq": 0,
+                  "stream_seq": 0
+                },
+                "ack_floor": {
+                  "consumer_seq": 0,
+                  "stream_seq": 0
+                },
+                "num_ack_pending": 0,
+                "num_redelivered": 0,
+                "num_waiting": 1,
+                "num_pending": 0,
+                "ts": "2026-10-02T06:18:25.77723537Z"
+              },
+              {
+                "stream_name": "OPERATIONS",
+                "name": "telegram-event-bridge-2",
+                "created": "2026-09-08T05:23:54.525412612Z",
+                "config": {
+                  "durable_name": "telegram-event-bridge-2",
+                  "name": "telegram-event-bridge-2",
+                  "deliver_policy": "all",
+                  "ack_policy": "explicit",
+                  "ack_wait": 30000000000,
+                  "max_deliver": -1,
+                  "filter_subject": "order.>",
+                  "replay_policy": "instant",
+                  "max_waiting": 512,
+                  "max_ack_pending": 1000,
+                  "num_replicas": 0
+                },
+                "delivered": {
+                  "consumer_seq": 0,
+                  "stream_seq": 0
+                },
+                "ack_floor": {
+                  "consumer_seq": 0,
+                  "stream_seq": 0
+                },
+                "num_ack_pending": 0,
+                "num_redelivered": 0,
+                "num_waiting": 1,
+                "num_pending": 0,
+                "ts": "2026-10-02T06:18:25.777262773Z"
+              },
+              {
+                "stream_name": "OPERATIONS",
+                "name": "telegram-event-bridge-3",
+                "created": "2026-09-08T05:23:54.528887433Z",
+                "config": {
+                  "durable_name": "telegram-event-bridge-3",
+                  "name": "telegram-event-bridge-3",
+                  "deliver_policy": "all",
+                  "ack_policy": "explicit",
+                  "ack_wait": 30000000000,
+                  "max_deliver": -1,
+                  "filter_subject": "md.data_gap.>",
+                  "replay_policy": "instant",
+                  "max_waiting": 512,
+                  "max_ack_pending": 1000,
+                  "num_replicas": 0
+                },
+                "delivered": {
+                  "consumer_seq": 120,
+                  "stream_seq": 716
+                },
+                "ack_floor": {
+                  "consumer_seq": 120,
+                  "stream_seq": 716
+                },
+                "num_ack_pending": 0,
+                "num_redelivered": 0,
+                "num_waiting": 1,
+                "num_pending": 0,
+                "ts": "2026-10-02T06:18:25.777277654Z"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "total": 1
+  },
+  "catalogue": {
+    "page_count": 476928,
+    "free_pages": 46617,
+    "page_size": 4096,
+    "manifest": [
+      [
+        "remote_verified",
+        0,
+        10136,
+        3162836640
+      ]
+    ],
+    "live_runs": [
+      4300,
+      9556323
+    ],
+    "retirement_state": [
+      1,
+      2226132,
+      1790877515000000000
+    ],
+    "recovery_unverified": 0,
+    "recovery_unpruned": 4300
+  },
+  "diskstats": {
+    "vda": [
+      654914,
+      138831,
+      41467130,
+      708572,
+      11014907,
+      4156804,
+      205045800,
+      30016775,
+      0,
+      2549640,
+      30774090,
+      0,
+      0,
+      0,
+      0,
+      967786,
+      48742
+    ],
+    "vdb": [
+      69816854,
+      174338,
+      3746541978,
+      2053607045,
+      100603122,
+      42534078,
+      3868366168,
+      1797159586,
+      11,
+      493006671,
+      3852162974,
+      5121,
+      0,
+      41943048,
+      33,
+      31431431,
+      1396309
+    ]
+  },
+  "io_pressure": "some avg10=67.09 avg60=65.48 avg300=64.18 total=370619233185\nfull avg10=46.32 avg60=43.70 avg300=41.91 total=346060845407\n",
+  "data_disk_free": 6170824704,
+  "root_disk_free": 1893707776,
+  "memory_available_kib": 1701944,
+  "db_bytes": {
+    "vibetrading.sqlite3-shm": 32768,
+    "vibetrading.sqlite3": 1953497088,
+    "vibetrading.sqlite3-wal": 7135872
+  },
+  "storage_errors": [],
+  "rates_seconds": 30.163782137911767,
+  "disk_rates": {
+    "vda": {
+      "read_iops": 4.31,
+      "write_iops": 20.75,
+      "util_percent": 0.3,
+      "read_await_ms": 0.21,
+      "write_await_ms": 1.4
+    },
+    "vdb": {
+      "read_iops": 21.95,
+      "write_iops": 80.92,
+      "util_percent": 99.49,
+      "read_await_ms": 12.87,
+      "write_await_ms": 96.98
+    }
+  },
+  "container_io_rates": {
+    "nats": {
+      "253:0": {
+        "rbytes": 0.0,
+        "wbytes": 0.0,
+        "rios": 0.0,
+        "wios": 0.0,
+        "dbytes": 0.0,
+        "dios": 0.0
+      },
+      "253:16": {
+        "rbytes": 0.0,
+        "wbytes": 1828574.94,
+        "rios": 0.0,
+        "wios": 15.88,
+        "dbytes": 0.0,
+        "dios": 0.0
+      }
+    },
+    "storage": {
+      "253:16": {
+        "rbytes": 90709.05,
+        "wbytes": 374785.89,
+        "rios": 22.01,
+        "wios": 56.06,
+        "dbytes": 0.0,
+        "dios": 0.0
+      }
+    },
+    "crypto-storage": {
+      "253:0": {
+        "rbytes": 1493.71,
+        "wbytes": 271.58,
+        "rios": 0.07,
+        "wios": 0.27,
+        "dbytes": 0.0,
+        "dios": 0.0
+      },
+      "253:16": {
+        "rbytes": 0.0,
+        "wbytes": 85277.37,
+        "rios": 0.0,
+        "wios": 0.17,
+        "dbytes": 0.0,
+        "dios": 0.0
+      }
+    },
+    "maintenance": {
+      "253:16": {
+        "rbytes": 0.0,
+        "wbytes": 135.79,
+        "rios": 0.0,
+        "wios": 0.03,
+        "dbytes": 0.0,
+        "dios": 0.0
+      }
+    },
+    "crypto-maintenance": {
+      "253:16": {
+        "rbytes": 0.0,
+        "wbytes": 0.0,
+        "rios": 0.0,
+        "wios": 0.0,
+        "dbytes": 0.0,
+        "dios": 0.0
+      },
+      "253:0": {
+        "rbytes": 46984.03,
+        "wbytes": 413350.82,
+        "rios": 4.24,
+        "wios": 11.93,
+        "dbytes": 0.0,
+        "dios": 0.0
+      }
+    },
+    "crypto-collector-binance": {
+      "253:16": {
+        "rbytes": 0.0,
+        "wbytes": 678.96,
+        "rios": 0.0,
+        "wios": 0.17,
+        "dbytes": 0.0,
+        "dios": 0.0
+      }
+    },
+    "crypto-collector-bitget": {
+      "253:16": {
+        "rbytes": 0.0,
+        "wbytes": 678.96,
+        "rios": 0.0,
+        "wios": 0.17,
+        "dbytes": 0.0,
+        "dios": 0.0
+      }
+    },
+    "crypto-collector-bybit": {
+      "253:16": {
+        "rbytes": 0.0,
+        "wbytes": 678.96,
+        "rios": 0.0,
+        "wios": 0.17,
+        "dbytes": 0.0,
+        "dios": 0.0
+      }
+    },
+    "collectors": {
+      "253:16": {
+        "rbytes": 0.0,
+        "wbytes": 1493.71,
+        "rios": 0.0,
+        "wios": 0.36,
+        "dbytes": 0.0,
+        "dios": 0.0
+      }
+    },
+    "telegram": {
+      "253:0": {
+        "rbytes": 0.0,
+        "wbytes": 0.0,
+        "rios": 0.0,
+        "wios": 0.0,
+        "dbytes": 0.0,
+        "dios": 0.0
+      },
+      "253:16": {
+        "rbytes": 0.0,
+        "wbytes": 0.0,
+        "rios": 0.0,
+        "wios": 0.0,
+        "dbytes": 0.0,
+        "dios": 0.0
+      }
+    }
+  }
+}

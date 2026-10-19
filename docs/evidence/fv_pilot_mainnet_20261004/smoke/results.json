@@ -1,0 +1,2748 @@
+{
+  "manifest": {
+    "mode": "mainnet_public_pilot_no_external_orders",
+    "start_ns": 1791109175264304293,
+    "duration": 10,
+    "venues": [
+      "arcus",
+      "bybit",
+      "bitget",
+      "grvt"
+    ],
+    "routes": {
+      "S1": [
+        "s1_net_liquidity",
+        "BTC"
+      ],
+      "S2": [
+        "s2_external_anchor",
+        "ETH"
+      ],
+      "S3": [
+        "s3_aggressive_flow",
+        "SOL"
+      ],
+      "S4": [
+        "s4_obi",
+        "XRP"
+      ]
+    },
+    "models": {
+      "arcus:S1": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 355,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 1.1744070717650554,
+        "error_allowance": 0.08923256926042675,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "arcus:S2": {
+        "valid": false,
+        "basis": 0.00025910140078207373,
+        "horizon": 30,
+        "fit_samples": 208,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": -0.2911633434537723,
+        "reason": "lambda_outside_(0,1]"
+      },
+      "arcus:S3": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 213,
+        "error_calibration_samples": 32,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": -4.012889263086007,
+        "error_allowance": 0.021012889263096125,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "arcus:S4": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 326,
+        "error_calibration_samples": 132,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": -0.09904131937073245,
+        "error_allowance": 0.00020433739288388368,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "bybit:S1": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 356,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": -1.9339075259447516,
+        "error_allowance": 16.612016442571797,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "bybit:S2": {
+        "valid": false,
+        "basis": -5.183121536103845e-05,
+        "horizon": 30,
+        "fit_samples": 208,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 1.1115133188216488,
+        "reason": "lambda_outside_(0,1]"
+      },
+      "bybit:S3": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 326,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 1.3962937635203008,
+        "error_allowance": 0.04943216660258023,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "bybit:S4": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 357,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 0.6358118568043575,
+        "error_allowance": 0.0004060467156524368,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "bitget:S1": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 355,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 28.746499927237227,
+        "error_allowance": 2.7749871692933348,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "bitget:S2": {
+        "valid": false,
+        "basis": -4.811428995342874e-05,
+        "horizon": 30,
+        "fit_samples": 208,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 1.7440199769557527,
+        "reason": "lambda_outside_(0,1]"
+      },
+      "bitget:S3": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 327,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 2.448890986589552,
+        "error_allowance": 0.02189172667941827,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "bitget:S4": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 357,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 2.561078488206927,
+        "error_allowance": 0.0003796761899404662,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "grvt:S1": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 335,
+        "error_calibration_samples": 109,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": -22.646288862704797,
+        "error_allowance": 5.1646288862646585,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "grvt:S2": {
+        "valid": true,
+        "basis": 0.00017767676571375007,
+        "horizon": 30,
+        "fit_samples": 208,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 0.14212599706377213,
+        "error_allowance": 0.006539109110951888,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "grvt:S3": {
+        "valid": false,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 0,
+        "error_calibration_samples": 0,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "reason": "insufficient_excitation_or_calibration_history"
+      },
+      "grvt:S4": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 303,
+        "error_calibration_samples": 117,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 0.24474306905201854,
+        "error_allowance": 0.0005239674434935407,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      }
+    },
+    "latencies": {
+      "bybit": {
+        "entry_seconds": 0.3250375490024453,
+        "cancel_seconds": 0.1960817439976381,
+        "entry_samples": 1,
+        "cancel_samples": 1,
+        "origin": "Bybit testnet 2026-10-04; decision receipt→first live observation, cancel_send→terminal observation",
+        "proxy": false,
+        "measurement_note": "Few observations; descriptive quantile, not a stable mainnet p95. Receipt→live includes private/REST observation delay."
+      },
+      "grvt": {
+        "entry_seconds": 1.0804514237999683,
+        "cancel_seconds": 1.0804514237999683,
+        "entry_samples": 3,
+        "cancel_samples": 0,
+        "origin": "GRVT testnet interrupted execution check; decision receipt→first live observation",
+        "proxy": false,
+        "cancel_proxy": true,
+        "measurement_note": "3 live observations; includes private/REST observation delay. Valid cancel timing unavailable; entry budget used as cancel proxy."
+      },
+      "arcus": {
+        "entry_seconds": 1.0804514237999683,
+        "cancel_seconds": 1.0804514237999683,
+        "entry_samples": 0,
+        "cancel_samples": 0,
+        "origin": "Conservative cross-venue proxy: maximum recorded Bybit/GRVT descriptive 95th percentile",
+        "proxy": true,
+        "measurement_note": "Not measured on this venue. Primary assumption, with separate 2x stress scenario."
+      },
+      "bitget": {
+        "entry_seconds": 1.0804514237999683,
+        "cancel_seconds": 1.0804514237999683,
+        "entry_samples": 0,
+        "cancel_samples": 0,
+        "origin": "Conservative cross-venue proxy: maximum recorded Bybit/GRVT descriptive 95th percentile",
+        "proxy": true,
+        "measurement_note": "Not measured on this venue. Primary assumption, with separate 2x stress scenario."
+      }
+    },
+    "scenarios": {
+      "measured": 1,
+      "stress2x": 2
+    },
+    "policy": {
+      "virtual_equity": 10000,
+      "unit_notional_cap": 150,
+      "unit_equity_fraction": 0.015,
+      "depth_participation": 0.1,
+      "account_gross_fraction": 0.08,
+      "account_stop_fraction": 0.002,
+      "holding_cap_seconds": 120,
+      "position_stop_fraction": 0.0035,
+      "minimum_intent_interval_seconds": 0.25,
+      "feed_stale_seconds": 3,
+      "shutdown_maker_grace_seconds": 15,
+      "shutdown_timeout_seconds": 120,
+      "funding": "PnL excludes funding; public rates are not a private settled ledger",
+      "queue": "entire displayed size ahead; no cancellation credit; actual opposite-side volume only; no touch fills"
+    },
+    "instruments": {
+      "arcus": {
+        "BTC": {
+          "symbol": "BTC-USD",
+          "currency": "USD",
+          "tick": "0.1",
+          "lot": "1E-8",
+          "minimum": "0.0001",
+          "min_notional": "5",
+          "maker_fee": "0",
+          "taker_fee": "0.000225"
+        },
+        "ETH": {
+          "symbol": "ETH-USD",
+          "currency": "USD",
+          "tick": "0.01",
+          "lot": "1E-7",
+          "minimum": "0.001",
+          "min_notional": "5",
+          "maker_fee": "0",
+          "taker_fee": "0.000225"
+        },
+        "SOL": {
+          "symbol": "SOL-USD",
+          "currency": "USD",
+          "tick": "0.001",
+          "lot": "0.000001",
+          "minimum": "0.01",
+          "min_notional": "5",
+          "maker_fee": "0",
+          "taker_fee": "0.000225"
+        },
+        "XRP": {
+          "symbol": "XRP-USD",
+          "currency": "USD",
+          "tick": "0.0001",
+          "lot": "0.00001",
+          "minimum": "1",
+          "min_notional": "5",
+          "maker_fee": "0",
+          "taker_fee": "0.000225"
+        }
+      },
+      "bybit": {
+        "BTC": {
+          "symbol": "BTCUSDT",
+          "currency": "USDT",
+          "tick": "0.10",
+          "lot": "0.001",
+          "minimum": "0.001",
+          "min_notional": "5",
+          "maker_fee": "0.0002",
+          "taker_fee": "0.00055"
+        },
+        "ETH": {
+          "symbol": "ETHUSDT",
+          "currency": "USDT",
+          "tick": "0.01",
+          "lot": "0.01",
+          "minimum": "0.01",
+          "min_notional": "5",
+          "maker_fee": "0.0002",
+          "taker_fee": "0.00055"
+        },
+        "SOL": {
+          "symbol": "SOLUSDT",
+          "currency": "USDT",
+          "tick": "0.010",
+          "lot": "0.1",
+          "minimum": "0.1",
+          "min_notional": "5",
+          "maker_fee": "0.0002",
+          "taker_fee": "0.00055"
+        },
+        "XRP": {
+          "symbol": "XRPUSDT",
+          "currency": "USDT",
+          "tick": "0.0001",
+          "lot": "0.1",
+          "minimum": "0.1",
+          "min_notional": "5",
+          "maker_fee": "0.0002",
+          "taker_fee": "0.00055"
+        }
+      },
+      "bitget": {
+        "BTC": {
+          "symbol": "BTCUSDT",
+          "currency": "USDT",
+          "tick": "0.1",
+          "lot": "0.0001",
+          "minimum": "0.0001",
+          "min_notional": "5",
+          "maker_fee": "0.0002",
+          "taker_fee": "0.0006"
+        },
+        "ETH": {
+          "symbol": "ETHUSDT",
+          "currency": "USDT",
+          "tick": "0.01",
+          "lot": "0.01",
+          "minimum": "0.01",
+          "min_notional": "5",
+          "maker_fee": "0.0002",
+          "taker_fee": "0.0006"
+        },
+        "SOL": {
+          "symbol": "SOLUSDT",
+          "currency": "USDT",
+          "tick": "0.001",
+          "lot": "0.1",
+          "minimum": "0.1",
+          "min_notional": "5",
+          "maker_fee": "0.0002",
+          "taker_fee": "0.0006"
+        },
+        "XRP": {
+          "symbol": "XRPUSDT",
+          "currency": "USDT",
+          "tick": "0.0001",
+          "lot": "1",
+          "minimum": "1",
+          "min_notional": "5",
+          "maker_fee": "0.0002",
+          "taker_fee": "0.0006"
+        }
+      },
+      "grvt": {
+        "BTC": {
+          "symbol": "BTC_USDT_Perp",
+          "currency": "USDT",
+          "tick": "0.1",
+          "lot": "0.001",
+          "minimum": "0.001",
+          "min_notional": "100.0",
+          "maker_fee": "0",
+          "taker_fee": "0.00045"
+        },
+        "ETH": {
+          "symbol": "ETH_USDT_Perp",
+          "currency": "USDT",
+          "tick": "0.01",
+          "lot": "0.001",
+          "minimum": "0.001",
+          "min_notional": "20.0",
+          "maker_fee": "0",
+          "taker_fee": "0.00045"
+        },
+        "SOL": {
+          "symbol": "SOL_USDT_Perp",
+          "currency": "USDT",
+          "tick": "0.01",
+          "lot": "0.01",
+          "minimum": "0.01",
+          "min_notional": "5.0",
+          "maker_fee": "0",
+          "taker_fee": "0.00045"
+        },
+        "XRP": {
+          "symbol": "XRP_USDT_Perp",
+          "currency": "USDT",
+          "tick": "0.0001",
+          "lot": "0.1",
+          "minimum": "0.1",
+          "min_notional": "5.0",
+          "maker_fee": "0",
+          "taker_fee": "0.00045"
+        }
+      }
+    },
+    "source_sha256": "243a87e136187d3998eaa45a2f62e5ddfbc34f6a2b08df741f16fef9723655da",
+    "model_sha256": "1328b52a1a3da17f34b73f13032e3ca2a19c7881168254b2530328ef99774d79",
+    "external_order_submissions": 0
+  },
+  "completion": {
+    "phase": "cleanup",
+    "elapsed_seconds": 10.344,
+    "inventory": {
+      "measured:arcus:S1": "0",
+      "measured:arcus:S2": "0",
+      "measured:arcus:S3": "0",
+      "measured:arcus:S4": "0",
+      "measured:bybit:S1": "0",
+      "measured:bybit:S2": "0",
+      "measured:bybit:S3": "0",
+      "measured:bybit:S4": "0",
+      "measured:bitget:S1": "0",
+      "measured:bitget:S2": "0",
+      "measured:bitget:S3": "0",
+      "measured:bitget:S4": "0",
+      "measured:grvt:S1": "0",
+      "measured:grvt:S2": "0",
+      "measured:grvt:S3": "0",
+      "measured:grvt:S4": "0",
+      "stress2x:arcus:S1": "0",
+      "stress2x:arcus:S2": "0",
+      "stress2x:arcus:S3": "0",
+      "stress2x:arcus:S4": "0",
+      "stress2x:bybit:S1": "0",
+      "stress2x:bybit:S2": "0",
+      "stress2x:bybit:S3": "0",
+      "stress2x:bybit:S4": "0",
+      "stress2x:bitget:S1": "0",
+      "stress2x:bitget:S2": "0",
+      "stress2x:bitget:S3": "0",
+      "stress2x:bitget:S4": "0",
+      "stress2x:grvt:S1": "0",
+      "stress2x:grvt:S2": "0",
+      "stress2x:grvt:S3": "0",
+      "stress2x:grvt:S4": "0"
+    },
+    "paper_open_orders": 0,
+    "counts": {
+      "measured": {},
+      "stress2x": {}
+    },
+    "halted": {},
+    "books": {
+      "grvt:BTC": 67,
+      "grvt:ETH": 62,
+      "grvt:SOL": 31,
+      "arcus:BTC": 905,
+      "arcus:ETH": 423,
+      "arcus:XRP": 97,
+      "arcus:SOL": 843,
+      "grvt:XRP": 31,
+      "bybit:BTC": 381,
+      "bybit:ETH": 244,
+      "bybit:SOL": 343,
+      "bybit:XRP": 292,
+      "bitget:SOL": 276,
+      "bitget:ETH": 400,
+      "bitget:BTC": 489,
+      "bitget:XRP": 461
+    },
+    "unknown_sides": {},
+    "external_order_submissions": 0,
+    "evaluation_start_ns": 1791109175264304293,
+    "evaluation_end_ns": 1791109185603294111,
+    "evaluation_elapsed_seconds": 10.338990557997022,
+    "requested_duration_met": true,
+    "cleanup_end_ns": 1791109185608765896,
+    "complete": true
+  },
+  "requested_duration_met": true,
+  "performance": {
+    "arcus:S1": {
+      "asset": "BTC",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 355,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 1.1744070717650554,
+        "error_allowance": 0.08923256926042675,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USD",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "arcus:S2": {
+      "asset": "ETH",
+      "model": {
+        "valid": false,
+        "basis": 0.00025910140078207373,
+        "horizon": 30,
+        "fit_samples": 208,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": -0.2911633434537723,
+        "reason": "lambda_outside_(0,1]"
+      },
+      "currency": "USD",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "arcus:S3": {
+      "asset": "SOL",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 213,
+        "error_calibration_samples": 32,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": -4.012889263086007,
+        "error_allowance": 0.021012889263096125,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USD",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "arcus:S4": {
+      "asset": "XRP",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 326,
+        "error_calibration_samples": 132,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": -0.09904131937073245,
+        "error_allowance": 0.00020433739288388368,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USD",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "bybit:S1": {
+      "asset": "BTC",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 356,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": -1.9339075259447516,
+        "error_allowance": 16.612016442571797,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "bybit:S2": {
+      "asset": "ETH",
+      "model": {
+        "valid": false,
+        "basis": -5.183121536103845e-05,
+        "horizon": 30,
+        "fit_samples": 208,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 1.1115133188216488,
+        "reason": "lambda_outside_(0,1]"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "bybit:S3": {
+      "asset": "SOL",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 326,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 1.3962937635203008,
+        "error_allowance": 0.04943216660258023,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "bybit:S4": {
+      "asset": "XRP",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 357,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 0.6358118568043575,
+        "error_allowance": 0.0004060467156524368,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "bitget:S1": {
+      "asset": "BTC",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 355,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 28.746499927237227,
+        "error_allowance": 2.7749871692933348,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "bitget:S2": {
+      "asset": "ETH",
+      "model": {
+        "valid": false,
+        "basis": -4.811428995342874e-05,
+        "horizon": 30,
+        "fit_samples": 208,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 1.7440199769557527,
+        "reason": "lambda_outside_(0,1]"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "bitget:S3": {
+      "asset": "SOL",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 327,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 2.448890986589552,
+        "error_allowance": 0.02189172667941827,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "bitget:S4": {
+      "asset": "XRP",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 357,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 2.561078488206927,
+        "error_allowance": 0.0003796761899404662,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "grvt:S1": {
+      "asset": "BTC",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 335,
+        "error_calibration_samples": 109,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": -22.646288862704797,
+        "error_allowance": 5.1646288862646585,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "grvt:S2": {
+      "asset": "ETH",
+      "model": {
+        "valid": true,
+        "basis": 0.00017767676571375007,
+        "horizon": 30,
+        "fit_samples": 208,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 0.14212599706377213,
+        "error_allowance": 0.006539109110951888,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "grvt:S3": {
+      "asset": "SOL",
+      "model": {
+        "valid": false,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 0,
+        "error_calibration_samples": 0,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "reason": "insufficient_excitation_or_calibration_history"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "grvt:S4": {
+      "asset": "XRP",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 303,
+        "error_calibration_samples": 117,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 0.24474306905201854,
+        "error_allowance": 0.0005239674434935407,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    }
+  },
+  "stress_performance": {
+    "arcus:S1": {
+      "asset": "BTC",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 355,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 1.1744070717650554,
+        "error_allowance": 0.08923256926042675,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USD",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "arcus:S2": {
+      "asset": "ETH",
+      "model": {
+        "valid": false,
+        "basis": 0.00025910140078207373,
+        "horizon": 30,
+        "fit_samples": 208,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": -0.2911633434537723,
+        "reason": "lambda_outside_(0,1]"
+      },
+      "currency": "USD",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "arcus:S3": {
+      "asset": "SOL",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 213,
+        "error_calibration_samples": 32,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": -4.012889263086007,
+        "error_allowance": 0.021012889263096125,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USD",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "arcus:S4": {
+      "asset": "XRP",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 326,
+        "error_calibration_samples": 132,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": -0.09904131937073245,
+        "error_allowance": 0.00020433739288388368,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USD",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "bybit:S1": {
+      "asset": "BTC",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 356,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": -1.9339075259447516,
+        "error_allowance": 16.612016442571797,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "bybit:S2": {
+      "asset": "ETH",
+      "model": {
+        "valid": false,
+        "basis": -5.183121536103845e-05,
+        "horizon": 30,
+        "fit_samples": 208,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 1.1115133188216488,
+        "reason": "lambda_outside_(0,1]"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "bybit:S3": {
+      "asset": "SOL",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 326,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 1.3962937635203008,
+        "error_allowance": 0.04943216660258023,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "bybit:S4": {
+      "asset": "XRP",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 357,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 0.6358118568043575,
+        "error_allowance": 0.0004060467156524368,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "bitget:S1": {
+      "asset": "BTC",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 355,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 28.746499927237227,
+        "error_allowance": 2.7749871692933348,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "bitget:S2": {
+      "asset": "ETH",
+      "model": {
+        "valid": false,
+        "basis": -4.811428995342874e-05,
+        "horizon": 30,
+        "fit_samples": 208,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 1.7440199769557527,
+        "reason": "lambda_outside_(0,1]"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "bitget:S3": {
+      "asset": "SOL",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 327,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 2.448890986589552,
+        "error_allowance": 0.02189172667941827,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "bitget:S4": {
+      "asset": "XRP",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 357,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 2.561078488206927,
+        "error_allowance": 0.0003796761899404662,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "grvt:S1": {
+      "asset": "BTC",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 335,
+        "error_calibration_samples": 109,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": -22.646288862704797,
+        "error_allowance": 5.1646288862646585,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "grvt:S2": {
+      "asset": "ETH",
+      "model": {
+        "valid": true,
+        "basis": 0.00017767676571375007,
+        "horizon": 30,
+        "fit_samples": 208,
+        "error_calibration_samples": 149,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 0.14212599706377213,
+        "error_allowance": 0.006539109110951888,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "grvt:S3": {
+      "asset": "SOL",
+      "model": {
+        "valid": false,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 0,
+        "error_calibration_samples": 0,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "reason": "insufficient_excitation_or_calibration_history"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    },
+    "grvt:S4": {
+      "asset": "XRP",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 303,
+        "error_calibration_samples": 117,
+        "fit_end": 74837.907129368,
+        "cal_start": 74867.907129368,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 0.24474306905201854,
+        "error_allowance": 0.0005239674434935407,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "currency": "USDT",
+      "order_intents": 0,
+      "activated_maker_intents": 0,
+      "cancel_intents": 0,
+      "hypothetical_fills": 0,
+      "hypothetical_filled_orders": 0,
+      "maker_fills": 0,
+      "taker_fills": 0,
+      "hypothetical_notional": 0,
+      "assumed_fees": 0.0,
+      "gross_pnl": 0.0,
+      "pnl_ex_funding": 0.0,
+      "funding_pnl": 0.0,
+      "funding_note": "PnL excludes funding; if no hypothetical fills the funding exposure is zero. Otherwise settled funding is not inferred from current rate.",
+      "end_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "observed_max_drawdown_ex_funding": 0.0,
+      "episodes": [],
+      "terminal_states": {},
+      "fill_evidence": {},
+      "external_order_submissions": 0,
+      "annualized_sharpe": null,
+      "calmar": null,
+      "execution_note": "Hypothetical queue/volume fills, not exchange fills. No real order was sent; private fill recognition delay is not separately modeled."
+    }
+  },
+  "hypotheses": {
+    "arcus:S1": {
+      "10": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "30": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "60": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "remaining_move_measured": {
+        "assumed_order_delay_seconds": 1.0804514237999683,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "remaining_move_stress2x": {
+        "assumed_order_delay_seconds": 2.1609028475999366,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "longer_block_sensitivity": {
+        "30": {
+          "n": 0,
+          "reason": "no_valid_pairs"
+        }
+      }
+    },
+    "arcus:S2": {
+      "10": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "30": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "60": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "remaining_move_measured": {
+        "assumed_order_delay_seconds": 1.0804514237999683,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "remaining_move_stress2x": {
+        "assumed_order_delay_seconds": 2.1609028475999366,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "longer_block_sensitivity": {
+        "30": {
+          "n": 0,
+          "reason": "no_valid_pairs"
+        }
+      }
+    },
+    "arcus:S3": {
+      "10": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "30": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "60": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "remaining_move_measured": {
+        "assumed_order_delay_seconds": 1.0804514237999683,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "remaining_move_stress2x": {
+        "assumed_order_delay_seconds": 2.1609028475999366,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "longer_block_sensitivity": {
+        "30": {
+          "n": 0,
+          "reason": "no_valid_pairs"
+        }
+      }
+    },
+    "arcus:S4": {
+      "10": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "30": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "60": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "remaining_move_measured": {
+        "assumed_order_delay_seconds": 1.0804514237999683,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "remaining_move_stress2x": {
+        "assumed_order_delay_seconds": 2.1609028475999366,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "longer_block_sensitivity": {
+        "30": {
+          "n": 0,
+          "reason": "no_valid_pairs"
+        }
+      }
+    },
+    "bybit:S1": {
+      "10": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "30": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "60": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "remaining_move_measured": {
+        "assumed_order_delay_seconds": 0.3250375490024453,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "remaining_move_stress2x": {
+        "assumed_order_delay_seconds": 0.6500750980048906,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "longer_block_sensitivity": {
+        "30": {
+          "n": 0,
+          "reason": "no_valid_pairs"
+        }
+      }
+    },
+    "bybit:S2": {
+      "10": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "30": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "60": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "remaining_move_measured": {
+        "assumed_order_delay_seconds": 0.3250375490024453,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "remaining_move_stress2x": {
+        "assumed_order_delay_seconds": 0.6500750980048906,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "longer_block_sensitivity": {
+        "30": {
+          "n": 0,
+          "reason": "no_valid_pairs"
+        }
+      }
+    },
+    "bybit:S3": {
+      "10": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "30": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "60": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "remaining_move_measured": {
+        "assumed_order_delay_seconds": 0.3250375490024453,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "remaining_move_stress2x": {
+        "assumed_order_delay_seconds": 0.6500750980048906,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "longer_block_sensitivity": {
+        "30": {
+          "n": 0,
+          "reason": "no_valid_pairs"
+        }
+      }
+    },
+    "bybit:S4": {
+      "10": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "30": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "60": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "remaining_move_measured": {
+        "assumed_order_delay_seconds": 0.3250375490024453,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "remaining_move_stress2x": {
+        "assumed_order_delay_seconds": 0.6500750980048906,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "longer_block_sensitivity": {
+        "30": {
+          "n": 0,
+          "reason": "no_valid_pairs"
+        }
+      }
+    },
+    "bitget:S1": {
+      "10": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "30": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "60": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "remaining_move_measured": {
+        "assumed_order_delay_seconds": 1.0804514237999683,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "remaining_move_stress2x": {
+        "assumed_order_delay_seconds": 2.1609028475999366,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "longer_block_sensitivity": {
+        "30": {
+          "n": 0,
+          "reason": "no_valid_pairs"
+        }
+      }
+    },
+    "bitget:S2": {
+      "10": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "30": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "60": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "remaining_move_measured": {
+        "assumed_order_delay_seconds": 1.0804514237999683,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "remaining_move_stress2x": {
+        "assumed_order_delay_seconds": 2.1609028475999366,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "longer_block_sensitivity": {
+        "30": {
+          "n": 0,
+          "reason": "no_valid_pairs"
+        }
+      }
+    },
+    "bitget:S3": {
+      "10": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "30": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "60": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "remaining_move_measured": {
+        "assumed_order_delay_seconds": 1.0804514237999683,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "remaining_move_stress2x": {
+        "assumed_order_delay_seconds": 2.1609028475999366,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "longer_block_sensitivity": {
+        "30": {
+          "n": 0,
+          "reason": "no_valid_pairs"
+        }
+      }
+    },
+    "bitget:S4": {
+      "10": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "30": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "60": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "remaining_move_measured": {
+        "assumed_order_delay_seconds": 1.0804514237999683,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "remaining_move_stress2x": {
+        "assumed_order_delay_seconds": 2.1609028475999366,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "longer_block_sensitivity": {
+        "30": {
+          "n": 0,
+          "reason": "no_valid_pairs"
+        }
+      }
+    },
+    "grvt:S1": {
+      "10": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "30": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "60": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "remaining_move_measured": {
+        "assumed_order_delay_seconds": 1.0804514237999683,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "remaining_move_stress2x": {
+        "assumed_order_delay_seconds": 2.1609028475999366,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "longer_block_sensitivity": {
+        "30": {
+          "n": 0,
+          "reason": "no_valid_pairs"
+        }
+      }
+    },
+    "grvt:S2": {
+      "10": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "30": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "60": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "remaining_move_measured": {
+        "assumed_order_delay_seconds": 1.0804514237999683,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "remaining_move_stress2x": {
+        "assumed_order_delay_seconds": 2.1609028475999366,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "longer_block_sensitivity": {
+        "30": {
+          "n": 0,
+          "reason": "no_valid_pairs"
+        }
+      }
+    },
+    "grvt:S3": {
+      "10": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "30": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "60": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "remaining_move_measured": {
+        "assumed_order_delay_seconds": 1.0804514237999683,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "remaining_move_stress2x": {
+        "assumed_order_delay_seconds": 2.1609028475999366,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "longer_block_sensitivity": {
+        "30": {
+          "n": 0,
+          "reason": "no_valid_pairs"
+        }
+      }
+    },
+    "grvt:S4": {
+      "10": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "30": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "60": {
+        "n": 0,
+        "reason": "no_valid_feature_future_pairs"
+      },
+      "remaining_move_measured": {
+        "assumed_order_delay_seconds": 1.0804514237999683,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "remaining_move_stress2x": {
+        "assumed_order_delay_seconds": 2.1609028475999366,
+        "n": 0,
+        "signed_remaining_move_mean_bps": null,
+        "time_blocks": 0,
+        "note": "Descriptive FV-oriented price move from first 1s sample after assumed delay to 30s target; not a simulated fill or event-level executable edge."
+      },
+      "longer_block_sensitivity": {
+        "30": {
+          "n": 0,
+          "reason": "no_valid_pairs"
+        }
+      }
+    }
+  },
+  "data_quality": {
+    "arcus:S1": {
+      "samples_1s": 10,
+      "valid_fv_samples": 9,
+      "fresh_snapshot_fraction": 0.9672124124598587,
+      "maximum_edge_to_cost_ratio": 0.0037423616414328886,
+      "edge_above_cost_1s_snapshots": 0,
+      "changed_quote_decision_rows": 0,
+      "decision_reasons": {},
+      "native_live_trades": {
+        "n": 36,
+        "unknown": 0,
+        "first_ns": 1791109175510011000,
+        "last_ns": 1791109181439589000
+      },
+      "native_books": {
+        "n": 888,
+        "unknown_source": 888
+      },
+      "note": "Decision reasons count changed quote states, not time fractions or every event; 1s observations are not exhaustive quote opportunities."
+    },
+    "arcus:S2": {
+      "samples_1s": 10,
+      "valid_fv_samples": 0,
+      "fresh_snapshot_fraction": 0.9672124124598587,
+      "maximum_edge_to_cost_ratio": null,
+      "edge_above_cost_1s_snapshots": 0,
+      "changed_quote_decision_rows": 0,
+      "decision_reasons": {},
+      "native_live_trades": {
+        "n": 6,
+        "unknown": 0,
+        "first_ns": 1791109178505914000,
+        "last_ns": 1791109185341505000
+      },
+      "native_books": {
+        "n": 421,
+        "unknown_source": 421
+      },
+      "note": "Decision reasons count changed quote states, not time fractions or every event; 1s observations are not exhaustive quote opportunities."
+    },
+    "arcus:S3": {
+      "samples_1s": 10,
+      "valid_fv_samples": 0,
+      "fresh_snapshot_fraction": 0.9672124124598587,
+      "maximum_edge_to_cost_ratio": null,
+      "edge_above_cost_1s_snapshots": 0,
+      "changed_quote_decision_rows": 0,
+      "decision_reasons": {},
+      "native_live_trades": {
+        "n": 3,
+        "unknown": 0,
+        "first_ns": 1791109175876823000,
+        "last_ns": 1791109181153175000
+      },
+      "native_books": {
+        "n": 842,
+        "unknown_source": 842
+      },
+      "note": "Decision reasons count changed quote states, not time fractions or every event; 1s observations are not exhaustive quote opportunities."
+    },
+    "arcus:S4": {
+      "samples_1s": 10,
+      "valid_fv_samples": 10,
+      "fresh_snapshot_fraction": 0.9672124124598587,
+      "maximum_edge_to_cost_ratio": 0.028989634127374396,
+      "edge_above_cost_1s_snapshots": 0,
+      "changed_quote_decision_rows": 0,
+      "decision_reasons": {},
+      "native_live_trades": {
+        "n": 0,
+        "unknown": null,
+        "first_ns": null,
+        "last_ns": null
+      },
+      "native_books": {
+        "n": 93,
+        "unknown_source": 93
+      },
+      "note": "Decision reasons count changed quote states, not time fractions or every event; 1s observations are not exhaustive quote opportunities."
+    },
+    "bybit:S1": {
+      "samples_1s": 10,
+      "valid_fv_samples": 8,
+      "fresh_snapshot_fraction": 0.9672124124598587,
+      "maximum_edge_to_cost_ratio": 0.002281581805929962,
+      "edge_above_cost_1s_snapshots": 0,
+      "changed_quote_decision_rows": 0,
+      "decision_reasons": {},
+      "native_live_trades": {
+        "n": 94,
+        "unknown": 0,
+        "first_ns": 1791109175303000000,
+        "last_ns": 1791109185324000000
+      },
+      "native_books": {
+        "n": 378,
+        "unknown_source": 0
+      },
+      "note": "Decision reasons count changed quote states, not time fractions or every event; 1s observations are not exhaustive quote opportunities."
+    },
+    "bybit:S2": {
+      "samples_1s": 10,
+      "valid_fv_samples": 0,
+      "fresh_snapshot_fraction": 0.9672124124598587,
+      "maximum_edge_to_cost_ratio": null,
+      "edge_above_cost_1s_snapshots": 0,
+      "changed_quote_decision_rows": 0,
+      "decision_reasons": {},
+      "native_live_trades": {
+        "n": 80,
+        "unknown": 0,
+        "first_ns": 1791109176762000000,
+        "last_ns": 1791109185354000000
+      },
+      "native_books": {
+        "n": 237,
+        "unknown_source": 0
+      },
+      "note": "Decision reasons count changed quote states, not time fractions or every event; 1s observations are not exhaustive quote opportunities."
+    },
+    "bybit:S3": {
+      "samples_1s": 10,
+      "valid_fv_samples": 1,
+      "fresh_snapshot_fraction": 0.9672124124598587,
+      "maximum_edge_to_cost_ratio": 0.07522841246876184,
+      "edge_above_cost_1s_snapshots": 0,
+      "changed_quote_decision_rows": 0,
+      "decision_reasons": {},
+      "native_live_trades": {
+        "n": 62,
+        "unknown": 0,
+        "first_ns": 1791109175546000000,
+        "last_ns": 1791109185309000000
+      },
+      "native_books": {
+        "n": 336,
+        "unknown_source": 0
+      },
+      "note": "Decision reasons count changed quote states, not time fractions or every event; 1s observations are not exhaustive quote opportunities."
+    },
+    "bybit:S4": {
+      "samples_1s": 10,
+      "valid_fv_samples": 10,
+      "fresh_snapshot_fraction": 0.9672124124598587,
+      "maximum_edge_to_cost_ratio": 0.03407704611808249,
+      "edge_above_cost_1s_snapshots": 0,
+      "changed_quote_decision_rows": 0,
+      "decision_reasons": {},
+      "native_live_trades": {
+        "n": 23,
+        "unknown": 0,
+        "first_ns": 1791109175841000000,
+        "last_ns": 1791109183438000000
+      },
+      "native_books": {
+        "n": 280,
+        "unknown_source": 0
+      },
+      "note": "Decision reasons count changed quote states, not time fractions or every event; 1s observations are not exhaustive quote opportunities."
+    },
+    "bitget:S1": {
+      "samples_1s": 10,
+      "valid_fv_samples": 9,
+      "fresh_snapshot_fraction": 0.9672124124598587,
+      "maximum_edge_to_cost_ratio": 0.0404009968256459,
+      "edge_above_cost_1s_snapshots": 0,
+      "changed_quote_decision_rows": 0,
+      "decision_reasons": {},
+      "native_live_trades": {
+        "n": 61,
+        "unknown": 0,
+        "first_ns": 1791109176029000000,
+        "last_ns": 1791109185361000000
+      },
+      "native_books": {
+        "n": 486,
+        "unknown_source": 0
+      },
+      "note": "Decision reasons count changed quote states, not time fractions or every event; 1s observations are not exhaustive quote opportunities."
+    },
+    "bitget:S2": {
+      "samples_1s": 10,
+      "valid_fv_samples": 0,
+      "fresh_snapshot_fraction": 0.9672124124598587,
+      "maximum_edge_to_cost_ratio": null,
+      "edge_above_cost_1s_snapshots": 0,
+      "changed_quote_decision_rows": 0,
+      "decision_reasons": {},
+      "native_live_trades": {
+        "n": 35,
+        "unknown": 0,
+        "first_ns": 1791109176512000000,
+        "last_ns": 1791109185366000000
+      },
+      "native_books": {
+        "n": 397,
+        "unknown_source": 0
+      },
+      "note": "Decision reasons count changed quote states, not time fractions or every event; 1s observations are not exhaustive quote opportunities."
+    },
+    "bitget:S3": {
+      "samples_1s": 10,
+      "valid_fv_samples": 3,
+      "fresh_snapshot_fraction": 0.9672124124598587,
+      "maximum_edge_to_cost_ratio": 0.010865209156905227,
+      "edge_above_cost_1s_snapshots": 0,
+      "changed_quote_decision_rows": 0,
+      "decision_reasons": {},
+      "native_live_trades": {
+        "n": 26,
+        "unknown": 0,
+        "first_ns": 1791109175351000000,
+        "last_ns": 1791109185287000000
+      },
+      "native_books": {
+        "n": 274,
+        "unknown_source": 0
+      },
+      "note": "Decision reasons count changed quote states, not time fractions or every event; 1s observations are not exhaustive quote opportunities."
+    },
+    "bitget:S4": {
+      "samples_1s": 10,
+      "valid_fv_samples": 10,
+      "fresh_snapshot_fraction": 0.9672124124598587,
+      "maximum_edge_to_cost_ratio": 0.14136126635839752,
+      "edge_above_cost_1s_snapshots": 0,
+      "changed_quote_decision_rows": 0,
+      "decision_reasons": {},
+      "native_live_trades": {
+        "n": 11,
+        "unknown": 0,
+        "first_ns": 1791109175258000000,
+        "last_ns": 1791109185359000000
+      },
+      "native_books": {
+        "n": 458,
+        "unknown_source": 0
+      },
+      "note": "Decision reasons count changed quote states, not time fractions or every event; 1s observations are not exhaustive quote opportunities."
+    },
+    "grvt:S1": {
+      "samples_1s": 10,
+      "valid_fv_samples": 8,
+      "fresh_snapshot_fraction": 0.9672124124598587,
+      "maximum_edge_to_cost_ratio": 0.05184319759916126,
+      "edge_above_cost_1s_snapshots": 0,
+      "changed_quote_decision_rows": 0,
+      "decision_reasons": {},
+      "native_live_trades": {
+        "n": 0,
+        "unknown": null,
+        "first_ns": null,
+        "last_ns": null
+      },
+      "native_books": {
+        "n": 63,
+        "unknown_source": 0
+      },
+      "note": "Decision reasons count changed quote states, not time fractions or every event; 1s observations are not exhaustive quote opportunities."
+    },
+    "grvt:S2": {
+      "samples_1s": 10,
+      "valid_fv_samples": 10,
+      "fresh_snapshot_fraction": 0.9672124124598587,
+      "maximum_edge_to_cost_ratio": 0.042557669970809356,
+      "edge_above_cost_1s_snapshots": 0,
+      "changed_quote_decision_rows": 0,
+      "decision_reasons": {},
+      "native_live_trades": {
+        "n": 0,
+        "unknown": null,
+        "first_ns": null,
+        "last_ns": null
+      },
+      "native_books": {
+        "n": 61,
+        "unknown_source": 0
+      },
+      "note": "Decision reasons count changed quote states, not time fractions or every event; 1s observations are not exhaustive quote opportunities."
+    },
+    "grvt:S3": {
+      "samples_1s": 10,
+      "valid_fv_samples": 0,
+      "fresh_snapshot_fraction": 0.9672124124598587,
+      "maximum_edge_to_cost_ratio": null,
+      "edge_above_cost_1s_snapshots": 0,
+      "changed_quote_decision_rows": 0,
+      "decision_reasons": {},
+      "native_live_trades": {
+        "n": 1,
+        "unknown": 0,
+        "first_ns": 1791109175785272089,
+        "last_ns": 1791109175785272089
+      },
+      "native_books": {
+        "n": 30,
+        "unknown_source": 0
+      },
+      "note": "Decision reasons count changed quote states, not time fractions or every event; 1s observations are not exhaustive quote opportunities."
+    },
+    "grvt:S4": {
+      "samples_1s": 10,
+      "valid_fv_samples": 10,
+      "fresh_snapshot_fraction": 0.9672124124598587,
+      "maximum_edge_to_cost_ratio": 0.018648454247866552,
+      "edge_above_cost_1s_snapshots": 0,
+      "changed_quote_decision_rows": 0,
+      "decision_reasons": {},
+      "native_live_trades": {
+        "n": 0,
+        "unknown": null,
+        "first_ns": null,
+        "last_ns": null
+      },
+      "native_books": {
+        "n": 28,
+        "unknown_source": 0
+      },
+      "note": "Decision reasons count changed quote states, not time fractions or every event; 1s observations are not exhaustive quote opportunities."
+    }
+  },
+  "feed_gaps": [],
+  "external_order_submissions": 0,
+  "interpretation": "Hypothetical mainnet paper trading. USD and USDT are kept separate. No causal/profitability proof from 30 minutes."
+}

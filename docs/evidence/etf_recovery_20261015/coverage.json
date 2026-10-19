@@ -1,0 +1,79 @@
+{
+  "069500": {
+    "completed_unique_bars_through_1253": 233,
+    "expected": 233,
+    "first": "2026-10-15 09:01:00",
+    "last": "2026-10-15 12:53:00",
+    "sources": [
+      "KIWOOM",
+      "TOSS"
+    ]
+  },
+  "122630": {
+    "completed_unique_bars_through_1253": 233,
+    "expected": 233,
+    "first": "2026-10-15 09:01:00",
+    "last": "2026-10-15 12:53:00",
+    "sources": [
+      "KIWOOM",
+      "TOSS"
+    ]
+  },
+  "229200": {
+    "completed_unique_bars_through_1253": 233,
+    "expected": 233,
+    "first": "2026-10-15 09:01:00",
+    "last": "2026-10-15 12:53:00",
+    "sources": [
+      "KIWOOM",
+      "TOSS"
+    ]
+  },
+  "251340": {
+    "completed_unique_bars_through_1253": 233,
+    "expected": 233,
+    "first": "2026-10-15 09:01:00",
+    "last": "2026-10-15 12:53:00",
+    "sources": [
+      "KIWOOM",
+      "TOSS"
+    ]
+  },
+  "114800": {
+    "completed_unique_bars_through_1253": 233,
+    "expected": 233,
+    "first": "2026-10-15 09:01:00",
+    "last": "2026-10-15 12:53:00",
+    "sources": [
+      "TOSS"
+    ]
+  },
+  "252670": {
+    "completed_unique_bars_through_1253": 233,
+    "expected": 233,
+    "first": "2026-10-15 09:01:00",
+    "last": "2026-10-15 12:53:00",
+    "sources": [
+      "TOSS"
+    ]
+  },
+  "233740": {
+    "completed_unique_bars_through_1253": 233,
+    "expected": 233,
+    "first": "2026-10-15 09:01:00",
+    "last": "2026-10-15 12:53:00",
+    "sources": [
+      "TOSS"
+    ]
+  },
+  "KOSPI200": {
+    "completed_unique_bars_through_1253": 233,
+    "expected": 233,
+    "first": "2026-10-15 09:01:00",
+    "last": "2026-10-15 12:53:00",
+    "sources": [
+      "KIS",
+      "KIWOOM"
+    ]
+  }
+}

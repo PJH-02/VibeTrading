@@ -1,0 +1,7 @@
+ARG DASHBOARD_APP_IMAGE
+FROM ${DASHBOARD_APP_IMAGE}
+USER root
+ENV PLAYWRIGHT_BROWSERS_PATH=/opt/dashboard-browsers
+RUN python -m playwright install --with-deps chromium --only-shell \
+    && rm -rf /var/lib/apt/lists/*
+USER vibetrading

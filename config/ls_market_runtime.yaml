@@ -1,0 +1,8 @@
+# Optional LS market-data process. Never loaded by the existing crypto or
+# domestic collectors. Deployment requires account-specific no-fee checks.
+collectors:
+  - provider: ls-kospi200-foreign
+    symbols: K2I
+  - provider: ls-overseas-delayed
+    symbols: ES,NQ
+strategies: []

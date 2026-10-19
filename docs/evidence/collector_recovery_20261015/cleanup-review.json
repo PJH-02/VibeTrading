@@ -1,0 +1,5620 @@
+{
+  "review_date": "2026-10-15",
+  "no_files_deleted": true,
+  "local_root": "C:\\Users\\박제형\\Desktop\\VibeTrading",
+  "local_inventory_observed_ns": 1792027719736228400,
+  "local_directories": [
+    {
+      "path": ".analysis-venv",
+      "bytes": 292587917,
+      "files": 8761,
+      "decision": "재생성 가능",
+      "reason": "분석 종료 후 requirements로 재설치 가능"
+    },
+    {
+      "path": ".analysis-venv/Lib",
+      "bytes": 291050012,
+      "files": 8744,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": ".analysis-venv/Scripts",
+      "bytes": 1531881,
+      "files": 15,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": ".analysis-venv/share",
+      "bytes": 5601,
+      "files": 1,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": ".codex_remote",
+      "bytes": 5410329421,
+      "files": 37,
+      "decision": "완료 작업 후보",
+      "reason": "과거 배포/성능 실험. 아래 DB 폴더는 운영 원본이 아님; 결과 JSON과 생성 코드 보존"
+    },
+    {
+      "path": ".codex_remote/__pycache__",
+      "bytes": 17385,
+      "files": 1,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": ".codex_remote/r2-event-run-cost",
+      "bytes": 4639590402,
+      "files": 5,
+      "decision": "완료 작업 후보",
+      "reason": "benchmark-only 복제 DB 3개; 결과 JSON 및 원본 입력 보존 후 정리"
+    },
+    {
+      "path": ".codex_remote/r2-synthetic-20260929",
+      "bytes": 766139695,
+      "files": 6,
+      "decision": "완료 작업 후보",
+      "reason": "합성 SQLite DB 3개; 거래 원장 아님. 결과와 생성 코드 보존"
+    },
+    {
+      "path": ".matplotlib-cache",
+      "bytes": 189944,
+      "files": 1,
+      "decision": "재생성 가능",
+      "reason": "폰트 캐시"
+    },
+    {
+      "path": ".pytest_cache",
+      "bytes": 63414,
+      "files": 5,
+      "decision": "재생성 가능",
+      "reason": "pytest 종료 후 정리"
+    },
+    {
+      "path": ".pytest_cache/v",
+      "bytes": 62874,
+      "files": 2,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": ".server_patch",
+      "bytes": 25084692,
+      "files": 172,
+      "decision": "완료 작업 후보",
+      "reason": "과거 배포 tar/복사본. 정식 소스·rollback·인증 비교 증적 한 부 보존 후 정리. ETF 데이터 tar 제외"
+    },
+    {
+      "path": ".server_patch/__pycache__",
+      "bytes": 30487,
+      "files": 6,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": ".server_patch/api-docs",
+      "bytes": 3551840,
+      "files": 20,
+      "decision": "재생성 가능",
+      "reason": "공급자 문서 다운로드; 참조 URL과 필요한 문서 보존"
+    },
+    {
+      "path": ".server_patch/config",
+      "bytes": 2163,
+      "files": 2,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": ".server_patch/crypto-backpressure-20260928",
+      "bytes": 341722,
+      "files": 23,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": ".server_patch/profiler",
+      "bytes": 2936518,
+      "files": 1,
+      "decision": "완료 작업 후보",
+      "reason": "완료한 프로파일링 산출물; 최종 수치/재현 코드 보존"
+    },
+    {
+      "path": ".server_patch/vibetrading",
+      "bytes": 274526,
+      "files": 24,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "__pycache__",
+      "bytes": 261,
+      "files": 1,
+      "decision": "재생성 가능",
+      "reason": "하위 __pycache__/와 *.pyc에도 동일 적용"
+    },
+    {
+      "path": "backtest",
+      "bytes": 84088,
+      "files": 19,
+      "decision": "조건부·구형/연구",
+      "reason": "기존 run_strategy 백테스트 엔진; 사용 목적 확인"
+    },
+    {
+      "path": "backtest/__pycache__",
+      "bytes": 46417,
+      "files": 7,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "backtest/engines",
+      "bytes": 5194,
+      "files": 7,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "config",
+      "bytes": 13681,
+      "files": 9,
+      "decision": "보존",
+      "reason": "운영 수집·전략 설정"
+    },
+    {
+      "path": "dashboard",
+      "bytes": 3306800363,
+      "files": 218980,
+      "decision": "보존",
+      "reason": "사이트 원본과 설치물 혼재; 하위 재생성 항목만 분리"
+    },
+    {
+      "path": "dashboard/.git",
+      "bytes": 722038,
+      "files": 190,
+      "decision": "보존",
+      "reason": "별도 dashboard Git 이력"
+    },
+    {
+      "path": "dashboard/.next",
+      "bytes": 1251,
+      "files": 1,
+      "decision": "재생성 가능",
+      "reason": "빌드 캐시"
+    },
+    {
+      "path": "dashboard/.openai",
+      "bytes": 91,
+      "files": 1,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "dashboard/.sites-runtime",
+      "bytes": 6382023,
+      "files": 214,
+      "decision": "조건부 보존",
+      "reason": "사이트 작업/연결 상태. 단순 캐시로 일괄 삭제하지 않음"
+    },
+    {
+      "path": "dashboard/.vinext",
+      "bytes": 193,
+      "files": 1,
+      "decision": "재생성 가능",
+      "reason": "빌드 캐시"
+    },
+    {
+      "path": "dashboard/.wrangler",
+      "bytes": 136224,
+      "files": 13,
+      "decision": "조건부 보존",
+      "reason": "로컬 DB/state 포함 가능; export 후 판단"
+    },
+    {
+      "path": "dashboard/app",
+      "bytes": 56161,
+      "files": 9,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "dashboard/build",
+      "bytes": 17332,
+      "files": 5,
+      "decision": "보존",
+      "reason": "빌드용 소스·설정; 이름만 보고 캐시로 삭제하지 않음"
+    },
+    {
+      "path": "dashboard/components",
+      "bytes": 214987,
+      "files": 62,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "dashboard/db",
+      "bytes": 1538,
+      "files": 2,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "dashboard/dist",
+      "bytes": 2127351,
+      "files": 71,
+      "decision": "재생성 가능",
+      "reason": "로컬 미리보기 종료 후 재빌드 가능"
+    },
+    {
+      "path": "dashboard/drizzle",
+      "bytes": 5516,
+      "files": 3,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "dashboard/examples",
+      "bytes": 2070,
+      "files": 2,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "dashboard/hooks",
+      "bytes": 565,
+      "files": 1,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "dashboard/lib",
+      "bytes": 10798,
+      "files": 7,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "dashboard/node_modules",
+      "bytes": 3294328203,
+      "files": 218360,
+      "decision": "재생성 가능",
+      "reason": "개발/빌드 종료 후 lockfile로 재설치. 링크/hardlink로 실제 확보 공간은 다름"
+    },
+    {
+      "path": "dashboard/outputs",
+      "bytes": 1790302,
+      "files": 3,
+      "decision": "완료 작업 후보",
+      "reason": "최종 결과/배포 증적 한 부 보존 후"
+    },
+    {
+      "path": "dashboard/public",
+      "bytes": 2526,
+      "files": 4,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "dashboard/scripts",
+      "bytes": 56284,
+      "files": 13,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "dashboard/vendor",
+      "bytes": 17104,
+      "files": 2,
+      "decision": "보존",
+      "reason": "빌드/실행 공급 코드"
+    },
+    {
+      "path": "deploy",
+      "bytes": 18398,
+      "files": 13,
+      "decision": "보존",
+      "reason": "compose/systemd/NATS 배포 원본; env는 민감정보 가능"
+    },
+    {
+      "path": "docs",
+      "bytes": 691742093,
+      "files": 662,
+      "decision": "보존",
+      "reason": "운영/연구 보고서 및 고유 증적"
+    },
+    {
+      "path": "docs/evidence",
+      "bytes": 690810961,
+      "files": 599,
+      "decision": "조건부 보존",
+      "reason": "고유 원본/재현 근거. 원격 사본 검증 전 일괄 삭제 불가"
+    },
+    {
+      "path": "docs/mm_state",
+      "bytes": 28650,
+      "files": 6,
+      "decision": "보존",
+      "reason": "연구 기록"
+    },
+    {
+      "path": "output",
+      "bytes": 1930081,
+      "files": 1,
+      "decision": "보존",
+      "reason": "최종 보고서 PDF"
+    },
+    {
+      "path": "output/pdf",
+      "bytes": 1930081,
+      "files": 1,
+      "decision": "보존",
+      "reason": "최종 crypto_strategy_complete_report_20261012.pdf"
+    },
+    {
+      "path": "runtime_data",
+      "bytes": 7281247158,
+      "files": 28843,
+      "decision": "보존",
+      "reason": "시세·CSV·주문/연구 원장 혼재; 전체 삭제 불가"
+    },
+    {
+      "path": "runtime_data/capacity_replay_20260926",
+      "bytes": 221472,
+      "files": 5,
+      "decision": "완료 작업 후보",
+      "reason": "과거 성능 시험. 증적 보존 후 운영 데이터와 분리해 정리"
+    },
+    {
+      "path": "runtime_data/etf_reference_csv",
+      "bytes": 117582663,
+      "files": 11,
+      "decision": "보존",
+      "reason": "사용자 정리 티커별 원본 CSV 10개와 manifest"
+    },
+    {
+      "path": "runtime_data/fv_mm",
+      "bytes": 193324813,
+      "files": 51,
+      "decision": "조건부·연구",
+      "reason": "테스트넷/가상매매 원장·연구 입력"
+    },
+    {
+      "path": "runtime_data/fv_pilot",
+      "bytes": 1822794585,
+      "files": 43,
+      "decision": "조건부·연구",
+      "reason": "run.sqlite·server_evidence·압축본. 결과 원장 한 부 검증 후 중복만"
+    },
+    {
+      "path": "runtime_data/fv_regime_20261005",
+      "bytes": 1086633,
+      "files": 6,
+      "decision": "조건부·연구",
+      "reason": "연구 입력/산출물; 원격 보존·동일성 미검증"
+    },
+    {
+      "path": "runtime_data/fv_research_20261004",
+      "bytes": 118364588,
+      "files": 10,
+      "decision": "조건부·연구",
+      "reason": "원시 catalogue·audit·파생 parquet; 다른 사본과 해시 미대조"
+    },
+    {
+      "path": "runtime_data/fv_research_native",
+      "bytes": 4882612207,
+      "files": 28675,
+      "decision": "조건부·연구",
+      "reason": "원시/파생 연구 입력과 압축본. 해제본과 중복 검증 전 보존"
+    },
+    {
+      "path": "runtime_data/fv_research_production_arcus",
+      "bytes": 17926991,
+      "files": 3,
+      "decision": "조건부·연구",
+      "reason": "연구 입력/산출물; 원격 보존·동일성 미검증"
+    },
+    {
+      "path": "runtime_data/fv_research_production_bitget",
+      "bytes": 57962638,
+      "files": 3,
+      "decision": "조건부·연구",
+      "reason": "연구 입력/산출물; 원격 보존·동일성 미검증"
+    },
+    {
+      "path": "runtime_data/fv_research_production_bybit",
+      "bytes": 57781741,
+      "files": 3,
+      "decision": "조건부·연구",
+      "reason": "연구 입력/산출물; 원격 보존·동일성 미검증"
+    },
+    {
+      "path": "runtime_data/fv_research_production_grvt",
+      "bytes": 10250591,
+      "files": 3,
+      "decision": "조건부·연구",
+      "reason": "연구 입력/산출물; 원격 보존·동일성 미검증"
+    },
+    {
+      "path": "runtime_data/liquidity_mm",
+      "bytes": 435910,
+      "files": 23,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "runtime_data/state",
+      "bytes": 205005,
+      "files": 4,
+      "decision": "보존",
+      "reason": "로컬 토큰/DB/주문 원장. WAL/SHM/lock 실행 중 삭제 불가"
+    },
+    {
+      "path": "scripts",
+      "bytes": 1535865,
+      "files": 257,
+      "decision": "파일별 판단",
+      "reason": "Python 파일별 목록 참조"
+    },
+    {
+      "path": "scripts/__pycache__",
+      "bytes": 586864,
+      "files": 74,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "services",
+      "bytes": 302623,
+      "files": 40,
+      "decision": "조건부·구형/연구",
+      "reason": "구형 실행 경로. shared/backtest 의존성과 함께 정리 필요"
+    },
+    {
+      "path": "services/__pycache__",
+      "bytes": 5615,
+      "files": 1,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "services/data_feed",
+      "bytes": 92848,
+      "files": 9,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "services/execution",
+      "bytes": 105136,
+      "files": 13,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "services/monitoring",
+      "bytes": 15355,
+      "files": 3,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "services/risk_engine",
+      "bytes": 26017,
+      "files": 4,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "services/signal_gen",
+      "bytes": 53054,
+      "files": 9,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "shared",
+      "bytes": 167308,
+      "files": 20,
+      "decision": "조건부·구형/연구",
+      "reason": "구형 공통 DB/모델/메시징. 호출부와 함께 판단"
+    },
+    {
+      "path": "shared/__pycache__",
+      "bytes": 109495,
+      "files": 13,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "strategies",
+      "bytes": 23969,
+      "files": 8,
+      "decision": "조건부·구형/연구",
+      "reason": "turtle/example 및 동적 로더 대상"
+    },
+    {
+      "path": "strategies/__pycache__",
+      "bytes": 13943,
+      "files": 5,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "strategy",
+      "bytes": 25480,
+      "files": 8,
+      "decision": "조건부·연구",
+      "reason": "코인 S1~S4 연구 전략. ETF와 별개인 고유 소스"
+    },
+    {
+      "path": "strategy/__pycache__",
+      "bytes": 12685,
+      "files": 4,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "tests",
+      "bytes": 1199626,
+      "files": 152,
+      "decision": "보존",
+      "reason": "회귀 테스트"
+    },
+    {
+      "path": "tests/__pycache__",
+      "bytes": 856098,
+      "files": 88,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "tmp",
+      "bytes": 215167744,
+      "files": 2700,
+      "decision": "완료 작업 후보",
+      "reason": "현재 조사 중간 메타데이터 포함; 실행 중인 작업 확인 후 하위별 정리"
+    },
+    {
+      "path": "tmp/kiwoom-official",
+      "bytes": 13296714,
+      "files": 450,
+      "decision": "재생성 가능",
+      "reason": "공식 예제 checkout; URL/commit 보존"
+    },
+    {
+      "path": "tmp/pdfs",
+      "bytes": 198460563,
+      "files": 1761,
+      "decision": "재생성 가능",
+      "reason": "렌더 중간물. output/pdf 최종본과 원본 문서 보존"
+    },
+    {
+      "path": "tmp/pytest-collector-incident",
+      "bytes": 426968,
+      "files": 195,
+      "decision": "재생성 가능",
+      "reason": "테스트 임시 DB/출력. 테스트 종료 후"
+    },
+    {
+      "path": "tmp/pytest-crypto-latency",
+      "bytes": 1037,
+      "files": 2,
+      "decision": "재생성 가능",
+      "reason": "테스트 임시 DB/출력. 테스트 종료 후"
+    },
+    {
+      "path": "tmp/pytest-disk-guard",
+      "bytes": 528,
+      "files": 6,
+      "decision": "재생성 가능",
+      "reason": "테스트 임시 DB/출력. 테스트 종료 후"
+    },
+    {
+      "path": "tmp/pytest-incident-final",
+      "bytes": 13524,
+      "files": 62,
+      "decision": "재생성 가능",
+      "reason": "테스트 임시 DB/출력. 테스트 종료 후"
+    },
+    {
+      "path": "tmp/pytest-trade-exclusions",
+      "bytes": 381064,
+      "files": 20,
+      "decision": "재생성 가능",
+      "reason": "테스트 임시 DB/출력. 테스트 종료 후"
+    },
+    {
+      "path": "tmp/pytest-trade-reporting",
+      "bytes": 477382,
+      "files": 29,
+      "decision": "재생성 가능",
+      "reason": "테스트 임시 DB/출력. 테스트 종료 후"
+    },
+    {
+      "path": "tmp/pytest-trade-reporting-approved",
+      "bytes": 1172020,
+      "files": 166,
+      "decision": "재생성 가능",
+      "reason": "테스트 임시 DB/출력. 테스트 종료 후"
+    },
+    {
+      "path": "vibetrading",
+      "bytes": 2225783,
+      "files": 220,
+      "decision": "보존",
+      "reason": "현재 운영 모듈 원본"
+    },
+    {
+      "path": "vibetrading/__pycache__",
+      "bytes": 567132,
+      "files": 48,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "vibetrading/dashboard",
+      "bytes": 57685,
+      "files": 12,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "vibetrading/fv_mm",
+      "bytes": 160628,
+      "files": 30,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "vibetrading/fv_pilot",
+      "bytes": 100773,
+      "files": 10,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "vibetrading/liquidity_mm",
+      "bytes": 204864,
+      "files": 22,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "vibetrading/mm_state",
+      "bytes": 69033,
+      "files": 20,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "vibetrading/providers",
+      "bytes": 414142,
+      "files": 28,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    },
+    {
+      "path": "vibetrading/timefolio",
+      "bytes": 55438,
+      "files": 6,
+      "decision": "상위 판정 적용",
+      "reason": "상위 디렉터리 정책을 따름; 소스와 캐시 구별"
+    }
+  ],
+  "python_files": [
+    {
+      "path": ".codex_remote/crypto_minimal_cutover.py",
+      "bytes": 8817,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "One-off cutover checks. Production source is retained for rollback."
+    },
+    {
+      "path": ".codex_remote/crypto_minimal_status.py",
+      "bytes": 1754,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Small host evidence snapshot: no SQLite queries or environment output."
+    },
+    {
+      "path": ".codex_remote/crypto_provenance_check.py",
+      "bytes": 1754,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".codex_remote/crypto_recent_coverage.py",
+      "bytes": 1317,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Read only a bounded set of committed files; report counts, never prices."
+    },
+    {
+      "path": ".codex_remote/finalize_crypto_deletion_20261002.py",
+      "bytes": 2887,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Remove production crypto recovery copies after every data object is verified."
+    },
+    {
+      "path": ".codex_remote/latency_preflight.py",
+      "bytes": 819,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".codex_remote/purge_crypto_targets_20261002.py",
+      "bytes": 7396,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Offline, exact-symbol production archive deletion with an audit trail."
+    },
+    {
+      "path": ".server_patch/api-docs/grvt-grvt_ccxt_env.py",
+      "bytes": 8435,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/api-docs/grvt-grvt_ccxt_utils.py",
+      "bytes": 18983,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/binance_build_fix_20261003.py",
+      "bytes": 3861,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Build/test a one-file Binance fix on the verified current crypto image."
+    },
+    {
+      "path": ".server_patch/binance_catalog_probe_20261003.py",
+      "bytes": 717,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/binance_crypto_perp_before_20261003.py",
+      "bytes": 19443,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Public USDT perpetual feeds. No account keys or paid market data are used."
+    },
+    {
+      "path": ".server_patch/binance_deploy_fix_20261003.py",
+      "bytes": 3849,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Replace Binance alone; persist the override in the boot-owned Compose file."
+    },
+    {
+      "path": ".server_patch/binance_remote_coverage_20261003.py",
+      "bytes": 2392,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Read bounded, already verified archive files without changing stored data."
+    },
+    {
+      "path": ".server_patch/binance_root_headroom_20261003.py",
+      "bytes": 6343,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Preserve cold rollback bytes in verified compressed archives and bound OS logs."
+    },
+    {
+      "path": ".server_patch/binance_verify_fix_20261003.py",
+      "bytes": 4537,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Verify the live collector, shared services and fresh committed records."
+    },
+    {
+      "path": ".server_patch/build_collector_recovery_20261007.py",
+      "bytes": 2238,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/capacity_validation_20261006.py",
+      "bytes": 1181,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/check_cleanup_candidates.py",
+      "bytes": 463,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/compactor_probe_20261007.py",
+      "bytes": 2097,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/crypto-backpressure-20260928/before/archive.py",
+      "bytes": 7643,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/crypto-backpressure-20260928/before/runtime.py",
+      "bytes": 21478,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/crypto-backpressure-20260928/before/settings.py",
+      "bytes": 16544,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/crypto-backpressure-20260928/before/sqlite_store.py",
+      "bytes": 27261,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/crypto-backpressure-20260928/image-before/archive.py",
+      "bytes": 7747,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/crypto-backpressure-20260928/image-before/runtime.py",
+      "bytes": 25149,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/crypto-backpressure-20260928/image-before/settings.py",
+      "bytes": 16544,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/crypto-backpressure-20260928/image-before/sqlite_store.py",
+      "bytes": 27272,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/crypto-backpressure-20260928/image-before/storage_backend.py",
+      "bytes": 6932,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/crypto-backpressure-20260928/image-before/storage_worker.py",
+      "bytes": 10243,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/crypto-backpressure-20260928/overlay/archive.py",
+      "bytes": 9179,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/crypto-backpressure-20260928/overlay/gap_ledger.py",
+      "bytes": 1312,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Small local operational ledger for collector outage and backpressure intervals."
+    },
+    {
+      "path": ".server_patch/crypto-backpressure-20260928/overlay/runtime.py",
+      "bytes": 25737,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/crypto-backpressure-20260928/overlay/settings.py",
+      "bytes": 16475,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/crypto-backpressure-20260928/overlay/sqlite_store.py",
+      "bytes": 30554,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/crypto-backpressure-20260928/overlay/storage_backend.py",
+      "bytes": 7244,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/crypto-backpressure-20260928/overlay/storage_worker.py",
+      "bytes": 10770,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/crypto_capacity_20261003.py",
+      "bytes": 3196,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Read-only capacity sample; no benchmark or production configuration change."
+    },
+    {
+      "path": ".server_patch/crypto_capacity_metadata_20261003.py",
+      "bytes": 983,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/crypto_incident_check.py",
+      "bytes": 1380,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/crypto_relief_audit.py",
+      "bytes": 4398,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Check deployed mount/image/guard provenance without exposing app secrets."
+    },
+    {
+      "path": ".server_patch/crypto_relief_cleanup.py",
+      "bytes": 1544,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Reclaim only three explicitly selected, inactive VS Code binary caches."
+    },
+    {
+      "path": ".server_patch/crypto_relief_coverage.py",
+      "bytes": 2446,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Read a bounded set of fresh committed Parquet files, never prices."
+    },
+    {
+      "path": ".server_patch/crypto_relief_cutover.py",
+      "bytes": 8815,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Quiesce writers, verify a cross-disk NATS copy, then deploy crypto only."
+    },
+    {
+      "path": ".server_patch/crypto_relief_final_build.py",
+      "bytes": 4367,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Build the final split-DB release, using only changed, verified source files."
+    },
+    {
+      "path": ".server_patch/crypto_relief_finalize_policy.py",
+      "bytes": 1800,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Finalize the bounded recovery throughput and its immutable provenance."
+    },
+    {
+      "path": ".server_patch/crypto_relief_finish_move.py",
+      "bytes": 5150,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Resume the verified disk copy after the offline recovery helper finishes."
+    },
+    {
+      "path": ".server_patch/crypto_relief_iopriority.py",
+      "bytes": 880,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Give the current maintenance worker bounded best-effort I/O priority."
+    },
+    {
+      "path": ".server_patch/crypto_relief_last_cache.py",
+      "bytes": 1135,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Remove the remaining inactive VS Code binary cache, preserving the CLI."
+    },
+    {
+      "path": ".server_patch/crypto_relief_market_cache.py",
+      "bytes": 5052,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Increase only the existing Market storage cache; retain its exact image/config."
+    },
+    {
+      "path": ".server_patch/crypto_relief_move_db.py",
+      "bytes": 8838,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Move the authoritative crypto state to vda; keep Parquet/NATS on vdb."
+    },
+    {
+      "path": ".server_patch/crypto_relief_observe.py",
+      "bytes": 6898,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Bounded live evidence, including writes to both physical disks."
+    },
+    {
+      "path": ".server_patch/crypto_relief_persist.py",
+      "bytes": 2344,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Persist the split storage release without recreating Market services."
+    },
+    {
+      "path": ".server_patch/crypto_relief_prepare.py",
+      "bytes": 7212,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Build a minimal immutable patch from the deployed crypto release."
+    },
+    {
+      "path": ".server_patch/crypto_relief_recover_window.py",
+      "bytes": 3995,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Recover every retired exact record before expanding the live window."
+    },
+    {
+      "path": ".server_patch/crypto_relief_shrink_window.py",
+      "bytes": 2650,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Offline monotonic policy shrink; preserves the existing exact index."
+    },
+    {
+      "path": ".server_patch/crypto_relief_telegram_mount.py",
+      "bytes": 3918,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Make Telegram read the moved crypto health directory; preserve its config."
+    },
+    {
+      "path": ".server_patch/deploy_capacity_20261006.py",
+      "bytes": 9632,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/deploy_collector_recovery_20261007.py",
+      "bytes": 2070,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/deploy_expansion_20261003.py",
+      "bytes": 12066,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Pinned, source-verified deployment; never touches Market storage or NATS data."
+    },
+    {
+      "path": ".server_patch/deploy_maintenance_capacity_20261006.py",
+      "bytes": 5477,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/diagnose_collectors_20261007.py",
+      "bytes": 3983,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/expansion_inventory_20261003.py",
+      "bytes": 1827,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/finalize_receipts_20261003.py",
+      "bytes": 2872,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/finish_collector_recovery_20261007.py",
+      "bytes": 2673,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/finish_expansion_wiring.py",
+      "bytes": 435,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/incident_finish_20261006.py",
+      "bytes": 3426,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/incident_snapshot_20261006.py",
+      "bytes": 4309,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Read-only incident capture. Never exports credentials or changes services."
+    },
+    {
+      "path": ".server_patch/inspect_hyperliquid.py",
+      "bytes": 2010,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/inspect_manifest_usage.py",
+      "bytes": 2180,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/inspect_nats_market.py",
+      "bytes": 2006,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/inspect_sources_20261007.py",
+      "bytes": 643,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/inspect_universe.py",
+      "bytes": 483,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/maintenance_stack_20261006.py",
+      "bytes": 409,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/maintenance_stops_20261006.py",
+      "bytes": 842,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/maintenance_validation_final_20261006.py",
+      "bytes": 2033,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/market-archive-base.py",
+      "bytes": 17737,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/market-runtime-base.py",
+      "bytes": 34371,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/market-sqlite-base.py",
+      "bytes": 42700,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/market_audit_20261006.py",
+      "bytes": 5017,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Read-only SHA-verified KIS/Kiwoom observation audit; no inferred gap closure."
+    },
+    {
+      "path": ".server_patch/market_audit_prepare_20261006.py",
+      "bytes": 845,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/market_capacity_cutover_20261006.py",
+      "bytes": 5087,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Move Market data to the existing 300GB volume, preserving every byte."
+    },
+    {
+      "path": ".server_patch/market_historical_prepare_20261006.py",
+      "bytes": 969,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/merge_market_coverage_20261006.py",
+      "bytes": 2681,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/migration_receipt_summary_20261006.py",
+      "bytes": 969,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/observe_expansion_20261003.py",
+      "bytes": 3831,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/operations_audit_20261006.py",
+      "bytes": 1194,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/prepare_capacity_bundle_20261006.py",
+      "bytes": 1503,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/prepare_collector_recovery_20261007.py",
+      "bytes": 1708,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/prepare_expansion_bundle.py",
+      "bytes": 2125,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/prepare_maintenance_capacity_20261006.py",
+      "bytes": 1512,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/probe_extended_auth_20261003.py",
+      "bytes": 5406,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Read-only authentication and signing-key validation; never submits orders."
+    },
+    {
+      "path": ".server_patch/profile_storage_20261006.py",
+      "bytes": 1372,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/profile_storage_after_20261006.py",
+      "bytes": 986,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/read_old_readiness_20261006.py",
+      "bytes": 627,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/repair_migration_reader_20261006.py",
+      "bytes": 1128,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/repair_sqlite_reader_permissions_20261006.py",
+      "bytes": 982,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/reset_storage_consumer.py",
+      "bytes": 731,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/smoke_extended_feeds.py",
+      "bytes": 1516,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/storage_300gb_20261003.py",
+      "bytes": 6860,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": "Move exact crypto trees to a verified new disk; retain originals for rollback."
+    },
+    {
+      "path": ".server_patch/sync_grvt_env_20261003.py",
+      "bytes": 1528,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/update_expansion_wiring.py",
+      "bytes": 906,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/validate_collectors_20261007.py",
+      "bytes": 2899,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/verify_expansion_storage_20261003.py",
+      "bytes": 3127,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/verify_remote_hyperliquid.py",
+      "bytes": 2182,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/verify_toss_storage_20261007.py",
+      "bytes": 1952,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/vibetrading/archive.py",
+      "bytes": 4779,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/vibetrading/bus.py",
+      "bytes": 16109,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/vibetrading/cli.py",
+      "bytes": 22738,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/vibetrading/compactor.py",
+      "bytes": 4160,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/vibetrading/market_policy.py",
+      "bytes": 8807,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/vibetrading/models.py",
+      "bytes": 9965,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/vibetrading/parquet_store.py",
+      "bytes": 10728,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/vibetrading/providers/hyperliquid.py",
+      "bytes": 9592,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/vibetrading/providers/universe.py",
+      "bytes": 11726,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/vibetrading/runtime.py",
+      "bytes": 15324,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/vibetrading/settings.py",
+      "bytes": 15779,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/vibetrading/sqlite_store.py",
+      "bytes": 18506,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/vibetrading/storage_worker.py",
+      "bytes": 4881,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": ".server_patch/vibetrading/universe_config.py",
+      "bytes": 5496,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": "backtest/__init__.py",
+      "bytes": 281,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Backtestackage with team-routed engines."
+    },
+    {
+      "path": "backtest/data_loader.py",
+      "bytes": 5214,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Backtest Data Loader"
+    },
+    {
+      "path": "backtest/engine.py",
+      "bytes": 16054,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Bias-Safe Backtesting Engine"
+    },
+    {
+      "path": "backtest/engine_router.py",
+      "bytes": 660,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Backtest engine routing by team."
+    },
+    {
+      "path": "backtest/engines/__init__.py",
+      "bytes": 535,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Team-specific backtest engine entrypoints."
+    },
+    {
+      "path": "backtest/engines/arbitrage_engine.py",
+      "bytes": 659,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Arbitrage team backtest engine."
+    },
+    {
+      "path": "backtest/engines/portfolio_engine.py",
+      "bytes": 669,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Portfolio team backtest engine."
+    },
+    {
+      "path": "backtest/engines/trading_engine.py",
+      "bytes": 267,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Trading team backtest engine (single-instrument signal flow)."
+    },
+    {
+      "path": "backtest/walk_forward.py",
+      "bytes": 10268,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Walk-Forward Validation"
+    },
+    {
+      "path": "docs/evidence/crypto_e2e_20261014/measure-used.py",
+      "bytes": 24169,
+      "decision": "보존",
+      "reason": "연구/검증 증적의 재현 코드",
+      "purpose": "Correlated production pipeline traces and explicitly scoped GRVT testnet orders."
+    },
+    {
+      "path": "docs/evidence/crypto_e2e_20261014/trace-used.py",
+      "bytes": 3430,
+      "decision": "보존",
+      "reason": "연구/검증 증적의 재현 코드",
+      "purpose": "Temporary sampled timing taps. Does not change normalized event payloads."
+    },
+    {
+      "path": "docs/evidence/hummingbot_structure_review_20261014/benchmark_local.py",
+      "bytes": 3794,
+      "decision": "보존",
+      "reason": "연구/검증 증적의 재현 코드",
+      "purpose": "Synthetic local component measurements, not a Hummingbot/server benchmark."
+    },
+    {
+      "path": "docs/evidence/hummingbot_structure_review_20261014/read_health.py",
+      "bytes": 1607,
+      "decision": "보존",
+      "reason": "연구/검증 증적의 재현 코드",
+      "purpose": "Read existing heartbeat files, without invoking runtime code or changing state."
+    },
+    {
+      "path": "docs/evidence/hummingbot_structure_review_20261014/read_live_latency.py",
+      "bytes": 2424,
+      "decision": "보존",
+      "reason": "연구/검증 증적의 재현 코드",
+      "purpose": "Passive Core NATS observation; no durable consumers, orders, or publications."
+    },
+    {
+      "path": "docs/evidence/hummingbot_structure_review_20261014/read_server_config.py",
+      "bytes": 4745,
+      "decision": "보존",
+      "reason": "연구/검증 증적의 재현 코드",
+      "purpose": "Read-only audit; selected non-secret configuration and source hashes only."
+    },
+    {
+      "path": "docs/evidence/hummingbot_structure_review_20261014/read_source_diff.py",
+      "bytes": 1750,
+      "decision": "보존",
+      "reason": "연구/검증 증적의 재현 코드",
+      "purpose": "Read selected deployed Python sources; save a local comparison, no remote writes."
+    },
+    {
+      "path": "main.py",
+      "bytes": 131,
+      "decision": "보존",
+      "reason": "Docker 운영 CLI 진입점",
+      "purpose": ""
+    },
+    {
+      "path": "run_strategy.py",
+      "bytes": 11173,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "VibeTrading Strategy Runner"
+    },
+    {
+      "path": "scripts/activate_etf_scope_release.py",
+      "bytes": 4221,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Activate verified collector/storage changes and persist mock ETF service."
+    },
+    {
+      "path": "scripts/activate_telegram_commands.py",
+      "bytes": 1042,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Apply tested command/report changes without restarting live market feeds."
+    },
+    {
+      "path": "scripts/analyze_crypto_capacity.py",
+      "bytes": 4162,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": "scripts/analyze_fv_pilot.py",
+      "bytes": 17887,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Paper PnL, native data diagnostics and frozen-FV response tests."
+    },
+    {
+      "path": "scripts/analyze_fv_run.py",
+      "bytes": 20470,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Exploratory, dependence-aware diagnostics on the untouched evaluation period."
+    },
+    {
+      "path": "scripts/analyze_liquidity_regimes.py",
+      "bytes": 18166,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Held-out liquidity/volatility regimes, realized price responses and ranges."
+    },
+    {
+      "path": "scripts/analyze_market_export.py",
+      "bytes": 24298,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "Merge an exported market-data snapshot by asset and run data-quality checks."
+    },
+    {
+      "path": "scripts/archive_legacy_scope_exports.py",
+      "bytes": 1548,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "Relocate legacy combined exports containing retired data to cloud storage."
+    },
+    {
+      "path": "scripts/archive_precompact_artifact.py",
+      "bytes": 4485,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Preserve one inactive precompact artifact; never opens SQLite or deletes it."
+    },
+    {
+      "path": "scripts/archive_retired_nats_gaps.py",
+      "bytes": 2022,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "Archive and purge exact retired-venue operational data-gap subjects."
+    },
+    {
+      "path": "scripts/archive_retired_venues.py",
+      "bytes": 5174,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "Move retired venue cache to verified cloud storage, retaining catalogue."
+    },
+    {
+      "path": "scripts/assess_mm_state_server.py",
+      "bytes": 2279,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Read-only SSH metrics with existing user SSH configuration. No environment dump."
+    },
+    {
+      "path": "scripts/attach_crypto_recovery_coverage.py",
+      "bytes": 4480,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Add exact recovery blocks to an OFFLINE verified pre-coverage candidate."
+    },
+    {
+      "path": "scripts/audit_market_coverage.py",
+      "bytes": 19535,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "Audit per-instrument collection gaps from local and verified remote Parquet."
+    },
+    {
+      "path": "scripts/audit_original_fv_formulas.py",
+      "bytes": 4045,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Independent receipt-order numeric replay of recorded strategy signals."
+    },
+    {
+      "path": "scripts/backup_crypto_cutover.py",
+      "bytes": 10174,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "One-shot consistent backup for the stopped pre-R2 crypto store."
+    },
+    {
+      "path": "scripts/backup_mock_journal.py",
+      "bytes": 738,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Read-only SQLite snapshot before the intraday mock service upgrade."
+    },
+    {
+      "path": "scripts/benchmark_fv_extract.py",
+      "bytes": 712,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": ""
+    },
+    {
+      "path": "scripts/benchmark_mm_state.py",
+      "bytes": 4460,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Bounded synthetic CPU/RSS benchmark; includes JSON/L2, state policy and paper lifecycle."
+    },
+    {
+      "path": "scripts/build_all_strategy_report.py",
+      "bytes": 99203,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Build one retrospective catalogue from immutable strategy/evidence records."
+    },
+    {
+      "path": "scripts/build_crypto_release.py",
+      "bytes": 9613,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "Prepare a source-only bundle and build crypto alone from a pinned local base."
+    },
+    {
+      "path": "scripts/build_etf_scope_release.py",
+      "bytes": 2110,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Package only coupled collection/ETF execution changes for server overlay."
+    },
+    {
+      "path": "scripts/build_fv_pilot_latency.py",
+      "bytes": 2822,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Freeze measured testnet timing evidence and explicitly named cross-venue proxies."
+    },
+    {
+      "path": "scripts/build_release_images.py",
+      "bytes": 7746,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": ""
+    },
+    {
+      "path": "scripts/build_telegram_restore_release.py",
+      "bytes": 1607,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Package source for recovery; never include credentials or runtime data."
+    },
+    {
+      "path": "scripts/bybit_testnet_status.py",
+      "bytes": 1561,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Read-only Bybit testnet position and open-order check for probe cleanup."
+    },
+    {
+      "path": "scripts/cancel_fv_owned_order.py",
+      "bytes": 1044,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Operator diagnostic for an explicitly identified experiment-owned testnet order."
+    },
+    {
+      "path": "scripts/capture_parquet_jsonl.py",
+      "bytes": 2283,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": "scripts/check_dashboard_server.py",
+      "bytes": 1878,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Server-local private Site read probe. Never prints credentials."
+    },
+    {
+      "path": "scripts/check_etf_csv_sync_release.py",
+      "bytes": 939,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Run close-gated CSV synchronization and preserve a deployment receipt."
+    },
+    {
+      "path": "scripts/check_etf_scope_release.py",
+      "bytes": 1028,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Read-only broker/API preflight using server-owned credentials and new image."
+    },
+    {
+      "path": "scripts/check_fv_connections.py",
+      "bytes": 1567,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Read-only metadata, wallet and native private-feed readiness check."
+    },
+    {
+      "path": "scripts/check_nonoverlap_ranges.py",
+      "bytes": 732,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": "scripts/collect_fv_mainnet.py",
+      "bytes": 3920,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Public-only, four-venue live pre-calibration. No authentication or order API."
+    },
+    {
+      "path": "scripts/collect_fv_public.py",
+      "bytes": 3952,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Read-only pre-calibration collector; no account clients or order submissions."
+    },
+    {
+      "path": "scripts/compare_event_run_cost.py",
+      "bytes": 5487,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Compare NEW disposable clones at production size; no source writes."
+    },
+    {
+      "path": "scripts/compare_l1_price_responses.py",
+      "bytes": 2866,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Matched routes and calendar overlap audit for the original L1 OBI curve."
+    },
+    {
+      "path": "scripts/compare_ledger_layouts.py",
+      "bytes": 4961,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Local synthetic cost attribution; never accepts or opens a production DB."
+    },
+    {
+      "path": "scripts/complete_fv_research_partitions.py",
+      "bytes": 1974,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Publish and evaluate only fully closed, hash-verified reduction shards."
+    },
+    {
+      "path": "scripts/complete_mm_state_server_review.py",
+      "bytes": 3387,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Add reviewed operational entrypoints/docs to an already tested isolated source."
+    },
+    {
+      "path": "scripts/control_liquidity_volatility.py",
+      "bytes": 3346,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Check whether the ratio adds information beyond already-observed volatility."
+    },
+    {
+      "path": "scripts/crypto_capacity_log.py",
+      "bytes": 5350,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Record bounded, read-only server metrics for later crypto capacity review."
+    },
+    {
+      "path": "scripts/deploy_collector_mock_alerts.py",
+      "bytes": 3071,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Upgrade the existing Telegram service without exposing its credentials."
+    },
+    {
+      "path": "scripts/deploy_dual_mock.py",
+      "bytes": 2767,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Upgrade only the ETF loop, importing audited counterfactual records first."
+    },
+    {
+      "path": "scripts/deploy_kiwoom_recovery.py",
+      "bytes": 1515,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Deploy the tested transport fix to collectors only; preserve live trading."
+    },
+    {
+      "path": "scripts/deploy_trade_report_exclusions.py",
+      "bytes": 2574,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Deploy tested reporting changes to Telegram only; keep collectors running."
+    },
+    {
+      "path": "scripts/diagnose_fv_prediction.py",
+      "bytes": 15235,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Read-only horizon, reference-feed and same-asset feature diagnostics."
+    },
+    {
+      "path": "scripts/diagnose_mm_state_no_intents.py",
+      "bytes": 3433,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Causal flat-account eligibility audit for zero-intent paths, no order engine."
+    },
+    {
+      "path": "scripts/enable_etf_mock_service.py",
+      "bytes": 1730,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Start and enable the approved KIS mock-only ETF loop after preflight."
+    },
+    {
+      "path": "scripts/evaluate_fv_indicators.py",
+      "bytes": 14991,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Gap-free, chronologically held-out indicator/FV response surface."
+    },
+    {
+      "path": "scripts/evaluate_regime_direction.py",
+      "bytes": 3308,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Direction and magnitude conditional on liquidity and signal intensity."
+    },
+    {
+      "path": "scripts/exclude_mock_tests_20261014.py",
+      "bytes": 3017,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Apply the user's exact test-trade exclusion; preserve all raw broker evidence."
+    },
+    {
+      "path": "scripts/export_dashboard_audits.py",
+      "bytes": 551,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "Run once in a network-isolated root container; export only display fields."
+    },
+    {
+      "path": "scripts/export_market_snapshot.py",
+      "bytes": 10579,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "Create a verified, point-in-time market-data export on the server."
+    },
+    {
+      "path": "scripts/extract_pilot_liquidity_notional.py",
+      "bytes": 4179,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Exact receipt-time quote stock integrals and public trade notionals."
+    },
+    {
+      "path": "scripts/finalize_crypto_load_trial.py",
+      "bytes": 7764,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Host orchestrator for the existing completed trial, never production data."
+    },
+    {
+      "path": "scripts/finalize_telegram_recovery.py",
+      "bytes": 3529,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Assert the restored production scope and save non-secret evidence."
+    },
+    {
+      "path": "scripts/fix_retired_collector_alerts.py",
+      "bytes": 3769,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Deploy active-scope alert checks without restarting any market collector."
+    },
+    {
+      "path": "scripts/fix_scope_disk_guard.py",
+      "bytes": 704,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Keep OS-disk guard recovery pinned to the verified market deployment."
+    },
+    {
+      "path": "scripts/fv_research_extract.py",
+      "bytes": 12844,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Stream every sealed active crypto archive into causal one-second statistics."
+    },
+    {
+      "path": "scripts/fv_research_local_parallel.py",
+      "bytes": 1868,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Parallel per-asset computations; exact shared-connection gap mask."
+    },
+    {
+      "path": "scripts/fv_research_pilot.py",
+      "bytes": 3073,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Reconstruct L2 pilot evidence using the same read-only extractor as archives."
+    },
+    {
+      "path": "scripts/fv_research_reduce.py",
+      "bytes": 5743,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Receipt-time external merge of immutable archive rows into seconds."
+    },
+    {
+      "path": "scripts/fv_research_server_finish.py",
+      "bytes": 294,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Complete sealed GRVT/Arcus archive derivations in an isolated container."
+    },
+    {
+      "path": "scripts/fv_research_slim.py",
+      "bytes": 1479,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Float Arrow derived copies for local computation, preserving every event."
+    },
+    {
+      "path": "scripts/import_future_trading_csv.py",
+      "bytes": 2738,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "Package the user-maintained ticker CSVs without rewriting their bytes."
+    },
+    {
+      "path": "scripts/import_permission_reconstruction.py",
+      "bytes": 1642,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Import audited historical permission failures without changing real fills."
+    },
+    {
+      "path": "scripts/init_db.py",
+      "bytes": 5780,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "Database Initialization Script"
+    },
+    {
+      "path": "scripts/init_nats.py",
+      "bytes": 6435,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "NATS JetStream Initialization Script"
+    },
+    {
+      "path": "scripts/inspect_fv_pilot.py",
+      "bytes": 1441,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Compact read-only inspection of a public collector/pilot ledger."
+    },
+    {
+      "path": "scripts/inspect_fv_run.py",
+      "bytes": 977,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Small read-only snapshot; no credentials, cookies or order signatures."
+    },
+    {
+      "path": "scripts/inspect_pilot_schema.py",
+      "bytes": 494,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": "scripts/inspect_rollback_state.py",
+      "bytes": 1166,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Inspect retained rollback inputs without exposing credentials."
+    },
+    {
+      "path": "scripts/inspect_timefolio_metrics.py",
+      "bytes": 1006,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Server-only read probe of metric labels after login; never prints credentials."
+    },
+    {
+      "path": "scripts/install_etf_scope_release.py",
+      "bytes": 1656,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Build the isolated collection/ETF image and run tests before activation."
+    },
+    {
+      "path": "scripts/install_future_trading_csv.py",
+      "bytes": 1464,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "Atomically install ticker CSVs and preserve the former strategy files."
+    },
+    {
+      "path": "scripts/inventory_fv_research.py",
+      "bytes": 945,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Read-only catalogue inventory; never reads credentials."
+    },
+    {
+      "path": "scripts/latency_trace_sitecustomize.py",
+      "bytes": 3430,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Temporary sampled timing taps. Does not change normalized event payloads."
+    },
+    {
+      "path": "scripts/launch_fv_pilot.py",
+      "bytes": 1597,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Detach a bounded public-only collector or pilot on the experiment server."
+    },
+    {
+      "path": "scripts/launch_fv_run.py",
+      "bytes": 1223,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Launch the operator-requested bounded run as a separate server process."
+    },
+    {
+      "path": "scripts/launch_mock2_validation.py",
+      "bytes": 1074,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Supply server credentials privately to an isolated mock-only validation."
+    },
+    {
+      "path": "scripts/measure_crypto_e2e.py",
+      "bytes": 24292,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Correlated production pipeline traces and explicitly scoped GRVT testnet orders."
+    },
+    {
+      "path": "scripts/measure_crypto_latency.py",
+      "bytes": 6105,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Read-only live ingestion timing. Does not publish intents or submit orders."
+    },
+    {
+      "path": "scripts/measure_maintenance_io.py",
+      "bytes": 3482,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Short read-only host measurement; no SQLite scans or secret/environment output."
+    },
+    {
+      "path": "scripts/measure_pipeline_capacity.py",
+      "bytes": 4177,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "Sample server queue, storage and container pressure without enabling feeds."
+    },
+    {
+      "path": "scripts/merge_fv_research_results.py",
+      "bytes": 1503,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": ""
+    },
+    {
+      "path": "scripts/migrate_crypto_delivery_ledger.py",
+      "bytes": 10388,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Offline, fail-closed migration of the crypto delivery ledger."
+    },
+    {
+      "path": "scripts/nats_crypto_status.py",
+      "bytes": 2143,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": ""
+    },
+    {
+      "path": "scripts/normalize_mock2_product_env.py",
+      "bytes": 324,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Docker env_file treats inline comments as part of the account code."
+    },
+    {
+      "path": "scripts/os_disk_guard.py",
+      "bytes": 2047,
+      "decision": "보존",
+      "reason": "현재 호스트 디스크 가드의 정식 원본",
+      "purpose": "Host guard: preserve thresholds, expose pause state, resume verified service."
+    },
+    {
+      "path": "scripts/plot_fv_diagnosis.py",
+      "bytes": 2960,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Static figures for the read-only FV diagnosis."
+    },
+    {
+      "path": "scripts/plot_fv_report.py",
+      "bytes": 3498,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Static research figure: frozen FV price displacement vs actual future mid."
+    },
+    {
+      "path": "scripts/polish_strategy_report.py",
+      "bytes": 4658,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Whitespace-only Korean prose formatting; numbers, links and formula atoms stay intact."
+    },
+    {
+      "path": "scripts/prepare_crypto_event_index.py",
+      "bytes": 6934,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Prepare and verify a NEW offline catalogue; never modifies the source DB."
+    },
+    {
+      "path": "scripts/prepare_crypto_replay_trace.py",
+      "bytes": 7065,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Capture the busiest receive minute plus the observed one-second burst."
+    },
+    {
+      "path": "scripts/prepare_etf_reference.py",
+      "bytes": 2097,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "Vendor only original deterministic feature functions; record source hashes."
+    },
+    {
+      "path": "scripts/prepare_trial_retention_policy.py",
+      "bytes": 2869,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Offline exact-index validation before narrowing ONLY a disposable test policy."
+    },
+    {
+      "path": "scripts/probe_crypto_prune_capacity.py",
+      "bytes": 5776,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Bounded destructive retention probe ONLY in the completed disposable trial."
+    },
+    {
+      "path": "scripts/probe_derivative_streams.py",
+      "bytes": 1407,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": "scripts/probe_etf_csv_close.py",
+      "bytes": 2487,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Exercise native close updates in a separate sink; never alter live history."
+    },
+    {
+      "path": "scripts/probe_etf_inputs.py",
+      "bytes": 2751,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "Check Kiwoom warmup independently of KIS mock account readiness."
+    },
+    {
+      "path": "scripts/probe_fv_archive.py",
+      "bytes": 637,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": ""
+    },
+    {
+      "path": "scripts/probe_fv_native.py",
+      "bytes": 767,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": ""
+    },
+    {
+      "path": "scripts/probe_fv_public_frames.py",
+      "bytes": 1640,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Read-only native frame shape probe; no account access."
+    },
+    {
+      "path": "scripts/probe_fv_testnets.py",
+      "bytes": 3074,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Read-only readiness probe; never prints keys, cookies or signatures."
+    },
+    {
+      "path": "scripts/probe_grvt_auth_candidates.py",
+      "bytes": 1225,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Test only namespaced testnet keys in known app configuration files."
+    },
+    {
+      "path": "scripts/probe_grvt_latency_readiness.py",
+      "bytes": 2029,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "GRVT testnet-only read-only readiness, without printing auth material."
+    },
+    {
+      "path": "scripts/probe_grvt_trade_selector.py",
+      "bytes": 1354,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Public-only simultaneous selector diagnostic; never loads .env/orders."
+    },
+    {
+      "path": "scripts/probe_kis_futures_scope.py",
+      "bytes": 991,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "Resolve current KIS collection subscriptions without placing orders."
+    },
+    {
+      "path": "scripts/probe_kis_mock_rejection.py",
+      "bytes": 2033,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "Read-only mock diagnostics. No POST orders and no credentials in output."
+    },
+    {
+      "path": "scripts/probe_missing_etf_trades.py",
+      "bytes": 2907,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Read-only diagnosis of all broker fills and independently stored intents."
+    },
+    {
+      "path": "scripts/probe_mock_summary.py",
+      "bytes": 852,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "Read only mock account summary fields; never submit an order."
+    },
+    {
+      "path": "scripts/probe_publish_incident.py",
+      "bytes": 2038,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "Read-only NATS pressure, collector freshness and mock-order counts."
+    },
+    {
+      "path": "scripts/probe_retired_alerts.py",
+      "bytes": 580,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Inspect alert scope without revealing Telegram credentials."
+    },
+    {
+      "path": "scripts/probe_telegram_restart.py",
+      "bytes": 731,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": "scripts/provision_dashboard.py",
+      "bytes": 3052,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Run on the existing Linux server. Secrets arrive via stdin, never command arguments."
+    },
+    {
+      "path": "scripts/r2_sqlite_baseline.py",
+      "bytes": 3319,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": "scripts/read_fv_gaps.py",
+      "bytes": 743,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": ""
+    },
+    {
+      "path": "scripts/rebuild_fv_pilot_calibration.py",
+      "bytes": 3335,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Rebuild Bitget S1/S3 from immutable training frames after snapshot semantics fix."
+    },
+    {
+      "path": "scripts/reclaim_current_local_snapshot.py",
+      "bytes": 2539,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Reclaim only the redundant local snapshot after full remote verification."
+    },
+    {
+      "path": "scripts/reclaim_export_duplicates.py",
+      "bytes": 7893,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Verify retained tar files before reclaiming only their extracted duplicates."
+    },
+    {
+      "path": "scripts/reclaim_retired_trial_cache.py",
+      "bytes": 2541,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Remove only the private, reclaimable cache subtree of a retired trial."
+    },
+    {
+      "path": "scripts/reclaim_unused_toss_trial_image.py",
+      "bytes": 1618,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Reclaim exactly one retired trial image; no force, volumes, or containers."
+    },
+    {
+      "path": "scripts/reclaim_verified_precompact.py",
+      "bytes": 3271,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Reclaim exactly one inactive artifact after its authorized remote backup."
+    },
+    {
+      "path": "scripts/reconstruct_permission_denied_trades.py",
+      "bytes": 5537,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Read-only reconstruction from recorded quotes/bars; never invent old prices."
+    },
+    {
+      "path": "scripts/record_main_server_recovery.py",
+      "bytes": 2098,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Document observable event-time gaps left by the unintended shutdown."
+    },
+    {
+      "path": "scripts/recover_current_backup_receipt.py",
+      "bytes": 2919,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Recover the already verified remote receipt after a local permission error."
+    },
+    {
+      "path": "scripts/recover_empty_mock2_probe.py",
+      "bytes": 510,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": "scripts/refresh_testnet_env.py",
+      "bytes": 643,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Copy testnet fields from an operator-selected env file; never print values."
+    },
+    {
+      "path": "scripts/refresh_trade_valuation.py",
+      "bytes": 830,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "Read two mock accounts and retain their daily executions; submit no orders."
+    },
+    {
+      "path": "scripts/relocate_closed_research_cache.py",
+      "bytes": 2014,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Restore OS disk headroom while preserving closed research paths and bytes."
+    },
+    {
+      "path": "scripts/render_strategy_report_pdf.py",
+      "bytes": 9834,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Render the consolidated Markdown report with embedded Korean fonts and outline."
+    },
+    {
+      "path": "scripts/replay_crypto_nats.py",
+      "bytes": 9395,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Replay captured receive timing into a disposable real NATS only."
+    },
+    {
+      "path": "scripts/replay_mm_state_revision.py",
+      "bytes": 12987,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Train-frozen native replay and incremental ablations, isolated virtual accounts."
+    },
+    {
+      "path": "scripts/replay_storage_capacity.py",
+      "bytes": 3432,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Replay a captured public feed into an isolated Parquet writer at 2x rate."
+    },
+    {
+      "path": "scripts/report_fv_indicator_research.py",
+      "bytes": 41560,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Scientific plots and Korean report from the complete reproducible grid."
+    },
+    {
+      "path": "scripts/report_liquidity_regimes.py",
+      "bytes": 32337,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Merge research partitions; scientific price plots; Korean follow-up report."
+    },
+    {
+      "path": "scripts/report_mm_state_revision.py",
+      "bytes": 26302,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Report completed evidence only. Source ledgers are opened read-only."
+    },
+    {
+      "path": "scripts/restore_dashboard_monitors.py",
+      "bytes": 4588,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Restore the two previously running read-only dashboard workers."
+    },
+    {
+      "path": "scripts/restore_vibetrading_server.py",
+      "bytes": 8492,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Recover the mistakenly decommissioned main server, reusing retained state."
+    },
+    {
+      "path": "scripts/retire_collectors_20261013.py",
+      "bytes": 812,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Persist the user-requested retired crypto venues without changing storage."
+    },
+    {
+      "path": "scripts/retire_dashboard_observers.py",
+      "bytes": 2003,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Apply the same retired-venue scope to dashboard public/account observers."
+    },
+    {
+      "path": "scripts/run_backtest.py",
+      "bytes": 7252,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "Backtest Runner CLI"
+    },
+    {
+      "path": "scripts/run_crypto_e2e_audit.py",
+      "bytes": 5510,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Bounded temporary collector instrumentation, always restored on completion."
+    },
+    {
+      "path": "scripts/run_fv_pilot.py",
+      "bytes": 883,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Bounded 16-policy public-mainnet pilot. Does not load .env or trading clients."
+    },
+    {
+      "path": "scripts/run_fv_testnets.py",
+      "bytes": 1400,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": ""
+    },
+    {
+      "path": "scripts/run_r2_maintenance_regressions.py",
+      "bytes": 2016,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Actual NATS regression with private ephemeral services and no credentials."
+    },
+    {
+      "path": "scripts/scope_inventory_20261013.py",
+      "bytes": 1504,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Read-only inventory for the requested collection scope migration."
+    },
+    {
+      "path": "scripts/seal_fv_indicator_report.py",
+      "bytes": 7726,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Seal report provenance and enumerate strictly observed contiguous periods."
+    },
+    {
+      "path": "scripts/set_kis_mock_stock_product.py",
+      "bytes": 641,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Apply the user's approved switch to the KIS mock stock product (01)."
+    },
+    {
+      "path": "scripts/setup_crypto_load_trial.py",
+      "bytes": 14272,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Host-only setup for a disposable full-size candidate and real NATS replay."
+    },
+    {
+      "path": "scripts/setup_crypto_maintenance_trial.py",
+      "bytes": 10342,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Qualify the new maintenance service on the existing disposable full DB."
+    },
+    {
+      "path": "scripts/shard_closed_fv_research.py",
+      "bytes": 1610,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Shard a closed server reduction without changing the observed values."
+    },
+    {
+      "path": "scripts/smoke_aligned_derivatives.py",
+      "bytes": 2222,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": "scripts/smoke_crypto_feeds.py",
+      "bytes": 2829,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "Read-only public-feed smoke check; does not write or submit orders."
+    },
+    {
+      "path": "scripts/smoke_telegram_commands.py",
+      "bytes": 1100,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Exercise replies to the configured user's requested status/trade commands."
+    },
+    {
+      "path": "scripts/summarize_crypto_load_trial.py",
+      "bytes": 3135,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Summarize observer evidence without claiming a qualification pass."
+    },
+    {
+      "path": "scripts/validate_all_strategy_report.py",
+      "bytes": 4502,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Validate report coverage and numerical provenance without modifying source evidence."
+    },
+    {
+      "path": "scripts/validate_crypto_data_saving.py",
+      "bytes": 2663,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "Validate crypto candle saving behavior."
+    },
+    {
+      "path": "scripts/validate_kis_mock2_orders.py",
+      "bytes": 4912,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Explicitly authorized one-share mock2 round trips; persist before POST."
+    },
+    {
+      "path": "scripts/validate_system.py",
+      "bytes": 7621,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "System Validation Script"
+    },
+    {
+      "path": "scripts/verify_collector_mock_alerts.py",
+      "bytes": 1768,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Verify actual status delivery and journal readiness, without test orders."
+    },
+    {
+      "path": "scripts/verify_collector_release_health.py",
+      "bytes": 2618,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": "Host-side evidence with no credentials, order submissions or log secrets."
+    },
+    {
+      "path": "scripts/verify_crypto_delivery_ledger.py",
+      "bytes": 1904,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": "scripts/verify_crypto_prune_generation_nats.py",
+      "bytes": 6946,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Disposable real-NATS proof of generation-isolated, non-starving pruning."
+    },
+    {
+      "path": "scripts/verify_crypto_replay_integrity.py",
+      "bytes": 14915,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Read-only terminal audit for a disposable production-size replay."
+    },
+    {
+      "path": "scripts/verify_dual_mock.py",
+      "bytes": 2876,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Host verification: active routes, durable assumptions, delivery and smoke fills."
+    },
+    {
+      "path": "scripts/verify_etf_scope_runtime.py",
+      "bytes": 4103,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Save runtime evidence without exporting credentials or complete environments."
+    },
+    {
+      "path": "scripts/verify_event_runs_nats_e2e.py",
+      "bytes": 10728,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Bounded integration test; refuses production NATS addresses and data paths."
+    },
+    {
+      "path": "scripts/verify_filtered_trade_reply.py",
+      "bytes": 777,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Verify and deliver the corrected reply to the configured user."
+    },
+    {
+      "path": "scripts/verify_fv_slim_bundle.py",
+      "bytes": 1049,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": ""
+    },
+    {
+      "path": "scripts/verify_kiwoom_recovery.py",
+      "bytes": 3151,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Verify the running transport/Telegram fix without submitting orders."
+    },
+    {
+      "path": "scripts/verify_maintenance_yield_e2e.py",
+      "bytes": 5150,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Run only against a disposable NATS server, never production subjects/data."
+    },
+    {
+      "path": "scripts/verify_mm_state_on_server.py",
+      "bytes": 3776,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Stage a source-only review, then network-disabled Linux tests and a capped benchmark."
+    },
+    {
+      "path": "scripts/verify_release_runtime.py",
+      "bytes": 5446,
+      "decision": "보존·운영도구",
+      "reason": "반복 진단/패키징/복구/초기화용; 기능을 유지하는 동안 보존",
+      "purpose": ""
+    },
+    {
+      "path": "scripts/verify_scope_20261013.py",
+      "bytes": 2440,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Record exact remaining subjects/files and remove retired KIS option caches."
+    },
+    {
+      "path": "scripts/verify_telegram_restore.py",
+      "bytes": 2111,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Record recovery status with credentials redacted from diagnostic logs."
+    },
+    {
+      "path": "scripts/watch_crypto_load_trial.py",
+      "bytes": 7666,
+      "decision": "완료 작업 후보",
+      "reason": "과거 단발 배포/시험/측정 도구. 작업 완료 및 상시 호출부 없음 확인 후 정리",
+      "purpose": "Observe and guard only the disposable trial, without SQLite heartbeat scans."
+    },
+    {
+      "path": "scripts/watch_fv_pilot.py",
+      "bytes": 1170,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Bounded read-only pilot watcher; prints compact progress every 45 seconds."
+    },
+    {
+      "path": "scripts/watch_fv_run.py",
+      "bytes": 959,
+      "decision": "조건부·연구",
+      "reason": "연구/실험 재현 도구. 관련 연구를 유지한다면 보존",
+      "purpose": "Bounded read-only monitor; exits when completion or attention appears."
+    },
+    {
+      "path": "services/broker_factory.py",
+      "bytes": 4598,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Broker Factory"
+    },
+    {
+      "path": "services/data_feed/__init__.py",
+      "bytes": 21,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": ""
+    },
+    {
+      "path": "services/data_feed/base.py",
+      "bytes": 4161,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Abstract Data Feed Provider Interface"
+    },
+    {
+      "path": "services/data_feed/crypto_feed.py",
+      "bytes": 15173,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Binance Crypto Data Feed Provider"
+    },
+    {
+      "path": "services/data_feed/kiwoom_feed.py",
+      "bytes": 16341,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Kiwoom Securities Data Feed Provider"
+    },
+    {
+      "path": "services/data_feed/kr_feed.py",
+      "bytes": 14470,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Korea Stock Market Data Feed Provider"
+    },
+    {
+      "path": "services/data_feed/us_feed.py",
+      "bytes": 14624,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "US Stock Market Data Feed Provider"
+    },
+    {
+      "path": "services/execution/__init__.py",
+      "bytes": 21,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": ""
+    },
+    {
+      "path": "services/execution/base.py",
+      "bytes": 4166,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Abstract Broker Adapter Interface"
+    },
+    {
+      "path": "services/execution/broker_stub.py",
+      "bytes": 6949,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Broker Stub / Paper Trading Adapter"
+    },
+    {
+      "path": "services/execution/crypto_binance.py",
+      "bytes": 11112,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Binance Crypto Broker Adapter"
+    },
+    {
+      "path": "services/execution/kiwoom_broker.py",
+      "bytes": 19102,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Kiwoom Securities Broker Adapter"
+    },
+    {
+      "path": "services/execution/order_manager.py",
+      "bytes": 14974,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Order Manager"
+    },
+    {
+      "path": "services/monitoring/__init__.py",
+      "bytes": 22,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": ""
+    },
+    {
+      "path": "services/monitoring/health.py",
+      "bytes": 4771,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Health Monitoring Service"
+    },
+    {
+      "path": "services/monitoring/state_query.py",
+      "bytes": 10562,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "State Query Interface"
+    },
+    {
+      "path": "services/risk_engine/__init__.py",
+      "bytes": 23,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": ""
+    },
+    {
+      "path": "services/risk_engine/kill_switch.py",
+      "bytes": 3715,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Kill Switch"
+    },
+    {
+      "path": "services/risk_engine/position_tracker.py",
+      "bytes": 11359,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Position Tracker"
+    },
+    {
+      "path": "services/risk_engine/risk_manager.py",
+      "bytes": 10920,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Risk Manager"
+    },
+    {
+      "path": "services/signal_gen/__init__.py",
+      "bytes": 29,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": ""
+    },
+    {
+      "path": "services/signal_gen/engine.py",
+      "bytes": 9375,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Signal Generation Engine"
+    },
+    {
+      "path": "services/signal_gen/strategy_loader.py",
+      "bytes": 7668,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Strategy Loader"
+    },
+    {
+      "path": "shared/__init__.py",
+      "bytes": 37,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": ""
+    },
+    {
+      "path": "shared/config.py",
+      "bytes": 12267,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Centralized Configuration for Trading System"
+    },
+    {
+      "path": "shared/database.py",
+      "bytes": 9027,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Database Connection Management"
+    },
+    {
+      "path": "shared/fill_logic.py",
+      "bytes": 10550,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Unified Fill Logic"
+    },
+    {
+      "path": "shared/messaging.py",
+      "bytes": 10764,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "NATS JetStream Messaging Client"
+    },
+    {
+      "path": "shared/models.py",
+      "bytes": 13065,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Shared Models for Trading System"
+    },
+    {
+      "path": "shared/strategy_contracts.py",
+      "bytes": 2103,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Team-scoped strategy contracts for refactored backtesting."
+    },
+    {
+      "path": "strategies/__init__.py",
+      "bytes": 85,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": ""
+    },
+    {
+      "path": "strategies/example_signal.py",
+      "bytes": 1971,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": ""
+    },
+    {
+      "path": "strategies/turtle_breakout.py",
+      "bytes": 7970,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "Turtle Breakout Strategy"
+    },
+    {
+      "path": "strategy/s1_net_liquidity.py",
+      "bytes": 1562,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "S1: causal OFI onset/persistence direction; standalone entry point."
+    },
+    {
+      "path": "strategy/s2_external_anchor.py",
+      "bytes": 5843,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "S2: causal robust basis residual + origin, unhedged local maker policy."
+    },
+    {
+      "path": "strategy/s3_aggressive_flow.py",
+      "bytes": 4556,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "S3: flow/absorption -> exhaustion transition, not trade sign alone."
+    },
+    {
+      "path": "strategy/s4_obi.py",
+      "bytes": 834,
+      "decision": "조건부·구형/연구",
+      "reason": "별도 전략/백테스트 경로. 연구 목적과 관련 import 정리 여부를 확인한 후 판단",
+      "purpose": "S4: L1 OBI core direction; L2 is an auxiliary diagnostic."
+    },
+    {
+      "path": "tests/test_aligned_derivatives.py",
+      "bytes": 3922,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_archive_reclaim_scaling.py",
+      "bytes": 3776,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_archive_relief.py",
+      "bytes": 4747,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_archive_scheduler_progress.py",
+      "bytes": 4682,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": "Regression for upload starvation after a prune-only pressure deferral."
+    },
+    {
+      "path": "tests/test_binance_snapshot_bridge.py",
+      "bytes": 3731,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_collection_limits.py",
+      "bytes": 3094,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_collector_recovery_20261007.py",
+      "bytes": 4133,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_confirmed_ack_receipts.py",
+      "bytes": 2871,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_crypto_committed_aliases.py",
+      "bytes": 3617,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_crypto_cutover_backup.py",
+      "bytes": 5973,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_crypto_delivery_recovery.py",
+      "bytes": 16133,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_crypto_event_retirement.py",
+      "bytes": 8919,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_crypto_latency_audit.py",
+      "bytes": 3678,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_crypto_perp_pipeline.py",
+      "bytes": 6043,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_crypto_release.py",
+      "bytes": 2223,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": "Deployment boundaries that must survive changes to the older profile."
+    },
+    {
+      "path": "tests/test_crypto_replay_integrity.py",
+      "bytes": 7389,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_crypto_storage_readiness.py",
+      "bytes": 2498,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_dashboard.py",
+      "bytes": 5597,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_dual_mock_and_assumed.py",
+      "bytes": 6555,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_durable_pipeline_guards.py",
+      "bytes": 13151,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_etf_csv_sync.py",
+      "bytes": 7240,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": "Ticker sharing, exchange close gates and recoverable CSV commits."
+    },
+    {
+      "path": "tests/test_etf_execution_update.py",
+      "bytes": 12553,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": "Five-second partial-fill replacement and immutable CSV history boundaries."
+    },
+    {
+      "path": "tests/test_etf_mock_trading.py",
+      "bytes": 12605,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": "Scope guards, broker account isolation and durable partial-fill accounting."
+    },
+    {
+      "path": "tests/test_event_filter_capacity.py",
+      "bytes": 1761,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_event_index_runs.py",
+      "bytes": 4191,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_event_index_runs_storage.py",
+      "bytes": 4029,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_exchange_expansion.py",
+      "bytes": 11272,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_export_duplicate_reclaim.py",
+      "bytes": 1801,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_fv_analysis.py",
+      "bytes": 2445,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_fv_indicator_research.py",
+      "bytes": 6377,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_fv_mm.py",
+      "bytes": 9880,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_fv_pilot.py",
+      "bytes": 4942,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_fv_pilot_analysis.py",
+      "bytes": 2204,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_fv_prediction_diagnosis.py",
+      "bytes": 2349,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_gap_ledger.py",
+      "bytes": 2332,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_incident_remediation.py",
+      "bytes": 3080,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_kiwoom_disconnect_alerts.py",
+      "bytes": 2881,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": "Transport recovery classification and suppression of market-open notices."
+    },
+    {
+      "path": "tests/test_liquidity_mm.py",
+      "bytes": 22449,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_liquidity_regimes.py",
+      "bytes": 2417,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_live_data_smoke.py",
+      "bytes": 744,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_logging_redaction.py",
+      "bytes": 650,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_ls_market.py",
+      "bytes": 4924,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_maintenance_lock_retry.py",
+      "bytes": 1580,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_maintenance_yield.py",
+      "bytes": 8976,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_market_collector_incident.py",
+      "bytes": 7345,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_market_export_analysis.py",
+      "bytes": 3773,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_mm_state_revision.py",
+      "bytes": 14721,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_models.py",
+      "bytes": 1087,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_os_disk_guard.py",
+      "bytes": 2308,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_parquet_store.py",
+      "bytes": 2738,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_participant_flow.py",
+      "bytes": 2342,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_publish_and_mock_notifications.py",
+      "bytes": 8136,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_session_alerts.py",
+      "bytes": 898,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_settings.py",
+      "bytes": 483,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_split_state_disk_guard.py",
+      "bytes": 1678,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_sqlite_io_budget.py",
+      "bytes": 2253,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_storage_heartbeat_contention.py",
+      "bytes": 1665,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_storage_pipeline.py",
+      "bytes": 21057,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_telegram_commands.py",
+      "bytes": 7843,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_telegram_status.py",
+      "bytes": 10234,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_timefolio.py",
+      "bytes": 362,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_toss_daymarket.py",
+      "bytes": 2139,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_trade_exclusions.py",
+      "bytes": 4161,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tests/test_universe.py",
+      "bytes": 1891,
+      "decision": "보존",
+      "reason": "회귀 테스트; 소스와 함께 유지",
+      "purpose": ""
+    },
+    {
+      "path": "tmp/benchmark_grvt_local_prepare.py",
+      "bytes": 1679,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": "tmp/observe_domestic_recovery.py",
+      "bytes": 830,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": "tmp/probe_arcus_compare.py",
+      "bytes": 2988,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": "tmp/probe_arcus_raw_time.py",
+      "bytes": 585,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": "tmp/probe_arcus_timestamp.py",
+      "bytes": 579,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": "tmp/probe_order_shape.py",
+      "bytes": 672,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": "tmp/refresh_kiwoom_incident.py",
+      "bytes": 179,
+      "decision": "완료 작업 후보",
+      "reason": "임시 배포/측정 복사본 또는 단발 도구. 정식 소스·증적·rollback 한 부 보존 후 정리",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/__init__.py",
+      "bytes": 246,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Operational runtime for VibeTrading."
+    },
+    {
+      "path": "vibetrading/archive.py",
+      "bytes": 24364,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/brokers.py",
+      "bytes": 16047,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/bus.py",
+      "bytes": 40654,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/bybit_execution.py",
+      "bytes": 33679,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Fail-closed Bybit linear-perpetual order probe with a separate audit ledger."
+    },
+    {
+      "path": "vibetrading/cli.py",
+      "bytes": 29355,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/collection_timing.py",
+      "bytes": 912,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/compactor.py",
+      "bytes": 5453,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/dashboard/__init__.py",
+      "bytes": 79,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Read-only projections and outbound publishing for the private dashboard."
+    },
+    {
+      "path": "vibetrading/dashboard/accounts.py",
+      "bytes": 3441,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Authenticated GET-only account observers. No order methods are called here."
+    },
+    {
+      "path": "vibetrading/dashboard/bridge.py",
+      "bytes": 9062,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/dashboard/projection.py",
+      "bytes": 12603,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/dashboard/telemetry.py",
+      "bytes": 1003,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Strategy lifecycle telemetry, separate from execution and market storage."
+    },
+    {
+      "path": "vibetrading/dashboard/timefolio_monitor.py",
+      "bytes": 4445,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/dedup.py",
+      "bytes": 1441,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/delivery_recovery.py",
+      "bytes": 26361,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Exact crypto delivery recovery blocks, committed with their canonical runs."
+    },
+    {
+      "path": "vibetrading/etf_csv_history.py",
+      "bytes": 7326,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Shared ticker CSV history, with atomic close-only appends and receipts."
+    },
+    {
+      "path": "vibetrading/etf_csv_sync.py",
+      "bytes": 10742,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Close-only ticker CSV updates, independent of the mock trading process."
+    },
+    {
+      "path": "vibetrading/etf_history.py",
+      "bytes": 8879,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Pre-open Kiwoom warmup and confirmed US/index inputs for frozen ETF rules."
+    },
+    {
+      "path": "vibetrading/etf_journal.py",
+      "bytes": 16980,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Durable per-strategy capital, reservations and broker-confirmed fills."
+    },
+    {
+      "path": "vibetrading/etf_reference.py",
+      "bytes": 7199,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Original Future_Trading feature formulas, vendored by prepare_etf_reference.py."
+    },
+    {
+      "path": "vibetrading/etf_trading.py",
+      "bytes": 36448,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Live Kiwoom ETF signals -> independent books -> KIS mock cash orders."
+    },
+    {
+      "path": "vibetrading/event_index_runs.py",
+      "bytes": 15403,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Append-only exact event lookup runs, committed in the catalogue transaction."
+    },
+    {
+      "path": "vibetrading/execution.py",
+      "bytes": 3640,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/extended_brokers.py",
+      "bytes": 18515,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Signed WebSocket order submission for Arcus and GRVT."
+    },
+    {
+      "path": "vibetrading/fv_mm/__init__.py",
+      "bytes": 103,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Independent v4 FV providers and shared, testnet-only execution research."
+    },
+    {
+      "path": "vibetrading/fv_mm/calibration.py",
+      "bytes": 2657,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Chronological training and disjoint error calibration; no evaluation refits."
+    },
+    {
+      "path": "vibetrading/fv_mm/feeds.py",
+      "bytes": 7609,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Shared sockets; signal updates happen on each received market event."
+    },
+    {
+      "path": "vibetrading/fv_mm/journal.py",
+      "bytes": 2476,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/fv_mm/legacy/__init__.py",
+      "bytes": 63,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Frozen FV v4 formulas for historical reproduction only."
+    },
+    {
+      "path": "vibetrading/fv_mm/legacy/paper_simulation.py",
+      "bytes": 9573,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Causal receipt-time paper matching; no method can submit an exchange order."
+    },
+    {
+      "path": "vibetrading/fv_mm/legacy/s1_net_liquidity.py",
+      "bytes": 1676,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "S1: price-aware net BBO flow. No trade, OBI or anchor approval filter."
+    },
+    {
+      "path": "vibetrading/fv_mm/legacy/s2_external_anchor.py",
+      "bytes": 1355,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "S2: same-asset Binance USDT perpetual anchor with frozen log basis."
+    },
+    {
+      "path": "vibetrading/fv_mm/legacy/s3_aggressive_flow.py",
+      "bytes": 1293,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "S3: signed actual aggressor quantity in a depth-scaled volume window."
+    },
+    {
+      "path": "vibetrading/fv_mm/legacy/s4_obi.py",
+      "bytes": 1001,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "S4: current BBO imbalance only, with its own future-move coefficient."
+    },
+    {
+      "path": "vibetrading/fv_mm/market.py",
+      "bytes": 5180,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/fv_mm/private.py",
+      "bytes": 2694,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Native private order/fill events, with REST reconciliation after gaps."
+    },
+    {
+      "path": "vibetrading/fv_mm/runner.py",
+      "bytes": 28776,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Eight independently routed policies, shared account risk and event feeds."
+    },
+    {
+      "path": "vibetrading/fv_mm/types.py",
+      "bytes": 3762,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/fv_mm/venues.py",
+      "bytes": 12788,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Fixed testnet endpoints. Mutations require explicit runner trading mode."
+    },
+    {
+      "path": "vibetrading/fv_pilot/__init__.py",
+      "bytes": 81,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Public-mainnet market data and intent-only, latency-aware paper execution."
+    },
+    {
+      "path": "vibetrading/fv_pilot/market.py",
+      "bytes": 2334,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/fv_pilot/public.py",
+      "bytes": 14076,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/fv_pilot/runner.py",
+      "bytes": 19548,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/fv_pilot/simulation.py",
+      "bytes": 15528,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Deterministic receipt-time paper engine. No exchange order client exists here."
+    },
+    {
+      "path": "vibetrading/gap_ledger.py",
+      "bytes": 3068,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Small local operational ledger for collector outage and backpressure intervals."
+    },
+    {
+      "path": "vibetrading/health.py",
+      "bytes": 4542,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/hot_path.py",
+      "bytes": 7111,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/kis_execution.py",
+      "bytes": 10559,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "KIS domestic cash orders, with explicit real/mock credential namespaces."
+    },
+    {
+      "path": "vibetrading/liquidity_mm/__init__.py",
+      "bytes": 124,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Residual-flow selective market making, isolated from collection services."
+    },
+    {
+      "path": "vibetrading/liquidity_mm/__main__.py",
+      "bytes": 30,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/liquidity_mm/cli.py",
+      "bytes": 5601,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/liquidity_mm/config.py",
+      "bytes": 4756,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/liquidity_mm/domain.py",
+      "bytes": 4912,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/liquidity_mm/exchange.py",
+      "bytes": 9389,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/liquidity_mm/journal.py",
+      "bytes": 5499,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/liquidity_mm/market.py",
+      "bytes": 14055,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/liquidity_mm/replay.py",
+      "bytes": 11416,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/liquidity_mm/runner.py",
+      "bytes": 41231,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/liquidity_mm/strategy.py",
+      "bytes": 12057,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/logging_utils.py",
+      "bytes": 1187,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/maintenance_gate.py",
+      "bytes": 2984,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Cross-container gate for disk-intensive maintenance on the shared volume."
+    },
+    {
+      "path": "vibetrading/market_policy.py",
+      "bytes": 14372,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/market_source_status.py",
+      "bytes": 1832,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Fail-closed external market-data entitlement registry."
+    },
+    {
+      "path": "vibetrading/mm_state/__init__.py",
+      "bytes": 83,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Bounded causal state policies. No exchange credentials or network mutations."
+    },
+    {
+      "path": "vibetrading/mm_state/analytics.py",
+      "bytes": 3127,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Bounded fill-conditioned future observations; gaps/tails are missing labels."
+    },
+    {
+      "path": "vibetrading/mm_state/calibration.py",
+      "bytes": 5055,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Train-only thresholds and offline S2 diagnostics; never called per market tick."
+    },
+    {
+      "path": "vibetrading/mm_state/clock.py",
+      "bytes": 422,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Live feed source freshness. Offline replay uses recorded receipt clocks instead."
+    },
+    {
+      "path": "vibetrading/mm_state/coordinator.py",
+      "bytes": 3669,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Ablation profiles share one feature engine; strategy files stay independent."
+    },
+    {
+      "path": "vibetrading/mm_state/features.py",
+      "bytes": 8797,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Receipt-time microstructure, bounded 100 ms buckets; L2 changes are net proxies."
+    },
+    {
+      "path": "vibetrading/mm_state/lifecycle.py",
+      "bytes": 1704,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Shared paper/live quote retention rules, including pre-ACK reservations."
+    },
+    {
+      "path": "vibetrading/mm_state/policy.py",
+      "bytes": 3715,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Maker prices, asymmetric inventory control and explicit experimental state risk."
+    },
+    {
+      "path": "vibetrading/mm_state/replay.py",
+      "bytes": 4407,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Streaming native pilot SQLite replay; receipt order, read-only source handles."
+    },
+    {
+      "path": "vibetrading/mm_state/risk.py",
+      "bytes": 2761,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Bounded, latched operational circuits. A halt forbids entries, not reductions."
+    },
+    {
+      "path": "vibetrading/models.py",
+      "bytes": 13249,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/parquet_store.py",
+      "bytes": 18602,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/providers/__init__.py",
+      "bytes": 72,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Market-data provider implementations for the operational runtime."
+    },
+    {
+      "path": "vibetrading/providers/base.py",
+      "bytes": 243,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/providers/binance.py",
+      "bytes": 15767,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/providers/coingecko.py",
+      "bytes": 2240,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/providers/crypto_perp.py",
+      "bytes": 20721,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Public USDT perpetual feeds. No account keys or paid market data are used."
+    },
+    {
+      "path": "vibetrading/providers/extended_perp.py",
+      "bytes": 9629,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Public Arcus/GRVT perp feeds, retaining native identifiers and book frames."
+    },
+    {
+      "path": "vibetrading/providers/hyperliquid.py",
+      "bytes": 15950,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/providers/kis.py",
+      "bytes": 45093,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/providers/kis_client.py",
+      "bytes": 14866,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/providers/kis_master.py",
+      "bytes": 13049,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/providers/kiwoom.py",
+      "bytes": 31311,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/providers/ls_market.py",
+      "bytes": 14988,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "LS Securities read-only derivatives collectors."
+    },
+    {
+      "path": "vibetrading/providers/toss.py",
+      "bytes": 26805,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/providers/universe.py",
+      "bytes": 12423,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/real_runner.py",
+      "bytes": 7301,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/runtime.py",
+      "bytes": 40036,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/session_alerts.py",
+      "bytes": 2214,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/settings.py",
+      "bytes": 17084,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/sqlite_store.py",
+      "bytes": 56296,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/status.py",
+      "bytes": 4333,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/storage_backend.py",
+      "bytes": 7303,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/storage_guard.py",
+      "bytes": 6724,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/storage_worker.py",
+      "bytes": 20607,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/strategy_contract.py",
+      "bytes": 1825,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/strategy_runner.py",
+      "bytes": 3583,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/telegram.py",
+      "bytes": 30288,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/telegram_trade.py",
+      "bytes": 7437,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Read-only trade summaries. Assumptions never masquerade as broker fills."
+    },
+    {
+      "path": "vibetrading/timefolio/__init__.py",
+      "bytes": 459,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/timefolio/client.py",
+      "bytes": 19607,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/timefolio/runner.py",
+      "bytes": 9213,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    },
+    {
+      "path": "vibetrading/trade_reporting.py",
+      "bytes": 2120,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": "Presentation-only exclusions. Broker and strategy evidence stays immutable."
+    },
+    {
+      "path": "vibetrading/universe_config.py",
+      "bytes": 7787,
+      "decision": "보존",
+      "reason": "운영 모듈 또는 공용 CLI import 대상. 비활성 provider도 파일 삭제 전 호출부 분리 필요",
+      "purpose": ""
+    }
+  ],
+  "artifact_files": [
+    {
+      "path": ".codex_remote/crypto-minimal-fix-20261001.tar.gz",
+      "bytes": 168136,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".codex_remote/r2-archive-scheduler-20261001.tar.gz",
+      "bytes": 166464,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".codex_remote/r2-crypto-prune-20261001.tar.gz",
+      "bytes": 166491,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".codex_remote/r2-crypto-source-20260930-gates.tar.gz",
+      "bytes": 166121,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".codex_remote/r2-crypto-source-20260930.tar.gz",
+      "bytes": 166137,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".codex_remote/r2-load-pressure-interim.jsonl",
+      "bytes": 882775,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".codex_remote/r2-maintenance-capacity-20261001.tar.gz",
+      "bytes": 167637,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".codex_remote/r2-maintenance-recovery-20261001.tar.gz",
+      "bytes": 167658,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".codex_remote/r2-maintenance-service-20261001.tar.gz",
+      "bytes": 167616,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".codex_remote/r2-maintenance-service-final-20261001.tar.gz",
+      "bytes": 167694,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".codex_remote/r2-observed-receive-histogram.json",
+      "bytes": 218104,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".codex_remote/r2-prune-index-scan-20261001.tar.gz",
+      "bytes": 167326,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".codex_remote/r2-prune-proof-index-20261001.tar.gz",
+      "bytes": 167487,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".codex_remote/r2-prune-read-cache-20261001.tar.gz",
+      "bytes": 166991,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".codex_remote/r2-recovery-test-source.tar.gz",
+      "bytes": 230536,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".codex_remote/r2-replay-files.json",
+      "bytes": 761015,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".codex_remote/r2-retirement-test-source.tar.gz",
+      "bytes": 237113,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".codex_remote/r2-test-source.tar.gz",
+      "bytes": 221894,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".server_patch/arcus_llms.txt",
+      "bytes": 24480,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".server_patch/capacity-20261006.tar.gz",
+      "bytes": 27744,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".server_patch/collector-recovery-20261007.tar.gz",
+      "bytes": 62269,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".server_patch/collector-recovery-20261015.tar.gz",
+      "bytes": 116226,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".server_patch/crypto-ledger-20260928.tar.gz",
+      "bytes": 51153,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".server_patch/crypto_deploy_20260926.tar.gz",
+      "bytes": 120414,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".server_patch/crypto_deploy_20260927_fix.tar.gz",
+      "bytes": 120643,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".server_patch/docker-compose.yml",
+      "bytes": 3052,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".server_patch/etf-reference-csv-20261013.tar.gz",
+      "bytes": 15898020,
+      "decision": "보존·중복검증 전"
+    },
+    {
+      "path": ".server_patch/etf-scope-20261013.tar.gz",
+      "bytes": 126488,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".server_patch/expansion-20261003.tar.gz",
+      "bytes": 257107,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".server_patch/incident_1714_capacity.jsonl",
+      "bytes": 329818,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".server_patch/maintenance-capacity-20261006.tar.gz",
+      "bytes": 52063,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".server_patch/nats-frozen.json",
+      "bytes": 12530,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".server_patch/nats-restored.json",
+      "bytes": 12133,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": ".server_patch/telegram-recovery-20261014.tar.gz",
+      "bytes": 395347,
+      "decision": "완료 작업 후보"
+    },
+    {
+      "path": "runtime_data/etf_reference_csv/manifest.json",
+      "bytes": 3479,
+      "decision": "보존"
+    },
+    {
+      "path": "runtime_data/etf_reference_csv/raw/069500_daily.csv",
+      "bytes": 395824,
+      "decision": "보존"
+    },
+    {
+      "path": "runtime_data/etf_reference_csv/raw/069500_minute.csv",
+      "bytes": 29026384,
+      "decision": "보존"
+    },
+    {
+      "path": "runtime_data/etf_reference_csv/raw/122630_daily.csv",
+      "bytes": 281520,
+      "decision": "보존"
+    },
+    {
+      "path": "runtime_data/etf_reference_csv/raw/122630_minute.csv",
+      "bytes": 29595735,
+      "decision": "보존"
+    },
+    {
+      "path": "runtime_data/etf_reference_csv/raw/229200_daily.csv",
+      "bytes": 182665,
+      "decision": "보존"
+    },
+    {
+      "path": "runtime_data/etf_reference_csv/raw/229200_minute.csv",
+      "bytes": 29239720,
+      "decision": "보존"
+    },
+    {
+      "path": "runtime_data/etf_reference_csv/raw/251340_daily.csv",
+      "bytes": 162140,
+      "decision": "보존"
+    },
+    {
+      "path": "runtime_data/etf_reference_csv/raw/251340_minute.csv",
+      "bytes": 27913977,
+      "decision": "보존"
+    },
+    {
+      "path": "runtime_data/etf_reference_csv/raw/KOSPI200_daily.csv",
+      "bytes": 139061,
+      "decision": "보존"
+    },
+    {
+      "path": "runtime_data/etf_reference_csv/raw/SP500_daily.csv",
+      "bytes": 642158,
+      "decision": "보존"
+    }
+  ],
+  "server_directories": [
+    {
+      "path": "/opt/oracle-a1-catcher",
+      "allocated_bytes": 559759360,
+      "decision": "완료 작업 후보",
+      "reason": "main에서 disabled/inactive, 열린 FD 없음. micro 서버와 혼동하지 않음"
+    },
+    {
+      "path": "/opt/oracle-a1-catcher/.venv",
+      "allocated_bytes": 559714304,
+      "decision": "완료 작업 후보",
+      "reason": "main에서 disabled/inactive, 열린 FD 없음. micro 서버와 혼동하지 않음"
+    },
+    {
+      "path": "/opt/oracle-a1-catcher/.venv/bin",
+      "allocated_bytes": 53248,
+      "decision": "완료 작업 후보",
+      "reason": "main에서 disabled/inactive, 열린 FD 없음. micro 서버와 혼동하지 않음"
+    },
+    {
+      "path": "/opt/oracle-a1-catcher/.venv/include",
+      "allocated_bytes": 8192,
+      "decision": "완료 작업 후보",
+      "reason": "main에서 disabled/inactive, 열린 FD 없음. micro 서버와 혼동하지 않음"
+    },
+    {
+      "path": "/opt/oracle-a1-catcher/.venv/lib",
+      "allocated_bytes": 559644672,
+      "decision": "완료 작업 후보",
+      "reason": "main에서 disabled/inactive, 열린 FD 없음. micro 서버와 혼동하지 않음"
+    },
+    {
+      "path": "/opt/vibetrading",
+      "allocated_bytes": 368640,
+      "decision": "보존·하위별 검토",
+      "reason": "여러 역할 혼재. 하위 행·활성 mount 확인"
+    },
+    {
+      "path": "/opt/vibetrading/dashboard",
+      "allocated_bytes": 4096,
+      "decision": "보존·하위별 검토",
+      "reason": "여러 역할 혼재. 하위 행·활성 mount 확인"
+    },
+    {
+      "path": "/opt/vibetrading/incidents",
+      "allocated_bytes": 24576,
+      "decision": "보존·증적",
+      "reason": "장애/복구 근거; 대용량 복사본만 별도 검증"
+    },
+    {
+      "path": "/opt/vibetrading/incidents/collectors-20261015",
+      "allocated_bytes": 20480,
+      "decision": "보존·증적",
+      "reason": "장애/복구 근거; 대용량 복사본만 별도 검증"
+    },
+    {
+      "path": "/opt/vibetrading/latency-audits",
+      "allocated_bytes": 139264,
+      "decision": "완료 작업 후보",
+      "reason": "고유 events/result와 복구 설정을 다른 위치에 검증 보존 후 정리"
+    },
+    {
+      "path": "/opt/vibetrading/latency-audits/crypto-e2e-1791988489784645020",
+      "allocated_bytes": 40960,
+      "decision": "완료 작업 후보",
+      "reason": "고유 events/result와 복구 설정을 다른 위치에 검증 보존 후 정리"
+    },
+    {
+      "path": "/opt/vibetrading/latency-audits/crypto-e2e-1791988631395500772",
+      "allocated_bytes": 45056,
+      "decision": "완료 작업 후보",
+      "reason": "고유 events/result와 복구 설정을 다른 위치에 검증 보존 후 정리"
+    },
+    {
+      "path": "/opt/vibetrading/latency-audits/crypto-e2e-1791988738275858741",
+      "allocated_bytes": 49152,
+      "decision": "완료 작업 후보",
+      "reason": "고유 events/result와 복구 설정을 다른 위치에 검증 보존 후 정리"
+    },
+    {
+      "path": "/opt/vibetrading/releases",
+      "allocated_bytes": 196608,
+      "decision": "보존·하위별 검토",
+      "reason": "여러 역할 혼재. 하위 행·활성 mount 확인"
+    },
+    {
+      "path": "/opt/vibetrading/releases/capacity-20261006",
+      "allocated_bytes": 40960,
+      "decision": "보존·호환 설정",
+      "reason": "현재 mirror/이전 참조 확인 전 삭제 불가"
+    },
+    {
+      "path": "/opt/vibetrading/releases/telegram-recovery-20261014",
+      "allocated_bytes": 151552,
+      "decision": "보존·활성 설정",
+      "reason": "runtime.yml/dashboard.yml이 실제 systemd/가드에서 사용됨"
+    },
+    {
+      "path": "/root/vibetrading",
+      "allocated_bytes": 2076672,
+      "decision": "보존",
+      "reason": "서버 정식 소스·재빌드·config mount 원본"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007",
+      "allocated_bytes": 10526720,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/084ae2bf7e402373",
+      "allocated_bytes": 1720320,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/084ae2bf7e402373/scripts",
+      "allocated_bytes": 73728,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/084ae2bf7e402373/strategy",
+      "allocated_bytes": 28672,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/084ae2bf7e402373/tests",
+      "allocated_bytes": 49152,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/084ae2bf7e402373/vibetrading",
+      "allocated_bytes": 1273856,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/0d2dc9fedf1a2e35",
+      "allocated_bytes": 1740800,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/0d2dc9fedf1a2e35/scripts",
+      "allocated_bytes": 73728,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/0d2dc9fedf1a2e35/strategy",
+      "allocated_bytes": 28672,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/0d2dc9fedf1a2e35/tests",
+      "allocated_bytes": 53248,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/0d2dc9fedf1a2e35/vibetrading",
+      "allocated_bytes": 1286144,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/5f2a10fd19f7728d",
+      "allocated_bytes": 1732608,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/5f2a10fd19f7728d/scripts",
+      "allocated_bytes": 73728,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/5f2a10fd19f7728d/strategy",
+      "allocated_bytes": 28672,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/5f2a10fd19f7728d/tests",
+      "allocated_bytes": 53248,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/5f2a10fd19f7728d/vibetrading",
+      "allocated_bytes": 1282048,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/646c9f6a48f4a3bf",
+      "allocated_bytes": 1720320,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/646c9f6a48f4a3bf/scripts",
+      "allocated_bytes": 73728,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/646c9f6a48f4a3bf/strategy",
+      "allocated_bytes": 28672,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/646c9f6a48f4a3bf/tests",
+      "allocated_bytes": 49152,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/646c9f6a48f4a3bf/vibetrading",
+      "allocated_bytes": 1273856,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/692487af63298f4a",
+      "allocated_bytes": 1875968,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/692487af63298f4a/config",
+      "allocated_bytes": 12288,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/692487af63298f4a/docs",
+      "allocated_bytes": 49152,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/692487af63298f4a/scripts",
+      "allocated_bytes": 106496,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/692487af63298f4a/strategy",
+      "allocated_bytes": 28672,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/692487af63298f4a/tests",
+      "allocated_bytes": 53248,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/692487af63298f4a/vibetrading",
+      "allocated_bytes": 1286144,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/94f7f797e0a212c5",
+      "allocated_bytes": 1732608,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/94f7f797e0a212c5/scripts",
+      "allocated_bytes": 73728,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/94f7f797e0a212c5/strategy",
+      "allocated_bytes": 28672,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/94f7f797e0a212c5/tests",
+      "allocated_bytes": 53248,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading-mm-state-review-20261007/94f7f797e0a212c5/vibetrading",
+      "allocated_bytes": 1282048,
+      "decision": "완료 작업 후보",
+      "reason": "과거 검토 checkout. 로컬 정식 소스·고유 결과 보존 후"
+    },
+    {
+      "path": "/root/vibetrading/config",
+      "allocated_bytes": 45056,
+      "decision": "보존",
+      "reason": "서버 정식 소스·재빌드·config mount 원본"
+    },
+    {
+      "path": "/root/vibetrading/deploy",
+      "allocated_bytes": 36864,
+      "decision": "보존",
+      "reason": "서버 정식 소스·재빌드·config mount 원본"
+    },
+    {
+      "path": "/root/vibetrading/strategies",
+      "allocated_bytes": 20480,
+      "decision": "보존",
+      "reason": "서버 정식 소스·재빌드·config mount 원본"
+    },
+    {
+      "path": "/root/vibetrading/strategy",
+      "allocated_bytes": 28672,
+      "decision": "보존",
+      "reason": "서버 정식 소스·재빌드·config mount 원본"
+    },
+    {
+      "path": "/root/vibetrading/tests",
+      "allocated_bytes": 462848,
+      "decision": "보존",
+      "reason": "서버 정식 소스·재빌드·config mount 원본"
+    },
+    {
+      "path": "/root/vibetrading/vibetrading",
+      "allocated_bytes": 1437696,
+      "decision": "보존",
+      "reason": "서버 정식 소스·재빌드·config mount 원본"
+    },
+    {
+      "path": "/root/vibetrading/vibetrading/dashboard",
+      "allocated_bytes": 53248,
+      "decision": "보존",
+      "reason": "서버 정식 소스·재빌드·config mount 원본"
+    },
+    {
+      "path": "/root/vibetrading/vibetrading/fv_mm",
+      "allocated_bytes": 126976,
+      "decision": "보존",
+      "reason": "서버 정식 소스·재빌드·config mount 원본"
+    },
+    {
+      "path": "/root/vibetrading/vibetrading/fv_pilot",
+      "allocated_bytes": 65536,
+      "decision": "보존",
+      "reason": "서버 정식 소스·재빌드·config mount 원본"
+    },
+    {
+      "path": "/root/vibetrading/vibetrading/liquidity_mm",
+      "allocated_bytes": 143360,
+      "decision": "보존",
+      "reason": "서버 정식 소스·재빌드·config mount 원본"
+    },
+    {
+      "path": "/root/vibetrading/vibetrading/mm_state",
+      "allocated_bytes": 61440,
+      "decision": "보존",
+      "reason": "서버 정식 소스·재빌드·config mount 원본"
+    },
+    {
+      "path": "/root/vibetrading/vibetrading/providers",
+      "allocated_bytes": 262144,
+      "decision": "보존",
+      "reason": "서버 정식 소스·재빌드·config mount 원본"
+    },
+    {
+      "path": "/root/vibetrading/vibetrading/timefolio",
+      "allocated_bytes": 40960,
+      "decision": "보존",
+      "reason": "서버 정식 소스·재빌드·config mount 원본"
+    },
+    {
+      "path": "/srv/vibetrading-capacity",
+      "allocated_bytes": 70359855104,
+      "decision": "보존·하위별 검토",
+      "reason": "여러 역할 혼재. 하위 행·활성 mount 확인"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/build-wheels-20261003",
+      "allocated_bytes": 14884864,
+      "decision": "재생성 가능",
+      "reason": "연구 의존성/빌드 캐시; requirements와 offline 필요성 확인"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/crypto-market-data",
+      "allocated_bytes": 215846912,
+      "decision": "보존·운영 데이터",
+      "reason": "활성 DB/원장/시세 또는 bind mount 실체. WAL/SHM/토큰/lock 포함"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/crypto-market-data/event_type=funding_rate",
+      "allocated_bytes": 2523136,
+      "decision": "보존·운영 데이터",
+      "reason": "활성 DB/원장/시세 또는 bind mount 실체. WAL/SHM/토큰/lock 포함"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/crypto-market-data/event_type=open_interest",
+      "allocated_bytes": 2498560,
+      "decision": "보존·운영 데이터",
+      "reason": "활성 DB/원장/시세 또는 bind mount 실체. WAL/SHM/토큰/lock 포함"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/crypto-market-data/event_type=order_book",
+      "allocated_bytes": 202747904,
+      "decision": "보존·운영 데이터",
+      "reason": "활성 DB/원장/시세 또는 bind mount 실체. WAL/SHM/토큰/lock 포함"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/crypto-market-data/event_type=trade",
+      "allocated_bytes": 8073216,
+      "decision": "보존·운영 데이터",
+      "reason": "활성 DB/원장/시세 또는 bind mount 실체. WAL/SHM/토큰/lock 포함"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/crypto-state",
+      "allocated_bytes": 7881662464,
+      "decision": "보존·운영 데이터",
+      "reason": "활성 DB/원장/시세 또는 bind mount 실체. WAL/SHM/토큰/lock 포함"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/crypto-state/backups",
+      "allocated_bytes": 4096,
+      "decision": "보존·운영 데이터",
+      "reason": "활성 DB/원장/시세 또는 bind mount 실체. WAL/SHM/토큰/lock 포함"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/crypto-state/health",
+      "allocated_bytes": 12288,
+      "decision": "보존·운영 데이터",
+      "reason": "활성 DB/원장/시세 또는 bind mount 실체. WAL/SHM/토큰/lock 포함"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/crypto-state/pre-minimal-fix-20261001",
+      "allocated_bytes": 4096,
+      "decision": "보존·운영 데이터",
+      "reason": "활성 DB/원장/시세 또는 bind mount 실체. WAL/SHM/토큰/lock 포함"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/experiments",
+      "allocated_bytes": 1738674176,
+      "decision": "조건부·연구",
+      "reason": "연구 원본/파생본/실험 원장. 원격 보존 후 중복만"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/experiments/fv-pilot-20261004",
+      "allocated_bytes": 1738670080,
+      "decision": "조건부·연구",
+      "reason": "연구 원본/파생본/실험 원장. 원격 보존 후 중복만"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/fv-research-20261004",
+      "allocated_bytes": 26986655744,
+      "decision": "조건부·연구",
+      "reason": "연구 원본/파생본/실험 원장. 원격 보존 후 중복만"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/fv-research-20261004/arcus_native",
+      "allocated_bytes": 596832256,
+      "decision": "조건부·연구",
+      "reason": "연구 원본/파생본/실험 원장. 원격 보존 후 중복만"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native",
+      "allocated_bytes": 3799539712,
+      "decision": "조건부·연구",
+      "reason": "연구 원본/파생본/실험 원장. 원격 보존 후 중복만"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized",
+      "allocated_bytes": 405127168,
+      "decision": "조건부·연구",
+      "reason": "연구 원본/파생본/실험 원장. 원격 보존 후 중복만"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/fv-research-20261004/bitget_native",
+      "allocated_bytes": 3392139264,
+      "decision": "조건부·연구",
+      "reason": "연구 원본/파생본/실험 원장. 원격 보존 후 중복만"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/fv-research-20261004/bybit_native",
+      "allocated_bytes": 2351071232,
+      "decision": "조건부·연구",
+      "reason": "연구 원본/파생본/실험 원장. 원격 보존 후 중복만"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/fv-research-20261004/deps",
+      "allocated_bytes": 59228160,
+      "decision": "재생성 가능",
+      "reason": "연구 의존성/빌드 캐시; requirements와 offline 필요성 확인"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/fv-research-20261004/duckdb-temp",
+      "allocated_bytes": 11274768384,
+      "decision": "재생성 가능·사용 확인",
+      "reason": "DuckDB spill. 열린 FD 0건 스냅샷 확인; 재실행 작업 없음도 확인 필요"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/fv-research-20261004/grvt_native",
+      "allocated_bytes": 139841536,
+      "decision": "조건부·연구",
+      "reason": "연구 원본/파생본/실험 원장. 원격 보존 후 중복만"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/fv-research-20261004/slim",
+      "allocated_bytes": 2519265280,
+      "decision": "조건부·연구",
+      "reason": "연구 원본/파생본/실험 원장. 원격 보존 후 중복만"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/fv-research-20261004/temp",
+      "allocated_bytes": 4096,
+      "decision": "조건부·연구",
+      "reason": "연구 원본/파생본/실험 원장. 원격 보존 후 중복만"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/incident-20261006",
+      "allocated_bytes": 137322496,
+      "decision": "보존·증적",
+      "reason": "장애/복구 근거; 대용량 복사본만 별도 검증"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/incident-20261006/market-audit",
+      "allocated_bytes": 24662016,
+      "decision": "보존·증적",
+      "reason": "장애/복구 근거; 대용량 복사본만 별도 검증"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/incident-20261006/market-historical-audit",
+      "allocated_bytes": 954368,
+      "decision": "보존·증적",
+      "reason": "장애/복구 근거; 대용량 복사본만 별도 검증"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/incident-20261006/market-migration",
+      "allocated_bytes": 89391104,
+      "decision": "보존·증적",
+      "reason": "장애/복구 근거; 대용량 복사본만 별도 검증"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/incident-20261007",
+      "allocated_bytes": 1576960,
+      "decision": "보존·증적",
+      "reason": "장애/복구 근거; 대용량 복사본만 별도 검증"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/incident-20261007/compactor-new",
+      "allocated_bytes": 225280,
+      "decision": "보존·증적",
+      "reason": "장애/복구 근거; 대용량 복사본만 별도 검증"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/incident-20261007/compactor-old",
+      "allocated_bytes": 151552,
+      "decision": "보존·증적",
+      "reason": "장애/복구 근거; 대용량 복사본만 별도 검증"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/lost+found",
+      "allocated_bytes": 16384,
+      "decision": "보존·하위별 검토",
+      "reason": "여러 역할 혼재. 하위 행·활성 mount 확인"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/market-data",
+      "allocated_bytes": 5366521856,
+      "decision": "보존·운영 데이터",
+      "reason": "활성 DB/원장/시세 또는 bind mount 실체. WAL/SHM/토큰/lock 포함"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/market-data/event_type=bar_1m",
+      "allocated_bytes": 46878720,
+      "decision": "보존·운영 데이터",
+      "reason": "활성 DB/원장/시세 또는 bind mount 실체. WAL/SHM/토큰/lock 포함"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/market-data/event_type=etf_nav",
+      "allocated_bytes": 625348608,
+      "decision": "보존·운영 데이터",
+      "reason": "활성 DB/원장/시세 또는 bind mount 실체. WAL/SHM/토큰/lock 포함"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/market-data/event_type=funding_rate",
+      "allocated_bytes": 446464,
+      "decision": "보존·운영 데이터",
+      "reason": "활성 DB/원장/시세 또는 bind mount 실체. WAL/SHM/토큰/lock 포함"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/market-data/event_type=open_interest",
+      "allocated_bytes": 6766592,
+      "decision": "보존·운영 데이터",
+      "reason": "활성 DB/원장/시세 또는 bind mount 실체. WAL/SHM/토큰/lock 포함"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/market-data/event_type=order_book",
+      "allocated_bytes": 2645471232,
+      "decision": "보존·운영 데이터",
+      "reason": "활성 DB/원장/시세 또는 bind mount 실체. WAL/SHM/토큰/lock 포함"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/market-data/event_type=participant_flow",
+      "allocated_bytes": 90112,
+      "decision": "보존·운영 데이터",
+      "reason": "활성 DB/원장/시세 또는 bind mount 실체. WAL/SHM/토큰/lock 포함"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/market-data/event_type=trade",
+      "allocated_bytes": 2041516032,
+      "decision": "보존·운영 데이터",
+      "reason": "활성 DB/원장/시세 또는 bind mount 실체. WAL/SHM/토큰/lock 포함"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/market-exports",
+      "allocated_bytes": 4096,
+      "decision": "보존·하위별 검토",
+      "reason": "여러 역할 혼재. 하위 행·활성 mount 확인"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/market-state",
+      "allocated_bytes": 9529651200,
+      "decision": "보존·운영 데이터",
+      "reason": "활성 DB/원장/시세 또는 bind mount 실체. WAL/SHM/토큰/lock 포함"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/market-state/backups",
+      "allocated_bytes": 4096,
+      "decision": "보존·운영 데이터",
+      "reason": "활성 DB/원장/시세 또는 bind mount 실체. WAL/SHM/토큰/lock 포함"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/market-state/etf-csv-close-probe-1791897983608037096",
+      "allocated_bytes": 331776,
+      "decision": "완료 작업 후보",
+      "reason": "격리된 마감 갱신 시험 sink; 결과 보존 후"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/market-state/etf-csv-sync",
+      "allocated_bytes": 6025216,
+      "decision": "보존·운영 데이터",
+      "reason": "활성 DB/원장/시세 또는 bind mount 실체. WAL/SHM/토큰/lock 포함"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/market-state/etf-mock",
+      "allocated_bytes": 264699904,
+      "decision": "보존·운영 데이터",
+      "reason": "활성 DB/원장/시세 또는 bind mount 실체. WAL/SHM/토큰/lock 포함"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/market-state/health",
+      "allocated_bytes": 98304,
+      "decision": "보존·운영 데이터",
+      "reason": "활성 DB/원장/시세 또는 bind mount 실체. WAL/SHM/토큰/lock 포함"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/market-state/universe_cache",
+      "allocated_bytes": 20480,
+      "decision": "보존·운영 데이터",
+      "reason": "활성 DB/원장/시세 또는 bind mount 실체. WAL/SHM/토큰/lock 포함"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/migration-retained-20261003",
+      "allocated_bytes": 1979166720,
+      "decision": "조건부·백업",
+      "reason": "이동 전 보관본. 고유 행/원격 receipt/내용 동일성 검증 전 보존"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/migration-retained-20261003/crypto_market_data.before-300gb-20261003",
+      "allocated_bytes": 25546752,
+      "decision": "조건부·백업",
+      "reason": "이동 전 보관본. 고유 행/원격 receipt/내용 동일성 검증 전 보존"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/migration-retained-20261003/vibetrading-crypto-state.before-300gb-20261003",
+      "allocated_bytes": 1953615872,
+      "decision": "조건부·백업",
+      "reason": "이동 전 보관본. 고유 행/원격 receipt/내용 동일성 검증 전 보존"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/migration-retained-20261006",
+      "allocated_bytes": 12212895744,
+      "decision": "조건부·백업",
+      "reason": "이동 전 보관본. 고유 행/원격 receipt/내용 동일성 검증 전 보존"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/migration-retained-20261006/market-data",
+      "allocated_bytes": 3635261440,
+      "decision": "조건부·백업",
+      "reason": "이동 전 보관본. 고유 행/원격 receipt/내용 동일성 검증 전 보존"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/migration-retained-20261006/market-exports",
+      "allocated_bytes": 2221637632,
+      "decision": "조건부·백업",
+      "reason": "이동 전 보관본. 고유 행/원격 receipt/내용 동일성 검증 전 보존"
+    },
+    {
+      "path": "/srv/vibetrading-capacity/migration-retained-20261006/market-state",
+      "allocated_bytes": 6355992576,
+      "decision": "조건부·백업",
+      "reason": "이동 전 보관본. 고유 행/원격 receipt/내용 동일성 검증 전 보존"
+    },
+    {
+      "path": "/srv/vibetrading-data/host-tools",
+      "allocated_bytes": 2779381760,
+      "decision": "보존",
+      "reason": "VS Code 설치 및 기존 symlink 목적지"
+    },
+    {
+      "path": "/srv/vibetrading-data/host-tools/vscode-servers",
+      "allocated_bytes": 2779377664,
+      "decision": "보존",
+      "reason": "VS Code 설치 및 기존 symlink 목적지"
+    },
+    {
+      "path": "/srv/vibetrading-data/host-tools/vscode-servers/.locks",
+      "allocated_bytes": 4096,
+      "decision": "보존",
+      "reason": "VS Code 설치 및 기존 symlink 목적지"
+    },
+    {
+      "path": "/srv/vibetrading-data/host-tools/vscode-servers/Stable-07f806f999227108933c2e30515b26eecc1fda74",
+      "allocated_bytes": 670724096,
+      "decision": "조건부·구버전",
+      "reason": "현재 접속 버전 확인 후 미사용 버전만 정리; 이미 데이터 디스크로 이전"
+    },
+    {
+      "path": "/srv/vibetrading-data/host-tools/vscode-servers/Stable-16507d91be0dc1ce4f94c04d4d0430210b8685d9",
+      "allocated_bytes": 702885888,
+      "decision": "조건부·구버전",
+      "reason": "현재 접속 버전 확인 후 미사용 버전만 정리; 이미 데이터 디스크로 이전"
+    },
+    {
+      "path": "/srv/vibetrading-data/host-tools/vscode-servers/Stable-2a59476c9bfcb90b3ddc372c36762471b7dfad1c",
+      "allocated_bytes": 702902272,
+      "decision": "조건부·구버전",
+      "reason": "현재 접속 버전 확인 후 미사용 버전만 정리; 이미 데이터 디스크로 이전"
+    },
+    {
+      "path": "/srv/vibetrading-data/host-tools/vscode-servers/Stable-7baac39ec3ca969dab74ac12c097f6a486e46593",
+      "allocated_bytes": 702853120,
+      "decision": "조건부·구버전",
+      "reason": "현재 접속 버전 확인 후 미사용 버전만 정리; 이미 데이터 디스크로 이전"
+    },
+    {
+      "path": "/srv/vibetrading-data/releases",
+      "allocated_bytes": 888832,
+      "decision": "보존·하위별 검토",
+      "reason": "여러 역할 혼재. 하위 행·활성 mount 확인"
+    },
+    {
+      "path": "/srv/vibetrading-data/releases/collector-recovery-20261015",
+      "allocated_bytes": 884736,
+      "decision": "보존·현 복구본",
+      "reason": "이번 복구 build/이전 소스/주문 장부 snapshot; 현 rollback"
+    },
+    {
+      "path": "/srv/vibetrading-data/releases/collector-recovery-20261015/source-before",
+      "allocated_bytes": 106496,
+      "decision": "보존·현 복구본",
+      "reason": "이번 복구 build/이전 소스/주문 장부 snapshot; 현 rollback"
+    },
+    {
+      "path": "/srv/vibetrading-data/releases/collector-recovery-20261015/src",
+      "allocated_bytes": 118784,
+      "decision": "보존·현 복구본",
+      "reason": "이번 복구 build/이전 소스/주문 장부 snapshot; 현 rollback"
+    },
+    {
+      "path": "/srv/vibetrading-data/releases/collector-recovery-20261015/tests",
+      "allocated_bytes": 479232,
+      "decision": "완료 작업 후보",
+      "reason": "완료한 테스트 복사본. 로그·현 rollback 보존"
+    },
+    {
+      "path": "/srv/vibetrading-data/runtime_data",
+      "allocated_bytes": 141529088,
+      "decision": "보존·하위별 검토",
+      "reason": "여러 역할 혼재. 하위 행·활성 mount 확인"
+    },
+    {
+      "path": "/srv/vibetrading-data/runtime_data/crypto-delete-audit-20261002",
+      "allocated_bytes": 114110464,
+      "decision": "보존·삭제 증적",
+      "reason": "퇴역 데이터 원격 보관·삭제 감사 근거"
+    },
+    {
+      "path": "/srv/vibetrading-data/runtime_data/crypto_state",
+      "allocated_bytes": 24576,
+      "decision": "보존·하위별 검토",
+      "reason": "여러 역할 혼재. 하위 행·활성 mount 확인"
+    },
+    {
+      "path": "/srv/vibetrading-data/runtime_data/crypto_state/backups",
+      "allocated_bytes": 4096,
+      "decision": "보존·하위별 검토",
+      "reason": "여러 역할 혼재. 하위 행·활성 mount 확인"
+    },
+    {
+      "path": "/srv/vibetrading-data/runtime_data/crypto_state/health",
+      "allocated_bytes": 12288,
+      "decision": "보존·하위별 검토",
+      "reason": "여러 역할 혼재. 하위 행·활성 mount 확인"
+    },
+    {
+      "path": "/srv/vibetrading-data/runtime_data/crypto_state/pre-minimal-fix-20261001",
+      "allocated_bytes": 4096,
+      "decision": "보존·하위별 검토",
+      "reason": "여러 역할 혼재. 하위 행·활성 mount 확인"
+    },
+    {
+      "path": "/srv/vibetrading-data/runtime_data/dashboard-monitor",
+      "allocated_bytes": 20480,
+      "decision": "보존·하위별 검토",
+      "reason": "여러 역할 혼재. 하위 행·활성 mount 확인"
+    },
+    {
+      "path": "/srv/vibetrading-data/runtime_data/liquidity_mm",
+      "allocated_bytes": 4096,
+      "decision": "보존·하위별 검토",
+      "reason": "여러 역할 혼재. 하위 행·활성 mount 확인"
+    },
+    {
+      "path": "/srv/vibetrading-data/runtime_data/logs",
+      "allocated_bytes": 4096,
+      "decision": "보존·하위별 검토",
+      "reason": "여러 역할 혼재. 하위 행·활성 mount 확인"
+    },
+    {
+      "path": "/srv/vibetrading-data/runtime_data/recovery-receipts",
+      "allocated_bytes": 2199552,
+      "decision": "보존·증적",
+      "reason": "장애/복구 근거; 대용량 복사본만 별도 검증"
+    },
+    {
+      "path": "/srv/vibetrading-data/runtime_data/replay",
+      "allocated_bytes": 4096,
+      "decision": "보존·하위별 검토",
+      "reason": "여러 역할 혼재. 하위 행·활성 mount 확인"
+    },
+    {
+      "path": "/srv/vibetrading-data/runtime_data/reports",
+      "allocated_bytes": 24969216,
+      "decision": "조건부·증적",
+      "reason": "최종 보고서/receipt 보존 후 중복 raw만"
+    },
+    {
+      "path": "/srv/vibetrading-data/runtime_data/reports/collector-recovery",
+      "allocated_bytes": 1007616,
+      "decision": "조건부·증적",
+      "reason": "최종 보고서/receipt 보존 후 중복 raw만"
+    },
+    {
+      "path": "/srv/vibetrading-data/runtime_data/reports/market-coverage",
+      "allocated_bytes": 1904640,
+      "decision": "조건부·증적",
+      "reason": "최종 보고서/receipt 보존 후 중복 raw만"
+    },
+    {
+      "path": "/srv/vibetrading-data/runtime_data/reports/market-coverage-20260925",
+      "allocated_bytes": 65536,
+      "decision": "조건부·증적",
+      "reason": "최종 보고서/receipt 보존 후 중복 raw만"
+    },
+    {
+      "path": "/srv/vibetrading-data/runtime_data/scope-migration-20261013",
+      "allocated_bytes": 163840,
+      "decision": "조건부·증적",
+      "reason": "최종 보고서/receipt 보존 후 중복 raw만"
+    },
+    {
+      "path": "/srv/vibetrading-data/testnet_latency_audits",
+      "allocated_bytes": 34152448,
+      "decision": "완료 작업 후보",
+      "reason": "고유 events/result와 복구 설정을 다른 위치에 검증 보존 후 정리"
+    },
+    {
+      "path": "/srv/vibetrading-data/testnet_latency_audits/20261001",
+      "allocated_bytes": 6463488,
+      "decision": "완료 작업 후보",
+      "reason": "고유 events/result와 복구 설정을 다른 위치에 검증 보존 후 정리"
+    },
+    {
+      "path": "/srv/vibetrading-data/testnet_latency_audits/crypto-e2e-1791988489784645020",
+      "allocated_bytes": 929792,
+      "decision": "완료 작업 후보",
+      "reason": "고유 events/result와 복구 설정을 다른 위치에 검증 보존 후 정리"
+    },
+    {
+      "path": "/srv/vibetrading-data/testnet_latency_audits/crypto-e2e-1791988489784645020/data",
+      "allocated_bytes": 12288,
+      "decision": "완료 작업 후보",
+      "reason": "고유 events/result와 복구 설정을 다른 위치에 검증 보존 후 정리"
+    },
+    {
+      "path": "/srv/vibetrading-data/testnet_latency_audits/crypto-e2e-1791988489784645020/state",
+      "allocated_bytes": 4096,
+      "decision": "완료 작업 후보",
+      "reason": "고유 events/result와 복구 설정을 다른 위치에 검증 보존 후 정리"
+    },
+    {
+      "path": "/srv/vibetrading-data/testnet_latency_audits/crypto-e2e-1791988631395500772",
+      "allocated_bytes": 581632,
+      "decision": "완료 작업 후보",
+      "reason": "고유 events/result와 복구 설정을 다른 위치에 검증 보존 후 정리"
+    },
+    {
+      "path": "/srv/vibetrading-data/testnet_latency_audits/crypto-e2e-1791988631395500772/data",
+      "allocated_bytes": 12288,
+      "decision": "완료 작업 후보",
+      "reason": "고유 events/result와 복구 설정을 다른 위치에 검증 보존 후 정리"
+    },
+    {
+      "path": "/srv/vibetrading-data/testnet_latency_audits/crypto-e2e-1791988631395500772/state",
+      "allocated_bytes": 4096,
+      "decision": "완료 작업 후보",
+      "reason": "고유 events/result와 복구 설정을 다른 위치에 검증 보존 후 정리"
+    },
+    {
+      "path": "/srv/vibetrading-data/testnet_latency_audits/crypto-e2e-1791988738275858741",
+      "allocated_bytes": 26103808,
+      "decision": "완료 작업 후보",
+      "reason": "고유 events/result와 복구 설정을 다른 위치에 검증 보존 후 정리"
+    },
+    {
+      "path": "/srv/vibetrading-data/testnet_latency_audits/crypto-e2e-1791988738275858741/data",
+      "allocated_bytes": 12288,
+      "decision": "완료 작업 후보",
+      "reason": "고유 events/result와 복구 설정을 다른 위치에 검증 보존 후 정리"
+    },
+    {
+      "path": "/srv/vibetrading-data/testnet_latency_audits/crypto-e2e-1791988738275858741/state",
+      "allocated_bytes": 4096,
+      "decision": "완료 작업 후보",
+      "reason": "고유 events/result와 복구 설정을 다른 위치에 검증 보존 후 정리"
+    }
+  ],
+  "size_caveat": "Logical local sizes; links/hardlinks and overlapping parents must not be summed. Server du is allocated bytes."
+}

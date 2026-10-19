@@ -1,0 +1,4000 @@
+asyncapi: 3.0.0
+info:
+  title: Arcus WebSocket API
+  version: 1.0.0
+  description: |
+    Real-time WebSocket API for Arcus. Provides live market data streams and account update subscriptions over a single persistent connection.
+
+    ## Connection
+
+    Connect to the WebSocket endpoint. All channels share one connection — there is no per-channel handshake.
+
+    ## Protocol
+
+    All messages are JSON. Four top-level `type` values exist:
+
+    | `type`        | Direction       | Purpose |
+    |---------------|-----------------|---------|
+    | `subscribe`   | client → server | Start receiving a channel |
+    | `unsubscribe` | client → server | Stop receiving a channel |
+    | `post`        | client → server | Order mutation (placeOrder, cancelOrder, modifyOrder) |
+    | `get`         | client → server | Read-only RPC snapshot |
+    | `subscribed`  | server → client | Subscribe ack + initial snapshot |
+    | `unsubscribed`| server → client | Unsubscribe ack |
+    | `channel_data`| server → client | Real-time update |
+    | `degraded`    | server → client | Initial snapshot withheld; subscribe pending server-side retry |
+
+    ## Degraded subscriptions
+
+    When the initial snapshot for a subscribe cannot be served, the server keeps the subscription pending — it never delivers a wrong or gappy snapshot — and sends a single notice:
+
+    ```json
+    {"type":"degraded","channel":"orders","id":"0x…","accountIndex":0,"reason":"snapshot_unavailable","retryAfterMs":5000}
+    ```
+
+    | `reason`               | Meaning |
+    |------------------------|---------|
+    | `snapshot_stale`       | Persistence snapshot too far behind the live stream to join it without a gap |
+    | `snapshot_unavailable` | Snapshot backend read failed |
+
+    The server retries the snapshot (roughly every `retryAfterMs`, advisory) and completes the subscribe with a normal `subscribed` frame once it can be served — no client action is required. `id` is omitted on global channels. Clients should surface a stale/degraded indicator until the `subscribed` frame arrives.
+
+    ## Signing
+
+    Two signing schemes are used depending on the method.
+
+    ### Typed canonical payload (placeOrder / cancelOrder / modifyOrder and batch variants)
+
+    The payload JSON object IS the signing message — there is no separate prefix. Keys are emitted in fixed alphabetical order; values are engine-native integers (ticks, quantums, enums), not decimal strings. Ed25519 sign the UTF-8 bytes of this string directly.
+
+    ```
+    placeOrder / batchPlaceOrders element  (op=1; op=4 for TPSL legs):
+      {"ad":"0x…","ai":N,[,"c":"…"],"ct":N,"g":N,"m":N,"op":1,"p":N,"q":N,"r":0|1,"s":N,"t":N,"v":1}
+
+    cancelOrder / batchCancelOrders element:
+      {"ad":"0x…","ai":N,[,"c":"…"],"ct":N,[,"id":"…"],"m":N,"op":2,"v":1}
+
+    modifyOrder / batchModifyOrders element (exactly one of id / c):
+      {"ad":"0x…","ai":N,[,"c":"…"],"ct":N,"g":N,[,"id":"…"],"m":N,"op":3,"p":N,"q":N,"r":0|1,"s":N,"t":N,"v":1}
+    ```
+
+    `ct` is the client timestamp in nanoseconds — the same value as `timestamp` on the request envelope (and the `X-Timestamp` header on REST). Generate it once per request with `time.now_ns()` / `Date.now() * 1_000_000` and use it in both places. The server rejects values outside ±30 s of its wall-clock.
+
+    Include `apiKey`, `timestamp`, and `signature` on the `request` object. The `apiKey` is your Ed25519 public key (64 hex characters).
+
+    **Batch methods are signed per element.** `batchPlaceOrders`, `batchCancelOrders`, and `batchModifyOrders` do NOT carry a single `request.signature`. Each element of `payload.orders` / `payload.cancels` / `payload.modifies` carries its own `signature` over the typed canonical payload for that element — byte-for-byte identical to the signature a standalone order would carry — and the `request` envelope carries only the shared `apiKey` + `timestamp`.
+
+    ### Legacy scheme (cancelAllOrders / setLeverage / adjustIsolatedMargin)
+
+    ```
+    timestamp_ns + action + canonicalJSON(request.payload)
+    ```
+
+    where `action` is the canonical camelCase method name (e.g. `cancelAllOrders`) and `timestamp_ns` is the nanosecond epoch string that also appears on the request envelope.
+servers:
+  mainnet:
+    host: api.arcus.xyz
+    protocol: wss
+    description: Mainnet
+  testnet:
+    host: api.testnet.arcus.xyz
+    protocol: wss
+    description: Testnet
+defaultContentType: application/json
+channels:
+  l2Orderbook:
+    address: /v1/ws?channel=l2Orderbook
+    description: |
+      > **Endpoint:** `wss://api.arcus.xyz/v1/ws` — one socket multiplexes every channel and RPC request. Click **Connect**, then send the example subscribe message below to start receiving data.
+
+      Periodic full L2 orderbook snapshots for a single market. On subscribe, the server sends the current book up to `nLevels` price levels per side, then continues to broadcast a fresh full snapshot every ~200ms.
+
+      No incremental updates — each message replaces the prior book state. Use `l2OrderbookUpdates` if you need to maintain your own local book.
+
+      A connection may subscribe more than once to the same market when each subscribe uses a distinct (`sigFigs`, `roundStep`) pair. `subscribed`, `channel_data`, and `unsubscribed` frames echo those fields (omitted for full precision) so the client can demux views. Unsubscribe must include the same pair to drop one view without affecting the others.
+    messages:
+      subscribe:
+        $ref: '#/components/messages/SubscribeL2Orderbook'
+      snapshot:
+        $ref: '#/components/messages/L2OrderbookSnapshot'
+    tags:
+      - name: Market data
+  l2OrderbookUpdates:
+    address: /v1/ws?channel=l2OrderbookUpdates
+    description: |
+      > **Endpoint:** `wss://api.arcus.xyz/v1/ws` — one socket multiplexes every channel and RPC request. Click **Connect**, then send the example subscribe message below to start receiving data.
+
+      Full L2 orderbook snapshot followed by event-driven incremental deltas for a single market.
+
+      On subscribe: full snapshot up to `nLevels` per side, then delta updates as orders are placed, modified, or cancelled. Each delta carries a monotonically increasing per-market `lastSequenceId`.
+
+      Reconciliation (splice rule): the snapshot is a periodic generation that lags slightly behind the live delta head, so the first delta after the snapshot may be a few sequences ahead of the snapshot's `lastSequenceId` — this small boundary gap is expected and self-heals. Seed from the snapshot, then apply every delta whose `lastSequenceId` exceeds the snapshot's; do NOT require the first delta to equal `snapshotSeq + 1`, and do NOT drop or re-subscribe on the initial boundary gap. Once you are applying deltas, sequences are contiguous; a gap that appears mid-stream indicates a genuine problem — resubscribe then. A single delta frame may list the same price more than once; apply entries in array order, last-write-wins per price.
+    messages:
+      subscribe:
+        $ref: '#/components/messages/SubscribeL2OrderbookUpdates'
+      snapshot:
+        $ref: '#/components/messages/L2OrderbookSnapshot'
+      update:
+        $ref: '#/components/messages/L2OrderbookUpdate'
+    tags:
+      - name: Market data
+  trades:
+    address: /v1/ws?channel=trades
+    description: |
+      > **Endpoint:** `wss://api.arcus.xyz/v1/ws` — one socket multiplexes every channel and RPC request. Click **Connect**, then send the example subscribe message below to start receiving data.
+
+      Public trade stream for a single market. No snapshot on subscribe — only live updates from the moment of subscription.
+
+      Each message is an array of fills from a single taker order match. All fills in one array share the same `takerOrderId`, `takerAccountId`, `timestamp`, and `sequenceNumber`.
+    messages:
+      subscribe:
+        $ref: '#/components/messages/SubscribeByMarket'
+      update:
+        $ref: '#/components/messages/TradesUpdate'
+    tags:
+      - name: Market data
+  markets:
+    address: /v1/ws?channel=markets
+    description: |
+      > **Endpoint:** `wss://api.arcus.xyz/v1/ws` — one socket multiplexes every channel and RPC request. Click **Connect**, then send the example subscribe message below to start receiving data.
+
+      Global channel — no `id` required. Streams full per-market metadata for all listed markets.
+
+      Snapshot-only channel: every message is a full map of all markets keyed by `marketId` (same shape on subscribe and on every periodic re-emission, no partial diffs). Clients replace their entire markets view on each message.
+
+      **Cadence:** ~5s periodic snapshot, plus an immediate snapshot when a new funding rate is applied (~hourly) so the just-applied `fundingRate` propagates without waiting for the next periodic snapshot.
+
+      **Field coverage today:** `marketDisplayName`, `marketId`, `baseAsset`, `quoteAsset`, `status` (currently always `ONLINE`), static config (tick/step/min/max sizes, margin fractions, fees), `oraclePrice`, `fundingRate`, `nextFundingRate`, and `nextFundingAt` are populated. `priceChange24h` is the fractional change in the **mark price** over the trailing 24h (not the oracle price). `volume24h`, `high24h`, `low24h`, and `trades24h` are rolling 24h aggregates, refreshed periodically. High/low use only closed candles with at least one trade (gap-fill buckets are excluded). `openInterest` is the total size of all open long positions per market (equals total short), in base asset units, refreshed from a periodic snapshot (default ~60s) so it may lag real time. `openInterestCapNotional` (`null` when no cap is active) is the operator-set maximum open-interest USD notional, refreshed on the same cadence.
+    messages:
+      subscribe:
+        $ref: '#/components/messages/SubscribeGlobal'
+      snapshot:
+        $ref: '#/components/messages/MarketsSnapshot'
+      update:
+        $ref: '#/components/messages/MarketsUpdate'
+    tags:
+      - name: Market data
+  oraclePrices:
+    address: /v1/ws?channel=oraclePrices
+    description: |
+      > **Endpoint:** `wss://api.arcus.xyz/v1/ws` — one socket multiplexes every channel and RPC request. Click **Connect**, then send the example subscribe message below to start receiving data.
+
+      Per-market oracle price updates sourced from the on-chain slinky aggregator. Pushes a new price on each oracle update.
+    messages:
+      subscribe:
+        $ref: '#/components/messages/SubscribeByMarket'
+      update:
+        $ref: '#/components/messages/OraclePricesUpdate'
+    tags:
+      - name: Market data
+  bbo:
+    address: /v1/ws?channel=bbo
+    description: |
+      > **Endpoint:** `wss://api.arcus.xyz/v1/ws` — one socket multiplexes every channel and RPC request. Click **Connect**, then send the example subscribe message below to start receiving data.
+
+      Best bid and offer (top-of-book) for a single market. Lower bandwidth than `l2Orderbook` when only the inside quote is needed.
+    messages:
+      subscribe:
+        $ref: '#/components/messages/SubscribeByMarket'
+      update:
+        $ref: '#/components/messages/BBOUpdate'
+    tags:
+      - name: Market data
+  account:
+    address: /v1/ws?channel=account
+    description: |
+      > **Endpoint:** `wss://api.arcus.xyz/v1/ws` — one socket multiplexes every channel and RPC request. Click **Connect**, then send the example subscribe message below to start receiving data.
+
+      Account state snapshot and streaming updates for a single sub-account.
+
+      **No authentication required at subscribe time** — pass the account's Ethereum address as `id`. Snapshot on subscribe includes open positions, balances, and margin info. Periodic re-snapshots are sent every 5 seconds.
+
+      Update `type` values: `PLACED`, `CANCELED`, `MARGIN_CANCELED`, `REJECTED`, `TPSL_PLACED`, `TPSL_CANCELED`, `TPSL_TRIGGERED`, `LIQUIDATION`, `ADL`.
+
+      `FILL` events are routed to the `userFills` channel only and do not appear here. `LIQUIDATION` and `ADL` are fanned out to both `account` and `userFills`.
+    messages:
+      subscribe:
+        $ref: '#/components/messages/SubscribeByAddress'
+      snapshot:
+        $ref: '#/components/messages/AccountSnapshot'
+      update:
+        $ref: '#/components/messages/AccountUpdate'
+    tags:
+      - name: Account
+  positions:
+    address: /v1/ws?channel=positions
+    description: |
+      > **Endpoint:** `wss://api.arcus.xyz/v1/ws` — one socket multiplexes every channel and RPC request. Click **Connect**, then send the example subscribe message below to start receiving data.
+
+      Open positions for a single sub-account. Snapshot contents use `PositionsSnapshot`: the REST `GET /positions` positions map plus `isSnapshot: true`, `lastSequenceId`, `address`, and `accountIndex`. Updates carry one `PositionUpdate` event per frame.
+
+      `cumulativeFunding` is absent from streaming events — use the snapshot for funding horizons. On close (size drops to 0), the row is emitted in `FLAT` form with zeroed financials.
+
+      `leverage` reflects the user's per-(account, market) override (set via REST `POST /v1/setLeverage`) when present, otherwise the market default. A `PositionUpdate` is also emitted when the user adjusts leverage on a market they already hold a position in, and when they add or remove isolated margin via `POST /v1/adjustIsolatedMargin` (that frame carries `requestId` so clients can correlate it with the 202 ACK, and `marginMode: ISOLATED`).
+
+      Every perp position row — snapshot and streaming — includes `marginMode` (`CROSS` or `ISOLATED`) so clients can tell the collateral mode without a REST round-trip. Isolated rows set `marginUsed` to the posted isolated-leg pool (not IMR at mark); the full isolated-leg cash balance is derivable as `marginUsed + borrowedCapital`.
+
+      Optionally scoped to one market: pass `market` on subscribe (ticker or numeric id) and the snapshot, the live frames, and the post-snapshot catch-up all carry only that market. The filter is part of subscription identity, so one connection can hold several market-scoped views of the same account; `unsubscribe` must repeat the same `market`.
+    messages:
+      subscribe:
+        $ref: '#/components/messages/SubscribeByAddress'
+      snapshot:
+        $ref: '#/components/messages/PositionsSnapshot'
+      update:
+        $ref: '#/components/messages/PositionUpdate'
+    tags:
+      - name: Account
+  userFills:
+    address: /v1/ws?channel=userFills
+    description: |
+      > **Endpoint:** `wss://api.arcus.xyz/v1/ws` — one socket multiplexes every channel and RPC request. Click **Connect**, then send the example subscribe message below to start receiving data.
+
+      Per-user fill stream. Snapshot on subscribe contains recent fills; streaming updates deliver each new fill as orders are matched. Snapshot is sent once on connect only.
+
+      `LIQUIDATION` and `ADL` fills also appear here carrying the `liquidation` marker (`method` + `liquidatedUser`) — on the liquidated account's leg for `LIQUIDATION` and the deleveraged counterparty's leg for `ADL` — so subscribers tracking realized closures can observe forced fills on either `account` or `userFills`. The marker is persisted, so it is present in snapshots as well as live updates.
+
+      Optionally scoped to one market: pass `market` on subscribe (ticker or numeric id) and the snapshot, the live frames, and the post-snapshot catch-up all carry only that market. The filter is part of subscription identity, so one connection can hold several market-scoped views of the same account; `unsubscribe` must repeat the same `market`.
+    messages:
+      subscribe:
+        $ref: '#/components/messages/SubscribeByAddress'
+      snapshot:
+        $ref: '#/components/messages/UserFillsSnapshot'
+      update:
+        $ref: '#/components/messages/UserFillUpdate'
+    tags:
+      - name: Account
+  orders:
+    address: /v1/ws?channel=orders
+    description: |
+      > **Endpoint:** `wss://api.arcus.xyz/v1/ws` — one socket multiplexes every channel and RPC request. Click **Connect**, then send the example subscribe message below to start receiving data.
+
+      Open and recently closed order updates for an account. Snapshot on subscribe includes all open orders and up to 100 recently closed orders. Streaming updates use a unified shape for both status changes and fill events. Snapshot is sent once on connect only.
+
+      Subscribe to this channel alongside `userFills` to observe the full order lifecycle after placing an order via the `orderOperations` channel.
+
+      Optionally scoped to one market: pass `market` on subscribe (ticker or numeric id) and the snapshot, the live frames, and the post-snapshot catch-up all carry only that market. The filter is part of subscription identity, so one connection can hold several market-scoped views of the same account; `unsubscribe` must repeat the same `market`.
+    messages:
+      subscribe:
+        $ref: '#/components/messages/SubscribeByAddress'
+      snapshot:
+        $ref: '#/components/messages/OrdersSnapshot'
+      update:
+        $ref: '#/components/messages/OrderUpdate'
+    tags:
+      - name: Account
+  funding:
+    address: /v1/ws?channel=funding
+    description: |
+      > **Endpoint:** `wss://api.arcus.xyz/v1/ws` — one socket multiplexes every channel and RPC request. Click **Connect**, then send the example subscribe message below to start receiving data.
+
+      Funding payment stream for an account. Snapshot on subscribe contains up to 100 most recent funding payments from the last 30 days; for older history query REST `GET /v1/funding` with an explicit `from`. Live updates deliver one event per (market, account) at each funding payment time.
+
+      Sign convention on `payment`: positive = received, negative = paid. `time` is the Unix-microsecond funding payment time.
+    messages:
+      subscribe:
+        $ref: '#/components/messages/SubscribeByAddress'
+      snapshot:
+        $ref: '#/components/messages/FundingPaymentsSnapshot'
+      update:
+        $ref: '#/components/messages/FundingPaymentUpdate'
+    tags:
+      - name: Account
+  predictedFunding:
+    address: /v1/ws?channel=predictedFunding
+    description: |
+      > **Endpoint:** `wss://api.arcus.xyz/v1/ws` — one socket multiplexes every channel and RPC request. Click **Connect**, then send the example subscribe message below to start receiving data.
+
+      Predicted next-hour funding rate for a single market. Subscribe `id` is the market display name (e.g. `BTC-USD`).
+
+      On subscribe the initial response carries the latest cached prediction for the market; `contents` is empty when no prediction has been published yet. Streaming updates deliver a new `{market, rate1h}` payload each time the funder recomputes the prediction. Unlike most channels, payloads are not wrapped in an `isSnapshot` envelope.
+    messages:
+      subscribe:
+        $ref: '#/components/messages/SubscribeByMarket'
+      snapshot:
+        $ref: '#/components/messages/PredictedFundingSnapshot'
+      update:
+        $ref: '#/components/messages/PredictedFundingUpdate'
+    tags:
+      - name: Market data
+  accountTransferUpdates:
+    address: /v1/ws?channel=accountTransferUpdates
+    description: |
+      > **Endpoint:** `wss://api.arcus.xyz/v1/ws` — one socket multiplexes every channel and RPC request. Click **Connect**, then send the example subscribe message below to start receiving data.
+
+      Account transfer events (deposits, withdrawals, transfers, referral claims) for an account. Snapshot on subscribe contains the most recent events newest-first (`isSnapshot: true`); each streaming update carries a single event (`isSnapshot: false`) as it is applied by the engine.
+
+      Amounts and balances are human-readable decimal strings in quote currency. `globalSequenceId` gives strict ordering across all engine events. The equivalent REST read is `GET /v1/accountTransferUpdates`.
+    messages:
+      subscribe:
+        $ref: '#/components/messages/SubscribeByAddress'
+      snapshot:
+        $ref: '#/components/messages/AccountTransferUpdatesSnapshot'
+      update:
+        $ref: '#/components/messages/AccountTransferUpdateEvent'
+    tags:
+      - name: Account
+  accountAttributeUpdates:
+    address: /v1/ws?channel=accountAttributeUpdates
+    description: |
+      > **Endpoint:** `wss://api.arcus.xyz/v1/ws` — one socket multiplexes every channel and RPC request. Click **Connect**, then send the example subscribe message below to start receiving data.
+
+      Per-account attribute state, discriminated by entry `type`. `type: "leverage"` entries carry effective leverage and margin mode per market. `isolated` and `marginMode` are always present — in the snapshot they reflect the current persisted state; in streaming frames they reflect the account's margin mode after the triggering event, defaulting to CROSS if the margin mode lookup fails. `type: "feeTier"` entries carry account-level fee tier state. `type: "leverageReject"` entries (streaming only) report that a setLeverage request was refused by the engine — this is the `REJECTED` half of the setLeverage lifecycle; an applied change arrives as a `leverage` entry. When `isolated` was also supplied on the request, both the leverage and margin mode outcomes are folded into the same entry via the optional `marginModeStatus` and `marginModeRejectReason` fields. Snapshot returns one leverage entry per market (carrying both leverage and margin mode state) plus, when available, one fee tier entry. Streaming delivers one entry for each changed attribute.
+    messages:
+      subscribe:
+        $ref: '#/components/messages/SubscribeByAddress'
+      snapshot:
+        $ref: '#/components/messages/AccountAttributesSnapshot'
+      update:
+        $ref: '#/components/messages/AccountAttributesUpdate'
+    tags:
+      - name: Account
+  exchangeAttributeUpdates:
+    address: /v1/ws?channel=exchangeAttributeUpdates
+    description: |
+      > **Endpoint:** `wss://api.arcus.xyz/v1/ws` — one socket multiplexes every channel and RPC request. Click **Connect**, then send the example subscribe message below to start receiving data.
+
+      Exchange-wide attribute state, discriminated by entry `type`:
+
+      `"feeTierConfig"` carries the full fee tier table whenever the fee tier table is updated.
+
+      `"marketAttributes"` (DEPRECATED — superseded by the dedicated `marketAttributes` channel, whose entries carry the market's full attribute state; this variant keeps streaming for existing consumers and will be removed after a deprecation window) carries per-market Regular Trading Hours and off-hours trading-bound events: RTH boundary crossings (`isOutsideRth`, with `boundEvent`: `exitRth` / `enterRth`), VWAP settlement seals (`sealedVwapSettlementPrice`), and off-hours expansion-zone events (`boundEvent`: `expansionZoneEntered` when a side's impact-price EWMA crosses within 90% of its trading boundary, starting the 1-hour expansion clock; `expansionZoneExited` when the EWMA relaxes out of the zone and the clock resets; `tradingBoundExpanded` when the clock completes and that side's band widens one level on the 0.5×→1×→2×→4× ladder).
+
+      **Global channel — no `id` required.** All subscribers receive the same stream.
+
+      On subscribe: snapshot of the current fee tier table (one `feeTierConfig` entry, `isSnapshot: true`). Streaming: fee tier table replacements and marketAttributes edge events (`isSnapshot: false`).
+
+      The equivalent REST reads are `GET /v1/feetiers` and `GET /v1/markets` (`isOutsideRth`, `isUpperInExpansionZone` / `isLowerInExpansionZone`, `upperTradingBound` / `lowerTradingBound`).
+    messages:
+      subscribe:
+        $ref: '#/components/messages/SubscribeExchangeAttributeUpdates'
+      snapshot:
+        $ref: '#/components/messages/ExchangeAttributesSnapshot'
+      update:
+        $ref: '#/components/messages/ExchangeAttributesUpdate'
+    tags:
+      - name: Market data
+  marketAttributes:
+    address: /v1/ws?channel=marketAttributes
+    description: |
+      > **Endpoint:** `wss://api.arcus.xyz/v1/ws` — one socket multiplexes every channel and RPC request. Click **Connect**, then send the example subscribe message below to start receiving data.
+
+      Per-market Regular Trading Hours / off-hours attribute state for every online market. 24/7 markets (crypto) are included with `isOutsideRth: false` — they never leave regular trading hours — and every other off-hours field `null`; they never produce streaming updates. Supersedes the `marketAttributes` entry variant on `exchangeAttributeUpdates`.
+
+      Every entry — snapshot and streaming alike — is the market's COMPLETE current attribute block: `marketId`, `marketDisplayName`, `offHoursInitialMarginFraction`, `isOutsideRth`, `currentSettlementPrice`, both trading-band boundaries and next-level boundaries, and per-side expansion-zone state. Fields that do not currently apply are `null`, never omitted. Field semantics match `GET /v1/markets`.
+
+      **Global channel — no `id` required.** All subscribers receive the same stream.
+
+      On subscribe: one full block per online market (`isSnapshot: true`) — a complete bootstrap, no REST read needed. Streaming: a single-entry envelope with the affected market's full post-event block on every RTH boundary crossing, VWAP seal, and off-hours bound event (`isSnapshot: false`). Because each update carries the full block — both sides' bounds, not just the side an event fired on — clients replace their local entry for `marketId` wholesale; `boundEvent` annotates what fired — always present on delta entries (`exitRth` / `enterRth` on RTH boundary crossings, a bound-event name otherwise); `boundSide` is also always present on delta entries (null on RTH-transition / non-bound-event deltas).
+    messages:
+      subscribe:
+        $ref: '#/components/messages/SubscribeMarketAttributes'
+      snapshot:
+        $ref: '#/components/messages/MarketAttributesSnapshot'
+      update:
+        $ref: '#/components/messages/MarketAttributesStreamUpdate'
+    tags:
+      - name: Market data
+  candles:
+    address: /v1/ws?channel=candles
+    description: |
+      > **Endpoint:** `wss://api.arcus.xyz/v1/ws` — one socket multiplexes every channel and RPC request. Click **Connect**, then send the example subscribe message below to start receiving data.
+
+      OHLCV candlestick stream. Subscribe `id` is `"MARKET/TIMEFRAME"`, e.g. `"BTC-USD/1m"`.
+
+      On subscribe: snapshot of the most recent candles (up to 200). Then: real-time updates as each bar changes. Open-candle updates are coalesced and sent at most about every 250 ms per market/timeframe. `isFinal: true` updates are sent immediately when the interval closes and the bar will not be updated again.
+
+      Available timeframes: `1m`, `3m`, `5m`, `15m`, `30m`, `1h`, `2h`, `4h`, `8h`, `12h`, `1d`, `3d`, `1w`.
+    messages:
+      subscribe:
+        $ref: '#/components/messages/SubscribeCandles'
+      snapshot:
+        $ref: '#/components/messages/CandlesSnapshot'
+      update:
+        $ref: '#/components/messages/CandleUpdate'
+    tags:
+      - name: Market data
+  orderOperations:
+    address: /v1/ws?channel=orderOperations
+    description: |
+      > **Endpoint:** `wss://api.arcus.xyz/v1/ws` — one socket multiplexes every channel and RPC request. Click **Connect**, then send the example subscribe message below to start receiving data.
+
+      RPC-style trading operations over WebSocket. Use `type: post` for order mutations and `type: get` for read-only snapshots.
+
+      Every request carries a client-chosen numeric `id` that is echoed in the response, allowing you to correlate replies with requests. Use a monotonically increasing counter per connection.
+
+      **Order mutations are asynchronous** — they reply with `status: 202` (accepted, not terminal). Subscribe to `orders` and `userFills` to observe the full order lifecycle.
+
+      **Supported `post` methods:** `placeOrder`, `cancelOrder`, `cancelAllOrders`, `scheduleCancel`, `modifyOrder`, `batchPlaceOrders`, `batchCancelOrders`, `batchModifyOrders`, `setLeverage`, `adjustIsolatedMargin`.
+
+      **Supported `get` methods:** `l2orderbook`, `bbo`, `mids`, `account`, `fills`, `orders`, `markets`, `prices`, `positions`, `leverages`, `ratelimit`.
+    messages:
+      placeOrder:
+        $ref: '#/components/messages/PlaceOrderRequest'
+      cancelOrder:
+        $ref: '#/components/messages/CancelOrderRequest'
+      cancelAllOrders:
+        $ref: '#/components/messages/CancelAllOrdersRequest'
+      scheduleCancel:
+        $ref: '#/components/messages/ScheduleCancelRequest'
+      modifyOrder:
+        $ref: '#/components/messages/ModifyOrderRequest'
+      batchPlaceOrders:
+        $ref: '#/components/messages/BatchPlaceOrdersRequest'
+      batchCancelOrders:
+        $ref: '#/components/messages/BatchCancelOrdersRequest'
+      batchModifyOrders:
+        $ref: '#/components/messages/BatchModifyOrdersRequest'
+      setLeverage:
+        $ref: '#/components/messages/SetLeverageRequest'
+      adjustIsolatedMargin:
+        $ref: '#/components/messages/AdjustIsolatedMarginRequest'
+      getSnapshot:
+        $ref: '#/components/messages/GetRequest'
+      response:
+        $ref: '#/components/messages/RpcResponse'
+    tags:
+      - name: Trading
+operations:
+  subscribeL2Orderbook:
+    action: receive
+    channel:
+      $ref: '#/channels/l2Orderbook'
+    messages:
+      - $ref: '#/channels/l2Orderbook/messages/subscribe'
+  receiveL2Orderbook:
+    action: send
+    channel:
+      $ref: '#/channels/l2Orderbook'
+    messages:
+      - $ref: '#/channels/l2Orderbook/messages/snapshot'
+  subscribeL2OrderbookUpdates:
+    action: receive
+    channel:
+      $ref: '#/channels/l2OrderbookUpdates'
+    messages:
+      - $ref: '#/channels/l2OrderbookUpdates/messages/subscribe'
+  receiveL2OrderbookUpdates:
+    action: send
+    channel:
+      $ref: '#/channels/l2OrderbookUpdates'
+    messages:
+      - $ref: '#/channels/l2OrderbookUpdates/messages/snapshot'
+      - $ref: '#/channels/l2OrderbookUpdates/messages/update'
+  subscribeTrades:
+    action: receive
+    channel:
+      $ref: '#/channels/trades'
+    messages:
+      - $ref: '#/channels/trades/messages/subscribe'
+  receiveTrades:
+    action: send
+    channel:
+      $ref: '#/channels/trades'
+    messages:
+      - $ref: '#/channels/trades/messages/update'
+  subscribeMarkets:
+    action: receive
+    channel:
+      $ref: '#/channels/markets'
+    messages:
+      - $ref: '#/channels/markets/messages/subscribe'
+  receiveMarkets:
+    action: send
+    channel:
+      $ref: '#/channels/markets'
+    messages:
+      - $ref: '#/channels/markets/messages/snapshot'
+      - $ref: '#/channels/markets/messages/update'
+  subscribeOraclePrices:
+    action: receive
+    channel:
+      $ref: '#/channels/oraclePrices'
+    messages:
+      - $ref: '#/channels/oraclePrices/messages/subscribe'
+  receiveOraclePrices:
+    action: send
+    channel:
+      $ref: '#/channels/oraclePrices'
+    messages:
+      - $ref: '#/channels/oraclePrices/messages/update'
+  subscribeBBO:
+    action: receive
+    channel:
+      $ref: '#/channels/bbo'
+    messages:
+      - $ref: '#/channels/bbo/messages/subscribe'
+  receiveBBO:
+    action: send
+    channel:
+      $ref: '#/channels/bbo'
+    messages:
+      - $ref: '#/channels/bbo/messages/update'
+  subscribeAccount:
+    action: receive
+    channel:
+      $ref: '#/channels/account'
+    messages:
+      - $ref: '#/channels/account/messages/subscribe'
+  receiveAccount:
+    action: send
+    channel:
+      $ref: '#/channels/account'
+    messages:
+      - $ref: '#/channels/account/messages/snapshot'
+      - $ref: '#/channels/account/messages/update'
+  subscribePositions:
+    action: receive
+    channel:
+      $ref: '#/channels/positions'
+    messages:
+      - $ref: '#/channels/positions/messages/subscribe'
+  receivePositions:
+    action: send
+    channel:
+      $ref: '#/channels/positions'
+    messages:
+      - $ref: '#/channels/positions/messages/snapshot'
+      - $ref: '#/channels/positions/messages/update'
+  subscribeUserFills:
+    action: receive
+    channel:
+      $ref: '#/channels/userFills'
+    messages:
+      - $ref: '#/channels/userFills/messages/subscribe'
+  receiveUserFills:
+    action: send
+    channel:
+      $ref: '#/channels/userFills'
+    messages:
+      - $ref: '#/channels/userFills/messages/snapshot'
+      - $ref: '#/channels/userFills/messages/update'
+  subscribeOrders:
+    action: receive
+    channel:
+      $ref: '#/channels/orders'
+    messages:
+      - $ref: '#/channels/orders/messages/subscribe'
+  receiveOrders:
+    action: send
+    channel:
+      $ref: '#/channels/orders'
+    messages:
+      - $ref: '#/channels/orders/messages/snapshot'
+      - $ref: '#/channels/orders/messages/update'
+  subscribeFunding:
+    action: receive
+    channel:
+      $ref: '#/channels/funding'
+    messages:
+      - $ref: '#/channels/funding/messages/subscribe'
+  receiveFunding:
+    action: send
+    channel:
+      $ref: '#/channels/funding'
+    messages:
+      - $ref: '#/channels/funding/messages/snapshot'
+      - $ref: '#/channels/funding/messages/update'
+  subscribePredictedFunding:
+    action: receive
+    channel:
+      $ref: '#/channels/predictedFunding'
+    messages:
+      - $ref: '#/channels/predictedFunding/messages/subscribe'
+  receivePredictedFunding:
+    action: send
+    channel:
+      $ref: '#/channels/predictedFunding'
+    messages:
+      - $ref: '#/channels/predictedFunding/messages/snapshot'
+      - $ref: '#/channels/predictedFunding/messages/update'
+  subscribeAccountTransferUpdates:
+    action: receive
+    channel:
+      $ref: '#/channels/accountTransferUpdates'
+    messages:
+      - $ref: '#/channels/accountTransferUpdates/messages/subscribe'
+  receiveAccountTransferUpdates:
+    action: send
+    channel:
+      $ref: '#/channels/accountTransferUpdates'
+    messages:
+      - $ref: '#/channels/accountTransferUpdates/messages/snapshot'
+      - $ref: '#/channels/accountTransferUpdates/messages/update'
+  subscribeCandles:
+    action: receive
+    channel:
+      $ref: '#/channels/candles'
+    messages:
+      - $ref: '#/channels/candles/messages/subscribe'
+  receiveCandles:
+    action: send
+    channel:
+      $ref: '#/channels/candles'
+    messages:
+      - $ref: '#/channels/candles/messages/snapshot'
+      - $ref: '#/channels/candles/messages/update'
+  subscribeAccountAttributes:
+    action: receive
+    channel:
+      $ref: '#/channels/accountAttributeUpdates'
+    messages:
+      - $ref: '#/channels/accountAttributeUpdates/messages/subscribe'
+  receiveAccountAttributes:
+    action: send
+    channel:
+      $ref: '#/channels/accountAttributeUpdates'
+    messages:
+      - $ref: '#/channels/accountAttributeUpdates/messages/snapshot'
+      - $ref: '#/channels/accountAttributeUpdates/messages/update'
+  subscribeExchangeAttributes:
+    action: receive
+    channel:
+      $ref: '#/channels/exchangeAttributeUpdates'
+    messages:
+      - $ref: '#/channels/exchangeAttributeUpdates/messages/subscribe'
+  receiveExchangeAttributes:
+    action: send
+    channel:
+      $ref: '#/channels/exchangeAttributeUpdates'
+    messages:
+      - $ref: '#/channels/exchangeAttributeUpdates/messages/snapshot'
+      - $ref: '#/channels/exchangeAttributeUpdates/messages/update'
+  subscribeMarketAttributes:
+    action: receive
+    channel:
+      $ref: '#/channels/marketAttributes'
+    messages:
+      - $ref: '#/channels/marketAttributes/messages/subscribe'
+  receiveMarketAttributes:
+    action: send
+    channel:
+      $ref: '#/channels/marketAttributes'
+    messages:
+      - $ref: '#/channels/marketAttributes/messages/snapshot'
+      - $ref: '#/channels/marketAttributes/messages/update'
+  sendOrderOperation:
+    action: receive
+    channel:
+      $ref: '#/channels/orderOperations'
+    messages:
+      - $ref: '#/channels/orderOperations/messages/placeOrder'
+      - $ref: '#/channels/orderOperations/messages/cancelOrder'
+      - $ref: '#/channels/orderOperations/messages/cancelAllOrders'
+      - $ref: '#/channels/orderOperations/messages/scheduleCancel'
+      - $ref: '#/channels/orderOperations/messages/modifyOrder'
+      - $ref: '#/channels/orderOperations/messages/batchPlaceOrders'
+      - $ref: '#/channels/orderOperations/messages/batchCancelOrders'
+      - $ref: '#/channels/orderOperations/messages/batchModifyOrders'
+      - $ref: '#/channels/orderOperations/messages/setLeverage'
+      - $ref: '#/channels/orderOperations/messages/adjustIsolatedMargin'
+      - $ref: '#/channels/orderOperations/messages/getSnapshot'
+  receiveOrderOperationResponse:
+    action: send
+    channel:
+      $ref: '#/channels/orderOperations'
+    messages:
+      - $ref: '#/channels/orderOperations/messages/response'
+components:
+  messages:
+    SubscribeL2Orderbook:
+      name: SubscribeL2Orderbook
+      title: Subscribe to L2 Orderbook
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/SubscribeL2OrderbookPayload'
+      examples:
+        - name: Subscribe BTC-USD (50 levels)
+          payload:
+            type: subscribe
+            channel: l2Orderbook
+            id: BTC-USD
+            nLevels: 50
+        - name: Subscribe ETH-USD (default levels)
+          payload:
+            type: subscribe
+            channel: l2Orderbook
+            id: ETH-USD
+        - name: Subscribe BTC-USD aggregated to 5 sig figs, $2 buckets
+          payload:
+            type: subscribe
+            channel: l2Orderbook
+            id: BTC-USD
+            sigFigs: 5
+            roundStep: 2
+        - name: Second view of BTC-USD at 3 sig figs on the same connection
+          payload:
+            type: subscribe
+            channel: l2Orderbook
+            id: BTC-USD
+            sigFigs: 3
+    SubscribeL2OrderbookUpdates:
+      name: SubscribeL2OrderbookUpdates
+      title: Subscribe to L2 Orderbook incremental updates
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/SubscribeL2OrderbookUpdatesPayload'
+      examples:
+        - name: Subscribe BTC-USD (50 levels)
+          payload:
+            type: subscribe
+            channel: l2OrderbookUpdates
+            id: BTC-USD
+            nLevels: 50
+        - name: Subscribe ETH-USD, deltas only (no initial snapshot)
+          payload:
+            type: subscribe
+            channel: l2OrderbookUpdates
+            id: ETH-USD
+            snapshot: false
+    SubscribeByMarket:
+      name: SubscribeByMarket
+      title: Subscribe to a market channel
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/SubscribeByMarketPayload'
+      examples:
+        - name: Subscribe BTC-USD trades
+          payload:
+            type: subscribe
+            channel: trades
+            id: BTC-USD
+    SubscribeByAddress:
+      name: SubscribeByAddress
+      title: Subscribe to an account channel
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/SubscribeByAddressPayload'
+      examples:
+        - name: Subscribe by Ethereum address
+          payload:
+            type: subscribe
+            channel: account
+            id: 0xAbCd...1234
+    SubscribeGlobal:
+      name: SubscribeGlobal
+      title: Subscribe to the markets channel
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/SubscribeGlobalPayload'
+      examples:
+        - name: Subscribe to all markets
+          payload:
+            type: subscribe
+            channel: markets
+    SubscribeExchangeAttributeUpdates:
+      name: SubscribeExchangeAttributeUpdates
+      title: Subscribe to the exchange attribute updates channel
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/SubscribeExchangeAttributeUpdatesPayload'
+      examples:
+        - name: Subscribe to exchange attribute updates
+          payload:
+            type: subscribe
+            channel: exchangeAttributeUpdates
+        - name: Subscribe, updates only (no initial snapshot)
+          payload:
+            type: subscribe
+            channel: exchangeAttributeUpdates
+            snapshot: false
+    SubscribeMarketAttributes:
+      name: SubscribeMarketAttributes
+      title: Subscribe to the market attributes channel
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/SubscribeMarketAttributesPayload'
+      examples:
+        - name: Subscribe to market attributes
+          payload:
+            type: subscribe
+            channel: marketAttributes
+        - name: Subscribe, updates only (no initial snapshot)
+          payload:
+            type: subscribe
+            channel: marketAttributes
+            snapshot: false
+    SubscribeCandles:
+      name: SubscribeCandles
+      title: Subscribe to candles
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/SubscribeCandlesPayload'
+      examples:
+        - name: BTC-USD 1-minute candles
+          payload:
+            type: subscribe
+            channel: candles
+            id: BTC-USD/1m
+        - name: ETH-USD 1-hour candles
+          payload:
+            type: subscribe
+            channel: candles
+            id: ETH-USD/1h
+    L2OrderbookSnapshot:
+      name: L2OrderbookSnapshot
+      title: L2 Orderbook Snapshot
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/L2OrderbookSnapshotPayload'
+      examples:
+        - name: BTC-USD snapshot
+          payload:
+            type: subscribed
+            channel: l2Orderbook
+            id: BTC-USD
+            contents:
+              bids:
+                - - '94500.0'
+                  - '1.5'
+                - - '94499.0'
+                  - '2.0'
+              asks:
+                - - '94501.0'
+                  - '0.8'
+                - - '94502.0'
+                  - '3.1'
+              lastSequenceId: 1042
+              globalSequenceId: 880421
+              timestamp: 1780410803123456
+        - name: BTC-USD snapshot aggregated to 3 sig figs
+          payload:
+            type: subscribed
+            channel: l2Orderbook
+            id: BTC-USD
+            sigFigs: 3
+            contents:
+              bids:
+                - - '94500'
+                  - '1.5'
+              asks:
+                - - '94600'
+                  - '0.8'
+              lastSequenceId: 1042
+              globalSequenceId: 880421
+              timestamp: 1780410803123456
+    L2OrderbookUpdate:
+      name: L2OrderbookUpdate
+      title: L2 Orderbook Incremental Update
+      contentType: application/json
+      description: |
+        `size: "0"` means the level was removed. Apply every delta whose `lastSequenceId` exceeds the snapshot's; the first delta may be a few sequences ahead of the snapshot (an expected boundary gap that self-heals — do **not** re-subscribe on it). Once you are applying deltas, sequences are contiguous, so only a **mid-stream** gap means a missed delta — re-subscribe for a fresh snapshot then.
+      payload:
+        $ref: '#/components/schemas/L2OrderbookUpdatePayload'
+      examples:
+        - name: BTC-USD delta
+          payload:
+            type: channel_data
+            channel: l2OrderbookUpdates
+            id: BTC-USD
+            contents:
+              bids:
+                - - '94499.0'
+                  - '0'
+              asks:
+                - - '94503.0'
+                  - '1.2'
+              lastSequenceId: 1043
+              globalSequenceId: 880422
+    TradesUpdate:
+      name: TradesUpdate
+      title: Trades Update
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/TradesUpdatePayload'
+      examples:
+        - name: BTC-USD trade
+          payload:
+            type: channel_data
+            channel: trades
+            id: BTC-USD
+            contents:
+              - takerOrderId: ord-taker-123
+                makerOrderId: ord-maker-456
+                takerAddress: 0xaaa...
+                makerAddress: 0xbbb...
+                price: '94500.00'
+                size: '0.5'
+                tradeId: trade-789
+                timestamp: 1712345679000000
+                sequenceNumber: 5001
+    MarketsSnapshot:
+      name: MarketsSnapshot
+      title: Markets Snapshot
+      contentType: application/json
+      description: |
+        Full markets state delivered as the subscribe response. Same shape as the periodic `MarketsUpdate` — the markets channel is snapshot-only.
+      payload:
+        $ref: '#/components/schemas/MarketsUpdatePayload'
+    MarketsUpdate:
+      name: MarketsUpdate
+      title: Markets Update
+      contentType: application/json
+      description: |
+        Periodic re-snapshot of all markets. Replaces the client's full markets view; there are no partial diffs on this channel.
+      payload:
+        $ref: '#/components/schemas/MarketsUpdatePayload'
+      examples:
+        - name: All markets snapshot
+          payload:
+            type: channel_data
+            channel: markets
+            contents:
+              isSnapshot: true
+              markets:
+                '1':
+                  marketDisplayName: BTC-USD
+                  marketId: 1
+                  status: ONLINE
+                  baseAsset: BTC
+                  quoteAsset: USD
+                  tickSize: '0.01'
+                  stepSize: '0.0001'
+                  minOrderSize: '0.0001'
+                  maxOrderSize: '10000'
+                  oraclePrice: '94500.00'
+                  markPrice: '94500.50'
+                  lastTradePrice: '94498.00'
+                  fundingRate: '0.0001'
+                  nextFundingRate: '0.00012'
+                  nextFundingAt: 1712349600
+                  priceChange24h: '0.025'
+                  volume24h: '1234.5678'
+                  trades24h: 4242
+                  openInterest: '312.4567'
+                  initialMarginFraction: '0.05'
+                  maintenanceMarginFraction: '0.03'
+                  type: PERPETUAL
+                '2':
+                  marketDisplayName: ETH-USD
+                  marketId: 2
+                  status: ONLINE
+                  baseAsset: ETH
+                  quoteAsset: USD
+                  oraclePrice: '3050.00'
+                  markPrice: '3050.25'
+                  lastTradePrice: '3049.80'
+                  fundingRate: '0.00005'
+                  nextFundingRate: '0.00007'
+                  nextFundingAt: 1712349600
+                  type: PERPETUAL
+    OraclePricesUpdate:
+      name: OraclePricesUpdate
+      title: Oracle Price Update
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/OraclePricesUpdatePayload'
+      examples:
+        - name: Oracle price batch
+          payload:
+            type: channel_data
+            channel: oraclePrices
+            contents:
+              epoch: 1780410803000000000
+              prices:
+                - marketDisplayName: SLV-USD
+                  marketId: 20
+                  price: '68.39'
+                  markPrice: '68.39'
+                  markEpochNanos: 1780410803000000000
+                - marketDisplayName: BTC-USD
+                  marketId: 1
+                  price: '94501.00'
+                  markPrice: '94500.50'
+                  markEpochNanos: 1780410803000000000
+    BBOUpdate:
+      name: BBOUpdate
+      title: Best Bid Offer (BBO) Update
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/BBOUpdatePayload'
+      examples:
+        - name: BTC-USD BBO
+          payload:
+            type: channel_data
+            channel: bbo
+            id: BTC-USD
+            contents:
+              bestBid:
+                price: '94500.00'
+                size: '1.5'
+              bestAsk:
+                price: '94501.00'
+                size: '0.8'
+              timestamp: 1780410803123456
+              lastSequenceId: 2001
+              globalSequenceId: 880422
+    AccountSnapshot:
+      name: AccountSnapshot
+      title: Account Snapshot
+      contentType: application/json
+      description: |
+        Full account state sent on subscribe, re-broadcast every 5 seconds, and sent shortly after account events. Schema: openapi `AccountsSnapshot` — not the REST `GET /account` shape (`lastSequenceId` and `accountEquity` instead of `sequenceNumber` and `equity`).
+      payload:
+        $ref: '#/components/schemas/ChannelDataEnvelope'
+    AccountUpdate:
+      name: AccountUpdate
+      title: Account Update
+      contentType: application/json
+      description: |
+        Streaming account event. `type` in `contents` is one of: `PLACED`, `CANCELED`, `MARGIN_CANCELED`, `REJECTED`, `TPSL_PLACED`, `TPSL_CANCELED`, `TPSL_TRIGGERED`, `LIQUIDATION`, `ADL`. `netQuoteBalance` is stamped on every frame. `avgFillPrice` is present whenever the order has any filled quantity (e.g. a cancel after partial fills) and matches the REST / snapshot value.
+      payload:
+        $ref: '#/components/schemas/ChannelDataEnvelope'
+    PositionsSnapshot:
+      name: PositionsSnapshot
+      title: Positions Snapshot
+      contentType: application/json
+      description: |
+        Sent once on subscribe. Contents use OpenAPI `PositionsSnapshot`: the same `positions` map as REST `GET /positions` (`GetPositionsResponse`) plus required `isSnapshot: true`, `lastSequenceId`, `address`, and `accountIndex`. The snapshot does NOT carry the REST-only `total` field. The required `positions` map is keyed by perp market id; each row carries `sequenceNumber`.
+      payload:
+        $ref: '#/components/schemas/ChannelDataEnvelope'
+    PositionUpdate:
+      name: PositionUpdate
+      title: Position Update
+      contentType: application/json
+      description: |
+        One position delta per frame (one `PositionUpdate` per streaming event). Contents carry `isSnapshot: false` and `lastSequenceId`. Each update has one row in `positions`.
+
+        Each perp position row carries `sequenceNumber` (same counter as AccountUpdate). `cumulativeFunding` is absent; use the snapshot for funding horizons. On close, emitted in `FLAT` form with zeroed financials.
+      payload:
+        $ref: '#/components/schemas/ChannelDataEnvelope'
+    AccountAttributesSnapshot:
+      name: AccountAttributesSnapshot
+      title: Account Attributes Snapshot
+      contentType: application/json
+      description: One leverage entry per market (carrying both leverage and margin mode state), plus one fee tier entry when available. Sent once on subscribe.
+      payload:
+        $ref: '#/components/schemas/AccountAttributesUpdatePayload'
+    AccountAttributesUpdate:
+      name: AccountAttributesUpdate
+      title: Account Attributes Update
+      contentType: application/json
+      description: |
+        Single-entry delta keyed by `type`. A `leverage` or `feeTier` entry is a state change; a `leverageReject` entry reports a refused request (no state change). When `isolated` was part of a `setLeverage` request the margin mode outcome is carried inside the same entry.
+      payload:
+        $ref: '#/components/schemas/AccountAttributesUpdatePayload'
+    ExchangeAttributesSnapshot:
+      name: ExchangeAttributesSnapshot
+      title: Exchange Attributes Snapshot
+      contentType: application/json
+      description: |
+        Initial snapshot sent once on subscribe. Contains one `feeTierConfig` entry with the complete current fee tier table (`isSnapshot: true`).
+      payload:
+        $ref: '#/components/schemas/ExchangeAttributesUpdatePayload'
+      examples:
+        - name: Fee tier table snapshot
+          payload:
+            type: subscribed
+            channel: exchangeAttributeUpdates
+            id: ''
+            contents:
+              isSnapshot: true
+              entries:
+                - type: feeTierConfig
+                  tiers:
+                    - level: 0
+                      name: Base
+                      volumeThreshold: 0
+                      makerFeePpm: 200
+                      takerFeePpm: 500
+                    - level: 1
+                      name: Bronze
+                      volumeThreshold: 100000000000
+                      makerFeePpm: 150
+                      takerFeePpm: 450
+    ExchangeAttributesUpdate:
+      name: ExchangeAttributesUpdate
+      title: Exchange Attributes Update
+      contentType: application/json
+      description: |
+        Streaming update pushed whenever an operator edits the exchange fee tier config. Always carries the full updated table in a single `feeTierConfig` entry (`isSnapshot: false`). Clients should replace their local copy atomically.
+      payload:
+        $ref: '#/components/schemas/ExchangeAttributesUpdatePayload'
+      examples:
+        - name: Fee tier table updated
+          payload:
+            type: channel_data
+            channel: exchangeAttributeUpdates
+            id: ''
+            contents:
+              isSnapshot: false
+              entries:
+                - type: feeTierConfig
+                  tiers:
+                    - level: 0
+                      name: Base
+                      volumeThreshold: 0
+                      makerFeePpm: 200
+                      takerFeePpm: 500
+    MarketAttributesSnapshot:
+      name: MarketAttributesSnapshot
+      title: Market Attributes Snapshot
+      contentType: application/json
+      description: |
+        Initial snapshot sent once on subscribe: one complete attribute block per online market, 24/7 crypto included (`isSnapshot: true`). Every field is present on every entry — `null` when it does not currently apply — so no REST bootstrap is needed.
+      payload:
+        $ref: '#/components/schemas/MarketAttributesChannelPayload'
+      examples:
+        - name: Snapshot with a 24/7, an off-hours, and an in-RTH market
+          payload:
+            type: subscribed
+            channel: marketAttributes
+            id: ''
+            contents:
+              isSnapshot: true
+              entries:
+                - marketId: 0
+                  marketDisplayName: BTC-USD
+                  offHoursInitialMarginFraction: '0.05'
+                  isOutsideRth: false
+                  currentSettlementPrice: null
+                  upperTradingBound: null
+                  lowerTradingBound: null
+                  nextUpperTradingBound: null
+                  nextLowerTradingBound: null
+                  isUpperInExpansionZone: null
+                  isLowerInExpansionZone: null
+                  upperZoneEnteredAt: null
+                  upperExpectedExpansionAt: null
+                  lowerZoneEnteredAt: null
+                  lowerExpectedExpansionAt: null
+                - marketId: 12
+                  marketDisplayName: INTC-USD
+                  offHoursInitialMarginFraction: '0.2'
+                  isOutsideRth: true
+                  currentSettlementPrice: '150.25'
+                  upperTradingBound: '165.28'
+                  lowerTradingBound: '135.23'
+                  nextUpperTradingBound: '180.30'
+                  nextLowerTradingBound: '120.20'
+                  isUpperInExpansionZone: false
+                  isLowerInExpansionZone: false
+                  upperZoneEnteredAt: null
+                  upperExpectedExpansionAt: null
+                  lowerZoneEnteredAt: null
+                  lowerExpectedExpansionAt: null
+                - marketId: 15
+                  marketDisplayName: TSLA-USD
+                  offHoursInitialMarginFraction: '0.2'
+                  isOutsideRth: false
+                  currentSettlementPrice: null
+                  upperTradingBound: null
+                  lowerTradingBound: null
+                  nextUpperTradingBound: null
+                  nextLowerTradingBound: null
+                  isUpperInExpansionZone: null
+                  isLowerInExpansionZone: null
+                  upperZoneEnteredAt: null
+                  upperExpectedExpansionAt: null
+                  lowerZoneEnteredAt: null
+                  lowerExpectedExpansionAt: null
+    MarketAttributesStreamUpdate:
+      name: MarketAttributesStreamUpdate
+      title: Market Attributes Update
+      contentType: application/json
+      description: |
+        Streaming update pushed on every RTH boundary crossing, VWAP seal, and off-hours bound event. The single entry is the affected market's full post-event attribute block — both sides' bounds, not just the side an event fired on — so clients replace their local entry for `marketId` wholesale. `boundEvent` annotates what fired — always present on delta entries (`exitRth` / `enterRth` on RTH boundary crossings, a bound-event name otherwise); `boundSide` is also always present on delta entries (null on RTH-transition / non-bound-event deltas).
+      payload:
+        $ref: '#/components/schemas/MarketAttributesChannelPayload'
+      examples:
+        - name: Upper trading bound expanded
+          payload:
+            type: channel_data
+            channel: marketAttributes
+            id: ''
+            contents:
+              isSnapshot: false
+              entries:
+                - marketId: 12
+                  marketDisplayName: INTC-USD
+                  offHoursInitialMarginFraction: '0.2'
+                  isOutsideRth: true
+                  currentSettlementPrice: '150.25'
+                  upperTradingBound: '180.30'
+                  lowerTradingBound: '135.23'
+                  nextUpperTradingBound: '210.35'
+                  nextLowerTradingBound: '120.20'
+                  isUpperInExpansionZone: false
+                  isLowerInExpansionZone: false
+                  upperZoneEnteredAt: null
+                  upperExpectedExpansionAt: null
+                  lowerZoneEnteredAt: null
+                  lowerExpectedExpansionAt: null
+                  boundEvent: tradingBoundExpanded
+                  boundSide: upper
+                  timestamp: 1753822800000000
+                  marketSequenceNum: 4211
+    UserFillsSnapshot:
+      name: UserFillsSnapshot
+      title: User Fills Snapshot
+      contentType: application/json
+      description: Recent fills sent once on subscribe.
+      payload:
+        $ref: '#/components/schemas/ChannelDataEnvelope'
+    UserFillUpdate:
+      name: UserFillUpdate
+      title: User Fill Update
+      contentType: application/json
+      description: One fill per frame as orders are matched.
+      payload:
+        $ref: '#/components/schemas/ChannelDataEnvelope'
+    OrdersSnapshot:
+      name: OrdersSnapshot
+      title: Orders Snapshot
+      contentType: application/json
+      description: |
+        Open orders plus recently closed orders with `isSnapshot: true` and `lastSequenceId` (per-account sequence at snapshot time). Sent once on subscribe.
+      payload:
+        $ref: '#/components/schemas/ChannelDataEnvelope'
+    OrderUpdate:
+      name: OrderUpdate
+      title: Order Update
+      contentType: application/json
+      description: |
+        One order lifecycle event. Carries `sequenceNumber` (per-account, same counter as AccountUpdate).
+      payload:
+        $ref: '#/components/schemas/OrderUpdatePayload'
+      examples:
+        - name: Order fully filled
+          payload:
+            type: channel_data
+            channel: orders
+            id: 0xAbCd...1234
+            contents:
+              orderId: ord-abc123
+              clientId: '42'
+              marketId: 1
+              marketDisplayName: BTC-USD
+              side: BUY
+              status: FILLED
+              price: '94000.00'
+              originalSize: '1.0'
+              remainingSize: '0.0'
+              avgFillPrice: '94000.00'
+              state: FILLED
+              positionEffect: OPEN_LONG
+              sequenceNumber: 5001
+        - name: Order rejected
+          payload:
+            type: channel_data
+            channel: orders
+            id: 0xAbCd...1234
+            contents:
+              orderId: ord-xyz789
+              marketId: 1
+              side: SELL
+              status: REJECTED
+              state: REJECTED
+              rejectionReason: INSUFFICIENT_MARGIN
+              sequenceNumber: 5002
+    FundingPaymentsSnapshot:
+      name: FundingPaymentsSnapshot
+      title: Funding Payments Snapshot
+      contentType: application/json
+      description: |
+        Recent funding payments for the account, sent once on subscribe. Same item shape as REST `GET /v1/funding`. Up to 100 entries from the last 30 days; for older history query REST `GET /v1/funding` with `from`.
+      payload:
+        $ref: '#/components/schemas/FundingPaymentsSnapshotPayload'
+      examples:
+        - name: Two recent funding payments
+          payload:
+            type: subscribed
+            channel: funding
+            id: 0xAbCd...1234
+            contents:
+              isSnapshot: true
+              fundingPayments:
+                - marketId: 1
+                  marketDisplayName: BTC-USD
+                  fundingRate: '0.00001234'
+                  size: '0.5'
+                  payment: '-3.21'
+                  time: 1700000000000000
+                - marketId: 2
+                  marketDisplayName: ETH-USD
+                  fundingRate: '-0.00000567'
+                  size: '-2.0'
+                  payment: '1.05'
+                  time: 1700000000000000
+    FundingPaymentUpdate:
+      name: FundingPaymentUpdate
+      title: Funding Payment Update
+      contentType: application/json
+      description: |
+        One applied funding payment per frame, emitted at each funding payment time. One frame per (market, account) where the position held a non-zero size when the payment was computed.
+      payload:
+        $ref: '#/components/schemas/FundingPaymentUpdatePayload'
+      examples:
+        - name: Long BTC-USD paid funding
+          payload:
+            type: channel_data
+            channel: funding
+            id: 0xAbCd...1234
+            contents:
+              marketId: 1
+              marketDisplayName: BTC-USD
+              fundingRate: '0.00001234'
+              size: '0.5'
+              payment: '-3.21'
+              time: 1700003600000000
+    PredictedFundingSnapshot:
+      name: PredictedFundingSnapshot
+      title: Predicted Funding Snapshot
+      contentType: application/json
+      description: |
+        Latest cached predicted rate for the market, sent once on subscribe. `contents` is empty when no prediction has been published yet.
+      payload:
+        $ref: '#/components/schemas/PredictedFundingSnapshotPayload'
+      examples:
+        - name: BTC-USD predicted rate snapshot
+          payload:
+            type: subscribed
+            channel: predictedFunding
+            id: BTC-USD
+            contents:
+              market: BTC-USD
+              rate1h: '0.0000125'
+    PredictedFundingUpdate:
+      name: PredictedFundingUpdate
+      title: Predicted Funding Update
+      contentType: application/json
+      description: |
+        New predicted next-hour funding rate, pushed each time the funder recomputes the prediction for the market.
+      payload:
+        $ref: '#/components/schemas/PredictedFundingUpdatePayload'
+      examples:
+        - name: BTC-USD predicted rate update
+          payload:
+            type: channel_data
+            channel: predictedFunding
+            id: BTC-USD
+            contents:
+              market: BTC-USD
+              rate1h: '0.0000131'
+    AccountTransferUpdatesSnapshot:
+      name: AccountTransferUpdatesSnapshot
+      title: Account Transfer Updates Snapshot
+      contentType: application/json
+      description: |
+        Recent account transfer events for the account, newest-first, sent once on subscribe (`isSnapshot: true`). `accountTransferEvents` is empty when the account has no recent events.
+      payload:
+        $ref: '#/components/schemas/AccountTransferUpdatesPayload'
+      examples:
+        - name: Snapshot with one recent deposit
+          payload:
+            type: subscribed
+            channel: accountTransferUpdates
+            id: 0xAbCd...1234
+            contents:
+              isSnapshot: true
+              accountTransferEvents:
+                - type: DEPOSIT
+                  eventId: dep-abc123
+                  amount: '100.00'
+                  netQuoteBalance: '1234.56'
+                  globalSequenceId: 9600000001
+                  accountSequenceNum: 42
+    AccountTransferUpdateEvent:
+      name: AccountTransferUpdateEvent
+      title: Account Transfer Update
+      contentType: application/json
+      description: |
+        A single applied transfer event (`isSnapshot: false`, one entry in `accountTransferEvents`), emitted as each deposit / withdrawal / transfer is applied by the engine.
+      payload:
+        $ref: '#/components/schemas/AccountTransferUpdatesPayload'
+      examples:
+        - name: Withdrawal applied
+          payload:
+            type: channel_data
+            channel: accountTransferUpdates
+            id: 0xAbCd...1234
+            contents:
+              isSnapshot: false
+              accountTransferEvents:
+                - type: WITHDRAWAL
+                  eventId: wdl-xyz789
+                  amount: '250.00'
+                  netQuoteBalance: '984.56'
+                  globalSequenceId: 9600000002
+                  accountSequenceNum: 43
+    CandlesSnapshot:
+      name: CandlesSnapshot
+      title: Candles Snapshot
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/CandlesSnapshotPayload'
+      examples:
+        - name: BTC-USD 1m snapshot
+          payload:
+            type: subscribed
+            channel: candles
+            id: BTC-USD/1m
+            contents:
+              isSnapshot: true
+              candles:
+                - open: '94000.00'
+                  high: '94800.00'
+                  low: '93500.00'
+                  close: '94500.00'
+                  volume: '123.45'
+                  openTime: 1712345580000000
+                  isFinal: true
+                - open: '94500.00'
+                  high: '94600.00'
+                  low: '94400.00'
+                  close: '94550.00'
+                  volume: '45.2'
+                  openTime: 1712345640000000
+                  isFinal: false
+    CandleUpdate:
+      name: CandleUpdate
+      title: Candle Update
+      contentType: application/json
+      description: |
+        A single candle bar update. Same shape as `Candle` in `openapi.yaml`. Open-candle updates are coalesced to at most about every 250 ms per market/timeframe. `isFinal: true` when the bar interval has closed; final updates are sent immediately.
+      payload:
+        $ref: '#/components/schemas/ChannelDataEnvelope'
+    PlaceOrderRequest:
+      name: PlaceOrderRequest
+      title: Place Order
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/PlaceOrderPayload'
+      examples:
+        - name: Place a GTT limit buy
+          payload:
+            type: post
+            id: 1
+            request:
+              type: placeOrder
+              payload:
+                address: 0x...
+                accountIndex: 0
+                marketId: 1
+                orderSide: BUY
+                orderType: LIMIT
+                timeInForce: GTT
+                goodTilTime: '4102444800000000'
+                quantity: '0.01'
+                price: '50000'
+              apiKey: <64-hex-public-key>
+              timestamp: '1712345678000000000'
+              signature: <128-hex-signature>
+    CancelOrderRequest:
+      name: CancelOrderRequest
+      title: Cancel Order
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/CancelOrderPayload'
+      examples:
+        - name: Cancel by orderId
+          payload:
+            type: post
+            id: 43
+            request:
+              type: cancelOrder
+              payload:
+                address: 0x...
+                accountIndex: 0
+                marketId: 1
+                orderId: ord-abc123
+              apiKey: <64-hex-public-key>
+              timestamp: '1712345678000000000'
+              signature: <128-hex-signature>
+    ModifyOrderRequest:
+      name: ModifyOrderRequest
+      title: Modify Order
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/ModifyOrderPayload'
+      examples:
+        - name: Modify price and quantity
+          payload:
+            type: post
+            id: 5
+            request:
+              type: modifyOrder
+              payload:
+                address: 0x...
+                accountIndex: 0
+                marketId: 1
+                orderId: ord-abc123
+                side: BUY
+                quantity: '0.02'
+                price: '49000'
+                timeInForce: GTT
+                goodTilTime: '4102444800000000'
+              apiKey: <64-hex-public-key>
+              timestamp: '1712345678000000000'
+              signature: <128-hex-signature>
+    SetLeverageRequest:
+      name: SetLeverageRequest
+      title: Set Leverage
+      contentType: application/json
+      description: |
+        Per-`(account, market)` leverage. Mirrors `POST /v1/setLeverage`. `leverage` is an integer in `[1, market max]`; values outside this range are rejected with `400`. The WS path returns immediately on accept (envelope `status: 202`, body `status: ACK`); subscribe to the `accountAttributes` channel to observe the engine-confirmed outcome: an APPLIED change arrives as a `leverage` entry, a REJECTED one as a `leverageReject` entry (carrying the same `requestId` for correlation).
+      payload:
+        $ref: '#/components/schemas/SetLeveragePayload'
+      examples:
+        - name: Set BTC-USD leverage to 5x
+          payload:
+            type: post
+            id: 7
+            request:
+              type: setLeverage
+              payload:
+                address: 0x...
+                accountIndex: 0
+                marketId: 1
+                leverage: 5
+              apiKey: <64-hex-public-key>
+              timestamp: '1712345678000000000'
+              signature: <128-hex-signature>
+    AdjustIsolatedMarginRequest:
+      name: AdjustIsolatedMarginRequest
+      title: Adjust Isolated Margin
+      contentType: application/json
+      description: |
+        Move margin between the cross bucket and an isolated-mode position's leg for `(account, market)`. Mirrors `POST /v1/adjustIsolatedMargin`. `amount` is dollars as a decimal string (e.g. `"100"` for $100) — do not send quote quantums; the gateway converts dollars to quantums for the engine. Positive adds to the leg (cross → isolated), negative removes from the leg (isolated → cross), zero is rejected with `400`. The WS path returns immediately on accept (envelope `status: 202`, body `status: ACK`); the engine-confirmed post-state arrives on the `positions` channel as a `PositionUpdate` (correlated by `requestId`).
+      payload:
+        $ref: '#/components/schemas/AdjustIsolatedMarginPayload'
+      examples:
+        - name: Add 100 USDC of margin to BTC-USD isolated leg
+          payload:
+            type: post
+            id: 8
+            request:
+              type: adjustIsolatedMargin
+              payload:
+                address: 0x...
+                accountIndex: 0
+                marketId: 1
+                amount: '100'
+              apiKey: <64-hex-public-key>
+              timestamp: '1712345678000000000'
+              signature: <128-hex-signature>
+    CancelAllOrdersRequest:
+      name: CancelAllOrdersRequest
+      title: Cancel All Orders
+      contentType: application/json
+      description: |
+        Cancels every open order for `(address, accountIndex)`. Pass `marketId` to scope the cancel to a single market; omit it to cancel across all markets. Untriggered TPSL orders in scope are canceled too. Mirrors `POST /v1/cancelAllOrders`.
+      payload:
+        $ref: '#/components/schemas/CancelAllOrdersPayload'
+      examples:
+        - name: Cancel all on BTC-USD
+          payload:
+            type: post
+            id: 44
+            request:
+              type: cancelAllOrders
+              payload:
+                address: 0x...
+                accountIndex: 0
+                marketId: 1
+              apiKey: <64-hex-public-key>
+              timestamp: '1712345678000000000'
+              signature: <128-hex-signature>
+    ScheduleCancelRequest:
+      name: ScheduleCancelRequest
+      title: Schedule Cancel
+      contentType: application/json
+      description: |
+        Dead man's switch. Arm, refresh, or disarm a cancel-all deadline. Mirrors `POST /v1/scheduleCancel`.
+
+        Keep the switch armed by sending a **new** `time` (updated absolute epoch microseconds, 5s–5min ahead of now — typically `now + 60s`) before the current deadline. Reusing a past `time` does not extend the previous arm. Omit `time` (or send null) to disarm. If the deadline elapses without a refresh, the gateway fires `cancelAllOrders`.
+
+        Omit `marketId` for an account-wide switch (fires cancel-all across every market), or set it to scope the switch to a single market. A per-market switch is independent of the account-wide switch and of other per-market switches on the same subaccount, and `marketId` selects which switch a given arm/refresh/disarm targets.
+
+        A wallet may hold only a bounded number of switches armed at once (across all subaccounts and markets); arming a new switch beyond that limit is rejected. Refreshing an already-armed switch is always allowed.
+      payload:
+        $ref: '#/components/schemas/ScheduleCancelPayload'
+      examples:
+        - name: Arm 60s deadline
+          payload:
+            type: post
+            id: 46
+            request:
+              type: scheduleCancel
+              payload:
+                address: 0x...
+                accountIndex: 0
+                time: 1734567890123000
+              apiKey: <64-hex-public-key>
+              timestamp: '1712345678000000000'
+              signature: <128-hex-signature>
+        - name: Arm per-market switch (market 0) with 60s deadline
+          payload:
+            type: post
+            id: 49
+            request:
+              type: scheduleCancel
+              payload:
+                address: 0x...
+                accountIndex: 0
+                marketId: 0
+                time: 1734567890123000
+              apiKey: <64-hex-public-key>
+              timestamp: '1712345678000000000'
+              signature: <128-hex-signature>
+        - name: Refresh with a later deadline
+          payload:
+            type: post
+            id: 47
+            request:
+              type: scheduleCancel
+              payload:
+                address: 0x...
+                accountIndex: 0
+                time: 1734567950123000
+              apiKey: <64-hex-public-key>
+              timestamp: '1712345708000000000'
+              signature: <128-hex-signature>
+        - name: Disarm
+          payload:
+            type: post
+            id: 48
+            request:
+              type: scheduleCancel
+              payload:
+                address: 0x...
+                accountIndex: 0
+              apiKey: <64-hex-public-key>
+              timestamp: '1712345738000000000'
+              signature: <128-hex-signature>
+    BatchPlaceOrdersRequest:
+      name: BatchPlaceOrdersRequest
+      title: Batch Place Orders
+      contentType: application/json
+      description: |
+        Places up to 100 orders in one request. All orders must share the same `address` / `accountIndex`. Signed PER ELEMENT using the typed canonical payload: each element of `orders` carries its own `signature` over the same typed `placeOrder` payload the element would carry if submitted standalone (op=1 for regular orders, op=4 for TPSL legs). The `request` envelope carries only the shared `apiKey` + `timestamp`; there is no outer `request.signature`. Mirrors `POST /v1/batchPlaceOrders`.
+      payload:
+        $ref: '#/components/schemas/BatchPlaceOrdersPayload'
+      examples:
+        - name: Place two limit orders
+          payload:
+            type: post
+            id: 45
+            request:
+              type: batchPlaceOrders
+              payload:
+                orders:
+                  - address: 0x...
+                    accountIndex: 0
+                    marketId: 1
+                    orderSide: BUY
+                    orderType: LIMIT
+                    timeInForce: GTT
+                    goodTilTime: '4102444800000000'
+                    quantity: '0.1'
+                    price: '49000'
+                    clientId: bid-1
+                    signature: <128-hex signature for this order>
+                  - address: 0x...
+                    accountIndex: 0
+                    marketId: 1
+                    orderSide: SELL
+                    orderType: LIMIT
+                    timeInForce: GTT
+                    goodTilTime: '4102444800000000'
+                    quantity: '0.1'
+                    price: '51000'
+                    clientId: ask-1
+                    signature: <128-hex signature for this order>
+              apiKey: <64-hex-public-key>
+              timestamp: '1712345678000000000'
+    BatchCancelOrdersRequest:
+      name: BatchCancelOrdersRequest
+      title: Batch Cancel Orders
+      contentType: application/json
+      description: |
+        Cancels up to 100 orders in one request. All cancels must share the same `address` / `accountIndex`. Signed PER ELEMENT using the typed canonical payload: each element of `cancels` carries its own `signature` over the same typed `cancelOrder` payload the element would carry if submitted standalone. The `request` envelope carries only the shared `apiKey` + `timestamp`; there is no outer `request.signature`. Mirrors `POST /v1/batchCancelOrders`.
+      payload:
+        $ref: '#/components/schemas/BatchCancelOrdersPayload'
+      examples:
+        - name: Cancel by orderId and clientId
+          payload:
+            type: post
+            id: 46
+            request:
+              type: batchCancelOrders
+              payload:
+                cancels:
+                  - address: 0x...
+                    accountIndex: 0
+                    marketId: 1
+                    orderId: ord-abc123
+                    signature: <128-hex signature for this cancel>
+                  - address: 0x...
+                    accountIndex: 0
+                    marketId: 1
+                    clientId: bid-1
+                    signature: <128-hex signature for this cancel>
+              apiKey: <64-hex-public-key>
+              timestamp: '1712345678000000000'
+    BatchModifyOrdersRequest:
+      name: BatchModifyOrdersRequest
+      title: Batch Modify Orders
+      contentType: application/json
+      description: |
+        Modifies up to 100 resting orders in one request. All modifies must share the same `address` / `accountIndex`. Signed PER ELEMENT using the typed canonical payload: each element of `modifies` carries its own `signature` over the same typed `modifyOrder` payload the element would carry if submitted standalone (op=3). The `request` envelope carries only the shared `apiKey` + `timestamp`; there is no outer `request.signature`. Failures are per element — an element that fails validation or signature verification surfaces as a `status: ERROR` row in the response while the rest of the batch proceeds. Mirrors `POST /v1/batchModifyOrders`.
+      payload:
+        $ref: '#/components/schemas/BatchModifyOrdersPayload'
+      examples:
+        - name: Reprice two resting orders
+          payload:
+            type: post
+            id: 47
+            request:
+              type: batchModifyOrders
+              payload:
+                modifies:
+                  - address: 0x...
+                    accountIndex: 0
+                    marketId: 1
+                    orderId: ord-abc123
+                    side: BUY
+                    quantity: '0.1'
+                    price: '49100'
+                    timeInForce: GTT
+                    goodTilTime: '4102444800000000'
+                    reduceOnly: false
+                    signature: <128-hex signature for this modify>
+                  - address: 0x...
+                    accountIndex: 0
+                    marketId: 1
+                    orderId: ord-def456
+                    side: SELL
+                    quantity: '0.1'
+                    price: '50900'
+                    timeInForce: GTT
+                    goodTilTime: '4102444800000000'
+                    reduceOnly: false
+                    signature: <128-hex signature for this modify>
+              apiKey: <64-hex-public-key>
+              timestamp: '1712345678000000000'
+    GetRequest:
+      name: GetRequest
+      title: Get Snapshot (RPC)
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/GetRequestPayload'
+      examples:
+        - name: Get L2 orderbook
+          payload:
+            type: get
+            id: 2
+            request:
+              type: l2orderbook
+              payload:
+                market: BTC-USD
+        - name: Get account snapshot
+          payload:
+            type: get
+            id: 3
+            request:
+              type: account
+    RpcResponse:
+      name: RpcResponse
+      title: RPC Response
+      contentType: application/json
+      description: |
+        Response to a `post` or `get` request. `id` is always echoed from the request. Order mutations reply with `status: 202` (accepted, not terminal). Other methods reply with `status: 200` on success.
+      payload:
+        $ref: '#/components/schemas/RpcResponsePayload'
+      examples:
+        - name: Order accepted (202)
+          payload:
+            method: placeOrder
+            id: 1
+            status: 202
+            result:
+              orderId: ord-abc123
+              status: ACK
+        - name: RPC success (200)
+          payload:
+            method: l2orderbook
+            id: 2
+            status: 200
+            result:
+              bids:
+                - - '94500.0'
+                  - '1.5'
+              asks:
+                - - '94501.0'
+                  - '0.8'
+        - name: Error response
+          payload:
+            method: placeOrder
+            id: 4
+            status: 400
+            error:
+              type: VALIDATION_ERROR
+              message: quantity must be positive
+              field: quantity
+  schemas:
+    SubscribeL2OrderbookPayload:
+      type: object
+      required:
+        - type
+        - channel
+        - id
+      properties:
+        type:
+          type: string
+          const: subscribe
+        channel:
+          type: string
+          enum:
+            - l2Orderbook
+            - l2OrderbookUpdates
+        id:
+          type: string
+          description: Market display name (e.g. "BTC-USD", "ETH-USD").
+          example: BTC-USD
+        nLevels:
+          type: integer
+          description: Price levels per side in snapshot. Range 1–100.
+          default: 20
+          minimum: 1
+          maximum: 100
+        sigFigs:
+          type: integer
+          description: 'Aggregate price levels to this many significant figures. Omit for full precision. Bids round down / asks round up to the bucket boundary and merged sizes are summed; applied before nLevels truncation. A second subscribe on the same market is allowed when this (with roundStep) differs from every view already held.
+
+            '
+          enum:
+            - 2
+            - 3
+            - 4
+            - 5
+        roundStep:
+          type: integer
+          description: 'Refines the finest bucket into steps of 1, 2, or 5. Takes effect only when sigFigs is 5; ignored otherwise. Unsubscribe must echo the same value used to subscribe.
+
+            '
+          enum:
+            - 1
+            - 2
+            - 5
+    SubscribeL2OrderbookUpdatesPayload:
+      type: object
+      required:
+        - type
+        - channel
+        - id
+      properties:
+        type:
+          type: string
+          const: subscribe
+        channel:
+          type: string
+          const: l2OrderbookUpdates
+        id:
+          type: string
+          description: Market display name (e.g. "BTC-USD", "ETH-USD").
+          example: BTC-USD
+        nLevels:
+          type: integer
+          description: Price levels per side in the initial snapshot. Range 1–100.
+          default: 20
+          minimum: 1
+          maximum: 100
+        snapshot:
+          type: boolean
+          description: When false, suppress the initial book snapshot on subscribe and stream only incremental delta updates. Defaults to true.
+          default: true
+    SubscribeByMarketPayload:
+      type: object
+      required:
+        - type
+        - channel
+        - id
+      properties:
+        type:
+          type: string
+          const: subscribe
+        channel:
+          type: string
+          enum:
+            - trades
+            - oraclePrices
+            - bbo
+        id:
+          type: string
+          description: Market display name (e.g. "BTC-USD").
+          example: BTC-USD
+    SubscribeByAddressPayload:
+      type: object
+      required:
+        - type
+        - channel
+        - id
+      properties:
+        type:
+          type: string
+          const: subscribe
+        channel:
+          type: string
+          enum:
+            - account
+            - positions
+            - userFills
+            - orders
+            - funding
+            - accountAttributeUpdates
+        id:
+          type: string
+          description: 'Master Ethereum address (0x-prefixed) or an encoded internal account id. When an encoded id is used it already carries its own subaccount index; supplying `accountIndex` as well is allowed only if the two agree. Whichever spelling is sent, every response frame echoes the lowercase master address.
+
+            '
+          example: 0xAbCd...1234
+        accountIndex:
+          type: integer
+          description: |
+            Subaccount of the address in `id` to subscribe to. Honored on the account-scoped channels — `account`, `positions`, `orders`, `userFills`, `funding`, `accountTransferUpdates`, `accountAttributeUpdates`. Omit for subaccount 0, which is what every client written before this field existed gets. It is part of subscription identity: each subaccount is a separate subscription with its own snapshot and stream, so one connection may hold several, and `unsubscribe` must repeat the same `accountIndex` — omitting it drops only subaccount 0. Supplying it on a channel that is not account-scoped (e.g. `l2Orderbook`, `trades`, `markets`) is an error, NOT a silently ignored field, for the same reason `market` is: a client that believed its stream was scoped to one subaccount would mis-handle the rest. A value outside 0-9 is likewise an error rather than a clamp — an out-of-range subaccount can never carry traffic, so accepting one returns a permanently silent subscription.
+          minimum: 0
+          maximum: 9
+          default: 0
+          example: 3
+        snapshot:
+          type: boolean
+          description: When false, suppress the initial state snapshot on subscribe and stream only live updates (e.g. userFills, orders). Defaults to true.
+          default: true
+        nFills:
+          type: integer
+          description: 'Optional userFills-only snapshot size (default 500, max 500). Honored only on the userFills channel; ignored elsewhere. Live channel_data frames are unaffected.
+
+            '
+          default: 500
+          maximum: 500
+          minimum: 1
+        market:
+          type: string
+          example: BTC-USD
+          description: |
+            Restrict this subscription to a single market. Honored only on `positions`, `orders`, and `userFills` — the account-scoped channels whose every frame is about exactly one market. Supplying it on any other channel (e.g. `account`, `accountTransferUpdates`) is an error, NOT a silently ignored field: a client that believed its stream was scoped to one market would mishandle every other market's data. Accepts the display ticker ("BTC-USD", case-insensitive) or the numeric market id ("1"), the same spellings as the REST `?market=` query param. Omit for every market; an unresolvable value is an error rather than an unfiltered stream. The filter applies to the subscribe snapshot, the live `channel_data` frames, and the post-snapshot catch-up alike, so the baseline and the diffs always describe the same markets. It is part of subscription identity: one connection may hold several market-filtered views of the same channel + id, and `unsubscribe` must repeat the market it subscribed with (an `unsubscribe` with no `market` matches only the unfiltered view). The `subscribed` / `unsubscribed` acks echo the resolved ticker.
+    SubscribeGlobalPayload:
+      type: object
+      required:
+        - type
+        - channel
+      properties:
+        type:
+          type: string
+          const: subscribe
+        channel:
+          type: string
+          enum:
+            - markets
+            - exchangeAttributeUpdates
+    SubscribeExchangeAttributeUpdatesPayload:
+      type: object
+      required:
+        - type
+        - channel
+      properties:
+        type:
+          type: string
+          const: subscribe
+        channel:
+          type: string
+          const: exchangeAttributeUpdates
+        snapshot:
+          type: boolean
+          description: When false, suppress the initial state snapshot on subscribe and stream only live updates. Defaults to true.
+          default: true
+    SubscribeMarketAttributesPayload:
+      type: object
+      required:
+        - type
+        - channel
+      properties:
+        type:
+          type: string
+          const: subscribe
+        channel:
+          type: string
+          const: marketAttributes
+        snapshot:
+          type: boolean
+          description: When false, suppress the initial per-market snapshot on subscribe and stream only live updates. Defaults to true.
+          default: true
+    SubscribeCandlesPayload:
+      type: object
+      required:
+        - type
+        - channel
+        - id
+      properties:
+        type:
+          type: string
+          const: subscribe
+        channel:
+          type: string
+          enum:
+            - candles
+        id:
+          type: string
+          description: |
+            Market and timeframe joined with "/". Available timeframes: `1m`, `3m`, `5m`, `15m`, `30m`, `1h`, `2h`, `4h`, `8h`, `12h`, `1d`, `3d`, `1w`.
+          example: BTC-USD/1m
+          pattern: ^[A-Z]+-[A-Z]+\/(1m|3m|5m|15m|30m|1h|2h|4h|8h|12h|1d|3d|1w)$
+        snapshot:
+          type: boolean
+          description: When false, suppress the initial candles snapshot on subscribe and stream only live updates. Defaults to true.
+          default: true
+    ChannelDataEnvelope:
+      type: object
+      description: Common envelope for all server-pushed channel messages.
+      required:
+        - type
+        - channel
+      properties:
+        type:
+          type: string
+          enum:
+            - subscribed
+            - channel_data
+          description: '`subscribed` for the initial snapshot; `channel_data` for updates.'
+        channel:
+          type: string
+          description: Channel name.
+        id:
+          type: string
+          description: 'Channel id (market, or the lowercase master Ethereum address on account-scoped channels). Absent for global channels. Always lowercase for addresses regardless of the spelling used to subscribe, so compare it case-insensitively.
+
+            '
+        accountIndex:
+          type: integer
+          description: |
+            Subaccount this frame belongs to. Present on EVERY frame of an account-scoped channel — `subscribed`, `unsubscribed`, `degraded`, and `channel_data` alike — including when it is 0, so a frame names its subaccount outright and no client needs a "missing means 0" rule. Omitted on every other channel. This is what makes several subaccounts of one address demuxable on a single connection: `id` alone is the master address and is identical across all of them.
+          minimum: 0
+          maximum: 9
+          example: 3
+        sigFigs:
+          type: integer
+          description: 'Echo of the l2Orderbook aggregation this frame belongs to. Omitted on full-precision views and on every other channel. Lets a client holding several aggregations of the same market demux snapshots.
+
+            '
+          enum:
+            - 2
+            - 3
+            - 4
+            - 5
+        roundStep:
+          type: integer
+          description: Echo of the l2Orderbook roundStep for this view. Omitted unless sigFigs is 5 and roundStep was 2 or 5.
+          enum:
+            - 1
+            - 2
+            - 5
+        market:
+          type: string
+          example: BTC-USD
+          description: |
+            Display ticker of the market this frame belongs to, always the resolved ticker even when the client subscribed by numeric id. Present only on `positions` / `orders` / `userFills`; omitted on every other channel. Its meaning differs slightly by frame type. On `subscribed` / `unsubscribed` it echoes the market filter the subscription was created with, and is omitted for an unfiltered subscription. On `channel_data` it is the market of the frame itself, so an UNFILTERED subscriber sees it too — those channels emit one frame per market, so every frame has one. This is what lets a client demux, exactly as `sigFigs` / `roundStep` do for l2Orderbook: a connection holding several market-filtered views of one account matches each frame to the right view by this field. Clients that hold a single unfiltered view can ignore it.
+        contents:
+          type: object
+          additionalProperties: true
+          description: Channel-specific payload. Schema varies by channel.
+          properties: {}
+    DegradedNotice:
+      type: object
+      description: |
+        Sent once when the initial snapshot for a subscribe cannot be served (too stale to join the live stream, or the backend read failed). The subscription stays pending; the server retries and completes it with a normal `subscribed` frame once a snapshot can be served.
+      required:
+        - type
+        - channel
+        - reason
+      properties:
+        type:
+          type: string
+          const: degraded
+        channel:
+          type: string
+          description: Channel name.
+        id:
+          type: string
+          description: 'Channel id (market, or the lowercase master Ethereum address on account-scoped channels). Absent for global channels.
+
+            '
+        accountIndex:
+          type: integer
+          description: 'Subaccount whose subscribe is degraded. Present on account-scoped channels — including when it is 0 — and omitted on every other channel, exactly as on `channel_data`. Each subaccount is its own subscription, so one can be degraded while another on the same address is already serving; without this field a client could not tell which of its pending subscribes the notice refers to.
+
+            '
+          minimum: 0
+          maximum: 9
+          example: 3
+        reason:
+          type: string
+          enum:
+            - snapshot_stale
+            - snapshot_unavailable
+        retryAfterMs:
+          type: integer
+          description: Advisory server-side retry cadence in milliseconds.
+    L2OrderbookSnapshotPayload:
+      allOf:
+        - $ref: '#/components/schemas/ChannelDataEnvelope'
+        - type: object
+          properties:
+            type:
+              const: subscribed
+            contents:
+              type: object
+              required:
+                - bids
+                - asks
+                - lastSequenceId
+              properties:
+                bids:
+                  type: array
+                  description: Price levels, best bid first. Each entry is `[price, size]`.
+                  items:
+                    type: array
+                    minItems: 2
+                    maxItems: 2
+                    items:
+                      type: string
+                  example:
+                    - - '94500.0'
+                      - '1.5'
+                    - - '94499.0'
+                      - '2.0'
+                asks:
+                  type: array
+                  description: Price levels, best ask first. Each entry is `[price, size]`.
+                  items:
+                    type: array
+                    minItems: 2
+                    maxItems: 2
+                    items:
+                      type: string
+                  example:
+                    - - '94501.0'
+                      - '0.8'
+                    - - '94502.0'
+                      - '3.1'
+                lastSequenceId:
+                  type: integer
+                  description: Per-market orderbook sequence of the last update reflected in this snapshot. Reconcile `l2OrderbookUpdates` deltas against this — apply deltas whose `lastSequenceId` exceeds it.
+                  example: 1042
+                globalSequenceId:
+                  type: integer
+                  description: Cross-market monotonic sequence. Omitted when zero.
+                  example: 880421
+                timestamp:
+                  type: integer
+                  format: int64
+                  description: Unix microseconds when the snapshot was taken. Omitted when zero.
+                  example: 1780410803123456
+    L2OrderbookUpdatePayload:
+      allOf:
+        - $ref: '#/components/schemas/ChannelDataEnvelope'
+        - type: object
+          properties:
+            type:
+              const: channel_data
+            contents:
+              type: object
+              description: |
+                Incremental delta. Each `[price, size]` entry sets that level's absolute size; `size: "0"` means the level was removed. Apply every delta whose `lastSequenceId` exceeds the snapshot's; the first delta may be a few sequences ahead of the snapshot (an expected boundary gap that self-heals — do **not** re-subscribe on it). Once you are applying deltas, sequences are contiguous, so only a **mid-stream** gap means a missed delta — re-subscribe for a fresh snapshot then.
+              required:
+                - bids
+                - asks
+                - lastSequenceId
+                - globalSequenceId
+              properties:
+                bids:
+                  type: array
+                  items:
+                    type: array
+                    minItems: 2
+                    maxItems: 2
+                    items:
+                      type: string
+                asks:
+                  type: array
+                  items:
+                    type: array
+                    minItems: 2
+                    maxItems: 2
+                    items:
+                      type: string
+                lastSequenceId:
+                  type: integer
+                  description: Per-market orderbook sequence for this delta. Monotonically increasing; the first delta after a snapshot may be a few sequences ahead of the snapshot's `lastSequenceId` (expected boundary gap). Apply any delta whose `lastSequenceId` exceeds the snapshot's; sequences are contiguous once you are applying deltas.
+                globalSequenceId:
+                  type: integer
+                  description: Cross-market monotonic sequence.
+    TradesUpdatePayload:
+      allOf:
+        - $ref: '#/components/schemas/ChannelDataEnvelope'
+        - type: object
+          properties:
+            type:
+              const: channel_data
+            contents:
+              type: array
+              description: |
+                Array of fills from one taker order match. All entries share `takerOrderId`, `takerAccountId`, `timestamp`, and `sequenceNumber`.
+              items:
+                type: object
+                properties:
+                  takerOrderId:
+                    type: string
+                  makerOrderId:
+                    type: string
+                  takerAddress:
+                    type: string
+                  makerAddress:
+                    type: string
+                  price:
+                    type: string
+                    example: '94500.00'
+                  size:
+                    type: string
+                    example: '0.5'
+                  tradeId:
+                    type: string
+                  timestamp:
+                    type: integer
+                    description: Unix timestamp in microseconds.
+                  sequenceNumber:
+                    type: integer
+    MarketsUpdatePayload:
+      allOf:
+        - $ref: '#/components/schemas/ChannelDataEnvelope'
+        - type: object
+          properties:
+            contents:
+              type: object
+              required:
+                - isSnapshot
+                - markets
+              properties:
+                isSnapshot:
+                  type: boolean
+                  description: |
+                    Always `true` on this channel — every emission is a full snapshot, not a partial diff.
+                  example: true
+                markets:
+                  type: object
+                  description: |
+                    All markets keyed by `marketId` as a string. Same per-market shape as REST `GET /v1/markets` (`MarketInfo`).
+                  additionalProperties:
+                    type: object
+                    description: One market entry. Matches REST `MarketInfo`.
+                    properties:
+                      marketDisplayName:
+                        type: string
+                        example: BTC-USD
+                      marketId:
+                        type: integer
+                        example: 1
+                      status:
+                        type: string
+                        example: ONLINE
+                      baseAsset:
+                        type: string
+                        example: BTC
+                      quoteAsset:
+                        type: string
+                        example: USD
+                      tickSize:
+                        type: string
+                      stepSize:
+                        type: string
+                      minOrderSize:
+                        type: string
+                        description: Minimum order quantity, in base-asset units.
+                        example: '0.0001'
+                      maxOrderSize:
+                        type: string
+                        description: |
+                          Maximum order quantity, in base-asset units. A per-order security gate rather than a dust filter — reduce-only orders are NOT exempt.
+                        example: '10000'
+                      oraclePrice:
+                        type: string
+                        example: '94500.00'
+                      markPrice:
+                        type: string
+                        description: 'Authoritative mark price (decimal string) — the sole risk-valuation price. "0" means unavailable; callers must not fall back to `oraclePrice`.
+
+                          '
+                        example: '94500.50'
+                      lastTradePrice:
+                        type: string
+                        description: Price of the most recent trade (decimal string). Omitted until the market has traded.
+                        example: '94498.00'
+                      fundingRate:
+                        type: string
+                        description: Most recently applied funding rate.
+                        example: '0.0001'
+                      nextFundingRate:
+                        type: string
+                        description: In-progress forecast for the next funding payment.
+                        example: '0.00012'
+                      nextFundingAt:
+                        type: integer
+                        format: int64
+                        description: Unix seconds for the next funding payment time.
+                      priceChange24h:
+                        type: string
+                        description: Fractional change in the mark price (not the oracle price) over the trailing 24h (e.g. "0.025" = +2.5%), computed from a rolling per-market ring of the first mark price seen each minute.
+                      volume24h:
+                        type: string
+                        description: Base-asset trade volume over the trailing 24h, from the rolling-24h aggregator.
+                      high24h:
+                        type: string
+                        description: Highest transaction price over the trailing 24h, from closed 1m candles with at least one trade.
+                      low24h:
+                        type: string
+                        description: Lowest transaction price over the trailing 24h, from closed 1m candles with at least one trade.
+                      trades24h:
+                        type: integer
+                        format: int64
+                        description: Trade count over the trailing 24h, from the rolling-24h aggregator.
+                      openInterest:
+                        type: string
+                        description: Total size of all open long positions in the market (equals total short), in base asset units. Refreshed from a periodic snapshot, so it may lag real time.
+                      openInterestCapNotional:
+                        type: string
+                        description: Operator-set maximum open interest as a USD-notional decimal string (openInterest × mark price). At the cap the engine rejects OI-increasing fills with rejection reason OPEN_INTEREST_CAP_EXCEEDED; OI-neutral and OI-reducing trades still match. `null` when no cap is active. Refreshed from a periodic snapshot, so it may lag real time.
+                        example: '50000000'
+                        nullable: true
+                      initialMarginFraction:
+                        type: string
+                      maintenanceMarginFraction:
+                        type: string
+                      offHoursInitialMarginFraction:
+                        type: string
+                        description: Initial margin fraction the engine enforces outside `regularTradingHours` (overnight/weekends for equity-class markets); equals `initialMarginFraction` for 24/7 markets. Maintenance margin is not uplifted off-hours.
+                      currentSettlementPrice:
+                        type: string
+                        description: Sealed VWAP settlement price (decimal USD) anchoring the off-hours trading band. Present only while outside RTH with a sealed anchor; omitted in-RTH and for 24/7 markets.
+                      upperTradingBound:
+                        type: string
+                        description: Actual upper price boundary (decimal USD) of the off-hours trading band the engine enforces (anchor + anchor × initialMarginFraction × bandMultiplier; the multiplier walks the 0.5×→1×→2×→4× ladder independently per side). Fills at or above it are halted. Present only while outside RTH with a sealed anchor; omitted in-RTH and for 24/7 markets.
+                      lowerTradingBound:
+                        type: string
+                        description: Actual lower price boundary (decimal USD) of the off-hours trading band. Fills at or below it are halted. Present only while outside RTH with a sealed anchor; omitted in-RTH and for 24/7 markets.
+                      nextUpperTradingBound:
+                        type: string
+                        description: Price (decimal USD) the upper boundary moves to if the upper band expands one level; equals upperTradingBound at the 4× ceiling. Present only while outside RTH with a sealed anchor.
+                      nextLowerTradingBound:
+                        type: string
+                        description: Price (decimal USD) the lower boundary moves to if the lower band expands one level; equals lowerTradingBound at the 4× ceiling. Present only while outside RTH with a sealed anchor.
+                      isUpperInExpansionZone:
+                        type: boolean
+                        description: Whether the upper band side is in its expansion zone — the 1-hour EWMA of the bid-side impact price is holding within 90% of the upper boundary; holding for one continuous hour expands the band one level. The zones are independent per side. Present only while outside RTH with a sealed anchor.
+                      isLowerInExpansionZone:
+                        type: boolean
+                        description: Whether the lower band side is in its expansion zone. Present only while outside RTH with a sealed anchor.
+                      upperZoneEnteredAt:
+                        type: integer
+                        format: int64
+                        description: Unix seconds at which the upper side entered its expansion zone. Present only while isUpperInExpansionZone is true.
+                      upperExpectedExpansionAt:
+                        type: integer
+                        format: int64
+                        description: Unix seconds of the earliest time the upper bound can expand — exactly one hour after upperZoneEnteredAt. Not a guarantee; the EWMA must still be in the zone when the hour completes. Present only while isUpperInExpansionZone is true.
+                      lowerZoneEnteredAt:
+                        type: integer
+                        format: int64
+                        description: Unix seconds at which the lower side entered its expansion zone. Present only while isLowerInExpansionZone is true.
+                      lowerExpectedExpansionAt:
+                        type: integer
+                        format: int64
+                        description: Unix seconds of the earliest time the lower bound can expand. Present only while isLowerInExpansionZone is true.
+                      regularTradingHours:
+                        type: object
+                        description: Session window during which the base margin fractions apply; outside it the off-hours fractions apply. Omitted for 24/7 markets (crypto).
+                        properties:
+                          startSecondsOfDay:
+                            type: integer
+                            format: int32
+                          endSecondsOfDay:
+                            type: integer
+                            format: int32
+                          timezone:
+                            type: string
+                            example: America/New_York
+                          isOvernight:
+                            type: boolean
+                      type:
+                        type: string
+                        example: PERPETUAL
+                      assetResolution:
+                        type: string
+                      pythId:
+                        type: string
+                  properties: {}
+    OraclePricesUpdatePayload:
+      allOf:
+        - $ref: '#/components/schemas/ChannelDataEnvelope'
+        - type: object
+          properties:
+            type:
+              const: channel_data
+            contents:
+              type: object
+              required:
+                - epoch
+                - prices
+              properties:
+                epoch:
+                  type: integer
+                  format: int64
+                  description: Batch publish time in Unix nanoseconds.
+                  example: 1780410803000000000
+                prices:
+                  type: array
+                  description: One entry per market updated in this batch.
+                  items:
+                    type: object
+                    required:
+                      - marketDisplayName
+                      - marketId
+                      - price
+                      - markPrice
+                    properties:
+                      marketDisplayName:
+                        type: string
+                        description: Display name / ticker (e.g. "BTC-USD").
+                        example: SLV-USD
+                      marketId:
+                        type: integer
+                        minimum: 0
+                        maximum: 65535
+                        description: Perpetual market identifier (uint16).
+                        example: 20
+                      price:
+                        type: string
+                        description: Latest oracle price (decimal string).
+                        example: '68.39'
+                      markPrice:
+                        type: string
+                        description: 'Authoritative mark price stamped by the matching engine (decimal string). "0" means unavailable; callers must not fall back to `price`.
+
+                          '
+                        example: '68.39'
+                      markEpochNanos:
+                        type: integer
+                        format: int64
+                        description: 'Wall-clock timestamp in Unix nanoseconds at which the mark price was signed. Omitted when unavailable.
+
+                          '
+                        example: 1780410803000000000
+    BBOUpdatePayload:
+      allOf:
+        - $ref: '#/components/schemas/ChannelDataEnvelope'
+        - type: object
+          properties:
+            type:
+              const: channel_data
+            contents:
+              type: object
+              required:
+                - bestBid
+                - bestAsk
+                - timestamp
+                - lastSequenceId
+                - globalSequenceId
+              properties:
+                bestBid:
+                  type: object
+                  nullable: true
+                  description: Best bid level, or null when the bid side is empty.
+                  required:
+                    - price
+                    - size
+                  properties:
+                    price:
+                      type: string
+                      example: '94500.00'
+                    size:
+                      type: string
+                      example: '1.5'
+                bestAsk:
+                  type: object
+                  nullable: true
+                  description: Best ask level, or null when the ask side is empty.
+                  required:
+                    - price
+                    - size
+                  properties:
+                    price:
+                      type: string
+                      example: '94501.00'
+                    size:
+                      type: string
+                      example: '0.8'
+                timestamp:
+                  type: integer
+                  format: int64
+                  description: Unix microseconds when the top-of-book was stamped.
+                  example: 1780410803123456
+                lastSequenceId:
+                  type: integer
+                  description: Per-market orderbook sequence for this BBO frame.
+                  example: 2001
+                globalSequenceId:
+                  type: integer
+                  description: Cross-market monotonic sequence.
+                  example: 880422
+    AccountAttributesLeverageEntry:
+      type: object
+      required:
+        - type
+        - marketId
+        - marketDisplayName
+        - leverage
+      properties:
+        type:
+          type: string
+          enum:
+            - leverage
+          description: Discriminator for per-market leverage entries.
+        marketId:
+          type: integer
+          description: Market identifier. BTC-USD is `0` and is always present.
+        marketDisplayName:
+          type: string
+          example: BTC-USD
+        leverage:
+          type: integer
+          minimum: 1
+          description: Effective leverage (user override or market default).
+        isolated:
+          type: boolean
+          description: '`true` = ISOLATED margin mode; `false` = CROSS. Always present. In snapshot frames reflects persisted state; in streaming frames reflects the account''s margin mode after the event (defaults to CROSS if the lookup fails).'
+        marginMode:
+          type: string
+          enum:
+            - CROSS
+            - ISOLATED
+          description: Human-readable form of `isolated`. Always present alongside `isolated`.
+    AccountAttributesFeeTierEntry:
+      type: object
+      required:
+        - type
+        - feeTierLevel
+        - makerFeePpm
+        - takerFeePpm
+      properties:
+        type:
+          type: string
+          enum:
+            - feeTier
+          description: Discriminator for account-level fee tier entries.
+        feeTierLevel:
+          type: integer
+          minimum: 0
+          description: |
+            Tier level index (0=Base, 1=Bronze, 2=Silver, 3=Gold, 4=Platinum, 5=VIP, 6=Max). Base tier is `0` and is always present.
+        makerFeePpm:
+          type: integer
+          format: int32
+          description: Maker fee rate in ppm — parts-per-million of notional (e.g. 200 = 0.02% = 2 bps).
+        takerFeePpm:
+          type: integer
+          format: int32
+          description: Taker fee rate in ppm — parts-per-million of notional (e.g. 500 = 0.05% = 5 bps).
+    AccountAttributesLeverageRejectEntry:
+      type: object
+      description: |
+        Emitted (streaming only, never in a snapshot) when the engine REJECTS a setLeverage request. The change did not take effect — `leverage` echoes the account's unchanged current value. Correlate with the originating request via `requestId` (returned in the WS `setLeverage` 202 ACK / the `POST /v1/setLeverage` response). A successful change instead surfaces as an `AccountAttributesLeverageEntry`. When `isolated` was also part of the request the margin mode outcome is folded in via the optional `isolated`, `marginMode`, `marginModeStatus`, and `marginModeRejectReason` fields.
+      required:
+        - type
+        - marketId
+        - marketDisplayName
+        - leverage
+        - status
+        - rejectReason
+        - requestId
+      properties:
+        type:
+          type: string
+          enum:
+            - leverageReject
+          description: Discriminator for a rejected setLeverage request.
+        marketId:
+          type: integer
+          description: Market identifier from the rejected request.
+        marketDisplayName:
+          type: string
+          example: BTC-USD
+          description: Falls back to `MARKET-<id>` when the market id is unknown (UNKNOWN_MARKET reject).
+        leverage:
+          type: integer
+          description: The account's unchanged current leverage (`0` when no override exists).
+        status:
+          type: string
+          enum:
+            - REJECTED
+          description: Engine-lifecycle marker. Always `REJECTED` for this entry.
+        rejectReason:
+          type: string
+          enum:
+            - UNDERCOLLATERALIZED
+            - INVALID_LEVERAGE
+            - UNKNOWN_MARKET
+            - HAS_OPEN_POSITION
+          description: Why the engine refused the leverage change.
+        requestId:
+          type: string
+          description: Correlates with the `requestId` returned in the setLeverage 202 ACK.
+        isolated:
+          type: boolean
+          description: Present when `isolated` was supplied on the request. `true` = ISOLATED; `false` = CROSS.
+        marginMode:
+          type: string
+          enum:
+            - CROSS
+            - ISOLATED
+          description: Human-readable form of `isolated`. Omitted when no margin mode change was requested.
+        marginModeStatus:
+          type: string
+          enum:
+            - APPLIED
+            - REJECTED
+          description: Outcome of the margin mode portion of the request.
+        marginModeRejectReason:
+          type: string
+          enum:
+            - UNKNOWN_MARKET
+            - HAS_OPEN_POSITION
+          description: Why the margin mode change was refused. Only present when `marginModeStatus` is `REJECTED`.
+    AccountAttributesEntry:
+      oneOf:
+        - $ref: '#/components/schemas/AccountAttributesLeverageEntry'
+        - $ref: '#/components/schemas/AccountAttributesFeeTierEntry'
+        - $ref: '#/components/schemas/AccountAttributesLeverageRejectEntry'
+      discriminator: type
+    AccountAttributesUpdatePayload:
+      allOf:
+        - $ref: '#/components/schemas/ChannelDataEnvelope'
+        - type: object
+          properties:
+            contents:
+              type: object
+              required:
+                - isSnapshot
+                - entries
+              properties:
+                isSnapshot:
+                  type: boolean
+                  description: True for subscribe-time snapshots; false for streaming deltas.
+                entries:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/AccountAttributesEntry'
+    ExchangeAttributesFeeTierTier:
+      type: object
+      description: One tier row in a feeTierConfig exchange attribute entry.
+      required:
+        - level
+        - name
+        - volumeThreshold
+        - makerFeePpm
+        - takerFeePpm
+      properties:
+        level:
+          type: integer
+          format: uint8
+          description: |
+            Tier level index (0=Base, 1=Bronze, 2=Silver, 3=Gold, 4=Platinum, 5=VIP, 6=Max).
+        name:
+          type: string
+          description: Human-readable tier name (e.g. "Base", "Gold").
+        volumeThreshold:
+          type: integer
+          format: int64
+          description: |
+            30-day notional volume threshold in USD×1e6 required to reach this tier. Always 0 for the base tier.
+        makerFeePpm:
+          type: integer
+          format: int32
+          description: |
+            Maker fee rate in ppm — parts-per-million of notional (e.g. 200 = 0.02% = 2 bps). Negative values indicate a maker rebate.
+        takerFeePpm:
+          type: integer
+          format: int32
+          description: 'Taker fee rate in ppm — parts-per-million of notional (e.g. 500 = 0.05% = 5 bps). Always ≥ 0.
+
+            '
+    ExchangeAttributesEntry:
+      type: object
+      description: |
+        A discriminated-union entry in the exchangeAttributeUpdates stream, discriminated by `type`: `"feeTierConfig"` (full fee tier table) or `"marketAttributes"` (per-market RTH / VWAP-seal / trading-bound edge events — DEPRECATED, superseded by the dedicated `marketAttributes` channel whose entries carry the market's full attribute state).
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - feeTierConfig
+            - marketAttributes
+          description: Discriminator. `"feeTierConfig"` carries the full fee tier table; `"marketAttributes"` carries one per-market RTH or trading-bound event.
+        tiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExchangeAttributesFeeTierTier'
+          description: |
+            Present when `type` is `"feeTierConfig"`. Full replacement of the exchange fee tier table, sorted ascending by level.
+        marketId:
+          type: integer
+          description: Numeric market id (marketAttributes entries only).
+        marketDisplayName:
+          type: string
+          description: Market ticker (marketAttributes entries only).
+          example: INTC-USD
+        isOutsideRth:
+          type: boolean
+          description: Regular Trading Hours state after the event (marketAttributes entries only).
+        sealedVwapSettlementPrice:
+          type: string
+          description: Sealed VWAP settlement price (decimal USD) anchoring the off-hours trading band (marketAttributes entries only; omitted when the frame carries no seal).
+          example: '23.41'
+        boundEvent:
+          type: string
+          enum:
+            - exitRth
+            - enterRth
+            - expansionZoneEntered
+            - expansionZoneExited
+            - tradingBoundExpanded
+          description: 'Event kind (marketAttributes entries only; always present on these entries). RTH transitions: `exitRth` (market leaves regular trading hours) / `enterRth` (market re-enters). Off-hours bound events: `expansionZoneEntered` (side''s impact-price EWMA crossed within 90% of its trading boundary, starting the 1-hour expansion clock), `expansionZoneExited` (EWMA relaxed out before the hour completed; clock reset), `tradingBoundExpanded` (clock completed; band widened one level on the 0.5×→1×→2×→4× ladder). Every entry also carries the per-side zone state (`upperZoneEnteredAt` / `upperExpectedExpansionAt` / `lowerZoneEnteredAt` / `lowerExpectedExpansionAt`), mirrored on `GET /v1/markets`. (Historical frames may carry the retired `boundHit` / `boundExpand` values.)'
+        boundSide:
+          type: string
+          enum:
+            - upper
+            - lower
+          description: Which band edge fired on bound-event deltas ("upper" / "lower"). Null on RTH-transition (`exitRth` / `enterRth`) and VWAP-seal deltas.
+        boundPrice:
+          type: string
+          description: Actual boundary price (decimal USD) in force when the bound event fired — the boundary being pressured for a zone event, the pre-expansion boundary for a `tradingBoundExpanded`.
+          example: '13.52'
+        newBoundPrice:
+          type: string
+          description: Boundary price (decimal USD) after the bound event — equals `boundPrice` for zone events, the widened boundary for a `tradingBoundExpanded`.
+          example: '12.02'
+        upperZoneEnteredAt:
+          type: integer
+          format: int64
+          description: Unix seconds at which the upper side entered its expansion zone, carried on every marketAttributes entry. Omitted when the upper side is not in its zone.
+        upperExpectedExpansionAt:
+          type: integer
+          format: int64
+          description: Unix seconds of the earliest time the upper bound can expand (zoneEnteredAt + one hour; not a guarantee — the EWMA must still be in the zone when the hour completes). Omitted when the upper side is not in its zone.
+        lowerZoneEnteredAt:
+          type: integer
+          format: int64
+          description: Unix seconds at which the lower side entered its expansion zone. Omitted when the lower side is not in its zone.
+        lowerExpectedExpansionAt:
+          type: integer
+          format: int64
+          description: Unix seconds of the earliest time the lower bound can expand. Omitted when the lower side is not in its zone.
+        timestamp:
+          type: integer
+          format: int64
+          description: Event time in Unix microseconds (marketAttributes entries only).
+        marketSequenceNum:
+          type: integer
+          format: int64
+          description: Per-market transaction sequence number (marketAttributes entries only). One engine transaction can emit several entries for a market (e.g. both bound sides transitioning on one tick) and they share this value — it identifies the transaction, not the individual entry, so do not dedup entries by it alone.
+    ExchangeAttributesUpdatePayload:
+      allOf:
+        - $ref: '#/components/schemas/ChannelDataEnvelope'
+        - type: object
+          properties:
+            contents:
+              type: object
+              required:
+                - isSnapshot
+                - entries
+              properties:
+                isSnapshot:
+                  type: boolean
+                  description: |
+                    True for the subscribe-time snapshot; false for streaming updates triggered by operator fee tier edits.
+                entries:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ExchangeAttributesEntry'
+    MarketAttributesEntry:
+      type: object
+      description: |
+        One market's complete RTH / off-hours attribute block. Every attribute field is present on every entry — `null` when it does not currently apply (in-RTH markets carry null bounds; a side not in its expansion zone carries null zone timestamps). Field semantics match the fields of the same names on `GET /v1/markets`. The `boundEvent` / `boundSide` / `timestamp` / `marketSequenceNum` annotations appear only on streaming updates, never on snapshot entries.
+      required:
+        - marketId
+        - marketDisplayName
+        - offHoursInitialMarginFraction
+        - isOutsideRth
+        - currentSettlementPrice
+        - upperTradingBound
+        - lowerTradingBound
+        - nextUpperTradingBound
+        - nextLowerTradingBound
+        - isUpperInExpansionZone
+        - isLowerInExpansionZone
+        - upperZoneEnteredAt
+        - upperExpectedExpansionAt
+        - lowerZoneEnteredAt
+        - lowerExpectedExpansionAt
+      properties:
+        marketId:
+          type: integer
+          description: Numeric market id.
+        marketDisplayName:
+          type: string
+          description: Market ticker.
+          example: INTC-USD
+        offHoursInitialMarginFraction:
+          type: string
+          description: |
+            Initial margin fraction the engine enforces outside the market's RTH window (maintenance margin is not uplifted off-hours).
+          example: '0.2'
+        isOutsideRth:
+          type: boolean
+          description: |
+            Current Regular Trading Hours state. Always `false` for 24/7 markets (crypto), which never leave regular trading hours. `null` while the server has not yet learned an RTH market's state (briefly after a deploy).
+          nullable: true
+        currentSettlementPrice:
+          type: string
+          description: |
+            Sealed VWAP settlement price (decimal USD) anchoring the off-hours trading band. `null` in-RTH (no anchor).
+          example: '150.25'
+          nullable: true
+        upperTradingBound:
+          type: string
+          description: |
+            Actual upper boundary (decimal USD) of the off-hours band: anchor + anchor × initialMarginFraction × bandMultiplier, where the multiplier walks the 0.5×→1×→2×→4× ladder independently per side. `null` in-RTH.
+          example: '165.28'
+          nullable: true
+        lowerTradingBound:
+          type: string
+          description: Actual lower boundary of the off-hours band. `null` in-RTH.
+          example: '135.23'
+          nullable: true
+        nextUpperTradingBound:
+          type: string
+          description: |
+            Boundary the upper band moves to if it expands one level (equals `upperTradingBound` at the 4× ceiling). `null` in-RTH.
+          example: '180.30'
+          nullable: true
+        nextLowerTradingBound:
+          type: string
+          description: Boundary the lower band moves to if it expands one level. `null` in-RTH.
+          example: '120.20'
+          nullable: true
+        isUpperInExpansionZone:
+          type: boolean
+          description: |
+            Whether the upper side is in its expansion zone (its 1-hour impact-price EWMA is holding within 90% of the boundary). `null` in-RTH.
+          nullable: true
+        isLowerInExpansionZone:
+          type: boolean
+          description: Whether the lower side is in its expansion zone. `null` in-RTH.
+          nullable: true
+        upperZoneEnteredAt:
+          type: integer
+          format: int64
+          description: |
+            Unix seconds the upper side entered its expansion zone. `null` when not in the zone.
+          nullable: true
+        upperExpectedExpansionAt:
+          type: integer
+          format: int64
+          description: |
+            Earliest Unix seconds the upper bound can expand (zoneEnteredAt
+            + one hour; not a guarantee — the EWMA must still be in the zone when the hour completes). `null` when not in the zone.
+          nullable: true
+        lowerZoneEnteredAt:
+          type: integer
+          format: int64
+          description: Unix seconds the lower side entered its expansion zone. `null` when not in the zone.
+          nullable: true
+        lowerExpectedExpansionAt:
+          type: integer
+          format: int64
+          description: Earliest Unix seconds the lower bound can expand. `null` when not in the zone.
+          nullable: true
+        boundEvent:
+          type: string
+          enum:
+            - exitRth
+            - enterRth
+            - expansionZoneEntered
+            - expansionZoneExited
+            - tradingBoundExpanded
+          description: |
+            Event annotation for streaming updates. Omitted only on snapshot entries — always present on delta entries, since every update frame is either an RTH transition or a bound event. `exitRth` (market leaves regular trading hours) / `enterRth` (market re-enters) — the block itself carries the resulting state, so there is no separate bound-price field for these. `expansionZoneEntered` (side's impact-price EWMA crossed within 90% of its boundary, starting the 1-hour expansion clock), `expansionZoneExited` (EWMA relaxed out; clock reset), `tradingBoundExpanded` (clock completed; band widened one level on the 0.5×→1×→2×→4× ladder — the new boundary IS the block's `upperTradingBound` / `lowerTradingBound`).
+        boundSide:
+          type: string
+          enum:
+            - upper
+            - lower
+          description: |
+            Which band edge fired on bound-event deltas ("upper" / "lower"). Null on snapshot entries and on RTH-transition (`exitRth` / `enterRth`) deltas.
+        timestamp:
+          type: integer
+          format: int64
+          description: Event time in Unix microseconds (streaming updates only).
+        marketSequenceNum:
+          type: integer
+          format: int64
+          description: |
+            Per-market transaction sequence number (streaming updates only). Entries emitted by one engine transaction share this value — it identifies the transaction, not the entry, so do not dedup by it alone.
+    MarketAttributesChannelPayload:
+      allOf:
+        - $ref: '#/components/schemas/ChannelDataEnvelope'
+        - type: object
+          properties:
+            contents:
+              type: object
+              required:
+                - isSnapshot
+                - entries
+              properties:
+                isSnapshot:
+                  type: boolean
+                  description: |
+                    True for the subscribe-time snapshot (one entry per RTH market); false for streaming updates (one entry for the affected market).
+                entries:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/MarketAttributesEntry'
+    OrderUpdatePayload:
+      allOf:
+        - $ref: '#/components/schemas/ChannelDataEnvelope'
+        - type: object
+          properties:
+            contents:
+              type: object
+              properties:
+                orderId:
+                  type: string
+                clientId:
+                  type: string
+                marketId:
+                  type: integer
+                  minimum: 0
+                  maximum: 65535
+                  description: Perpetual market identifier (uint16). Map to display name via `GET /markets`.
+                marketDisplayName:
+                  type: string
+                  example: BTC-USD
+                side:
+                  type: string
+                  enum:
+                    - BUY
+                    - SELL
+                status:
+                  type: string
+                  enum:
+                    - OPEN
+                    - FILLED
+                    - CANCELED
+                    - MARGIN_CANCELED
+                    - REJECTED
+                    - TPSL_PLACED
+                    - TPSL_CANCELED
+                    - TPSL_TRIGGERED
+                price:
+                  type: string
+                  description: Limit price. All TPSL lifecycle events (TPSL_PLACED, TPSL_TRIGGERED, TPSL_CANCELED, trigger-time REJECTED) carry the leg's limit price here; market-type TPSLs placed without a price report "0" — use triggerPrice for the trigger level.
+                  example: '94000.00'
+                originalSize:
+                  type: string
+                  example: '1.0'
+                remainingSize:
+                  type: string
+                  description: '"0.0" means fully filled.'
+                  example: '0.5'
+                avgFillPrice:
+                  type: string
+                  description: 'Cumulative average fill price across all fills of this order. Present whenever the order has any filled quantity; absent when nothing has filled. Matches the REST / snapshot `avgFillPrice`.
+
+                    '
+                  example: '94000.00'
+                triggerPrice:
+                  type: string
+                  description: Set for TP/SL orders only — on TP/SL events and on a REJECTED event for a TP/SL order rejected at placement or at trigger time (e.g. a triggered reduce-only TP/SL whose position flipped, or a triggered FOK that cannot fully fill). A TP/SL that converted to a regular order and was rejected after conversion does not carry TP/SL fields.
+                tpslType:
+                  type: string
+                  enum:
+                    - TAKE_PROFIT
+                    - STOP_LOSS
+                  description: Set for TP/SL orders only.
+                rejectionReason:
+                  type: string
+                  description: Non-empty when status is REJECTED.
+                cancelReason:
+                  type: string
+                  enum:
+                    - MODIFY_CANCELED
+                  description: 'Qualifies a CANCELED update when the matching engine stamped a reason. Currently the only value is MODIFY_CANCELED: this cancel is the first leg of a modify — the SAME orderId is re-placed by the account''s very next update (PLACED / FILLED / REJECTED), so the order is not terminally gone unless that follow-up says so. Absent on all other cancels, which are genuinely terminal.
+
+                    '
+                state:
+                  type: string
+                  enum:
+                    - OPEN
+                    - PARTIALLY_FILLED
+                    - FILLED
+                    - CANCELED
+                    - REJECTED
+                  description: |
+                    Order lifecycle state after this event. `PARTIALLY_FILLED` is terminal for IOC orders. Any explicit cancel produces `CANCELED` even when prior fills had already partially filled the order.
+                positionEffect:
+                  type: string
+                  enum:
+                    - OPEN_LONG
+                    - OPEN_SHORT
+                    - ADD_LONG
+                    - ADD_SHORT
+                    - CLOSE_LONG
+                    - CLOSE_SHORT
+                    - FLIP_LONG_TO_SHORT
+                    - FLIP_SHORT_TO_LONG
+                  description: |
+                    How this fill changed the account's position. Only set on fill events; absent on placements/cancels/rejects. `FLIP_*` covers a position that closed and reopened on the opposite side within one user order.
+                createdAt:
+                  type: integer
+                  format: int64
+                  description: Order placement time (epoch microseconds); stable across updates.
+                updatedAt:
+                  type: integer
+                  format: int64
+                  description: Time of this update event (epoch microseconds).
+                sequenceNumber:
+                  type: integer
+                  format: uint64
+                  description: Per-account sequence of this order event (same counter as AccountUpdate.sequenceNumber).
+    FundingPayment:
+      type: object
+      description: |
+        One applied funding payment for an (account, market) at a single funding payment time. Same shape as REST `GET /v1/funding` `FundingPayment`.
+      required:
+        - marketId
+        - marketDisplayName
+        - fundingRate
+        - size
+        - payment
+        - time
+      properties:
+        marketId:
+          type: integer
+          minimum: 0
+          maximum: 65535
+        marketDisplayName:
+          type: string
+          example: BTC-USD
+        fundingRate:
+          type: string
+          description: Hourly funding rate (decimal string).
+          example: '0.00001234'
+        size:
+          type: string
+          description: Signed position size when the payment was computed.
+          example: '0.5'
+        payment:
+          type: string
+          description: |
+            Quote-currency amount applied. Positive = trader received, negative = trader paid.
+          example: '-3.21'
+        time:
+          type: integer
+          format: int64
+          description: Funding payment time (Unix microseconds).
+          example: 1700003600000000
+    FundingPaymentsSnapshotPayload:
+      allOf:
+        - $ref: '#/components/schemas/ChannelDataEnvelope'
+        - type: object
+          properties:
+            type:
+              const: subscribed
+            contents:
+              type: object
+              required:
+                - isSnapshot
+                - fundingPayments
+              properties:
+                isSnapshot:
+                  type: boolean
+                  example: true
+                fundingPayments:
+                  type: array
+                  description: Up to 100 most recent funding payments.
+                  items:
+                    $ref: '#/components/schemas/FundingPayment'
+    FundingPaymentUpdatePayload:
+      allOf:
+        - $ref: '#/components/schemas/ChannelDataEnvelope'
+        - type: object
+          properties:
+            type:
+              const: channel_data
+            contents:
+              $ref: '#/components/schemas/FundingPayment'
+    PredictedFundingRate:
+      type: object
+      description: |
+        Predicted next-hour funding rate as published by the funder. Not wrapped in an isSnapshot envelope. May be empty in the subscribe-time snapshot when no prediction is cached for the market yet.
+      properties:
+        market:
+          type: string
+          description: Market display name.
+          example: BTC-USD
+        rate1h:
+          type: string
+          description: Predicted 1-hour funding rate as a decimal string.
+          example: '0.0000125'
+    PredictedFundingSnapshotPayload:
+      allOf:
+        - $ref: '#/components/schemas/ChannelDataEnvelope'
+        - type: object
+          properties:
+            type:
+              const: subscribed
+            contents:
+              $ref: '#/components/schemas/PredictedFundingRate'
+    PredictedFundingUpdatePayload:
+      allOf:
+        - $ref: '#/components/schemas/ChannelDataEnvelope'
+        - type: object
+          properties:
+            type:
+              const: channel_data
+            contents:
+              $ref: '#/components/schemas/PredictedFundingRate'
+    AccountTransferEvent:
+      type: object
+      description: |
+        One account transfer event. Same shape as `AccountTransferEvent` in `openapi.yaml`.
+      required:
+        - type
+        - eventId
+        - amount
+        - netQuoteBalance
+        - globalSequenceId
+        - accountSequenceNum
+      properties:
+        type:
+          type: string
+          enum:
+            - DEPOSIT
+            - WITHDRAWAL
+            - INTERNAL_TRANSFER
+            - SELF_ACCOUNT_TRANSFER
+            - REFERRAL_CLAIM
+          description: |
+            Kind of account transfer event.
+        eventId:
+          type: string
+          description: deposit_id, withdrawal_id, or transfer_id.
+          example: dep-abc123
+        amount:
+          type: string
+          description: |
+            Credited (deposit / transfer-in) or debited (withdrawal / transfer-out) amount as a decimal string.
+          example: '100.00'
+        netQuoteBalance:
+          type: string
+          description: |
+            Perspective account's post-event aggregate cash balance as a decimal string.
+          example: '1234.56'
+        globalSequenceId:
+          type: integer
+          format: int64
+          description: Strict ordering across all engine events.
+          example: 9600000001
+        accountSequenceNum:
+          type: integer
+          format: int64
+          description: |
+            Post-op per-account sequence number for the perspective account. Matches `AccountUpdate.sequenceNum`.
+          example: 42
+        sourceAccountId:
+          type: string
+          description: Sender's wire account ID. Populated only for transfer events.
+        destinationAccountId:
+          type: string
+          description: Recipient's wire account ID. Populated only for transfer events.
+    AccountTransferUpdatesPayload:
+      allOf:
+        - $ref: '#/components/schemas/ChannelDataEnvelope'
+        - type: object
+          properties:
+            contents:
+              type: object
+              required:
+                - isSnapshot
+                - accountTransferEvents
+              properties:
+                isSnapshot:
+                  type: boolean
+                  description: True for the subscribe-time snapshot; false for streaming updates.
+                accountTransferEvents:
+                  type: array
+                  description: Newest-first in snapshots; exactly one event in streaming updates.
+                  items:
+                    $ref: '#/components/schemas/AccountTransferEvent'
+    CandlesSnapshotPayload:
+      allOf:
+        - $ref: '#/components/schemas/ChannelDataEnvelope'
+        - type: object
+          properties:
+            type:
+              const: subscribed
+            contents:
+              type: object
+              properties:
+                isSnapshot:
+                  type: boolean
+                  example: true
+                candles:
+                  type: array
+                  description: Oldest first. Last entry is the open (in-progress) bar.
+                  items:
+                    $ref: '#/components/schemas/Candle'
+    Candle:
+      type: object
+      properties:
+        open:
+          type: string
+          example: '94000.00'
+        high:
+          type: string
+          example: '94800.00'
+        low:
+          type: string
+          example: '93500.00'
+        close:
+          type: string
+          example: '94500.00'
+        volume:
+          type: string
+          example: '123.45'
+        openTime:
+          type: integer
+          format: int64
+          description: Unix timestamp (microseconds) of the bar open (candle bucket start).
+          example: 1712345640000000
+        isFinal:
+          type: boolean
+          description: True when the bar is closed and will not be updated again.
+          example: false
+    SignedRequest:
+      type: object
+      description: Signing fields required for all order mutation requests.
+      required:
+        - apiKey
+        - timestamp
+        - signature
+      properties:
+        apiKey:
+          type: string
+          description: Ed25519 public key (64 hex characters).
+          example: <64-hex-public-key>
+        timestamp:
+          type: string
+          description: |
+            Unix epoch nanoseconds as a string. Millisecond or second epochs are rejected with `401`; must be within ±30s of server wall-clock.
+          example: '1712345678000000000'
+        signature:
+          type: string
+          description: |
+            Ed25519 signature (128 hex characters). For `placeOrder`, `cancelOrder`, and `modifyOrder` sign the **typed canonical payload** (the JSON object IS the signing message).             For legacy methods (`cancelAllOrders`, `setLeverage`, `adjustIsolatedMargin`) sign `timestamp + action + canonicalJSON(request.payload)` where `action` is the canonical camelCase method name.
+          example: <128-hex-signature>
+    BatchSignedRequest:
+      type: object
+      description: |
+        Envelope signing fields for BATCH order mutations (batchPlaceOrders / batchCancelOrders). Unlike `SignedRequest`, there is NO envelope `signature` — each element of the batch array carries its own per-order `signature` instead. Only the shared `apiKey` + `timestamp` live here.
+      required:
+        - apiKey
+        - timestamp
+      properties:
+        apiKey:
+          type: string
+          description: Ed25519 public key (64 hex characters).
+          example: <64-hex-public-key>
+        timestamp:
+          type: string
+          description: |
+            Unix epoch nanoseconds as a string, shared by every order in the batch. Millisecond or second epochs are rejected with `401`; must be within ±30s of server wall-clock.
+          example: '1712345678000000000'
+    OrderRequestItem:
+      type: object
+      description: |
+        A single order. Identical shape to the `placeOrder` payload and to each element of a `batchPlaceOrders` `orders` array.
+      required:
+        - address
+        - accountIndex
+        - marketId
+        - orderSide
+        - orderType
+        - timeInForce
+        - quantity
+        - goodTilTime
+      properties:
+        address:
+          type: string
+          description: Master EVM address; must match the API key's master account.
+          example: 0x...
+        accountIndex:
+          type: integer
+          minimum: 0
+          maximum: 9
+          description: Subaccount index (0–9).
+          example: 0
+        marketId:
+          type: integer
+          description: Market enum (e.g. 1 = BTC-USD, 2 = ETH-USD).
+          example: 0
+        orderSide:
+          type: string
+          enum:
+            - BUY
+            - SELL
+        orderType:
+          type: string
+          enum:
+            - LIMIT
+            - MARKET
+          description: |
+            Execution style. TPSL trigger orders are still `LIMIT` or `MARKET` here — the trigger semantics come from `tpslType` + `stopPrice`.
+        timeInForce:
+          type: string
+          enum:
+            - GTT
+            - IOC
+            - FOK
+            - ALO
+          description: 'GTT = Good Till Time (rests until goodTilTime), IOC = Immediate or Cancel, FOK = Fill or Kill, ALO = Add Liquidity Only (post-only). Note: order reads currently report resting orders as GTC (legacy name for GTT). Reduce-only non-TPSL orders must be IOC or FOK. TPSL LIMIT legs must be GTT.'
+        goodTilTime:
+          type: string
+          description: Order expiry as an epoch-microsecond timestamp (string). REQUIRED for all order types, including IOC/FOK (which never rest) — a mandatory replay-protection timestamp; omitting it is rejected with `goodTilTime is required`. Must be at least one month in the future. Covered by the per-order signature (`g`, in nanoseconds).
+          example: '4102444800000000'
+        quantity:
+          type: string
+          description: Order size in base asset, human-readable decimal. Must be at most the market's `maxOrderSize` (see `GET /markets`); reduce-only orders are **not** exempt — rejected with `OrderSizeTooLarge`.
+          example: '0.01'
+        price:
+          type: string
+          description: Human-readable decimal price. Required for `LIMIT` orders (resting limit price) and for **all** `MARKET` orders (protective slippage bound). For plain `MARKET` orders the value must be a positive decimal within **10% of the current mark price**; orders outside this band are rejected with `MarketPriceSlippageToleranceTooHigh`. For TPSL `MARKET` orders the value must be within **10% of `stopPrice`** (trigger price) — at trigger time the mark price ≈ stopPrice, so this enforces the same ±10% slippage protection.
+          example: '50000'
+        clientId:
+          type: string
+          description: Optional client-supplied order id (idempotency / cancel-by-clientId).
+        clientTime:
+          type: string
+          description: Optional client timestamp (Unix nanoseconds, as a string) — the signed `ct`; when set it must equal the envelope `timestamp`.
+        reduceOnly:
+          type: boolean
+          description: If true, the order can only reduce an existing position.
+        minSize:
+          type: string
+          description: Optional minimum fill size, human-readable decimal.
+        stopPrice:
+          type: string
+          description: Trigger price for TPSL orders, human-readable decimal. Required when `tpslType` is set.
+        tpslType:
+          type: string
+          enum:
+            - STOP_LOSS
+            - TAKE_PROFIT
+          description: Marks the order as a take-profit / stop-loss trigger order. Omit for plain orders. For `LIMIT` execution, `timeInForce` must be `GTT`.
+        fillMode:
+          type: string
+          description: Optional fill-mode hint.
+        signature:
+          type: string
+          description: |
+            Per-order Ed25519 signature (128 hex), REQUIRED when this order is an element of a `batchPlaceOrders` array, omitted for single `placeOrder`. Signed over the typed canonical `placeOrder` payload (op=1; op=4 for TPSL legs) — identical to the bytes signed for a standalone `placeOrder`. The shared `timestamp` envelope value is the `ct` field inside the payload.
+    CancelRequestItem:
+      type: object
+      description: |
+        A single cancel. Identical shape to the `cancelOrder` payload and to each element of a `batchCancelOrders` `cancels` array. Provide exactly one of `orderId` or `clientId` (use `kind` to disambiguate when both could apply).
+      required:
+        - address
+        - accountIndex
+        - marketId
+      properties:
+        address:
+          type: string
+          description: Master EVM address; must match the API key's master account.
+          example: 0x...
+        accountIndex:
+          type: integer
+          minimum: 0
+          maximum: 9
+          description: Subaccount index (0–9).
+          example: 0
+        marketId:
+          type: integer
+          description: Market enum (e.g. 1 = BTC-USD).
+          example: 0
+        kind:
+          type: string
+          enum:
+            - orderId
+            - clientId
+          description: Which identifier to cancel by. Defaults to `orderId` when `orderId` is present.
+        orderId:
+          type: string
+          description: System order id. One of `orderId` or `clientId` is required.
+        clientId:
+          type: string
+          description: Client-supplied order id from the prior `placeOrder`.
+        validUntil:
+          type: integer
+          format: int64
+          description: Optional expiry for the cancel itself (unix seconds).
+        signature:
+          type: string
+          description: |
+            Per-cancel Ed25519 signature (128 hex), REQUIRED when this cancel is an element of a `batchCancelOrders` array, omitted for single `cancelOrder`. Signed over the typed canonical `cancelOrder` payload — identical to the bytes signed for a standalone `cancelOrder`. The shared `timestamp` envelope value is the `ct` field inside the payload.
+    ModifyRequestItem:
+      type: object
+      description: |
+        A single modify. Identical shape to the `modifyOrder` payload and to each element of a `batchModifyOrders` `modifies` array. Identify the order to modify by **exactly one** of `orderId` or `clientId` — providing both (or neither) is rejected.
+      required:
+        - address
+        - accountIndex
+        - marketId
+        - side
+        - quantity
+        - price
+        - timeInForce
+        - reduceOnly
+        - goodTilTime
+      properties:
+        address:
+          type: string
+          description: Master EVM address; must match the API key's master account.
+          example: 0x...
+        accountIndex:
+          type: integer
+          minimum: 0
+          maximum: 9
+          description: Subaccount index (0–9).
+          example: 0
+        marketId:
+          type: integer
+          description: Market enum (e.g. 1 = BTC-USD).
+          example: 0
+        orderId:
+          type: string
+          description: Server order id to modify. Provide exactly one of `orderId` or `clientId`.
+        clientId:
+          type: string
+          description: |
+            Placement-time client id identifying the order to modify (resolved engine-side against the account's client-id index). Provide exactly one of `orderId` or `clientId` — supplying both is rejected. Lets a client modify an order before the place response (with the server orderId) has arrived.
+        side:
+          type: string
+          enum:
+            - BUY
+            - SELL
+        quantity:
+          type: string
+          description: New size, human-readable decimal. Must be at most the market's `maxOrderSize`; reduce-only orders are not exempt — rejected with `OrderSizeTooLarge`.
+        price:
+          type: string
+        timeInForce:
+          type: string
+          enum:
+            - GTT
+            - IOC
+            - FOK
+            - ALO
+          description: 'GTT = Good Till Time (rests until goodTilTime), IOC = Immediate or Cancel, FOK = Fill or Kill, ALO = Add Liquidity Only (post-only). Note: order reads currently report resting orders as GTC (legacy name for GTT).'
+        reduceOnly:
+          type: boolean
+          description: Reduce-only flag. Required — must be explicitly true or false (immutable; echo the resting order's value). Covered by the request signature.
+        goodTilTime:
+          type: string
+          description: Required — the order's expiry as epoch microseconds (string), echoed from placement (a differing value performs a cancel-replace with the new expiry). Must be at least one month in the future. Covered by the request signature (`g`, in nanoseconds).
+        clientTime:
+          type: string
+          description: Optional client timestamp (Unix nanoseconds, as a string) — the signed `ct`; when set it must equal the envelope `timestamp`.
+        signature:
+          type: string
+          description: |
+            Per-modify Ed25519 signature (128 hex), REQUIRED when this modify is an element of a `batchModifyOrders` array, omitted for single `modifyOrder`. Signed over the typed canonical `modifyOrder` payload — identical to the bytes signed for a standalone `modifyOrder`. The shared `timestamp` envelope value is the `ct` field inside the payload.
+    PlaceOrderPayload:
+      type: object
+      required:
+        - type
+        - id
+        - request
+      properties:
+        type:
+          type: string
+          const: post
+        id:
+          type: integer
+          description: Client-chosen request id, echoed in the response.
+          example: 1
+        request:
+          allOf:
+            - $ref: '#/components/schemas/SignedRequest'
+            - type: object
+              required:
+                - type
+                - payload
+              properties:
+                type:
+                  type: string
+                  const: placeOrder
+                payload:
+                  $ref: '#/components/schemas/OrderRequestItem'
+    CancelOrderPayload:
+      type: object
+      required:
+        - type
+        - id
+        - request
+      properties:
+        type:
+          type: string
+          const: post
+        id:
+          type: integer
+          example: 43
+        request:
+          allOf:
+            - $ref: '#/components/schemas/SignedRequest'
+            - type: object
+              required:
+                - type
+                - payload
+              properties:
+                type:
+                  type: string
+                  const: cancelOrder
+                payload:
+                  $ref: '#/components/schemas/CancelRequestItem'
+    CancelAllOrdersPayload:
+      type: object
+      required:
+        - type
+        - id
+        - request
+      properties:
+        type:
+          type: string
+          const: post
+        id:
+          type: integer
+          example: 44
+        request:
+          allOf:
+            - $ref: '#/components/schemas/SignedRequest'
+            - type: object
+              required:
+                - type
+                - payload
+              properties:
+                type:
+                  type: string
+                  const: cancelAllOrders
+                payload:
+                  type: object
+                  required:
+                    - address
+                    - accountIndex
+                  properties:
+                    address:
+                      type: string
+                      description: Master EVM address; must match the API key's master account.
+                      example: 0x...
+                    accountIndex:
+                      type: integer
+                      minimum: 0
+                      maximum: 9
+                      description: Subaccount index (0–9).
+                      example: 0
+                    marketId:
+                      type: integer
+                      description: Optional market scope. Omit to cancel every open order across all markets on the account.
+                    validUntil:
+                      type: integer
+                      format: int64
+                      description: Optional expiry for the cancel-all itself (unix seconds).
+    ScheduleCancelPayload:
+      type: object
+      required:
+        - type
+        - id
+        - request
+      properties:
+        type:
+          type: string
+          const: post
+        id:
+          type: integer
+          example: 46
+        request:
+          allOf:
+            - $ref: '#/components/schemas/SignedRequest'
+            - type: object
+              required:
+                - type
+                - payload
+              properties:
+                type:
+                  type: string
+                  const: scheduleCancel
+                payload:
+                  type: object
+                  required:
+                    - address
+                    - accountIndex
+                  properties:
+                    address:
+                      type: string
+                    accountIndex:
+                      type: integer
+                      minimum: 0
+                      maximum: 9
+                    marketId:
+                      type: integer
+                      minimum: 0
+                      description: |
+                        Optional market scope. Omit for an account-wide switch; set to scope the switch to a single market. Independent of the account-wide switch and of other per-market switches on the same subaccount, and selects which switch to arm/refresh/disarm.
+                    time:
+                      type: integer
+                      format: int64
+                      nullable: true
+                      description: |
+                        Absolute epoch microseconds deadline; omit or null to disarm. Each refresh must send a new later deadline (5s–5min ahead of now).
+    BatchPlaceOrdersPayload:
+      type: object
+      required:
+        - type
+        - id
+        - request
+      properties:
+        type:
+          type: string
+          const: post
+        id:
+          type: integer
+          example: 45
+        request:
+          allOf:
+            - $ref: '#/components/schemas/BatchSignedRequest'
+            - type: object
+              required:
+                - type
+                - payload
+              properties:
+                type:
+                  type: string
+                  const: batchPlaceOrders
+                payload:
+                  type: object
+                  required:
+                    - orders
+                  properties:
+                    orders:
+                      type: array
+                      minItems: 1
+                      maxItems: 100
+                      description: |
+                        Orders to place. All must share the same `address` / `accountIndex`; the server resolves identity from the first entry and overrides `address` on the rest.
+                      items:
+                        $ref: '#/components/schemas/OrderRequestItem'
+                    grouping:
+                      type: string
+                      enum:
+                        - na
+                        - partialTpsl
+                        - positionTpsl
+                        - entryTpsl
+                      description: |
+                        Selects the wire message family. Defaults to `na` (plain orders). Any TPSL grouping requires every order to set `tpslType` + `stopPrice` (except the single entry order in an `entryTpsl` bundle).
+    BatchCancelOrdersPayload:
+      type: object
+      required:
+        - type
+        - id
+        - request
+      properties:
+        type:
+          type: string
+          const: post
+        id:
+          type: integer
+          example: 46
+        request:
+          allOf:
+            - $ref: '#/components/schemas/BatchSignedRequest'
+            - type: object
+              required:
+                - type
+                - payload
+              properties:
+                type:
+                  type: string
+                  const: batchCancelOrders
+                payload:
+                  type: object
+                  required:
+                    - cancels
+                  properties:
+                    cancels:
+                      type: array
+                      minItems: 1
+                      maxItems: 100
+                      description: |
+                        Cancels to submit. All must share the same `address` / `accountIndex`; the server resolves identity from the first entry.
+                      items:
+                        $ref: '#/components/schemas/CancelRequestItem'
+    BatchModifyOrdersPayload:
+      type: object
+      required:
+        - type
+        - id
+        - request
+      properties:
+        type:
+          type: string
+          const: post
+        id:
+          type: integer
+          example: 47
+        request:
+          allOf:
+            - $ref: '#/components/schemas/BatchSignedRequest'
+            - type: object
+              required:
+                - type
+                - payload
+              properties:
+                type:
+                  type: string
+                  const: batchModifyOrders
+                payload:
+                  type: object
+                  required:
+                    - modifies
+                  properties:
+                    modifies:
+                      type: array
+                      minItems: 1
+                      maxItems: 100
+                      description: |
+                        Modifies to submit. All must share the same `address` / `accountIndex`; the server resolves identity from the first entry. Failures are per element.
+                      items:
+                        $ref: '#/components/schemas/ModifyRequestItem'
+    SetLeveragePayload:
+      type: object
+      required:
+        - type
+        - id
+        - request
+      properties:
+        type:
+          type: string
+          const: post
+        id:
+          type: integer
+        request:
+          allOf:
+            - $ref: '#/components/schemas/SignedRequest'
+            - type: object
+              required:
+                - type
+                - payload
+              properties:
+                type:
+                  type: string
+                  const: setLeverage
+                payload:
+                  type: object
+                  required:
+                    - address
+                    - accountIndex
+                    - marketId
+                    - leverage
+                  properties:
+                    address:
+                      type: string
+                      description: Master Ethereum address (0x-prefixed, 40 hex digits).
+                    accountIndex:
+                      type: integer
+                      minimum: 0
+                      maximum: 9
+                      description: Subaccount index (0–9).
+                    marketId:
+                      type: integer
+                    leverage:
+                      type: integer
+                      minimum: 1
+                      maximum: 1000
+                      description: Leverage to set. Must be in `[1, market max]`.
+                    isolated:
+                      type: boolean
+                      description: 'Optional. When present, also sets the margin mode: `true` for isolated, `false` for cross. Omit to leave the current margin mode unchanged.'
+    AdjustIsolatedMarginPayload:
+      type: object
+      required:
+        - type
+        - id
+        - request
+      properties:
+        type:
+          type: string
+          const: post
+        id:
+          type: integer
+        request:
+          allOf:
+            - $ref: '#/components/schemas/SignedRequest'
+            - type: object
+              required:
+                - type
+                - payload
+              properties:
+                type:
+                  type: string
+                  const: adjustIsolatedMargin
+                payload:
+                  type: object
+                  required:
+                    - address
+                    - accountIndex
+                    - marketId
+                    - amount
+                  properties:
+                    address:
+                      type: string
+                      description: Master Ethereum address (0x-prefixed, 40 hex digits).
+                    accountIndex:
+                      type: integer
+                      minimum: 0
+                      maximum: 9
+                      default: 0
+                      description: Subaccount index (0–9). Required in the signed payload; omit or send `0` for the primary account.
+                    marketId:
+                      type: integer
+                    amount:
+                      type: string
+                      description: Dollar amount to move, as a decimal string (e.g. `"100"` for $100). Do not send quote quantums — the gateway converts dollars to quantums (1e9 = $1) for the engine. Positive moves cross → isolated (adds margin to the leg); negative moves isolated → cross (removes margin from the leg). Zero is rejected with HTTP 400.
+                      examples:
+                        - '100'
+                        - '-40.5'
+    ModifyOrderPayload:
+      type: object
+      required:
+        - type
+        - id
+        - request
+      properties:
+        type:
+          type: string
+          const: post
+        id:
+          type: integer
+        request:
+          allOf:
+            - $ref: '#/components/schemas/SignedRequest'
+            - type: object
+              required:
+                - type
+                - payload
+              properties:
+                type:
+                  type: string
+                  const: modifyOrder
+                payload:
+                  $ref: '#/components/schemas/ModifyRequestItem'
+    GetRequestPayload:
+      type: object
+      required:
+        - type
+        - id
+        - request
+      properties:
+        type:
+          type: string
+          const: get
+        id:
+          type: integer
+          description: Client-chosen request id, echoed in the response.
+          example: 2
+        request:
+          type: object
+          required:
+            - type
+          properties:
+            type:
+              type: string
+              enum:
+                - l2orderbook
+                - bbo
+                - mids
+                - account
+                - fills
+                - orders
+                - markets
+                - prices
+                - positions
+                - leverages
+                - ratelimit
+              description: RPC method name.
+            payload:
+              type: object
+              additionalProperties: true
+              description: |
+                Method-specific parameters. `market` required for market-scoped RPCs.
+
+                An optional `market` filter is accepted by every market-scoped read: `fills`, `orders`, `positions`, `leverages`, `mids`, and `prices`. It takes either the display ticker (`BTC-USD`, case-insensitive) or the numeric market id (`1`), resolved by the same code as the REST `?market=` query param. Omit it to get every market; an unresolvable value returns 400 rather than a silent all-markets response. On `mids` and `prices` a filter naming an OFFLINE market returns an empty object, matching how the unfiltered response omits offline markets.
+
+                Account-scoped list RPCs take the same filters as their REST equivalents: `orders` accepts `market` and `status`, `fills` accepts `market` and `role`. On `orders`, both filters apply to the `openOrders` and `recentClosedOrders` halves of the result, and `status` accepts either a JSON array (`["OPEN","CANCELED"]`) or a comma-separated string (`"OPEN,CANCELED"`) — the same two spellings as the REST `?status=` param. Values are `OPEN`, `UNTRIGGERED`, `FILLED`, `CANCELED`, `REJECTED`, `LIQUIDATED`, `ADL`, case-insensitive; an unrecognised value returns 400. `status` matches each order's current status, not any status it held earlier in its life.
+              example:
+                market: BTC-USD
+              properties: {}
+    RpcResponsePayload:
+      type: object
+      required:
+        - method
+        - id
+        - status
+      properties:
+        method:
+          type: string
+          description: Echoed from `request.type`.
+        id:
+          type: integer
+          description: Echoed from the request `id`.
+        status:
+          type: integer
+          description: |
+            HTTP-like status. 200 = success with a definitive engine ack, 202 = accepted (not terminal — observe `orders`/`userFills` for the lifecycle), 4xx = client error, 5xx = gateway error.
+          enum:
+            - 200
+            - 202
+            - 400
+            - 401
+            - 403
+            - 404
+            - 409
+            - 429
+            - 500
+            - 501
+            - 503
+        result:
+          type: object
+          additionalProperties: true
+          description: Present on success.
+          properties: {}
+        error:
+          type: object
+          description: Present on failure.
+          properties:
+            type:
+              type: string
+            message:
+              type: string
+            field:
+              type: string
+              description: Field that caused the error, if applicable.
+            errorType:
+              type: string
+              description: Machine-readable error code.
+            errorSource:
+              type: string
+              description: Which layer surfaced the error.
+            retryAfterMs:
+              type: integer
+              format: int64
+              minimum: 0
+              description: |
+                Present only on 429 (rate-limit) errors. Precise milliseconds the client should wait before retrying. Mirrors the REST 429 body's `retryAfterMs` field.

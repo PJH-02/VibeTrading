@@ -1,0 +1,6 @@
+{
+  "image": "sha256:fcfe1a36a1efce6e7bbe843f4dab59df48e230bbda545b3ad9d94bd77758b026",
+  "base": "sha256:3724b7738064ee488a2fd1a683c369845fa5f2db4f619ef091179135d15805d3",
+  "revision": "capacity-f3652c530ebc762abbeb",
+  "tests": "......................................................                   [100%]\n54 passed in 7.09s"
+}

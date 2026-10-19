@@ -1,0 +1,14 @@
+{
+  "utc": "2026-10-02T06:10:48Z",
+  "only_setting_changed": "SQLITE_CACHE_KIB",
+  "cache_kib": 131072,
+  "same_image": true,
+  "same_mounts": true,
+  "same_db_inode": true,
+  "rollback_container": "vibetrading-storage-before-cache-20261002",
+  "rollback_restart_disabled": true,
+  "restart_policy": {
+    "Name": "unless-stopped",
+    "MaximumRetryCount": 0
+  }
+}

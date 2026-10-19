@@ -1,0 +1,68 @@
+# Release 1 image and resource overrides layered on the deployed Compose files.
+# Preserve the existing deployment's data roots, secrets, restart policies, and service topology.
+services:
+  collectors:
+    image: ${VIBETRADING_APP_IMAGE:?run scripts/build_release_images.py first}
+    env_file:
+      - "${VIBETRADING_APP_ENV_FILE:-.env}"
+      - "${VIBETRADING_RELEASE_DIR:?}/deploy/app-release.env"
+    environment:
+      NATS_FILE_STORE_MAX_BYTES: "2415919104"
+
+  storage:
+    image: ${VIBETRADING_APP_IMAGE:?run scripts/build_release_images.py first}
+    env_file:
+      - "${VIBETRADING_APP_ENV_FILE:-.env}"
+      - "${VIBETRADING_RELEASE_DIR:?}/deploy/app-release.env"
+    environment:
+      NATS_FILE_STORE_MAX_BYTES: "2415919104"
+
+  maintenance:
+    image: ${VIBETRADING_APP_IMAGE:?run scripts/build_release_images.py first}
+    env_file:
+      - "${VIBETRADING_APP_ENV_FILE:-.env}"
+      - "${VIBETRADING_RELEASE_DIR:?}/deploy/app-release.env"
+    environment:
+      ARCHIVE_SQLITE_BACKUP_INTERVAL_SECONDS: "86400"
+      NATS_FILE_STORE_MAX_BYTES: "2415919104"
+
+  crypto-storage:
+    image: ${VIBETRADING_CRYPTO_IMAGE:?run scripts/build_release_images.py first}
+    env_file:
+      - "${VIBETRADING_APP_ENV_FILE:-.env}"
+      - "${VIBETRADING_RELEASE_DIR:?}/deploy/crypto-release.env"
+    environment:
+      NATS_FILE_STORE_MAX_BYTES: "2415919104"
+
+  crypto-maintenance:
+    image: ${VIBETRADING_CRYPTO_IMAGE:?run scripts/build_release_images.py first}
+    env_file:
+      - "${VIBETRADING_APP_ENV_FILE:-.env}"
+      - "${VIBETRADING_RELEASE_DIR:?}/deploy/crypto-release.env"
+    environment:
+      ARCHIVE_SQLITE_BACKUP_INTERVAL_SECONDS: "86400"
+      NATS_FILE_STORE_MAX_BYTES: "2415919104"
+
+  crypto-collector-binance:
+    image: ${VIBETRADING_CRYPTO_IMAGE:?run scripts/build_release_images.py first}
+    env_file:
+      - "${VIBETRADING_APP_ENV_FILE:-.env}"
+      - "${VIBETRADING_RELEASE_DIR:?}/deploy/crypto-release.env"
+    environment:
+      NATS_FILE_STORE_MAX_BYTES: "2415919104"
+
+  crypto-collector-bitget:
+    image: ${VIBETRADING_CRYPTO_IMAGE:?run scripts/build_release_images.py first}
+    env_file:
+      - "${VIBETRADING_APP_ENV_FILE:-.env}"
+      - "${VIBETRADING_RELEASE_DIR:?}/deploy/crypto-release.env"
+    environment:
+      NATS_FILE_STORE_MAX_BYTES: "2415919104"
+
+  crypto-collector-bybit:
+    image: ${VIBETRADING_CRYPTO_IMAGE:?run scripts/build_release_images.py first}
+    env_file:
+      - "${VIBETRADING_APP_ENV_FILE:-.env}"
+      - "${VIBETRADING_RELEASE_DIR:?}/deploy/crypto-release.env"
+    environment:
+      NATS_FILE_STORE_MAX_BYTES: "2415919104"

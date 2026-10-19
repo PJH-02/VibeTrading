@@ -1,0 +1,3 @@
+# Intentionally empty.  The old per-minute Binance/storage/compactor jobs
+# bypassed the durable WorkQueue and collection policy.  Use
+# vibetrading.service as the sole scheduler for this deployment.

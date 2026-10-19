@@ -1,0 +1,1509 @@
+{
+  "manifest": {
+    "version": "fv-mm-v4.0",
+    "mode": "trade-testnet",
+    "start_ns": 1791095861302005787,
+    "duration": 1800,
+    "routes": {
+      "S1": [
+        "s1_net_liquidity",
+        "BTC"
+      ],
+      "S2": [
+        "s2_external_anchor",
+        "ETH"
+      ],
+      "S3": [
+        "s3_aggressive_flow",
+        "SOL"
+      ],
+      "S4": [
+        "s4_obi",
+        "XRP"
+      ]
+    },
+    "config": {
+      "environment": "testnet",
+      "horizon_seconds": 30,
+      "unit_equity_fraction": "0.015",
+      "depth_participation": "0.10",
+      "unit_notional_cap_usdt": "150",
+      "account_gross_fraction": "0.08",
+      "account_loss_fraction": "0.002",
+      "account_drawdown_fraction": "0.002",
+      "maximum_margin_rate": "0.15",
+      "position_stop_fraction": "0.0035",
+      "holding_cap_seconds": 120,
+      "invalid_model_reduce_grace_seconds": 15,
+      "shutdown_maker_grace_seconds": 15,
+      "shutdown_timeout_seconds": 120,
+      "feed_stale_seconds": 3,
+      "maximum_model_age_seconds": 1800,
+      "minimum_api_interval_seconds": 0.25
+    },
+    "models": {
+      "bybit:S1": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 322,
+        "error_calibration_samples": 125,
+        "fit_end": 60510.986449591,
+        "cal_start": 60540.986449591,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 2.61407676108017,
+        "error_allowance": 0.17965995787502348,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "bybit:S2": {
+        "valid": false,
+        "basis": 0.028376615590342952,
+        "horizon": 30,
+        "fit_samples": 175,
+        "error_calibration_samples": 122,
+        "fit_end": 60510.986449591,
+        "cal_start": 60540.986449591,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": -0.0018943691772742642,
+        "reason": "lambda_outside_(0,1]"
+      },
+      "bybit:S3": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 275,
+        "error_calibration_samples": 120,
+        "fit_end": 60510.986449591,
+        "cal_start": 60540.986449591,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 0.8558712599456303,
+        "error_allowance": 0.026029206895610335,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "bybit:S4": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 332,
+        "error_calibration_samples": 135,
+        "fit_end": 60510.986449591,
+        "cal_start": 60540.986449591,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": -1.3735642253767266,
+        "error_allowance": 0.0008782373049156167,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "grvt:S1": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 63,
+        "error_calibration_samples": 72,
+        "fit_end": 60510.986449591,
+        "cal_start": 60540.986449591,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 0.0,
+        "error_allowance": 0.0,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "grvt:S2": {
+        "valid": true,
+        "basis": -1.1136146819165864e-05,
+        "horizon": 30,
+        "fit_samples": 207,
+        "error_calibration_samples": 148,
+        "fit_end": 60510.986449591,
+        "cal_start": 60540.986449591,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 0.9903507981665353,
+        "error_allowance": 0.487433146033432,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "grvt:S3": {
+        "valid": false,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 39,
+        "error_calibration_samples": 0,
+        "fit_end": 60510.986449591,
+        "cal_start": 60540.986449591,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "reason": "insufficient_excitation_or_calibration_history"
+      },
+      "grvt:S4": {
+        "valid": false,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 80,
+        "error_calibration_samples": 28,
+        "fit_end": 60510.986449591,
+        "cal_start": 60540.986449591,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "reason": "insufficient_excitation_or_calibration_history"
+      }
+    },
+    "equity_start": {
+      "bybit": "9997.41840322",
+      "grvt": "10000.113898"
+    },
+    "fee_budget": {
+      "bybit": {
+        "BTC": [
+          "0.0002",
+          "0.00055"
+        ],
+        "ETH": [
+          "0.0002",
+          "0.00055"
+        ],
+        "SOL": [
+          "0.0002",
+          "0.00055"
+        ],
+        "XRP": [
+          "0.0002",
+          "0.00055"
+        ]
+      },
+      "grvt": {
+        "BTC": [
+          "0",
+          "0.00045"
+        ],
+        "ETH": [
+          "0",
+          "0.00045"
+        ],
+        "SOL": [
+          "0",
+          "0.00045"
+        ],
+        "XRP": [
+          "0",
+          "0.00045"
+        ]
+      }
+    },
+    "instruments": {
+      "bybit": {
+        "BTC": {
+          "tick": "0.10",
+          "lot": "0.001",
+          "minimum": "0.001",
+          "min_notional": "5"
+        },
+        "ETH": {
+          "tick": "0.01",
+          "lot": "0.01",
+          "minimum": "0.01",
+          "min_notional": "5"
+        },
+        "SOL": {
+          "tick": "0.010",
+          "lot": "0.1",
+          "minimum": "0.1",
+          "min_notional": "5"
+        },
+        "XRP": {
+          "tick": "0.0001",
+          "lot": "0.1",
+          "minimum": "0.1",
+          "min_notional": "5"
+        }
+      },
+      "grvt": {
+        "BTC": {
+          "tick": "0.1",
+          "lot": "0.001",
+          "minimum": "0.001",
+          "min_notional": "100.0"
+        },
+        "ETH": {
+          "tick": "0.01",
+          "lot": "0.001",
+          "minimum": "0.001",
+          "min_notional": "20.0"
+        },
+        "SOL": {
+          "tick": "0.01",
+          "lot": "0.01",
+          "minimum": "0.01",
+          "min_notional": "5.0"
+        },
+        "XRP": {
+          "tick": "0.0001",
+          "lot": "0.1",
+          "minimum": "0.1",
+          "min_notional": "5.0"
+        }
+      }
+    },
+    "model_sha256": "3a8880770527d441a5a65216d899b814891f9490c1f081c783f1e8dd33b655ca",
+    "source_sha256": "7b442f4229cf5c7e36980a48c822653ccff20374dc2bc0791a59d3e14d460218",
+    "training_directory": "/opt/vibetrading/experiments/fv-mm-v4-20261004/runtime_data/precalibration"
+  },
+  "completion": {
+    "phase": "cleanup",
+    "elapsed_seconds": 1802.1,
+    "duration_seconds": 1800,
+    "inventory": {
+      "grvt:BTC": "0",
+      "grvt:ETH": "0",
+      "grvt:SOL": "0",
+      "grvt:XRP": "0",
+      "bybit:BTC": "0",
+      "bybit:ETH": "0",
+      "bybit:SOL": "0",
+      "bybit:XRP": "0"
+    },
+    "working_orders": 0,
+    "orders": 1,
+    "fills": 0,
+    "halted": {},
+    "private_ready": {
+      "bybit": true,
+      "grvt": true
+    },
+    "complete": true,
+    "evaluation_start_ns": 1791095861302005787,
+    "evaluation_end_ns": 1791097662266118044,
+    "evaluation_elapsed_seconds": 1800.964112257,
+    "cleanup_end_ns": 1791097663422392151
+  },
+  "performance": {
+    "bybit:S1": {
+      "asset": "BTC",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 322,
+        "error_calibration_samples": 125,
+        "fit_end": 60510.986449591,
+        "cal_start": 60540.986449591,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 2.61407676108017,
+        "error_allowance": 0.17965995787502348,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "observed_samples_1s": 1579,
+      "valid_fv_samples": 1578,
+      "submitted_orders": 0,
+      "fills": 0,
+      "filled_order_count": 0,
+      "maker_fills": 0,
+      "maker_notional_usdt": 0,
+      "total_notional_usdt": 0,
+      "fees_usdt": 0.0,
+      "funding_usdt": 0,
+      "gross_trading_pnl_usdt": 0.0,
+      "net_pnl_usdt": 0.0,
+      "end_signed_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "episodes": [],
+      "observed_max_drawdown_usdt": 0.0,
+      "max_drawdown_note": "Own fill cashflows + sampled target mid marks; funding timing excluded from path, included in net PnL",
+      "receive_to_order_live_p95_seconds": null,
+      "latency_note": "First private OPEN/New receipt or REST active-state observation is a live-time proxy; origin is retained in events; REST polling adds observation delay; exchange network-send timestamp unavailable",
+      "calmar": null,
+      "annualized_sharpe": null,
+      "var_es": null,
+      "annualization_note": "30 minutes is insufficient for reliable daily Sharpe, annual return, Calmar, VaR/ES; zero fills cannot validate execution profitability",
+      "net_per_submitted_order": null,
+      "snapshot_economic_gate": {
+        "fee_budget": [
+          0.0002,
+          0.00055
+        ],
+        "valid_1s_snapshots": 1578,
+        "snapshots_edge_above_cost": 19,
+        "maximum_edge_to_cost_ratio": 24.53372619365362,
+        "note": "1s diagnostic snapshots, not exhaustive event opportunities or executions; fee budget from recorded preflight or manifest"
+      },
+      "snapshot_size_budget": {
+        "edge_above_cost_snapshots": 19,
+        "zero_quantity_after_lot_rounding": 19,
+        "maximum_rounded_quantity": 0.0,
+        "note": "Diagnostic reconstruction using recorded starting equity; live account headroom, private readiness and decision events are not reconstructed"
+      },
+      "fresh_book_snapshot_fraction": 0.8767526178082302,
+      "latency_sample_count": 0
+    },
+    "bybit:S2": {
+      "asset": "ETH",
+      "model": {
+        "valid": false,
+        "basis": 0.028376615590342952,
+        "horizon": 30,
+        "fit_samples": 175,
+        "error_calibration_samples": 122,
+        "fit_end": 60510.986449591,
+        "cal_start": 60540.986449591,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": -0.0018943691772742642,
+        "reason": "lambda_outside_(0,1]"
+      },
+      "observed_samples_1s": 1524,
+      "valid_fv_samples": 0,
+      "submitted_orders": 0,
+      "fills": 0,
+      "filled_order_count": 0,
+      "maker_fills": 0,
+      "maker_notional_usdt": 0,
+      "total_notional_usdt": 0,
+      "fees_usdt": 0.0,
+      "funding_usdt": 0,
+      "gross_trading_pnl_usdt": 0.0,
+      "net_pnl_usdt": 0.0,
+      "end_signed_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "episodes": [],
+      "observed_max_drawdown_usdt": 0.0,
+      "max_drawdown_note": "Own fill cashflows + sampled target mid marks; funding timing excluded from path, included in net PnL",
+      "receive_to_order_live_p95_seconds": null,
+      "latency_note": "First private OPEN/New receipt or REST active-state observation is a live-time proxy; origin is retained in events; REST polling adds observation delay; exchange network-send timestamp unavailable",
+      "calmar": null,
+      "annualized_sharpe": null,
+      "var_es": null,
+      "annualization_note": "30 minutes is insufficient for reliable daily Sharpe, annual return, Calmar, VaR/ES; zero fills cannot validate execution profitability",
+      "net_per_submitted_order": null,
+      "snapshot_economic_gate": {
+        "fee_budget": [
+          0.0002,
+          0.00055
+        ],
+        "valid_1s_snapshots": 0,
+        "snapshots_edge_above_cost": 0,
+        "maximum_edge_to_cost_ratio": null,
+        "note": "1s diagnostic snapshots, not exhaustive event opportunities or executions; fee budget from recorded preflight or manifest"
+      },
+      "snapshot_size_budget": {
+        "edge_above_cost_snapshots": 0,
+        "zero_quantity_after_lot_rounding": 0,
+        "maximum_rounded_quantity": null,
+        "note": "Diagnostic reconstruction using recorded starting equity; live account headroom, private readiness and decision events are not reconstructed"
+      },
+      "fresh_book_snapshot_fraction": 0.8462134195945173,
+      "latency_sample_count": 0
+    },
+    "bybit:S3": {
+      "asset": "SOL",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 275,
+        "error_calibration_samples": 120,
+        "fit_end": 60510.986449591,
+        "cal_start": 60540.986449591,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 0.8558712599456303,
+        "error_allowance": 0.026029206895610335,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "observed_samples_1s": 1478,
+      "valid_fv_samples": 1466,
+      "submitted_orders": 0,
+      "fills": 0,
+      "filled_order_count": 0,
+      "maker_fills": 0,
+      "maker_notional_usdt": 0,
+      "total_notional_usdt": 0,
+      "fees_usdt": 0.0,
+      "funding_usdt": 0,
+      "gross_trading_pnl_usdt": 0.0,
+      "net_pnl_usdt": 0.0,
+      "end_signed_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "episodes": [],
+      "observed_max_drawdown_usdt": 0.0,
+      "max_drawdown_note": "Own fill cashflows + sampled target mid marks; funding timing excluded from path, included in net PnL",
+      "receive_to_order_live_p95_seconds": null,
+      "latency_note": "First private OPEN/New receipt or REST active-state observation is a live-time proxy; origin is retained in events; REST polling adds observation delay; exchange network-send timestamp unavailable",
+      "calmar": null,
+      "annualized_sharpe": null,
+      "var_es": null,
+      "annualization_note": "30 minutes is insufficient for reliable daily Sharpe, annual return, Calmar, VaR/ES; zero fills cannot validate execution profitability",
+      "net_per_submitted_order": null,
+      "snapshot_economic_gate": {
+        "fee_budget": [
+          0.0002,
+          0.00055
+        ],
+        "valid_1s_snapshots": 1466,
+        "snapshots_edge_above_cost": 0,
+        "maximum_edge_to_cost_ratio": 0.540102381456668,
+        "note": "1s diagnostic snapshots, not exhaustive event opportunities or executions; fee budget from recorded preflight or manifest"
+      },
+      "snapshot_size_budget": {
+        "edge_above_cost_snapshots": 0,
+        "zero_quantity_after_lot_rounding": 0,
+        "maximum_rounded_quantity": null,
+        "note": "Diagnostic reconstruction using recorded starting equity; live account headroom, private readiness and decision events are not reconstructed"
+      },
+      "fresh_book_snapshot_fraction": 0.8206715447248665,
+      "latency_sample_count": 0
+    },
+    "bybit:S4": {
+      "asset": "XRP",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 332,
+        "error_calibration_samples": 135,
+        "fit_end": 60510.986449591,
+        "cal_start": 60540.986449591,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": -1.3735642253767266,
+        "error_allowance": 0.0008782373049156167,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "observed_samples_1s": 1444,
+      "valid_fv_samples": 1444,
+      "submitted_orders": 1,
+      "fills": 0,
+      "filled_order_count": 0,
+      "maker_fills": 0,
+      "maker_notional_usdt": 0,
+      "total_notional_usdt": 0,
+      "fees_usdt": 0.0,
+      "funding_usdt": 0,
+      "gross_trading_pnl_usdt": 0.0,
+      "net_pnl_usdt": 0.0,
+      "end_signed_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "episodes": [],
+      "observed_max_drawdown_usdt": 0.0,
+      "max_drawdown_note": "Own fill cashflows + sampled target mid marks; funding timing excluded from path, included in net PnL",
+      "receive_to_order_live_p95_seconds": 0.3250375490024453,
+      "latency_note": "First private OPEN/New receipt or REST active-state observation is a live-time proxy; origin is retained in events; REST polling adds observation delay; exchange network-send timestamp unavailable",
+      "calmar": null,
+      "annualized_sharpe": null,
+      "var_es": null,
+      "annualization_note": "30 minutes is insufficient for reliable daily Sharpe, annual return, Calmar, VaR/ES; zero fills cannot validate execution profitability",
+      "net_per_submitted_order": 0.0,
+      "snapshot_economic_gate": {
+        "fee_budget": [
+          0.0002,
+          0.00055
+        ],
+        "valid_1s_snapshots": 1444,
+        "snapshots_edge_above_cost": 0,
+        "maximum_edge_to_cost_ratio": 0.50726409622006,
+        "note": "1s diagnostic snapshots, not exhaustive event opportunities or executions; fee budget from recorded preflight or manifest"
+      },
+      "snapshot_size_budget": {
+        "edge_above_cost_snapshots": 0,
+        "zero_quantity_after_lot_rounding": 0,
+        "maximum_rounded_quantity": null,
+        "note": "Diagnostic reconstruction using recorded starting equity; live account headroom, private readiness and decision events are not reconstructed"
+      },
+      "fresh_book_snapshot_fraction": 0.8017927676472986,
+      "latency_sample_count": 1
+    },
+    "grvt:S1": {
+      "asset": "BTC",
+      "model": {
+        "valid": true,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 63,
+        "error_calibration_samples": 72,
+        "fit_end": 60510.986449591,
+        "cal_start": 60540.986449591,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 0.0,
+        "error_allowance": 0.0,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "observed_samples_1s": 1076,
+      "valid_fv_samples": 970,
+      "submitted_orders": 0,
+      "fills": 0,
+      "filled_order_count": 0,
+      "maker_fills": 0,
+      "maker_notional_usdt": 0,
+      "total_notional_usdt": 0,
+      "fees_usdt": 0.0,
+      "funding_usdt": 0,
+      "gross_trading_pnl_usdt": 0.0,
+      "net_pnl_usdt": 0.0,
+      "end_signed_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "episodes": [],
+      "observed_max_drawdown_usdt": 0.0,
+      "max_drawdown_note": "Own fill cashflows + sampled target mid marks; funding timing excluded from path, included in net PnL",
+      "receive_to_order_live_p95_seconds": null,
+      "latency_note": "First private OPEN/New receipt or REST active-state observation is a live-time proxy; origin is retained in events; REST polling adds observation delay; exchange network-send timestamp unavailable",
+      "calmar": null,
+      "annualized_sharpe": null,
+      "var_es": null,
+      "annualization_note": "30 minutes is insufficient for reliable daily Sharpe, annual return, Calmar, VaR/ES; zero fills cannot validate execution profitability",
+      "net_per_submitted_order": null,
+      "snapshot_economic_gate": {
+        "fee_budget": [
+          0.0,
+          0.00045
+        ],
+        "valid_1s_snapshots": 970,
+        "snapshots_edge_above_cost": 0,
+        "maximum_edge_to_cost_ratio": 0.0,
+        "note": "1s diagnostic snapshots, not exhaustive event opportunities or executions; fee budget from recorded preflight or manifest"
+      },
+      "snapshot_size_budget": {
+        "edge_above_cost_snapshots": 0,
+        "zero_quantity_after_lot_rounding": 0,
+        "maximum_rounded_quantity": null,
+        "note": "Diagnostic reconstruction using recorded starting equity; live account headroom, private readiness and decision events are not reconstructed"
+      },
+      "fresh_book_snapshot_fraction": 0.5974577686900923,
+      "latency_sample_count": 0
+    },
+    "grvt:S2": {
+      "asset": "ETH",
+      "model": {
+        "valid": true,
+        "basis": -1.1136146819165864e-05,
+        "horizon": 30,
+        "fit_samples": 207,
+        "error_calibration_samples": 148,
+        "fit_end": 60510.986449591,
+        "cal_start": 60540.986449591,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "coefficient": 0.9903507981665353,
+        "error_allowance": 0.487433146033432,
+        "reason": "pilot_frozen_model_not_statistically_validated"
+      },
+      "observed_samples_1s": 1785,
+      "valid_fv_samples": 1785,
+      "submitted_orders": 0,
+      "fills": 0,
+      "filled_order_count": 0,
+      "maker_fills": 0,
+      "maker_notional_usdt": 0,
+      "total_notional_usdt": 0,
+      "fees_usdt": 0.0,
+      "funding_usdt": 0,
+      "gross_trading_pnl_usdt": 0.0,
+      "net_pnl_usdt": 0.0,
+      "end_signed_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "episodes": [],
+      "observed_max_drawdown_usdt": 0.0,
+      "max_drawdown_note": "Own fill cashflows + sampled target mid marks; funding timing excluded from path, included in net PnL",
+      "receive_to_order_live_p95_seconds": null,
+      "latency_note": "First private OPEN/New receipt or REST active-state observation is a live-time proxy; origin is retained in events; REST polling adds observation delay; exchange network-send timestamp unavailable",
+      "calmar": null,
+      "annualized_sharpe": null,
+      "var_es": null,
+      "annualization_note": "30 minutes is insufficient for reliable daily Sharpe, annual return, Calmar, VaR/ES; zero fills cannot validate execution profitability",
+      "net_per_submitted_order": null,
+      "snapshot_economic_gate": {
+        "fee_budget": [
+          0.0,
+          0.00045
+        ],
+        "valid_1s_snapshots": 1785,
+        "snapshots_edge_above_cost": 0,
+        "maximum_edge_to_cost_ratio": 0.8749057150686518,
+        "note": "1s diagnostic snapshots, not exhaustive event opportunities or executions; fee budget from recorded preflight or manifest"
+      },
+      "snapshot_size_budget": {
+        "edge_above_cost_snapshots": 0,
+        "zero_quantity_after_lot_rounding": 0,
+        "maximum_rounded_quantity": null,
+        "note": "Diagnostic reconstruction using recorded starting equity; live account headroom, private readiness and decision events are not reconstructed"
+      },
+      "fresh_book_snapshot_fraction": 0.9911357965723185,
+      "latency_sample_count": 0
+    },
+    "grvt:S3": {
+      "asset": "SOL",
+      "model": {
+        "valid": false,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 39,
+        "error_calibration_samples": 0,
+        "fit_end": 60510.986449591,
+        "cal_start": 60540.986449591,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "reason": "insufficient_excitation_or_calibration_history"
+      },
+      "observed_samples_1s": 1790,
+      "valid_fv_samples": 0,
+      "submitted_orders": 0,
+      "fills": 0,
+      "filled_order_count": 0,
+      "maker_fills": 0,
+      "maker_notional_usdt": 0,
+      "total_notional_usdt": 0,
+      "fees_usdt": 0.0,
+      "funding_usdt": 0,
+      "gross_trading_pnl_usdt": 0.0,
+      "net_pnl_usdt": 0.0,
+      "end_signed_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "episodes": [],
+      "observed_max_drawdown_usdt": 0.0,
+      "max_drawdown_note": "Own fill cashflows + sampled target mid marks; funding timing excluded from path, included in net PnL",
+      "receive_to_order_live_p95_seconds": null,
+      "latency_note": "First private OPEN/New receipt or REST active-state observation is a live-time proxy; origin is retained in events; REST polling adds observation delay; exchange network-send timestamp unavailable",
+      "calmar": null,
+      "annualized_sharpe": null,
+      "var_es": null,
+      "annualization_note": "30 minutes is insufficient for reliable daily Sharpe, annual return, Calmar, VaR/ES; zero fills cannot validate execution profitability",
+      "net_per_submitted_order": null,
+      "snapshot_economic_gate": {
+        "fee_budget": [
+          0.0,
+          0.00045
+        ],
+        "valid_1s_snapshots": 0,
+        "snapshots_edge_above_cost": 0,
+        "maximum_edge_to_cost_ratio": null,
+        "note": "1s diagnostic snapshots, not exhaustive event opportunities or executions; fee budget from recorded preflight or manifest"
+      },
+      "snapshot_size_budget": {
+        "edge_above_cost_snapshots": 0,
+        "zero_quantity_after_lot_rounding": 0,
+        "maximum_rounded_quantity": null,
+        "note": "Diagnostic reconstruction using recorded starting equity; live account headroom, private readiness and decision events are not reconstructed"
+      },
+      "fresh_book_snapshot_fraction": 0.9939120873190197,
+      "latency_sample_count": 0
+    },
+    "grvt:S4": {
+      "asset": "XRP",
+      "model": {
+        "valid": false,
+        "basis": null,
+        "horizon": 30,
+        "fit_samples": 80,
+        "error_calibration_samples": 28,
+        "fit_end": 60510.986449591,
+        "cal_start": 60540.986449591,
+        "method": "zero-intercept OLS, frozen; chronological horizon purge; 90th percentile adverse error",
+        "reason": "insufficient_excitation_or_calibration_history"
+      },
+      "observed_samples_1s": 532,
+      "valid_fv_samples": 0,
+      "submitted_orders": 0,
+      "fills": 0,
+      "filled_order_count": 0,
+      "maker_fills": 0,
+      "maker_notional_usdt": 0,
+      "total_notional_usdt": 0,
+      "fees_usdt": 0.0,
+      "funding_usdt": 0,
+      "gross_trading_pnl_usdt": 0.0,
+      "net_pnl_usdt": 0.0,
+      "end_signed_inventory": 0.0,
+      "full_round_trips": 0,
+      "normal_close_rate": null,
+      "round_trip_win_rate": null,
+      "episodes": [],
+      "observed_max_drawdown_usdt": 0.0,
+      "max_drawdown_note": "Own fill cashflows + sampled target mid marks; funding timing excluded from path, included in net PnL",
+      "receive_to_order_live_p95_seconds": null,
+      "latency_note": "First private OPEN/New receipt or REST active-state observation is a live-time proxy; origin is retained in events; REST polling adds observation delay; exchange network-send timestamp unavailable",
+      "calmar": null,
+      "annualized_sharpe": null,
+      "var_es": null,
+      "annualization_note": "30 minutes is insufficient for reliable daily Sharpe, annual return, Calmar, VaR/ES; zero fills cannot validate execution profitability",
+      "net_per_submitted_order": null,
+      "snapshot_economic_gate": {
+        "fee_budget": [
+          0.0,
+          0.00045
+        ],
+        "valid_1s_snapshots": 0,
+        "snapshots_edge_above_cost": 0,
+        "maximum_edge_to_cost_ratio": null,
+        "note": "1s diagnostic snapshots, not exhaustive event opportunities or executions; fee budget from recorded preflight or manifest"
+      },
+      "snapshot_size_budget": {
+        "edge_above_cost_snapshots": 0,
+        "zero_quantity_after_lot_rounding": 0,
+        "maximum_rounded_quantity": null,
+        "note": "Diagnostic reconstruction using recorded starting equity; live account headroom, private readiness and decision events are not reconstructed"
+      },
+      "fresh_book_snapshot_fraction": 0.2953973354490047,
+      "latency_sample_count": 0
+    }
+  },
+  "hypotheses": {
+    "bybit:S1": {
+      "10": {
+        "n": 1569,
+        "nonoverlapping_pairs": 179,
+        "time_blocks_60s": 30,
+        "nonzero_price_moves": 1537,
+        "feature_slope_zero_intercept": -0.38593566590853,
+        "slope_ci95_block_bootstrap": [
+          -0.6480253103839116,
+          0.9978205795657528
+        ],
+        "p_block_bootstrap_centered": 0.13286713286713286,
+        "signed_feature_move_mean_bps": -0.05421449913888038,
+        "signed_move_ci95_block_bootstrap_bps": [
+          -0.20328038126912093,
+          0.02639902725319531
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.9271653543307087,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "frozen_coefficient": 2.61407676108017,
+        "forecast_rmse": 105.38814182382224,
+        "no_change_rmse": 79.08200610915601,
+        "mse_improvement_vs_mid": -4852.696746829481,
+        "mse_improvement_ci95": [
+          -14329.981700213011,
+          -0.0772008573437245
+        ],
+        "forecast_signed_move_mean_bps": -0.05421449913888038,
+        "inference_sufficient_time_blocks": true,
+        "coefficient_note": "Coefficient calibrated at H=30; other horizons are response diagnostics",
+        "q_bh_exploratory": 0.17647058823529413
+      },
+      "30": {
+        "n": 1549,
+        "nonoverlapping_pairs": 59,
+        "time_blocks_60s": 30,
+        "nonzero_price_moves": 1549,
+        "feature_slope_zero_intercept": -0.3449630904961522,
+        "slope_ci95_block_bootstrap": [
+          -2.9230013770520378,
+          2.7788286451685233
+        ],
+        "p_block_bootstrap_centered": 0.1028971028971029,
+        "signed_feature_move_mean_bps": -0.6162012901353238,
+        "signed_move_ci95_block_bootstrap_bps": [
+          -1.9918182714376322,
+          0.07842616174846356
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.9296875,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "frozen_coefficient": 2.61407676108017,
+        "forecast_rmse": 159.35363601760392,
+        "no_change_rmse": 143.51721340064196,
+        "mse_improvement_vs_mid": -4796.390769745583,
+        "mse_improvement_ci95": [
+          -14152.077509093982,
+          0.37476597742838935
+        ],
+        "forecast_signed_move_mean_bps": -0.6162012901353238,
+        "inference_sufficient_time_blocks": true,
+        "q_bh_exploratory": 0.15434565434565434
+      },
+      "60": {
+        "n": 1519,
+        "nonoverlapping_pairs": 29,
+        "time_blocks_60s": 29,
+        "nonzero_price_moves": 1519,
+        "feature_slope_zero_intercept": -0.3833023512095721,
+        "slope_ci95_block_bootstrap": [
+          -100.20069406762327,
+          5.2991623670301795
+        ],
+        "p_block_bootstrap_centered": 0.14185814185814186,
+        "signed_feature_move_mean_bps": -2.6397827676179495,
+        "signed_move_ci95_block_bootstrap_bps": [
+          -7.623503728628129,
+          0.15341302463244205
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.9123505976095617,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "frozen_coefficient": 2.61407676108017,
+        "forecast_rmse": 218.7407651540737,
+        "no_change_rmse": 206.98525583714812,
+        "mse_improvement_vs_mid": -5004.62620621995,
+        "mse_improvement_ci95": [
+          -14794.00571440679,
+          0.9982040593417176
+        ],
+        "forecast_signed_move_mean_bps": -2.6397827676179495,
+        "inference_sufficient_time_blocks": true,
+        "coefficient_note": "Coefficient calibrated at H=30; other horizons are response diagnostics",
+        "q_bh_exploratory": 0.17647058823529413
+      },
+      "remaining_move": {
+        "reason": "No live orders; latency-adjusted remaining move cannot be measured"
+      }
+    },
+    "bybit:S2": {
+      "10": {
+        "n": 1514,
+        "nonoverlapping_pairs": 179,
+        "time_blocks_60s": 30,
+        "nonzero_price_moves": 1444,
+        "feature_slope_zero_intercept": 6.25181647862403e-05,
+        "slope_ci95_block_bootstrap": [
+          -3.051870235585692e-05,
+          0.00014539553986527638
+        ],
+        "p_block_bootstrap_centered": 0.15784215784215785,
+        "signed_feature_move_mean_bps": 0.016916912517408945,
+        "signed_move_ci95_block_bootstrap_bps": [
+          -0.01004164097845322,
+          0.041480081928453795
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.6149584487534626,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "fv_forecast_evaluation": "no deployable frozen coefficient; feature-only diagnostic",
+        "inference_sufficient_time_blocks": true,
+        "coefficient_note": "Coefficient calibrated at H=30; other horizons are response diagnostics",
+        "q_bh_exploratory": 0.18414918414918416
+      },
+      "30": {
+        "n": 1494,
+        "nonoverlapping_pairs": 59,
+        "time_blocks_60s": 30,
+        "nonzero_price_moves": 1480,
+        "feature_slope_zero_intercept": 0.0001864765713186315,
+        "slope_ci95_block_bootstrap": [
+          -7.434439614516746e-05,
+          0.00043746248467039394
+        ],
+        "p_block_bootstrap_centered": 0.17582417582417584,
+        "signed_feature_move_mean_bps": 0.050438207606690925,
+        "signed_move_ci95_block_bootstrap_bps": [
+          -0.02501688776374276,
+          0.12441361038945209
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.6283783783783784,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "fv_forecast_evaluation": "no deployable frozen coefficient; feature-only diagnostic",
+        "inference_sufficient_time_blocks": true,
+        "q_bh_exploratory": 0.18461538461538463
+      },
+      "60": {
+        "n": 1468,
+        "nonoverlapping_pairs": 29,
+        "time_blocks_60s": 29,
+        "nonzero_price_moves": 1462,
+        "feature_slope_zero_intercept": 0.0003776753633308735,
+        "slope_ci95_block_bootstrap": [
+          -0.0002394594513506495,
+          0.0008678778493075016
+        ],
+        "p_block_bootstrap_centered": 0.16783216783216784,
+        "signed_feature_move_mean_bps": 0.10225199277476572,
+        "signed_move_ci95_block_bootstrap_bps": [
+          -0.07590387921742309,
+          0.2467171376890339
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.6326949384404925,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "fv_forecast_evaluation": "no deployable frozen coefficient; feature-only diagnostic",
+        "inference_sufficient_time_blocks": true,
+        "coefficient_note": "Coefficient calibrated at H=30; other horizons are response diagnostics",
+        "q_bh_exploratory": 0.18461538461538463
+      },
+      "remaining_move": {
+        "reason": "No live orders; latency-adjusted remaining move cannot be measured"
+      }
+    },
+    "bybit:S3": {
+      "10": {
+        "n": 1460,
+        "nonoverlapping_pairs": 177,
+        "time_blocks_60s": 30,
+        "nonzero_price_moves": 1107,
+        "feature_slope_zero_intercept": 0.4857295700962735,
+        "slope_ci95_block_bootstrap": [
+          0.38084033704641307,
+          0.5892768351343011
+        ],
+        "p_block_bootstrap_centered": 0.000999000999000999,
+        "signed_feature_move_mean_bps": 0.48266825748710973,
+        "signed_move_ci95_block_bootstrap_bps": [
+          0.30481785030087766,
+          0.6769381533976748
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.7567811934900542,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "frozen_coefficient": 0.8558712599456303,
+        "forecast_rmse": 0.012821744361908275,
+        "no_change_rmse": 0.013704313889359136,
+        "mse_improvement_vs_mid": 2.3411090695955073e-05,
+        "mse_improvement_ci95": [
+          -1.698702341252558e-05,
+          7.364422055094628e-05
+        ],
+        "forecast_signed_move_mean_bps": 0.48266825748710973,
+        "inference_sufficient_time_blocks": true,
+        "coefficient_note": "Coefficient calibrated at H=30; other horizons are response diagnostics",
+        "q_bh_exploratory": 0.002097902097902098
+      },
+      "30": {
+        "n": 1442,
+        "nonoverlapping_pairs": 59,
+        "time_blocks_60s": 30,
+        "nonzero_price_moves": 1311,
+        "feature_slope_zero_intercept": 0.7545945687913244,
+        "slope_ci95_block_bootstrap": [
+          0.5213966818229208,
+          1.0002051785162003
+        ],
+        "p_block_bootstrap_centered": 0.000999000999000999,
+        "signed_feature_move_mean_bps": 0.9286463346898017,
+        "signed_move_ci95_block_bootstrap_bps": [
+          0.5103981509646611,
+          1.3662111474888898
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.7114503816793893,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "frozen_coefficient": 0.8558712599456303,
+        "forecast_rmse": 0.024842070983783243,
+        "no_change_rmse": 0.02740163342874187,
+        "mse_improvement_vs_mid": 0.0001337210237998187,
+        "mse_improvement_ci95": [
+          3.498977230170008e-05,
+          0.00024664534033278185
+        ],
+        "forecast_signed_move_mean_bps": 0.9286463346898017,
+        "inference_sufficient_time_blocks": true,
+        "q_bh_exploratory": 0.002097902097902098
+      },
+      "60": {
+        "n": 1412,
+        "nonoverlapping_pairs": 29,
+        "time_blocks_60s": 29,
+        "nonzero_price_moves": 1284,
+        "feature_slope_zero_intercept": 0.6162210770338022,
+        "slope_ci95_block_bootstrap": [
+          0.25901640639660206,
+          0.9899356228615785
+        ],
+        "p_block_bootstrap_centered": 0.000999000999000999,
+        "signed_feature_move_mean_bps": 0.8583964998390125,
+        "signed_move_ci95_block_bootstrap_bps": [
+          0.25757493956732447,
+          1.506684680186963
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.6001558846453624,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "frozen_coefficient": 0.8558712599456303,
+        "forecast_rmse": 0.038877588344730034,
+        "no_change_rmse": 0.03986987510025519,
+        "mse_improvement_vs_mid": 7.814006500766077e-05,
+        "mse_improvement_ci95": [
+          -6.662934412093107e-05,
+          0.00023713426010842843
+        ],
+        "forecast_signed_move_mean_bps": 0.8583964998390125,
+        "inference_sufficient_time_blocks": true,
+        "coefficient_note": "Coefficient calibrated at H=30; other horizons are response diagnostics",
+        "q_bh_exploratory": 0.002097902097902098
+      },
+      "remaining_move": {
+        "reason": "No live orders; latency-adjusted remaining move cannot be measured"
+      }
+    },
+    "bybit:S4": {
+      "10": {
+        "n": 1436,
+        "nonoverlapping_pairs": 179,
+        "time_blocks_60s": 30,
+        "nonzero_price_moves": 1163,
+        "feature_slope_zero_intercept": 0.8020526059147037,
+        "slope_ci95_block_bootstrap": [
+          0.600770706383132,
+          1.026744539727026
+        ],
+        "p_block_bootstrap_centered": 0.000999000999000999,
+        "signed_feature_move_mean_bps": 0.477142549657916,
+        "signed_move_ci95_block_bootstrap_bps": [
+          0.31390808201712045,
+          0.6638514441732432
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.756513926325247,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "frozen_coefficient": -1.3735642253767266,
+        "forecast_rmse": 0.0002655872639399285,
+        "no_change_rmse": 0.00016084842083365428,
+        "mse_improvement_vs_mid": -4.466438028241694e-08,
+        "mse_improvement_ci95": [
+          -6.139386601028273e-08,
+          -3.071673259533684e-08
+        ],
+        "forecast_signed_move_mean_bps": -0.477142549657916,
+        "inference_sufficient_time_blocks": true,
+        "coefficient_note": "Coefficient calibrated at H=30; other horizons are response diagnostics",
+        "q_bh_exploratory": 0.002097902097902098
+      },
+      "30": {
+        "n": 1420,
+        "nonoverlapping_pairs": 59,
+        "time_blocks_60s": 30,
+        "nonzero_price_moves": 1311,
+        "feature_slope_zero_intercept": 1.3862014363339814,
+        "slope_ci95_block_bootstrap": [
+          0.7541256582419372,
+          2.154792406845778
+        ],
+        "p_block_bootstrap_centered": 0.000999000999000999,
+        "signed_feature_move_mean_bps": 1.0734809635090614,
+        "signed_move_ci95_block_bootstrap_bps": [
+          0.6554169400907405,
+          1.54592852246599
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.7170731707317073,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "frozen_coefficient": -1.3735642253767266,
+        "forecast_rmse": 0.00043168378833260013,
+        "no_change_rmse": 0.00035248863731561535,
+        "mse_improvement_vs_mid": -6.210265367256566e-08,
+        "mse_improvement_ci95": [
+          -8.364067551465762e-08,
+          -4.18006855858377e-08
+        ],
+        "forecast_signed_move_mean_bps": -1.0734809635090614,
+        "inference_sufficient_time_blocks": true,
+        "q_bh_exploratory": 0.002097902097902098
+      },
+      "60": {
+        "n": 1396,
+        "nonoverlapping_pairs": 29,
+        "time_blocks_60s": 29,
+        "nonzero_price_moves": 1329,
+        "feature_slope_zero_intercept": 1.8751846336378593,
+        "slope_ci95_block_bootstrap": [
+          0.8515402113203651,
+          3.139438152203089
+        ],
+        "p_block_bootstrap_centered": 0.000999000999000999,
+        "signed_feature_move_mean_bps": 1.4337255412865186,
+        "signed_move_ci95_block_bootstrap_bps": [
+          0.7006756969205162,
+          2.2773965307354564
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.6856913183279743,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "frozen_coefficient": -1.3735642253767266,
+        "forecast_rmse": 0.0006323952551935062,
+        "no_change_rmse": 0.0005675122911206917,
+        "mse_improvement_vs_mid": -7.785355821820315e-08,
+        "mse_improvement_ci95": [
+          -1.1551780272380011e-07,
+          -4.534136570544589e-08
+        ],
+        "forecast_signed_move_mean_bps": -1.4337255412865186,
+        "inference_sufficient_time_blocks": true,
+        "coefficient_note": "Coefficient calibrated at H=30; other horizons are response diagnostics",
+        "q_bh_exploratory": 0.002097902097902098
+      },
+      "remaining_move": {
+        "measured_p95_seconds": 0.3250375490024453,
+        "latency_observations": 1,
+        "n": 1301,
+        "signed_mean_bps": -1.0629843474332918,
+        "note": "Descriptive sample quantile; few live orders cannot establish a stable p95 latency distribution"
+      }
+    },
+    "grvt:S1": {
+      "10": {
+        "n": 793,
+        "nonoverlapping_pairs": 132,
+        "time_blocks_60s": 28,
+        "nonzero_price_moves": 347,
+        "feature_slope_zero_intercept": 0.1005819860460365,
+        "slope_ci95_block_bootstrap": [
+          -0.09823619186787975,
+          0.19106747224413811
+        ],
+        "p_block_bootstrap_centered": 0.14285714285714285,
+        "signed_feature_move_mean_bps": 0.14658505402375285,
+        "signed_move_ci95_block_bootstrap_bps": [
+          0.0434555210308546,
+          0.2605491817927559
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.6109510086455331,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "frozen_coefficient": 0.0,
+        "forecast_rmse": 5.35127679193574,
+        "no_change_rmse": 5.35127679193574,
+        "mse_improvement_vs_mid": 0.0,
+        "mse_improvement_ci95": [
+          0.0,
+          0.0
+        ],
+        "forecast_signed_move_mean_bps": 0.0,
+        "inference_sufficient_time_blocks": true,
+        "coefficient_note": "Coefficient calibrated at H=30; other horizons are response diagnostics",
+        "q_bh_exploratory": 0.17647058823529413
+      },
+      "30": {
+        "n": 765,
+        "nonoverlapping_pairs": 50,
+        "time_blocks_60s": 27,
+        "nonzero_price_moves": 508,
+        "feature_slope_zero_intercept": 0.29881559458895296,
+        "slope_ci95_block_bootstrap": [
+          -0.12266445895219197,
+          0.44753595713843186
+        ],
+        "p_block_bootstrap_centered": 0.07592407592407592,
+        "signed_feature_move_mean_bps": 0.2619605325964965,
+        "signed_move_ci95_block_bootstrap_bps": [
+          -0.010664967634322871,
+          0.5587567344746123
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.6043307086614174,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "frozen_coefficient": 0.0,
+        "forecast_rmse": 9.720657876011732,
+        "no_change_rmse": 9.720657876011732,
+        "mse_improvement_vs_mid": 0.0,
+        "mse_improvement_ci95": [
+          0.0,
+          0.0
+        ],
+        "forecast_signed_move_mean_bps": 0.0,
+        "inference_sufficient_time_blocks": true,
+        "q_bh_exploratory": 0.12264658418504572
+      },
+      "60": {
+        "n": 749,
+        "nonoverlapping_pairs": 26,
+        "time_blocks_60s": 27,
+        "nonzero_price_moves": 623,
+        "feature_slope_zero_intercept": 0.5178920052297992,
+        "slope_ci95_block_bootstrap": [
+          0.005383894101393038,
+          0.7141008167901427
+        ],
+        "p_block_bootstrap_centered": 0.01998001998001998,
+        "signed_feature_move_mean_bps": 0.3948451945615267,
+        "signed_move_ci95_block_bootstrap_bps": [
+          0.03718214902777702,
+          0.8138536490439082
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.6902086677367576,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "frozen_coefficient": 0.0,
+        "forecast_rmse": 12.984324404461315,
+        "no_change_rmse": 12.984324404461315,
+        "mse_improvement_vs_mid": 0.0,
+        "mse_improvement_ci95": [
+          0.0,
+          0.0
+        ],
+        "forecast_signed_move_mean_bps": 0.0,
+        "inference_sufficient_time_blocks": true,
+        "coefficient_note": "Coefficient calibrated at H=30; other horizons are response diagnostics",
+        "q_bh_exploratory": 0.03814367450731087
+      },
+      "remaining_move": {
+        "reason": "No live orders; latency-adjusted remaining move cannot be measured"
+      }
+    },
+    "grvt:S2": {
+      "10": {
+        "n": 1775,
+        "nonoverlapping_pairs": 179,
+        "time_blocks_60s": 30,
+        "nonzero_price_moves": 1686,
+        "feature_slope_zero_intercept": 0.4244095390631588,
+        "slope_ci95_block_bootstrap": [
+          0.254705181917871,
+          0.6142470967972715
+        ],
+        "p_block_bootstrap_centered": 0.000999000999000999,
+        "signed_feature_move_mean_bps": 0.37767516924198985,
+        "signed_move_ci95_block_bootstrap_bps": [
+          0.21381375129453145,
+          0.5952670305740845
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.6352313167259787,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "frozen_coefficient": 0.9903507981665353,
+        "forecast_rmse": 0.3446402490779001,
+        "no_change_rmse": 0.31664188684859296,
+        "mse_improvement_vs_mid": -0.018514816777439828,
+        "mse_improvement_ci95": [
+          -0.06174951200382659,
+          0.036124861241878324
+        ],
+        "forecast_signed_move_mean_bps": 0.37767516924198985,
+        "inference_sufficient_time_blocks": true,
+        "coefficient_note": "Coefficient calibrated at H=30; other horizons are response diagnostics",
+        "q_bh_exploratory": 0.002097902097902098
+      },
+      "30": {
+        "n": 1755,
+        "nonoverlapping_pairs": 59,
+        "time_blocks_60s": 30,
+        "nonzero_price_moves": 1695,
+        "feature_slope_zero_intercept": 0.5162818843715984,
+        "slope_ci95_block_bootstrap": [
+          0.3350164394753626,
+          0.7159184250692012
+        ],
+        "p_block_bootstrap_centered": 0.000999000999000999,
+        "signed_feature_move_mean_bps": 0.49465651825239376,
+        "signed_move_ci95_block_bootstrap_bps": [
+          0.29013534730815993,
+          0.7034431879473092
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.6548672566371682,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "frozen_coefficient": 0.9903507981665353,
+        "forecast_rmse": 0.3421342130538032,
+        "no_change_rmse": 0.35003603803069006,
+        "mse_improvement_vs_mid": 0.005469408178277456,
+        "mse_improvement_ci95": [
+          -0.038560135190483055,
+          0.06211821530742819
+        ],
+        "forecast_signed_move_mean_bps": 0.49465651825239376,
+        "inference_sufficient_time_blocks": true,
+        "q_bh_exploratory": 0.002097902097902098
+      },
+      "60": {
+        "n": 1725,
+        "nonoverlapping_pairs": 29,
+        "time_blocks_60s": 29,
+        "nonzero_price_moves": 1516,
+        "feature_slope_zero_intercept": 0.5052616127790504,
+        "slope_ci95_block_bootstrap": [
+          0.2705318207158661,
+          0.7266304025274894
+        ],
+        "p_block_bootstrap_centered": 0.000999000999000999,
+        "signed_feature_move_mean_bps": 0.49486632447495976,
+        "signed_move_ci95_block_bootstrap_bps": [
+          0.22035563950974918,
+          0.8211826505634111
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.6147757255936676,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "frozen_coefficient": 0.9903507981665353,
+        "forecast_rmse": 0.4127336992042188,
+        "no_change_rmse": 0.41587841380920726,
+        "mse_improvement_vs_mid": 0.002605748613663716,
+        "mse_improvement_ci95": [
+          -0.05146242429636759,
+          0.06463935195281183
+        ],
+        "forecast_signed_move_mean_bps": 0.49486632447495976,
+        "inference_sufficient_time_blocks": true,
+        "coefficient_note": "Coefficient calibrated at H=30; other horizons are response diagnostics",
+        "q_bh_exploratory": 0.002097902097902098
+      },
+      "remaining_move": {
+        "reason": "No live orders; latency-adjusted remaining move cannot be measured"
+      }
+    },
+    "grvt:S3": {
+      "10": {
+        "n": 34,
+        "nonoverlapping_pairs": 5,
+        "time_blocks_60s": 2,
+        "nonzero_price_moves": 32,
+        "feature_slope_zero_intercept": -7.555904245035151,
+        "slope_ci95_block_bootstrap": [
+          -8.088990571664528,
+          -6.762214374862414
+        ],
+        "p_block_bootstrap_centered": null,
+        "signed_feature_move_mean_bps": -0.5719589026960147,
+        "signed_move_ci95_block_bootstrap_bps": [
+          -0.8550784487368985,
+          -0.3484434716111064
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.28125,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "fv_forecast_evaluation": "no deployable frozen coefficient; feature-only diagnostic",
+        "inference_sufficient_time_blocks": false,
+        "inference_limitation": "Fewer than 10 time blocks: resampling intervals are descriptive only; insufficient history for hypothesis inference",
+        "coefficient_note": "Coefficient calibrated at H=30; other horizons are response diagnostics"
+      },
+      "30": {
+        "n": 34,
+        "nonoverlapping_pairs": 4,
+        "time_blocks_60s": 2,
+        "nonzero_price_moves": 28,
+        "feature_slope_zero_intercept": -1.6101637104190247,
+        "slope_ci95_block_bootstrap": [
+          -3.3093645392240187,
+          0.9197051266582327
+        ],
+        "p_block_bootstrap_centered": null,
+        "signed_feature_move_mean_bps": 0.2916376238299473,
+        "signed_move_ci95_block_bootstrap_bps": [
+          0.11034330560932065,
+          0.43476471716202125
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.42857142857142855,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "fv_forecast_evaluation": "no deployable frozen coefficient; feature-only diagnostic",
+        "inference_sufficient_time_blocks": false,
+        "inference_limitation": "Fewer than 10 time blocks: resampling intervals are descriptive only; insufficient history for hypothesis inference"
+      },
+      "60": {
+        "n": 34,
+        "nonoverlapping_pairs": 2,
+        "time_blocks_60s": 2,
+        "nonzero_price_moves": 34,
+        "feature_slope_zero_intercept": 0.022773541232804846,
+        "slope_ci95_block_bootstrap": [
+          -0.48272957988879683,
+          0.775395933766721
+        ],
+        "p_block_bootstrap_centered": null,
+        "signed_feature_move_mean_bps": 0.15774203676933263,
+        "signed_move_ci95_block_bootstrap_bps": [
+          -0.5241900439378474,
+          0.6961094689065799
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.5294117647058824,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "fv_forecast_evaluation": "no deployable frozen coefficient; feature-only diagnostic",
+        "inference_sufficient_time_blocks": false,
+        "inference_limitation": "Fewer than 10 time blocks: resampling intervals are descriptive only; insufficient history for hypothesis inference",
+        "coefficient_note": "Coefficient calibrated at H=30; other horizons are response diagnostics"
+      },
+      "remaining_move": {
+        "reason": "No live orders; latency-adjusted remaining move cannot be measured"
+      }
+    },
+    "grvt:S4": {
+      "10": {
+        "n": 381,
+        "nonoverlapping_pairs": 138,
+        "time_blocks_60s": 30,
+        "nonzero_price_moves": 343,
+        "feature_slope_zero_intercept": -0.4937626911981157,
+        "slope_ci95_block_bootstrap": [
+          -0.7630044490392427,
+          -0.26505279540406335
+        ],
+        "p_block_bootstrap_centered": 0.000999000999000999,
+        "signed_feature_move_mean_bps": -0.9767703694600258,
+        "signed_move_ci95_block_bootstrap_bps": [
+          -1.716539319074158,
+          -0.38604746411337054
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.29692832764505117,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "fv_forecast_evaluation": "no deployable frozen coefficient; feature-only diagnostic",
+        "inference_sufficient_time_blocks": true,
+        "coefficient_note": "Coefficient calibrated at H=30; other horizons are response diagnostics",
+        "q_bh_exploratory": 0.002097902097902098
+      },
+      "30": {
+        "n": 284,
+        "nonoverlapping_pairs": 45,
+        "time_blocks_60s": 30,
+        "nonzero_price_moves": 241,
+        "feature_slope_zero_intercept": -0.21006700413473514,
+        "slope_ci95_block_bootstrap": [
+          -0.43117303617098607,
+          0.017942322474870705
+        ],
+        "p_block_bootstrap_centered": 0.06593406593406594,
+        "signed_feature_move_mean_bps": -0.4361397399982409,
+        "signed_move_ci95_block_bootstrap_bps": [
+          -1.087965299701664,
+          0.2660329813675632
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.3883495145631068,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "fv_forecast_evaluation": "no deployable frozen coefficient; feature-only diagnostic",
+        "inference_sufficient_time_blocks": true,
+        "q_bh_exploratory": 0.11538461538461538
+      },
+      "60": {
+        "n": 197,
+        "nonoverlapping_pairs": 24,
+        "time_blocks_60s": 28,
+        "nonzero_price_moves": 187,
+        "feature_slope_zero_intercept": -0.10265522089741821,
+        "slope_ci95_block_bootstrap": [
+          -0.5800721780779924,
+          0.5941380765543903
+        ],
+        "p_block_bootstrap_centered": 0.7342657342657343,
+        "signed_feature_move_mean_bps": -0.018638524961793412,
+        "signed_move_ci95_block_bootstrap_bps": [
+          -1.0562274660779178,
+          0.9570362864352245
+        ],
+        "sign_accuracy_excluding_zero_moves": 0.4601226993865031,
+        "method": "1000 resamples of 60s time blocks; 10/30/60s prespecified horizons; no IID event p-values",
+        "interpretation": "exploratory testnet pilot; overlapping labels and short history; association is not causation",
+        "fv_forecast_evaluation": "no deployable frozen coefficient; feature-only diagnostic",
+        "inference_sufficient_time_blocks": true,
+        "coefficient_note": "Coefficient calibrated at H=30; other horizons are response diagnostics",
+        "q_bh_exploratory": 0.7342657342657343
+      },
+      "remaining_move": {
+        "reason": "No live orders; latency-adjusted remaining move cannot be measured"
+      }
+    }
+  },
+  "feed_gaps": 0,
+  "private_gaps": 7,
+  "account_end": {
+    "bybit": {
+      "funding": [],
+      "account_end": {
+        "equity": "9997.39840547",
+        "available": "9997.39840547",
+        "margin": "0"
+      },
+      "positions": {},
+      "open_orders": 0
+    },
+    "grvt": {
+      "funding": [],
+      "account_end": {
+        "equity": "10000.113898",
+        "available": "10000.113898",
+        "margin": "0E+5"
+      },
+      "positions": {},
+      "open_orders": 0
+    }
+  },
+  "requested_duration_met": true
+}
