@@ -1,1 +1,0 @@
-{"offline_only": true, "network": "none", "dummy_key_only": true, "backend": "NativeECCBackend", "coincurve_available": false, "current_prepare": {"n": 50, "p50_ms": 4.9799175, "min_ms": 4.751295, "max_ms": 5.457926}, "cached_account_only": {"n": 50, "p50_ms": 3.537872, "min_ms": 3.368837, "max_ms": 6.352489}}

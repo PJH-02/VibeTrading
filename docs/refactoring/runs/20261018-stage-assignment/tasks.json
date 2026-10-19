@@ -1,0 +1,821 @@
+{
+  "run_id": "20261018-stage-assignment",
+  "updated_kst": "2026-10-19T19:06:48.289934+09:00",
+  "tasks": [
+    {
+      "task_id": "P00-PHASE",
+      "phase": "P00",
+      "title": "기준선·현재 실행 경로·회귀 입력",
+      "owner_role": "p00_code_audit + root",
+      "status": "PARTIAL",
+      "depends_on": [],
+      "output_paths_or_contracts": [
+        "baseline_manifest.json",
+        "code_map.json",
+        "fixture_manifest.json",
+        "known_failures.md"
+      ],
+      "baseline_source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+      "contract_ids": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07"
+      ],
+      "permissions": "local/offline/read-only only; production cutover separately scoped",
+      "acceptance_gate": "G00",
+      "state_scope": "phase, not all subtasks ready"
+    },
+    {
+      "task_id": "P01-PHASE",
+      "phase": "P01",
+      "title": "계약·파라미터·adapter capability",
+      "owner_role": "p01_contract_design",
+      "status": "PARTIAL",
+      "depends_on": [
+        "G00-scoped"
+      ],
+      "output_paths_or_contracts": [
+        "contracts.md",
+        "parameters.json",
+        "adapter_capabilities.json",
+        "decisions.md"
+      ],
+      "baseline_source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+      "contract_ids": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07"
+      ],
+      "permissions": "local/offline/read-only only; production cutover separately scoped",
+      "acceptance_gate": "G01",
+      "state_scope": "phase, not all subtasks ready"
+    },
+    {
+      "task_id": "P02-PHASE",
+      "phase": "P02",
+      "title": "schema/field 캐시·중복 encoding 제거",
+      "owner_role": "implementation; root assigns after gates",
+      "status": "IMPLEMENTED_SCOPED_OFFLINE",
+      "depends_on": [
+        "G00-scoped",
+        "G01-P02"
+      ],
+      "output_paths_or_contracts": [
+        "schema cache diff and equivalence evidence",
+        "encoding packet contract and regression diff"
+      ],
+      "baseline_source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+      "contract_ids": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07"
+      ],
+      "permissions": "local/offline/read-only only; production cutover separately scoped",
+      "acceptance_gate": "G02",
+      "state_scope": "phase, not all subtasks ready"
+    },
+    {
+      "task_id": "P03-PHASE",
+      "phase": "P03",
+      "title": "공유 시장 상태·이력·전략 adapter",
+      "owner_role": "market-state implementation role",
+      "status": "IMPLEMENTED_REPLAY_SHADOW",
+      "depends_on": [
+        "G01",
+        "G02"
+      ],
+      "output_paths_or_contracts": [
+        "single writer MarketState",
+        "window/version fixtures"
+      ],
+      "baseline_source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+      "contract_ids": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07"
+      ],
+      "permissions": "local/offline/read-only only; production cutover separately scoped",
+      "acceptance_gate": "G03",
+      "state_scope": "phase, not all subtasks ready"
+    },
+    {
+      "task_id": "P04-PHASE",
+      "phase": "P04",
+      "title": "주문 원장·계좌 owner·제어·대조",
+      "owner_role": "execution implementation + independent reviewer",
+      "status": "IMPLEMENTED_OFFLINE_LIVE_GATES_OPEN",
+      "depends_on": [
+        "G01",
+        "G03-evidence"
+      ],
+      "output_paths_or_contracts": [
+        "transaction-before-submit",
+        "owner/fill/halt crash evidence"
+      ],
+      "baseline_source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+      "contract_ids": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07"
+      ],
+      "permissions": "local/offline/read-only only; production cutover separately scoped",
+      "acceptance_gate": "G04",
+      "state_scope": "phase, not all subtasks ready"
+    },
+    {
+      "task_id": "P05-PHASE",
+      "phase": "P05",
+      "title": "비차단 live/storage fanout",
+      "owner_role": "transport implementation role",
+      "status": "IMPLEMENTED_OFFLINE_NATS_FREE",
+      "depends_on": [
+        "G03",
+        "G04"
+      ],
+      "output_paths_or_contracts": [
+        "bounded fanout and failure latch",
+        "conditional spool ADR"
+      ],
+      "baseline_source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+      "contract_ids": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07"
+      ],
+      "permissions": "local/offline/read-only only; production cutover separately scoped",
+      "acceptance_gate": "G05",
+      "state_scope": "phase, not all subtasks ready"
+    },
+    {
+      "task_id": "P06-PHASE",
+      "phase": "P06",
+      "title": "replay/live 경계와 warmup",
+      "owner_role": "recovery implementation role",
+      "status": "IMPLEMENTED_SCOPED_RECOVERY",
+      "depends_on": [
+        "G05"
+      ],
+      "output_paths_or_contracts": [
+        "C/H handoff",
+        "replay no-submit evidence"
+      ],
+      "baseline_source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+      "contract_ids": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07"
+      ],
+      "permissions": "local/offline/read-only only; production cutover separately scoped",
+      "acceptance_gate": "G06",
+      "state_scope": "phase, not all subtasks ready"
+    },
+    {
+      "task_id": "P07-PHASE",
+      "phase": "P07",
+      "title": "Parquet·archive·catalog·GC",
+      "owner_role": "storage implementation role",
+      "status": "IMPLEMENTED_REVIEW_CORRECTIONS",
+      "depends_on": [
+        "G05",
+        "G06"
+      ],
+      "output_paths_or_contracts": [
+        "archive fault evidence",
+        "resource/retention bound"
+      ],
+      "baseline_source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+      "contract_ids": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07"
+      ],
+      "permissions": "local/offline/read-only only; production cutover separately scoped",
+      "acceptance_gate": "G07",
+      "state_scope": "phase, not all subtasks ready"
+    },
+    {
+      "task_id": "P08-PHASE",
+      "phase": "P08",
+      "title": "Telegram inbox/outbox·local control·보고",
+      "owner_role": "control/reporting implementation role",
+      "status": "IMPLEMENTED_REVIEW_CORRECTIONS",
+      "depends_on": [
+        "G04"
+      ],
+      "output_paths_or_contracts": [
+        "command dedupe",
+        "bounded notifications",
+        "trade compatibility"
+      ],
+      "baseline_source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+      "contract_ids": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07"
+      ],
+      "permissions": "local/offline/read-only only; production cutover separately scoped",
+      "acceptance_gate": "G08",
+      "state_scope": "phase, not all subtasks ready"
+    },
+    {
+      "task_id": "P09-PHASE",
+      "phase": "P09",
+      "title": "배포 명세·mount·관측·자원 예산",
+      "owner_role": "root integration + deployment review role",
+      "status": "SERVER_RELEASE_PREPARATION",
+      "depends_on": [
+        "G04",
+        "G05",
+        "G06",
+        "G07",
+        "G08"
+      ],
+      "output_paths_or_contracts": [
+        "role-pinned deployment proposal",
+        "resource and path evidence"
+      ],
+      "baseline_source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+      "contract_ids": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07"
+      ],
+      "permissions": "local/offline/read-only only; production cutover separately scoped",
+      "acceptance_gate": "G09",
+      "state_scope": "phase, not all subtasks ready"
+    },
+    {
+      "task_id": "P10-PHASE",
+      "phase": "P10",
+      "title": "통합·성능·장애·shadow 검증",
+      "owner_role": "independent validation role + root",
+      "status": "OFFLINE_PASS_PRODUCTION_OPEN",
+      "depends_on": [
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G06",
+        "G07",
+        "G08",
+        "G09"
+      ],
+      "output_paths_or_contracts": [
+        "offline suite",
+        "A/B and fault reports",
+        "72-hour coverage"
+      ],
+      "baseline_source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+      "contract_ids": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07"
+      ],
+      "permissions": "local/offline/read-only only; production cutover separately scoped",
+      "acceptance_gate": "G10",
+      "state_scope": "phase, not all subtasks ready"
+    },
+    {
+      "task_id": "P11-PHASE",
+      "phase": "P11",
+      "title": "feed·역할·계좌별 전환 패키지",
+      "owner_role": "root operations role; explicit scope required",
+      "status": "REVIEW_PACKAGE_NOT_DEPLOYED",
+      "depends_on": [
+        "G10",
+        "deployment_authorization"
+      ],
+      "output_paths_or_contracts": [
+        "cutover.md",
+        "rollback.md",
+        "release_manifest.json"
+      ],
+      "baseline_source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+      "contract_ids": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07"
+      ],
+      "permissions": "local/offline/read-only only; production cutover separately scoped",
+      "acceptance_gate": "G11",
+      "state_scope": "phase, not all subtasks ready"
+    },
+    {
+      "task_id": "P12-PHASE",
+      "phase": "P12",
+      "title": "검증된 legacy 정리·인수",
+      "owner_role": "root + independent retirement review",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "G11",
+        "retention_and_delete_scope"
+      ],
+      "output_paths_or_contracts": [
+        "reference/rollback audit",
+        "final handoff"
+      ],
+      "baseline_source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+      "contract_ids": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07"
+      ],
+      "permissions": "local/offline/read-only only; production cutover separately scoped",
+      "acceptance_gate": "G12",
+      "state_scope": "phase, not all subtasks ready"
+    },
+    {
+      "task_id": "P00-BASELINE",
+      "phase": "P00",
+      "owner_role": "root",
+      "status": "DONE_SCOPED_LOCAL",
+      "depends_on": [],
+      "baseline": {
+        "head": "3ec7923a8ac7c5c087903bd011df073f3e1a0480",
+        "source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+        "target_before_sha256": {}
+      },
+      "edit_paths": [
+        "docs/refactoring/baseline_manifest.json"
+      ],
+      "target_symbols": [],
+      "forbidden_paths": [
+        ".env",
+        "runtime_data/",
+        "vibetrading/etf_reference.py",
+        "production service/config/database"
+      ],
+      "preserved_behaviors": [
+        "C01-C07",
+        "C3/KP/KD outputs and mock/mock2",
+        "raw/native sequence/Decimal/null/field order",
+        "WAL/FULL and original retention"
+      ],
+      "acceptance": [
+        "current dirty/untracked source manifest and source-only archive verified",
+        "sanitised offline test baseline and failures classified"
+      ],
+      "test_commands": [
+        "python docs/refactoring/runs/20261018-stage-assignment/run_offline_tests.py --source tmp/refactoring/20261018-stage-assignment/baseline --label baseline-full --timeout 240"
+      ],
+      "permissions": "local_source_copy_or_local_diff_only",
+      "rollback": "revert this ticket diff without resetting user working tree",
+      "evidence_dir": "docs/refactoring/runs/20261018-stage-assignment/P00-BASELINE"
+    },
+    {
+      "task_id": "P00-CODEMAP",
+      "phase": "P00",
+      "owner_role": "p00_code_audit",
+      "status": "DONE_SCOPED_LOCAL",
+      "depends_on": [],
+      "baseline": {
+        "head": "3ec7923a8ac7c5c087903bd011df073f3e1a0480",
+        "source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+        "target_before_sha256": {}
+      },
+      "edit_paths": [
+        "docs/refactoring/code_map.json",
+        "docs/refactoring/current_state_audit.md"
+      ],
+      "target_symbols": [],
+      "forbidden_paths": [
+        ".env",
+        "runtime_data/",
+        "vibetrading/etf_reference.py",
+        "production service/config/database"
+      ],
+      "preserved_behaviors": [
+        "C01-C07",
+        "C3/KP/KD outputs and mock/mock2",
+        "raw/native sequence/Decimal/null/field order",
+        "WAL/FULL and original retention"
+      ],
+      "acceptance": [
+        "existing symbols/callers/side effects and deployment drift mapped"
+      ],
+      "test_commands": [],
+      "permissions": "local_source_copy_or_local_diff_only",
+      "rollback": "revert this ticket diff without resetting user working tree",
+      "evidence_dir": "docs/refactoring/runs/20261018-stage-assignment/P00-CODEMAP"
+    },
+    {
+      "task_id": "P00-REVIEW",
+      "phase": "P00",
+      "owner_role": "p00_independent_review",
+      "status": "DONE_SCOPED_LOCAL",
+      "depends_on": [],
+      "baseline": {
+        "head": "3ec7923a8ac7c5c087903bd011df073f3e1a0480",
+        "source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+        "target_before_sha256": {}
+      },
+      "edit_paths": [
+        "docs/refactoring/p00_review.md"
+      ],
+      "target_symbols": [],
+      "forbidden_paths": [
+        ".env",
+        "runtime_data/",
+        "vibetrading/etf_reference.py",
+        "production service/config/database"
+      ],
+      "preserved_behaviors": [
+        "C01-C07",
+        "C3/KP/KD outputs and mock/mock2",
+        "raw/native sequence/Decimal/null/field order",
+        "WAL/FULL and original retention"
+      ],
+      "acceptance": [
+        "test isolation and baseline preservation independently reviewed"
+      ],
+      "test_commands": [],
+      "permissions": "local_source_copy_or_local_diff_only",
+      "rollback": "revert this ticket diff without resetting user working tree",
+      "evidence_dir": "docs/refactoring/runs/20261018-stage-assignment/P00-REVIEW"
+    },
+    {
+      "task_id": "P00-FIXTURE",
+      "phase": "P00",
+      "owner_role": "root",
+      "status": "DONE_SCOPED_LOCAL",
+      "depends_on": [
+        "P00-BASELINE"
+      ],
+      "baseline": {
+        "head": "3ec7923a8ac7c5c087903bd011df073f3e1a0480",
+        "source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+        "target_before_sha256": {}
+      },
+      "edit_paths": [
+        "docs/refactoring/fixture_manifest.json"
+      ],
+      "target_symbols": [],
+      "forbidden_paths": [
+        ".env",
+        "runtime_data/",
+        "vibetrading/etf_reference.py",
+        "production service/config/database"
+      ],
+      "preserved_behaviors": [
+        "C01-C07",
+        "C3/KP/KD outputs and mock/mock2",
+        "raw/native sequence/Decimal/null/field order",
+        "WAL/FULL and original retention"
+      ],
+      "acceptance": [
+        "baseline regression fixtures mapped and executed; production vs synthetic provenance explicit"
+      ],
+      "test_commands": [],
+      "permissions": "local_source_copy_or_local_diff_only",
+      "rollback": "revert this ticket diff without resetting user working tree",
+      "evidence_dir": "docs/refactoring/runs/20261018-stage-assignment/P00-FIXTURE",
+      "limitations": [
+        "Inline synthetic fixture groups and baseline schema oracle only; no production interleaving trace"
+      ]
+    },
+    {
+      "task_id": "P00-LONG-MEASURE",
+      "phase": "P00",
+      "owner_role": "validation role; not dispatched",
+      "status": "COVERAGE_GAP_NOT_72H_COMPLETE",
+      "depends_on": [],
+      "baseline": {
+        "head": "3ec7923a8ac7c5c087903bd011df073f3e1a0480",
+        "source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+        "target_before_sha256": {}
+      },
+      "edit_paths": [],
+      "target_symbols": [],
+      "forbidden_paths": [
+        ".env",
+        "runtime_data/",
+        "vibetrading/etf_reference.py",
+        "production service/config/database"
+      ],
+      "preserved_behaviors": [
+        "C01-C07",
+        "C3/KP/KD outputs and mock/mock2",
+        "raw/native sequence/Decimal/null/field order",
+        "WAL/FULL and original retention"
+      ],
+      "acceptance": [
+        "72-hour input/resource coverage includes KR market sessions",
+        "daily raw/Parquet/verified-upload data rates measured without extrapolating short sample"
+      ],
+      "test_commands": [],
+      "permissions": "local_source_copy_or_local_diff_only",
+      "rollback": "revert this ticket diff without resetting user working tree",
+      "evidence_dir": "docs/refactoring/runs/20261018-stage-assignment/P00-LONG-MEASURE",
+      "scheduled": false,
+      "evidence": [
+        "measurement-72h-v1/coverage_gap.json",
+        "measurement-72h-v2/coverage_gap.json"
+      ]
+    },
+    {
+      "task_id": "P01-CONTRACTS",
+      "phase": "P01",
+      "owner_role": "p01_contract_design",
+      "status": "VERIFIED_SCOPED_P02_SCHEMA",
+      "depends_on": [
+        "G00-scoped"
+      ],
+      "baseline": {
+        "head": "3ec7923a8ac7c5c087903bd011df073f3e1a0480",
+        "source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+        "target_before_sha256": {}
+      },
+      "edit_paths": [
+        "docs/refactoring/contracts.md",
+        "docs/refactoring/parameters.json",
+        "docs/refactoring/adapter_capabilities.json",
+        "docs/refactoring/decisions.md"
+      ],
+      "target_symbols": [],
+      "forbidden_paths": [
+        ".env",
+        "runtime_data/",
+        "vibetrading/etf_reference.py",
+        "production service/config/database"
+      ],
+      "preserved_behaviors": [
+        "C01-C07",
+        "C3/KP/KD outputs and mock/mock2",
+        "raw/native sequence/Decimal/null/field order",
+        "WAL/FULL and original retention"
+      ],
+      "acceptance": [
+        "P02 scoped contract bound to actual functions",
+        "unverified live parameters block activation",
+        "NATS independence scope remains explicit ADR OPEN"
+      ],
+      "test_commands": [],
+      "permissions": "local_source_copy_or_local_diff_only",
+      "rollback": "revert this ticket diff without resetting user working tree",
+      "evidence_dir": "docs/refactoring/runs/20261018-stage-assignment/P01-CONTRACTS",
+      "limitations": [
+        "Production contracts/parameters and whole G01 remain partial"
+      ]
+    },
+    {
+      "task_id": "P02-SCHEMA-CACHE",
+      "phase": "P02",
+      "owner_role": "implementation; next available implementation slot",
+      "status": "APPLIED_SCOPED_TWO_STORAGE_SERVICES",
+      "depends_on": [
+        "G00-P02-schema",
+        "G01-P02-schema"
+      ],
+      "baseline": {
+        "head": "3ec7923a8ac7c5c087903bd011df073f3e1a0480",
+        "source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+        "target_before_sha256": {
+          "vibetrading/parquet_store.py": "72665b0d28433ec8d70845a4da9fd4ce20215b7ff7f68915b11a94a01ae9c6c2"
+        }
+      },
+      "edit_paths": [
+        "vibetrading/parquet_store.py",
+        "tests/refactoring/test_schema_cache_equivalence.py"
+      ],
+      "target_symbols": [
+        "_schema",
+        "_normalize",
+        "ParquetBatchWriter._materialize"
+      ],
+      "forbidden_paths": [
+        ".env",
+        "runtime_data/",
+        "vibetrading/etf_reference.py",
+        "production service/config/database"
+      ],
+      "preserved_behaviors": [
+        "C01-C07",
+        "C3/KP/KD outputs and mock/mock2",
+        "raw/native sequence/Decimal/null/field order",
+        "WAL/FULL and original retention"
+      ],
+      "acceptance": [
+        "all 8 event schemas preserve field/type/order/Decimal/null/native/raw semantics",
+        "normalized values and canonical hash equal frozen baseline",
+        "finite cache; unsupported types remain errors",
+        "component benchmark records CPU/event without system-wide claim"
+      ],
+      "test_commands": [
+        "python -m pytest -q tests/test_models.py tests/test_parquet_store.py tests/test_storage_pipeline.py tests/test_durable_pipeline_guards.py tests/test_crypto_perp_pipeline.py tests/refactoring/test_schema_cache_equivalence.py"
+      ],
+      "permissions": "local_source_copy_or_local_diff_only",
+      "rollback": "revert this ticket diff without resetting user working tree",
+      "evidence_dir": "docs/refactoring/runs/20261018-stage-assignment/P02-SCHEMA-CACHE",
+      "assigned_agent": "p00_code_audit",
+      "dispatch_state": "IMPLEMENTED_REVIEWED_OFFLINE",
+      "contract_ids": [
+        "C02",
+        "C06"
+      ],
+      "contract_version": "p01-draft-1; root scoped acceptance for P02 schema only",
+      "contract_sha256": "fe37d162fcfc49e64062e01731e47a5035951360c3dfede4716c8b368a8bb6dc",
+      "fixture_manifest_sha256": "8b5274795795484e071b645273211078687e089c4260ba2ef0739b86e306a2ca",
+      "fixture_oracle_sha256": "028d9166533d077aacf03cd9c74adb563a2601e0aeb1333029c7fcb8a7e0625c",
+      "path_actions": {
+        "vibetrading/parquet_store.py": "modify",
+        "tests/refactoring/test_schema_cache_equivalence.py": "add"
+      },
+      "reviewer": "independent reviewer role; separate from implementation",
+      "implementation_scope": "Cache finite schema/field metadata; expand other callsites only with explicit ticket diff scope review",
+      "review": "docs/refactoring/p02_schema_review.md",
+      "evidence": [
+        "p02-schema-v1",
+        "schema_benchmark.json"
+      ],
+      "production_status": "ACTIVE_SCHEMA_CACHE_ONLY"
+    },
+    {
+      "task_id": "P02-ENCODE-PACKET",
+      "phase": "P02",
+      "owner_role": "implementation; not dispatched",
+      "status": "PASS_SCOPED_OFFLINE",
+      "depends_on": [
+        "G00-P02-encoding",
+        "G01-P02-encoding",
+        "P02-SCHEMA-CACHE-reviewed"
+      ],
+      "baseline": {
+        "head": "3ec7923a8ac7c5c087903bd011df073f3e1a0480",
+        "source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+        "target_before_sha256": {
+          "vibetrading/bus.py": "dea0b7bf1f494d6ce0fcff18ba17654c2c48f6e89dce57ab3e9153f50ff20476",
+          "vibetrading/runtime.py": "69a4e401016cdfb4be8a2ef6dad2142a2601c10a569a01faefdf8c7a19d28832"
+        }
+      },
+      "edit_paths": [
+        "vibetrading/bus.py",
+        "vibetrading/runtime.py",
+        "tests/refactoring/test_encoding_packet.py",
+        "tests/refactoring/test_buffered_packet_lifecycle.py"
+      ],
+      "target_symbols": [
+        "BufferedMarketEventBus.publish_market_event",
+        "BufferedMarketEventBus._worker",
+        "NatsJetStreamBus.publish_market_event",
+        "_CollectorReadinessBus.publish_market_event"
+      ],
+      "forbidden_paths": [
+        ".env",
+        "runtime_data/",
+        "vibetrading/etf_reference.py",
+        "production service/config/database"
+      ],
+      "preserved_behaviors": [
+        "C01-C07",
+        "C3/KP/KD outputs and mock/mock2",
+        "raw/native sequence/Decimal/null/field order",
+        "WAL/FULL and original retention"
+      ],
+      "acceptance": [
+        "owned immutable encoded bytes with consistent readiness/live payload",
+        "per-symbol order and durable/live policy preserved",
+        "queue put cancellation does not leak accepted/byte reservations",
+        "baseline regression and packet mutation/cancel/full/failure tests"
+      ],
+      "test_commands": [
+        "python -m pytest -q tests/test_durable_pipeline_guards.py tests/test_publish_and_mock_notifications.py tests/test_universe_hot_path.py tests/refactoring/test_encoding_equivalence.py"
+      ],
+      "permissions": "local_source_copy_or_local_diff_only",
+      "rollback": "revert this ticket diff without resetting user working tree",
+      "evidence_dir": "docs/refactoring/runs/20261018-stage-assignment/P02-ENCODE-PACKET",
+      "assigned_agent": "root",
+      "dispatch_state": "IMPLEMENTED_REVIEWED_OFFLINE",
+      "ticket": "docs/refactoring/p02_encoding_ticket.json",
+      "evidence": [
+        "p02-packet-targeted-v1",
+        "p02-packet-full-v1",
+        "p02-packet-targeted-v2"
+      ]
+    },
+    {
+      "task_id": "P05-LOCAL-RUNTIME",
+      "phase": "P05",
+      "status": "LOCAL_IMPLEMENTED_SCOPED_TESTS",
+      "owner_role": "root",
+      "output_paths_or_contracts": [
+        "market_spool.py",
+        "local_transport.py",
+        "local_pipeline.py",
+        "local_engine.py",
+        "local_observation.py"
+      ],
+      "production_status": "NOT_DEPLOYED"
+    },
+    {
+      "task_id": "P07-LOCAL-STORAGE",
+      "phase": "P07",
+      "status": "REVIEW_CORRECTIONS_IMPLEMENTED",
+      "owner_role": "control_review_2",
+      "output_paths_or_contracts": [
+        "local_storage.py",
+        "tests/refactoring/test_local_storage.py"
+      ],
+      "production_status": "NOT_DEPLOYED"
+    },
+    {
+      "task_id": "P08-LOCAL-FACTS",
+      "phase": "P08",
+      "status": "REVIEW_CORRECTIONS_IMPLEMENTED",
+      "owner_role": "storage_fanout_review_2",
+      "output_paths_or_contracts": [
+        "local_events.py",
+        "telegram.py",
+        "tests/refactoring/test_local_events.py"
+      ],
+      "production_status": "NOT_DEPLOYED"
+    },
+    {
+      "task_id": "P09-SERVER-OWNER-BASE",
+      "phase": "P09",
+      "status": "POST_P02_SERVER_REBASE_VERIFIED",
+      "owner_role": "root + storage_fanout_review_2",
+      "output_paths_or_contracts": [
+        "server-active-owner-after-p02.json",
+        "server-active-owner-candidate-v6.json"
+      ],
+      "production_status": "NOT_DEPLOYED"
+    },
+    {
+      "task_id": "KR-SIGNAL-CONTINUITY",
+      "phase": "P10",
+      "status": "FAIL_SCOPED_AVAILABILITY",
+      "owner_role": "control_review_2",
+      "output_paths_or_contracts": [
+        "docs/evidence/refactoring_20261019/korean_strategy_continuity_audit.md",
+        "docs/evidence/refactoring_20261019/korean_strategy_gap_detail.json"
+      ],
+      "production_status": "NOT_DEPLOYED"
+    },
+    {
+      "task_id": "KR-HISTORICAL-GAP-REPAIR",
+      "phase": "P07",
+      "status": "DEFERRED_BY_USER_20261019",
+      "owner_role": "execution_review_2",
+      "output_paths_or_contracts": [
+        "tmp/refactoring/server-hotfix-20261019/etf-history-v1"
+      ],
+      "production_status": "NOT_DEPLOYED"
+    }
+  ],
+  "source_of_truth": "execution_board.md plus this task queue; individual audit reports retain author-time observations",
+  "authorization": "User explicitly requested full refactoring and continuation; local implementation/tests authorized. Deployment still subject to operational gates in refactoring_plan.md.",
+  "latest_user_direction": "Pause missing-minute work; resume original refactoring plan, reconcile completed work to server before next phase. Simple reviews use Luna; read diffs only; KISS/DRY/YAGNI.",
+  "current_work": "P02 schema cache active; P03-P08 offline implemented; P08 WAL cap verified; P09 next candidate rebased onto actual post-P02 server; P10 production evidence and P11 full cutover remain open"
+}

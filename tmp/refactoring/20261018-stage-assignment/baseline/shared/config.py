@@ -1,0 +1,337 @@
+"""
+Centralized Configuration for Trading System
+Uses Pydantic Settings with .env loading.
+"""
+
+import os
+from decimal import Decimal
+from functools import lru_cache
+from typing import Literal, Optional
+
+from pydantic import Field, field_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+from shared.models import Market, TradingMode
+
+
+class DatabaseSettings(BaseSettings):
+    """PostgreSQL database settings."""
+    model_config = SettingsConfigDict(env_prefix="POSTGRES_", extra="ignore")
+    
+    host: str = "localhost"
+    port: int = 5432
+    user: str = "trading"
+    password: str = "trading_dev"
+    db: str = "trading_db"
+    
+    @property
+    def url(self) -> str:
+        """Build database URL."""
+        return f"postgresql+asyncpg://{self.user}:{self.password}@{self.host}:{self.port}/{self.db}"
+    
+    @property
+    def sync_url(self) -> str:
+        """Build synchronous database URL."""
+        return f"postgresql://{self.user}:{self.password}@{self.host}:{self.port}/{self.db}"
+
+
+class QuestDBSettings(BaseSettings):
+    """QuestDB time-series database settings."""
+    model_config = SettingsConfigDict(env_prefix="QUESTDB_", extra="ignore")
+    
+    host: str = "localhost"
+    http_port: int = 9000
+    ilp_port: int = 9009
+    pg_port: int = 8812
+    
+    @property
+    def http_url(self) -> str:
+        """HTTP API URL."""
+        return f"http://{self.host}:{self.http_port}"
+    
+    @property
+    def ilp_address(self) -> tuple[str, int]:
+        """ILP (InfluxDB Line Protocol) address."""
+        return (self.host, self.ilp_port)
+
+
+class NatsSettings(BaseSettings):
+    """NATS JetStream settings."""
+    model_config = SettingsConfigDict(env_prefix="NATS_", extra="ignore")
+    
+    url: str = "nats://localhost:4222"
+    connect_timeout: int = 10
+    reconnect_time_wait: int = 2
+    max_reconnect_attempts: int = 60
+
+
+class RedisSettings(BaseSettings):
+    """Redis settings."""
+    model_config = SettingsConfigDict(env_prefix="REDIS_", extra="ignore")
+    
+    url: str = "redis://localhost:6379/0"
+
+
+class BinanceSettings(BaseSettings):
+    """Binance API settings."""
+    model_config = SettingsConfigDict(env_prefix="BINANCE_", extra="ignore")
+    
+    api_key: str = ""
+    api_secret: str = ""
+    testnet: bool = True
+    
+    @property
+    def base_url(self) -> str:
+        """Get appropriate base URL."""
+        if self.testnet:
+            return "https://testnet.binance.vision"
+        return "https://api.binance.com"
+    
+    @property
+    def ws_base_url(self) -> str:
+        """Get Binance WebSocket base URL."""
+        if self.testnet:
+            return "wss://testnet.binance.vision"
+        return "wss://stream.binance.com:9443"
+
+    @property
+    def ws_stream_url(self) -> str:
+        """Get Binance combined stream URL."""
+        return f"{self.ws_base_url}/stream"
+
+
+class BybitSettings(BaseSettings):
+    """Bybit API settings."""
+    model_config = SettingsConfigDict(env_prefix="BYBIT_", extra="ignore")
+
+    testnet: bool = True
+
+    @property
+    def ws_public_url(self) -> str:
+        """Get Bybit public spot WebSocket URL."""
+        if self.testnet:
+            return "wss://stream-testnet.bybit.com/v5/public/spot"
+        return "wss://stream.bybit.com/v5/public/spot"
+
+
+class KISSettings(BaseSettings):
+    """Korea Investment & Securities (KIS) API settings."""
+    model_config = SettingsConfigDict(env_prefix="KIS_", extra="ignore")
+    
+    app_key: str = ""
+    app_secret: str = ""
+    account_number: str = ""
+    account_product_code: str = ""
+    use_mock: bool = True  # True for virtual account, False for real account
+    
+    @property
+    def base_url(self) -> str:
+        """Get appropriate base URL."""
+        if self.use_mock:
+            return "https://openapivts.koreainvestment.com:29443"
+        return "https://openapi.koreainvestment.com:9443"
+
+
+class KiwoomSettings(BaseSettings):
+    """Kiwoom Securities API settings."""
+    model_config = SettingsConfigDict(env_prefix="KIWOOM_", extra="ignore")
+    
+    account_number: str = ""
+    account_password: str = ""
+    cert_password: str = ""
+    use_mock: bool = True  # True for simulated trading, False for real account
+
+
+class RiskSettings(BaseSettings):
+    """Risk control settings."""
+    model_config = SettingsConfigDict(extra="ignore")
+    
+    max_drawdown_pct: Decimal = Field(default=Decimal("10.0"), alias="MAX_DRAWDOWN_PCT")
+    max_position_size_pct: Decimal = Field(default=Decimal("5.0"), alias="MAX_POSITION_SIZE_PCT")
+    daily_loss_limit_pct: Decimal = Field(default=Decimal("3.0"), alias="DAILY_LOSS_LIMIT_PCT")
+
+
+class FillLogicSettings(BaseSettings):
+    """Fill simulation settings."""
+    model_config = SettingsConfigDict(extra="ignore")
+    
+    slippage_bps_crypto: int = Field(default=10, alias="SLIPPAGE_BPS_CRYPTO")
+    slippage_bps_kr: int = Field(default=5, alias="SLIPPAGE_BPS_KR")
+    slippage_bps_us: int = Field(default=3, alias="SLIPPAGE_BPS_US")
+    min_latency_ms: int = Field(default=50, alias="MIN_LATENCY_MS")
+    
+    # Commission rates (per-market)
+    commission_rate_crypto: Decimal = Field(default=Decimal("0.001"), alias="COMMISSION_RATE_CRYPTO")   # 0.1%
+    commission_rate_kr: Decimal = Field(default=Decimal("0.00015"), alias="COMMISSION_RATE_KR")        # 0.015%
+    commission_rate_us: Decimal = Field(default=Decimal("0.0001"), alias="COMMISSION_RATE_US")         # 0.01%
+    
+    def get_slippage_bps(self, market: Market) -> int:
+        """Get slippage in basis points for a market."""
+        mapping = {
+            Market.CRYPTO: self.slippage_bps_crypto,
+            Market.KR: self.slippage_bps_kr,
+            Market.US: self.slippage_bps_us,
+        }
+        return mapping[market]
+    
+    def get_commission_rate(self, market: Market) -> Decimal:
+        """Get commission rate for a market."""
+        mapping = {
+            Market.CRYPTO: self.commission_rate_crypto,
+            Market.KR: self.commission_rate_kr,
+            Market.US: self.commission_rate_us,
+        }
+        return mapping[market]
+
+
+class LoggingSettings(BaseSettings):
+    """Logging settings."""
+    model_config = SettingsConfigDict(extra="ignore")
+    
+    log_level: str = Field(default="INFO", alias="LOG_LEVEL")
+    log_format: str = Field(default="json", alias="LOG_FORMAT")
+
+
+class TradingSettings(BaseSettings):
+    """Main trading system settings."""
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore"
+    )
+    
+    # Core settings
+    mode: TradingMode = Field(default=TradingMode.PAPER, alias="TRADING_MODE")
+    market: Market = Field(default=Market.CRYPTO, alias="TRADING_MARKET")
+    kr_broker: Literal["kis", "kiwoom", "both"] = Field(
+        default="kis",
+        alias="KR_BROKER",
+    )
+    crypto_exchange: Literal["binance", "bybit"] = Field(
+        default="binance",
+        alias="CRYPTO_EXCHANGE",
+    )
+    crypto_ws_url: str = Field(default="", alias="CRYPTO_WS_URL")
+    
+    # Standalone mode (no NATS/DB dependencies — set by run_strategy.py)
+    standalone_mode: bool = Field(default=False, alias="STANDALONE_MODE")
+    
+    # Capital & Position sizing (overridable by strategy config)
+    initial_balance: Decimal = Field(default=Decimal("100000"), alias="INITIAL_BALANCE")
+    position_size_pct: Decimal = Field(default=Decimal("10.0"), alias="POSITION_SIZE_PCT")
+    
+    # Sub-settings (loaded from same .env)
+    database: DatabaseSettings = Field(default_factory=DatabaseSettings)
+    questdb: QuestDBSettings = Field(default_factory=QuestDBSettings)
+    nats: NatsSettings = Field(default_factory=NatsSettings)
+    redis: RedisSettings = Field(default_factory=RedisSettings)
+    binance: BinanceSettings = Field(default_factory=BinanceSettings)
+    bybit: BybitSettings = Field(default_factory=BybitSettings)
+    kis: KISSettings = Field(default_factory=KISSettings)
+    kiwoom: KiwoomSettings = Field(default_factory=KiwoomSettings)
+    risk: RiskSettings = Field(default_factory=RiskSettings)
+    fill_logic: FillLogicSettings = Field(default_factory=FillLogicSettings)
+    logging: LoggingSettings = Field(default_factory=LoggingSettings)
+    
+    @field_validator("mode", mode="before")
+    @classmethod
+    def validate_mode(cls, v: str) -> TradingMode:
+        """Validate and convert trading mode."""
+        if isinstance(v, TradingMode):
+            return v
+        return TradingMode(v.lower())
+    
+    @field_validator("market", mode="before")
+    @classmethod
+    def validate_market(cls, v: str) -> Market:
+        """Validate and convert market."""
+        if isinstance(v, Market):
+            return v
+        return Market(v.lower())
+
+
+@lru_cache()
+def get_settings() -> TradingSettings:
+    """Get cached settings instance."""
+    return TradingSettings()
+
+
+def reload_settings() -> TradingSettings:
+    """Force reload settings (clears cache)."""
+    get_settings.cache_clear()
+    return get_settings()
+
+
+def apply_strategy_config(strategy_config: dict) -> TradingSettings:
+    """
+    전략의 STRATEGY_CONFIG를 시스템 설정에 적용합니다.
+    환경변수를 덮어써서 get_settings()가 전략 설정을 반영하도록 합니다.
+
+    Args:
+        strategy_config: 전략 파일의 STRATEGY_CONFIG dict
+
+    Returns:
+        적용된 TradingSettings
+    """
+    import os
+
+    # 항상 standalone 모드
+    os.environ["STANDALONE_MODE"] = "true"
+
+    # 마켓 / 모드
+    if "market" in strategy_config:
+        os.environ["TRADING_MARKET"] = strategy_config["market"]
+    if "mode" in strategy_config:
+        os.environ["TRADING_MODE"] = strategy_config["mode"]
+
+    # 거래소 / 브로커
+    if "crypto_exchange" in strategy_config:
+        os.environ["CRYPTO_EXCHANGE"] = strategy_config["crypto_exchange"]
+    if "kr_broker" in strategy_config:
+        os.environ["KR_BROKER"] = strategy_config["kr_broker"]
+
+    # 자본금 / 포지션
+    if "initial_balance" in strategy_config:
+        os.environ["INITIAL_BALANCE"] = str(strategy_config["initial_balance"])
+    if "position_size_pct" in strategy_config:
+        os.environ["POSITION_SIZE_PCT"] = str(strategy_config["position_size_pct"])
+
+    # API 키 (비어있지 않은 값만 덮어씀)
+    api_mappings = {
+        "binance_api_key": "BINANCE_API_KEY",
+        "binance_api_secret": "BINANCE_API_SECRET",
+        "kis_app_key": "KIS_APP_KEY",
+        "kis_app_secret": "KIS_APP_SECRET",
+        "kis_account_number": "KIS_ACCOUNT_NUMBER",
+    }
+    for cfg_key, env_key in api_mappings.items():
+        val = strategy_config.get(cfg_key, "")
+        if val:
+            os.environ[env_key] = val
+
+    if "binance_testnet" in strategy_config:
+        os.environ["BINANCE_TESTNET"] = str(strategy_config["binance_testnet"]).lower()
+    if "kis_use_mock" in strategy_config:
+        os.environ["KIS_USE_MOCK"] = str(strategy_config["kis_use_mock"]).lower()
+
+    # 슬리피지 / 수수료
+    market = strategy_config.get("market", "crypto")
+    if "slippage_bps" in strategy_config:
+        env_key = f"SLIPPAGE_BPS_{market.upper()}"
+        os.environ[env_key] = str(strategy_config["slippage_bps"])
+    if "commission_rate" in strategy_config:
+        env_key = f"COMMISSION_RATE_{market.upper()}"
+        os.environ[env_key] = str(strategy_config["commission_rate"])
+    if "min_latency_ms" in strategy_config:
+        os.environ["MIN_LATENCY_MS"] = str(strategy_config["min_latency_ms"])
+
+    # 리스크
+    if "max_drawdown_pct" in strategy_config:
+        os.environ["MAX_DRAWDOWN_PCT"] = str(strategy_config["max_drawdown_pct"])
+    if "max_position_size_pct" in strategy_config:
+        os.environ["MAX_POSITION_SIZE_PCT"] = str(strategy_config["max_position_size_pct"])
+    if "daily_loss_limit_pct" in strategy_config:
+        os.environ["DAILY_LOSS_LIMIT_PCT"] = str(strategy_config["daily_loss_limit_pct"])
+
+    # 설정 리로드
+    return reload_settings()

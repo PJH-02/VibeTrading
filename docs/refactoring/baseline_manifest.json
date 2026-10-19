@@ -1,0 +1,2051 @@
+{
+  "schema_version": 1,
+  "created_kst": "2026-10-18T19:13:56.901183+09:00",
+  "run_id": "20261018-stage-assignment",
+  "git_head": "3ec7923a8ac7c5c087903bd011df073f3e1a0480",
+  "git_status_short": [
+    " M .env.example",
+    " M .gitignore",
+    " M README.md",
+    " D V2.md",
+    " M docker-compose.yml",
+    " M requirements.txt",
+    " M scripts/__pycache__/run_backtest.cpython-310.pyc",
+    " M scripts/__pycache__/validate_system.cpython-310.pyc",
+    "?? .dockerignore",
+    "?? .server_patch/",
+    "?? Dockerfile",
+    "?? Dockerfile.crypto",
+    "?? config/",
+    "?? dashboard/",
+    "?? deploy/",
+    "?? docs/BINANCE_COLLECTOR_FIX_2026-10-03.md",
+    "?? docs/BYBIT_TESTNET_LATENCY_2026-09-26.md",
+    "?? docs/CLEANUP_DELETE_KEEP_2026-10-15.md",
+    "?? docs/CLEANUP_DIRECTORY_INDEX_2026-10-15.md",
+    "?? docs/CLEANUP_PYTHON_FILES_2026-10-15.md",
+    "?? docs/COLLECTOR_RECOVERY_AND_MISSING_ALERTS_2026-10-15.md",
+    "?? docs/COLLECTOR_TIMEOUT_AND_MOCK_ALERTS_2026-10-14.md",
+    "?? docs/CRYPTO_BACKPRESSURE_2026-09-28.md",
+    "?? docs/CRYPTO_BACKPRESSURE_REVIEW_2026-09-28.md",
+    "?? docs/CRYPTO_CAPACITY_AND_MARKET_COVERAGE_2026-10-06.md",
+    "?? docs/CRYPTO_CORE_INEFFICIENCY_CANDIDATES_2026-10-01.md",
+    "?? docs/CRYPTO_DELETION_2026-10-02.md",
+    "?? docs/CRYPTO_DEPLOYMENT_2026-09-26.md",
+    "?? docs/CRYPTO_E2E_LATENCY_2026-10-14.md",
+    "?? docs/CRYPTO_E2E_LATENCY_REASSESSMENT_2026-10-15.md",
+    "?? docs/CRYPTO_EXCHANGE_EXPANSION_CAPACITY_2026-10-03.md",
+    "?? docs/CRYPTO_INCIDENT_2026-09-27.md",
+    "?? docs/CRYPTO_INGESTION_RELEASE_PLAN_V2_2026-09-29.md",
+    "?? docs/CRYPTO_IO_STRUCTURAL_REASSESSMENT_2026-09-29.md",
+    "?? docs/CRYPTO_LATENCY_2026-10-01.md",
+    "?? docs/CRYPTO_MARKET_IMPLEMENTATION.md",
+    "?? docs/CRYPTO_MINIMAL_FIX_2026-10-01.md",
+    "?? docs/CRYPTO_STORAGE_SPLIT_FIX_2026-10-02.md",
+    "?? docs/DUAL_MOCK_AND_PERMISSION_PNL_2026-10-14.md",
+    "?? docs/ETF_FIRST_SIGNAL_RECOVERY_2026-10-15.md",
+    "?? docs/ETF_MOCK_COLLECTION_SCOPE_2026-10-13.md",
+    "?? docs/EXCHANGE_EXPANSION_AND_STORAGE_2026-10-03.md",
+    "?? docs/FV_MM_V4_TESTNETS.md",
+    "?? docs/FV_PILOT_MAINNET.md",
+    "?? docs/HUMMINGBOT_STRUCTURE_REVIEW_2026-10-14.md",
+    "?? docs/INCIDENT_REMEDIATION_2026-09-23.md",
+    "?? docs/KIS_LAG_AND_KD_SIGNAL_AUDIT_2026-10-15.md",
+    "?? docs/KIWOOM_RECONNECT_AND_KIS_REJECTION_2026-10-14.md",
+    "?? docs/LIQUIDITY_MM_BYBIT_TESTNET.md",
+    "?? docs/LS_MARKET_DATA_IMPLEMENTATION_2026-09-27.md",
+    "?? docs/MARKET_COVERAGE_AUDIT_2026-09-25.md",
+    "?? docs/MARKET_COVERAGE_BY_SYMBOL_2026-09-25.csv",
+    "?? docs/MARKET_COVERAGE_GAPS_2026-09-25.csv",
+    "?? docs/MARKET_COVERAGE_PROVIDER_OUTAGES_2026-09-25.csv",
+    "?? docs/MARKET_COVERAGE_SUMMARY_2026-09-25.json",
+    "?? docs/MARKET_DATA_EXPORT_ANALYSIS.md",
+    "?? docs/MARKET_DATA_QA_2026-09-14.md",
+    "?? docs/MARKET_GAP_RECONCILIATION_2026-10-06.json",
+    "?? docs/MARKET_OBSERVATION_DAYS_2026-10-06.csv",
+    "?? docs/MARKET_OBSERVED_INTERVALS_2026-10-06.csv",
+    "?? docs/RELEASE1_CRYPTO_STORAGE_RESIDUAL_2026-09-29.md",
+    "?? docs/RELEASE1_MAINTENANCE_YIELD_2026-09-29.md",
+    "?? docs/RETIRED_COLLECTOR_ALERT_FIX_2026-10-14.md",
+    "?? docs/ROOT_CAUSE_AND_ETF_GAP_AUDIT_2026-10-15.md",
+    "?? docs/SERVER_STORAGE_DEPLOYMENT_PLAN.md",
+    "?? docs/SSH_CONNECTION_DIAGNOSIS_2026-10-03.md",
+    "?? docs/TELEGRAM_COMMANDS_AND_SERVER_RECOVERY_2026-10-14.md",
+    "?? docs/TICKER_CSV_COLLECTION_2026-10-13.md",
+    "?? docs/TOSS_AND_CRYPTO_RECOVERY_2026-10-07.md",
+    "?? docs/TOSS_DAYMARKET_2026-09-28.md",
+    "?? docs/TRADE_TEST_EXCLUSION_2026-10-14.md",
+    "?? docs/WEB_DASHBOARD.md",
+    "?? docs/evidence/",
+    "?? docs/mm_state/",
+    "?? docs/refactoring/",
+    "?? main.py",
+    "?? output/",
+    "?? pytest.ini",
+    "?? refactoring_ai.md",
+    "?? refactoring_context.md",
+    "?? refactoring_plan.md",
+    "?? requirements-analysis.txt",
+    "?? requirements-fv-mm.txt",
+    "?? requirements-fv-pilot.txt",
+    "?? requirements-liquidity-mm.txt",
+    "?? requirements-mm-state-research.txt",
+    "?? scripts/activate_etf_first_signal_recovery.py",
+    "?? scripts/activate_etf_scope_release.py",
+    "?? scripts/activate_telegram_commands.py",
+    "?? scripts/analyze_crypto_capacity.py",
+    "?? scripts/analyze_fv_pilot.py",
+    "?? scripts/analyze_fv_run.py",
+    "?? scripts/analyze_liquidity_regimes.py",
+    "?? scripts/analyze_market_export.py",
+    "?? scripts/archive_legacy_scope_exports.py",
+    "?? scripts/archive_precompact_artifact.py",
+    "?? scripts/archive_retired_nats_gaps.py",
+    "?? scripts/archive_retired_venues.py",
+    "?? scripts/assess_mm_state_server.py",
+    "?? scripts/attach_crypto_recovery_coverage.py",
+    "?? scripts/audit_market_coverage.py",
+    "?? scripts/audit_original_fv_formulas.py",
+    "?? scripts/backup_crypto_cutover.py",
+    "?? scripts/backup_mock_journal.py",
+    "?? scripts/benchmark_fv_extract.py",
+    "?? scripts/benchmark_mm_state.py",
+    "?? scripts/build_all_strategy_report.py",
+    "?? scripts/build_crypto_release.py",
+    "?? scripts/build_etf_scope_release.py",
+    "?? scripts/build_fv_pilot_latency.py",
+    "?? scripts/build_release_images.py",
+    "?? scripts/build_telegram_restore_release.py",
+    "?? scripts/bybit_testnet_status.py",
+    "?? scripts/cancel_fv_owned_order.py",
+    "?? scripts/capture_parquet_jsonl.py",
+    "?? scripts/check_dashboard_server.py",
+    "?? scripts/check_etf_csv_sync_release.py",
+    "?? scripts/check_etf_scope_release.py",
+    "?? scripts/check_fv_connections.py",
+    "?? scripts/check_nonoverlap_ranges.py",
+    "?? scripts/collect_fv_mainnet.py",
+    "?? scripts/collect_fv_public.py",
+    "?? scripts/compare_event_run_cost.py",
+    "?? scripts/compare_l1_price_responses.py",
+    "?? scripts/compare_ledger_layouts.py",
+    "?? scripts/complete_fv_research_partitions.py",
+    "?? scripts/complete_mm_state_server_review.py",
+    "?? scripts/control_liquidity_volatility.py",
+    "?? scripts/crypto_capacity_log.py",
+    "?? scripts/deploy_collector_mock_alerts.py",
+    "?? scripts/deploy_dashboard.mjs",
+    "?? scripts/deploy_dual_mock.py",
+    "?? scripts/deploy_kiwoom_recovery.py",
+    "?? scripts/deploy_trade_report_exclusions.py",
+    "?? scripts/diagnose_fv_prediction.py",
+    "?? scripts/diagnose_mm_state_no_intents.py",
+    "?? scripts/enable_etf_mock_service.py",
+    "?? scripts/evaluate_fv_indicators.py",
+    "?? scripts/evaluate_regime_direction.py",
+    "?? scripts/exclude_mock_tests_20261014.py",
+    "?? scripts/export_dashboard_audits.py",
+    "?? scripts/export_market_snapshot.py",
+    "?? scripts/extract_pilot_liquidity_notional.py",
+    "?? scripts/finalize_crypto_load_trial.py",
+    "?? scripts/finalize_telegram_recovery.py",
+    "?? scripts/fix_retired_collector_alerts.py",
+    "?? scripts/fix_scope_disk_guard.py",
+    "?? scripts/fv_research_extract.py",
+    "?? scripts/fv_research_local_parallel.py",
+    "?? scripts/fv_research_pilot.py",
+    "?? scripts/fv_research_reduce.py",
+    "?? scripts/fv_research_server_finish.py",
+    "?? scripts/fv_research_slim.py",
+    "?? scripts/import_future_trading_csv.py",
+    "?? scripts/import_permission_reconstruction.py",
+    "?? scripts/inspect_fv_pilot.py",
+    "?? scripts/inspect_fv_run.py",
+    "?? scripts/inspect_pilot_schema.py",
+    "?? scripts/inspect_rollback_state.py",
+    "?? scripts/inspect_timefolio_metrics.py",
+    "?? scripts/install_etf_scope_release.py",
+    "?? scripts/install_future_trading_csv.py",
+    "?? scripts/inventory_fv_research.py",
+    "?? scripts/latency_trace_sitecustomize.py",
+    "?? scripts/launch_fv_pilot.py",
+    "?? scripts/launch_fv_run.py",
+    "?? scripts/launch_mock2_validation.py",
+    "?? scripts/measure_crypto_e2e.py",
+    "?? scripts/measure_crypto_latency.py",
+    "?? scripts/measure_maintenance_io.py",
+    "?? scripts/measure_pipeline_capacity.py",
+    "?? scripts/merge_fv_research_results.py",
+    "?? scripts/migrate_crypto_delivery_ledger.py",
+    "?? scripts/nats_crypto_status.py",
+    "?? scripts/normalize_mock2_product_env.py",
+    "?? scripts/os_disk_guard.py",
+    "?? scripts/package_dashboard.mjs",
+    "?? scripts/plot_fv_diagnosis.py",
+    "?? scripts/plot_fv_report.py",
+    "?? scripts/polish_strategy_report.py",
+    "?? scripts/prepare_crypto_event_index.py",
+    "?? scripts/prepare_crypto_replay_trace.py",
+    "?? scripts/prepare_etf_reference.py",
+    "?? scripts/prepare_trial_retention_policy.py",
+    "?? scripts/probe_crypto_prune_capacity.py",
+    "?? scripts/probe_derivative_streams.py",
+    "?? scripts/probe_etf_csv_close.py",
+    "?? scripts/probe_etf_inputs.py",
+    "?? scripts/probe_fv_archive.py",
+    "?? scripts/probe_fv_native.py",
+    "?? scripts/probe_fv_public_frames.py",
+    "?? scripts/probe_fv_testnets.py",
+    "?? scripts/probe_grvt_auth_candidates.py",
+    "?? scripts/probe_grvt_latency_readiness.py",
+    "?? scripts/probe_grvt_trade_selector.py",
+    "?? scripts/probe_kis_futures_scope.py",
+    "?? scripts/probe_kis_mock_rejection.py",
+    "?? scripts/probe_missing_etf_trades.py",
+    "?? scripts/probe_mock_summary.py",
+    "?? scripts/probe_publish_incident.py",
+    "?? scripts/probe_retired_alerts.py",
+    "?? scripts/probe_telegram_restart.py",
+    "?? scripts/provision_dashboard.py",
+    "?? scripts/r2_sqlite_baseline.py",
+    "?? scripts/read_fv_gaps.py",
+    "?? scripts/rebuild_fv_pilot_calibration.py",
+    "?? scripts/reclaim_current_local_snapshot.py",
+    "?? scripts/reclaim_export_duplicates.py",
+    "?? scripts/reclaim_retired_trial_cache.py",
+    "?? scripts/reclaim_unused_toss_trial_image.py",
+    "?? scripts/reclaim_verified_precompact.py",
+    "?? scripts/reconstruct_permission_denied_trades.py",
+    "?? scripts/record_main_server_recovery.py",
+    "?? scripts/recover_current_backup_receipt.py",
+    "?? scripts/recover_empty_mock2_probe.py",
+    "?? scripts/refresh_testnet_env.py",
+    "?? scripts/refresh_trade_valuation.py",
+    "?? scripts/relocate_closed_research_cache.py",
+    "?? scripts/render_strategy_report_pdf.py",
+    "?? scripts/replay_crypto_nats.py",
+    "?? scripts/replay_mm_state_revision.py",
+    "?? scripts/replay_storage_capacity.py",
+    "?? scripts/report_fv_indicator_research.py",
+    "?? scripts/report_liquidity_regimes.py",
+    "?? scripts/report_mm_state_revision.py",
+    "?? scripts/restore_dashboard_monitors.py",
+    "?? scripts/restore_vibetrading_server.py",
+    "?? scripts/retire_collectors_20261013.py",
+    "?? scripts/retire_dashboard_observers.py",
+    "?? scripts/run_crypto_e2e_audit.py",
+    "?? scripts/run_fv_pilot.py",
+    "?? scripts/run_fv_testnets.py",
+    "?? scripts/run_r2_maintenance_regressions.py",
+    "?? scripts/scope_inventory_20261013.py",
+    "?? scripts/seal_fv_indicator_report.py",
+    "?? scripts/set_kis_mock_stock_product.py",
+    "?? scripts/setup_crypto_load_trial.py",
+    "?? scripts/setup_crypto_maintenance_trial.py",
+    "?? scripts/shard_closed_fv_research.py",
+    "?? scripts/smoke_aligned_derivatives.py",
+    "?? scripts/smoke_crypto_feeds.py",
+    "?? scripts/smoke_telegram_commands.py",
+    "?? scripts/summarize_crypto_load_trial.py",
+    "?? scripts/validate_all_strategy_report.py",
+    "?? scripts/validate_kis_mock2_orders.py",
+    "?? scripts/verify_collector_mock_alerts.py",
+    "?? scripts/verify_collector_release_health.py",
+    "?? scripts/verify_crypto_delivery_ledger.py",
+    "?? scripts/verify_crypto_prune_generation_nats.py",
+    "?? scripts/verify_crypto_replay_integrity.py",
+    "?? scripts/verify_dual_mock.py",
+    "?? scripts/verify_etf_first_signal_recovery.py",
+    "?? scripts/verify_etf_scope_runtime.py",
+    "?? scripts/verify_event_runs_nats_e2e.py",
+    "?? scripts/verify_filtered_trade_reply.py",
+    "?? scripts/verify_fv_slim_bundle.py",
+    "?? scripts/verify_kiwoom_recovery.py",
+    "?? scripts/verify_maintenance_yield_e2e.py",
+    "?? scripts/verify_mm_state_on_server.py",
+    "?? scripts/verify_release_runtime.py",
+    "?? scripts/verify_scope_20261013.py",
+    "?? scripts/verify_telegram_restore.py",
+    "?? scripts/watch_crypto_load_trial.py",
+    "?? scripts/watch_fv_pilot.py",
+    "?? scripts/watch_fv_run.py",
+    "?? strategies/example_signal.py",
+    "?? strategy/",
+    "?? tests/",
+    "?? tmp/",
+    "?? vibetrading/"
+  ],
+  "scope": "Current source, tests, selected config/deploy; excludes credentials and runtime datasets",
+  "files": {
+    ".dockerignore": {
+      "sha256": "9a4a7c647ca6a54359fe20631cff6fb8193d81e0e6866c94289ddda3b2909c63",
+      "bytes": 326
+    },
+    ".gitignore": {
+      "sha256": "f917e9939e48cfc9c1c8c1606f94ec74ab87f708003bf7def4503d70e0cb1728",
+      "bytes": 304
+    },
+    "backtest/__init__.py": {
+      "sha256": "ac86e8e6df2ef89ba32068352c074a6edd92c9ce5f470f97ad3e38c15f0f4ed9",
+      "bytes": 281
+    },
+    "backtest/data_loader.py": {
+      "sha256": "8cf254dde9e6ff0dada82bdbdd412e503785e3b161ea57d4d554ec12167bfb24",
+      "bytes": 5214
+    },
+    "backtest/engine.py": {
+      "sha256": "a046daa086f90aadde1e3cd21c5afcc130e7e27f18fd39e4b0681b4199de5b23",
+      "bytes": 16054
+    },
+    "backtest/engine_router.py": {
+      "sha256": "48f66c265839486afa692232477be9dd11c2ffb37673e0cc6cf3b3cc9dfe9859",
+      "bytes": 660
+    },
+    "backtest/engines/__init__.py": {
+      "sha256": "a15b4d63b2adc622861a3379313619831cfc2972d0ea3c7662b4758ee73060d9",
+      "bytes": 535
+    },
+    "backtest/engines/arbitrage_engine.py": {
+      "sha256": "513d8f64f6fb87c500f65ad0e6ccb18a93b8236bee225d7f08a6a141fc9056ab",
+      "bytes": 659
+    },
+    "backtest/engines/portfolio_engine.py": {
+      "sha256": "9702a278dd96a161a4c6d51c213f1247ab456825f11a2d0c26bcdf12ab8ffd41",
+      "bytes": 669
+    },
+    "backtest/engines/trading_engine.py": {
+      "sha256": "89f326b91a2a06705d79c1f6fb327fb1b067acd9a2bd5f3ff948ea8c35c6c21f",
+      "bytes": 267
+    },
+    "backtest/walk_forward.py": {
+      "sha256": "9907767ed3b851d3383f2e509c080dc1a254fc5323d7632431aff07ec077c0d8",
+      "bytes": 10268
+    },
+    "config/crypto_runtime.yaml": {
+      "sha256": "412bd0a4f510de69c1377b24428ac74dd3aa0ce8deec5c4495cf697c1fd695cc",
+      "bytes": 370
+    },
+    "config/etf_strategy_provenance.json": {
+      "sha256": "532ce6ab78e842f573f313dbf77c1c87934c311d2ad65c0338842cae68871e78",
+      "bytes": 6608
+    },
+    "config/fv_mm_testnets.json": {
+      "sha256": "218eaa953b90a0bf47f685e6a1147dd733a5ba09450390edf75ea107b333bec3",
+      "bytes": 649
+    },
+    "config/fv_pilot_latency.json": {
+      "sha256": "3febdd5a5115ff9accd00e206215287ae96337ca15546012539aa6a46fdcebd4",
+      "bytes": 1708
+    },
+    "config/liquidity_mm_testnet.yaml": {
+      "sha256": "853aec9f0fe4b52c31d703e5bab983a022b9c1586a54c320f66698e60952e6d3",
+      "bytes": 1100
+    },
+    "config/ls_market_runtime.yaml": {
+      "sha256": "63d88fca785a06acc424ae82e617d5f3f771a113dceebe567f8d1375b7988b66",
+      "bytes": 280
+    },
+    "config/mm_state_latency_scenarios.json": {
+      "sha256": "a91b43b9f36f12f7fcf0e235f57675bb547aa82edb1906e879126756dd203242",
+      "bytes": 1037
+    },
+    "config/runtime.yaml": {
+      "sha256": "ba53e1decda890fb0b1c16ab925ca974ea3abde64b05d27f64cd41ab591d72a6",
+      "bytes": 496
+    },
+    "config/universe.yaml": {
+      "sha256": "b147e8afcede7e1a09e6c0ba43ed561f2a0cd9e2bc8fa01f38eb0bd8d5d68da4",
+      "bytes": 1489
+    },
+    "deploy/crypto-profile.yml": {
+      "sha256": "2343b00164f8ecacbf59325310f18e69e8338865ab92cc854155f4d775a86c60",
+      "bytes": 7865
+    },
+    "deploy/dashboard-compose.yml": {
+      "sha256": "b9fbb1388089c6b41d9cbdb8bf383a11106702c6d31577269000e2ff27f16f9e",
+      "bytes": 1993
+    },
+    "deploy/ls-market-profile.yml": {
+      "sha256": "25eb12fdf05fe3e69192d81139e50bd083323442459b415ef9809cad81587d3f",
+      "bytes": 935
+    },
+    "deploy/nats.conf": {
+      "sha256": "2d072e6f136852da8afbbee6ad0cb7163694915312543f5d4e418f47e52e1fd9",
+      "bytes": 505
+    },
+    "deploy/release1-overlay.yml": {
+      "sha256": "a84b732916f8a3c6cf8a0c5ca5e907db54db52a8753d30e27eb4df8f617c34b9",
+      "bytes": 2590
+    },
+    "Dockerfile": {
+      "sha256": "ade2788acf19c77686218dd056a4f7991f6b9d7b7d9f88251caa89bf7259895d",
+      "bytes": 1015
+    },
+    "Dockerfile.crypto": {
+      "sha256": "862ff7241487828ceaa41be1660668941bece584ee3f86b49eb73481169183e9",
+      "bytes": 696
+    },
+    "main.py": {
+      "sha256": "838b5bf6c41f635104b9c3050a30c684284c0513b060cf415e1c545322a623b6",
+      "bytes": 131
+    },
+    "pytest.ini": {
+      "sha256": "88f4e508ac8e7bc44a5dbed7e210bef69353e76a3ffc2d6d05029a7904788ebf",
+      "bytes": 146
+    },
+    "README.md": {
+      "sha256": "6e58fa69cfe086865ce4c81abe98c1e2b128b121731891b8b64ed9cdf630be2e",
+      "bytes": 44104
+    },
+    "refactoring_ai.md": {
+      "sha256": "ff26dda01196701fa01c86fde236f6c6d05fe1eb25ebcb0c65a2d57bc715adfb",
+      "bytes": 24797
+    },
+    "refactoring_context.md": {
+      "sha256": "0f2754a702ef9cb0c9ed36cae379ac3f5f794f37032efff169719fa60703a975",
+      "bytes": 24858
+    },
+    "refactoring_plan.md": {
+      "sha256": "0678733987187a790cdd0ed194bea8179cce4724375d3744c7986fe101c7fadb",
+      "bytes": 48801
+    },
+    "requirements-analysis.txt": {
+      "sha256": "2277aec4719c3ffda19f45bfdc22e59b4b43c9349156c0a83c4aad5b057e184d",
+      "bytes": 62
+    },
+    "requirements-fv-mm.txt": {
+      "sha256": "0b24cf55ba31bd042b4de8535d0102a0dbf52ce6686e76bd28fc2da1f72c13bb",
+      "bytes": 121
+    },
+    "requirements-fv-pilot.txt": {
+      "sha256": "5cf06051f7a9bd51b27e0cf909b920f059c6ddf034f7f816a9f6580330994683",
+      "bytes": 68
+    },
+    "requirements-liquidity-mm.txt": {
+      "sha256": "7df8ab05415cee8a684d59d9c46a6ed2cf5f37b9c56e537276c36c6e2d2dddcc",
+      "bytes": 277
+    },
+    "requirements-mm-state-research.txt": {
+      "sha256": "bed8420495fdc9892f330a65c6e6e486101d2cfe6ba594443f10ce07f9c0f32e",
+      "bytes": 68
+    },
+    "requirements.txt": {
+      "sha256": "9ffa094a9d1155101a640eb22f69b50f76ef362360fcf415d874732fc9c9e03d",
+      "bytes": 1454
+    },
+    "run_strategy.py": {
+      "sha256": "b16d264d3efba7c501521cd790af8611849842ae3ac396ebfeed5f0744629077",
+      "bytes": 11173
+    },
+    "scripts/activate_etf_first_signal_recovery.py": {
+      "sha256": "864127f6a65183120f55014be206cabc6302f5ff466124e8e03534ed2876b7a0",
+      "bytes": 2990
+    },
+    "scripts/activate_etf_scope_release.py": {
+      "sha256": "7c6a6c6ecf44f48c5cf28c4548c3154780701b0d636cabdd2190839326a98f90",
+      "bytes": 4221
+    },
+    "scripts/activate_telegram_commands.py": {
+      "sha256": "62e866fcdf44b4a19f0c924c9cf6d3531dcd049fedfaff371b2eeff7e4d12cc5",
+      "bytes": 1042
+    },
+    "scripts/analyze_crypto_capacity.py": {
+      "sha256": "fc9f847d89f222baa3b778d51b01b00cda99e604d049fb1c38e719b91433d83b",
+      "bytes": 4162
+    },
+    "scripts/analyze_fv_pilot.py": {
+      "sha256": "7943687fe5a39f781c51229c12b0f275db5f650848ebf221f01abfcbee4db618",
+      "bytes": 17887
+    },
+    "scripts/analyze_fv_run.py": {
+      "sha256": "98dbcc3be037585e0d322dac5e5dee73536160591d84c6e037cc25305d330b54",
+      "bytes": 20470
+    },
+    "scripts/analyze_liquidity_regimes.py": {
+      "sha256": "56c6335a218e68cdabd926764480cc7cd73bd6cfadf56b4eaf7aedfab75c684e",
+      "bytes": 18166
+    },
+    "scripts/analyze_market_export.py": {
+      "sha256": "701ebbcdc90fdec13de9b9cdaa11f16f418ce9223e0188516d0a53e8c973482e",
+      "bytes": 24298
+    },
+    "scripts/archive_legacy_scope_exports.py": {
+      "sha256": "291b736b4c3477795e66887285e29c53a7356ae04f30fb68e08130a29640aaca",
+      "bytes": 1548
+    },
+    "scripts/archive_precompact_artifact.py": {
+      "sha256": "291f48a3b5d370132d0513df21966b68ea7e95ce3b7c60ebd4db52588470a199",
+      "bytes": 4485
+    },
+    "scripts/archive_retired_nats_gaps.py": {
+      "sha256": "027e36dc17146960c25144381e055173f978e88fec3876d0ad7f7a45bcbb6e4e",
+      "bytes": 2022
+    },
+    "scripts/archive_retired_venues.py": {
+      "sha256": "c617232e1451f2c5ed0bfb0b8a977d7e60d221c5f1fad64799710655508e4d0a",
+      "bytes": 5174
+    },
+    "scripts/assess_mm_state_server.py": {
+      "sha256": "90fa674c72a53f2bdda5d343d01061c74f904f915624b5294ee7d8063c3108d6",
+      "bytes": 2279
+    },
+    "scripts/attach_crypto_recovery_coverage.py": {
+      "sha256": "45f07e77f155afde648cf847cb488388574b352343c6dca5ee85f1622c54c46d",
+      "bytes": 4480
+    },
+    "scripts/audit_market_coverage.py": {
+      "sha256": "89bf102062b386af35990eed0b30ce3c226a238618c4a8cb97ffe1e41388f08f",
+      "bytes": 19535
+    },
+    "scripts/audit_original_fv_formulas.py": {
+      "sha256": "e8ed285b3302e08552a51b9263c5c45458d1425cb743c09e72fe696e5f13734c",
+      "bytes": 4045
+    },
+    "scripts/backup_crypto_cutover.py": {
+      "sha256": "204ea4e90ae2ece12700a436282ac6bd2a55a21f97fcb1e7284c228de8ea0bc3",
+      "bytes": 10174
+    },
+    "scripts/backup_mock_journal.py": {
+      "sha256": "c05859e01ab96584dc5fd6914d638cc5c8ff49f5a2419ac53ccd1dadad374204",
+      "bytes": 738
+    },
+    "scripts/benchmark_fv_extract.py": {
+      "sha256": "ec5f646ce9503ee09c456616785766ab0c1202ff6558fd79c2bad6d7225db80e",
+      "bytes": 712
+    },
+    "scripts/benchmark_mm_state.py": {
+      "sha256": "6b02d44e69e389a327a05c2b146c50bac3ead5c0943777509c7c5be74713d9e7",
+      "bytes": 4460
+    },
+    "scripts/build_all_strategy_report.py": {
+      "sha256": "d8fb550d1fd78415f7a0520f9e9ca76202c3307296f1784273dcab83eab37e7d",
+      "bytes": 99203
+    },
+    "scripts/build_crypto_release.py": {
+      "sha256": "613e1be54b6e977a4cd9b8f0bc685de44ab05210d2f89be1bca9f16d7c05f9fe",
+      "bytes": 9613
+    },
+    "scripts/build_etf_scope_release.py": {
+      "sha256": "e10416c89193ef345e3f82e097c939ce5a3a8a323241b1a984f1ffd56b128396",
+      "bytes": 2110
+    },
+    "scripts/build_fv_pilot_latency.py": {
+      "sha256": "61c5e20daae611b15f6b43c6f693e462b944f9d6685afc7f2cf2167afed11ba2",
+      "bytes": 2822
+    },
+    "scripts/build_release_images.py": {
+      "sha256": "3b34589d824bfae1509f9fe396e10a137032c92cd4f33055b6a8427ba9c2d31b",
+      "bytes": 7746
+    },
+    "scripts/build_telegram_restore_release.py": {
+      "sha256": "ceea517230fd6b0a15253e586b67017d949fbb9cfdf7e45d430370daaf048fb6",
+      "bytes": 1607
+    },
+    "scripts/bybit_testnet_status.py": {
+      "sha256": "76ad0de2362055431639dcd40ff6c1ac5b7ba32077d2c7cfa0ba484adc21e9c8",
+      "bytes": 1561
+    },
+    "scripts/cancel_fv_owned_order.py": {
+      "sha256": "f9ef50b94781e0c8c967ae93845f404d0ff1248e4519f3d43a21cf6472fc878f",
+      "bytes": 1044
+    },
+    "scripts/capture_parquet_jsonl.py": {
+      "sha256": "87cf17be6b7f381ee68ff3fe6962cd8347d5cf156b6be1effd7994204d4ccc00",
+      "bytes": 2283
+    },
+    "scripts/check_dashboard_server.py": {
+      "sha256": "3c5051a4e035be0ad62495c0a779d6ae003225a934a8480f9a49c8dd13e965ff",
+      "bytes": 1878
+    },
+    "scripts/check_etf_csv_sync_release.py": {
+      "sha256": "8949e50df43b46f3f222ec3bd3d75e34bc98111f1ffde774c2a94c3b340c6c9e",
+      "bytes": 939
+    },
+    "scripts/check_etf_scope_release.py": {
+      "sha256": "8fc741932d08e598af95cd15b0b6ed4bb0187129da9d341e3ca79eef70d7a2dc",
+      "bytes": 1028
+    },
+    "scripts/check_fv_connections.py": {
+      "sha256": "03a635be97442d72b2129bc9c301aeb14d7db6196b855b1e1e64636303449aa0",
+      "bytes": 1567
+    },
+    "scripts/check_nonoverlap_ranges.py": {
+      "sha256": "b233a1daf532f16c90985e4df0df2418aafc48fde969dfa065daa6670c10d29d",
+      "bytes": 732
+    },
+    "scripts/collect_fv_mainnet.py": {
+      "sha256": "50bae68895f2a75df6d93330d2d765cc9238357a4af35254964ac5fcf36cef02",
+      "bytes": 3920
+    },
+    "scripts/collect_fv_public.py": {
+      "sha256": "72d7f9df0c5ec73ae46ec3211bd6e1fc9dd20dab0d83d5880e6646f527c424a4",
+      "bytes": 3952
+    },
+    "scripts/compare_event_run_cost.py": {
+      "sha256": "d386ab3637c266fa45e01101420fe9e09cc2eb098bc6dc21c47a92990ad03177",
+      "bytes": 5487
+    },
+    "scripts/compare_l1_price_responses.py": {
+      "sha256": "2c6acc7f00e8b230a92940d496ca14fc1e5432fbfd4bd12a046f16dde001c054",
+      "bytes": 2866
+    },
+    "scripts/compare_ledger_layouts.py": {
+      "sha256": "b12f555c9c84dbfe789e1fb5cfbeb45ae184d8b03748a628dbf82a97236315f1",
+      "bytes": 4961
+    },
+    "scripts/complete_fv_research_partitions.py": {
+      "sha256": "86633e8b5504a4a5fa8d27331717d77f98a3b8061a0832bed25013dbff8db555",
+      "bytes": 1974
+    },
+    "scripts/complete_mm_state_server_review.py": {
+      "sha256": "c32b260fe6c34dd806c6b7bbf09acdc9ae86e829ace002e27aba522ea37a6188",
+      "bytes": 3387
+    },
+    "scripts/control_liquidity_volatility.py": {
+      "sha256": "954ff75d753c9865b3d7954c8197be7916bbe35bdbaf0f52b24b880527cadd12",
+      "bytes": 3346
+    },
+    "scripts/crypto_capacity_log.py": {
+      "sha256": "8aa76672e2664b190a593352189472fd9c5b98b002e38bb0b34a561d56200d2a",
+      "bytes": 5350
+    },
+    "scripts/deploy_collector_mock_alerts.py": {
+      "sha256": "258576224fe2fc42f8f9d344a06dc2911896d86b375a22899cb4444e6c142f20",
+      "bytes": 3071
+    },
+    "scripts/deploy_dual_mock.py": {
+      "sha256": "50371c5ad656bac9aff9aa06bbe0086c189132367d0884f9d908cfb1fbeafee6",
+      "bytes": 2767
+    },
+    "scripts/deploy_kiwoom_recovery.py": {
+      "sha256": "130ff809a9a3f5ba71f97f0cd16cc8f2a081117cf1547aa0aed158e648285921",
+      "bytes": 1515
+    },
+    "scripts/deploy_trade_report_exclusions.py": {
+      "sha256": "e295bf764c1972596320ea603e5f514362f6173c88fccf82652be8cc579954cd",
+      "bytes": 2574
+    },
+    "scripts/diagnose_fv_prediction.py": {
+      "sha256": "9dff3f58408f3ed5fa9feb4ff5ce03a487a6044125117d8135a9f8437874955e",
+      "bytes": 15235
+    },
+    "scripts/diagnose_mm_state_no_intents.py": {
+      "sha256": "1f2f1f49bb954d3a1080785f4f866511313e022f69cdbc26fd8f4895e1f080da",
+      "bytes": 3433
+    },
+    "scripts/enable_etf_mock_service.py": {
+      "sha256": "ab4ca40a04d6b481bf517d01629da0a1dbafe3685b8973f6b3e3543e64377ff1",
+      "bytes": 1730
+    },
+    "scripts/evaluate_fv_indicators.py": {
+      "sha256": "e3067a9144e5f990a99e85e48c94daa556a2b5f51c967b3224ed35cdc59eebb4",
+      "bytes": 14991
+    },
+    "scripts/evaluate_regime_direction.py": {
+      "sha256": "52c4190e62a79a35ac378460e7ea8f2e5fa8ab6117baccf28ccf2bfd4de75148",
+      "bytes": 3308
+    },
+    "scripts/exclude_mock_tests_20261014.py": {
+      "sha256": "65749147bb4c0204f83e2e5c5ce6a10d9cc98ce9c5fc88b965fa748fe1010299",
+      "bytes": 3017
+    },
+    "scripts/export_dashboard_audits.py": {
+      "sha256": "0eb10246c6d9e1c5eea2437c7d8d284231d56a08e3891ce99d6e330b6e822c31",
+      "bytes": 551
+    },
+    "scripts/export_market_snapshot.py": {
+      "sha256": "c10634c1a4d96610bc9c8225c765cb99219e0f77baf62d1099bc1d3e7d453b11",
+      "bytes": 10579
+    },
+    "scripts/extract_pilot_liquidity_notional.py": {
+      "sha256": "343ea4325fc7ec02d31b7a621bb60a2ea66f16753f43f872692d3182567b5554",
+      "bytes": 4179
+    },
+    "scripts/finalize_crypto_load_trial.py": {
+      "sha256": "a2510812fb43d95b82250be5fc25de5902b30f57bb72744387307ac59e64c308",
+      "bytes": 7764
+    },
+    "scripts/finalize_telegram_recovery.py": {
+      "sha256": "7cce90de9db34ab756ca9750c367762efb7aed210bc95614cd43ed7d3a0bdbbc",
+      "bytes": 3529
+    },
+    "scripts/fix_retired_collector_alerts.py": {
+      "sha256": "25dc2de780201d32d338083bd9eed79bacfd597a9701e6580161b57793fdca97",
+      "bytes": 3769
+    },
+    "scripts/fix_scope_disk_guard.py": {
+      "sha256": "04663484b847644f699cdcdbf037fdcc24f379ca3dfdeadaec380050f866ea20",
+      "bytes": 704
+    },
+    "scripts/fv_research_extract.py": {
+      "sha256": "f6d0fec177a2bb115263151df259b1abad591abb6f9439eae27b83f42512ade4",
+      "bytes": 12844
+    },
+    "scripts/fv_research_local_parallel.py": {
+      "sha256": "3711e921ee80d5807ee50467cd5cb7a8da73ffc20e0c29a41128b489d9a1965f",
+      "bytes": 1868
+    },
+    "scripts/fv_research_pilot.py": {
+      "sha256": "4f719278e720763b080e2293e127238045b414883d78239a507b221a6852dc9e",
+      "bytes": 3073
+    },
+    "scripts/fv_research_reduce.py": {
+      "sha256": "6f341e2efe626c014dd5f61cd11818fea01648b85569f08c9727638390123489",
+      "bytes": 5743
+    },
+    "scripts/fv_research_server_finish.py": {
+      "sha256": "39ccfcc3219a84ecb785625be1f3c9470928d9ff000f02bfa46b8d73bd0b1ccb",
+      "bytes": 294
+    },
+    "scripts/fv_research_slim.py": {
+      "sha256": "c79a6ca321ab96fd7aef39be32e6a3dbec639c1fcceb6a6f147583fe25f163cd",
+      "bytes": 1479
+    },
+    "scripts/import_future_trading_csv.py": {
+      "sha256": "4a21b88238cec704cd3927fc30619ca6e712445e7274abfb5d30743a05e1b278",
+      "bytes": 2738
+    },
+    "scripts/import_permission_reconstruction.py": {
+      "sha256": "f41d20e45cc7b9eeb42bbdea5f7aff412791a38a9aacf463f94561a2c660015d",
+      "bytes": 1642
+    },
+    "scripts/init_db.py": {
+      "sha256": "39d600fc679e03b2833c345dfe2f83fa2ade1c57556e674b4c70154e7d04ef91",
+      "bytes": 5780
+    },
+    "scripts/init_nats.py": {
+      "sha256": "a296b8aedd43a3f0e05729fb6c675c0ab8743fb4d909e2f3a18732b00c1e35cb",
+      "bytes": 6435
+    },
+    "scripts/inspect_fv_pilot.py": {
+      "sha256": "d9c48944d45103f77efb3d038c8de6a28713ca5fdbced78becaf8066bf15bdb5",
+      "bytes": 1441
+    },
+    "scripts/inspect_fv_run.py": {
+      "sha256": "c8da8faec9d511c3681c0ccaecc3326b6c2d138da889f87360c7e1fc936d1592",
+      "bytes": 977
+    },
+    "scripts/inspect_pilot_schema.py": {
+      "sha256": "b5bad62e157539e0498db0275832efc1998293e56f9dfb486deb6fe3f9224dd4",
+      "bytes": 494
+    },
+    "scripts/inspect_rollback_state.py": {
+      "sha256": "2a6d6f006007fd298d23f37893fa7918c0720a5e132d409320d7c75ec7d46044",
+      "bytes": 1166
+    },
+    "scripts/inspect_timefolio_metrics.py": {
+      "sha256": "af75855722684199236d915abf64244da565a395f1e735ba9e22b10f1f17d0e7",
+      "bytes": 1006
+    },
+    "scripts/install_etf_scope_release.py": {
+      "sha256": "6c934b69559dedff84a448e91a60252ef29b24a654c9ec8df212e1c0ad344c59",
+      "bytes": 1656
+    },
+    "scripts/install_future_trading_csv.py": {
+      "sha256": "5c7115d76375f04fa5a9e3133f1fb54d26dec6947a4981b6b2125076109fab2c",
+      "bytes": 1464
+    },
+    "scripts/inventory_fv_research.py": {
+      "sha256": "ab32e3de771be1244ec83b7e550b8b9302ae0c9b5f8209614cbd9a458b999a04",
+      "bytes": 945
+    },
+    "scripts/latency_trace_sitecustomize.py": {
+      "sha256": "785d60a281069e24612cb2f3dca0fc11311b8743f0c024b910485562723d29c5",
+      "bytes": 3430
+    },
+    "scripts/launch_fv_pilot.py": {
+      "sha256": "c596be08e9bc24a4fe62eba27ab13446e4c77a7da74106e6d18b09effbeeb89a",
+      "bytes": 1597
+    },
+    "scripts/launch_fv_run.py": {
+      "sha256": "5afc6ca21fa48c8f82d2209b820496db017b29f9d41494a746634d2f93e90a8e",
+      "bytes": 1223
+    },
+    "scripts/launch_mock2_validation.py": {
+      "sha256": "8be10296250b2c1fe152932886c59db26e9a977afba4c59f676e08c3e5c589aa",
+      "bytes": 1074
+    },
+    "scripts/measure_crypto_e2e.py": {
+      "sha256": "9d302606547cace4a5db1d62cf764f4535e0cbf7f4e3472d09b3d6c00151de62",
+      "bytes": 24292
+    },
+    "scripts/measure_crypto_latency.py": {
+      "sha256": "c1fcddbd7c151ac398c85f8f01ee1a53fbff4d38686298f335b03195f4eefa99",
+      "bytes": 6105
+    },
+    "scripts/measure_maintenance_io.py": {
+      "sha256": "cf087f3f97786391cc77a3d50069114d946577e369f56ba110140db08047e825",
+      "bytes": 3482
+    },
+    "scripts/measure_pipeline_capacity.py": {
+      "sha256": "5c3bf88bf13e76726131793278e652f9ac8090679049d902a08b5dda1de21ea3",
+      "bytes": 4177
+    },
+    "scripts/merge_fv_research_results.py": {
+      "sha256": "e52c3679b29f10e5fcb9752ffa5e8eabf5ec3c93326ba4f4c6f0c1c8640be2ad",
+      "bytes": 1503
+    },
+    "scripts/migrate_crypto_delivery_ledger.py": {
+      "sha256": "131118f73a7e44a19ad0a9379e03871dc25dbb16f38302ecd4c7de858155a35a",
+      "bytes": 10388
+    },
+    "scripts/nats_crypto_status.py": {
+      "sha256": "27609fafca1bdd02073e840dfdfdb22180c015d73f5a698de85e9ff646a530cb",
+      "bytes": 2143
+    },
+    "scripts/normalize_mock2_product_env.py": {
+      "sha256": "6a35df01fa35963020f71f34212252db7e0c0efc05e1ff532e42230f159d4103",
+      "bytes": 324
+    },
+    "scripts/os_disk_guard.py": {
+      "sha256": "5ef269ce33aefb3f6301804f4ef431b02ad0d5061b52ef66ebd6e1207eaab8cb",
+      "bytes": 2047
+    },
+    "scripts/plot_fv_diagnosis.py": {
+      "sha256": "abda3b54b2bc02ca4342a5d30ad9a18a4ab4c8553e7486deaf70609687266062",
+      "bytes": 2960
+    },
+    "scripts/plot_fv_report.py": {
+      "sha256": "e8d342d88eaec235907da6b203c3c43f78bfceefd6a2d089b738f5ce1d9f88f4",
+      "bytes": 3498
+    },
+    "scripts/polish_strategy_report.py": {
+      "sha256": "c492952be9b78ce96b93a10490a01c79373b2c178dd2c31cc6c643da75684986",
+      "bytes": 4658
+    },
+    "scripts/prepare_crypto_event_index.py": {
+      "sha256": "82a0270152a1d89f015500839ae8ff2cdf6f2bead02b9f01e43f3a36b780f27b",
+      "bytes": 6934
+    },
+    "scripts/prepare_crypto_replay_trace.py": {
+      "sha256": "78f27ca030ccf96c1c127c3aabcd94f8916e95cee5dea64ebf9ff4cb5bee6739",
+      "bytes": 7065
+    },
+    "scripts/prepare_etf_reference.py": {
+      "sha256": "7a821bcc2dd3bac104550b8db548644c0a74ce80b45cb8918e1e02a2c2e8e821",
+      "bytes": 2097
+    },
+    "scripts/prepare_trial_retention_policy.py": {
+      "sha256": "cae648f73d6c22df2a7674df7bc7b4ad7f6ec2d1e54dd82318edf1b60515168e",
+      "bytes": 2869
+    },
+    "scripts/probe_crypto_prune_capacity.py": {
+      "sha256": "9853357c09abc04a52b86cecd1a12252459bfa2b2b70a4d98bba204db6e79050",
+      "bytes": 5776
+    },
+    "scripts/probe_derivative_streams.py": {
+      "sha256": "0f015b31fbd4dfc19558e6f806064b062d4d723e995f992dcdd57a54de38b466",
+      "bytes": 1407
+    },
+    "scripts/probe_etf_csv_close.py": {
+      "sha256": "e83ea1b8229c92c34e1362ec2e3d1179b021b475cd363a20295e5ff4133488f3",
+      "bytes": 2487
+    },
+    "scripts/probe_etf_inputs.py": {
+      "sha256": "acc34475bf81262044b1190fa228d0bb3249f8b998cddd8d89649837ad10d75f",
+      "bytes": 2751
+    },
+    "scripts/probe_fv_archive.py": {
+      "sha256": "29fda0d6faccf753bfc9446d35c9a386478e5e478f1cbe8d5368555955c0fda0",
+      "bytes": 637
+    },
+    "scripts/probe_fv_native.py": {
+      "sha256": "91937f477e019d8543e7864d3a6a2f84752e4b7c3e5a389b292818f6f3ff63ce",
+      "bytes": 767
+    },
+    "scripts/probe_fv_public_frames.py": {
+      "sha256": "72df60929a901eab5bc58b9dfff7edc55aa0bd10b6b6b697ddbfc9914f622acf",
+      "bytes": 1640
+    },
+    "scripts/probe_fv_testnets.py": {
+      "sha256": "c4f8fe1ddd615a23539216d8aa997e00e2b2fd87f8b9d4c9c75ceee5563b9a02",
+      "bytes": 3074
+    },
+    "scripts/probe_grvt_auth_candidates.py": {
+      "sha256": "d57ff4149a1a01fa03c37da136d1e23bacc37d455fac38c36c72991ab80d9aa7",
+      "bytes": 1225
+    },
+    "scripts/probe_grvt_latency_readiness.py": {
+      "sha256": "9a07bbc3f8a4ded6f8a6cc007d4636c84b8de9875de80919f8b10fa5271c5d60",
+      "bytes": 2029
+    },
+    "scripts/probe_grvt_trade_selector.py": {
+      "sha256": "092b376b698792a242845e92d982e22c566c9e68fb68af96e1a025b1726f5626",
+      "bytes": 1354
+    },
+    "scripts/probe_kis_futures_scope.py": {
+      "sha256": "414fe207764b42183ac08a5eb984df2ad94f729e8a91b82fc245d94cc686dcb8",
+      "bytes": 991
+    },
+    "scripts/probe_kis_mock_rejection.py": {
+      "sha256": "3f954b04f3c3bf541a7eb983e3d502ad0bbce39b0b3119c5474f0015d68b4383",
+      "bytes": 2033
+    },
+    "scripts/probe_missing_etf_trades.py": {
+      "sha256": "1e1d44fabe1ed20e67fa0e7d23c9d7e733266fc2562c50df6d762a338e0f8c06",
+      "bytes": 2907
+    },
+    "scripts/probe_mock_summary.py": {
+      "sha256": "0c75bcb31695ba1db61a63d1c3ba27dba33f0c257087ed691f94989d0576ef7b",
+      "bytes": 852
+    },
+    "scripts/probe_publish_incident.py": {
+      "sha256": "5e812a2082934a798dfca7e3b7301023a03ce4acc6f632be9ebaa2f0816d8290",
+      "bytes": 2038
+    },
+    "scripts/probe_retired_alerts.py": {
+      "sha256": "fe0be5dc3071866cdcbbd716b1d1445be120d0e5fc7c3fb988ca20e3e3858e4d",
+      "bytes": 580
+    },
+    "scripts/probe_telegram_restart.py": {
+      "sha256": "566787a1915ba7c0defc292e0c98040619ff20d3f22afc5f298453127d89c42a",
+      "bytes": 731
+    },
+    "scripts/provision_dashboard.py": {
+      "sha256": "be1bcddcda21fd6d652f47bda68de5da8c7baa45631751035a08a0d2e02a62e8",
+      "bytes": 3052
+    },
+    "scripts/r2_sqlite_baseline.py": {
+      "sha256": "14fa93034cb2378095f039f396d91369cfcd68458431dbbbff8fb1eed8b00836",
+      "bytes": 3319
+    },
+    "scripts/read_fv_gaps.py": {
+      "sha256": "b8168c128df2bf98c0daf83cc273294f6dfe225a1c2b310f3d8282cc95192b8b",
+      "bytes": 743
+    },
+    "scripts/rebuild_fv_pilot_calibration.py": {
+      "sha256": "20b59e86b96e7f3c6875018afa781f91d49f4a350095e3f06f5965b5ae53b285",
+      "bytes": 3335
+    },
+    "scripts/reclaim_current_local_snapshot.py": {
+      "sha256": "f766e5ed753a262b25f8ac3a70dbba3a37b286003c72f01b975cc2f679a9e47a",
+      "bytes": 2539
+    },
+    "scripts/reclaim_export_duplicates.py": {
+      "sha256": "eb15d25bfe6358dbb17ea0d644db8a2b4a9af3ebbbaf2ac105ea4efc0913f6a3",
+      "bytes": 7893
+    },
+    "scripts/reclaim_retired_trial_cache.py": {
+      "sha256": "e6ab9ce9e337ff41911cda7bdd293ebbc4676c8513f92b0dc2e35bbdc30fa3cd",
+      "bytes": 2541
+    },
+    "scripts/reclaim_unused_toss_trial_image.py": {
+      "sha256": "7e862d03f7a19901241997914a71dc89f7576b49ef4649df153ddfd60e51d38d",
+      "bytes": 1618
+    },
+    "scripts/reclaim_verified_precompact.py": {
+      "sha256": "09775a6ccd9e257792666844a094b8c14909c417a43fd353810a12a0178102b9",
+      "bytes": 3271
+    },
+    "scripts/reconstruct_permission_denied_trades.py": {
+      "sha256": "f2c8b59439a4426ea10fb711eb0a642d51b07e052bc5ea035de833a50f213c90",
+      "bytes": 5537
+    },
+    "scripts/record_main_server_recovery.py": {
+      "sha256": "96767386d069552b8aa095ffbb3a10000815906d1def75d17271e334e5229a4a",
+      "bytes": 2098
+    },
+    "scripts/recover_current_backup_receipt.py": {
+      "sha256": "e750479d8e2cae8dd5d4e91e74b0189f26333a524f58cd1f50b5ffd54cfdd78c",
+      "bytes": 2919
+    },
+    "scripts/recover_empty_mock2_probe.py": {
+      "sha256": "cc20b59e68035708fb61c9b067fbc8b7ee776be652f7210a5560720898a08911",
+      "bytes": 510
+    },
+    "scripts/refresh_testnet_env.py": {
+      "sha256": "88e5d7913d7ad8a4f242ca8b14a8db3142e3861941fe88f85b808ef69c0d9992",
+      "bytes": 643
+    },
+    "scripts/refresh_trade_valuation.py": {
+      "sha256": "87a8a7f52604145968f957a801781d1de71765fe20e7d985df208cccf7fae872",
+      "bytes": 830
+    },
+    "scripts/relocate_closed_research_cache.py": {
+      "sha256": "2cccbc6e10964a481925142d600265c6fd33c8426a3ddede84f9ba459381a428",
+      "bytes": 2014
+    },
+    "scripts/render_strategy_report_pdf.py": {
+      "sha256": "774da511467776a048fa623175a8c88711f72f15ab032ab013f8545d6301a3e1",
+      "bytes": 9834
+    },
+    "scripts/replay_crypto_nats.py": {
+      "sha256": "618b65d9e9f54a951d4e7882f674f963438c765877a7219da8c80a4c39aee274",
+      "bytes": 9395
+    },
+    "scripts/replay_mm_state_revision.py": {
+      "sha256": "6f769bc10ff88eaf3ace168d0ade2f0433d68bc9708dcb3342e67976987b2f22",
+      "bytes": 12987
+    },
+    "scripts/replay_storage_capacity.py": {
+      "sha256": "df70ed8e6a8e84eb032e7c1de35a2e13cfe568a12d3f5cf136cc4070e6258f6f",
+      "bytes": 3432
+    },
+    "scripts/report_fv_indicator_research.py": {
+      "sha256": "eecc6b6cc7b54377756094eebf309d2cca9ae150be2b319dafe2cc7ca0ce2606",
+      "bytes": 41560
+    },
+    "scripts/report_liquidity_regimes.py": {
+      "sha256": "a781d34290a03d6a21d8fe9cefb6bca0a9c30a577b01ef1b67a6e2f5cc5c1615",
+      "bytes": 32337
+    },
+    "scripts/report_mm_state_revision.py": {
+      "sha256": "d1ccdbbc7cce46a180c25ed8aa69703d86042a1fc10f55a7a64979fac27da018",
+      "bytes": 26302
+    },
+    "scripts/restore_dashboard_monitors.py": {
+      "sha256": "62411885ba002e4b09fb9ab4618655af3a202910e163c4249bfd07c0996e5d22",
+      "bytes": 4588
+    },
+    "scripts/restore_vibetrading_server.py": {
+      "sha256": "79af220c844c1458c59e3d3ecfc1157db81e5a66bd17a64c7eef4e1f015dcf67",
+      "bytes": 8492
+    },
+    "scripts/retire_collectors_20261013.py": {
+      "sha256": "a70e7473dde1a5ea6f9ca385af961be660b2da70a6ec822cac8d1bb516a26f39",
+      "bytes": 812
+    },
+    "scripts/retire_dashboard_observers.py": {
+      "sha256": "09eabd9f9db5df3ed8f5a12d664181f3c5da01b60e636e8633986356a1290c2b",
+      "bytes": 2003
+    },
+    "scripts/run_backtest.py": {
+      "sha256": "0c6020563abc52ef29e6f6c7db461e89fe60ff2820578019cb4eea372008151f",
+      "bytes": 7252
+    },
+    "scripts/run_crypto_e2e_audit.py": {
+      "sha256": "b6df058081ad9d22b25c85a7317ed4c6131a7d22f0e2524ae4edea4c3cef85fa",
+      "bytes": 5510
+    },
+    "scripts/run_fv_pilot.py": {
+      "sha256": "5ef6c32b7c3467fe518b68e0ebee18fad3e8784012083de05c3cb559c79b8efb",
+      "bytes": 883
+    },
+    "scripts/run_fv_testnets.py": {
+      "sha256": "4571e086fd854ea4af9da09df89c40562a31c63a2e4da2d86913f0c6031f4473",
+      "bytes": 1400
+    },
+    "scripts/run_r2_maintenance_regressions.py": {
+      "sha256": "47160f11ed8ff0422463810c58bc2d67e8caa0fa5e4f93bf5620b4db6afe1b60",
+      "bytes": 2016
+    },
+    "scripts/scope_inventory_20261013.py": {
+      "sha256": "08213fb5f1619bfc390bf9b0ccdb7a6487fd4234f2c0db873e82bc94bbc7af1c",
+      "bytes": 1504
+    },
+    "scripts/seal_fv_indicator_report.py": {
+      "sha256": "8b5984f5537a12b61a94accd5af1a783b90d86dd06c6a0c0e3056d5dd6c6c93d",
+      "bytes": 7726
+    },
+    "scripts/set_kis_mock_stock_product.py": {
+      "sha256": "4a3f34063103606d28f1ba8f7f37e3fd0c7c65de59e82e219185d1a1b9234c4a",
+      "bytes": 641
+    },
+    "scripts/setup_crypto_load_trial.py": {
+      "sha256": "cd749284ef3450185340c35109ce0aff8d1dfdd1024db136b5990860775e867b",
+      "bytes": 14272
+    },
+    "scripts/setup_crypto_maintenance_trial.py": {
+      "sha256": "6480609f533c4435081c24502206d8a719f18f16cb0b8da43bee4986586b22d8",
+      "bytes": 10342
+    },
+    "scripts/shard_closed_fv_research.py": {
+      "sha256": "5d101bf0955f6a55286e85f0b675381281e45e22637f2a77bc2a4ef3dc790bfc",
+      "bytes": 1610
+    },
+    "scripts/smoke_aligned_derivatives.py": {
+      "sha256": "7955e2641e23a235b16c933a337ae200c474cb40c7f9fea0661ab03b003e3388",
+      "bytes": 2222
+    },
+    "scripts/smoke_crypto_feeds.py": {
+      "sha256": "e9e449652604a00ebc25c48169daff8d041160f021dcff23faee6a58ac98fec9",
+      "bytes": 2829
+    },
+    "scripts/smoke_telegram_commands.py": {
+      "sha256": "17df9ed6b7a4482ffe466a8d1476acde8348096be0d6651e701a3cb967cdb3f7",
+      "bytes": 1100
+    },
+    "scripts/summarize_crypto_load_trial.py": {
+      "sha256": "032ecbe5487e93e300544a2b8d16bfe6f190caacd55fc86cc0e4c685a34ca68b",
+      "bytes": 3135
+    },
+    "scripts/validate_all_strategy_report.py": {
+      "sha256": "066b84270d300f231110fd226ed74713ae1bc45318ed7e51412b1bf559c22b17",
+      "bytes": 4502
+    },
+    "scripts/validate_crypto_data_saving.py": {
+      "sha256": "4a5ed5bcebcf75b9e14a95f858ead34d743aa188d6dd56de29ccfc8c1846451e",
+      "bytes": 2663
+    },
+    "scripts/validate_kis_mock2_orders.py": {
+      "sha256": "688a87868164cd7fb584f5e5b847207f06531621dd5123ad4711c52c463f5f9a",
+      "bytes": 4912
+    },
+    "scripts/validate_system.py": {
+      "sha256": "e98cd3156b869b7aaddb0e14855ff88c9529479c2757698fae9b3bd1354be4d1",
+      "bytes": 7621
+    },
+    "scripts/verify_collector_mock_alerts.py": {
+      "sha256": "ac893581dbb813e30d24f426890eed1028e297bf428bc9df93f956966795fa52",
+      "bytes": 1768
+    },
+    "scripts/verify_collector_release_health.py": {
+      "sha256": "af4fd530cca991ab944591f9a3cdf0b34ee6fe24cfad056d1af9b5826d97a372",
+      "bytes": 2618
+    },
+    "scripts/verify_crypto_delivery_ledger.py": {
+      "sha256": "9dce87c33acf3ae67630c8f1649f934e7a1fe2235eb79be86e504592eb252d0b",
+      "bytes": 1904
+    },
+    "scripts/verify_crypto_prune_generation_nats.py": {
+      "sha256": "c2ac468b6f375864c381ac5ce9b5e0ee5dab7c6db4858d11a81791dc967b8c2c",
+      "bytes": 6946
+    },
+    "scripts/verify_crypto_replay_integrity.py": {
+      "sha256": "b1b06f842f7fff0a397ee86dce40b1a622cbc3bdfde9767e31f1996e71977bd6",
+      "bytes": 14915
+    },
+    "scripts/verify_dual_mock.py": {
+      "sha256": "4053878a02cc149730dcad6622d92aeb59e2ce3e453fd0bce1b8f9042b7047e1",
+      "bytes": 2876
+    },
+    "scripts/verify_etf_first_signal_recovery.py": {
+      "sha256": "c43f3283f4b6098cb650bdbab45935f9bb7d599f3ddd6cd1742aed63eb935ed0",
+      "bytes": 2039
+    },
+    "scripts/verify_etf_scope_runtime.py": {
+      "sha256": "2bcaa6fdbe2d347fbda2f9417011d528802f35960e9d758871cc3a7735478e43",
+      "bytes": 4103
+    },
+    "scripts/verify_event_runs_nats_e2e.py": {
+      "sha256": "927d96a81adc0662236b8883f77d24cd18da969bc421b1f26d67f446d360dc6e",
+      "bytes": 10728
+    },
+    "scripts/verify_filtered_trade_reply.py": {
+      "sha256": "83b57e695091bf0a036b44bfe9a5d6e847e58e9de70c7bb6d79d747cbf8afd4f",
+      "bytes": 777
+    },
+    "scripts/verify_fv_slim_bundle.py": {
+      "sha256": "852bfa1adf8795814472d3fc020410512768a1c377b0aaa8901a98504cdce179",
+      "bytes": 1049
+    },
+    "scripts/verify_kiwoom_recovery.py": {
+      "sha256": "ee3d3955094c1f16427228c06a5a7524003b5b53efe87690965e800d15b32423",
+      "bytes": 3151
+    },
+    "scripts/verify_maintenance_yield_e2e.py": {
+      "sha256": "5552477aa01cc7c6a68b2fcf5e451eb5670ce6426951697c5ac5bed15cf1ad2a",
+      "bytes": 5150
+    },
+    "scripts/verify_mm_state_on_server.py": {
+      "sha256": "c6cf26c7f4efc63d6406d98962a757ad9fff3df62813c71a5be2e7b5185fc6e4",
+      "bytes": 3776
+    },
+    "scripts/verify_release_runtime.py": {
+      "sha256": "5e318d13f27df364e654740c76b7ce50d8521aaf445969dd993cf25a7e6c6c60",
+      "bytes": 5446
+    },
+    "scripts/verify_scope_20261013.py": {
+      "sha256": "79089ec8588ac5b42f6d7011bb210f350d0fdbf753757cc855ee1a4efb0e73d2",
+      "bytes": 2440
+    },
+    "scripts/verify_telegram_restore.py": {
+      "sha256": "e288b8ba889edac42765d56e1c5ba80af7a803a6ddaf51fbfc7e3ef7fd2cd763",
+      "bytes": 2111
+    },
+    "scripts/watch_crypto_load_trial.py": {
+      "sha256": "2e6b51a9247097fee90b25e5221ac662d4bdea08cffe66f064efac4292643afc",
+      "bytes": 7666
+    },
+    "scripts/watch_fv_pilot.py": {
+      "sha256": "9932b78b90a34c97cbd9a29026dd69e26310ed4b1f584104c206a451861f09ad",
+      "bytes": 1170
+    },
+    "scripts/watch_fv_run.py": {
+      "sha256": "98985c8b2988493b7ed04d7f826d9709c36de1cc5231f4f26cf8bf066be2e0fa",
+      "bytes": 959
+    },
+    "services/broker_factory.py": {
+      "sha256": "238f76fbb58020fab349bc8fbfcb28a3fd651ba4437cd652b65ead401f06602a",
+      "bytes": 4598
+    },
+    "services/data_feed/__init__.py": {
+      "sha256": "9afe4c7436091d25d265333b93961b1e196acfe77caeaa9ea2f7dcf8b72619da",
+      "bytes": 21
+    },
+    "services/data_feed/base.py": {
+      "sha256": "4376385610a780d3470197d9b27956933040f86b00fe2a5cac1d043bc2d6f69b",
+      "bytes": 4161
+    },
+    "services/data_feed/crypto_feed.py": {
+      "sha256": "93770c0e46396974967fcdd07ac99d55bd556ceae7be592fde01ce188c1cf07d",
+      "bytes": 15173
+    },
+    "services/data_feed/kiwoom_feed.py": {
+      "sha256": "6501e7d746431243cacb4e7503b4f98045241bcfe9214d8cc15eca08e316b36b",
+      "bytes": 16341
+    },
+    "services/data_feed/kr_feed.py": {
+      "sha256": "ef257cd2db934c63873379abee7536d5ef812db0b4343bce25dbbc3b3aa8a63a",
+      "bytes": 14470
+    },
+    "services/data_feed/us_feed.py": {
+      "sha256": "5fc1e515fa631afadc2af0aefd2f29ded52e334e3b49a9f4a6fffc29199d8ee2",
+      "bytes": 14624
+    },
+    "services/execution/__init__.py": {
+      "sha256": "c61d5cf1812d3c08d48171f9212bc86d7c1c881a31197d2ffe850fe0707439b1",
+      "bytes": 21
+    },
+    "services/execution/base.py": {
+      "sha256": "8539c59f333bf877fbcd01279dc6d3eb3dd8e25d41e602b8788d2e91ae41c120",
+      "bytes": 4166
+    },
+    "services/execution/broker_stub.py": {
+      "sha256": "6e3cc293225b201b90d7a83b17322bebc15098c53e421483c87d92957b42535f",
+      "bytes": 6949
+    },
+    "services/execution/crypto_binance.py": {
+      "sha256": "3ddbdc407b15007b0fe02fd349f24455ad5539fe50fc9684108b13866384a537",
+      "bytes": 11112
+    },
+    "services/execution/kiwoom_broker.py": {
+      "sha256": "57c36f133c1d05648be855f0923c87f6e929381dd2fc465c451ccfbdbb407848",
+      "bytes": 19102
+    },
+    "services/execution/order_manager.py": {
+      "sha256": "e1fe34585d54a05c2c8dce17a97a90ea25aff193e993cd706e1f36524d85a45c",
+      "bytes": 14974
+    },
+    "services/monitoring/__init__.py": {
+      "sha256": "35b79a9e7f4e9c9a818a028fe59eef1b8a8c853ef7a241d657be4bc226eb08e8",
+      "bytes": 22
+    },
+    "services/monitoring/health.py": {
+      "sha256": "a45bd0b11df971b877ecb450601647d8013cff2443e33a0bcdae95fca11d458b",
+      "bytes": 4771
+    },
+    "services/monitoring/state_query.py": {
+      "sha256": "eb54e09b86c939493089f51db16401cf70c11b359d0be607e86df8cdc71db587",
+      "bytes": 10562
+    },
+    "services/risk_engine/__init__.py": {
+      "sha256": "24244d76bda9df2f9763f9b7d3c0795bb64ad198dc368e5b7909a18bc99943e6",
+      "bytes": 23
+    },
+    "services/risk_engine/kill_switch.py": {
+      "sha256": "48200ce565c9f320b65caca3ed3be11aabcaf1fcf6a352fa8fc705c94d33fa3f",
+      "bytes": 3715
+    },
+    "services/risk_engine/position_tracker.py": {
+      "sha256": "a59c011f5e682ec2368ecfd03754575808d36e58705f6fc1034464eb4d3493be",
+      "bytes": 11359
+    },
+    "services/risk_engine/risk_manager.py": {
+      "sha256": "6e4e7e0ddbf5b7c13f6923e2ba380f0a38ca450e831883320ef5c2804ac4835b",
+      "bytes": 10920
+    },
+    "services/signal_gen/__init__.py": {
+      "sha256": "1ec97eb45a3dd72271964b9efb531f656f09ab60ed713c9e54d5de4279290dd7",
+      "bytes": 29
+    },
+    "services/signal_gen/engine.py": {
+      "sha256": "c86ab8a7a2974ebd395e9df4fd5ba178cf1c10e04a766f750defb5173b8a7025",
+      "bytes": 9375
+    },
+    "services/signal_gen/strategy_loader.py": {
+      "sha256": "4d1100a761288fd74e825f0a1aa8b06d76aebb525ee69ddf809beada3962a63b",
+      "bytes": 7668
+    },
+    "shared/__init__.py": {
+      "sha256": "4b3ada54824f7d927024da5d00ae8748fc7f8f5994629dc6135e703722db7973",
+      "bytes": 37
+    },
+    "shared/config.py": {
+      "sha256": "447292fa1c0fcd3370aee94c3164e6c35736e03e86a6cb4c120a63bae5138e60",
+      "bytes": 12267
+    },
+    "shared/database.py": {
+      "sha256": "9d6aeee31fce08973ff853f2f4978e84b28da759183ac733c21b7994097f7aec",
+      "bytes": 9027
+    },
+    "shared/fill_logic.py": {
+      "sha256": "371a2debfb6dca17c843cd8e19d8a229d073c879814f3956c2c4d466d11a683a",
+      "bytes": 10550
+    },
+    "shared/messaging.py": {
+      "sha256": "b4c3ffe93f9b9ae6a740887f77939b47e8cbad7879bcfceb190a130bc0bcb775",
+      "bytes": 10764
+    },
+    "shared/models.py": {
+      "sha256": "c9e05bace2e214a5b35b83dc343c9faa7450bfd34b2b948933f9b1c8b57b82ac",
+      "bytes": 13065
+    },
+    "shared/strategy_contracts.py": {
+      "sha256": "cd4e737a684abea3eb6c43299d5eb3604a7654057c48dff9e8fe489ae61f38a7",
+      "bytes": 2103
+    },
+    "strategies/__init__.py": {
+      "sha256": "9c7e4e7a24c30403a484c3b04bc7348ebadb4136856c2f1d7e110c4107b38a5c",
+      "bytes": 85
+    },
+    "strategies/example_signal.py": {
+      "sha256": "a41fbc65d5b70624912afb825fa75ce6a5a3f51859e487e0395c6e8a2a08b36c",
+      "bytes": 1971
+    },
+    "strategies/turtle_breakout.py": {
+      "sha256": "4b8e1570bf895e4931269073ecc46c5d681c7e81dfb21cc46e2d1b3c0684c165",
+      "bytes": 7970
+    },
+    "strategy/s1_net_liquidity.py": {
+      "sha256": "5e1a58de6e03799f780a300c890a64860ca944fb94be85115e99215db8a55b73",
+      "bytes": 1562
+    },
+    "strategy/s2_external_anchor.py": {
+      "sha256": "338a28e47f7150a5f60f39e6ac657ff37a4179f363a6e5327bc49712dcd98665",
+      "bytes": 5843
+    },
+    "strategy/s3_aggressive_flow.py": {
+      "sha256": "df17df812282194968c9b7363fabcb91a1e888c46a428b54c62174d8deea9695",
+      "bytes": 4556
+    },
+    "strategy/s4_obi.py": {
+      "sha256": "241bae2c27c71941552eaf9989e1e82af60d29d2956c29562a35a3f0f3121e05",
+      "bytes": 834
+    },
+    "tests/test_aligned_derivatives.py": {
+      "sha256": "36ee7ed81abb4b81c2b0606acc95f903d4b80c37b75c5ade4d9d8642acf1c60d",
+      "bytes": 3922
+    },
+    "tests/test_archive_reclaim_scaling.py": {
+      "sha256": "8571cdc623094655e255f5b1052aa212b72db0b4f418464faf4631fe0cd9eeac",
+      "bytes": 3776
+    },
+    "tests/test_archive_relief.py": {
+      "sha256": "87bf353766f371ce4bfa71c49e31542e18f1c2cfdd094f2728d08258fdc4289f",
+      "bytes": 4747
+    },
+    "tests/test_archive_scheduler_progress.py": {
+      "sha256": "f34a784a18f3783ab5608f0a9c7e0616c3206b01ed4c542bd1faa78a7834c19e",
+      "bytes": 4682
+    },
+    "tests/test_binance_snapshot_bridge.py": {
+      "sha256": "b3ac0c4a356e4c0272f783e4542f912867462eb232cc09a6e2f1268f3f3382cf",
+      "bytes": 3731
+    },
+    "tests/test_collection_limits.py": {
+      "sha256": "c93f251dd3da545faf66271149ae38e1e190993f2c2833edb24b7005ec9588f7",
+      "bytes": 3094
+    },
+    "tests/test_collector_recovery_20261007.py": {
+      "sha256": "c1255ecd4cfcdbaf2c935899c1a483218c5bb1436d0e396a3e98338ba862c2d2",
+      "bytes": 4133
+    },
+    "tests/test_confirmed_ack_receipts.py": {
+      "sha256": "996829313bed183ac2ee4904d373182378fdeeb069e69115f8d9342219e73748",
+      "bytes": 2871
+    },
+    "tests/test_crypto_committed_aliases.py": {
+      "sha256": "b457bc0776719eb0815f799453ab00f92dca896cf153281df99f5d6610b16c94",
+      "bytes": 3617
+    },
+    "tests/test_crypto_cutover_backup.py": {
+      "sha256": "224d2554dea029b30dd155ffbc18ea2419cdc452edfdbd9e39d38cc70c9d7e6d",
+      "bytes": 5973
+    },
+    "tests/test_crypto_delivery_recovery.py": {
+      "sha256": "efca95be9f93cf84c55d9e782aad59288282d74b5eb627a4d915dfffb87b232c",
+      "bytes": 16133
+    },
+    "tests/test_crypto_event_retirement.py": {
+      "sha256": "f5a31e95cd9340ba389d230b6bb4d964dff8a5a9d327985c473785217538cf42",
+      "bytes": 8919
+    },
+    "tests/test_crypto_latency_audit.py": {
+      "sha256": "1ac33bcbf55e67a49bddc65766b64b0b65f1f8c76d57d8ff28407be73da8499d",
+      "bytes": 3678
+    },
+    "tests/test_crypto_perp_pipeline.py": {
+      "sha256": "2cf92c66227e6e56229566df75dee043acf001b66c1fca8b683007b07a92da8e",
+      "bytes": 6043
+    },
+    "tests/test_crypto_release.py": {
+      "sha256": "1e1ed3ac7e68786b4c9ecfc3bbe080ee39e4223fad18b9c595889f8cafc49584",
+      "bytes": 2223
+    },
+    "tests/test_crypto_replay_integrity.py": {
+      "sha256": "de272eb0dcc07914dc09fc0b035068bb0f18813a265764bde7dc9ef60b8fc797",
+      "bytes": 7389
+    },
+    "tests/test_crypto_storage_readiness.py": {
+      "sha256": "b1a7e95cb088cbd5a0e96b98ab17eb11dd15ca864d6bafa3cc6e6a61a4dc5f4a",
+      "bytes": 2498
+    },
+    "tests/test_dashboard.py": {
+      "sha256": "b680e04d2a41649e99e070deaf94d8f7768584b875129be4bca609b9d014bf96",
+      "bytes": 5597
+    },
+    "tests/test_dual_mock_and_assumed.py": {
+      "sha256": "1d55e8a74330a8321a6bed11b28e98e4936c2b33f7e270fcd35911d792cdde5a",
+      "bytes": 6555
+    },
+    "tests/test_durable_pipeline_guards.py": {
+      "sha256": "c2958ceda7c8debd7a67a9fd283f3f2bff6abbcd58c44dea2221f8e03d165780",
+      "bytes": 13151
+    },
+    "tests/test_etf_csv_sync.py": {
+      "sha256": "4fe71cf27ded38cd0019879b515dfb5764606163b3ed414fb6b4c6c9ea741bfb",
+      "bytes": 7240
+    },
+    "tests/test_etf_execution_update.py": {
+      "sha256": "9dc779f9f9860a2f49344050ab955399aa840b222d2b9975889960a4bb8be71f",
+      "bytes": 12817
+    },
+    "tests/test_etf_mock_trading.py": {
+      "sha256": "08edc3da94af8c1154ff833fdf19ff62ae41e43755090f7b6c506475421a487b",
+      "bytes": 12605
+    },
+    "tests/test_etf_outage_recovery.py": {
+      "sha256": "ec8aa26fcb8bc074a34210b3dcc4800e8a8988a525622cfd60fd073308588a61",
+      "bytes": 9375
+    },
+    "tests/test_event_filter_capacity.py": {
+      "sha256": "da2d62bc1f10daafbc4d8b582bff6a1afbaca6e9777b0935613adb2946bcfe68",
+      "bytes": 1761
+    },
+    "tests/test_event_index_runs.py": {
+      "sha256": "4bb69fca5b43b651f3ec33f7bece93c588fd888dbb36daaddac37575cdff0dde",
+      "bytes": 4191
+    },
+    "tests/test_event_index_runs_storage.py": {
+      "sha256": "9709f4aba6eecc346fe0b2243482bdb76bd9c7e1ab930a6c8e5a414414a4d291",
+      "bytes": 4029
+    },
+    "tests/test_exchange_expansion.py": {
+      "sha256": "8b5b4e0ab7d6456be523ad70785de2ca90d564ab5778315ad8bc922d5c1803c3",
+      "bytes": 11272
+    },
+    "tests/test_export_duplicate_reclaim.py": {
+      "sha256": "aabb000988b8468af69c0df953e600dc14738d782bee47b552df27c0b202cda5",
+      "bytes": 1801
+    },
+    "tests/test_fv_analysis.py": {
+      "sha256": "faaa19195901f38171a6a2c80905da7ad28a96ddacc98df5a8855bde4fa0ab01",
+      "bytes": 2445
+    },
+    "tests/test_fv_indicator_research.py": {
+      "sha256": "2ace6c48a848e68fc7b0352cafca1377d151981b8a0e69026a08e9aa76c38d47",
+      "bytes": 6377
+    },
+    "tests/test_fv_mm.py": {
+      "sha256": "145a924cf025ed462dada287ae116702ebfb905197dcd99383b90385837e8ee2",
+      "bytes": 9880
+    },
+    "tests/test_fv_pilot.py": {
+      "sha256": "6ce240be2683dfba78119883409d4ad2849371e0da54e18be372fe4f174f1961",
+      "bytes": 4942
+    },
+    "tests/test_fv_pilot_analysis.py": {
+      "sha256": "4d6c4f80062d129a9b7a3ba05f42732502b5340af323014f07e604ddc13b0c89",
+      "bytes": 2204
+    },
+    "tests/test_fv_prediction_diagnosis.py": {
+      "sha256": "f01a06221903597a0cb5510221b5ba1829a4d8e5e1346bbe778e4cd4329be800",
+      "bytes": 2349
+    },
+    "tests/test_gap_ledger.py": {
+      "sha256": "ba284e0fda49bb8489bcdb8a71e7efc940276080e2f91b1a3b89316a2565cc85",
+      "bytes": 2332
+    },
+    "tests/test_incident_remediation.py": {
+      "sha256": "62220f0328a02e083e442ed6f51b9baf98c12d3cfe41d9f7c46bdcd30eca930f",
+      "bytes": 3080
+    },
+    "tests/test_kiwoom_disconnect_alerts.py": {
+      "sha256": "e115fd14231cadda9ab764983817d946e1f8202b16ba57e6c8654b4bdf3daa0d",
+      "bytes": 2881
+    },
+    "tests/test_liquidity_mm.py": {
+      "sha256": "6587ef25d2ffcd75e7db244e13d6e28b52e4f2f65cc226ccad40650e03fb2de4",
+      "bytes": 22449
+    },
+    "tests/test_liquidity_regimes.py": {
+      "sha256": "5c44853036661171319f1ec9a13b9ddf0ef784309bb73d6dbbad11d6442be959",
+      "bytes": 2417
+    },
+    "tests/test_live_data_smoke.py": {
+      "sha256": "048b14913c63d95b5a5d80573c913e395d37867769205e24972bfdd2eabd323f",
+      "bytes": 744
+    },
+    "tests/test_logging_redaction.py": {
+      "sha256": "22c6ca7fac689ca4bab9e1615036e95186dfd7c63de76868e1b17489c4df6224",
+      "bytes": 650
+    },
+    "tests/test_ls_market.py": {
+      "sha256": "b8079d042f40357c187663476658eecf1c9630a5d2388ae431b5a8ad6d4e6b3d",
+      "bytes": 4924
+    },
+    "tests/test_maintenance_lock_retry.py": {
+      "sha256": "cbaf186d23aa7f40abef0e9898d540d5a7ecf0897c9474a9ec70e65521f293b2",
+      "bytes": 1580
+    },
+    "tests/test_maintenance_yield.py": {
+      "sha256": "4b4034f68032b421d51d82b3012d4a1e55c6ed45ed46c075934ae37e202c43f5",
+      "bytes": 8976
+    },
+    "tests/test_market_collector_incident.py": {
+      "sha256": "64e81917705e841436227c0e5a8135fd41a754e145e8c74a5c243985dce16383",
+      "bytes": 7345
+    },
+    "tests/test_market_export_analysis.py": {
+      "sha256": "c6ea7c439ea3274751565e9c4ab51b2a8794ae0fbe23d14ecb6e0ffc670e54a8",
+      "bytes": 3773
+    },
+    "tests/test_mm_state_revision.py": {
+      "sha256": "f7c251c4cd78cbfeffffad23096ae2c94637d3c19af21f300d3c7bd227a7ee99",
+      "bytes": 14721
+    },
+    "tests/test_models.py": {
+      "sha256": "e084f934becba01fe46265d3e03e4fb37e3d9dbbb1f1a90f141d60c0be5b24cf",
+      "bytes": 1087
+    },
+    "tests/test_os_disk_guard.py": {
+      "sha256": "97d32cfd46e4b8296ef10067e7320b14fed542ff4cd4edf7ae1515611b1a182e",
+      "bytes": 2308
+    },
+    "tests/test_parquet_store.py": {
+      "sha256": "e3a7b7b878a6f7236ac5490ff2e2da5c4699320ee010009f1bee9c37a88fa872",
+      "bytes": 2738
+    },
+    "tests/test_participant_flow.py": {
+      "sha256": "93308789afc694b18dd3edcfebe20b85b54edd4f50268478c211a8126c79533d",
+      "bytes": 2342
+    },
+    "tests/test_publish_and_mock_notifications.py": {
+      "sha256": "cc2aca27361581d224b00d35772edc9f9b55b6b6ce841e8580001c51e33b4024",
+      "bytes": 8136
+    },
+    "tests/test_session_alerts.py": {
+      "sha256": "2506582724ca0b70115a6e7b514f024fa89ad1038d65c43b8c44f169e2700c52",
+      "bytes": 898
+    },
+    "tests/test_settings.py": {
+      "sha256": "5e3b6694d198f613c3541c0d85163a116eada279f593afc11556d7fa1b6d265c",
+      "bytes": 483
+    },
+    "tests/test_split_state_disk_guard.py": {
+      "sha256": "b6654bddfc31316517fedf4b6b4c0ad6bf875097b65219a3ee6f9f01983bd93b",
+      "bytes": 1678
+    },
+    "tests/test_sqlite_io_budget.py": {
+      "sha256": "2e4b0bfcb73c62c0814f6ae4cc834d3c1b52e13e5d9361d94896bcaea9f1e771",
+      "bytes": 2253
+    },
+    "tests/test_storage_heartbeat_contention.py": {
+      "sha256": "b280f53f87ef84fb01ed04f5a5c557bced58f3a1f23ac3f1b6d83f140ebad567",
+      "bytes": 1665
+    },
+    "tests/test_storage_pipeline.py": {
+      "sha256": "15a5ec160458514b445cd508ab8e9344b7fbc1c85be241e25ee8b2fcbd516344",
+      "bytes": 21057
+    },
+    "tests/test_telegram_commands.py": {
+      "sha256": "9ce487cbff91004cdc8a1f173e2452625296dc4d6e2eefd7427e6170174aaea4",
+      "bytes": 7843
+    },
+    "tests/test_telegram_status.py": {
+      "sha256": "c1264318d2e81e8e1c28d1a4dd1e6c44fa79724faf10b5f9b7be88c1d86de1c1",
+      "bytes": 10234
+    },
+    "tests/test_timefolio.py": {
+      "sha256": "2a83eab9e53c4c3e3a8e5953a05b00679f299291b570b53b8c7a45b1a8f06336",
+      "bytes": 362
+    },
+    "tests/test_toss_daymarket.py": {
+      "sha256": "912430bc9a19b3c0f6f07083866552e46a6df0e8996975b64cb5f16dcb9d6185",
+      "bytes": 2139
+    },
+    "tests/test_trade_exclusions.py": {
+      "sha256": "dc09440370a7b185252400551088e5bbe53cd58942f3c930dc35a3786c9d3968",
+      "bytes": 4161
+    },
+    "tests/test_universe.py": {
+      "sha256": "e372ac113d482fed9bf6c6e07bbed4bdbd03774d88cc0f1ada82f0506ec1603c",
+      "bytes": 1891
+    },
+    "tests/test_universe_hot_path.py": {
+      "sha256": "400c7d78569cf677f52951a9d482216c96326fe96ffb305d3c44b949667efff6",
+      "bytes": 3717
+    },
+    "vibetrading/__init__.py": {
+      "sha256": "2305adfd592763cd484365552a525953fe2e377e6f95c6636d8ba5d9674cfa2f",
+      "bytes": 246
+    },
+    "vibetrading/archive.py": {
+      "sha256": "a627aaed463bc5a7f6dd4eb9b999a2f06d4cc9881b7e5f14025a00174fd40d3b",
+      "bytes": 24364
+    },
+    "vibetrading/brokers.py": {
+      "sha256": "a3d0a61c549e09f6a4bccff42adbbe8ddd2102290a8ba64474c01ba6b4520e61",
+      "bytes": 16047
+    },
+    "vibetrading/bus.py": {
+      "sha256": "dea0b7bf1f494d6ce0fcff18ba17654c2c48f6e89dce57ab3e9153f50ff20476",
+      "bytes": 41708
+    },
+    "vibetrading/bybit_execution.py": {
+      "sha256": "a40f95107bf262ca283fd8d852fee3e5d198bbdec3ec2d1c44e6f05c238ab12a",
+      "bytes": 33679
+    },
+    "vibetrading/cli.py": {
+      "sha256": "67684db7c81450eb9f20acd77d7abea48f17ab77fcda664632b725573d4de5c2",
+      "bytes": 29355
+    },
+    "vibetrading/collection_timing.py": {
+      "sha256": "76dbe9f12797abab7d87a7dd6b897ddfe8aa8b1d9d9cdc7be20c921f5dbf3726",
+      "bytes": 912
+    },
+    "vibetrading/compactor.py": {
+      "sha256": "65a21069fc7cfb701ea54c32fac7efb4663604de37fc892a253f8fd605620b4d",
+      "bytes": 5453
+    },
+    "vibetrading/dashboard/__init__.py": {
+      "sha256": "b8df0c42d1c57dfb8fb12a136ca7e544a55b3dc47579d400b80fdf5f5232b88f",
+      "bytes": 79
+    },
+    "vibetrading/dashboard/accounts.py": {
+      "sha256": "54b45399fbf6002d5e17d443c8919a650f241dac2b950e2bc49840ddfa1b0df8",
+      "bytes": 3441
+    },
+    "vibetrading/dashboard/bridge.py": {
+      "sha256": "ad410db80bfd6fda0370b8c10d490d7697c700e1179bf8d8150386cbd7c5e81c",
+      "bytes": 9062
+    },
+    "vibetrading/dashboard/projection.py": {
+      "sha256": "7e57ebf99c796c6e3ef20420cb28034e0f4c17b4e5e21ec5db99b978b77399b6",
+      "bytes": 12603
+    },
+    "vibetrading/dashboard/telemetry.py": {
+      "sha256": "e118a3e30a2777c75244bde4bedb20fd4ba137d0888936a828b9074a1d8b0d8c",
+      "bytes": 1003
+    },
+    "vibetrading/dashboard/timefolio_monitor.py": {
+      "sha256": "41ccdad388ea719bb7e2ae4311c808030f3e7fe18750570e5b3af0f43dd7fa0d",
+      "bytes": 4445
+    },
+    "vibetrading/dedup.py": {
+      "sha256": "d3393c7c025296399c66ca70986ee3dc3000f0f05478dff56fa01ec2c05bb2c0",
+      "bytes": 1441
+    },
+    "vibetrading/delivery_recovery.py": {
+      "sha256": "b57af0bd1db6bd3b0c866313b06c71d2f3dcaa742f38025976c466afafe37626",
+      "bytes": 26361
+    },
+    "vibetrading/etf_csv_history.py": {
+      "sha256": "5c5024a155488112b68fddceb1c31e6118e3985d828021b19077fca13706f486",
+      "bytes": 7326
+    },
+    "vibetrading/etf_csv_sync.py": {
+      "sha256": "d9e5c4f7125fb77f922be3f109425d0a651cd10a15ac8a30cbf9574e47da169e",
+      "bytes": 10659
+    },
+    "vibetrading/etf_history.py": {
+      "sha256": "932d273d61e0c73276999f45eafd792290457b483e9b55254f39d62d321caa04",
+      "bytes": 8879
+    },
+    "vibetrading/etf_intraday_store.py": {
+      "sha256": "a786b1e182db673b0e6a606d62f4c0e81080c776553b3513e0ce4880c9aea60b",
+      "bytes": 1451
+    },
+    "vibetrading/etf_journal.py": {
+      "sha256": "f86a3befcd9a723a89563ce3910aa422d402feac2f95f23f07688ca50265917f",
+      "bytes": 18082
+    },
+    "vibetrading/etf_recovery.py": {
+      "sha256": "3bc7257a2820aa29ddf9a1a7c77654346e241bc5096c0fc63280d6ac8d8f9a20",
+      "bytes": 19913
+    },
+    "vibetrading/etf_recovery_ledger.py": {
+      "sha256": "b6080f9c192bb4883c5642a5598a9730606b972366920099aaca6acf730cb395",
+      "bytes": 8438
+    },
+    "vibetrading/etf_reference.py": {
+      "sha256": "2171c8f45eb217b9e0912bd48a574a7c79af30aa2a8cf08c8e2a29b595cb5683",
+      "bytes": 7199
+    },
+    "vibetrading/etf_trading.py": {
+      "sha256": "bbdd0f48b04fa51630476773e0969637bd5fe56d2dcf63f3eb8ddb2db042ea3b",
+      "bytes": 39675
+    },
+    "vibetrading/event_index_runs.py": {
+      "sha256": "39deb9bded2a5d10dc2138d7dbdd28a5d442dd2871b2cedec58cc2e2be70f5e0",
+      "bytes": 15403
+    },
+    "vibetrading/execution.py": {
+      "sha256": "97081707a7b0523b3f36194e9ca8eb5f1e838de596af9d053d0cb813db3ad646",
+      "bytes": 3640
+    },
+    "vibetrading/extended_brokers.py": {
+      "sha256": "19dd83ff62a498fecf6f9e05a58f57bc92c2a9d64ef59a7108cea06cb293d77b",
+      "bytes": 18515
+    },
+    "vibetrading/fv_mm/__init__.py": {
+      "sha256": "43f60cb03df45579d4d75ada8d1a65f4358b86467d50352b5b46c6ee702ed8f4",
+      "bytes": 103
+    },
+    "vibetrading/fv_mm/calibration.py": {
+      "sha256": "b83f964a0c68ee58280c7d5885d9abdda48600f66933de1b90abfebb9fb847e3",
+      "bytes": 2657
+    },
+    "vibetrading/fv_mm/feeds.py": {
+      "sha256": "9b86ae290b683b0f8971aeda1a0f8dff2ea61e1798575531e3a097098f4589d1",
+      "bytes": 7609
+    },
+    "vibetrading/fv_mm/journal.py": {
+      "sha256": "da5058086b19f60f449b26629e161b75c349c5ed1f612c257164fd31d2db282f",
+      "bytes": 2476
+    },
+    "vibetrading/fv_mm/legacy/__init__.py": {
+      "sha256": "77f2931ed74cf24cb1e99a7f12b30b3f2fa618083a3a167bb9e9870338e1e121",
+      "bytes": 63
+    },
+    "vibetrading/fv_mm/legacy/paper_simulation.py": {
+      "sha256": "a0c1643bdce583c5e34062d41312fd639370f44f369776ba4a1e72a196d70780",
+      "bytes": 9573
+    },
+    "vibetrading/fv_mm/legacy/s1_net_liquidity.py": {
+      "sha256": "e59ec1ec844de3b1ba32652af93846e3c47a6f61607d81c26d46a6be991fda5c",
+      "bytes": 1676
+    },
+    "vibetrading/fv_mm/legacy/s2_external_anchor.py": {
+      "sha256": "1222758b1ec9eddd444193eeda365c0238d8d71a0fcb17c029a3d09c12046a4d",
+      "bytes": 1355
+    },
+    "vibetrading/fv_mm/legacy/s3_aggressive_flow.py": {
+      "sha256": "618dd3e316f03c3ba3625e59334fe55e0b5e89a524abb16d9d38e35e832030d9",
+      "bytes": 1293
+    },
+    "vibetrading/fv_mm/legacy/s4_obi.py": {
+      "sha256": "4cc047191c6de3157cceb2a8079e84c2a0e6ca650f6f281f3f40054933fad294",
+      "bytes": 1001
+    },
+    "vibetrading/fv_mm/market.py": {
+      "sha256": "adced90e7cbad104d385109013aeaed05be96a75200cb74bdfc40cf608987ac4",
+      "bytes": 5180
+    },
+    "vibetrading/fv_mm/private.py": {
+      "sha256": "4ba108dbbc4641f3b4eeedfa16968994017e1fac5ced1769134d19b26bbcd49e",
+      "bytes": 2694
+    },
+    "vibetrading/fv_mm/runner.py": {
+      "sha256": "0a253067d244354b2d8164088f40e5fa8d7ed6b17ec1e7a09b5088678b05f5cf",
+      "bytes": 28776
+    },
+    "vibetrading/fv_mm/types.py": {
+      "sha256": "10c4421f369cc7a057040f2891e6f762154457a5cb9c8ad0e903de101c630bf3",
+      "bytes": 3762
+    },
+    "vibetrading/fv_mm/venues.py": {
+      "sha256": "9f833b635c208849d51e1d3b5c802562041fa4f1b7b7e36b77acff649b45155e",
+      "bytes": 12788
+    },
+    "vibetrading/fv_pilot/__init__.py": {
+      "sha256": "d598e9196aca711475f05a735073e06e909c6b812641005ff037d47a03f973dd",
+      "bytes": 81
+    },
+    "vibetrading/fv_pilot/market.py": {
+      "sha256": "107bf0ab68030b940d1db92d3eeb67656bd54777b49dbb173c0612d38556756b",
+      "bytes": 2334
+    },
+    "vibetrading/fv_pilot/public.py": {
+      "sha256": "4bdc1d73dc0feafcf3fb814134db4ce6b1d028937d98226e622be1508fe2a2f3",
+      "bytes": 14076
+    },
+    "vibetrading/fv_pilot/runner.py": {
+      "sha256": "cf5f01b9af55fe9ca84dafefbdd103dfaafb099198513c872d13f060f65ae9cb",
+      "bytes": 19548
+    },
+    "vibetrading/fv_pilot/simulation.py": {
+      "sha256": "ae949752722d7ca4afab4092617c088f748b4df3ffea5a06a74f2ae7d031916d",
+      "bytes": 15528
+    },
+    "vibetrading/gap_ledger.py": {
+      "sha256": "f57f27e1f7b23a75fc64f93c6552ef3a6b2826b81a30334bbafaceb6fb30029d",
+      "bytes": 3068
+    },
+    "vibetrading/health.py": {
+      "sha256": "5b67d5a7275b0b70445d03e4e60d51ab8a38183692d78066164a542ba4b45f6b",
+      "bytes": 4542
+    },
+    "vibetrading/hot_path.py": {
+      "sha256": "a1ae594c9783bcefa269c88a4469763fcdc391895ce0c796ca65f67b79d12d44",
+      "bytes": 7111
+    },
+    "vibetrading/kis_execution.py": {
+      "sha256": "f40ac766d2b39a676aa8ed3d007be477f44eb1f028c4a52bfd956de3e55d551d",
+      "bytes": 10559
+    },
+    "vibetrading/kis_index.py": {
+      "sha256": "6011f742c4d4240dbc3fcbe68a4cf0438e4549e1fa613c73d7a56ee8ec5c6500",
+      "bytes": 4288
+    },
+    "vibetrading/liquidity_mm/__init__.py": {
+      "sha256": "7db23e85578990e68f0d907c4683d28b5787de48ce19e6bc09e9f10cb96633a4",
+      "bytes": 124
+    },
+    "vibetrading/liquidity_mm/__main__.py": {
+      "sha256": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+      "bytes": 30
+    },
+    "vibetrading/liquidity_mm/cli.py": {
+      "sha256": "51c7ac39693cb01776b88065a82a86930901403743dc7789d485588486ca11ab",
+      "bytes": 5601
+    },
+    "vibetrading/liquidity_mm/config.py": {
+      "sha256": "c694ec5368170b589a9b8de52258b2a62aba97179f5979c5e57018caf76bb313",
+      "bytes": 4756
+    },
+    "vibetrading/liquidity_mm/domain.py": {
+      "sha256": "a247d6aa113b81c742ef505f04c9508e847ba08380bb2eb7b73682d16cbd66cb",
+      "bytes": 4912
+    },
+    "vibetrading/liquidity_mm/exchange.py": {
+      "sha256": "4dd403af8e79cf0b78f5116303759216a6d7a83f02c0db87131c853f2c5c8766",
+      "bytes": 9389
+    },
+    "vibetrading/liquidity_mm/journal.py": {
+      "sha256": "74e3062f47c4402e0e33e50ddb22974ad8078ec66d6699badc9fb8d9075d6c03",
+      "bytes": 5499
+    },
+    "vibetrading/liquidity_mm/market.py": {
+      "sha256": "210b4a4fdd62d49299534be102f9a20a535ba00208fa5f883c0af55884291ed0",
+      "bytes": 14055
+    },
+    "vibetrading/liquidity_mm/replay.py": {
+      "sha256": "9b1ddf703083dfcfca69aa1489f1a23a2827925815ce0ea69793f16168efe79e",
+      "bytes": 11416
+    },
+    "vibetrading/liquidity_mm/runner.py": {
+      "sha256": "e490b861d50a5a7c89034b54a5a376619e4da96ab853e97d825f4ebece97ba56",
+      "bytes": 41231
+    },
+    "vibetrading/liquidity_mm/strategy.py": {
+      "sha256": "5540b7509c5b0db449a8f5b5af2b1fe3ac7d889e9f17ca140097a1186303c0b6",
+      "bytes": 12057
+    },
+    "vibetrading/logging_utils.py": {
+      "sha256": "ceb71e2f44446a3591c7084ba2481b54320a63897efc1561cd7c87cedaad7068",
+      "bytes": 1187
+    },
+    "vibetrading/maintenance_gate.py": {
+      "sha256": "c08063f5e821b1bee141bf44af75ff26baa5e42723d28cc592c02347a8d4bb5c",
+      "bytes": 2984
+    },
+    "vibetrading/market_policy.py": {
+      "sha256": "ce5f399a0b5e0cd0ea48d400664d258efd5f0711ec5b301dceaa8fb3ec9fff0c",
+      "bytes": 14470
+    },
+    "vibetrading/market_source_status.py": {
+      "sha256": "0228e53297db65209af88102b9b8fbf7c9561e04577f250f05433ecddf13622a",
+      "bytes": 1832
+    },
+    "vibetrading/mm_state/__init__.py": {
+      "sha256": "57a584746c2636c91c0acdbc9a4ab996dcd320323130181099f2ba7025a442f7",
+      "bytes": 83
+    },
+    "vibetrading/mm_state/analytics.py": {
+      "sha256": "2d32794a7ebe6650f162fc4de1b3097407d0bd72bc09e575b6cf11ca34025556",
+      "bytes": 3127
+    },
+    "vibetrading/mm_state/calibration.py": {
+      "sha256": "01a88ea755d6abaca0be2a90bf58c61deb53c74a9324dbbd4b47b87b114451b7",
+      "bytes": 5055
+    },
+    "vibetrading/mm_state/clock.py": {
+      "sha256": "5df3c1f42f577ce83f0ff323220a02b40ba2c899b3376b1001d24410a1952f1b",
+      "bytes": 422
+    },
+    "vibetrading/mm_state/coordinator.py": {
+      "sha256": "466a1b205005f9a7b9b87199eae0fe334b05de8b0b31778a3d551a4f429fbfe0",
+      "bytes": 3669
+    },
+    "vibetrading/mm_state/features.py": {
+      "sha256": "dbdb1f90646d3fcebf337fe5b6270323ea4d8ba4c37b28b7217d9b89675b1680",
+      "bytes": 8797
+    },
+    "vibetrading/mm_state/lifecycle.py": {
+      "sha256": "4e758ea1e9dd9bfef0764518d9fc45d0e7f369e89acbf3d3abf2b242fd4ebf25",
+      "bytes": 1704
+    },
+    "vibetrading/mm_state/policy.py": {
+      "sha256": "01174e0e3ec65ddfc444974ec4fc160ecc4bb947381a7c82432b3759f8053859",
+      "bytes": 3715
+    },
+    "vibetrading/mm_state/replay.py": {
+      "sha256": "949f4e9f21e72ca20df49e613b7bfa221b544aed59576a6474fb38773cb8dd28",
+      "bytes": 4407
+    },
+    "vibetrading/mm_state/risk.py": {
+      "sha256": "0c4b9df95297e14511dc8e5da7c57457144c80faf1c206af73a5dd59aeeb7280",
+      "bytes": 2761
+    },
+    "vibetrading/models.py": {
+      "sha256": "d432fea6e114b76c3e5df2a801998679c5d6c84196f075905acb02b93c0d416f",
+      "bytes": 13249
+    },
+    "vibetrading/parquet_store.py": {
+      "sha256": "72665b0d28433ec8d70845a4da9fd4ce20215b7ff7f68915b11a94a01ae9c6c2",
+      "bytes": 18602
+    },
+    "vibetrading/providers/__init__.py": {
+      "sha256": "9d3039b2dc4be32e65fc8a0d847e5a4ff821d8337833c56701610cfb4925fc7c",
+      "bytes": 72
+    },
+    "vibetrading/providers/base.py": {
+      "sha256": "e4aa92276ccf05a48c7f119c7c7885274e4a6b3bdd51ae87993947722ca181e0",
+      "bytes": 243
+    },
+    "vibetrading/providers/binance.py": {
+      "sha256": "3b00b6af2ad40118778c37d15f410695601bca0423845836dfdbc73176fc004c",
+      "bytes": 15767
+    },
+    "vibetrading/providers/coingecko.py": {
+      "sha256": "117b23afb50af6584cb7ca4cf0738943442dc9dfef648ed8a22d46b6762a33f8",
+      "bytes": 2240
+    },
+    "vibetrading/providers/crypto_perp.py": {
+      "sha256": "dacbf7971413c6095984f0d0fa3f9587bdb3508221fa53d0a5fe7fec87e20288",
+      "bytes": 20721
+    },
+    "vibetrading/providers/extended_perp.py": {
+      "sha256": "c2d175e2eb8d1ec08d05a7a0ef5db6f16d7230c074c005df0b07df05bedc0e00",
+      "bytes": 9629
+    },
+    "vibetrading/providers/hyperliquid.py": {
+      "sha256": "318c0e73fb1aeadc9f638eb1cd836646aebcf1b972efec09db1c0b3dfac27c5f",
+      "bytes": 15950
+    },
+    "vibetrading/providers/kis.py": {
+      "sha256": "f077a067c0566c0944ddbceb9eb4c2231d552077a82288aec7d9da65f5f462b1",
+      "bytes": 47387
+    },
+    "vibetrading/providers/kis_client.py": {
+      "sha256": "03ecfe5a5ff9762eb733e83b1bbeac60ee66c4ec073586510d1c415df962017e",
+      "bytes": 14866
+    },
+    "vibetrading/providers/kis_master.py": {
+      "sha256": "b1ab9b9dd08991cf89bf14d103c8351c68c069e492f31bd19155d13046e857a4",
+      "bytes": 13049
+    },
+    "vibetrading/providers/kiwoom.py": {
+      "sha256": "7429a4ffc8e7d7acb12537f2978366d39edf49fad2caade88382917626ac774a",
+      "bytes": 32088
+    },
+    "vibetrading/providers/ls_market.py": {
+      "sha256": "ff3be23ca2d1b0f327fa4a457c04020a3471bc3e3edf6f56288c38b630784d93",
+      "bytes": 14988
+    },
+    "vibetrading/providers/toss.py": {
+      "sha256": "6cf9e893dabe0029225cd058a05bf423bf8fc32542aa6907cff2e8157f3fbeca",
+      "bytes": 26805
+    },
+    "vibetrading/providers/universe.py": {
+      "sha256": "4c369da2cf24ae5d3e40990f3b0d9fb462d3271d7348f295c5ea889b637f56fa",
+      "bytes": 12423
+    },
+    "vibetrading/real_runner.py": {
+      "sha256": "691b7cc4c04e7a33055c06b0e795fd55593817b411e3308a843a184c9bf2897d",
+      "bytes": 7301
+    },
+    "vibetrading/runtime.py": {
+      "sha256": "69a4e401016cdfb4be8a2ef6dad2142a2601c10a569a01faefdf8c7a19d28832",
+      "bytes": 40036
+    },
+    "vibetrading/session_alerts.py": {
+      "sha256": "6448e1b41bb595a47a387271c877a24e99f88e172c06521540cb59afd3e40731",
+      "bytes": 2214
+    },
+    "vibetrading/settings.py": {
+      "sha256": "d5ae255b15e07c31d57a55ebe5d522f83c8f0d9002fbec0179a41e4ec72915a5",
+      "bytes": 17084
+    },
+    "vibetrading/sqlite_store.py": {
+      "sha256": "d11e3ac45baf9c3cfe1799d43c49fe60c08f1fbf455171f26dc9d68075a8f0ea",
+      "bytes": 56296
+    },
+    "vibetrading/status.py": {
+      "sha256": "db28b2e4dea84429daff0b7e966fe10ea46ea68eb327611602807d542353b159",
+      "bytes": 4333
+    },
+    "vibetrading/storage_backend.py": {
+      "sha256": "18f1b886251c1a0a52215a6392ce2a99aba55985a8db5e0e70d8dc6a94927f15",
+      "bytes": 7303
+    },
+    "vibetrading/storage_guard.py": {
+      "sha256": "a626ec955d2bd1c561f98b64fa9ee032306eb4d411e0979acd86ce0fa8d6ce08",
+      "bytes": 6724
+    },
+    "vibetrading/storage_worker.py": {
+      "sha256": "896334414c422f0083efc3f6f6855638b88ee61308b3b1e15daa42d071c35faa",
+      "bytes": 20607
+    },
+    "vibetrading/strategy_contract.py": {
+      "sha256": "88263fe2365226362e4c35d45af2ed11c0bd262fdf882527d5e7b3978cadac86",
+      "bytes": 1825
+    },
+    "vibetrading/strategy_runner.py": {
+      "sha256": "f07324b657bf9b1857488b3dd7b86f505faa08ebc22e35d5c5d3bb88d0ba4943",
+      "bytes": 3583
+    },
+    "vibetrading/telegram.py": {
+      "sha256": "2fe6451ea5c402590e2b458cd88372f4497f904badaf43cb989f4b0b6f0d87e6",
+      "bytes": 31303
+    },
+    "vibetrading/telegram_trade.py": {
+      "sha256": "6b52dc6d514da224341eeab77f2e2338942da230dcb7c456d48ecd12d03aa511",
+      "bytes": 8136
+    },
+    "vibetrading/timefolio/__init__.py": {
+      "sha256": "d20db22004af7ed4da3f73f1e4154741817dd908c2830a59b056eddf91561f6f",
+      "bytes": 459
+    },
+    "vibetrading/timefolio/client.py": {
+      "sha256": "d347a5843e0b97d342b50d184285cca74aee9f37144523d2f07387bb33741800",
+      "bytes": 19607
+    },
+    "vibetrading/timefolio/runner.py": {
+      "sha256": "6f3364eb894c330433d18512bc04722643e16611f20a28717b0663c9c10b079c",
+      "bytes": 9213
+    },
+    "vibetrading/trade_reporting.py": {
+      "sha256": "c73f652e0249ce029961ef1b2ffc551fd6494354e22a6cb8785756f65ff54f8e",
+      "bytes": 2120
+    },
+    "vibetrading/universe_config.py": {
+      "sha256": "408f6b8fdc47d08475761683af6cc90b74a36a1b6a32c7fc5ab5e5d32f1540f3",
+      "bytes": 8254
+    }
+  },
+  "source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+  "archive": {
+    "path": "docs/refactoring/runs/20261018-stage-assignment/baseline_source.tar.gz",
+    "sha256": "229a5bdff050a57d31f9a67eff6a456b455760a3de4dbd284993afff1ce15b7e"
+  },
+  "sandbox": "C:\\Users\\박제형\\Desktop\\VibeTrading\\tmp\\refactoring\\20261018-stage-assignment\\baseline",
+  "server_evidence": "docs/evidence/refactoring_20261018/server_readonly_snapshot.json",
+  "server_evidence_status": "Prior read-only observation 2026-10-18 12:06 KST; not fresh execution-time readiness",
+  "environment": {
+    "python": "3.10.11 (tags/v3.10.11:7d4cc5a, Apr  5 2023, 00:38:17) [MSC v.1929 64 bit (AMD64)]",
+    "executable": "C:\\Users\\박제형\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+    "platform": "Windows-10-10.0.26200-SP0"
+  },
+  "permissions": {
+    "local_source_edits": true,
+    "offline_tests": true,
+    "readonly_investigation": true,
+    "production_changes": false,
+    "real_orders": false,
+    "messages": false,
+    "original_data_deletion": false
+  }
+}

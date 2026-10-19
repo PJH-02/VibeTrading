@@ -1,0 +1,409 @@
+{
+  "schema_version": 1,
+  "basis": "ACTUAL_RUNNING_CONTAINER_SOURCE",
+  "server_source_root": "C:\\Users\\\ubc15\uc81c\ud615\\Desktop\\VibeTrading\\tmp\\refactoring\\server-source-20261019\\active-owner-after-p02",
+  "local_refactoring_source": "C:\\Users\\\ubc15\uc81c\ud615\\Desktop\\VibeTrading\\tmp\\refactoring\\20261018-stage-assignment\\local-runtime-v6",
+  "candidate": "C:\\Users\\\ubc15\uc81c\ud615\\Desktop\\VibeTrading\\tmp\\refactoring\\server-candidates-20261019\\active-owner-v6",
+  "server_preimages": {
+    "main.py": "838b5bf6c41f635104b9c3050a30c684284c0513b060cf415e1c545322a623b6",
+    "strategies/example_signal.py": "a41fbc65d5b70624912afb825fa75ce6a5a3f51859e487e0395c6e8a2a08b36c",
+    "strategies/turtle_breakout.py": "4b8e1570bf895e4931269073ecc46c5d681c7e81dfb21cc46e2d1b3c0684c165",
+    "strategies/__init__.py": "9c7e4e7a24c30403a484c3b04bc7348ebadb4136856c2f1d7e110c4107b38a5c",
+    "vibetrading/archive.py": "a627aaed463bc5a7f6dd4eb9b999a2f06d4cc9881b7e5f14025a00174fd40d3b",
+    "vibetrading/brokers.py": "a3d0a61c549e09f6a4bccff42adbbe8ddd2102290a8ba64474c01ba6b4520e61",
+    "vibetrading/bus.py": "dea0b7bf1f494d6ce0fcff18ba17654c2c48f6e89dce57ab3e9153f50ff20476",
+    "vibetrading/bybit_execution.py": "a40f95107bf262ca283fd8d852fee3e5d198bbdec3ec2d1c44e6f05c238ab12a",
+    "vibetrading/cli.py": "67684db7c81450eb9f20acd77d7abea48f17ab77fcda664632b725573d4de5c2",
+    "vibetrading/collection_timing.py": "76dbe9f12797abab7d87a7dd6b897ddfe8aa8b1d9d9cdc7be20c921f5dbf3726",
+    "vibetrading/compactor.py": "65a21069fc7cfb701ea54c32fac7efb4663604de37fc892a253f8fd605620b4d",
+    "vibetrading/dedup.py": "d3393c7c025296399c66ca70986ee3dc3000f0f05478dff56fa01ec2c05bb2c0",
+    "vibetrading/delivery_recovery.py": "b57af0bd1db6bd3b0c866313b06c71d2f3dcaa742f38025976c466afafe37626",
+    "vibetrading/etf_csv_history.py": "5c5024a155488112b68fddceb1c31e6118e3985d828021b19077fca13706f486",
+    "vibetrading/etf_csv_sync.py": "d9e5c4f7125fb77f922be3f109425d0a651cd10a15ac8a30cbf9574e47da169e",
+    "vibetrading/etf_history.py": "932d273d61e0c73276999f45eafd792290457b483e9b55254f39d62d321caa04",
+    "vibetrading/etf_intraday_store.py": "a786b1e182db673b0e6a606d62f4c0e81080c776553b3513e0ce4880c9aea60b",
+    "vibetrading/etf_journal.py": "f86a3befcd9a723a89563ce3910aa422d402feac2f95f23f07688ca50265917f",
+    "vibetrading/etf_recovery.py": "3bc7257a2820aa29ddf9a1a7c77654346e241bc5096c0fc63280d6ac8d8f9a20",
+    "vibetrading/etf_recovery_ledger.py": "b6080f9c192bb4883c5642a5598a9730606b972366920099aaca6acf730cb395",
+    "vibetrading/etf_reference.py": "2171c8f45eb217b9e0912bd48a574a7c79af30aa2a8cf08c8e2a29b595cb5683",
+    "vibetrading/etf_trading.py": "bbdd0f48b04fa51630476773e0969637bd5fe56d2dcf63f3eb8ddb2db042ea3b",
+    "vibetrading/event_index_runs.py": "39deb9bded2a5d10dc2138d7dbdd28a5d442dd2871b2cedec58cc2e2be70f5e0",
+    "vibetrading/execution.py": "97081707a7b0523b3f36194e9ca8eb5f1e838de596af9d053d0cb813db3ad646",
+    "vibetrading/extended_brokers.py": "19dd83ff62a498fecf6f9e05a58f57bc92c2a9d64ef59a7108cea06cb293d77b",
+    "vibetrading/gap_ledger.py": "f57f27e1f7b23a75fc64f93c6552ef3a6b2826b81a30334bbafaceb6fb30029d",
+    "vibetrading/health.py": "5b67d5a7275b0b70445d03e4e60d51ab8a38183692d78066164a542ba4b45f6b",
+    "vibetrading/hot_path.py": "a1ae594c9783bcefa269c88a4469763fcdc391895ce0c796ca65f67b79d12d44",
+    "vibetrading/kis_execution.py": "f40ac766d2b39a676aa8ed3d007be477f44eb1f028c4a52bfd956de3e55d551d",
+    "vibetrading/kis_index.py": "6011f742c4d4240dbc3fcbe68a4cf0438e4549e1fa613c73d7a56ee8ec5c6500",
+    "vibetrading/logging_utils.py": "ceb71e2f44446a3591c7084ba2481b54320a63897efc1561cd7c87cedaad7068",
+    "vibetrading/maintenance_gate.py": "c08063f5e821b1bee141bf44af75ff26baa5e42723d28cc592c02347a8d4bb5c",
+    "vibetrading/market_policy.py": "ce5f399a0b5e0cd0ea48d400664d258efd5f0711ec5b301dceaa8fb3ec9fff0c",
+    "vibetrading/market_source_status.py": "0228e53297db65209af88102b9b8fbf7c9561e04577f250f05433ecddf13622a",
+    "vibetrading/models.py": "d432fea6e114b76c3e5df2a801998679c5d6c84196f075905acb02b93c0d416f",
+    "vibetrading/parquet_store.py": "0abce23285632c4b1a1d42f54b314c9e0df868c1172b536f52d3c8af33faa69f",
+    "vibetrading/real_runner.py": "691b7cc4c04e7a33055c06b0e795fd55593817b411e3308a843a184c9bf2897d",
+    "vibetrading/runtime.py": "69a4e401016cdfb4be8a2ef6dad2142a2601c10a569a01faefdf8c7a19d28832",
+    "vibetrading/session_alerts.py": "6448e1b41bb595a47a387271c877a24e99f88e172c06521540cb59afd3e40731",
+    "vibetrading/settings.py": "d5ae255b15e07c31d57a55ebe5d522f83c8f0d9002fbec0179a41e4ec72915a5",
+    "vibetrading/sqlite_store.py": "d11e3ac45baf9c3cfe1799d43c49fe60c08f1fbf455171f26dc9d68075a8f0ea",
+    "vibetrading/status.py": "db28b2e4dea84429daff0b7e966fe10ea46ea68eb327611602807d542353b159",
+    "vibetrading/storage_backend.py": "18f1b886251c1a0a52215a6392ce2a99aba55985a8db5e0e70d8dc6a94927f15",
+    "vibetrading/storage_guard.py": "a626ec955d2bd1c561f98b64fa9ee032306eb4d411e0979acd86ce0fa8d6ce08",
+    "vibetrading/storage_worker.py": "896334414c422f0083efc3f6f6855638b88ee61308b3b1e15daa42d071c35faa",
+    "vibetrading/strategy_contract.py": "88263fe2365226362e4c35d45af2ed11c0bd262fdf882527d5e7b3978cadac86",
+    "vibetrading/strategy_runner.py": "f07324b657bf9b1857488b3dd7b86f505faa08ebc22e35d5c5d3bb88d0ba4943",
+    "vibetrading/telegram.py": "2fe6451ea5c402590e2b458cd88372f4497f904badaf43cb989f4b0b6f0d87e6",
+    "vibetrading/telegram_trade.py": "6b52dc6d514da224341eeab77f2e2338942da230dcb7c456d48ecd12d03aa511",
+    "vibetrading/trade_reporting.py": "c73f652e0249ce029961ef1b2ffc551fd6494354e22a6cb8785756f65ff54f8e",
+    "vibetrading/universe_config.py": "408f6b8fdc47d08475761683af6cc90b74a36a1b6a32c7fc5ab5e5d32f1540f3",
+    "vibetrading/__init__.py": "2305adfd592763cd484365552a525953fe2e377e6f95c6636d8ba5d9674cfa2f",
+    "vibetrading/dashboard/accounts.py": "54b45399fbf6002d5e17d443c8919a650f241dac2b950e2bc49840ddfa1b0df8",
+    "vibetrading/dashboard/bridge.py": "ad410db80bfd6fda0370b8c10d490d7697c700e1179bf8d8150386cbd7c5e81c",
+    "vibetrading/dashboard/projection.py": "7e57ebf99c796c6e3ef20420cb28034e0f4c17b4e5e21ec5db99b978b77399b6",
+    "vibetrading/dashboard/telemetry.py": "e118a3e30a2777c75244bde4bedb20fd4ba137d0888936a828b9074a1d8b0d8c",
+    "vibetrading/dashboard/timefolio_monitor.py": "41ccdad388ea719bb7e2ae4311c808030f3e7fe18750570e5b3af0f43dd7fa0d",
+    "vibetrading/dashboard/__init__.py": "b8df0c42d1c57dfb8fb12a136ca7e544a55b3dc47579d400b80fdf5f5232b88f",
+    "vibetrading/fv_mm/calibration.py": "b83f964a0c68ee58280c7d5885d9abdda48600f66933de1b90abfebb9fb847e3",
+    "vibetrading/fv_mm/feeds.py": "9b86ae290b683b0f8971aeda1a0f8dff2ea61e1798575531e3a097098f4589d1",
+    "vibetrading/fv_mm/journal.py": "da5058086b19f60f449b26629e161b75c349c5ed1f612c257164fd31d2db282f",
+    "vibetrading/fv_mm/market.py": "adced90e7cbad104d385109013aeaed05be96a75200cb74bdfc40cf608987ac4",
+    "vibetrading/fv_mm/private.py": "4ba108dbbc4641f3b4eeedfa16968994017e1fac5ced1769134d19b26bbcd49e",
+    "vibetrading/fv_mm/runner.py": "0a253067d244354b2d8164088f40e5fa8d7ed6b17ec1e7a09b5088678b05f5cf",
+    "vibetrading/fv_mm/types.py": "10c4421f369cc7a057040f2891e6f762154457a5cb9c8ad0e903de101c630bf3",
+    "vibetrading/fv_mm/venues.py": "9f833b635c208849d51e1d3b5c802562041fa4f1b7b7e36b77acff649b45155e",
+    "vibetrading/fv_mm/__init__.py": "43f60cb03df45579d4d75ada8d1a65f4358b86467d50352b5b46c6ee702ed8f4",
+    "vibetrading/fv_mm/legacy/paper_simulation.py": "a0c1643bdce583c5e34062d41312fd639370f44f369776ba4a1e72a196d70780",
+    "vibetrading/fv_mm/legacy/s1_net_liquidity.py": "e59ec1ec844de3b1ba32652af93846e3c47a6f61607d81c26d46a6be991fda5c",
+    "vibetrading/fv_mm/legacy/s2_external_anchor.py": "1222758b1ec9eddd444193eeda365c0238d8d71a0fcb17c029a3d09c12046a4d",
+    "vibetrading/fv_mm/legacy/s3_aggressive_flow.py": "618dd3e316f03c3ba3625e59334fe55e0b5e89a524abb16d9d38e35e832030d9",
+    "vibetrading/fv_mm/legacy/s4_obi.py": "4cc047191c6de3157cceb2a8079e84c2a0e6ca650f6f281f3f40054933fad294",
+    "vibetrading/fv_mm/legacy/__init__.py": "77f2931ed74cf24cb1e99a7f12b30b3f2fa618083a3a167bb9e9870338e1e121",
+    "vibetrading/fv_pilot/market.py": "107bf0ab68030b940d1db92d3eeb67656bd54777b49dbb173c0612d38556756b",
+    "vibetrading/fv_pilot/public.py": "4bdc1d73dc0feafcf3fb814134db4ce6b1d028937d98226e622be1508fe2a2f3",
+    "vibetrading/fv_pilot/runner.py": "cf5f01b9af55fe9ca84dafefbdd103dfaafb099198513c872d13f060f65ae9cb",
+    "vibetrading/fv_pilot/simulation.py": "ae949752722d7ca4afab4092617c088f748b4df3ffea5a06a74f2ae7d031916d",
+    "vibetrading/fv_pilot/__init__.py": "d598e9196aca711475f05a735073e06e909c6b812641005ff037d47a03f973dd",
+    "vibetrading/liquidity_mm/cli.py": "51c7ac39693cb01776b88065a82a86930901403743dc7789d485588486ca11ab",
+    "vibetrading/liquidity_mm/config.py": "c694ec5368170b589a9b8de52258b2a62aba97179f5979c5e57018caf76bb313",
+    "vibetrading/liquidity_mm/domain.py": "a247d6aa113b81c742ef505f04c9508e847ba08380bb2eb7b73682d16cbd66cb",
+    "vibetrading/liquidity_mm/exchange.py": "4dd403af8e79cf0b78f5116303759216a6d7a83f02c0db87131c853f2c5c8766",
+    "vibetrading/liquidity_mm/journal.py": "74e3062f47c4402e0e33e50ddb22974ad8078ec66d6699badc9fb8d9075d6c03",
+    "vibetrading/liquidity_mm/market.py": "210b4a4fdd62d49299534be102f9a20a535ba00208fa5f883c0af55884291ed0",
+    "vibetrading/liquidity_mm/replay.py": "9b1ddf703083dfcfca69aa1489f1a23a2827925815ce0ea69793f16168efe79e",
+    "vibetrading/liquidity_mm/runner.py": "e490b861d50a5a7c89034b54a5a376619e4da96ab853e97d825f4ebece97ba56",
+    "vibetrading/liquidity_mm/strategy.py": "5540b7509c5b0db449a8f5b5af2b1fe3ac7d889e9f17ca140097a1186303c0b6",
+    "vibetrading/liquidity_mm/__init__.py": "7db23e85578990e68f0d907c4683d28b5787de48ce19e6bc09e9f10cb96633a4",
+    "vibetrading/liquidity_mm/__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+    "vibetrading/mm_state/analytics.py": "2d32794a7ebe6650f162fc4de1b3097407d0bd72bc09e575b6cf11ca34025556",
+    "vibetrading/mm_state/calibration.py": "01a88ea755d6abaca0be2a90bf58c61deb53c74a9324dbbd4b47b87b114451b7",
+    "vibetrading/mm_state/clock.py": "5df3c1f42f577ce83f0ff323220a02b40ba2c899b3376b1001d24410a1952f1b",
+    "vibetrading/mm_state/coordinator.py": "466a1b205005f9a7b9b87199eae0fe334b05de8b0b31778a3d551a4f429fbfe0",
+    "vibetrading/mm_state/features.py": "dbdb1f90646d3fcebf337fe5b6270323ea4d8ba4c37b28b7217d9b89675b1680",
+    "vibetrading/mm_state/lifecycle.py": "4e758ea1e9dd9bfef0764518d9fc45d0e7f369e89acbf3d3abf2b242fd4ebf25",
+    "vibetrading/mm_state/policy.py": "01174e0e3ec65ddfc444974ec4fc160ecc4bb947381a7c82432b3759f8053859",
+    "vibetrading/mm_state/replay.py": "949f4e9f21e72ca20df49e613b7bfa221b544aed59576a6474fb38773cb8dd28",
+    "vibetrading/mm_state/risk.py": "0c4b9df95297e14511dc8e5da7c57457144c80faf1c206af73a5dd59aeeb7280",
+    "vibetrading/mm_state/__init__.py": "57a584746c2636c91c0acdbc9a4ab996dcd320323130181099f2ba7025a442f7",
+    "vibetrading/providers/base.py": "e4aa92276ccf05a48c7f119c7c7885274e4a6b3bdd51ae87993947722ca181e0",
+    "vibetrading/providers/binance.py": "3b00b6af2ad40118778c37d15f410695601bca0423845836dfdbc73176fc004c",
+    "vibetrading/providers/coingecko.py": "117b23afb50af6584cb7ca4cf0738943442dc9dfef648ed8a22d46b6762a33f8",
+    "vibetrading/providers/crypto_perp.py": "dacbf7971413c6095984f0d0fa3f9587bdb3508221fa53d0a5fe7fec87e20288",
+    "vibetrading/providers/extended_perp.py": "c2d175e2eb8d1ec08d05a7a0ef5db6f16d7230c074c005df0b07df05bedc0e00",
+    "vibetrading/providers/hyperliquid.py": "318c0e73fb1aeadc9f638eb1cd836646aebcf1b972efec09db1c0b3dfac27c5f",
+    "vibetrading/providers/kis.py": "f077a067c0566c0944ddbceb9eb4c2231d552077a82288aec7d9da65f5f462b1",
+    "vibetrading/providers/kis_client.py": "03ecfe5a5ff9762eb733e83b1bbeac60ee66c4ec073586510d1c415df962017e",
+    "vibetrading/providers/kis_master.py": "b1ab9b9dd08991cf89bf14d103c8351c68c069e492f31bd19155d13046e857a4",
+    "vibetrading/providers/kiwoom.py": "7429a4ffc8e7d7acb12537f2978366d39edf49fad2caade88382917626ac774a",
+    "vibetrading/providers/ls_market.py": "ff3be23ca2d1b0f327fa4a457c04020a3471bc3e3edf6f56288c38b630784d93",
+    "vibetrading/providers/toss.py": "6cf9e893dabe0029225cd058a05bf423bf8fc32542aa6907cff2e8157f3fbeca",
+    "vibetrading/providers/universe.py": "4c369da2cf24ae5d3e40990f3b0d9fb462d3271d7348f295c5ea889b637f56fa",
+    "vibetrading/providers/__init__.py": "9d3039b2dc4be32e65fc8a0d847e5a4ff821d8337833c56701610cfb4925fc7c",
+    "vibetrading/timefolio/client.py": "d347a5843e0b97d342b50d184285cca74aee9f37144523d2f07387bb33741800",
+    "vibetrading/timefolio/runner.py": "6f3364eb894c330433d18512bc04722643e16611f20a28717b0663c9c10b079c",
+    "vibetrading/timefolio/__init__.py": "d20db22004af7ed4da3f73f1e4154741817dd908c2830a59b056eddf91561f6f"
+  },
+  "changes": {
+    "strategies/example_signal.py": {
+      "baseline_sha256": "a41fbc65d5b70624912afb825fa75ce6a5a3f51859e487e0395c6e8a2a08b36c",
+      "server_preimage_sha256": "a41fbc65d5b70624912afb825fa75ce6a5a3f51859e487e0395c6e8a2a08b36c",
+      "local_delta_sha256": "cfb19db36ed7bd65b3b228548b5c905e43947b340149ba21513a281a1b0fb3da",
+      "state": "EXACT_SERVER_PREIMAGE_PATCH",
+      "candidate_sha256": "cfb19db36ed7bd65b3b228548b5c905e43947b340149ba21513a281a1b0fb3da"
+    },
+    "vibetrading/archive.py": {
+      "baseline_sha256": "a627aaed463bc5a7f6dd4eb9b999a2f06d4cc9881b7e5f14025a00174fd40d3b",
+      "server_preimage_sha256": "a627aaed463bc5a7f6dd4eb9b999a2f06d4cc9881b7e5f14025a00174fd40d3b",
+      "local_delta_sha256": "3ba8d81ca97e83907604d32afa33b64a657b4cec926893bac7c4d7196557934a",
+      "state": "EXACT_SERVER_PREIMAGE_PATCH",
+      "candidate_sha256": "3ba8d81ca97e83907604d32afa33b64a657b4cec926893bac7c4d7196557934a"
+    },
+    "vibetrading/bus.py": {
+      "baseline_sha256": "dea0b7bf1f494d6ce0fcff18ba17654c2c48f6e89dce57ab3e9153f50ff20476",
+      "server_preimage_sha256": "dea0b7bf1f494d6ce0fcff18ba17654c2c48f6e89dce57ab3e9153f50ff20476",
+      "local_delta_sha256": "2d4830b45b4ef549a2b7b1797d649e22fe1caab6e01a6329181f4fa2b628c4d2",
+      "state": "EXACT_SERVER_PREIMAGE_PATCH",
+      "candidate_sha256": "2d4830b45b4ef549a2b7b1797d649e22fe1caab6e01a6329181f4fa2b628c4d2"
+    },
+    "vibetrading/compactor.py": {
+      "baseline_sha256": "65a21069fc7cfb701ea54c32fac7efb4663604de37fc892a253f8fd605620b4d",
+      "server_preimage_sha256": "65a21069fc7cfb701ea54c32fac7efb4663604de37fc892a253f8fd605620b4d",
+      "local_delta_sha256": "4bf58c81a28ebfbf81e29597a7eb8c232f9151a31b1600653aa55a6ce4b3cc03",
+      "state": "EXACT_SERVER_PREIMAGE_PATCH",
+      "candidate_sha256": "4bf58c81a28ebfbf81e29597a7eb8c232f9151a31b1600653aa55a6ce4b3cc03"
+    },
+    "vibetrading/etf_journal.py": {
+      "baseline_sha256": "f86a3befcd9a723a89563ce3910aa422d402feac2f95f23f07688ca50265917f",
+      "server_preimage_sha256": "f86a3befcd9a723a89563ce3910aa422d402feac2f95f23f07688ca50265917f",
+      "local_delta_sha256": "cd81396df9174c73fcaa80f479fe8c06a11a37e99f16daa269eb75a84644d79d",
+      "state": "EXACT_SERVER_PREIMAGE_PATCH",
+      "candidate_sha256": "cd81396df9174c73fcaa80f479fe8c06a11a37e99f16daa269eb75a84644d79d"
+    },
+    "vibetrading/etf_trading.py": {
+      "baseline_sha256": "bbdd0f48b04fa51630476773e0969637bd5fe56d2dcf63f3eb8ddb2db042ea3b",
+      "server_preimage_sha256": "bbdd0f48b04fa51630476773e0969637bd5fe56d2dcf63f3eb8ddb2db042ea3b",
+      "local_delta_sha256": "9c6a49238125f2746ac7c4b31014d17e1e42fae597d97bf36f22b003959ebb79",
+      "state": "EXACT_SERVER_PREIMAGE_PATCH",
+      "candidate_sha256": "9c6a49238125f2746ac7c4b31014d17e1e42fae597d97bf36f22b003959ebb79"
+    },
+    "vibetrading/execution.py": {
+      "baseline_sha256": "97081707a7b0523b3f36194e9ca8eb5f1e838de596af9d053d0cb813db3ad646",
+      "server_preimage_sha256": "97081707a7b0523b3f36194e9ca8eb5f1e838de596af9d053d0cb813db3ad646",
+      "local_delta_sha256": "4152666b7f493f84fe5dd5cfee0a56ed9f1e83fb638855fa6302225daa953167",
+      "state": "EXACT_SERVER_PREIMAGE_PATCH",
+      "candidate_sha256": "4152666b7f493f84fe5dd5cfee0a56ed9f1e83fb638855fa6302225daa953167"
+    },
+    "vibetrading/execution_ledger.py": {
+      "baseline_sha256": null,
+      "server_preimage_sha256": null,
+      "local_delta_sha256": "657366cf0eb15c898786feb7704363043bb52674b507804d7a9b9d0ef350d70e",
+      "state": "NEW_REFACTOR_MODULE",
+      "candidate_sha256": "657366cf0eb15c898786feb7704363043bb52674b507804d7a9b9d0ef350d70e"
+    },
+    "vibetrading/execution_owner.py": {
+      "baseline_sha256": null,
+      "server_preimage_sha256": null,
+      "local_delta_sha256": "3a14368e015d88e8a8170fb7c7e3693da5a57ec933c66ccfa6ed5d57facc319b",
+      "state": "NEW_REFACTOR_MODULE",
+      "candidate_sha256": "3a14368e015d88e8a8170fb7c7e3693da5a57ec933c66ccfa6ed5d57facc319b"
+    },
+    "vibetrading/feed_recovery.py": {
+      "baseline_sha256": null,
+      "server_preimage_sha256": null,
+      "local_delta_sha256": "6e65dec38c47a530fa4654a9686b1c341706ab94fa38183029ca033c53d4c527",
+      "state": "NEW_REFACTOR_MODULE",
+      "candidate_sha256": "6e65dec38c47a530fa4654a9686b1c341706ab94fa38183029ca033c53d4c527"
+    },
+    "vibetrading/hot_path.py": {
+      "baseline_sha256": "a1ae594c9783bcefa269c88a4469763fcdc391895ce0c796ca65f67b79d12d44",
+      "server_preimage_sha256": "a1ae594c9783bcefa269c88a4469763fcdc391895ce0c796ca65f67b79d12d44",
+      "local_delta_sha256": "d310ce6062130fc0f15fafb0f3e69945c46b93b58ab1356152c8dc1b33654f30",
+      "state": "EXACT_SERVER_PREIMAGE_PATCH",
+      "candidate_sha256": "d310ce6062130fc0f15fafb0f3e69945c46b93b58ab1356152c8dc1b33654f30"
+    },
+    "vibetrading/kis_execution.py": {
+      "baseline_sha256": "f40ac766d2b39a676aa8ed3d007be477f44eb1f028c4a52bfd956de3e55d551d",
+      "server_preimage_sha256": "f40ac766d2b39a676aa8ed3d007be477f44eb1f028c4a52bfd956de3e55d551d",
+      "local_delta_sha256": "840ec17b40c6d6bd529757814679a7ad169a1db4c9a014b168f6821686bf20fb",
+      "state": "EXACT_SERVER_PREIMAGE_PATCH",
+      "candidate_sha256": "840ec17b40c6d6bd529757814679a7ad169a1db4c9a014b168f6821686bf20fb"
+    },
+    "vibetrading/local_config.py": {
+      "baseline_sha256": null,
+      "server_preimage_sha256": null,
+      "local_delta_sha256": "7b276ca1959f15da4fcc29543354cdd61da248e562018c270429a3a056856fa3",
+      "state": "NEW_REFACTOR_MODULE",
+      "candidate_sha256": "7b276ca1959f15da4fcc29543354cdd61da248e562018c270429a3a056856fa3"
+    },
+    "vibetrading/local_engine.py": {
+      "baseline_sha256": null,
+      "server_preimage_sha256": null,
+      "local_delta_sha256": "d83b4e21bc8b632da4f1227699b80175df41f56bbee1a99fc313c31f2918808c",
+      "state": "NEW_REFACTOR_MODULE",
+      "candidate_sha256": "d83b4e21bc8b632da4f1227699b80175df41f56bbee1a99fc313c31f2918808c"
+    },
+    "vibetrading/local_events.py": {
+      "baseline_sha256": null,
+      "server_preimage_sha256": null,
+      "local_delta_sha256": "fc62edd3becaf19d80007f70d0000e8c9984abc56556814a0c8160716f4ab362",
+      "state": "NEW_REFACTOR_MODULE",
+      "candidate_sha256": "fc62edd3becaf19d80007f70d0000e8c9984abc56556814a0c8160716f4ab362"
+    },
+    "vibetrading/local_observation.py": {
+      "baseline_sha256": null,
+      "server_preimage_sha256": null,
+      "local_delta_sha256": "e21ab80bc4e2aefc6bcb23ced06fae5267aa83ca85ba29d5914c38f5d518aa28",
+      "state": "NEW_REFACTOR_MODULE",
+      "candidate_sha256": "e21ab80bc4e2aefc6bcb23ced06fae5267aa83ca85ba29d5914c38f5d518aa28"
+    },
+    "vibetrading/local_pipeline.py": {
+      "baseline_sha256": null,
+      "server_preimage_sha256": null,
+      "local_delta_sha256": "5e3e0cbb559373e7ece320324f5adc0553c2ff58448e9ef3aeb2ed573c0b60aa",
+      "state": "NEW_REFACTOR_MODULE",
+      "candidate_sha256": "5e3e0cbb559373e7ece320324f5adc0553c2ff58448e9ef3aeb2ed573c0b60aa"
+    },
+    "vibetrading/local_runtime.py": {
+      "baseline_sha256": null,
+      "server_preimage_sha256": null,
+      "local_delta_sha256": "cb4893919d475f9f80023aa1faf52ef59fd1a7de93faeab9e0107b734a77e76b",
+      "state": "NEW_REFACTOR_MODULE",
+      "candidate_sha256": "cb4893919d475f9f80023aa1faf52ef59fd1a7de93faeab9e0107b734a77e76b"
+    },
+    "vibetrading/local_snapshot.py": {
+      "baseline_sha256": null,
+      "server_preimage_sha256": null,
+      "local_delta_sha256": "c194d70c3810a76dbe02f5d748a152c6f821f78286f975f442555e78f391c8f1",
+      "state": "NEW_REFACTOR_MODULE",
+      "candidate_sha256": "c194d70c3810a76dbe02f5d748a152c6f821f78286f975f442555e78f391c8f1"
+    },
+    "vibetrading/local_storage.py": {
+      "baseline_sha256": null,
+      "server_preimage_sha256": null,
+      "local_delta_sha256": "21233fc68e52d74bc8c9ae96cea44eece74e6c7f998cba7898f971ba46a22c61",
+      "state": "NEW_REFACTOR_MODULE",
+      "candidate_sha256": "21233fc68e52d74bc8c9ae96cea44eece74e6c7f998cba7898f971ba46a22c61"
+    },
+    "vibetrading/local_transport.py": {
+      "baseline_sha256": null,
+      "server_preimage_sha256": null,
+      "local_delta_sha256": "ddc03ff61429006096238310667c68785729e58b9d20c36357587face50ca4e6",
+      "state": "NEW_REFACTOR_MODULE",
+      "candidate_sha256": "ddc03ff61429006096238310667c68785729e58b9d20c36357587face50ca4e6"
+    },
+    "vibetrading/market_fanout.py": {
+      "baseline_sha256": null,
+      "server_preimage_sha256": null,
+      "local_delta_sha256": "483c6c9c22a8dcfd0b796a4c98d0a077cbb4cd91b12ad9749226487cf7311760",
+      "state": "NEW_REFACTOR_MODULE",
+      "candidate_sha256": "483c6c9c22a8dcfd0b796a4c98d0a077cbb4cd91b12ad9749226487cf7311760"
+    },
+    "vibetrading/market_spool.py": {
+      "baseline_sha256": null,
+      "server_preimage_sha256": null,
+      "local_delta_sha256": "0c735dbd5f03c9e915a18cc4b2c6a3056b8bff23955dc75fc58892082735a94b",
+      "state": "NEW_REFACTOR_MODULE",
+      "candidate_sha256": "0c735dbd5f03c9e915a18cc4b2c6a3056b8bff23955dc75fc58892082735a94b"
+    },
+    "vibetrading/parquet_store.py": {
+      "baseline_sha256": "72665b0d28433ec8d70845a4da9fd4ce20215b7ff7f68915b11a94a01ae9c6c2",
+      "server_preimage_sha256": "0abce23285632c4b1a1d42f54b314c9e0df868c1172b536f52d3c8af33faa69f",
+      "local_delta_sha256": "d06be8441511f235c5c7e4a51d719fbe5801e51ac311d3168734c52709597c2e",
+      "state": "SERVER_AND_REFACTOR_THREE_WAY_MERGE_REVIEW_REQUIRED",
+      "candidate_sha256": "d06be8441511f235c5c7e4a51d719fbe5801e51ac311d3168734c52709597c2e"
+    },
+    "vibetrading/process_lease.py": {
+      "baseline_sha256": null,
+      "server_preimage_sha256": null,
+      "local_delta_sha256": "064decebc0d4f2a7ddb6b76188720418afd2022b379f675b7d61e385b52882eb",
+      "state": "NEW_REFACTOR_MODULE",
+      "candidate_sha256": "064decebc0d4f2a7ddb6b76188720418afd2022b379f675b7d61e385b52882eb"
+    },
+    "vibetrading/real_runner.py": {
+      "baseline_sha256": "691b7cc4c04e7a33055c06b0e795fd55593817b411e3308a843a184c9bf2897d",
+      "server_preimage_sha256": "691b7cc4c04e7a33055c06b0e795fd55593817b411e3308a843a184c9bf2897d",
+      "local_delta_sha256": "bf80bc565dc663e356e4f923c8b7bb345bec1e8c67634dbac2dbbe3bfe521089",
+      "state": "EXACT_SERVER_PREIMAGE_PATCH",
+      "candidate_sha256": "bf80bc565dc663e356e4f923c8b7bb345bec1e8c67634dbac2dbbe3bfe521089"
+    },
+    "vibetrading/runtime.py": {
+      "baseline_sha256": "69a4e401016cdfb4be8a2ef6dad2142a2601c10a569a01faefdf8c7a19d28832",
+      "server_preimage_sha256": "69a4e401016cdfb4be8a2ef6dad2142a2601c10a569a01faefdf8c7a19d28832",
+      "local_delta_sha256": "9e18689d0172020652fca418701a7746228090879d8b248ab6e63f4df05c3d92",
+      "state": "EXACT_SERVER_PREIMAGE_PATCH",
+      "candidate_sha256": "9e18689d0172020652fca418701a7746228090879d8b248ab6e63f4df05c3d92"
+    },
+    "vibetrading/runtime_control.py": {
+      "baseline_sha256": null,
+      "server_preimage_sha256": null,
+      "local_delta_sha256": "c162de94a24dfa4e772529044cb9c69016ea34150bdb45ce1fa37c97e69d441d",
+      "state": "NEW_REFACTOR_MODULE",
+      "candidate_sha256": "c162de94a24dfa4e772529044cb9c69016ea34150bdb45ce1fa37c97e69d441d"
+    },
+    "vibetrading/runtime_paths.py": {
+      "baseline_sha256": null,
+      "server_preimage_sha256": null,
+      "local_delta_sha256": "f74899a72df9791f044e940ed6054960a577458e9593191a73a1c3c78bcf476c",
+      "state": "NEW_REFACTOR_MODULE",
+      "candidate_sha256": "f74899a72df9791f044e940ed6054960a577458e9593191a73a1c3c78bcf476c"
+    },
+    "vibetrading/settings.py": {
+      "baseline_sha256": "d5ae255b15e07c31d57a55ebe5d522f83c8f0d9002fbec0179a41e4ec72915a5",
+      "server_preimage_sha256": "d5ae255b15e07c31d57a55ebe5d522f83c8f0d9002fbec0179a41e4ec72915a5",
+      "local_delta_sha256": "d7f8413024824118c357a628cdfa69c998a22884f7ee159bf8e6d375ef4ded95",
+      "state": "EXACT_SERVER_PREIMAGE_PATCH",
+      "candidate_sha256": "d7f8413024824118c357a628cdfa69c998a22884f7ee159bf8e6d375ef4ded95"
+    },
+    "vibetrading/sqlite_store.py": {
+      "baseline_sha256": "d11e3ac45baf9c3cfe1799d43c49fe60c08f1fbf455171f26dc9d68075a8f0ea",
+      "server_preimage_sha256": "d11e3ac45baf9c3cfe1799d43c49fe60c08f1fbf455171f26dc9d68075a8f0ea",
+      "local_delta_sha256": "955430027048c98eaa864a098ff494a8ab31c42ea06e34fc52f76068fcd3ee0b",
+      "state": "EXACT_SERVER_PREIMAGE_PATCH",
+      "candidate_sha256": "955430027048c98eaa864a098ff494a8ab31c42ea06e34fc52f76068fcd3ee0b"
+    },
+    "vibetrading/status.py": {
+      "baseline_sha256": "db28b2e4dea84429daff0b7e966fe10ea46ea68eb327611602807d542353b159",
+      "server_preimage_sha256": "db28b2e4dea84429daff0b7e966fe10ea46ea68eb327611602807d542353b159",
+      "local_delta_sha256": "f35e34a060f863ac7d45e26af39909ba0e3a7612184796628a1e61e4c916a6a9",
+      "state": "EXACT_SERVER_PREIMAGE_PATCH",
+      "candidate_sha256": "f35e34a060f863ac7d45e26af39909ba0e3a7612184796628a1e61e4c916a6a9"
+    },
+    "vibetrading/storage_backend.py": {
+      "baseline_sha256": "18f1b886251c1a0a52215a6392ce2a99aba55985a8db5e0e70d8dc6a94927f15",
+      "server_preimage_sha256": "18f1b886251c1a0a52215a6392ce2a99aba55985a8db5e0e70d8dc6a94927f15",
+      "local_delta_sha256": "c1a55e79793f0dd482016802dd763c442c60435232a51cf018f8625f8121b642",
+      "state": "EXACT_SERVER_PREIMAGE_PATCH",
+      "candidate_sha256": "c1a55e79793f0dd482016802dd763c442c60435232a51cf018f8625f8121b642"
+    },
+    "vibetrading/storage_guard.py": {
+      "baseline_sha256": "a626ec955d2bd1c561f98b64fa9ee032306eb4d411e0979acd86ce0fa8d6ce08",
+      "server_preimage_sha256": "a626ec955d2bd1c561f98b64fa9ee032306eb4d411e0979acd86ce0fa8d6ce08",
+      "local_delta_sha256": "942d7b985806b8154741449a729d523ce4cf34540e9c821f3a20c16c2dd65ad6",
+      "state": "EXACT_SERVER_PREIMAGE_PATCH",
+      "candidate_sha256": "942d7b985806b8154741449a729d523ce4cf34540e9c821f3a20c16c2dd65ad6"
+    },
+    "vibetrading/strategy_contract.py": {
+      "baseline_sha256": "88263fe2365226362e4c35d45af2ed11c0bd262fdf882527d5e7b3978cadac86",
+      "server_preimage_sha256": "88263fe2365226362e4c35d45af2ed11c0bd262fdf882527d5e7b3978cadac86",
+      "local_delta_sha256": "90fa77440bdcafdfa6e421f2c08a7d3bb8b6dfc3dcd0e5d0b2b3e88587ce4d16",
+      "state": "EXACT_SERVER_PREIMAGE_PATCH",
+      "candidate_sha256": "90fa77440bdcafdfa6e421f2c08a7d3bb8b6dfc3dcd0e5d0b2b3e88587ce4d16"
+    },
+    "vibetrading/strategy_runner.py": {
+      "baseline_sha256": "f07324b657bf9b1857488b3dd7b86f505faa08ebc22e35d5c5d3bb88d0ba4943",
+      "server_preimage_sha256": "f07324b657bf9b1857488b3dd7b86f505faa08ebc22e35d5c5d3bb88d0ba4943",
+      "local_delta_sha256": "c1f482cbe73b661426bbf7d6f084aaf6abe6b6007cae7aaac29e529363995cc8",
+      "state": "EXACT_SERVER_PREIMAGE_PATCH",
+      "candidate_sha256": "c1f482cbe73b661426bbf7d6f084aaf6abe6b6007cae7aaac29e529363995cc8"
+    },
+    "vibetrading/telegram.py": {
+      "baseline_sha256": "2fe6451ea5c402590e2b458cd88372f4497f904badaf43cb989f4b0b6f0d87e6",
+      "server_preimage_sha256": "2fe6451ea5c402590e2b458cd88372f4497f904badaf43cb989f4b0b6f0d87e6",
+      "local_delta_sha256": "aabf5df9eb1b9ca6aa6bb808849da3fcfa97061b3c1f1a01b7f4b469f080e5d4",
+      "state": "EXACT_SERVER_PREIMAGE_PATCH",
+      "candidate_sha256": "aabf5df9eb1b9ca6aa6bb808849da3fcfa97061b3c1f1a01b7f4b469f080e5d4"
+    },
+    "vibetrading/telegram_state.py": {
+      "baseline_sha256": null,
+      "server_preimage_sha256": null,
+      "local_delta_sha256": "bf1c0c1b9e2e3d5c4f7d5bc16f99dcd039b9d1cbfee765806f2eb917bf39984e",
+      "state": "NEW_REFACTOR_MODULE",
+      "candidate_sha256": "bf1c0c1b9e2e3d5c4f7d5bc16f99dcd039b9d1cbfee765806f2eb917bf39984e"
+    },
+    "vibetrading/dashboard/bridge.py": {
+      "baseline_sha256": "ad410db80bfd6fda0370b8c10d490d7697c700e1179bf8d8150386cbd7c5e81c",
+      "server_preimage_sha256": "ad410db80bfd6fda0370b8c10d490d7697c700e1179bf8d8150386cbd7c5e81c",
+      "local_delta_sha256": "4b1cb3881770356b7f290d6155638c4669243807c85580cfe5f6f9dfa5aff1f3",
+      "state": "EXACT_SERVER_PREIMAGE_PATCH",
+      "candidate_sha256": "4b1cb3881770356b7f290d6155638c4669243807c85580cfe5f6f9dfa5aff1f3"
+    }
+  },
+  "selected_delta_paths": null,
+  "blocked_files": [],
+  "production_status": "NOT_UPLOADED_NOT_BUILT_NOT_DEPLOYED",
+  "server_only_changes": "PRESERVED; unchanged local modules never replace server variants",
+  "status": "CANDIDATE_REQUIRES_ROLE_SPECIFIC_TESTS_AND_REVIEW",
+  "local_v6_product_equivalence": {
+    "files": 130,
+    "differences": []
+  }
+}

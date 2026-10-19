@@ -1,0 +1,61 @@
+{
+  "compose_files": {
+    "/opt/vibetrading/releases/telegram-recovery-20261014/dashboard.yml": "145bae53817aa15d85d8925abdfe34657e50ff20d1b65aae0687336169af2279",
+    "/opt/vibetrading/releases/telegram-recovery-20261014/runtime.yml": "f50b9aa8ce076f84adb2361b55559d2d0562c775285276c3995089a900a27e15"
+  },
+  "compose_root": "/opt/vibetrading/releases/telegram-recovery-20261014",
+  "compose_services": [
+    "bridge",
+    "collectors",
+    "crypto-collector-arcus",
+    "crypto-collector-binance",
+    "crypto-collector-grvt",
+    "crypto-maintenance",
+    "crypto-storage",
+    "etf-csv-sync",
+    "etf-mock",
+    "maintenance",
+    "nats",
+    "storage",
+    "telegram",
+    "timefolio"
+  ],
+  "containers": {
+    "vibetrading-crypto-storage-1": {
+      "compose_config_files": "/opt/vibetrading/releases/telegram-recovery-20261014/runtime.yml",
+      "compose_service_sha256": "ab3a91bd604400dbb9fc55ef9de38b7c3943e8f65eb47e956faa6be0a490c8ae",
+      "container_id": "d528f40b0e218c5978d8de2f83d3901a72c0e6cafc024e628987c322525d575d",
+      "env_identity_sha256": "f495877df5e5c43855cddad772c446d97833116b68f6af2d43e9ff6957388fae",
+      "host_config_sha256": "0d84a68cd816e2cfcc3e2f69758d2ef71a9c0df2aa333e59d0260a74bbe988c6",
+      "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "image_tag": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "mounts_sha256": "49c5b8cd332d047d04be51abe88c1b1c0368b98d9928492a7efd38e714843c24",
+      "process_config_sha256": "7af0667695f8ef834da9a973a4c64e5492d98aa200af034996d5a2a92e7d1009",
+      "project": "vibetrading",
+      "restart_count": 0,
+      "runtime_config_sha256": "f81226d4562e0110bf10e00196c4fc1084a9c299a873133f5688ab5769e7d646",
+      "service": "crypto-storage",
+      "state": "running"
+    },
+    "vibetrading-storage-1": {
+      "compose_config_files": "/opt/vibetrading/releases/telegram-recovery-20261014/runtime.yml",
+      "compose_service_sha256": "a1e0255afdc72c6edabfeb6f91b5b1a904037b09cfc7347c3d997751f0a73491",
+      "container_id": "8d98469fa651cab98dd9af45e6797d8263c1b87abf0c5f774eb81a0f25d2ef2c",
+      "env_identity_sha256": "d3352caf1c6ac77d85e51665734a35f5290398029d1ce0a325bb19d20ebb1cf2",
+      "host_config_sha256": "04646f45d8b2eb72b981216da653d47841107af7f9469c7eb3bac7dce6f0aff9",
+      "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "image_tag": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "mounts_sha256": "49c5b8cd332d047d04be51abe88c1b1c0368b98d9928492a7efd38e714843c24",
+      "process_config_sha256": "e627feed9ba2cd5d2112574232bef6cc4bf701262ec062ea0fda4882fd54cd06",
+      "project": "vibetrading",
+      "restart_count": 0,
+      "runtime_config_sha256": "b7a46bc58dbac9782144615437c145c578d055a777784ba937ffd0c717589cd4",
+      "service": "storage",
+      "state": "running"
+    }
+  },
+  "observed_utc": "2026-10-19T09:54:11.182487+00:00",
+  "resolved_compose_sha256": "52d4cb1059c521a4933888591b6d3b81157159920e739fdae4ee7a5eecfd8b52",
+  "schema_version": 1,
+  "status": "READ_ONLY_IDENTITY_PINS_NOT_AUTHORIZATION"
+}

@@ -1,0 +1,343 @@
+{
+  "provenance": "Frozen baseline source, fixed clock, fake JetStream/Core transports; synthetic only",
+  "baseline_bus_sha256": "dea0b7bf1f494d6ce0fcff18ba17654c2c48f6e89dce57ab3e9153f50ff20476",
+  "baseline_runtime_sha256": "69a4e401016cdfb4be8a2ef6dad2142a2601c10a569a01faefdf8c7a19d28832",
+  "probe_sha256": "e24266473bbbeb580cd1054e503a285199983f98e2fecee8ae0ced4cee983fe8",
+  "transcript": {
+    "backfill": {
+      "bytes": 1000,
+      "calls": [
+        {
+          "headers": {
+            "Nats-Msg-Id": "5746738b7185f765b4d7d3208bba7bb9f21d7e04cf5230e1e35bb52c79df99e7"
+          },
+          "lane": "js",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiI1NzQ2NzM4YjcxODVmNzY1YjRkN2QzMjA4YmJhN2JiOWYyMWQ3ZTA0Y2Y1MjMwZTFlMzViYjUyYzc5ZGY5OWU3IiwiZXZlbnRfdHlwZSI6ImJhcl8xbSIsImluc3RydW1lbnQiOnsidmVudWUiOiJraXMiLCJhc3NldF9jbGFzcyI6ImluZGV4IiwicmF3X3N5bWJvbCI6IjIwMDEiLCJzdGRfc3ltYm9sIjoiS09TUEkyMDAiLCJjb250cmFjdF9tb250aCI6bnVsbCwiZXhwaXJ5IjpudWxsLCJzdHJpa2UiOm51bGwsIm9wdGlvbl9yaWdodCI6bnVsbCwidW5kZXJseWluZyI6bnVsbCwic2VjdXJpdHlfa2luZCI6bnVsbCwiY3VycmVuY3kiOm51bGwsImV4Y2hhbmdlIjpudWxsfSwic291cmNlX3RzX25zIjoxNzkyMjgxNjAwMDAwMDAwMDAwLCJzb3VyY2VfdGltZXN0YW1wX2tpbmQiOiJwcm92aWRlcl9ldmVudCIsIm9ic2VydmVkX2RlbGF5X21zIjpudWxsLCJ3YWxsY2xvY2tfdHNfbnMiOjE3OTIyODE2MDAwMDAwMDAwMDAsInJlY2VpdmVfdHNfbnMiOjE3OTIyODE2MDAwMDAwMDAwMDAsInJlY2VpdmVfbW9ub3RvbmljX25zIjoxMjMsImNvbGxlY3Rvcl9ydW5faWQiOm51bGwsImNvbm5lY3Rpb25faWQiOiJmaXh0dXJlIiwicmVjZWl2ZV9zZXF1ZW5jZSI6MSwicmVjb3JkX2luZGV4IjpudWxsLCJuYXRpdmVfZXZlbnRfaWQiOm51bGwsImNvbGxlY3Rpb25fc3RhcnRfdHNfbnMiOm51bGwsImluZ2VzdF9tb2RlIjoiYmFja2ZpbGwiLCJ0cmFkaW5nX2RhdGUiOiIyMDI2LTEwLTE4Iiwic2Vzc2lvbiI6ImZpeHR1cmUiLCJ2ZW51ZSI6ImtpcyIsInByb3ZpZGVyIjoia2lzIiwic2VxdWVuY2UiOjcsImludGVydmFsIjoiMW0iLCJvcGVuX3RzX25zIjoxNzkyMjgxNTQwMDAwMDAwMDAwLCJjbG9zZV90c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwib3BlbiI6IjEwMCIsImhpZ2giOiIxMDIiLCJsb3ciOiI5OSIsImNsb3NlIjoiMTAxIiwidm9sdW1lIjoiNTAiLCJ0cmFkZV9jb3VudCI6bnVsbCwiY2xvc2VkIjp0cnVlfQ==",
+          "subject": "md.bar_1m.kis.index.KOSPI200",
+          "timeout": 5
+        },
+        {
+          "lane": "live",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiI1NzQ2NzM4YjcxODVmNzY1YjRkN2QzMjA4YmJhN2JiOWYyMWQ3ZTA0Y2Y1MjMwZTFlMzViYjUyYzc5ZGY5OWU3IiwiZXZlbnRfdHlwZSI6ImJhcl8xbSIsImluc3RydW1lbnQiOnsidmVudWUiOiJraXMiLCJhc3NldF9jbGFzcyI6ImluZGV4IiwicmF3X3N5bWJvbCI6IjIwMDEiLCJzdGRfc3ltYm9sIjoiS09TUEkyMDAiLCJjb250cmFjdF9tb250aCI6bnVsbCwiZXhwaXJ5IjpudWxsLCJzdHJpa2UiOm51bGwsIm9wdGlvbl9yaWdodCI6bnVsbCwidW5kZXJseWluZyI6bnVsbCwic2VjdXJpdHlfa2luZCI6bnVsbCwiY3VycmVuY3kiOm51bGwsImV4Y2hhbmdlIjpudWxsfSwic291cmNlX3RzX25zIjoxNzkyMjgxNjAwMDAwMDAwMDAwLCJzb3VyY2VfdGltZXN0YW1wX2tpbmQiOiJwcm92aWRlcl9ldmVudCIsIm9ic2VydmVkX2RlbGF5X21zIjpudWxsLCJ3YWxsY2xvY2tfdHNfbnMiOjE3OTIyODE2MDAwMDAwMDAwMDAsInJlY2VpdmVfdHNfbnMiOjE3OTIyODE2MDAwMDAwMDAwMDAsInJlY2VpdmVfbW9ub3RvbmljX25zIjoxMjMsImNvbGxlY3Rvcl9ydW5faWQiOm51bGwsImNvbm5lY3Rpb25faWQiOiJmaXh0dXJlIiwicmVjZWl2ZV9zZXF1ZW5jZSI6MSwicmVjb3JkX2luZGV4IjpudWxsLCJuYXRpdmVfZXZlbnRfaWQiOm51bGwsImNvbGxlY3Rpb25fc3RhcnRfdHNfbnMiOm51bGwsImluZ2VzdF9tb2RlIjoiYmFja2ZpbGwiLCJ0cmFkaW5nX2RhdGUiOiIyMDI2LTEwLTE4Iiwic2Vzc2lvbiI6ImZpeHR1cmUiLCJ2ZW51ZSI6ImtpcyIsInByb3ZpZGVyIjoia2lzIiwic2VxdWVuY2UiOjcsImludGVydmFsIjoiMW0iLCJvcGVuX3RzX25zIjoxNzkyMjgxNTQwMDAwMDAwMDAwLCJjbG9zZV90c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwib3BlbiI6IjEwMCIsImhpZ2giOiIxMDIiLCJsb3ciOiI5OSIsImNsb3NlIjoiMTAxIiwidm9sdW1lIjoiNTAiLCJ0cmFkZV9jb3VudCI6bnVsbCwiY2xvc2VkIjp0cnVlfQ==",
+          "subject": "live.md.bar_1m.kis.index.KOSPI200"
+        }
+      ],
+      "count": 1,
+      "last_event_ts_ns": 1792281600000000000,
+      "symbol_last_seen_ns": {
+        "2001": 1792281600000000000
+      }
+    },
+    "crypto_trade": {
+      "bytes": 951,
+      "calls": [
+        {
+          "headers": {
+            "Nats-Msg-Id": "d39b700f622b7ab23e202445bdf5a6128bcd11cb6b7d1d2f44b8ec65f9c6173d"
+          },
+          "lane": "js",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiJkMzliNzAwZjYyMmI3YWIyM2UyMDI0NDViZGY1YTYxMjhiY2QxMWNiNmI3ZDFkMmY0NGI4ZWM2NWY5YzYxNzNkIiwiZXZlbnRfdHlwZSI6InRyYWRlIiwiaW5zdHJ1bWVudCI6eyJ2ZW51ZSI6ImJpbmFuY2UiLCJhc3NldF9jbGFzcyI6ImNyeXB0b19wZXJwIiwicmF3X3N5bWJvbCI6IkJUQ1VTRFQiLCJzdGRfc3ltYm9sIjoiQlRDVVNEVCIsImNvbnRyYWN0X21vbnRoIjpudWxsLCJleHBpcnkiOm51bGwsInN0cmlrZSI6bnVsbCwib3B0aW9uX3JpZ2h0IjpudWxsLCJ1bmRlcmx5aW5nIjpudWxsLCJzZWN1cml0eV9raW5kIjpudWxsLCJjdXJyZW5jeSI6bnVsbCwiZXhjaGFuZ2UiOm51bGx9LCJzb3VyY2VfdHNfbnMiOjE3OTIyODE2MDAwMDAwMDAwMDAsInNvdXJjZV90aW1lc3RhbXBfa2luZCI6InByb3ZpZGVyX2V2ZW50Iiwib2JzZXJ2ZWRfZGVsYXlfbXMiOm51bGwsIndhbGxjbG9ja190c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV90c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV9tb25vdG9uaWNfbnMiOjEyMywiY29sbGVjdG9yX3J1bl9pZCI6bnVsbCwiY29ubmVjdGlvbl9pZCI6ImZpeHR1cmUiLCJyZWNlaXZlX3NlcXVlbmNlIjoxLCJyZWNvcmRfaW5kZXgiOm51bGwsIm5hdGl2ZV9ldmVudF9pZCI6bnVsbCwiY29sbGVjdGlvbl9zdGFydF90c19ucyI6bnVsbCwiaW5nZXN0X21vZGUiOiJyZWFsdGltZSIsInRyYWRpbmdfZGF0ZSI6IjIwMjYtMTAtMTgiLCJzZXNzaW9uIjoiZml4dHVyZSIsInZlbnVlIjoiYmluYW5jZSIsInByb3ZpZGVyIjoiYmluYW5jZS1wZXJwIiwic2VxdWVuY2UiOjcsInByaWNlIjoiMC4xMjM0NTY3ODkwMTIzNDU2NzgiLCJxdWFudGl0eSI6IjIuMDAwMDAwMDAwMDAwMDAwMDAxIiwiYWdncmVzc29yX3NpZGUiOiJ1bmtub3duIiwidHJhZGVfaWQiOm51bGx9",
+          "subject": "crypto.trade.binance.crypto_perp.BTCUSDT",
+          "timeout": 5
+        },
+        {
+          "lane": "live",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiJkMzliNzAwZjYyMmI3YWIyM2UyMDI0NDViZGY1YTYxMjhiY2QxMWNiNmI3ZDFkMmY0NGI4ZWM2NWY5YzYxNzNkIiwiZXZlbnRfdHlwZSI6InRyYWRlIiwiaW5zdHJ1bWVudCI6eyJ2ZW51ZSI6ImJpbmFuY2UiLCJhc3NldF9jbGFzcyI6ImNyeXB0b19wZXJwIiwicmF3X3N5bWJvbCI6IkJUQ1VTRFQiLCJzdGRfc3ltYm9sIjoiQlRDVVNEVCIsImNvbnRyYWN0X21vbnRoIjpudWxsLCJleHBpcnkiOm51bGwsInN0cmlrZSI6bnVsbCwib3B0aW9uX3JpZ2h0IjpudWxsLCJ1bmRlcmx5aW5nIjpudWxsLCJzZWN1cml0eV9raW5kIjpudWxsLCJjdXJyZW5jeSI6bnVsbCwiZXhjaGFuZ2UiOm51bGx9LCJzb3VyY2VfdHNfbnMiOjE3OTIyODE2MDAwMDAwMDAwMDAsInNvdXJjZV90aW1lc3RhbXBfa2luZCI6InByb3ZpZGVyX2V2ZW50Iiwib2JzZXJ2ZWRfZGVsYXlfbXMiOm51bGwsIndhbGxjbG9ja190c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV90c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV9tb25vdG9uaWNfbnMiOjEyMywiY29sbGVjdG9yX3J1bl9pZCI6bnVsbCwiY29ubmVjdGlvbl9pZCI6ImZpeHR1cmUiLCJyZWNlaXZlX3NlcXVlbmNlIjoxLCJyZWNvcmRfaW5kZXgiOm51bGwsIm5hdGl2ZV9ldmVudF9pZCI6bnVsbCwiY29sbGVjdGlvbl9zdGFydF90c19ucyI6bnVsbCwiaW5nZXN0X21vZGUiOiJyZWFsdGltZSIsInRyYWRpbmdfZGF0ZSI6IjIwMjYtMTAtMTgiLCJzZXNzaW9uIjoiZml4dHVyZSIsInZlbnVlIjoiYmluYW5jZSIsInByb3ZpZGVyIjoiYmluYW5jZS1wZXJwIiwic2VxdWVuY2UiOjcsInByaWNlIjoiMC4xMjM0NTY3ODkwMTIzNDU2NzgiLCJxdWFudGl0eSI6IjIuMDAwMDAwMDAwMDAwMDAwMDAxIiwiYWdncmVzc29yX3NpZGUiOiJ1bmtub3duIiwidHJhZGVfaWQiOm51bGx9",
+          "subject": "live.crypto.trade.binance.crypto_perp.BTCUSDT"
+        }
+      ],
+      "count": 1,
+      "last_event_ts_ns": 1792281600000000000,
+      "symbol_last_seen_ns": {
+        "BTCUSDT": 1792281600000000000
+      }
+    },
+    "disallowed_symbol": {
+      "bytes": 948,
+      "calls": [],
+      "count": 1,
+      "last_event_ts_ns": 1792281600000000000,
+      "symbol_last_seen_ns": {
+        "NOPE": 1792281600000000000
+      }
+    },
+    "durable_only_book": {
+      "bytes": 1296,
+      "calls": [
+        {
+          "headers": {
+            "Nats-Msg-Id": "b7484bdbc224c48ed13ed043b760165e28608f5809f2287668604f385957b168"
+          },
+          "lane": "js",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiJiNzQ4NGJkYmMyMjRjNDhlZDEzZWQwNDNiNzYwMTY1ZTI4NjA4ZjU4MDlmMjI4NzY2ODYwNGYzODU5NTdiMTY4IiwiZXZlbnRfdHlwZSI6Im9yZGVyX2Jvb2siLCJpbnN0cnVtZW50Ijp7InZlbnVlIjoiYmluYW5jZSIsImFzc2V0X2NsYXNzIjoiY3J5cHRvX3BlcnAiLCJyYXdfc3ltYm9sIjoiQlRDVVNEVCIsInN0ZF9zeW1ib2wiOiJCVENVU0RUIiwiY29udHJhY3RfbW9udGgiOm51bGwsImV4cGlyeSI6bnVsbCwic3RyaWtlIjpudWxsLCJvcHRpb25fcmlnaHQiOm51bGwsInVuZGVybHlpbmciOm51bGwsInNlY3VyaXR5X2tpbmQiOm51bGwsImN1cnJlbmN5IjpudWxsLCJleGNoYW5nZSI6bnVsbH0sInNvdXJjZV90c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwic291cmNlX3RpbWVzdGFtcF9raW5kIjoicHJvdmlkZXJfZXZlbnQiLCJvYnNlcnZlZF9kZWxheV9tcyI6bnVsbCwid2FsbGNsb2NrX3RzX25zIjoxNzkyMjgxNjAwMDAwMDAwMDAwLCJyZWNlaXZlX3RzX25zIjoxNzkyMjgxNjAwMDAwMDAwMDAwLCJyZWNlaXZlX21vbm90b25pY19ucyI6MTIzLCJjb2xsZWN0b3JfcnVuX2lkIjpudWxsLCJjb25uZWN0aW9uX2lkIjoiZml4dHVyZSIsInJlY2VpdmVfc2VxdWVuY2UiOjEsInJlY29yZF9pbmRleCI6bnVsbCwibmF0aXZlX2V2ZW50X2lkIjpudWxsLCJjb2xsZWN0aW9uX3N0YXJ0X3RzX25zIjpudWxsLCJpbmdlc3RfbW9kZSI6InJlYWx0aW1lIiwidHJhZGluZ19kYXRlIjoiMjAyNi0xMC0xOCIsInNlc3Npb24iOiJmaXh0dXJlIiwidmVudWUiOiJiaW5hbmNlIiwicHJvdmlkZXIiOiJiaW5hbmNlLXBlcnAiLCJzZXF1ZW5jZSI6NywidXBkYXRlX3R5cGUiOiJzbmFwc2hvdCIsImRlcHRoIjoyLCJiaWRzIjpbeyJwcmljZSI6IjEwLjAwIiwicXVhbnRpdHkiOiIyLjAwIiwib3JkZXJfY291bnQiOjN9LHsicHJpY2UiOiI5LjAiLCJxdWFudGl0eSI6IjAiLCJvcmRlcl9jb3VudCI6bnVsbH1dLCJhc2tzIjpbeyJwcmljZSI6IjExLjAwMCIsInF1YW50aXR5IjoiMyIsIm9yZGVyX2NvdW50IjpudWxsfV0sImlzX2Z1bGxfZGVwdGgiOmZhbHNlLCJzYW1wbGVkX2F0X25zIjpudWxsLCJjaGFubmVsIjpudWxsLCJwcm92aWRlcl9kZXB0aCI6bnVsbCwiZmlyc3RfdXBkYXRlX2lkIjo2LCJmaW5hbF91cGRhdGVfaWQiOjcsInByZXZpb3VzX3VwZGF0ZV9pZCI6NSwic3luY19nZW5lcmF0aW9uIjoxLCJmYXN0IjpmYWxzZSwicmF3X3BheWxvYWQiOiJ7XCJuYXRpdmVcIjpcIu2VnOq4gFwiLFwiYlwiOltbXCI5LjBcIixcIjBcIl1dfSJ9",
+          "subject": "crypto.order_book.binance.crypto_perp.BTCUSDT",
+          "timeout": 5
+        }
+      ],
+      "count": 1,
+      "last_event_ts_ns": 1792281600000000000,
+      "symbol_last_seen_ns": {
+        "BTCUSDT": 1792281600000000000
+      }
+    },
+    "etf_bar": {
+      "bytes": 1014,
+      "calls": [
+        {
+          "headers": {
+            "Nats-Msg-Id": "5746738b7185f765b4d7d3208bba7bb9f21d7e04cf5230e1e35bb52c79df99e7"
+          },
+          "lane": "js",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiI1NzQ2NzM4YjcxODVmNzY1YjRkN2QzMjA4YmJhN2JiOWYyMWQ3ZTA0Y2Y1MjMwZTFlMzViYjUyYzc5ZGY5OWU3IiwiZXZlbnRfdHlwZSI6ImJhcl8xbSIsImluc3RydW1lbnQiOnsidmVudWUiOiJraXdvb20iLCJhc3NldF9jbGFzcyI6ImV0ZiIsInJhd19zeW1ib2wiOiIwNjk1MDAiLCJzdGRfc3ltYm9sIjoiS0lXT09NOjA2OTUwMCIsImNvbnRyYWN0X21vbnRoIjpudWxsLCJleHBpcnkiOm51bGwsInN0cmlrZSI6bnVsbCwib3B0aW9uX3JpZ2h0IjpudWxsLCJ1bmRlcmx5aW5nIjpudWxsLCJzZWN1cml0eV9raW5kIjpudWxsLCJjdXJyZW5jeSI6bnVsbCwiZXhjaGFuZ2UiOm51bGx9LCJzb3VyY2VfdHNfbnMiOjE3OTIyODE2MDAwMDAwMDAwMDAsInNvdXJjZV90aW1lc3RhbXBfa2luZCI6InByb3ZpZGVyX2V2ZW50Iiwib2JzZXJ2ZWRfZGVsYXlfbXMiOm51bGwsIndhbGxjbG9ja190c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV90c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV9tb25vdG9uaWNfbnMiOjEyMywiY29sbGVjdG9yX3J1bl9pZCI6bnVsbCwiY29ubmVjdGlvbl9pZCI6ImZpeHR1cmUiLCJyZWNlaXZlX3NlcXVlbmNlIjoxLCJyZWNvcmRfaW5kZXgiOm51bGwsIm5hdGl2ZV9ldmVudF9pZCI6bnVsbCwiY29sbGVjdGlvbl9zdGFydF90c19ucyI6bnVsbCwiaW5nZXN0X21vZGUiOiJyZWFsdGltZSIsInRyYWRpbmdfZGF0ZSI6IjIwMjYtMTAtMTgiLCJzZXNzaW9uIjoiZml4dHVyZSIsInZlbnVlIjoia2l3b29tIiwicHJvdmlkZXIiOiJraXdvb20iLCJzZXF1ZW5jZSI6NywiaW50ZXJ2YWwiOiIxbSIsIm9wZW5fdHNfbnMiOjE3OTIyODE1NDAwMDAwMDAwMDAsImNsb3NlX3RzX25zIjoxNzkyMjgxNjAwMDAwMDAwMDAwLCJvcGVuIjoiMTAwIiwiaGlnaCI6IjEwMiIsImxvdyI6Ijk5IiwiY2xvc2UiOiIxMDEiLCJ2b2x1bWUiOiI1MCIsInRyYWRlX2NvdW50IjpudWxsLCJjbG9zZWQiOnRydWV9",
+          "subject": "md.bar_1m.kiwoom.etf.KIWOOM_069500",
+          "timeout": 5
+        },
+        {
+          "lane": "live",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiI1NzQ2NzM4YjcxODVmNzY1YjRkN2QzMjA4YmJhN2JiOWYyMWQ3ZTA0Y2Y1MjMwZTFlMzViYjUyYzc5ZGY5OWU3IiwiZXZlbnRfdHlwZSI6ImJhcl8xbSIsImluc3RydW1lbnQiOnsidmVudWUiOiJraXdvb20iLCJhc3NldF9jbGFzcyI6ImV0ZiIsInJhd19zeW1ib2wiOiIwNjk1MDAiLCJzdGRfc3ltYm9sIjoiS0lXT09NOjA2OTUwMCIsImNvbnRyYWN0X21vbnRoIjpudWxsLCJleHBpcnkiOm51bGwsInN0cmlrZSI6bnVsbCwib3B0aW9uX3JpZ2h0IjpudWxsLCJ1bmRlcmx5aW5nIjpudWxsLCJzZWN1cml0eV9raW5kIjpudWxsLCJjdXJyZW5jeSI6bnVsbCwiZXhjaGFuZ2UiOm51bGx9LCJzb3VyY2VfdHNfbnMiOjE3OTIyODE2MDAwMDAwMDAwMDAsInNvdXJjZV90aW1lc3RhbXBfa2luZCI6InByb3ZpZGVyX2V2ZW50Iiwib2JzZXJ2ZWRfZGVsYXlfbXMiOm51bGwsIndhbGxjbG9ja190c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV90c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV9tb25vdG9uaWNfbnMiOjEyMywiY29sbGVjdG9yX3J1bl9pZCI6bnVsbCwiY29ubmVjdGlvbl9pZCI6ImZpeHR1cmUiLCJyZWNlaXZlX3NlcXVlbmNlIjoxLCJyZWNvcmRfaW5kZXgiOm51bGwsIm5hdGl2ZV9ldmVudF9pZCI6bnVsbCwiY29sbGVjdGlvbl9zdGFydF90c19ucyI6bnVsbCwiaW5nZXN0X21vZGUiOiJyZWFsdGltZSIsInRyYWRpbmdfZGF0ZSI6IjIwMjYtMTAtMTgiLCJzZXNzaW9uIjoiZml4dHVyZSIsInZlbnVlIjoia2l3b29tIiwicHJvdmlkZXIiOiJraXdvb20iLCJzZXF1ZW5jZSI6NywiaW50ZXJ2YWwiOiIxbSIsIm9wZW5fdHNfbnMiOjE3OTIyODE1NDAwMDAwMDAwMDAsImNsb3NlX3RzX25zIjoxNzkyMjgxNjAwMDAwMDAwMDAwLCJvcGVuIjoiMTAwIiwiaGlnaCI6IjEwMiIsImxvdyI6Ijk5IiwiY2xvc2UiOiIxMDEiLCJ2b2x1bWUiOiI1MCIsInRyYWRlX2NvdW50IjpudWxsLCJjbG9zZWQiOnRydWV9",
+          "subject": "live.md.bar_1m.kiwoom.etf.KIWOOM_069500"
+        }
+      ],
+      "count": 1,
+      "last_event_ts_ns": 1792281600000000000,
+      "symbol_last_seen_ns": {
+        "069500": 1792281600000000000
+      }
+    },
+    "etf_book": {
+      "bytes": 1284,
+      "calls": [
+        {
+          "headers": {
+            "Nats-Msg-Id": "b7484bdbc224c48ed13ed043b760165e28608f5809f2287668604f385957b168"
+          },
+          "lane": "js",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiJiNzQ4NGJkYmMyMjRjNDhlZDEzZWQwNDNiNzYwMTY1ZTI4NjA4ZjU4MDlmMjI4NzY2ODYwNGYzODU5NTdiMTY4IiwiZXZlbnRfdHlwZSI6Im9yZGVyX2Jvb2siLCJpbnN0cnVtZW50Ijp7InZlbnVlIjoia2l3b29tIiwiYXNzZXRfY2xhc3MiOiJldGYiLCJyYXdfc3ltYm9sIjoiMDY5NTAwIiwic3RkX3N5bWJvbCI6IktJV09PTTowNjk1MDAiLCJjb250cmFjdF9tb250aCI6bnVsbCwiZXhwaXJ5IjpudWxsLCJzdHJpa2UiOm51bGwsIm9wdGlvbl9yaWdodCI6bnVsbCwidW5kZXJseWluZyI6bnVsbCwic2VjdXJpdHlfa2luZCI6bnVsbCwiY3VycmVuY3kiOm51bGwsImV4Y2hhbmdlIjpudWxsfSwic291cmNlX3RzX25zIjoxNzkyMjgxNjAwMDAwMDAwMDAwLCJzb3VyY2VfdGltZXN0YW1wX2tpbmQiOiJwcm92aWRlcl9ldmVudCIsIm9ic2VydmVkX2RlbGF5X21zIjpudWxsLCJ3YWxsY2xvY2tfdHNfbnMiOjE3OTIyODE2MDAwMDAwMDAwMDAsInJlY2VpdmVfdHNfbnMiOjE3OTIyODE2MDAwMDAwMDAwMDAsInJlY2VpdmVfbW9ub3RvbmljX25zIjoxMjMsImNvbGxlY3Rvcl9ydW5faWQiOm51bGwsImNvbm5lY3Rpb25faWQiOiJmaXh0dXJlIiwicmVjZWl2ZV9zZXF1ZW5jZSI6MSwicmVjb3JkX2luZGV4IjpudWxsLCJuYXRpdmVfZXZlbnRfaWQiOm51bGwsImNvbGxlY3Rpb25fc3RhcnRfdHNfbnMiOm51bGwsImluZ2VzdF9tb2RlIjoicmVhbHRpbWUiLCJ0cmFkaW5nX2RhdGUiOiIyMDI2LTEwLTE4Iiwic2Vzc2lvbiI6ImZpeHR1cmUiLCJ2ZW51ZSI6Imtpd29vbSIsInByb3ZpZGVyIjoia2l3b29tIiwic2VxdWVuY2UiOjcsInVwZGF0ZV90eXBlIjoic25hcHNob3QiLCJkZXB0aCI6MiwiYmlkcyI6W3sicHJpY2UiOiIxMC4wMCIsInF1YW50aXR5IjoiMi4wMCIsIm9yZGVyX2NvdW50IjozfSx7InByaWNlIjoiOS4wIiwicXVhbnRpdHkiOiIwIiwib3JkZXJfY291bnQiOm51bGx9XSwiYXNrcyI6W3sicHJpY2UiOiIxMS4wMDAiLCJxdWFudGl0eSI6IjMiLCJvcmRlcl9jb3VudCI6bnVsbH1dLCJpc19mdWxsX2RlcHRoIjpmYWxzZSwic2FtcGxlZF9hdF9ucyI6bnVsbCwiY2hhbm5lbCI6bnVsbCwicHJvdmlkZXJfZGVwdGgiOm51bGwsImZpcnN0X3VwZGF0ZV9pZCI6NiwiZmluYWxfdXBkYXRlX2lkIjo3LCJwcmV2aW91c191cGRhdGVfaWQiOjUsInN5bmNfZ2VuZXJhdGlvbiI6MSwiZmFzdCI6dHJ1ZSwicmF3X3BheWxvYWQiOiJ7XCJuYXRpdmVcIjpcIu2VnOq4gFwiLFwiYlwiOltbXCI5LjBcIixcIjBcIl1dfSJ9",
+          "subject": "md.order_book.kiwoom.etf.KIWOOM_069500",
+          "timeout": 5
+        },
+        {
+          "lane": "live",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiJiNzQ4NGJkYmMyMjRjNDhlZDEzZWQwNDNiNzYwMTY1ZTI4NjA4ZjU4MDlmMjI4NzY2ODYwNGYzODU5NTdiMTY4IiwiZXZlbnRfdHlwZSI6Im9yZGVyX2Jvb2siLCJpbnN0cnVtZW50Ijp7InZlbnVlIjoia2l3b29tIiwiYXNzZXRfY2xhc3MiOiJldGYiLCJyYXdfc3ltYm9sIjoiMDY5NTAwIiwic3RkX3N5bWJvbCI6IktJV09PTTowNjk1MDAiLCJjb250cmFjdF9tb250aCI6bnVsbCwiZXhwaXJ5IjpudWxsLCJzdHJpa2UiOm51bGwsIm9wdGlvbl9yaWdodCI6bnVsbCwidW5kZXJseWluZyI6bnVsbCwic2VjdXJpdHlfa2luZCI6bnVsbCwiY3VycmVuY3kiOm51bGwsImV4Y2hhbmdlIjpudWxsfSwic291cmNlX3RzX25zIjoxNzkyMjgxNjAwMDAwMDAwMDAwLCJzb3VyY2VfdGltZXN0YW1wX2tpbmQiOiJwcm92aWRlcl9ldmVudCIsIm9ic2VydmVkX2RlbGF5X21zIjpudWxsLCJ3YWxsY2xvY2tfdHNfbnMiOjE3OTIyODE2MDAwMDAwMDAwMDAsInJlY2VpdmVfdHNfbnMiOjE3OTIyODE2MDAwMDAwMDAwMDAsInJlY2VpdmVfbW9ub3RvbmljX25zIjoxMjMsImNvbGxlY3Rvcl9ydW5faWQiOm51bGwsImNvbm5lY3Rpb25faWQiOiJmaXh0dXJlIiwicmVjZWl2ZV9zZXF1ZW5jZSI6MSwicmVjb3JkX2luZGV4IjpudWxsLCJuYXRpdmVfZXZlbnRfaWQiOm51bGwsImNvbGxlY3Rpb25fc3RhcnRfdHNfbnMiOm51bGwsImluZ2VzdF9tb2RlIjoicmVhbHRpbWUiLCJ0cmFkaW5nX2RhdGUiOiIyMDI2LTEwLTE4Iiwic2Vzc2lvbiI6ImZpeHR1cmUiLCJ2ZW51ZSI6Imtpd29vbSIsInByb3ZpZGVyIjoia2l3b29tIiwic2VxdWVuY2UiOjcsInVwZGF0ZV90eXBlIjoic25hcHNob3QiLCJkZXB0aCI6MiwiYmlkcyI6W3sicHJpY2UiOiIxMC4wMCIsInF1YW50aXR5IjoiMi4wMCIsIm9yZGVyX2NvdW50IjozfSx7InByaWNlIjoiOS4wIiwicXVhbnRpdHkiOiIwIiwib3JkZXJfY291bnQiOm51bGx9XSwiYXNrcyI6W3sicHJpY2UiOiIxMS4wMDAiLCJxdWFudGl0eSI6IjMiLCJvcmRlcl9jb3VudCI6bnVsbH1dLCJpc19mdWxsX2RlcHRoIjpmYWxzZSwic2FtcGxlZF9hdF9ucyI6bnVsbCwiY2hhbm5lbCI6bnVsbCwicHJvdmlkZXJfZGVwdGgiOm51bGwsImZpcnN0X3VwZGF0ZV9pZCI6NiwiZmluYWxfdXBkYXRlX2lkIjo3LCJwcmV2aW91c191cGRhdGVfaWQiOjUsInN5bmNfZ2VuZXJhdGlvbiI6MSwiZmFzdCI6dHJ1ZSwicmF3X3BheWxvYWQiOiJ7XCJuYXRpdmVcIjpcIu2VnOq4gFwiLFwiYlwiOltbXCI5LjBcIixcIjBcIl1dfSJ9",
+          "subject": "live.md.order_book.kiwoom.etf.KIWOOM_069500"
+        }
+      ],
+      "count": 1,
+      "last_event_ts_ns": 1792281600000000000,
+      "symbol_last_seen_ns": {
+        "069500": 1792281600000000000
+      }
+    },
+    "etf_nav": {
+      "bytes": 962,
+      "calls": [
+        {
+          "headers": {
+            "Nats-Msg-Id": "5dc0303c9ba288a6327e092acf638d7a481a42d95d15b055aa9e3fe8b6ff27c7"
+          },
+          "lane": "js",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiI1ZGMwMzAzYzliYTI4OGE2MzI3ZTA5MmFjZjYzOGQ3YTQ4MWE0MmQ5NWQxNWIwNTVhYTllM2ZlOGI2ZmYyN2M3IiwiZXZlbnRfdHlwZSI6ImV0Zl9uYXYiLCJpbnN0cnVtZW50Ijp7InZlbnVlIjoia2l3b29tIiwiYXNzZXRfY2xhc3MiOiJldGYiLCJyYXdfc3ltYm9sIjoiMDY5NTAwIiwic3RkX3N5bWJvbCI6IktJV09PTTowNjk1MDAiLCJjb250cmFjdF9tb250aCI6bnVsbCwiZXhwaXJ5IjpudWxsLCJzdHJpa2UiOm51bGwsIm9wdGlvbl9yaWdodCI6bnVsbCwidW5kZXJseWluZyI6bnVsbCwic2VjdXJpdHlfa2luZCI6bnVsbCwiY3VycmVuY3kiOm51bGwsImV4Y2hhbmdlIjpudWxsfSwic291cmNlX3RzX25zIjoxNzkyMjgxNjAwMDAwMDAwMDAwLCJzb3VyY2VfdGltZXN0YW1wX2tpbmQiOiJwcm92aWRlcl9ldmVudCIsIm9ic2VydmVkX2RlbGF5X21zIjpudWxsLCJ3YWxsY2xvY2tfdHNfbnMiOjE3OTIyODE2MDAwMDAwMDAwMDAsInJlY2VpdmVfdHNfbnMiOjE3OTIyODE2MDAwMDAwMDAwMDAsInJlY2VpdmVfbW9ub3RvbmljX25zIjoxMjMsImNvbGxlY3Rvcl9ydW5faWQiOm51bGwsImNvbm5lY3Rpb25faWQiOiJmaXh0dXJlIiwicmVjZWl2ZV9zZXF1ZW5jZSI6MSwicmVjb3JkX2luZGV4IjpudWxsLCJuYXRpdmVfZXZlbnRfaWQiOm51bGwsImNvbGxlY3Rpb25fc3RhcnRfdHNfbnMiOm51bGwsImluZ2VzdF9tb2RlIjoicmVhbHRpbWUiLCJ0cmFkaW5nX2RhdGUiOiIyMDI2LTEwLTE4Iiwic2Vzc2lvbiI6ImZpeHR1cmUiLCJ2ZW51ZSI6Imtpd29vbSIsInByb3ZpZGVyIjoia2l3b29tIiwic2VxdWVuY2UiOjcsIm5hdiI6IjEwMC4wMTAwIiwibmF2X2NoYW5nZSI6bnVsbCwibmF2X2NoYW5nZV9wY3QiOm51bGwsImluZGV4X2Rpc3Bhcml0eV9wY3QiOm51bGwsImV0Zl9kaXNwYXJpdHlfcGN0IjpudWxsLCJyYXdfcGF5bG9hZCI6bnVsbH0=",
+          "subject": "md.etf_nav.kiwoom.etf.KIWOOM_069500",
+          "timeout": 5
+        },
+        {
+          "lane": "live",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiI1ZGMwMzAzYzliYTI4OGE2MzI3ZTA5MmFjZjYzOGQ3YTQ4MWE0MmQ5NWQxNWIwNTVhYTllM2ZlOGI2ZmYyN2M3IiwiZXZlbnRfdHlwZSI6ImV0Zl9uYXYiLCJpbnN0cnVtZW50Ijp7InZlbnVlIjoia2l3b29tIiwiYXNzZXRfY2xhc3MiOiJldGYiLCJyYXdfc3ltYm9sIjoiMDY5NTAwIiwic3RkX3N5bWJvbCI6IktJV09PTTowNjk1MDAiLCJjb250cmFjdF9tb250aCI6bnVsbCwiZXhwaXJ5IjpudWxsLCJzdHJpa2UiOm51bGwsIm9wdGlvbl9yaWdodCI6bnVsbCwidW5kZXJseWluZyI6bnVsbCwic2VjdXJpdHlfa2luZCI6bnVsbCwiY3VycmVuY3kiOm51bGwsImV4Y2hhbmdlIjpudWxsfSwic291cmNlX3RzX25zIjoxNzkyMjgxNjAwMDAwMDAwMDAwLCJzb3VyY2VfdGltZXN0YW1wX2tpbmQiOiJwcm92aWRlcl9ldmVudCIsIm9ic2VydmVkX2RlbGF5X21zIjpudWxsLCJ3YWxsY2xvY2tfdHNfbnMiOjE3OTIyODE2MDAwMDAwMDAwMDAsInJlY2VpdmVfdHNfbnMiOjE3OTIyODE2MDAwMDAwMDAwMDAsInJlY2VpdmVfbW9ub3RvbmljX25zIjoxMjMsImNvbGxlY3Rvcl9ydW5faWQiOm51bGwsImNvbm5lY3Rpb25faWQiOiJmaXh0dXJlIiwicmVjZWl2ZV9zZXF1ZW5jZSI6MSwicmVjb3JkX2luZGV4IjpudWxsLCJuYXRpdmVfZXZlbnRfaWQiOm51bGwsImNvbGxlY3Rpb25fc3RhcnRfdHNfbnMiOm51bGwsImluZ2VzdF9tb2RlIjoicmVhbHRpbWUiLCJ0cmFkaW5nX2RhdGUiOiIyMDI2LTEwLTE4Iiwic2Vzc2lvbiI6ImZpeHR1cmUiLCJ2ZW51ZSI6Imtpd29vbSIsInByb3ZpZGVyIjoia2l3b29tIiwic2VxdWVuY2UiOjcsIm5hdiI6IjEwMC4wMTAwIiwibmF2X2NoYW5nZSI6bnVsbCwibmF2X2NoYW5nZV9wY3QiOm51bGwsImluZGV4X2Rpc3Bhcml0eV9wY3QiOm51bGwsImV0Zl9kaXNwYXJpdHlfcGN0IjpudWxsLCJyYXdfcGF5bG9hZCI6bnVsbH0=",
+          "subject": "live.md.etf_nav.kiwoom.etf.KIWOOM_069500"
+        }
+      ],
+      "count": 1,
+      "last_event_ts_ns": 1792281600000000000,
+      "symbol_last_seen_ns": {
+        "069500": 1792281600000000000
+      }
+    },
+    "etf_trade": {
+      "bytes": 940,
+      "calls": [
+        {
+          "headers": {
+            "Nats-Msg-Id": "d39b700f622b7ab23e202445bdf5a6128bcd11cb6b7d1d2f44b8ec65f9c6173d"
+          },
+          "lane": "js",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiJkMzliNzAwZjYyMmI3YWIyM2UyMDI0NDViZGY1YTYxMjhiY2QxMWNiNmI3ZDFkMmY0NGI4ZWM2NWY5YzYxNzNkIiwiZXZlbnRfdHlwZSI6InRyYWRlIiwiaW5zdHJ1bWVudCI6eyJ2ZW51ZSI6Imtpd29vbSIsImFzc2V0X2NsYXNzIjoiZXRmIiwicmF3X3N5bWJvbCI6IjA2OTUwMCIsInN0ZF9zeW1ib2wiOiJLSVdPT006MDY5NTAwIiwiY29udHJhY3RfbW9udGgiOm51bGwsImV4cGlyeSI6bnVsbCwic3RyaWtlIjpudWxsLCJvcHRpb25fcmlnaHQiOm51bGwsInVuZGVybHlpbmciOm51bGwsInNlY3VyaXR5X2tpbmQiOm51bGwsImN1cnJlbmN5IjpudWxsLCJleGNoYW5nZSI6bnVsbH0sInNvdXJjZV90c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwic291cmNlX3RpbWVzdGFtcF9raW5kIjoicHJvdmlkZXJfZXZlbnQiLCJvYnNlcnZlZF9kZWxheV9tcyI6bnVsbCwid2FsbGNsb2NrX3RzX25zIjoxNzkyMjgxNjAwMDAwMDAwMDAwLCJyZWNlaXZlX3RzX25zIjoxNzkyMjgxNjAwMDAwMDAwMDAwLCJyZWNlaXZlX21vbm90b25pY19ucyI6MTIzLCJjb2xsZWN0b3JfcnVuX2lkIjpudWxsLCJjb25uZWN0aW9uX2lkIjoiZml4dHVyZSIsInJlY2VpdmVfc2VxdWVuY2UiOjEsInJlY29yZF9pbmRleCI6bnVsbCwibmF0aXZlX2V2ZW50X2lkIjpudWxsLCJjb2xsZWN0aW9uX3N0YXJ0X3RzX25zIjpudWxsLCJpbmdlc3RfbW9kZSI6InJlYWx0aW1lIiwidHJhZGluZ19kYXRlIjoiMjAyNi0xMC0xOCIsInNlc3Npb24iOiJmaXh0dXJlIiwidmVudWUiOiJraXdvb20iLCJwcm92aWRlciI6Imtpd29vbSIsInNlcXVlbmNlIjo3LCJwcmljZSI6IjAuMTIzNDU2Nzg5MDEyMzQ1Njc4IiwicXVhbnRpdHkiOiIyLjAwMDAwMDAwMDAwMDAwMDAwMSIsImFnZ3Jlc3Nvcl9zaWRlIjoidW5rbm93biIsInRyYWRlX2lkIjpudWxsfQ==",
+          "subject": "md.trade.kiwoom.etf.KIWOOM_069500",
+          "timeout": 5
+        },
+        {
+          "lane": "live",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiJkMzliNzAwZjYyMmI3YWIyM2UyMDI0NDViZGY1YTYxMjhiY2QxMWNiNmI3ZDFkMmY0NGI4ZWM2NWY5YzYxNzNkIiwiZXZlbnRfdHlwZSI6InRyYWRlIiwiaW5zdHJ1bWVudCI6eyJ2ZW51ZSI6Imtpd29vbSIsImFzc2V0X2NsYXNzIjoiZXRmIiwicmF3X3N5bWJvbCI6IjA2OTUwMCIsInN0ZF9zeW1ib2wiOiJLSVdPT006MDY5NTAwIiwiY29udHJhY3RfbW9udGgiOm51bGwsImV4cGlyeSI6bnVsbCwic3RyaWtlIjpudWxsLCJvcHRpb25fcmlnaHQiOm51bGwsInVuZGVybHlpbmciOm51bGwsInNlY3VyaXR5X2tpbmQiOm51bGwsImN1cnJlbmN5IjpudWxsLCJleGNoYW5nZSI6bnVsbH0sInNvdXJjZV90c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwic291cmNlX3RpbWVzdGFtcF9raW5kIjoicHJvdmlkZXJfZXZlbnQiLCJvYnNlcnZlZF9kZWxheV9tcyI6bnVsbCwid2FsbGNsb2NrX3RzX25zIjoxNzkyMjgxNjAwMDAwMDAwMDAwLCJyZWNlaXZlX3RzX25zIjoxNzkyMjgxNjAwMDAwMDAwMDAwLCJyZWNlaXZlX21vbm90b25pY19ucyI6MTIzLCJjb2xsZWN0b3JfcnVuX2lkIjpudWxsLCJjb25uZWN0aW9uX2lkIjoiZml4dHVyZSIsInJlY2VpdmVfc2VxdWVuY2UiOjEsInJlY29yZF9pbmRleCI6bnVsbCwibmF0aXZlX2V2ZW50X2lkIjpudWxsLCJjb2xsZWN0aW9uX3N0YXJ0X3RzX25zIjpudWxsLCJpbmdlc3RfbW9kZSI6InJlYWx0aW1lIiwidHJhZGluZ19kYXRlIjoiMjAyNi0xMC0xOCIsInNlc3Npb24iOiJmaXh0dXJlIiwidmVudWUiOiJraXdvb20iLCJwcm92aWRlciI6Imtpd29vbSIsInNlcXVlbmNlIjo3LCJwcmljZSI6IjAuMTIzNDU2Nzg5MDEyMzQ1Njc4IiwicXVhbnRpdHkiOiIyLjAwMDAwMDAwMDAwMDAwMDAwMSIsImFnZ3Jlc3Nvcl9zaWRlIjoidW5rbm93biIsInRyYWRlX2lkIjpudWxsfQ==",
+          "subject": "live.md.trade.kiwoom.etf.KIWOOM_069500"
+        }
+      ],
+      "count": 1,
+      "last_event_ts_ns": 1792281600000000000,
+      "symbol_last_seen_ns": {
+        "069500": 1792281600000000000
+      }
+    },
+    "future": {
+      "bytes": 951,
+      "calls": [
+        {
+          "headers": {
+            "Nats-Msg-Id": "86b5ca7efb0ac9e68523e1e5605717b549b49827e6e97eea30833d5b6a45bb75"
+          },
+          "lane": "js",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiI4NmI1Y2E3ZWZiMGFjOWU2ODUyM2UxZTU2MDU3MTdiNTQ5YjQ5ODI3ZTZlOTdlZWEzMDgzM2Q1YjZhNDViYjc1IiwiZXZlbnRfdHlwZSI6ImRhdGFfZ2FwIiwiaW5zdHJ1bWVudCI6eyJ2ZW51ZSI6ImJpbmFuY2UiLCJhc3NldF9jbGFzcyI6ImNyeXB0b19wZXJwIiwicmF3X3N5bWJvbCI6IkJUQ1VTRFQiLCJzdGRfc3ltYm9sIjoiQlRDVVNEVCIsImNvbnRyYWN0X21vbnRoIjpudWxsLCJleHBpcnkiOm51bGwsInN0cmlrZSI6bnVsbCwib3B0aW9uX3JpZ2h0IjpudWxsLCJ1bmRlcmx5aW5nIjpudWxsLCJzZWN1cml0eV9raW5kIjpudWxsLCJjdXJyZW5jeSI6bnVsbCwiZXhjaGFuZ2UiOm51bGx9LCJzb3VyY2VfdHNfbnMiOjE3OTIyODE2MDAwMDAwMDAwMDAsInNvdXJjZV90aW1lc3RhbXBfa2luZCI6InByb3ZpZGVyX2V2ZW50Iiwib2JzZXJ2ZWRfZGVsYXlfbXMiOm51bGwsIndhbGxjbG9ja190c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV90c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV9tb25vdG9uaWNfbnMiOm51bGwsImNvbGxlY3Rvcl9ydW5faWQiOm51bGwsImNvbm5lY3Rpb25faWQiOm51bGwsInJlY2VpdmVfc2VxdWVuY2UiOm51bGwsInJlY29yZF9pbmRleCI6bnVsbCwibmF0aXZlX2V2ZW50X2lkIjpudWxsLCJjb2xsZWN0aW9uX3N0YXJ0X3RzX25zIjpudWxsLCJpbmdlc3RfbW9kZSI6InJlYWx0aW1lIiwidHJhZGluZ19kYXRlIjoiMjAyNi0xMC0xOCIsInNlc3Npb24iOiJmaXh0dXJlIiwidmVudWUiOiJiaW5hbmNlIiwicHJvdmlkZXIiOiJiaW5hbmNlLXBlcnAiLCJzZXF1ZW5jZSI6NywibWlzc2luZ19mcm9tX3NlcXVlbmNlIjpudWxsLCJtaXNzaW5nX3RvX3NlcXVlbmNlIjpudWxsLCJyZWFzb24iOiJpbnZhbGlkIHJlYWx0aW1lIHRpbWVzdGFtcCBhZ2Vfc2Vjb25kcz0tMzAxIiwicmVzeW5jX3N0YXR1cyI6ImJsb2NrZWRfaW52YWxpZF90aW1lc3RhbXAifQ==",
+          "subject": "crypto.data_gap.binance.crypto_perp.BTCUSDT",
+          "timeout": 5
+        }
+      ],
+      "count": 1,
+      "last_event_ts_ns": 1792281600000000000,
+      "symbol_last_seen_ns": {
+        "BTCUSDT": 1792281600000000000
+      }
+    },
+    "gap": {
+      "bytes": 951,
+      "calls": [
+        {
+          "headers": {
+            "Nats-Msg-Id": "d9f294cc124f18555615564ac9851aa8fcc3efba64f0f5823d1e484840385625"
+          },
+          "lane": "js",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiJkOWYyOTRjYzEyNGYxODU1NTYxNTU2NGFjOTg1MWFhOGZjYzNlZmJhNjRmMGY1ODIzZDFlNDg0ODQwMzg1NjI1IiwiZXZlbnRfdHlwZSI6ImRhdGFfZ2FwIiwiaW5zdHJ1bWVudCI6eyJ2ZW51ZSI6ImJpbmFuY2UiLCJhc3NldF9jbGFzcyI6ImNyeXB0b19wZXJwIiwicmF3X3N5bWJvbCI6IkJUQ1VTRFQiLCJzdGRfc3ltYm9sIjoiQlRDVVNEVCIsImNvbnRyYWN0X21vbnRoIjpudWxsLCJleHBpcnkiOm51bGwsInN0cmlrZSI6bnVsbCwib3B0aW9uX3JpZ2h0IjpudWxsLCJ1bmRlcmx5aW5nIjpudWxsLCJzZWN1cml0eV9raW5kIjpudWxsLCJjdXJyZW5jeSI6bnVsbCwiZXhjaGFuZ2UiOm51bGx9LCJzb3VyY2VfdHNfbnMiOjE3OTIyODE2MDAwMDAwMDAwMDAsInNvdXJjZV90aW1lc3RhbXBfa2luZCI6InByb3ZpZGVyX2V2ZW50Iiwib2JzZXJ2ZWRfZGVsYXlfbXMiOm51bGwsIndhbGxjbG9ja190c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV90c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV9tb25vdG9uaWNfbnMiOjEyMywiY29sbGVjdG9yX3J1bl9pZCI6bnVsbCwiY29ubmVjdGlvbl9pZCI6ImZpeHR1cmUiLCJyZWNlaXZlX3NlcXVlbmNlIjoxLCJyZWNvcmRfaW5kZXgiOm51bGwsIm5hdGl2ZV9ldmVudF9pZCI6bnVsbCwiY29sbGVjdGlvbl9zdGFydF90c19ucyI6bnVsbCwiaW5nZXN0X21vZGUiOiJyZWFsdGltZSIsInRyYWRpbmdfZGF0ZSI6IjIwMjYtMTAtMTgiLCJzZXNzaW9uIjoiZml4dHVyZSIsInZlbnVlIjoiYmluYW5jZSIsInByb3ZpZGVyIjoiYmluYW5jZS1wZXJwIiwic2VxdWVuY2UiOjcsIm1pc3NpbmdfZnJvbV9zZXF1ZW5jZSI6bnVsbCwibWlzc2luZ190b19zZXF1ZW5jZSI6bnVsbCwicmVhc29uIjoiZml4dHVyZSBnYXAiLCJyZXN5bmNfc3RhdHVzIjoicGVuZGluZyJ9",
+          "subject": "crypto.data_gap.binance.crypto_perp.BTCUSDT",
+          "timeout": 5
+        },
+        {
+          "lane": "live",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiJkOWYyOTRjYzEyNGYxODU1NTYxNTU2NGFjOTg1MWFhOGZjYzNlZmJhNjRmMGY1ODIzZDFlNDg0ODQwMzg1NjI1IiwiZXZlbnRfdHlwZSI6ImRhdGFfZ2FwIiwiaW5zdHJ1bWVudCI6eyJ2ZW51ZSI6ImJpbmFuY2UiLCJhc3NldF9jbGFzcyI6ImNyeXB0b19wZXJwIiwicmF3X3N5bWJvbCI6IkJUQ1VTRFQiLCJzdGRfc3ltYm9sIjoiQlRDVVNEVCIsImNvbnRyYWN0X21vbnRoIjpudWxsLCJleHBpcnkiOm51bGwsInN0cmlrZSI6bnVsbCwib3B0aW9uX3JpZ2h0IjpudWxsLCJ1bmRlcmx5aW5nIjpudWxsLCJzZWN1cml0eV9raW5kIjpudWxsLCJjdXJyZW5jeSI6bnVsbCwiZXhjaGFuZ2UiOm51bGx9LCJzb3VyY2VfdHNfbnMiOjE3OTIyODE2MDAwMDAwMDAwMDAsInNvdXJjZV90aW1lc3RhbXBfa2luZCI6InByb3ZpZGVyX2V2ZW50Iiwib2JzZXJ2ZWRfZGVsYXlfbXMiOm51bGwsIndhbGxjbG9ja190c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV90c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV9tb25vdG9uaWNfbnMiOjEyMywiY29sbGVjdG9yX3J1bl9pZCI6bnVsbCwiY29ubmVjdGlvbl9pZCI6ImZpeHR1cmUiLCJyZWNlaXZlX3NlcXVlbmNlIjoxLCJyZWNvcmRfaW5kZXgiOm51bGwsIm5hdGl2ZV9ldmVudF9pZCI6bnVsbCwiY29sbGVjdGlvbl9zdGFydF90c19ucyI6bnVsbCwiaW5nZXN0X21vZGUiOiJyZWFsdGltZSIsInRyYWRpbmdfZGF0ZSI6IjIwMjYtMTAtMTgiLCJzZXNzaW9uIjoiZml4dHVyZSIsInZlbnVlIjoiYmluYW5jZSIsInByb3ZpZGVyIjoiYmluYW5jZS1wZXJwIiwic2VxdWVuY2UiOjcsIm1pc3NpbmdfZnJvbV9zZXF1ZW5jZSI6bnVsbCwibWlzc2luZ190b19zZXF1ZW5jZSI6bnVsbCwicmVhc29uIjoiZml4dHVyZSBnYXAiLCJyZXN5bmNfc3RhdHVzIjoicGVuZGluZyJ9",
+          "subject": "live.crypto.data_gap.binance.crypto_perp.BTCUSDT"
+        }
+      ],
+      "count": 1,
+      "last_event_ts_ns": 1792281600000000000,
+      "symbol_last_seen_ns": {}
+    },
+    "index_supplement": {
+      "bytes": 953,
+      "calls": [
+        {
+          "headers": {
+            "Nats-Msg-Id": "c4143fb48f8052561df1756a7b5c18deb406c54a00cd1a7bf270423abfea5f5f"
+          },
+          "lane": "js",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiJjNDE0M2ZiNDhmODA1MjU2MWRmMTc1NmE3YjVjMThkZWI0MDZjNTRhMDBjZDFhN2JmMjcwNDIzYWJmZWE1ZjVmIiwiZXZlbnRfdHlwZSI6ImluZGV4X3F1b3RlIiwiaW5zdHJ1bWVudCI6eyJ2ZW51ZSI6ImtpcyIsImFzc2V0X2NsYXNzIjoiaW5kZXgiLCJyYXdfc3ltYm9sIjoiMjAwMSIsInN0ZF9zeW1ib2wiOiJLT1NQSTIwMCIsImNvbnRyYWN0X21vbnRoIjpudWxsLCJleHBpcnkiOm51bGwsInN0cmlrZSI6bnVsbCwib3B0aW9uX3JpZ2h0IjpudWxsLCJ1bmRlcmx5aW5nIjpudWxsLCJzZWN1cml0eV9raW5kIjpudWxsLCJjdXJyZW5jeSI6bnVsbCwiZXhjaGFuZ2UiOm51bGx9LCJzb3VyY2VfdHNfbnMiOjE3OTIyODE2MDAwMDAwMDAwMDAsInNvdXJjZV90aW1lc3RhbXBfa2luZCI6InByb3ZpZGVyX2V2ZW50Iiwib2JzZXJ2ZWRfZGVsYXlfbXMiOm51bGwsIndhbGxjbG9ja190c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV90c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV9tb25vdG9uaWNfbnMiOjEyMywiY29sbGVjdG9yX3J1bl9pZCI6bnVsbCwiY29ubmVjdGlvbl9pZCI6ImZpeHR1cmUiLCJyZWNlaXZlX3NlcXVlbmNlIjoxLCJyZWNvcmRfaW5kZXgiOm51bGwsIm5hdGl2ZV9ldmVudF9pZCI6bnVsbCwiY29sbGVjdGlvbl9zdGFydF90c19ucyI6bnVsbCwiaW5nZXN0X21vZGUiOiJyZWFsdGltZSIsInRyYWRpbmdfZGF0ZSI6IjIwMjYtMTAtMTgiLCJzZXNzaW9uIjoiZml4dHVyZSIsInZlbnVlIjoia2lzIiwicHJvdmlkZXIiOiJraXMiLCJzZXF1ZW5jZSI6NywidmFsdWUiOiIzMDAuMDEiLCJ1bml0IjoicG9pbnQiLCJjdXJyZW5jeSI6bnVsbCwib3BlbiI6bnVsbCwiaGlnaCI6bnVsbCwibG93IjpudWxsLCJjaGFuZ2UiOm51bGwsImNoYW5nZV9wY3QiOm51bGwsIm1ldGFkYXRhIjp7fX0=",
+          "subject": "md.index_quote.kis.index.KOSPI200",
+          "timeout": 5
+        },
+        {
+          "lane": "live",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiJjNDE0M2ZiNDhmODA1MjU2MWRmMTc1NmE3YjVjMThkZWI0MDZjNTRhMDBjZDFhN2JmMjcwNDIzYWJmZWE1ZjVmIiwiZXZlbnRfdHlwZSI6ImluZGV4X3F1b3RlIiwiaW5zdHJ1bWVudCI6eyJ2ZW51ZSI6ImtpcyIsImFzc2V0X2NsYXNzIjoiaW5kZXgiLCJyYXdfc3ltYm9sIjoiMjAwMSIsInN0ZF9zeW1ib2wiOiJLT1NQSTIwMCIsImNvbnRyYWN0X21vbnRoIjpudWxsLCJleHBpcnkiOm51bGwsInN0cmlrZSI6bnVsbCwib3B0aW9uX3JpZ2h0IjpudWxsLCJ1bmRlcmx5aW5nIjpudWxsLCJzZWN1cml0eV9raW5kIjpudWxsLCJjdXJyZW5jeSI6bnVsbCwiZXhjaGFuZ2UiOm51bGx9LCJzb3VyY2VfdHNfbnMiOjE3OTIyODE2MDAwMDAwMDAwMDAsInNvdXJjZV90aW1lc3RhbXBfa2luZCI6InByb3ZpZGVyX2V2ZW50Iiwib2JzZXJ2ZWRfZGVsYXlfbXMiOm51bGwsIndhbGxjbG9ja190c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV90c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV9tb25vdG9uaWNfbnMiOjEyMywiY29sbGVjdG9yX3J1bl9pZCI6bnVsbCwiY29ubmVjdGlvbl9pZCI6ImZpeHR1cmUiLCJyZWNlaXZlX3NlcXVlbmNlIjoxLCJyZWNvcmRfaW5kZXgiOm51bGwsIm5hdGl2ZV9ldmVudF9pZCI6bnVsbCwiY29sbGVjdGlvbl9zdGFydF90c19ucyI6bnVsbCwiaW5nZXN0X21vZGUiOiJyZWFsdGltZSIsInRyYWRpbmdfZGF0ZSI6IjIwMjYtMTAtMTgiLCJzZXNzaW9uIjoiZml4dHVyZSIsInZlbnVlIjoia2lzIiwicHJvdmlkZXIiOiJraXMiLCJzZXF1ZW5jZSI6NywidmFsdWUiOiIzMDAuMDEiLCJ1bml0IjoicG9pbnQiLCJjdXJyZW5jeSI6bnVsbCwib3BlbiI6bnVsbCwiaGlnaCI6bnVsbCwibG93IjpudWxsLCJjaGFuZ2UiOm51bGwsImNoYW5nZV9wY3QiOm51bGwsIm1ldGFkYXRhIjp7fX0=",
+          "subject": "live.md.index_quote.kis.index.KOSPI200"
+        }
+      ],
+      "count": 1,
+      "last_event_ts_ns": 1792281600000000000,
+      "symbol_last_seen_ns": {
+        "2001": 1792281600000000000
+      }
+    },
+    "null_source": {
+      "bytes": 936,
+      "calls": [
+        {
+          "headers": {
+            "Nats-Msg-Id": "d39b700f622b7ab23e202445bdf5a6128bcd11cb6b7d1d2f44b8ec65f9c6173d"
+          },
+          "lane": "js",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiJkMzliNzAwZjYyMmI3YWIyM2UyMDI0NDViZGY1YTYxMjhiY2QxMWNiNmI3ZDFkMmY0NGI4ZWM2NWY5YzYxNzNkIiwiZXZlbnRfdHlwZSI6InRyYWRlIiwiaW5zdHJ1bWVudCI6eyJ2ZW51ZSI6ImJpbmFuY2UiLCJhc3NldF9jbGFzcyI6ImNyeXB0b19wZXJwIiwicmF3X3N5bWJvbCI6IkJUQ1VTRFQiLCJzdGRfc3ltYm9sIjoiQlRDVVNEVCIsImNvbnRyYWN0X21vbnRoIjpudWxsLCJleHBpcnkiOm51bGwsInN0cmlrZSI6bnVsbCwib3B0aW9uX3JpZ2h0IjpudWxsLCJ1bmRlcmx5aW5nIjpudWxsLCJzZWN1cml0eV9raW5kIjpudWxsLCJjdXJyZW5jeSI6bnVsbCwiZXhjaGFuZ2UiOm51bGx9LCJzb3VyY2VfdHNfbnMiOm51bGwsInNvdXJjZV90aW1lc3RhbXBfa2luZCI6InByb3ZpZGVyX2V2ZW50Iiwib2JzZXJ2ZWRfZGVsYXlfbXMiOm51bGwsIndhbGxjbG9ja190c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV90c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV9tb25vdG9uaWNfbnMiOjEyMywiY29sbGVjdG9yX3J1bl9pZCI6bnVsbCwiY29ubmVjdGlvbl9pZCI6ImZpeHR1cmUiLCJyZWNlaXZlX3NlcXVlbmNlIjoxLCJyZWNvcmRfaW5kZXgiOm51bGwsIm5hdGl2ZV9ldmVudF9pZCI6bnVsbCwiY29sbGVjdGlvbl9zdGFydF90c19ucyI6bnVsbCwiaW5nZXN0X21vZGUiOiJyZWFsdGltZSIsInRyYWRpbmdfZGF0ZSI6IjIwMjYtMTAtMTgiLCJzZXNzaW9uIjoiZml4dHVyZSIsInZlbnVlIjoiYmluYW5jZSIsInByb3ZpZGVyIjoiYmluYW5jZS1wZXJwIiwic2VxdWVuY2UiOjcsInByaWNlIjoiMC4xMjM0NTY3ODkwMTIzNDU2NzgiLCJxdWFudGl0eSI6IjIuMDAwMDAwMDAwMDAwMDAwMDAxIiwiYWdncmVzc29yX3NpZGUiOiJ1bmtub3duIiwidHJhZGVfaWQiOm51bGx9",
+          "subject": "crypto.trade.binance.crypto_perp.BTCUSDT",
+          "timeout": 5
+        },
+        {
+          "lane": "live",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiJkMzliNzAwZjYyMmI3YWIyM2UyMDI0NDViZGY1YTYxMjhiY2QxMWNiNmI3ZDFkMmY0NGI4ZWM2NWY5YzYxNzNkIiwiZXZlbnRfdHlwZSI6InRyYWRlIiwiaW5zdHJ1bWVudCI6eyJ2ZW51ZSI6ImJpbmFuY2UiLCJhc3NldF9jbGFzcyI6ImNyeXB0b19wZXJwIiwicmF3X3N5bWJvbCI6IkJUQ1VTRFQiLCJzdGRfc3ltYm9sIjoiQlRDVVNEVCIsImNvbnRyYWN0X21vbnRoIjpudWxsLCJleHBpcnkiOm51bGwsInN0cmlrZSI6bnVsbCwib3B0aW9uX3JpZ2h0IjpudWxsLCJ1bmRlcmx5aW5nIjpudWxsLCJzZWN1cml0eV9raW5kIjpudWxsLCJjdXJyZW5jeSI6bnVsbCwiZXhjaGFuZ2UiOm51bGx9LCJzb3VyY2VfdHNfbnMiOm51bGwsInNvdXJjZV90aW1lc3RhbXBfa2luZCI6InByb3ZpZGVyX2V2ZW50Iiwib2JzZXJ2ZWRfZGVsYXlfbXMiOm51bGwsIndhbGxjbG9ja190c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV90c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV9tb25vdG9uaWNfbnMiOjEyMywiY29sbGVjdG9yX3J1bl9pZCI6bnVsbCwiY29ubmVjdGlvbl9pZCI6ImZpeHR1cmUiLCJyZWNlaXZlX3NlcXVlbmNlIjoxLCJyZWNvcmRfaW5kZXgiOm51bGwsIm5hdGl2ZV9ldmVudF9pZCI6bnVsbCwiY29sbGVjdGlvbl9zdGFydF90c19ucyI6bnVsbCwiaW5nZXN0X21vZGUiOiJyZWFsdGltZSIsInRyYWRpbmdfZGF0ZSI6IjIwMjYtMTAtMTgiLCJzZXNzaW9uIjoiZml4dHVyZSIsInZlbnVlIjoiYmluYW5jZSIsInByb3ZpZGVyIjoiYmluYW5jZS1wZXJwIiwic2VxdWVuY2UiOjcsInByaWNlIjoiMC4xMjM0NTY3ODkwMTIzNDU2NzgiLCJxdWFudGl0eSI6IjIuMDAwMDAwMDAwMDAwMDAwMDAxIiwiYWdncmVzc29yX3NpZGUiOiJ1bmtub3duIiwidHJhZGVfaWQiOm51bGx9",
+          "subject": "live.crypto.trade.binance.crypto_perp.BTCUSDT"
+        }
+      ],
+      "count": 1,
+      "last_event_ts_ns": 1792281600000000000,
+      "symbol_last_seen_ns": {
+        "BTCUSDT": 1792281600000000000
+      }
+    },
+    "raw_delta": {
+      "bytes": 1292,
+      "calls": [
+        {
+          "headers": {
+            "Nats-Msg-Id": "b7484bdbc224c48ed13ed043b760165e28608f5809f2287668604f385957b168"
+          },
+          "lane": "js",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiJiNzQ4NGJkYmMyMjRjNDhlZDEzZWQwNDNiNzYwMTY1ZTI4NjA4ZjU4MDlmMjI4NzY2ODYwNGYzODU5NTdiMTY4IiwiZXZlbnRfdHlwZSI6Im9yZGVyX2Jvb2siLCJpbnN0cnVtZW50Ijp7InZlbnVlIjoiYmluYW5jZSIsImFzc2V0X2NsYXNzIjoiY3J5cHRvX3BlcnAiLCJyYXdfc3ltYm9sIjoiQlRDVVNEVCIsInN0ZF9zeW1ib2wiOiJCVENVU0RUIiwiY29udHJhY3RfbW9udGgiOm51bGwsImV4cGlyeSI6bnVsbCwic3RyaWtlIjpudWxsLCJvcHRpb25fcmlnaHQiOm51bGwsInVuZGVybHlpbmciOm51bGwsInNlY3VyaXR5X2tpbmQiOm51bGwsImN1cnJlbmN5IjpudWxsLCJleGNoYW5nZSI6bnVsbH0sInNvdXJjZV90c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwic291cmNlX3RpbWVzdGFtcF9raW5kIjoicHJvdmlkZXJfZXZlbnQiLCJvYnNlcnZlZF9kZWxheV9tcyI6bnVsbCwid2FsbGNsb2NrX3RzX25zIjoxNzkyMjgxNjAwMDAwMDAwMDAwLCJyZWNlaXZlX3RzX25zIjoxNzkyMjgxNjAwMDAwMDAwMDAwLCJyZWNlaXZlX21vbm90b25pY19ucyI6MTIzLCJjb2xsZWN0b3JfcnVuX2lkIjpudWxsLCJjb25uZWN0aW9uX2lkIjoiZml4dHVyZSIsInJlY2VpdmVfc2VxdWVuY2UiOjEsInJlY29yZF9pbmRleCI6bnVsbCwibmF0aXZlX2V2ZW50X2lkIjpudWxsLCJjb2xsZWN0aW9uX3N0YXJ0X3RzX25zIjpudWxsLCJpbmdlc3RfbW9kZSI6InJlYWx0aW1lIiwidHJhZGluZ19kYXRlIjoiMjAyNi0xMC0xOCIsInNlc3Npb24iOiJmaXh0dXJlIiwidmVudWUiOiJiaW5hbmNlIiwicHJvdmlkZXIiOiJiaW5hbmNlLXBlcnAiLCJzZXF1ZW5jZSI6NywidXBkYXRlX3R5cGUiOiJkZWx0YSIsImRlcHRoIjoyLCJiaWRzIjpbeyJwcmljZSI6IjEwLjAwIiwicXVhbnRpdHkiOiIyLjAwIiwib3JkZXJfY291bnQiOjN9LHsicHJpY2UiOiI5LjAiLCJxdWFudGl0eSI6IjAiLCJvcmRlcl9jb3VudCI6bnVsbH1dLCJhc2tzIjpbeyJwcmljZSI6IjExLjAwMCIsInF1YW50aXR5IjoiMyIsIm9yZGVyX2NvdW50IjpudWxsfV0sImlzX2Z1bGxfZGVwdGgiOmZhbHNlLCJzYW1wbGVkX2F0X25zIjpudWxsLCJjaGFubmVsIjpudWxsLCJwcm92aWRlcl9kZXB0aCI6bnVsbCwiZmlyc3RfdXBkYXRlX2lkIjo2LCJmaW5hbF91cGRhdGVfaWQiOjcsInByZXZpb3VzX3VwZGF0ZV9pZCI6NSwic3luY19nZW5lcmF0aW9uIjoxLCJmYXN0Ijp0cnVlLCJyYXdfcGF5bG9hZCI6IntcIm5hdGl2ZVwiOlwi7ZWc6riAXCIsXCJiXCI6W1tcIjkuMFwiLFwiMFwiXV19In0=",
+          "subject": "crypto.order_book.binance.crypto_perp.BTCUSDT",
+          "timeout": 5
+        },
+        {
+          "lane": "live",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiJiNzQ4NGJkYmMyMjRjNDhlZDEzZWQwNDNiNzYwMTY1ZTI4NjA4ZjU4MDlmMjI4NzY2ODYwNGYzODU5NTdiMTY4IiwiZXZlbnRfdHlwZSI6Im9yZGVyX2Jvb2siLCJpbnN0cnVtZW50Ijp7InZlbnVlIjoiYmluYW5jZSIsImFzc2V0X2NsYXNzIjoiY3J5cHRvX3BlcnAiLCJyYXdfc3ltYm9sIjoiQlRDVVNEVCIsInN0ZF9zeW1ib2wiOiJCVENVU0RUIiwiY29udHJhY3RfbW9udGgiOm51bGwsImV4cGlyeSI6bnVsbCwic3RyaWtlIjpudWxsLCJvcHRpb25fcmlnaHQiOm51bGwsInVuZGVybHlpbmciOm51bGwsInNlY3VyaXR5X2tpbmQiOm51bGwsImN1cnJlbmN5IjpudWxsLCJleGNoYW5nZSI6bnVsbH0sInNvdXJjZV90c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwic291cmNlX3RpbWVzdGFtcF9raW5kIjoicHJvdmlkZXJfZXZlbnQiLCJvYnNlcnZlZF9kZWxheV9tcyI6bnVsbCwid2FsbGNsb2NrX3RzX25zIjoxNzkyMjgxNjAwMDAwMDAwMDAwLCJyZWNlaXZlX3RzX25zIjoxNzkyMjgxNjAwMDAwMDAwMDAwLCJyZWNlaXZlX21vbm90b25pY19ucyI6MTIzLCJjb2xsZWN0b3JfcnVuX2lkIjpudWxsLCJjb25uZWN0aW9uX2lkIjoiZml4dHVyZSIsInJlY2VpdmVfc2VxdWVuY2UiOjEsInJlY29yZF9pbmRleCI6bnVsbCwibmF0aXZlX2V2ZW50X2lkIjpudWxsLCJjb2xsZWN0aW9uX3N0YXJ0X3RzX25zIjpudWxsLCJpbmdlc3RfbW9kZSI6InJlYWx0aW1lIiwidHJhZGluZ19kYXRlIjoiMjAyNi0xMC0xOCIsInNlc3Npb24iOiJmaXh0dXJlIiwidmVudWUiOiJiaW5hbmNlIiwicHJvdmlkZXIiOiJiaW5hbmNlLXBlcnAiLCJzZXF1ZW5jZSI6NywidXBkYXRlX3R5cGUiOiJkZWx0YSIsImRlcHRoIjoyLCJiaWRzIjpbeyJwcmljZSI6IjEwLjAwIiwicXVhbnRpdHkiOiIyLjAwIiwib3JkZXJfY291bnQiOjN9LHsicHJpY2UiOiI5LjAiLCJxdWFudGl0eSI6IjAiLCJvcmRlcl9jb3VudCI6bnVsbH1dLCJhc2tzIjpbeyJwcmljZSI6IjExLjAwMCIsInF1YW50aXR5IjoiMyIsIm9yZGVyX2NvdW50IjpudWxsfV0sImlzX2Z1bGxfZGVwdGgiOmZhbHNlLCJzYW1wbGVkX2F0X25zIjpudWxsLCJjaGFubmVsIjpudWxsLCJwcm92aWRlcl9kZXB0aCI6bnVsbCwiZmlyc3RfdXBkYXRlX2lkIjo2LCJmaW5hbF91cGRhdGVfaWQiOjcsInByZXZpb3VzX3VwZGF0ZV9pZCI6NSwic3luY19nZW5lcmF0aW9uIjoxLCJmYXN0Ijp0cnVlfQ==",
+          "subject": "live.crypto.order_book.binance.crypto_perp.BTCUSDT"
+        }
+      ],
+      "count": 1,
+      "last_event_ts_ns": 1792281600000000000,
+      "symbol_last_seen_ns": {
+        "BTCUSDT": 1792281600000000000
+      }
+    },
+    "raw_snapshot": {
+      "bytes": 1295,
+      "calls": [
+        {
+          "headers": {
+            "Nats-Msg-Id": "b7484bdbc224c48ed13ed043b760165e28608f5809f2287668604f385957b168"
+          },
+          "lane": "js",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiJiNzQ4NGJkYmMyMjRjNDhlZDEzZWQwNDNiNzYwMTY1ZTI4NjA4ZjU4MDlmMjI4NzY2ODYwNGYzODU5NTdiMTY4IiwiZXZlbnRfdHlwZSI6Im9yZGVyX2Jvb2siLCJpbnN0cnVtZW50Ijp7InZlbnVlIjoiYmluYW5jZSIsImFzc2V0X2NsYXNzIjoiY3J5cHRvX3BlcnAiLCJyYXdfc3ltYm9sIjoiQlRDVVNEVCIsInN0ZF9zeW1ib2wiOiJCVENVU0RUIiwiY29udHJhY3RfbW9udGgiOm51bGwsImV4cGlyeSI6bnVsbCwic3RyaWtlIjpudWxsLCJvcHRpb25fcmlnaHQiOm51bGwsInVuZGVybHlpbmciOm51bGwsInNlY3VyaXR5X2tpbmQiOm51bGwsImN1cnJlbmN5IjpudWxsLCJleGNoYW5nZSI6bnVsbH0sInNvdXJjZV90c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwic291cmNlX3RpbWVzdGFtcF9raW5kIjoicHJvdmlkZXJfZXZlbnQiLCJvYnNlcnZlZF9kZWxheV9tcyI6bnVsbCwid2FsbGNsb2NrX3RzX25zIjoxNzkyMjgxNjAwMDAwMDAwMDAwLCJyZWNlaXZlX3RzX25zIjoxNzkyMjgxNjAwMDAwMDAwMDAwLCJyZWNlaXZlX21vbm90b25pY19ucyI6MTIzLCJjb2xsZWN0b3JfcnVuX2lkIjpudWxsLCJjb25uZWN0aW9uX2lkIjoiZml4dHVyZSIsInJlY2VpdmVfc2VxdWVuY2UiOjEsInJlY29yZF9pbmRleCI6bnVsbCwibmF0aXZlX2V2ZW50X2lkIjpudWxsLCJjb2xsZWN0aW9uX3N0YXJ0X3RzX25zIjpudWxsLCJpbmdlc3RfbW9kZSI6InJlYWx0aW1lIiwidHJhZGluZ19kYXRlIjoiMjAyNi0xMC0xOCIsInNlc3Npb24iOiJmaXh0dXJlIiwidmVudWUiOiJiaW5hbmNlIiwicHJvdmlkZXIiOiJiaW5hbmNlLXBlcnAiLCJzZXF1ZW5jZSI6NywidXBkYXRlX3R5cGUiOiJzbmFwc2hvdCIsImRlcHRoIjoyLCJiaWRzIjpbeyJwcmljZSI6IjEwLjAwIiwicXVhbnRpdHkiOiIyLjAwIiwib3JkZXJfY291bnQiOjN9LHsicHJpY2UiOiI5LjAiLCJxdWFudGl0eSI6IjAiLCJvcmRlcl9jb3VudCI6bnVsbH1dLCJhc2tzIjpbeyJwcmljZSI6IjExLjAwMCIsInF1YW50aXR5IjoiMyIsIm9yZGVyX2NvdW50IjpudWxsfV0sImlzX2Z1bGxfZGVwdGgiOmZhbHNlLCJzYW1wbGVkX2F0X25zIjpudWxsLCJjaGFubmVsIjpudWxsLCJwcm92aWRlcl9kZXB0aCI6bnVsbCwiZmlyc3RfdXBkYXRlX2lkIjo2LCJmaW5hbF91cGRhdGVfaWQiOjcsInByZXZpb3VzX3VwZGF0ZV9pZCI6NSwic3luY19nZW5lcmF0aW9uIjoxLCJmYXN0Ijp0cnVlLCJyYXdfcGF5bG9hZCI6IntcIm5hdGl2ZVwiOlwi7ZWc6riAXCIsXCJiXCI6W1tcIjkuMFwiLFwiMFwiXV19In0=",
+          "subject": "crypto.order_book.binance.crypto_perp.BTCUSDT",
+          "timeout": 5
+        },
+        {
+          "lane": "live",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiJiNzQ4NGJkYmMyMjRjNDhlZDEzZWQwNDNiNzYwMTY1ZTI4NjA4ZjU4MDlmMjI4NzY2ODYwNGYzODU5NTdiMTY4IiwiZXZlbnRfdHlwZSI6Im9yZGVyX2Jvb2siLCJpbnN0cnVtZW50Ijp7InZlbnVlIjoiYmluYW5jZSIsImFzc2V0X2NsYXNzIjoiY3J5cHRvX3BlcnAiLCJyYXdfc3ltYm9sIjoiQlRDVVNEVCIsInN0ZF9zeW1ib2wiOiJCVENVU0RUIiwiY29udHJhY3RfbW9udGgiOm51bGwsImV4cGlyeSI6bnVsbCwic3RyaWtlIjpudWxsLCJvcHRpb25fcmlnaHQiOm51bGwsInVuZGVybHlpbmciOm51bGwsInNlY3VyaXR5X2tpbmQiOm51bGwsImN1cnJlbmN5IjpudWxsLCJleGNoYW5nZSI6bnVsbH0sInNvdXJjZV90c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwic291cmNlX3RpbWVzdGFtcF9raW5kIjoicHJvdmlkZXJfZXZlbnQiLCJvYnNlcnZlZF9kZWxheV9tcyI6bnVsbCwid2FsbGNsb2NrX3RzX25zIjoxNzkyMjgxNjAwMDAwMDAwMDAwLCJyZWNlaXZlX3RzX25zIjoxNzkyMjgxNjAwMDAwMDAwMDAwLCJyZWNlaXZlX21vbm90b25pY19ucyI6MTIzLCJjb2xsZWN0b3JfcnVuX2lkIjpudWxsLCJjb25uZWN0aW9uX2lkIjoiZml4dHVyZSIsInJlY2VpdmVfc2VxdWVuY2UiOjEsInJlY29yZF9pbmRleCI6bnVsbCwibmF0aXZlX2V2ZW50X2lkIjpudWxsLCJjb2xsZWN0aW9uX3N0YXJ0X3RzX25zIjpudWxsLCJpbmdlc3RfbW9kZSI6InJlYWx0aW1lIiwidHJhZGluZ19kYXRlIjoiMjAyNi0xMC0xOCIsInNlc3Npb24iOiJmaXh0dXJlIiwidmVudWUiOiJiaW5hbmNlIiwicHJvdmlkZXIiOiJiaW5hbmNlLXBlcnAiLCJzZXF1ZW5jZSI6NywidXBkYXRlX3R5cGUiOiJzbmFwc2hvdCIsImRlcHRoIjoyLCJiaWRzIjpbeyJwcmljZSI6IjEwLjAwIiwicXVhbnRpdHkiOiIyLjAwIiwib3JkZXJfY291bnQiOjN9LHsicHJpY2UiOiI5LjAiLCJxdWFudGl0eSI6IjAiLCJvcmRlcl9jb3VudCI6bnVsbH1dLCJhc2tzIjpbeyJwcmljZSI6IjExLjAwMCIsInF1YW50aXR5IjoiMyIsIm9yZGVyX2NvdW50IjpudWxsfV0sImlzX2Z1bGxfZGVwdGgiOmZhbHNlLCJzYW1wbGVkX2F0X25zIjpudWxsLCJjaGFubmVsIjpudWxsLCJwcm92aWRlcl9kZXB0aCI6bnVsbCwiZmlyc3RfdXBkYXRlX2lkIjo2LCJmaW5hbF91cGRhdGVfaWQiOjcsInByZXZpb3VzX3VwZGF0ZV9pZCI6NSwic3luY19nZW5lcmF0aW9uIjoxLCJmYXN0Ijp0cnVlfQ==",
+          "subject": "live.crypto.order_book.binance.crypto_perp.BTCUSDT"
+        }
+      ],
+      "count": 1,
+      "last_event_ts_ns": 1792281600000000000,
+      "symbol_last_seen_ns": {
+        "BTCUSDT": 1792281600000000000
+      }
+    },
+    "retired": {
+      "bytes": 950,
+      "calls": [],
+      "count": 1,
+      "last_event_ts_ns": 1792281600000000000,
+      "symbol_last_seen_ns": {
+        "BTCUSDT": 1792281600000000000
+      }
+    },
+    "stale": {
+      "bytes": 951,
+      "calls": [
+        {
+          "headers": {
+            "Nats-Msg-Id": "86b5ca7efb0ac9e68523e1e5605717b549b49827e6e97eea30833d5b6a45bb75"
+          },
+          "lane": "js",
+          "payload": "eyJzY2hlbWFfdmVyc2lvbiI6MiwiZXZlbnRfaWQiOiI4NmI1Y2E3ZWZiMGFjOWU2ODUyM2UxZTU2MDU3MTdiNTQ5YjQ5ODI3ZTZlOTdlZWEzMDgzM2Q1YjZhNDViYjc1IiwiZXZlbnRfdHlwZSI6ImRhdGFfZ2FwIiwiaW5zdHJ1bWVudCI6eyJ2ZW51ZSI6ImJpbmFuY2UiLCJhc3NldF9jbGFzcyI6ImNyeXB0b19wZXJwIiwicmF3X3N5bWJvbCI6IkJUQ1VTRFQiLCJzdGRfc3ltYm9sIjoiQlRDVVNEVCIsImNvbnRyYWN0X21vbnRoIjpudWxsLCJleHBpcnkiOm51bGwsInN0cmlrZSI6bnVsbCwib3B0aW9uX3JpZ2h0IjpudWxsLCJ1bmRlcmx5aW5nIjpudWxsLCJzZWN1cml0eV9raW5kIjpudWxsLCJjdXJyZW5jeSI6bnVsbCwiZXhjaGFuZ2UiOm51bGx9LCJzb3VyY2VfdHNfbnMiOjE3OTIyODE2MDAwMDAwMDAwMDAsInNvdXJjZV90aW1lc3RhbXBfa2luZCI6InByb3ZpZGVyX2V2ZW50Iiwib2JzZXJ2ZWRfZGVsYXlfbXMiOm51bGwsIndhbGxjbG9ja190c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV90c19ucyI6MTc5MjI4MTYwMDAwMDAwMDAwMCwicmVjZWl2ZV9tb25vdG9uaWNfbnMiOm51bGwsImNvbGxlY3Rvcl9ydW5faWQiOm51bGwsImNvbm5lY3Rpb25faWQiOm51bGwsInJlY2VpdmVfc2VxdWVuY2UiOm51bGwsInJlY29yZF9pbmRleCI6bnVsbCwibmF0aXZlX2V2ZW50X2lkIjpudWxsLCJjb2xsZWN0aW9uX3N0YXJ0X3RzX25zIjpudWxsLCJpbmdlc3RfbW9kZSI6InJlYWx0aW1lIiwidHJhZGluZ19kYXRlIjoiMjAyNi0xMC0xOCIsInNlc3Npb24iOiJmaXh0dXJlIiwidmVudWUiOiJiaW5hbmNlIiwicHJvdmlkZXIiOiJiaW5hbmNlLXBlcnAiLCJzZXF1ZW5jZSI6NywibWlzc2luZ19mcm9tX3NlcXVlbmNlIjpudWxsLCJtaXNzaW5nX3RvX3NlcXVlbmNlIjpudWxsLCJyZWFzb24iOiJpbnZhbGlkIHJlYWx0aW1lIHRpbWVzdGFtcCBhZ2Vfc2Vjb25kcz0yMDAwMDAiLCJyZXN5bmNfc3RhdHVzIjoiYmxvY2tlZF9pbnZhbGlkX3RpbWVzdGFtcCJ9",
+          "subject": "crypto.data_gap.binance.crypto_perp.BTCUSDT",
+          "timeout": 5
+        }
+      ],
+      "count": 1,
+      "last_event_ts_ns": 1792281600000000000,
+      "symbol_last_seen_ns": {}
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "method": "AST-only removal of added domestic supplement helper/constant/import and helper-true branches; associative same-op BoolOp flattening on both sides; no product imports or execution",
+  "results": {
+    "vibetrading/bus.py": {
+      "crypto_source_sha256": "0f5da044e104e88bc041546e2316a758950953c2370ef246ff379411d09232fc",
+      "collectors_source_sha256": "dea0b7bf1f494d6ce0fcff18ba17654c2c48f6e89dce57ab3e9153f50ff20476",
+      "crypto_normalized_ast_sha256": "ab8412fa65871179d40d763a6f92eb17a861d0c8ab2a6d154479364378d618c5",
+      "collectors_without_domestic_supplement_normalized_ast_sha256": "ab8412fa65871179d40d763a6f92eb17a861d0c8ab2a6d154479364378d618c5",
+      "ast_equal_after_removing_only_domestic_supplement": true,
+      "semantic_note": "allowed_supplement only accepts INDEX KOSPI200 or ETF backfill; CRYPTO_PERP input always returns False. Equal normalized AST means no other source behavior difference was found."
+    },
+    "vibetrading/market_policy.py": {
+      "crypto_source_sha256": "1b13f6704ebc79dff27aff0f6b0a6713ff7f306d25a6cccb8adf79bd1b571a4d",
+      "collectors_source_sha256": "ce5f399a0b5e0cd0ea48d400664d258efd5f0711ec5b301dceaa8fb3ec9fff0c",
+      "crypto_normalized_ast_sha256": "3dd9086fa1da9df3dc53d21563780c39f7aeca3b2e28b84e7c5302ec160a6dd5",
+      "collectors_without_domestic_supplement_normalized_ast_sha256": "3dd9086fa1da9df3dc53d21563780c39f7aeca3b2e28b84e7c5302ec160a6dd5",
+      "ast_equal_after_removing_only_domestic_supplement": true,
+      "semantic_note": "allowed_supplement only accepts INDEX KOSPI200 or ETF backfill; CRYPTO_PERP input always returns False. Equal normalized AST means no other source behavior difference was found."
+    }
+  }
+}

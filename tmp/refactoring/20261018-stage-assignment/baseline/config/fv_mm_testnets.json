@@ -1,0 +1,21 @@
+{
+  "environment": "testnet",
+  "emergency_taker": false,
+  "maximum_ack_seconds": 5,
+  "horizon_seconds": 30,
+  "unit_equity_fraction": "0.015",
+  "depth_participation": "0.10",
+  "unit_notional_cap_usdt": "150",
+  "account_gross_fraction": "0.08",
+  "account_loss_fraction": "0.002",
+  "account_drawdown_fraction": "0.002",
+  "maximum_margin_rate": "0.15",
+  "position_stop_fraction": "0.0035",
+  "holding_cap_seconds": 120,
+  "invalid_model_reduce_grace_seconds": 15,
+  "shutdown_maker_grace_seconds": 15,
+  "shutdown_timeout_seconds": 120,
+  "feed_stale_seconds": 3,
+  "maximum_model_age_seconds": 1800,
+  "minimum_api_interval_seconds": 0.25
+}

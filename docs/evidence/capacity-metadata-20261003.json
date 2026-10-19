@@ -1,8 +1,0 @@
-{
-  "virtualization": "kvm",
-  "serverProductCode": "SVR.VSVR.AMD.HICPU.C002.M004.G003",
-  "serverInstanceType/code": "HICPU",
-  "cpuCount": "2.0",
-  "memorySize": "4.294967296E9",
-  "baseBlockStorageDiskDetailType/code": "SSD"
-}
