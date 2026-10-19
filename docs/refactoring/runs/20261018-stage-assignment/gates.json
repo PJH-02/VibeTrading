@@ -1,0 +1,166 @@
+{
+  "run_id": "20261018-stage-assignment",
+  "updated_kst": "2026-10-19T19:06:48.289934+09:00",
+  "gate_owner": "root",
+  "baseline_source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+  "gates": {
+    "G00": {
+      "status": "PARTIAL",
+      "confirmed": [
+        "current source snapshot and code map",
+        "baseline Windows offline suite 584 PASS/1 SKIP/2 DESELECT",
+        "synthetic fixture/oracle manifests"
+      ],
+      "unverified": [
+        "current runtime after historical snapshot/full image dependencies/account ownership",
+        "actual writer PRAGMA/consistent backup restoration",
+        "production input interleaving trace",
+        "Linux durability",
+        "72-hour representative data/resource measurement"
+      ],
+      "long_measurement": "Two interrupted local measurement processes; coverage gaps preserved; not72hcomplete"
+    },
+    "G00-P02-schema": {
+      "status": "PASS_SCOPED_OFFLINE",
+      "test_evidence": "baseline-short/junit.xml",
+      "fixtures": "docs/refactoring/fixture_manifest.json",
+      "fixture_sha256": "8b5274795795484e071b645273211078687e089c4260ba2ef0739b86e306a2ca",
+      "review": "docs/refactoring/p00_review.md",
+      "scope": "Local immutable-format schema caching only; no operational/latency gate"
+    },
+    "G01": {
+      "status": "PARTIAL",
+      "contract": "docs/refactoring/contracts.md",
+      "unverified": [
+        "production required parameters and provider semantics",
+        "NATS independence scope",
+        "whole architecture implementation"
+      ]
+    },
+    "G01-P02-schema": {
+      "status": "PASS_SCOPED_OFFLINE",
+      "contract": "docs/refactoring/contracts.md",
+      "contract_sha256": "fe37d162fcfc49e64062e01731e47a5035951360c3dfede4716c8b368a8bb6dc",
+      "oracle_sha256": "028d9166533d077aacf03cd9c74adb563a2601e0aeb1333029c7fcb8a7e0625c",
+      "required_next_state": "implementation review then candidate tests"
+    },
+    "G02": {
+      "status": "IN_PROGRESS",
+      "schema": "PASS_SCOPED_OFFLINE",
+      "encoding": "IMPLEMENTED_REVIEW",
+      "evidence": [
+        "p02-schema-v1",
+        "p02-packet-full-v1",
+        "p02-packet-targeted-v2"
+      ],
+      "production_status": "NOT_DEPLOYED"
+    },
+    "G03-G12": {
+      "status": "NOT_RUN"
+    },
+    "G-NATS": {
+      "status": "SUPERSEDED_BY_NATS_FREE_TARGET",
+      "decision": "ADR-002 final runtime requires no NATS; new unused bridge removed"
+    },
+    "G02-schema": {
+      "status": "PASS_SCOPED_OFFLINE",
+      "review": "docs/refactoring/p02_schema_review.md",
+      "tests": "608 passed,1 skipped,2 deselected",
+      "benchmark": "schema_benchmark.json"
+    },
+    "G10-OFFLINE-V5": {
+      "status": "PASS_SCOPED_FROZEN_SOURCE",
+      "proofs": {
+        "integrated-windows-v5": {
+          "status": "PASS_SCOPED_FROZEN_SOURCE",
+          "evidence": "docs\\refactoring\\runs\\20261018-stage-assignment\\integrated-windows-v5\\result.json",
+          "elapsed_seconds": 234.92199999999866,
+          "current_product_drift": [
+            "vibetrading/local_events.py",
+            "vibetrading/local_runtime.py"
+          ]
+        },
+        "integrated-linux-v5": {
+          "status": "PASS_SCOPED_FROZEN_SOURCE",
+          "evidence": "docs\\refactoring\\runs\\20261018-stage-assignment\\integrated-linux-v5\\linux_result.json",
+          "elapsed_seconds": 201.428754857,
+          "current_product_drift": [
+            "vibetrading/local_runtime.py",
+            "vibetrading/local_events.py"
+          ]
+        }
+      },
+      "windows": "1078 passed,9 skipped,2 deselected",
+      "linux": "1087 passed,2 deselected",
+      "limitations": [
+        "Synthetic traffic/fake broker; no production account, peak/RSS or wall-clock 30-minute outage proof",
+        "Later source changes and server-owner candidates require fresh tests"
+      ]
+    },
+    "G-NATS-FREE": {
+      "status": "IMPLEMENTED_OFFLINE_PRODUCTION_OPEN",
+      "decision": "Final local spool -> Linux UDS engine / direct Parquet worker; local facts and dashboard snapshot",
+      "evidence": [
+        "local-runtime-linux-v4/linux_result.json",
+        "integrated-linux-v5/linux_result.json"
+      ],
+      "unverified": [
+        "Production ingress capacity and representative 72-hour coverage",
+        "Continuous spool/fact archival and safe GC proof",
+        "Role-specific immutable image and mount/resource budget",
+        "Production cutover, old NATS backlog and rollback preservation"
+      ]
+    },
+    "G-KR-SIGNAL-CONTINUITY": {
+      "status": "FAIL_SCOPED_AVAILABILITY",
+      "session": "2026-10-19 XKRX",
+      "confirmed": [
+        "C3 decision at09:01:05; conditions did not authorize entry",
+        "KP/KD each10 no_entry decisions,13:00 and13:30 absent",
+        "Both base ETF historical2026-10-15 12:54..13:08 missing; affected prior windows13/14",
+        "Current-session affected windows30/30;381 rows can be380 continuous+auction"
+      ],
+      "unverified": [
+        "The exact runtime silent-return branch was not instrumented at the time"
+      ],
+      "repair": "DEFERRED_BY_USER_20261019; no hotfix deployed, no data repair, no retroactive trades"
+    },
+    "G11": {
+      "status": "BLOCKED_OPERATIONAL_EVIDENCE",
+      "source_basis": "Active module owner inventory2026-10-19",
+      "prohibitions": [
+        "No wholesale local Compose rollout",
+        "No old DB restore over fills",
+        "No unverified raw/source deletion"
+      ]
+    },
+    "G-P02-SERVER-RELEASE": {
+      "status": "APPLIED_SCOPED_TWO_STORAGE_SERVICES",
+      "image_id": "sha256:3fcaa490d47d13d1df5aca7d6321d8313ea480bc1a18dddcb5139c84a0bdde3c",
+      "release": "/opt/vibetrading/releases/refactoring-20261019-p02-schema",
+      "evidence": [
+        "p02-server-resume-receipt.json",
+        "p02-server-health.jsonl"
+      ],
+      "scope": "Schema cache only; packet/shared engine/storage/control changes are inactive candidates",
+      "operational_finding": "Existing crypto event-index startup revalidation took minutes; initial 30s readiness timeout exceeded, same container resumed without repeated restart"
+    },
+    "G08-FACTS-WAL-V6": {
+      "status": "PASS_SCOPED_OFFLINE_NOT_DEPLOYED",
+      "proofs": {
+        "local-facts-wal-windows-v6": {
+          "exit_code": 0,
+          "evidence": "docs\\refactoring\\runs\\20261018-stage-assignment\\local-facts-wal-windows-v6\\result.json"
+        },
+        "local-facts-wal-linux-v6": {
+          "exit_code": 0,
+          "evidence": "docs\\refactoring\\runs\\20261018-stage-assignment\\local-facts-wal-linux-v6\\linux_result.json"
+        }
+      },
+      "windows": "46 passed,1 skipped",
+      "linux": "47 passed",
+      "review": "Luna minimal diff, no findings",
+      "limits": "No receipt deletion/GC; main DB cap plus separately derived WAL/SHM reserve; no live control cutover"
+    }
+  }
+}

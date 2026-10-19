@@ -1,0 +1,6 @@
+{
+  "status": "STAGED_AND_IMAGE_BUILT_NOT_ACTIVE",
+  "release": "/opt/vibetrading/releases/refactoring-20261019-p02-schema",
+  "image": "vibetrading:refactor-p02-schema-0abce2328563",
+  "image_id": "sha256:3fcaa490d47d13d1df5aca7d6321d8313ea480bc1a18dddcb5139c84a0bdde3c"
+}

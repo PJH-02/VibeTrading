@@ -1,0 +1,20 @@
+{
+  "status": "P02_SCHEMA_ACTIVE_TWO_STORAGE_SERVICES",
+  "release": "/opt/vibetrading/releases/refactoring-20261019-p02-schema",
+  "image_id": "sha256:3fcaa490d47d13d1df5aca7d6321d8313ea480bc1a18dddcb5139c84a0bdde3c",
+  "containers": {
+    "vibetrading-crypto-storage-1": {
+      "id": "9716f099418c38f7da7901d9cd95ff5afcce5d55cb05fdd604c651b7b02210dd",
+      "healthy": true
+    },
+    "vibetrading-storage-1": {
+      "id": "94375c50b4b1c879efe325e731494883bfa6cd40122f4f22dce4dc0937575ca9",
+      "healthy": true
+    }
+  },
+  "other_containers_unchanged": true,
+  "database_migration": false,
+  "missing_bar_hotfix_included": false,
+  "resumed_after": "Existing crypto index validation exceeded initial readiness timeout; no repeated restart",
+  "utc": "2026-10-19T10:03:27.538697+00:00"
+}

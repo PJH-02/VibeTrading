@@ -1,0 +1,121 @@
+{
+  "document_version": "p01-draft-1",
+  "created_date_kst": "2026-10-18",
+  "status": "DRAFT",
+  "purpose": "Parameter evidence and activation contract; not a runtime configuration file",
+  "production_activation": {
+    "status": "BLOCKED_UNVERIFIED",
+    "rule": "For a live ticket, require every relevant parameter to have a finite validated value, units, scope, provenance, production confirmation and fixture coverage. A code default or offline fixture never supplies a missing production value.",
+    "implementation_status": "NOT_IMPLEMENTED",
+    "unrelated_offline_work_allowed": true,
+    "offline_exception": "P02 schema/encoding preservation can proceed after root pins the relevant source and baseline oracle; no live activation or tuning is implied."
+  },
+  "evidence_statuses": {
+    "VERIFIED_CODE": "Read from the current local source; not provider assurance or production verification",
+    "OBSERVED_SNAPSHOT": "Historical server observation at the referenced timestamp; recheck before activation",
+    "TARGET_UNVALIDATED": "Plan target, never a measured result",
+    "UNVERIFIED": "Missing or insufficient evidence; block the dependent live behavior",
+    "OFFLINE_FIXTURE_ONLY": "Artificial local test boundary; must not be promoted to production"
+  },
+  "code_defaults": [
+    {"id":"publisher.shards","value":4,"unit":"workers","source":"vibetrading/bus.py::BufferedMarketEventBus.__init__","status":"VERIFIED_CODE","production_status":"UNVERIFIED"},
+    {"id":"publisher.requested_max_items","value":128,"unit":"records","source":"vibetrading/bus.py::BufferedMarketEventBus.__init__","status":"VERIFIED_CODE","note":"Actual total queue slots = shards * max(1, floor(max_items/shards)); in-flight workers are additional records.","production_status":"UNVERIFIED"},
+    {"id":"publisher.max_bytes","value":67108864,"unit":"encoded_bytes","source":"vibetrading/bus.py::BufferedMarketEventBus.__init__","status":"VERIFIED_CODE","note":"Reserved accepted payload bytes include in-flight until worker finally; not Python object/RSS budget.","production_status":"UNVERIFIED"},
+    {"id":"live.pending_messages","value":256,"unit":"messages","source":"vibetrading/bus.py::NatsJetStreamBus.subscribe_live","status":"VERIFIED_CODE","production_status":"UNVERIFIED"},
+    {"id":"live.pending_bytes","value":8388608,"unit":"bytes","source":"vibetrading/bus.py::NatsJetStreamBus.subscribe_live","status":"VERIFIED_CODE","production_status":"UNVERIFIED"},
+    {"id":"nats.market_max_bytes","value":1073741824,"unit":"bytes","env":"NATS_MAX_BYTES","source":"vibetrading/settings.py::NatsSettings","status":"VERIFIED_CODE","production_status":"UNVERIFIED"},
+    {"id":"nats.operations_max_bytes","value":67108864,"unit":"bytes","env":"NATS_OPERATIONS_MAX_BYTES","source":"vibetrading/settings.py::NatsSettings","status":"VERIFIED_CODE","production_status":"UNVERIFIED"},
+    {"id":"nats.crypto_max_bytes","value":null,"fallback":"nats.market_max_bytes","unit":"bytes","env":"CRYPTO_NATS_MAX_BYTES","source":"vibetrading/bus.py::NatsJetStreamBus.initialize_streams","status":"VERIFIED_CODE","production_status":"UNVERIFIED"},
+    {"id":"nats.ack_wait","value":1200,"unit":"seconds","env":"NATS_ACK_WAIT_SECONDS","source":"vibetrading/settings.py::NatsSettings","status":"VERIFIED_CODE","production_status":"UNVERIFIED"},
+    {"id":"nats.max_ack_pending","value":65536,"unit":"records","env":"NATS_MAX_ACK_PENDING","source":"vibetrading/settings.py::NatsSettings","status":"VERIFIED_CODE","production_status":"UNVERIFIED"},
+    {"id":"parquet.flush_age","value":900.0,"unit":"seconds","env":"PARQUET_FLUSH_SECONDS","source":"vibetrading/settings.py::ParquetSettings","status":"VERIFIED_CODE","production_status":"UNVERIFIED"},
+    {"id":"parquet.flush_bytes","value":67108864,"unit":"bytes","env":"PARQUET_FLUSH_BYTES","source":"vibetrading/settings.py::ParquetSettings","status":"VERIFIED_CODE","production_status":"UNVERIFIED"},
+    {"id":"parquet.max_buffer_bytes","value":134217728,"unit":"staged_plus_arrow_bytes","env":"PARQUET_MAX_BUFFER_BYTES","source":"vibetrading/settings.py::ParquetSettings","status":"VERIFIED_CODE","production_status":"UNVERIFIED"},
+    {"id":"parquet.arrow_batch_rows","value":512,"minimum":64,"unit":"records","env":"PARQUET_ARROW_BATCH_ROWS","source":"vibetrading/parquet_store.py::ParquetBatchWriter.__init__","status":"VERIFIED_CODE","production_status":"UNVERIFIED"},
+    {"id":"parquet.rss_flush_bytes","value":681574400,"unit":"bytes","env":"PARQUET_RSS_FLUSH_BYTES","source":"vibetrading/settings.py::ParquetSettings","status":"VERIFIED_CODE","production_status":"UNVERIFIED"},
+    {"id":"parquet.rss_pause_bytes","value":838860800,"unit":"bytes","env":"PARQUET_RSS_PAUSE_BYTES","source":"vibetrading/settings.py::ParquetSettings","status":"VERIFIED_CODE","production_status":"UNVERIFIED"},
+    {"id":"storage.reserve_gb","value":4.0,"unit":"GiB","env":"STORAGE_RESERVE_GB","source":"vibetrading/settings.py::StorageGuardSettings; vibetrading/storage_guard.py::StorageGuard.evaluate","status":"VERIFIED_CODE","note":"Despite env suffix GB, existing guard multiplies by 1024**3 and takes the max with declared/configured NATS + WAL + flush + recovery budgets. Physical volume validation is still required.","production_status":"UNVERIFIED"},
+    {"id":"storage.resume_margin_gb","value":0.5,"unit":"GiB","env":"STORAGE_RESUME_MARGIN_GB","source":"vibetrading/settings.py::StorageGuardSettings; vibetrading/storage_guard.py::StorageGuard.evaluate","status":"VERIFIED_CODE","note":"Existing effective data-volume margin also takes max(configured bytes, 2% of probed total).","production_status":"UNVERIFIED"},
+    {"id":"storage.resume_stable","value":60,"unit":"seconds","env":"STORAGE_RESUME_STABLE_SECONDS","source":"vibetrading/settings.py::StorageGuardSettings","status":"VERIFIED_CODE","production_status":"UNVERIFIED"},
+    {"id":"schema.cache_supported_types","value":8,"unit":"event_types","source":"vibetrading/parquet_store.py::_schema","status":"VERIFIED_CODE","note":"P02 metadata cache bound only; signal/data_gap are unsupported and must still raise."}
+  ],
+  "production_snapshot": {
+    "status": "OBSERVED_SNAPSHOT",
+    "observed_window_kst": "2026-10-18T12:06:20+09:00/2026-10-18T12:06:45+09:00",
+    "source": "docs/evidence/refactoring_20261018/server_readonly_snapshot.json",
+    "values": {
+      "logical_cpus": 2,
+      "mem_total_bytes": 4105048064,
+      "nats_crypto_max_bytes": 134217728,
+      "nats_market_max_bytes": 1073741824,
+      "nats_operations_max_bytes": 67108864,
+      "nats_file_store_cap_bytes": 2415919104,
+      "crypto_sequence_growth_records": 7309,
+      "crypto_sequence_growth_seconds": 20.127
+    },
+    "restrictions": [
+      "Sunday short observation does not prove weekday/burst/72-hour capacity.",
+      "Total NATS inbound bytes include live/control traffic; not storage ingress rate.",
+      "Stream occupancy decrease cannot estimate ingress because ACK consumption changes occupancy.",
+      "Historical stream cap must be rechecked before runtime activation; do not restore older 512MiB by assumption."
+    ]
+  },
+  "targets": [
+    {"id":"app.peak_memory","value":3221225472,"unit":"bytes","scope":"all application processes including caches and concurrent peaks","status":"TARGET_UNVALIDATED","blocked_gate":"P10"},
+    {"id":"storage.parquet_outage","value":900,"unit":"seconds","status":"TARGET_UNVALIDATED"},
+    {"id":"storage.parquet_recovery","value":1800,"unit":"seconds","status":"TARGET_UNVALIDATED"},
+    {"id":"storage.cloud_outage","value":86400,"unit":"seconds","status":"TARGET_UNVALIDATED"},
+    {"id":"storage.cloud_recovery","value":86400,"unit":"seconds","status":"TARGET_UNVALIDATED"},
+    {"id":"storage.parquet_capacity_candidate","value":1.8,"unit":"mu_over_lambda","status":"TARGET_UNVALIDATED","minimum_theoretical":1.5},
+    {"id":"storage.verified_upload_capacity_candidate","value":2.4,"unit":"mu_over_lambda","status":"TARGET_UNVALIDATED","minimum_theoretical":2.0},
+    {"id":"transport.nats_independent_outage","value":1800,"unit":"seconds","status":"UNVERIFIED","decision":"ADR-002 OPEN; requirement adoption and transport branch need explicit user scope decision","current_implementation_satisfies":false}
+  ],
+  "required_production_parameters": [
+    {"id":"feed.storage_ingress_rate","value":null,"unit":"encoded_bytes_per_second","status":"UNVERIFIED","scope":"per feed/stream and weekday/crypto burst trace","blocks":["G-NATS","P05-capacity","P07-capacity","P10"]},
+    {"id":"storage.sustained_materialization_rate","value":null,"unit":"verified_bytes_per_second","status":"UNVERIFIED","blocks":["P07-capacity","P10"]},
+    {"id":"storage.sustained_remote_verified_rate","value":null,"unit":"verified_bytes_per_second","status":"UNVERIFIED","blocks":["P07-capacity","P10"]},
+    {"id":"queue.max_records_bytes_frame_age_inflight","value":null,"unit":"per_queue_record_bytes_seconds_workers","status":"UNVERIFIED","blocks":["P05-live","P08-outbox-live"]},
+    {"id":"feed.health_lease","value":null,"unit":"milliseconds_per_feed","status":"UNVERIFIED","blocks":["P03-live","P04-live","P05-live"]},
+    {"id":"feed.failure_propagation_bound","value":null,"unit":"milliseconds","status":"UNVERIFIED","blocks":["P05-live","P04-live"]},
+    {"id":"execution.intent_ttl","value":null,"unit":"milliseconds_per_strategy","status":"UNVERIFIED","blocks":["P04-live"]},
+    {"id":"execution.account_risk_limits","value":null,"unit":"currency_and_quantity_per_account_scope","status":"UNVERIFIED","blocks":["P04-live"]},
+    {"id":"execution.retry_and_reconciliation_horizon","value":null,"unit":"milliseconds_and_pages_per_adapter","status":"UNVERIFIED","blocks":["P04-live"]},
+    {"id":"sqlite.writer_pragmas","value":null,"unit":"journal_mode_synchronous_for_actual_owner_connection","status":"UNVERIFIED","required":{"journal_mode":"wal","synchronous":2},"blocks":["P04-live","P07-live","P08-live"]},
+    {"id":"telegram.control_ttl","value":null,"candidate":60,"unit":"seconds_since_message_date","status":"UNVERIFIED","blocks":["P08-mutating-control"]},
+    {"id":"telegram.numeric_user_chat_allowlists_and_poller_owner","value":null,"unit":"identities_and_lease","status":"UNVERIFIED","blocks":["P08-mutating-control"]},
+    {"id":"storage.physical_volume_reserve_and_temp_budget","value":null,"unit":"bytes_per_physical_volume","status":"UNVERIFIED","blocks":["P05-live","P07-live","P09-live"]},
+    {"id":"memory.per_component_and_concurrent_peak_budget","value":null,"unit":"bytes","status":"UNVERIFIED","blocks":["P03-live","P05-live","P09-live","P10"]}
+  ],
+  "offline_test_profile": {
+    "status": "OFFLINE_FIXTURE_ONLY",
+    "network": "disabled_and_all_venue_telegram_transports_fake",
+    "accounts": "synthetic_aliases_only",
+    "production_data_paths": "forbidden",
+    "temporary_database": "fresh_per_test_tmp_path",
+    "candidate_values": {
+      "schema_supported_type_count": 8,
+      "publisher_shards": 2,
+      "publisher_max_items": 4,
+      "publisher_max_bytes": 4096,
+      "publisher_frame_equal_limit_bytes": 4096,
+      "publisher_frame_over_limit_bytes": 4097,
+      "fixed_wallclock_ns": 1792281600000000000,
+      "fixture_seed": 20261018,
+      "close_test_timeout_seconds": 1,
+      "fault_matrix": ["before_reserve","after_reserve_before_put","after_put_before_worker","during_publish","during_close","other_shard_failure"]
+    },
+    "rationale": "Small artificial boundaries exercise correctness and cancellation. They are not performance tuning or production defaults."
+  },
+  "validation_rules_for_followup_implementation": [
+    "Reject NaN/infinity/nonpositive bounds and inconsistent queue frame/byte budgets.",
+    "Validate actual shard allocation and account for one in-flight event per worker separately from queue slots.",
+    "Treat unknown values as absent, never zero or code default for live activation.",
+    "Require rss_flush_bytes < rss_pause_bytes and component+concurrent cache budgets within host envelope.",
+    "Disk capacity comparisons must use consistent physical volume and not subtract existing usage twice.",
+    "Require mu > lambda and compute recovery_seconds=lambda*outage_seconds/(mu-lambda).",
+    "A selected 30-minute NATS-independent requirement must pass G-NATS; the current NATS/Core transport cannot satisfy it.",
+    "Do not lower SQLite synchronous FULL to meet latency or benchmark targets.",
+    "Do not alter production parameters in P02 schema/encoding preservation tickets."
+  ],
+  "tests_executed_by_document_author": "NOT_RUN"
+}

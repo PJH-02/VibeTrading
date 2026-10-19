@@ -1,0 +1,8 @@
+{
+  "basis": "Original active-owner export + one verified deployed P02 file",
+  "source": "C:\\Users\\\ubc15\uc81c\ud615\\Desktop\\VibeTrading\\tmp\\refactoring\\server-source-20261019\\active-owner-after-p02",
+  "changed_owner": "vibetrading/parquet_store.py -> storage/crypto-storage",
+  "source_sha256": "0abce23285632c4b1a1d42f54b314c9e0df868c1172b536f52d3c8af33faa69f",
+  "health_evidence": "C:\\Users\\\ubc15\uc81c\ud615\\Desktop\\VibeTrading\\docs\\refactoring\\runs\\20261018-stage-assignment\\p02-server-health.jsonl",
+  "other_modules": "Unchanged running owner container identities verified at deployment and final health collection"
+}

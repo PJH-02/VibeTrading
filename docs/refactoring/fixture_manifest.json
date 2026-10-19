@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "baseline_source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+  "source_trace_status": "Production captured interleaving trace/golden bundle not yet acquired; synthetic offline baseline only",
+  "existing_fixture_groups": [
+    {
+      "path": "tests/test_binance_snapshot_bridge.py",
+      "source_sha256": "b3ac0c4a356e4c0272f783e4542f912867462eb232cc09a6e2f1268f3f3382cf",
+      "provenance": "Existing inline synthetic factories/fakes/assertions frozen in baseline_source.tar.gz",
+      "purpose": "book snapshot/delta bridge",
+      "results": [
+        {
+          "test": "tests.test_binance_snapshot_bridge::test_snapshot_boundary_bridges_then_advances_without_false_gap[100]",
+          "status": "PASS"
+        },
+        {
+          "test": "tests.test_binance_snapshot_bridge::test_snapshot_boundary_bridges_then_advances_without_false_gap[101]",
+          "status": "PASS"
+        },
+        {
+          "test": "tests.test_binance_snapshot_bridge::test_real_previous_sequence_gap_after_bridge_invalidates_book[100]",
+          "status": "PASS"
+        },
+        {
+          "test": "tests.test_binance_snapshot_bridge::test_real_previous_sequence_gap_after_bridge_invalidates_book[101]",
+          "status": "PASS"
+        },
+        {
+          "test": "tests.test_binance_snapshot_bridge::test_duplicate_depth_frame_is_preserved_without_regressing_live_book",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "tests/test_etf_execution_update.py",
+      "source_sha256": "9dc779f9f9860a2f49344050ab955399aa840b222d2b9975889960a4bb8be71f",
+      "provenance": "Existing inline synthetic factories/fakes/assertions frozen in baseline_source.tar.gz",
+      "purpose": "ETF feature-to-vehicle order request mapping",
+      "results": [
+        {
+          "test": "tests.test_etf_execution_update::test_kp_leverage_and_kd_short_route_to_actual_vehicles[KP-1-0.8-expected0]",
+          "status": "PASS"
+        },
+        {
+          "test": "tests.test_etf_execution_update::test_kp_leverage_and_kd_short_route_to_actual_vehicles[KP-1-1.5-expected1]",
+          "status": "PASS"
+        },
+        {
+          "test": "tests.test_etf_execution_update::test_kp_leverage_and_kd_short_route_to_actual_vehicles[KP-1-2.0-expected2]",
+          "status": "PASS"
+        },
+        {
+          "test": "tests.test_etf_execution_update::test_kp_leverage_and_kd_short_route_to_actual_vehicles[KD-1-1.0-expected3]",
+          "status": "PASS"
+        },
+        {
+          "test": "tests.test_etf_execution_update::test_kp_leverage_and_kd_short_route_to_actual_vehicles[KD--1-1.0-expected4]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "tests/test_etf_execution_update.py",
+      "source_sha256": "9dc779f9f9860a2f49344050ab955399aa840b222d2b9975889960a4bb8be71f",
+      "provenance": "Existing inline synthetic factories/fakes/assertions frozen in baseline_source.tar.gz",
+      "purpose": "C3 market-data trigger-to-order callback",
+      "results": [
+        {
+          "test": "tests.test_etf_execution_update::test_c3_uses_native_day_opens_without_waiting_for_a_minute_close",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "tests/test_etf_mock_trading.py",
+      "source_sha256": "08edc3da94af8c1154ff833fdf19ff62ae41e43755090f7b6c506475421a487b",
+      "provenance": "Existing inline synthetic factories/fakes/assertions frozen in baseline_source.tar.gz",
+      "purpose": "UNKNOWN order restart and reservation",
+      "results": [
+        {
+          "test": "tests.test_etf_mock_trading::test_uncertain_submit_survives_restart_with_cash_reserved",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "tests/test_etf_execution_update.py",
+      "source_sha256": "9dc779f9f9860a2f49344050ab955399aa840b222d2b9975889960a4bb8be71f",
+      "provenance": "Existing inline synthetic factories/fakes/assertions frozen in baseline_source.tar.gz",
+      "purpose": "cancel/fill replacement race",
+      "results": [
+        {
+          "test": "tests.test_etf_execution_update::test_cancel_fill_race_replaces_only_confirmed_remaining_once[buy]",
+          "status": "PASS"
+        },
+        {
+          "test": "tests.test_etf_execution_update::test_cancel_fill_race_replaces_only_confirmed_remaining_once[sell]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "tests/test_parquet_store.py",
+      "source_sha256": "e3a7b7b878a6f7236ac5490ff2e2da5c4699320ee010009f1bee9c37a88fa872",
+      "provenance": "Existing inline synthetic factories/fakes/assertions frozen in baseline_source.tar.gz",
+      "purpose": "schema/manifest persistence",
+      "results": [
+        {
+          "test": "tests.test_parquet_store::test_parquet_writer_commits_manifest",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "tests/test_universe_hot_path.py",
+      "source_sha256": "400c7d78569cf677f52951a9d482216c96326fe96ffb305d3c44b949667efff6",
+      "provenance": "Existing inline synthetic factories/fakes/assertions frozen in baseline_source.tar.gz",
+      "purpose": "cache/repeated REST row preservation",
+      "results": [
+        {
+          "test": "tests.test_universe_hot_path::test_unchanged_universe_parsed_once_and_caller_mutations_isolated",
+          "status": "PASS"
+        },
+        {
+          "test": "tests.test_universe_hot_path::test_universe_edit_atomic_replace_and_missing_file_are_visible",
+          "status": "PASS"
+        },
+        {
+          "test": "tests.test_universe_hot_path::test_delayed_source_is_distinguished_from_disconnected_transport",
+          "status": "PASS"
+        },
+        {
+          "test": "tests.test_universe_hot_path::test_repeated_rest_page_skips_old_and_accepted_rows_before_normalization",
+          "status": "PASS"
+        }
+      ]
+    }
+  ],
+  "schema_oracle": {
+    "path": "docs/refactoring/runs/20261018-stage-assignment/schema_oracle.json",
+    "sha256": "028d9166533d077aacf03cd9c74adb563a2601e0aeb1333029c7fcb8a7e0625c",
+    "event_types": 8,
+    "expected_output_source": "Frozen baseline _schema/_normalize/_canon/logical_hash_rows; before any product edit"
+  },
+  "evidence": "docs/refactoring/runs/20261018-stage-assignment/baseline-short/junit.xml"
+}

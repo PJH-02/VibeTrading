@@ -1,0 +1,39 @@
+{
+  "bybit": {
+    "entry_seconds": 0.3250375490024453,
+    "cancel_seconds": 0.1960817439976381,
+    "entry_samples": 1,
+    "cancel_samples": 1,
+    "origin": "Bybit testnet 2026-10-04; decision receipt\u2192first live observation, cancel_send\u2192terminal observation",
+    "proxy": false,
+    "measurement_note": "Few observations; descriptive quantile, not a stable mainnet p95. Receipt\u2192live includes private/REST observation delay."
+  },
+  "grvt": {
+    "entry_seconds": 1.0804514237999683,
+    "cancel_seconds": 1.0804514237999683,
+    "entry_samples": 3,
+    "cancel_samples": 0,
+    "origin": "GRVT testnet interrupted execution check; decision receipt\u2192first live observation",
+    "proxy": false,
+    "cancel_proxy": true,
+    "measurement_note": "3 live observations; includes private/REST observation delay. Valid cancel timing unavailable; entry budget used as cancel proxy."
+  },
+  "arcus": {
+    "entry_seconds": 1.0804514237999683,
+    "cancel_seconds": 1.0804514237999683,
+    "entry_samples": 0,
+    "cancel_samples": 0,
+    "origin": "Conservative cross-venue proxy: maximum recorded Bybit/GRVT descriptive 95th percentile",
+    "proxy": true,
+    "measurement_note": "Not measured on this venue. Primary assumption, with separate 2x stress scenario."
+  },
+  "bitget": {
+    "entry_seconds": 1.0804514237999683,
+    "cancel_seconds": 1.0804514237999683,
+    "entry_samples": 0,
+    "cancel_samples": 0,
+    "origin": "Conservative cross-venue proxy: maximum recorded Bybit/GRVT descriptive 95th percentile",
+    "proxy": true,
+    "measurement_note": "Not measured on this venue. Primary assumption, with separate 2x stress scenario."
+  }
+}

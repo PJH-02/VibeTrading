@@ -1,0 +1,2612 @@
+{
+  "provenance": "SYNTHETIC, captured from frozen baseline before any product edit; not production wire trace",
+  "pyarrow_version": "21.0.0",
+  "cases": [
+    {
+      "event_type": "trade",
+      "input_flattened_row": {
+        "schema_version": 1,
+        "event_id": "synthetic-oracle-1",
+        "source_ts_ns": 1792281600000000000,
+        "wallclock_ts_ns": 1792281600000001000,
+        "receive_ts_ns": 1792281600000002000,
+        "receive_monotonic_ns": 12345,
+        "collector_run_id": "fixture-run",
+        "connection_id": "fixture-connection",
+        "receive_sequence": 17,
+        "record_index": 0,
+        "native_event_id": "native-17",
+        "ingest_mode": "live",
+        "trading_date": "2026-10-18",
+        "session": "CRYPTO_24X7",
+        "venue": "grvt",
+        "provider": "grvt-perp",
+        "sequence": 17,
+        "nats_stream": "CRYPTO_DATA",
+        "nats_stream_sequence": 17,
+        "instrument_venue": "grvt",
+        "instrument_asset_class": "crypto_perp",
+        "instrument_raw_symbol": "BTC_USDT_Perp",
+        "instrument_std_symbol": "BTCUSDT",
+        "instrument_currency": "USDT",
+        "unknown_field": "must remain excluded",
+        "event_type": "trade",
+        "price": "123.456789012345678901",
+        "quantity": "0.000000000000000001",
+        "aggressor_side": "buy",
+        "trade_id": "trade-17"
+      },
+      "schema_ipc_base64": "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AAABAhAAAAAgAAAABAAAAAAAAAAMAAAAcmVjb3JkX2luZGV4AAAAAAT9//8AAAABIAAAAEz9//8AAAECEAAAACQAAAAEAAAAAAAAABAAAAByZWNlaXZlX3NlcXVlbmNlAAAAAED9//8AAAABQAAAAIj9//8AAAEFEAAAACAAAAAEAAAAAAAAAA0AAABjb25uZWN0aW9uX2lkAAAAvP3//7j9//8AAAEFEAAAACQAAAAEAAAAAAAAABAAAABjb2xsZWN0b3JfcnVuX2lkAAAAAPD9///s/f//AAABAhAAAAAoAAAABAAAAAAAAAAUAAAAcmVjZWl2ZV9tb25vdG9uaWNfbnMAAAAA5P3//wAAAAFAAAAALP7//wAAAQIQAAAAIAAAAAQAAAAAAAAADQAAAHJlY2VpdmVfdHNfbnMAAAAc/v//AAAAAUAAAABk/v//AAABAhAAAAAgAAAABAAAAAAAAAAPAAAAd2FsbGNsb2NrX3RzX25zAFT+//8AAAABQAAAAJz+//8AAAECEAAAACQAAAAEAAAAAAAAABEAAABvYnNlcnZlZF9kZWxheV9tcwAAAJD+//8AAAABQAAAAGT///8AAAEFFAAAAFQAAAAwAAAABAAAAAAAAAAVAAAAc291cmNlX3RpbWVzdGFtcF9raW5kAAAACAAUAAgABAAIAAAAEAAAAAEAAAAAAAAAAAAAAPD+//8AAAABIAAAAED///88////AAABAhAAAAAgAAAABAAAAAAAAAAMAAAAc291cmNlX3RzX25zAAAAACz///8AAAABQAAAABAAGAAIAAYABwAMABAAFAAQAAAAAAABBRQAAAA8AAAAJAAAAAQAAAAAAAAACgAAAGV2ZW50X3R5cGUAAAgACAAAAAQACAAAAAQAAACE////AAAAASAAAADU////0P///wAAAQUQAAAAIAAAAAQAAAAAAAAACAAAAGV2ZW50X2lkAAAAAAQABAAEAAAAEAAUAAgABgAHAAwAAAAQABAAAAAAAAECEAAAACgAAAAEAAAAAAAAAA4AAABzY2hlbWFfdmVyc2lvbgAACAAMAAgABwAIAAAAAAAAARAAAAA=",
+      "schema_fields": [
+        {
+          "name": "schema_version",
+          "type": "int16",
+          "nullable": true
+        },
+        {
+          "name": "event_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "event_type",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "source_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "source_timestamp_kind",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "observed_delay_ms",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "wallclock_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "receive_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "receive_monotonic_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "collector_run_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "connection_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "receive_sequence",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "record_index",
+          "type": "int32",
+          "nullable": true
+        },
+        {
+          "name": "native_event_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "collection_start_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "ingest_mode",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "sampled_at_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "trading_date",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "session",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "venue",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "provider",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "sequence",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "nats_stream",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "nats_stream_sequence",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "instrument_venue",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_asset_class",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_raw_symbol",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_std_symbol",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_contract_month",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_expiry",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_strike",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "instrument_option_right",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_underlying",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_security_kind",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_currency",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_exchange",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "price",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "quantity",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "aggressor_side",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "trade_id",
+          "type": "string",
+          "nullable": true
+        }
+      ],
+      "expected_typed_normalized": {
+        "schema_version": 1,
+        "event_id": "synthetic-oracle-1",
+        "event_type": "trade",
+        "source_ts_ns": 1792281600000000000,
+        "source_timestamp_kind": null,
+        "observed_delay_ms": null,
+        "wallclock_ts_ns": 1792281600000001000,
+        "receive_ts_ns": 1792281600000002000,
+        "receive_monotonic_ns": 12345,
+        "collector_run_id": "fixture-run",
+        "connection_id": "fixture-connection",
+        "receive_sequence": 17,
+        "record_index": 0,
+        "native_event_id": "native-17",
+        "collection_start_ts_ns": null,
+        "ingest_mode": "live",
+        "sampled_at_ns": null,
+        "trading_date": "2026-10-18",
+        "session": "CRYPTO_24X7",
+        "venue": "grvt",
+        "provider": "grvt-perp",
+        "sequence": "17",
+        "nats_stream": "CRYPTO_DATA",
+        "nats_stream_sequence": 17,
+        "instrument_venue": "grvt",
+        "instrument_asset_class": "crypto_perp",
+        "instrument_raw_symbol": "BTC_USDT_Perp",
+        "instrument_std_symbol": "BTCUSDT",
+        "instrument_contract_month": null,
+        "instrument_expiry": null,
+        "instrument_strike": null,
+        "instrument_option_right": null,
+        "instrument_underlying": null,
+        "instrument_security_kind": null,
+        "instrument_currency": "USDT",
+        "instrument_exchange": null,
+        "price": {
+          "decimal": "123.456789012345678901"
+        },
+        "quantity": {
+          "decimal": "1E-18"
+        },
+        "aggressor_side": "buy",
+        "trade_id": "trade-17"
+      },
+      "canonical_json": "{\"aggressor_side\":\"buy\",\"collection_start_ts_ns\":null,\"collector_run_id\":\"fixture-run\",\"connection_id\":\"fixture-connection\",\"event_id\":\"synthetic-oracle-1\",\"event_type\":\"trade\",\"ingest_mode\":\"live\",\"instrument_asset_class\":\"crypto_perp\",\"instrument_contract_month\":null,\"instrument_currency\":\"USDT\",\"instrument_exchange\":null,\"instrument_expiry\":null,\"instrument_option_right\":null,\"instrument_raw_symbol\":\"BTC_USDT_Perp\",\"instrument_security_kind\":null,\"instrument_std_symbol\":\"BTCUSDT\",\"instrument_strike\":null,\"instrument_underlying\":null,\"instrument_venue\":\"grvt\",\"native_event_id\":\"native-17\",\"nats_stream\":\"CRYPTO_DATA\",\"nats_stream_sequence\":17,\"observed_delay_ms\":null,\"price\":\"123.456789012345678901\",\"provider\":\"grvt-perp\",\"quantity\":\"1E-18\",\"receive_monotonic_ns\":12345,\"receive_sequence\":17,\"receive_ts_ns\":1792281600000002000,\"record_index\":0,\"sampled_at_ns\":null,\"schema_version\":1,\"sequence\":\"17\",\"session\":\"CRYPTO_24X7\",\"source_timestamp_kind\":null,\"source_ts_ns\":1792281600000000000,\"trade_id\":\"trade-17\",\"trading_date\":\"2026-10-18\",\"venue\":\"grvt\",\"wallclock_ts_ns\":1792281600000001000}",
+      "logical_sha256": "705dc5e3e902861110919ce9a55dea910194d61a8430c7d477e73cb29cb5cd08"
+    },
+    {
+      "event_type": "order_book",
+      "input_flattened_row": {
+        "schema_version": 1,
+        "event_id": "synthetic-oracle-1",
+        "source_ts_ns": 1792281600000000000,
+        "wallclock_ts_ns": 1792281600000001000,
+        "receive_ts_ns": 1792281600000002000,
+        "receive_monotonic_ns": 12345,
+        "collector_run_id": "fixture-run",
+        "connection_id": "fixture-connection",
+        "receive_sequence": 17,
+        "record_index": 0,
+        "native_event_id": "native-17",
+        "ingest_mode": "live",
+        "trading_date": "2026-10-18",
+        "session": "CRYPTO_24X7",
+        "venue": "grvt",
+        "provider": "grvt-perp",
+        "sequence": 17,
+        "nats_stream": "CRYPTO_DATA",
+        "nats_stream_sequence": 17,
+        "instrument_venue": "grvt",
+        "instrument_asset_class": "crypto_perp",
+        "instrument_raw_symbol": "BTC_USDT_Perp",
+        "instrument_std_symbol": "BTCUSDT",
+        "instrument_currency": "USDT",
+        "unknown_field": "must remain excluded",
+        "event_type": "order_book",
+        "update_type": "delta",
+        "depth": 2,
+        "is_full_depth": false,
+        "channel": "book",
+        "provider_depth": 1000,
+        "first_update_id": 16,
+        "final_update_id": 17,
+        "previous_update_id": 15,
+        "sync_generation": 2,
+        "fast": true,
+        "raw_payload": "{\"original\":\"원문\",\"quantity\":\"0.00\"}",
+        "bids": [
+          {
+            "price": "123.45",
+            "quantity": "0",
+            "order_count": null
+          },
+          {
+            "price": "123.40",
+            "quantity": "1.000",
+            "order_count": 2
+          }
+        ],
+        "asks": [
+          {
+            "price": "123.50",
+            "quantity": "2.500",
+            "order_count": null
+          }
+        ]
+      },
+      "schema_ipc_base64": "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",
+      "schema_fields": [
+        {
+          "name": "schema_version",
+          "type": "int16",
+          "nullable": true
+        },
+        {
+          "name": "event_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "event_type",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "source_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "source_timestamp_kind",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "observed_delay_ms",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "wallclock_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "receive_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "receive_monotonic_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "collector_run_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "connection_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "receive_sequence",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "record_index",
+          "type": "int32",
+          "nullable": true
+        },
+        {
+          "name": "native_event_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "collection_start_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "ingest_mode",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "sampled_at_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "trading_date",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "session",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "venue",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "provider",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "sequence",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "nats_stream",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "nats_stream_sequence",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "instrument_venue",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_asset_class",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_raw_symbol",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_std_symbol",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_contract_month",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_expiry",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_strike",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "instrument_option_right",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_underlying",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_security_kind",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_currency",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_exchange",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "update_type",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "depth",
+          "type": "int32",
+          "nullable": true
+        },
+        {
+          "name": "is_full_depth",
+          "type": "bool",
+          "nullable": true
+        },
+        {
+          "name": "channel",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "provider_depth",
+          "type": "int32",
+          "nullable": true
+        },
+        {
+          "name": "first_update_id",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "final_update_id",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "previous_update_id",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "sync_generation",
+          "type": "int32",
+          "nullable": true
+        },
+        {
+          "name": "fast",
+          "type": "bool",
+          "nullable": true
+        },
+        {
+          "name": "raw_payload",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "bids",
+          "type": "list<item: struct<price: decimal128(38, 18), quantity: decimal128(38, 18), order_count: int32>>",
+          "nullable": true
+        },
+        {
+          "name": "asks",
+          "type": "list<item: struct<price: decimal128(38, 18), quantity: decimal128(38, 18), order_count: int32>>",
+          "nullable": true
+        }
+      ],
+      "expected_typed_normalized": {
+        "schema_version": 1,
+        "event_id": "synthetic-oracle-1",
+        "event_type": "order_book",
+        "source_ts_ns": 1792281600000000000,
+        "source_timestamp_kind": null,
+        "observed_delay_ms": null,
+        "wallclock_ts_ns": 1792281600000001000,
+        "receive_ts_ns": 1792281600000002000,
+        "receive_monotonic_ns": 12345,
+        "collector_run_id": "fixture-run",
+        "connection_id": "fixture-connection",
+        "receive_sequence": 17,
+        "record_index": 0,
+        "native_event_id": "native-17",
+        "collection_start_ts_ns": null,
+        "ingest_mode": "live",
+        "sampled_at_ns": null,
+        "trading_date": "2026-10-18",
+        "session": "CRYPTO_24X7",
+        "venue": "grvt",
+        "provider": "grvt-perp",
+        "sequence": "17",
+        "nats_stream": "CRYPTO_DATA",
+        "nats_stream_sequence": 17,
+        "instrument_venue": "grvt",
+        "instrument_asset_class": "crypto_perp",
+        "instrument_raw_symbol": "BTC_USDT_Perp",
+        "instrument_std_symbol": "BTCUSDT",
+        "instrument_contract_month": null,
+        "instrument_expiry": null,
+        "instrument_strike": null,
+        "instrument_option_right": null,
+        "instrument_underlying": null,
+        "instrument_security_kind": null,
+        "instrument_currency": "USDT",
+        "instrument_exchange": null,
+        "update_type": "delta",
+        "depth": 2,
+        "is_full_depth": false,
+        "channel": "book",
+        "provider_depth": 1000,
+        "first_update_id": 16,
+        "final_update_id": 17,
+        "previous_update_id": 15,
+        "sync_generation": 2,
+        "fast": true,
+        "raw_payload": "{\"original\":\"원문\",\"quantity\":\"0.00\"}",
+        "bids": [
+          {
+            "price": {
+              "decimal": "123.45"
+            },
+            "quantity": {
+              "decimal": "0"
+            },
+            "order_count": null
+          },
+          {
+            "price": {
+              "decimal": "123.40"
+            },
+            "quantity": {
+              "decimal": "1.000"
+            },
+            "order_count": 2
+          }
+        ],
+        "asks": [
+          {
+            "price": {
+              "decimal": "123.50"
+            },
+            "quantity": {
+              "decimal": "2.500"
+            },
+            "order_count": null
+          }
+        ]
+      },
+      "canonical_json": "{\"asks\":[{\"order_count\":null,\"price\":\"123.50\",\"quantity\":\"2.500\"}],\"bids\":[{\"order_count\":null,\"price\":\"123.45\",\"quantity\":\"0\"},{\"order_count\":2,\"price\":\"123.40\",\"quantity\":\"1.000\"}],\"channel\":\"book\",\"collection_start_ts_ns\":null,\"collector_run_id\":\"fixture-run\",\"connection_id\":\"fixture-connection\",\"depth\":2,\"event_id\":\"synthetic-oracle-1\",\"event_type\":\"order_book\",\"fast\":true,\"final_update_id\":17,\"first_update_id\":16,\"ingest_mode\":\"live\",\"instrument_asset_class\":\"crypto_perp\",\"instrument_contract_month\":null,\"instrument_currency\":\"USDT\",\"instrument_exchange\":null,\"instrument_expiry\":null,\"instrument_option_right\":null,\"instrument_raw_symbol\":\"BTC_USDT_Perp\",\"instrument_security_kind\":null,\"instrument_std_symbol\":\"BTCUSDT\",\"instrument_strike\":null,\"instrument_underlying\":null,\"instrument_venue\":\"grvt\",\"is_full_depth\":false,\"native_event_id\":\"native-17\",\"nats_stream\":\"CRYPTO_DATA\",\"nats_stream_sequence\":17,\"observed_delay_ms\":null,\"previous_update_id\":15,\"provider\":\"grvt-perp\",\"provider_depth\":1000,\"raw_payload\":\"{\\\"original\\\":\\\"원문\\\",\\\"quantity\\\":\\\"0.00\\\"}\",\"receive_monotonic_ns\":12345,\"receive_sequence\":17,\"receive_ts_ns\":1792281600000002000,\"record_index\":0,\"sampled_at_ns\":null,\"schema_version\":1,\"sequence\":\"17\",\"session\":\"CRYPTO_24X7\",\"source_timestamp_kind\":null,\"source_ts_ns\":1792281600000000000,\"sync_generation\":2,\"trading_date\":\"2026-10-18\",\"update_type\":\"delta\",\"venue\":\"grvt\",\"wallclock_ts_ns\":1792281600000001000}",
+      "logical_sha256": "c49ccde0f5f02c12713c960c691bf206b79d1b65a28ff3b48eccf21fcba77e09"
+    },
+    {
+      "event_type": "bar_1m",
+      "input_flattened_row": {
+        "schema_version": 1,
+        "event_id": "synthetic-oracle-1",
+        "source_ts_ns": 1792281600000000000,
+        "wallclock_ts_ns": 1792281600000001000,
+        "receive_ts_ns": 1792281600000002000,
+        "receive_monotonic_ns": 12345,
+        "collector_run_id": "fixture-run",
+        "connection_id": "fixture-connection",
+        "receive_sequence": 17,
+        "record_index": 0,
+        "native_event_id": "native-17",
+        "ingest_mode": "live",
+        "trading_date": "2026-10-18",
+        "session": "CRYPTO_24X7",
+        "venue": "grvt",
+        "provider": "grvt-perp",
+        "sequence": 17,
+        "nats_stream": "CRYPTO_DATA",
+        "nats_stream_sequence": 17,
+        "instrument_venue": "grvt",
+        "instrument_asset_class": "crypto_perp",
+        "instrument_raw_symbol": "BTC_USDT_Perp",
+        "instrument_std_symbol": "BTCUSDT",
+        "instrument_currency": "USDT",
+        "unknown_field": "must remain excluded",
+        "event_type": "bar_1m",
+        "interval": "1m",
+        "open_ts_ns": 1792281600000000000,
+        "close_ts_ns": 1792281660000000000,
+        "open": "100",
+        "high": "102",
+        "low": "99",
+        "close": "101",
+        "volume": "0",
+        "trade_count": 0,
+        "closed": true
+      },
+      "schema_ipc_base64": "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",
+      "schema_fields": [
+        {
+          "name": "schema_version",
+          "type": "int16",
+          "nullable": true
+        },
+        {
+          "name": "event_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "event_type",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "source_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "source_timestamp_kind",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "observed_delay_ms",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "wallclock_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "receive_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "receive_monotonic_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "collector_run_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "connection_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "receive_sequence",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "record_index",
+          "type": "int32",
+          "nullable": true
+        },
+        {
+          "name": "native_event_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "collection_start_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "ingest_mode",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "sampled_at_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "trading_date",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "session",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "venue",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "provider",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "sequence",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "nats_stream",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "nats_stream_sequence",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "instrument_venue",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_asset_class",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_raw_symbol",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_std_symbol",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_contract_month",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_expiry",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_strike",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "instrument_option_right",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_underlying",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_security_kind",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_currency",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_exchange",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "interval",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "open_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "close_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "open",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "high",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "low",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "close",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "volume",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "trade_count",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "closed",
+          "type": "bool",
+          "nullable": true
+        }
+      ],
+      "expected_typed_normalized": {
+        "schema_version": 1,
+        "event_id": "synthetic-oracle-1",
+        "event_type": "bar_1m",
+        "source_ts_ns": 1792281600000000000,
+        "source_timestamp_kind": null,
+        "observed_delay_ms": null,
+        "wallclock_ts_ns": 1792281600000001000,
+        "receive_ts_ns": 1792281600000002000,
+        "receive_monotonic_ns": 12345,
+        "collector_run_id": "fixture-run",
+        "connection_id": "fixture-connection",
+        "receive_sequence": 17,
+        "record_index": 0,
+        "native_event_id": "native-17",
+        "collection_start_ts_ns": null,
+        "ingest_mode": "live",
+        "sampled_at_ns": null,
+        "trading_date": "2026-10-18",
+        "session": "CRYPTO_24X7",
+        "venue": "grvt",
+        "provider": "grvt-perp",
+        "sequence": "17",
+        "nats_stream": "CRYPTO_DATA",
+        "nats_stream_sequence": 17,
+        "instrument_venue": "grvt",
+        "instrument_asset_class": "crypto_perp",
+        "instrument_raw_symbol": "BTC_USDT_Perp",
+        "instrument_std_symbol": "BTCUSDT",
+        "instrument_contract_month": null,
+        "instrument_expiry": null,
+        "instrument_strike": null,
+        "instrument_option_right": null,
+        "instrument_underlying": null,
+        "instrument_security_kind": null,
+        "instrument_currency": "USDT",
+        "instrument_exchange": null,
+        "interval": "1m",
+        "open_ts_ns": 1792281600000000000,
+        "close_ts_ns": 1792281660000000000,
+        "open": {
+          "decimal": "100"
+        },
+        "high": {
+          "decimal": "102"
+        },
+        "low": {
+          "decimal": "99"
+        },
+        "close": {
+          "decimal": "101"
+        },
+        "volume": {
+          "decimal": "0"
+        },
+        "trade_count": 0,
+        "closed": true
+      },
+      "canonical_json": "{\"close\":\"101\",\"close_ts_ns\":1792281660000000000,\"closed\":true,\"collection_start_ts_ns\":null,\"collector_run_id\":\"fixture-run\",\"connection_id\":\"fixture-connection\",\"event_id\":\"synthetic-oracle-1\",\"event_type\":\"bar_1m\",\"high\":\"102\",\"ingest_mode\":\"live\",\"instrument_asset_class\":\"crypto_perp\",\"instrument_contract_month\":null,\"instrument_currency\":\"USDT\",\"instrument_exchange\":null,\"instrument_expiry\":null,\"instrument_option_right\":null,\"instrument_raw_symbol\":\"BTC_USDT_Perp\",\"instrument_security_kind\":null,\"instrument_std_symbol\":\"BTCUSDT\",\"instrument_strike\":null,\"instrument_underlying\":null,\"instrument_venue\":\"grvt\",\"interval\":\"1m\",\"low\":\"99\",\"native_event_id\":\"native-17\",\"nats_stream\":\"CRYPTO_DATA\",\"nats_stream_sequence\":17,\"observed_delay_ms\":null,\"open\":\"100\",\"open_ts_ns\":1792281600000000000,\"provider\":\"grvt-perp\",\"receive_monotonic_ns\":12345,\"receive_sequence\":17,\"receive_ts_ns\":1792281600000002000,\"record_index\":0,\"sampled_at_ns\":null,\"schema_version\":1,\"sequence\":\"17\",\"session\":\"CRYPTO_24X7\",\"source_timestamp_kind\":null,\"source_ts_ns\":1792281600000000000,\"trade_count\":0,\"trading_date\":\"2026-10-18\",\"venue\":\"grvt\",\"volume\":\"0\",\"wallclock_ts_ns\":1792281600000001000}",
+      "logical_sha256": "baa7b952743b2374fc9e5564f867e8fdbb6f77ec2418f4170f090960ba7aa193"
+    },
+    {
+      "event_type": "etf_nav",
+      "input_flattened_row": {
+        "schema_version": 1,
+        "event_id": "synthetic-oracle-1",
+        "source_ts_ns": 1792281600000000000,
+        "wallclock_ts_ns": 1792281600000001000,
+        "receive_ts_ns": 1792281600000002000,
+        "receive_monotonic_ns": 12345,
+        "collector_run_id": "fixture-run",
+        "connection_id": "fixture-connection",
+        "receive_sequence": 17,
+        "record_index": 0,
+        "native_event_id": "native-17",
+        "ingest_mode": "live",
+        "trading_date": "2026-10-18",
+        "session": "CRYPTO_24X7",
+        "venue": "grvt",
+        "provider": "grvt-perp",
+        "sequence": 17,
+        "nats_stream": "CRYPTO_DATA",
+        "nats_stream_sequence": 17,
+        "instrument_venue": "grvt",
+        "instrument_asset_class": "crypto_perp",
+        "instrument_raw_symbol": "BTC_USDT_Perp",
+        "instrument_std_symbol": "BTCUSDT",
+        "instrument_currency": "USDT",
+        "unknown_field": "must remain excluded",
+        "event_type": "etf_nav",
+        "nav": "7488.270",
+        "nav_change": "-10.04",
+        "nav_change_pct": "-0.04",
+        "index_disparity_pct": null,
+        "etf_disparity_pct": "0",
+        "raw_payload": "native-nav"
+      },
+      "schema_ipc_base64": "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",
+      "schema_fields": [
+        {
+          "name": "schema_version",
+          "type": "int16",
+          "nullable": true
+        },
+        {
+          "name": "event_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "event_type",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "source_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "source_timestamp_kind",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "observed_delay_ms",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "wallclock_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "receive_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "receive_monotonic_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "collector_run_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "connection_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "receive_sequence",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "record_index",
+          "type": "int32",
+          "nullable": true
+        },
+        {
+          "name": "native_event_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "collection_start_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "ingest_mode",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "sampled_at_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "trading_date",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "session",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "venue",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "provider",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "sequence",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "nats_stream",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "nats_stream_sequence",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "instrument_venue",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_asset_class",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_raw_symbol",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_std_symbol",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_contract_month",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_expiry",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_strike",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "instrument_option_right",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_underlying",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_security_kind",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_currency",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_exchange",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "nav",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "nav_change",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "nav_change_pct",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "index_disparity_pct",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "etf_disparity_pct",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "raw_payload",
+          "type": "string",
+          "nullable": true
+        }
+      ],
+      "expected_typed_normalized": {
+        "schema_version": 1,
+        "event_id": "synthetic-oracle-1",
+        "event_type": "etf_nav",
+        "source_ts_ns": 1792281600000000000,
+        "source_timestamp_kind": null,
+        "observed_delay_ms": null,
+        "wallclock_ts_ns": 1792281600000001000,
+        "receive_ts_ns": 1792281600000002000,
+        "receive_monotonic_ns": 12345,
+        "collector_run_id": "fixture-run",
+        "connection_id": "fixture-connection",
+        "receive_sequence": 17,
+        "record_index": 0,
+        "native_event_id": "native-17",
+        "collection_start_ts_ns": null,
+        "ingest_mode": "live",
+        "sampled_at_ns": null,
+        "trading_date": "2026-10-18",
+        "session": "CRYPTO_24X7",
+        "venue": "grvt",
+        "provider": "grvt-perp",
+        "sequence": "17",
+        "nats_stream": "CRYPTO_DATA",
+        "nats_stream_sequence": 17,
+        "instrument_venue": "grvt",
+        "instrument_asset_class": "crypto_perp",
+        "instrument_raw_symbol": "BTC_USDT_Perp",
+        "instrument_std_symbol": "BTCUSDT",
+        "instrument_contract_month": null,
+        "instrument_expiry": null,
+        "instrument_strike": null,
+        "instrument_option_right": null,
+        "instrument_underlying": null,
+        "instrument_security_kind": null,
+        "instrument_currency": "USDT",
+        "instrument_exchange": null,
+        "nav": {
+          "decimal": "7488.270"
+        },
+        "nav_change": {
+          "decimal": "-10.04"
+        },
+        "nav_change_pct": {
+          "decimal": "-0.04"
+        },
+        "index_disparity_pct": null,
+        "etf_disparity_pct": {
+          "decimal": "0"
+        },
+        "raw_payload": "native-nav"
+      },
+      "canonical_json": "{\"collection_start_ts_ns\":null,\"collector_run_id\":\"fixture-run\",\"connection_id\":\"fixture-connection\",\"etf_disparity_pct\":\"0\",\"event_id\":\"synthetic-oracle-1\",\"event_type\":\"etf_nav\",\"index_disparity_pct\":null,\"ingest_mode\":\"live\",\"instrument_asset_class\":\"crypto_perp\",\"instrument_contract_month\":null,\"instrument_currency\":\"USDT\",\"instrument_exchange\":null,\"instrument_expiry\":null,\"instrument_option_right\":null,\"instrument_raw_symbol\":\"BTC_USDT_Perp\",\"instrument_security_kind\":null,\"instrument_std_symbol\":\"BTCUSDT\",\"instrument_strike\":null,\"instrument_underlying\":null,\"instrument_venue\":\"grvt\",\"native_event_id\":\"native-17\",\"nats_stream\":\"CRYPTO_DATA\",\"nats_stream_sequence\":17,\"nav\":\"7488.270\",\"nav_change\":\"-10.04\",\"nav_change_pct\":\"-0.04\",\"observed_delay_ms\":null,\"provider\":\"grvt-perp\",\"raw_payload\":\"native-nav\",\"receive_monotonic_ns\":12345,\"receive_sequence\":17,\"receive_ts_ns\":1792281600000002000,\"record_index\":0,\"sampled_at_ns\":null,\"schema_version\":1,\"sequence\":\"17\",\"session\":\"CRYPTO_24X7\",\"source_timestamp_kind\":null,\"source_ts_ns\":1792281600000000000,\"trading_date\":\"2026-10-18\",\"venue\":\"grvt\",\"wallclock_ts_ns\":1792281600000001000}",
+      "logical_sha256": "9fdae1c995f2de6e81238d36d6adf62801d24ab9de67333eda48862e59fe1d9b"
+    },
+    {
+      "event_type": "funding_rate",
+      "input_flattened_row": {
+        "schema_version": 1,
+        "event_id": "synthetic-oracle-1",
+        "source_ts_ns": 1792281600000000000,
+        "wallclock_ts_ns": 1792281600000001000,
+        "receive_ts_ns": 1792281600000002000,
+        "receive_monotonic_ns": 12345,
+        "collector_run_id": "fixture-run",
+        "connection_id": "fixture-connection",
+        "receive_sequence": 17,
+        "record_index": 0,
+        "native_event_id": "native-17",
+        "ingest_mode": "live",
+        "trading_date": "2026-10-18",
+        "session": "CRYPTO_24X7",
+        "venue": "grvt",
+        "provider": "grvt-perp",
+        "sequence": 17,
+        "nats_stream": "CRYPTO_DATA",
+        "nats_stream_sequence": 17,
+        "instrument_venue": "grvt",
+        "instrument_asset_class": "crypto_perp",
+        "instrument_raw_symbol": "BTC_USDT_Perp",
+        "instrument_std_symbol": "BTCUSDT",
+        "instrument_currency": "USDT",
+        "unknown_field": "must remain excluded",
+        "event_type": "funding_rate",
+        "funding_rate": "-0.000123",
+        "premium": "0.001",
+        "funding_interval_hours": 8
+      },
+      "schema_ipc_base64": "//////gJAAAUAAAAAAAAAAAACgAMAAYABQAIAAoAAAAAAQQABAAAAMj2//8EAAAAJwAAAIwJAABICQAA+AgAAKwIAABECAAABAgAAMgHAACMBwAASAcAABAHAADcBgAAnAYAAGAGAAAsBgAA6AUAAJQFAABYBQAAJAUAANQEAACABAAAMAQAAAAEAADQAwAAjAMAAFQDAAAYAwAA3AIAAKACAABgAgAAKAIAAOABAACkAQAAaAEAACgBAADwAAAAuAAAAHwAAABIAAAABAAAACD3//8AAAECEAAAACgAAAAEAAAAAAAAABYAAABmdW5kaW5nX2ludGVydmFsX2hvdXJzAAAY9///AAAAARAAAABg9///AAABBxAAAAAYAAAABAAAAAAAAAAHAAAAcHJlbWl1bQB4/v//JgAAABIAAACQ9///AAABBxAAAAAgAAAABAAAAAAAAAAMAAAAZnVuZGluZ19yYXRlAAAAALD+//8mAAAAEgAAAMj3//8AAAEFEAAAACQAAAAEAAAAAAAAABMAAABpbnN0cnVtZW50X2V4Y2hhbmdlAAD4///89///AAABBRAAAAAkAAAABAAAAAAAAAATAAAAaW5zdHJ1bWVudF9jdXJyZW5jeQA0+P//MPj//wAAAQUQAAAALAAAAAQAAAAAAAAAGAAAAGluc3RydW1lbnRfc2VjdXJpdHlfa2luZAAAAABw+P//bPj//wAAAQUQAAAAKAAAAAQAAAAAAAAAFQAAAGluc3RydW1lbnRfdW5kZXJseWluZwAAAKj4//+k+P//AAABBRAAAAAoAAAABAAAAAAAAAAXAAAAaW5zdHJ1bWVudF9vcHRpb25fcmlnaHQA4Pj//9z4//8AAAEHEAAAACwAAAAEAAAAAAAAABEAAABpbnN0cnVtZW50X3N0cmlrZQAAAAgADAAEAAgACAAAACYAAAASAAAAIPn//wAAAQUQAAAAJAAAAAQAAAAAAAAAEQAAAGluc3RydW1lbnRfZXhwaXJ5AAAAWPn//1T5//8AAAEFEAAAACwAAAAEAAAAAAAAABkAAABpbnN0cnVtZW50X2NvbnRyYWN0X21vbnRoAAAAlPn//5D5//8AAAEFEAAAACgAAAAEAAAAAAAAABUAAABpbnN0cnVtZW50X3N0ZF9zeW1ib2wAAADM+f//yPn//wAAAQUQAAAA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",
+      "schema_fields": [
+        {
+          "name": "schema_version",
+          "type": "int16",
+          "nullable": true
+        },
+        {
+          "name": "event_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "event_type",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "source_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "source_timestamp_kind",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "observed_delay_ms",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "wallclock_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "receive_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "receive_monotonic_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "collector_run_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "connection_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "receive_sequence",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "record_index",
+          "type": "int32",
+          "nullable": true
+        },
+        {
+          "name": "native_event_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "collection_start_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "ingest_mode",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "sampled_at_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "trading_date",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "session",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "venue",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "provider",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "sequence",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "nats_stream",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "nats_stream_sequence",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "instrument_venue",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_asset_class",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_raw_symbol",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_std_symbol",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_contract_month",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_expiry",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_strike",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "instrument_option_right",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_underlying",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_security_kind",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_currency",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_exchange",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "funding_rate",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "premium",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "funding_interval_hours",
+          "type": "int16",
+          "nullable": true
+        }
+      ],
+      "expected_typed_normalized": {
+        "schema_version": 1,
+        "event_id": "synthetic-oracle-1",
+        "event_type": "funding_rate",
+        "source_ts_ns": 1792281600000000000,
+        "source_timestamp_kind": null,
+        "observed_delay_ms": null,
+        "wallclock_ts_ns": 1792281600000001000,
+        "receive_ts_ns": 1792281600000002000,
+        "receive_monotonic_ns": 12345,
+        "collector_run_id": "fixture-run",
+        "connection_id": "fixture-connection",
+        "receive_sequence": 17,
+        "record_index": 0,
+        "native_event_id": "native-17",
+        "collection_start_ts_ns": null,
+        "ingest_mode": "live",
+        "sampled_at_ns": null,
+        "trading_date": "2026-10-18",
+        "session": "CRYPTO_24X7",
+        "venue": "grvt",
+        "provider": "grvt-perp",
+        "sequence": "17",
+        "nats_stream": "CRYPTO_DATA",
+        "nats_stream_sequence": 17,
+        "instrument_venue": "grvt",
+        "instrument_asset_class": "crypto_perp",
+        "instrument_raw_symbol": "BTC_USDT_Perp",
+        "instrument_std_symbol": "BTCUSDT",
+        "instrument_contract_month": null,
+        "instrument_expiry": null,
+        "instrument_strike": null,
+        "instrument_option_right": null,
+        "instrument_underlying": null,
+        "instrument_security_kind": null,
+        "instrument_currency": "USDT",
+        "instrument_exchange": null,
+        "funding_rate": {
+          "decimal": "-0.000123"
+        },
+        "premium": {
+          "decimal": "0.001"
+        },
+        "funding_interval_hours": 8
+      },
+      "canonical_json": "{\"collection_start_ts_ns\":null,\"collector_run_id\":\"fixture-run\",\"connection_id\":\"fixture-connection\",\"event_id\":\"synthetic-oracle-1\",\"event_type\":\"funding_rate\",\"funding_interval_hours\":8,\"funding_rate\":\"-0.000123\",\"ingest_mode\":\"live\",\"instrument_asset_class\":\"crypto_perp\",\"instrument_contract_month\":null,\"instrument_currency\":\"USDT\",\"instrument_exchange\":null,\"instrument_expiry\":null,\"instrument_option_right\":null,\"instrument_raw_symbol\":\"BTC_USDT_Perp\",\"instrument_security_kind\":null,\"instrument_std_symbol\":\"BTCUSDT\",\"instrument_strike\":null,\"instrument_underlying\":null,\"instrument_venue\":\"grvt\",\"native_event_id\":\"native-17\",\"nats_stream\":\"CRYPTO_DATA\",\"nats_stream_sequence\":17,\"observed_delay_ms\":null,\"premium\":\"0.001\",\"provider\":\"grvt-perp\",\"receive_monotonic_ns\":12345,\"receive_sequence\":17,\"receive_ts_ns\":1792281600000002000,\"record_index\":0,\"sampled_at_ns\":null,\"schema_version\":1,\"sequence\":\"17\",\"session\":\"CRYPTO_24X7\",\"source_timestamp_kind\":null,\"source_ts_ns\":1792281600000000000,\"trading_date\":\"2026-10-18\",\"venue\":\"grvt\",\"wallclock_ts_ns\":1792281600000001000}",
+      "logical_sha256": "3a7bf41259459f4b87f7a3917836f4d31face16a0db81e2abd8c8dbf5b24105f"
+    },
+    {
+      "event_type": "open_interest",
+      "input_flattened_row": {
+        "schema_version": 1,
+        "event_id": "synthetic-oracle-1",
+        "source_ts_ns": 1792281600000000000,
+        "wallclock_ts_ns": 1792281600000001000,
+        "receive_ts_ns": 1792281600000002000,
+        "receive_monotonic_ns": 12345,
+        "collector_run_id": "fixture-run",
+        "connection_id": "fixture-connection",
+        "receive_sequence": 17,
+        "record_index": 0,
+        "native_event_id": "native-17",
+        "ingest_mode": "live",
+        "trading_date": "2026-10-18",
+        "session": "CRYPTO_24X7",
+        "venue": "grvt",
+        "provider": "grvt-perp",
+        "sequence": 17,
+        "nats_stream": "CRYPTO_DATA",
+        "nats_stream_sequence": 17,
+        "instrument_venue": "grvt",
+        "instrument_asset_class": "crypto_perp",
+        "instrument_raw_symbol": "BTC_USDT_Perp",
+        "instrument_std_symbol": "BTCUSDT",
+        "instrument_currency": "USDT",
+        "unknown_field": "must remain excluded",
+        "event_type": "open_interest",
+        "open_interest": "123.456",
+        "open_interest_unit": "contracts",
+        "open_interest_value": "7890.12",
+        "value_currency": "USD",
+        "mark_price": "123.45",
+        "observation_method": "fixture"
+      },
+      "schema_ipc_base64": "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",
+      "schema_fields": [
+        {
+          "name": "schema_version",
+          "type": "int16",
+          "nullable": true
+        },
+        {
+          "name": "event_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "event_type",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "source_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "source_timestamp_kind",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "observed_delay_ms",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "wallclock_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "receive_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "receive_monotonic_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "collector_run_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "connection_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "receive_sequence",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "record_index",
+          "type": "int32",
+          "nullable": true
+        },
+        {
+          "name": "native_event_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "collection_start_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "ingest_mode",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "sampled_at_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "trading_date",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "session",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "venue",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "provider",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "sequence",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "nats_stream",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "nats_stream_sequence",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "instrument_venue",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_asset_class",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_raw_symbol",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_std_symbol",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_contract_month",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_expiry",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_strike",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "instrument_option_right",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_underlying",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_security_kind",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_currency",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_exchange",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "open_interest",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "open_interest_unit",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "open_interest_value",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "value_currency",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "mark_price",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "observation_method",
+          "type": "string",
+          "nullable": true
+        }
+      ],
+      "expected_typed_normalized": {
+        "schema_version": 1,
+        "event_id": "synthetic-oracle-1",
+        "event_type": "open_interest",
+        "source_ts_ns": 1792281600000000000,
+        "source_timestamp_kind": null,
+        "observed_delay_ms": null,
+        "wallclock_ts_ns": 1792281600000001000,
+        "receive_ts_ns": 1792281600000002000,
+        "receive_monotonic_ns": 12345,
+        "collector_run_id": "fixture-run",
+        "connection_id": "fixture-connection",
+        "receive_sequence": 17,
+        "record_index": 0,
+        "native_event_id": "native-17",
+        "collection_start_ts_ns": null,
+        "ingest_mode": "live",
+        "sampled_at_ns": null,
+        "trading_date": "2026-10-18",
+        "session": "CRYPTO_24X7",
+        "venue": "grvt",
+        "provider": "grvt-perp",
+        "sequence": "17",
+        "nats_stream": "CRYPTO_DATA",
+        "nats_stream_sequence": 17,
+        "instrument_venue": "grvt",
+        "instrument_asset_class": "crypto_perp",
+        "instrument_raw_symbol": "BTC_USDT_Perp",
+        "instrument_std_symbol": "BTCUSDT",
+        "instrument_contract_month": null,
+        "instrument_expiry": null,
+        "instrument_strike": null,
+        "instrument_option_right": null,
+        "instrument_underlying": null,
+        "instrument_security_kind": null,
+        "instrument_currency": "USDT",
+        "instrument_exchange": null,
+        "open_interest": {
+          "decimal": "123.456"
+        },
+        "open_interest_unit": "contracts",
+        "open_interest_value": {
+          "decimal": "7890.12"
+        },
+        "value_currency": "USD",
+        "mark_price": {
+          "decimal": "123.45"
+        },
+        "observation_method": "fixture"
+      },
+      "canonical_json": "{\"collection_start_ts_ns\":null,\"collector_run_id\":\"fixture-run\",\"connection_id\":\"fixture-connection\",\"event_id\":\"synthetic-oracle-1\",\"event_type\":\"open_interest\",\"ingest_mode\":\"live\",\"instrument_asset_class\":\"crypto_perp\",\"instrument_contract_month\":null,\"instrument_currency\":\"USDT\",\"instrument_exchange\":null,\"instrument_expiry\":null,\"instrument_option_right\":null,\"instrument_raw_symbol\":\"BTC_USDT_Perp\",\"instrument_security_kind\":null,\"instrument_std_symbol\":\"BTCUSDT\",\"instrument_strike\":null,\"instrument_underlying\":null,\"instrument_venue\":\"grvt\",\"mark_price\":\"123.45\",\"native_event_id\":\"native-17\",\"nats_stream\":\"CRYPTO_DATA\",\"nats_stream_sequence\":17,\"observation_method\":\"fixture\",\"observed_delay_ms\":null,\"open_interest\":\"123.456\",\"open_interest_unit\":\"contracts\",\"open_interest_value\":\"7890.12\",\"provider\":\"grvt-perp\",\"receive_monotonic_ns\":12345,\"receive_sequence\":17,\"receive_ts_ns\":1792281600000002000,\"record_index\":0,\"sampled_at_ns\":null,\"schema_version\":1,\"sequence\":\"17\",\"session\":\"CRYPTO_24X7\",\"source_timestamp_kind\":null,\"source_ts_ns\":1792281600000000000,\"trading_date\":\"2026-10-18\",\"value_currency\":\"USD\",\"venue\":\"grvt\",\"wallclock_ts_ns\":1792281600000001000}",
+      "logical_sha256": "b1ca2fbabca01274e491f9cdf537bd24c943bb82694d639e8ef79873eb151f5e"
+    },
+    {
+      "event_type": "participant_flow",
+      "input_flattened_row": {
+        "schema_version": 1,
+        "event_id": "synthetic-oracle-1",
+        "source_ts_ns": 1792281600000000000,
+        "wallclock_ts_ns": 1792281600000001000,
+        "receive_ts_ns": 1792281600000002000,
+        "receive_monotonic_ns": 12345,
+        "collector_run_id": "fixture-run",
+        "connection_id": "fixture-connection",
+        "receive_sequence": 17,
+        "record_index": 0,
+        "native_event_id": "native-17",
+        "ingest_mode": "live",
+        "trading_date": "2026-10-18",
+        "session": "CRYPTO_24X7",
+        "venue": "grvt",
+        "provider": "grvt-perp",
+        "sequence": 17,
+        "nats_stream": "CRYPTO_DATA",
+        "nats_stream_sequence": 17,
+        "instrument_venue": "grvt",
+        "instrument_asset_class": "crypto_perp",
+        "instrument_raw_symbol": "BTC_USDT_Perp",
+        "instrument_std_symbol": "BTCUSDT",
+        "instrument_currency": "USDT",
+        "unknown_field": "must remain excluded",
+        "event_type": "participant_flow",
+        "market_code": "K2I",
+        "market_subcode": "0001",
+        "participant": "foreign",
+        "participant_label": "외국인",
+        "buy_volume": "10",
+        "sell_volume": "12",
+        "net_volume": "-2",
+        "buy_value": "1000.01",
+        "sell_value": "1200.02",
+        "net_value": "-200.01",
+        "quantity_unit": "contracts",
+        "value_currency": "KRW",
+        "value_unit": "won",
+        "observation_method": "fixture",
+        "raw_payload": "native-flow"
+      },
+      "schema_ipc_base64": "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",
+      "schema_fields": [
+        {
+          "name": "schema_version",
+          "type": "int16",
+          "nullable": true
+        },
+        {
+          "name": "event_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "event_type",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "source_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "source_timestamp_kind",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "observed_delay_ms",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "wallclock_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "receive_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "receive_monotonic_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "collector_run_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "connection_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "receive_sequence",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "record_index",
+          "type": "int32",
+          "nullable": true
+        },
+        {
+          "name": "native_event_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "collection_start_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "ingest_mode",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "sampled_at_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "trading_date",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "session",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "venue",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "provider",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "sequence",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "nats_stream",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "nats_stream_sequence",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "instrument_venue",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_asset_class",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_raw_symbol",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_std_symbol",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_contract_month",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_expiry",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_strike",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "instrument_option_right",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_underlying",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_security_kind",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_currency",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_exchange",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "market_code",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "market_subcode",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "participant",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "participant_label",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "buy_volume",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "sell_volume",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "net_volume",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "buy_value",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "sell_value",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "net_value",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "quantity_unit",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "value_currency",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "value_unit",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "observation_method",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "raw_payload",
+          "type": "string",
+          "nullable": true
+        }
+      ],
+      "expected_typed_normalized": {
+        "schema_version": 1,
+        "event_id": "synthetic-oracle-1",
+        "event_type": "participant_flow",
+        "source_ts_ns": 1792281600000000000,
+        "source_timestamp_kind": null,
+        "observed_delay_ms": null,
+        "wallclock_ts_ns": 1792281600000001000,
+        "receive_ts_ns": 1792281600000002000,
+        "receive_monotonic_ns": 12345,
+        "collector_run_id": "fixture-run",
+        "connection_id": "fixture-connection",
+        "receive_sequence": 17,
+        "record_index": 0,
+        "native_event_id": "native-17",
+        "collection_start_ts_ns": null,
+        "ingest_mode": "live",
+        "sampled_at_ns": null,
+        "trading_date": "2026-10-18",
+        "session": "CRYPTO_24X7",
+        "venue": "grvt",
+        "provider": "grvt-perp",
+        "sequence": "17",
+        "nats_stream": "CRYPTO_DATA",
+        "nats_stream_sequence": 17,
+        "instrument_venue": "grvt",
+        "instrument_asset_class": "crypto_perp",
+        "instrument_raw_symbol": "BTC_USDT_Perp",
+        "instrument_std_symbol": "BTCUSDT",
+        "instrument_contract_month": null,
+        "instrument_expiry": null,
+        "instrument_strike": null,
+        "instrument_option_right": null,
+        "instrument_underlying": null,
+        "instrument_security_kind": null,
+        "instrument_currency": "USDT",
+        "instrument_exchange": null,
+        "market_code": "K2I",
+        "market_subcode": "0001",
+        "participant": "foreign",
+        "participant_label": "외국인",
+        "buy_volume": {
+          "decimal": "10"
+        },
+        "sell_volume": {
+          "decimal": "12"
+        },
+        "net_volume": {
+          "decimal": "-2"
+        },
+        "buy_value": {
+          "decimal": "1000.01"
+        },
+        "sell_value": {
+          "decimal": "1200.02"
+        },
+        "net_value": {
+          "decimal": "-200.01"
+        },
+        "quantity_unit": "contracts",
+        "value_currency": "KRW",
+        "value_unit": "won",
+        "observation_method": "fixture",
+        "raw_payload": "native-flow"
+      },
+      "canonical_json": "{\"buy_value\":\"1000.01\",\"buy_volume\":\"10\",\"collection_start_ts_ns\":null,\"collector_run_id\":\"fixture-run\",\"connection_id\":\"fixture-connection\",\"event_id\":\"synthetic-oracle-1\",\"event_type\":\"participant_flow\",\"ingest_mode\":\"live\",\"instrument_asset_class\":\"crypto_perp\",\"instrument_contract_month\":null,\"instrument_currency\":\"USDT\",\"instrument_exchange\":null,\"instrument_expiry\":null,\"instrument_option_right\":null,\"instrument_raw_symbol\":\"BTC_USDT_Perp\",\"instrument_security_kind\":null,\"instrument_std_symbol\":\"BTCUSDT\",\"instrument_strike\":null,\"instrument_underlying\":null,\"instrument_venue\":\"grvt\",\"market_code\":\"K2I\",\"market_subcode\":\"0001\",\"native_event_id\":\"native-17\",\"nats_stream\":\"CRYPTO_DATA\",\"nats_stream_sequence\":17,\"net_value\":\"-200.01\",\"net_volume\":\"-2\",\"observation_method\":\"fixture\",\"observed_delay_ms\":null,\"participant\":\"foreign\",\"participant_label\":\"외국인\",\"provider\":\"grvt-perp\",\"quantity_unit\":\"contracts\",\"raw_payload\":\"native-flow\",\"receive_monotonic_ns\":12345,\"receive_sequence\":17,\"receive_ts_ns\":1792281600000002000,\"record_index\":0,\"sampled_at_ns\":null,\"schema_version\":1,\"sell_value\":\"1200.02\",\"sell_volume\":\"12\",\"sequence\":\"17\",\"session\":\"CRYPTO_24X7\",\"source_timestamp_kind\":null,\"source_ts_ns\":1792281600000000000,\"trading_date\":\"2026-10-18\",\"value_currency\":\"KRW\",\"value_unit\":\"won\",\"venue\":\"grvt\",\"wallclock_ts_ns\":1792281600000001000}",
+      "logical_sha256": "722f949ab898e50f4deaaae6cd0978af8571d7413920c1d41f88528966b92fe3"
+    },
+    {
+      "event_type": "index_quote",
+      "input_flattened_row": {
+        "schema_version": 1,
+        "event_id": "synthetic-oracle-1",
+        "source_ts_ns": 1792281600000000000,
+        "wallclock_ts_ns": 1792281600000001000,
+        "receive_ts_ns": 1792281600000002000,
+        "receive_monotonic_ns": 12345,
+        "collector_run_id": "fixture-run",
+        "connection_id": "fixture-connection",
+        "receive_sequence": 17,
+        "record_index": 0,
+        "native_event_id": "native-17",
+        "ingest_mode": "live",
+        "trading_date": "2026-10-18",
+        "session": "CRYPTO_24X7",
+        "venue": "grvt",
+        "provider": "grvt-perp",
+        "sequence": 17,
+        "nats_stream": "CRYPTO_DATA",
+        "nats_stream_sequence": 17,
+        "instrument_venue": "grvt",
+        "instrument_asset_class": "crypto_perp",
+        "instrument_raw_symbol": "BTC_USDT_Perp",
+        "instrument_std_symbol": "BTCUSDT",
+        "instrument_currency": "USDT",
+        "unknown_field": "must remain excluded",
+        "event_type": "index_quote",
+        "value": "350.25",
+        "unit": "index_points",
+        "currency": "KRW",
+        "open": "349.50",
+        "high": "351",
+        "low": "349",
+        "change": "0.75",
+        "change_pct": "0.214592",
+        "metadata": {
+          "z": null,
+          "a": "원문",
+          "zero": 0
+        }
+      },
+      "schema_ipc_base64": "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",
+      "schema_fields": [
+        {
+          "name": "schema_version",
+          "type": "int16",
+          "nullable": true
+        },
+        {
+          "name": "event_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "event_type",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "source_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "source_timestamp_kind",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "observed_delay_ms",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "wallclock_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "receive_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "receive_monotonic_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "collector_run_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "connection_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "receive_sequence",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "record_index",
+          "type": "int32",
+          "nullable": true
+        },
+        {
+          "name": "native_event_id",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "collection_start_ts_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "ingest_mode",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "sampled_at_ns",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "trading_date",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "session",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "venue",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "provider",
+          "type": "dictionary<values=string, indices=int32, ordered=0>",
+          "nullable": true
+        },
+        {
+          "name": "sequence",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "nats_stream",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "nats_stream_sequence",
+          "type": "int64",
+          "nullable": true
+        },
+        {
+          "name": "instrument_venue",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_asset_class",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_raw_symbol",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_std_symbol",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_contract_month",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_expiry",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_strike",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "instrument_option_right",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_underlying",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_security_kind",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_currency",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "instrument_exchange",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "value",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "unit",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "nullable": true
+        },
+        {
+          "name": "open",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "high",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "low",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "change",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "change_pct",
+          "type": "decimal128(38, 18)",
+          "nullable": true
+        },
+        {
+          "name": "metadata",
+          "type": "string",
+          "nullable": true
+        }
+      ],
+      "expected_typed_normalized": {
+        "schema_version": 1,
+        "event_id": "synthetic-oracle-1",
+        "event_type": "index_quote",
+        "source_ts_ns": 1792281600000000000,
+        "source_timestamp_kind": null,
+        "observed_delay_ms": null,
+        "wallclock_ts_ns": 1792281600000001000,
+        "receive_ts_ns": 1792281600000002000,
+        "receive_monotonic_ns": 12345,
+        "collector_run_id": "fixture-run",
+        "connection_id": "fixture-connection",
+        "receive_sequence": 17,
+        "record_index": 0,
+        "native_event_id": "native-17",
+        "collection_start_ts_ns": null,
+        "ingest_mode": "live",
+        "sampled_at_ns": null,
+        "trading_date": "2026-10-18",
+        "session": "CRYPTO_24X7",
+        "venue": "grvt",
+        "provider": "grvt-perp",
+        "sequence": "17",
+        "nats_stream": "CRYPTO_DATA",
+        "nats_stream_sequence": 17,
+        "instrument_venue": "grvt",
+        "instrument_asset_class": "crypto_perp",
+        "instrument_raw_symbol": "BTC_USDT_Perp",
+        "instrument_std_symbol": "BTCUSDT",
+        "instrument_contract_month": null,
+        "instrument_expiry": null,
+        "instrument_strike": null,
+        "instrument_option_right": null,
+        "instrument_underlying": null,
+        "instrument_security_kind": null,
+        "instrument_currency": "USDT",
+        "instrument_exchange": null,
+        "value": {
+          "decimal": "350.25"
+        },
+        "unit": "index_points",
+        "currency": "KRW",
+        "open": {
+          "decimal": "349.50"
+        },
+        "high": {
+          "decimal": "351"
+        },
+        "low": {
+          "decimal": "349"
+        },
+        "change": {
+          "decimal": "0.75"
+        },
+        "change_pct": {
+          "decimal": "0.214592"
+        },
+        "metadata": "{\"a\": \"\\uc6d0\\ubb38\", \"z\": null, \"zero\": 0}"
+      },
+      "canonical_json": "{\"change\":\"0.75\",\"change_pct\":\"0.214592\",\"collection_start_ts_ns\":null,\"collector_run_id\":\"fixture-run\",\"connection_id\":\"fixture-connection\",\"currency\":\"KRW\",\"event_id\":\"synthetic-oracle-1\",\"event_type\":\"index_quote\",\"high\":\"351\",\"ingest_mode\":\"live\",\"instrument_asset_class\":\"crypto_perp\",\"instrument_contract_month\":null,\"instrument_currency\":\"USDT\",\"instrument_exchange\":null,\"instrument_expiry\":null,\"instrument_option_right\":null,\"instrument_raw_symbol\":\"BTC_USDT_Perp\",\"instrument_security_kind\":null,\"instrument_std_symbol\":\"BTCUSDT\",\"instrument_strike\":null,\"instrument_underlying\":null,\"instrument_venue\":\"grvt\",\"low\":\"349\",\"metadata\":\"{\\\"a\\\": \\\"\\\\uc6d0\\\\ubb38\\\", \\\"z\\\": null, \\\"zero\\\": 0}\",\"native_event_id\":\"native-17\",\"nats_stream\":\"CRYPTO_DATA\",\"nats_stream_sequence\":17,\"observed_delay_ms\":null,\"open\":\"349.50\",\"provider\":\"grvt-perp\",\"receive_monotonic_ns\":12345,\"receive_sequence\":17,\"receive_ts_ns\":1792281600000002000,\"record_index\":0,\"sampled_at_ns\":null,\"schema_version\":1,\"sequence\":\"17\",\"session\":\"CRYPTO_24X7\",\"source_timestamp_kind\":null,\"source_ts_ns\":1792281600000000000,\"trading_date\":\"2026-10-18\",\"unit\":\"index_points\",\"value\":\"350.25\",\"venue\":\"grvt\",\"wallclock_ts_ns\":1792281600000001000}",
+      "logical_sha256": "ac1ebc95d51b55efbf2016583ddafbc55c5dd0004424e0f89851a065f81cf586"
+    }
+  ],
+  "unsupported_type_error": {
+    "type": "ValueError",
+    "message": "Unsupported parquet event_type='data_gap'"
+  },
+  "baseline_source_set_sha256": "8eabfd5f0a0219e756190e78c819acabb6265851e4612dc8ddfcc41031f4efa9",
+  "baseline_parquet_source_sha256": "72665b0d28433ec8d70845a4da9fd4ce20215b7ff7f68915b11a94a01ae9c6c2"
+}

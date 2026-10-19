@@ -1,8 +1,0 @@
-{
-  "checks_passed": 5,
-  "network_calls": 0,
-  "order_submissions": 0,
-  "loaded_binance_message_source_sha256": "34f23467668a3559929a15cccf4084b06749bef9d6ccd4623f13cf6c0c606d32",
-  "container": "vibetrading-crypto-collector-binance-1",
-  "note": "Independent in-memory verification using code loaded from the running collector image; did not restart or modify the live collector."
-}

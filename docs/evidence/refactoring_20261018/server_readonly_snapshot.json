@@ -1,0 +1,1855 @@
+{
+  "observed_utc": "2026-10-18T03:06:20.824057+00:00",
+  "cpu_count": 2,
+  "sample_scope": "Sunday short sample, not weekday peak or 72-hour capacity validation",
+  "memory": {
+    "exit": 0,
+    "stdout": "total        used        free      shared  buff/cache   available\nMem:      4105048064  2844168192   236441600      503808  1338523648  1260879872\nSwap:     4294963200  1843392512  2451570688",
+    "stderr": ""
+  },
+  "disk": {
+    "exit": 0,
+    "stdout": "Filesystem        1B-blocks        Used    Available Use% Mounted on\n/dev/vda2       10460876800  6156001280   3751387136  63% /\n/dev/vdb        20957446144  8804851712  11062075392  45% /srv/vibetrading-data\n/dev/vdc       315926315008 66371522560 246316789760  22% /srv/vibetrading-capacity",
+    "stderr": ""
+  },
+  "mounts": {
+    "exit": 0,
+    "stdout": "/ /dev/vda2 ext4\n/srv/vibetrading-data /dev/vdb ext4\n/srv/vibetrading-capacity /dev/vdc ext4\n/srv/vibetrading-crypto-state /dev/vdc[/crypto-state] ext4\n/srv/vibetrading-data/runtime_data/crypto_market_data /dev/vdc[/crypto-market-data] ext4\n/srv/vibetrading-data/runtime_data/state /dev/vdc[/market-state] ext4\n/srv/vibetrading-data/runtime_data/market_data /dev/vdc[/market-data] ext4\n/srv/vibetrading-data/runtime_data/exports /dev/vdc[/market-exports] ext4",
+    "stderr": ""
+  },
+  "uptime": {
+    "exit": 0,
+    "stdout": "12:06:20 up 14 days, 13:43,  2 users,  load average: 1.23, 1.32, 1.27",
+    "stderr": ""
+  },
+  "stats": {
+    "exit": 0,
+    "stdout": "{\"BlockIO\":\"397MB / 359MB\",\"CPUPerc\":\"0.03%\",\"Container\":\"494860eac7062b483b315ed5e3ce76a92bacf9f93729e65908d9d999152ec049\",\"ID\":\"494860eac706\",\"MemPerc\":\"2.91%\",\"MemUsage\":\"14.88MiB / 512MiB\",\"Name\":\"vibetrading-etf-mock-1\",\"NetIO\":\"2.69GB / 67.3MB\",\"PIDs\":\"5\"}\n{\"BlockIO\":\"276MB / 249MB\",\"CPUPerc\":\"0.19%\",\"Container\":\"5aceed8a8e211bab558d166d2a910980287e16d7bdc5679c0795fac907497009\",\"ID\":\"5aceed8a8e21\",\"MemPerc\":\"20.62%\",\"MemUsage\":\"79.19MiB / 384MiB\",\"Name\":\"vibetrading-telegram-1\",\"NetIO\":\"293MB / 277MB\",\"PIDs\":\"8\"}\n{\"BlockIO\":\"556MB / 514MB\",\"CPUPerc\":\"26.45%\",\"Container\":\"12eade099d790499f1fb8a08fdbdd4c85fb528a7da28dbf110119472f0f2e03c\",\"ID\":\"12eade099d79\",\"MemPerc\":\"14.18%\",\"MemUsage\":\"72.62MiB / 512MiB\",\"Name\":\"vibetrading-etf-csv-sync-1\",\"NetIO\":\"9.27MB / 872kB\",\"PIDs\":\"8\"}\n{\"BlockIO\":\"185MB / 501MB\",\"CPUPerc\":\"0.01%\",\"Container\":\"175779bcf9dc44eb4f36423924de6ba33adca7a549a0dc0f141ac1c618338e67\",\"ID\":\"175779bcf9dc\",\"MemPerc\":\"5.99%\",\"MemUsage\":\"46.02MiB / 768MiB\",\"Name\":\"vibetrading-collectors-1\",\"NetIO\":\"6.56GB / 14.2GB\",\"PIDs\":\"8\"}\n{\"BlockIO\":\"117MB / 260MB\",\"CPUPerc\":\"52.27%\",\"Container\":\"dbab271b4086bd5fa5a31b31edf5bb413f372f1cbf23d25fbd738b49b00dc277\",\"ID\":\"dbab271b4086\",\"MemPerc\":\"22.45%\",\"MemUsage\":\"57.47MiB / 256MiB\",\"Name\":\"vibetrading-crypto-collector-arcus-1\",\"NetIO\":\"59.3GB / 341GB\",\"PIDs\":\"2\"}\n{\"BlockIO\":\"115MB / 267MB\",\"CPUPerc\":\"4.31%\",\"Container\":\"ead3961d20a6a601f043954f0d0c0f6eef4067c7132bbb9bc72e181e13c34f5e\",\"ID\":\"ead3961d20a6\",\"MemPerc\":\"25.73%\",\"MemUsage\":\"65.88MiB / 256MiB\",\"Name\":\"vibetrading-crypto-collector-binance-1\",\"NetIO\":\"14GB / 155GB\",\"PIDs\":\"2\"}\n{\"BlockIO\":\"129MB / 264MB\",\"CPUPerc\":\"1.82%\",\"Container\":\"38ae150178f6bc6732e5e21e5bf7556005dc6cd5eea8c1f46c3f7f835359465f\",\"ID\":\"38ae150178f6\",\"MemPerc\":\"20.76%\",\"MemUsage\":\"53.14MiB / 256MiB\",\"Name\":\"vibetrading-crypto-collector-grvt-1\",\"NetIO\":\"8.05GB / 33.2GB\",\"PIDs\":\"2\"}\n{\"BlockIO\":\"7.92MB / 45.4MB\",\"CPUPerc\":\"0.00%\",\"Container\":\"82f7a7f966d618d4eb586131121453cd0aedbced72502f37502b9473d7ba6db8\",\"ID\":\"82f7a7f966d6\",\"MemPerc\":\"0.75%\",\"MemUsage\":\"2.898MiB / 384MiB\",\"Name\":\"vibetrading-monitor-timefolio-1\",\"NetIO\":\"13.4kB / 126B\",\"PIDs\":\"1\"}\n{\"BlockIO\":\"1.47GB / 2.69GB\",\"CPUPerc\":\"13.62%\",\"Container\":\"3013c30cfb4a56eefce216cf0425d4a527c26c1ca67a1db88a1aa67907c45445\",\"ID\":\"3013c30cfb4a\",\"MemPerc\":\"95.35%\",\"MemUsage\":\"183.1MiB / 192MiB\",\"Name\":\"vibetrading-monitor-bridge-1\",\"NetIO\":\"67.7GB / 27.4GB\",\"PIDs\":\"7\"}\n{\"BlockIO\":\"89.8GB / 196GB\",\"CPUPerc\":\"0.00%\",\"Container\":\"b1f735a4590105d47c152936ac3c208a9e1a3b622d2578a6b7a5f5856ca36217\",\"ID\":\"b1f735a45901\",\"MemPerc\":\"70.46%\",\"MemUsage\":\"360.7MiB / 512MiB\",\"Name\":\"vibetrading-crypto-maintenance-1\",\"NetIO\":\"32.2GB / 32.5GB\",\"PIDs\":\"8\"}\n{\"BlockIO\":\"23.1GB / 38.1GB\",\"CPUPerc\":\"74.17%\",\"Container\":\"d528f40b0e218c5978d8de2f83d3901a72c0e6cafc024e628987c322525d575d\",\"ID\":\"d528f40b0e21\",\"MemPerc\":\"38.71%\",\"MemUsage\":\"495.5MiB / 1.25GiB\",\"Name\":\"vibetrading-crypto-storage-1\",\"NetIO\":\"327GB / 27GB\",\"PIDs\":\"9\"}\n{\"BlockIO\":\"30.7GB / 9.64GB\",\"CPUPerc\":\"0.00%\",\"Container\":\"87cd5a5234f87e205c71f6bc9e5d9e08caeddb9046cc86575094d8ba6bd59266\",\"ID\":\"87cd5a5234f8\",\"MemPerc\":\"91.61%\",\"MemUsage\":\"469.1MiB / 512MiB\",\"Name\":\"vibetrading-maintenance-1\",\"NetIO\":\"306MB / 311MB\",\"PIDs\":\"7\"}\n{\"BlockIO\":\"19.6GB / 56GB\",\"CPUPerc\":\"0.10%\",\"Container\":\"8d98469fa651cab98dd9af45e6797d8263c1b87abf0c5f774eb81a0f25d2ef2c\",\"ID\":\"8d98469fa651\",\"MemPerc\":\"8.28%\",\"MemUsage\":\"84.83MiB / 1GiB\",\"Name\":\"vibetrading-storage-1\",\"NetIO\":\"5.62GB / 838MB\",\"PIDs\":\"8\"}\n{\"BlockIO\":\"116MB / 706GB\",\"CPUPerc\":\"6.84%\",\"Container\":\"ae8b8433428fc935c3b6390647a7e2422eb1795c6cf54df9caf8a68ba36cbb0e\",\"ID\":\"ae8b8433428f\",\"MemPerc\":\"30.57%\",\"MemUsage\":\"156.5MiB / 512MiB\",\"Name\":\"vibetrading-nats-1\",\"NetIO\":\"607GB / 386GB\",\"PIDs\":\"14\"}",
+    "stderr": ""
+  },
+  "containers": [
+    {
+      "name": "/vibetrading-etf-mock-1",
+      "image": "vibetrading:etf-recovery-07a74502d725-r2-etf-mock",
+      "image_id": "sha256:8705060301df148daa21c973b9d7d82e6469c3d26f901d9ab0718f0d200d567c",
+      "status": "running",
+      "health": "healthy",
+      "started": "2026-10-15T03:54:26.58167046Z",
+      "oom_killed": false,
+      "restarts": 0,
+      "command": [
+        "python",
+        "-m",
+        "vibetrading.etf_trading",
+        "run"
+      ],
+      "memory_limit": 536870912,
+      "nano_cpus": 0,
+      "compose_files": "/opt/vibetrading/releases/telegram-recovery-20261014/runtime.yml",
+      "working_dir": "/opt/vibetrading/releases/telegram-recovery-20261014",
+      "environment_allowlist": {
+        "VIBETRADING_DATA_ROOT": "/data",
+        "ARCHIVE_LOCAL_RETENTION_SECONDS": "86400",
+        "NATS_FILE_STORE_MAX_BYTES": "2415919104",
+        "CRYPTO_NATS_MAX_BYTES": "134217728",
+        "OMP_NUM_THREADS": "1",
+        "ARROW_NUM_THREADS": "1"
+      },
+      "mounts": [
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "destination": "/data",
+          "rw": true
+        },
+        {
+          "source": "/root/vibetrading/config",
+          "destination": "/app/config",
+          "rw": false
+        },
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "destination": "/data/crypto_state",
+          "rw": true
+        }
+      ],
+      "cgroup": {
+        "memory.current": "19742720\n",
+        "memory.peak": "231485440\n",
+        "memory.swap.current": "130981888\n",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+        "cpu.stat": "usage_usec 6936229226\nuser_usec 6336185516\nsystem_usec 600043710\ncore_sched.force_idle_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\n"
+      },
+      "source_hashes": {
+        "main.py": "838b5bf6c41f635104b9c3050a30c684284c0513b060cf415e1c545322a623b6",
+        "vibetrading/runtime.py": "c8c34ff8b92116a5b540543adeece42abe61cd1824d6099bf8e19b975ca54246",
+        "vibetrading/bus.py": "dea0b7bf1f494d6ce0fcff18ba17654c2c48f6e89dce57ab3e9153f50ff20476",
+        "vibetrading/hot_path.py": "a1ae594c9783bcefa269c88a4469763fcdc391895ce0c796ca65f67b79d12d44",
+        "vibetrading/strategy_runner.py": "f07324b657bf9b1857488b3dd7b86f505faa08ebc22e35d5c5d3bb88d0ba4943",
+        "vibetrading/real_runner.py": "691b7cc4c04e7a33055c06b0e795fd55593817b411e3308a843a184c9bf2897d",
+        "vibetrading/models.py": "d432fea6e114b76c3e5df2a801998679c5d6c84196f075905acb02b93c0d416f",
+        "vibetrading/settings.py": "d5ae255b15e07c31d57a55ebe5d522f83c8f0d9002fbec0179a41e4ec72915a5",
+        "vibetrading/sqlite_store.py": "d11e3ac45baf9c3cfe1799d43c49fe60c08f1fbf455171f26dc9d68075a8f0ea",
+        "vibetrading/storage_worker.py": "896334414c422f0083efc3f6f6855638b88ee61308b3b1e15daa42d071c35faa",
+        "vibetrading/parquet_store.py": "72665b0d28433ec8d70845a4da9fd4ce20215b7ff7f68915b11a94a01ae9c6c2",
+        "vibetrading/archive.py": "a627aaed463bc5a7f6dd4eb9b999a2f06d4cc9881b7e5f14025a00174fd40d3b",
+        "vibetrading/storage_backend.py": "18f1b886251c1a0a52215a6392ce2a99aba55985a8db5e0e70d8dc6a94927f15",
+        "vibetrading/event_index_runs.py": "39deb9bded2a5d10dc2138d7dbdd28a5d442dd2871b2cedec58cc2e2be70f5e0",
+        "vibetrading/etf_trading.py": "bbdd0f48b04fa51630476773e0969637bd5fe56d2dcf63f3eb8ddb2db042ea3b",
+        "vibetrading/etf_journal.py": "f86a3befcd9a723a89563ce3910aa422d402feac2f95f23f07688ca50265917f",
+        "vibetrading/etf_recovery.py": "3bc7257a2820aa29ddf9a1a7c77654346e241bc5096c0fc63280d6ac8d8f9a20",
+        "vibetrading/etf_intraday_store.py": "a786b1e182db673b0e6a606d62f4c0e81080c776553b3513e0ce4880c9aea60b",
+        "vibetrading/etf_csv_history.py": "5c5024a155488112b68fddceb1c31e6118e3985d828021b19077fca13706f486",
+        "vibetrading/telegram.py": "e3af02cf3eaf0332d7bb945912d8f8df0fc9c3270025dcabf36e4b378f9483fe",
+        "vibetrading/telegram_trade.py": "a41733eab00be52631acdcd639b194f8d3b9a8557200962aefa914298951ed10",
+        "vibetrading/providers/kis.py": "d72cdee903d50fd69227b16cb76ddb95d9b941826d5c7822e3282d1acbd3ddf4",
+        "vibetrading/providers/crypto_perp.py": "dacbf7971413c6095984f0d0fa3f9587bdb3508221fa53d0a5fe7fec87e20288",
+        "vibetrading/providers/extended_perp.py": "c2d175e2eb8d1ec08d05a7a0ef5db6f16d7230c074c005df0b07df05bedc0e00"
+      }
+    },
+    {
+      "name": "/vibetrading-telegram-1",
+      "image": "vibetrading:etf-recovery-07a74502d725-telegram",
+      "image_id": "sha256:39069192e2184d3dc0932b9f60bd38413c0b0870240021ce42308b7b8b8e0f90",
+      "status": "running",
+      "health": null,
+      "started": "2026-10-15T03:53:38.922117374Z",
+      "oom_killed": false,
+      "restarts": 0,
+      "command": [
+        "python",
+        "main.py",
+        "telegram"
+      ],
+      "memory_limit": 402653184,
+      "nano_cpus": 0,
+      "compose_files": "/opt/vibetrading/releases/telegram-recovery-20261014/runtime.yml",
+      "working_dir": "/opt/vibetrading/releases/telegram-recovery-20261014",
+      "environment_allowlist": {
+        "CRYPTO_NATS_MAX_BYTES": "134217728",
+        "ARCHIVE_LOCAL_RETENTION_SECONDS": "86400",
+        "VIBETRADING_DATA_ROOT": "/data",
+        "OMP_NUM_THREADS": "1",
+        "ARROW_NUM_THREADS": "1",
+        "NATS_FILE_STORE_MAX_BYTES": "2415919104"
+      },
+      "mounts": [
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "destination": "/data",
+          "rw": true
+        },
+        {
+          "source": "/root/vibetrading/config",
+          "destination": "/app/config",
+          "rw": false
+        },
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "destination": "/data/crypto_state",
+          "rw": true
+        }
+      ],
+      "cgroup": {
+        "memory.current": "83111936\n",
+        "memory.peak": "130207744\n",
+        "memory.swap.current": "129929216\n",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+        "cpu.stat": "usage_usec 519527152\nuser_usec 428463004\nsystem_usec 91064147\ncore_sched.force_idle_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\n"
+      },
+      "source_hashes": {
+        "main.py": "838b5bf6c41f635104b9c3050a30c684284c0513b060cf415e1c545322a623b6",
+        "vibetrading/runtime.py": "c8c34ff8b92116a5b540543adeece42abe61cd1824d6099bf8e19b975ca54246",
+        "vibetrading/bus.py": "0f5da044e104e88bc041546e2316a758950953c2370ef246ff379411d09232fc",
+        "vibetrading/hot_path.py": "a1ae594c9783bcefa269c88a4469763fcdc391895ce0c796ca65f67b79d12d44",
+        "vibetrading/strategy_runner.py": "f07324b657bf9b1857488b3dd7b86f505faa08ebc22e35d5c5d3bb88d0ba4943",
+        "vibetrading/real_runner.py": "691b7cc4c04e7a33055c06b0e795fd55593817b411e3308a843a184c9bf2897d",
+        "vibetrading/models.py": "d432fea6e114b76c3e5df2a801998679c5d6c84196f075905acb02b93c0d416f",
+        "vibetrading/settings.py": "d5ae255b15e07c31d57a55ebe5d522f83c8f0d9002fbec0179a41e4ec72915a5",
+        "vibetrading/sqlite_store.py": "d11e3ac45baf9c3cfe1799d43c49fe60c08f1fbf455171f26dc9d68075a8f0ea",
+        "vibetrading/storage_worker.py": "896334414c422f0083efc3f6f6855638b88ee61308b3b1e15daa42d071c35faa",
+        "vibetrading/parquet_store.py": "72665b0d28433ec8d70845a4da9fd4ce20215b7ff7f68915b11a94a01ae9c6c2",
+        "vibetrading/archive.py": "a627aaed463bc5a7f6dd4eb9b999a2f06d4cc9881b7e5f14025a00174fd40d3b",
+        "vibetrading/storage_backend.py": "18f1b886251c1a0a52215a6392ce2a99aba55985a8db5e0e70d8dc6a94927f15",
+        "vibetrading/event_index_runs.py": "39deb9bded2a5d10dc2138d7dbdd28a5d442dd2871b2cedec58cc2e2be70f5e0",
+        "vibetrading/etf_trading.py": "1f6bdfbb1692cc3c7d904f674db5f0fa415d56b1f0f603461579dc42a3d2b9b9",
+        "vibetrading/etf_journal.py": "da6ffdf9168c81e7a573a66e6434b6a9b0749d86bab8b9c12219d63a333f3261",
+        "vibetrading/etf_csv_history.py": "5c5024a155488112b68fddceb1c31e6118e3985d828021b19077fca13706f486",
+        "vibetrading/telegram.py": "2fe6451ea5c402590e2b458cd88372f4497f904badaf43cb989f4b0b6f0d87e6",
+        "vibetrading/telegram_trade.py": "6b52dc6d514da224341eeab77f2e2338942da230dcb7c456d48ecd12d03aa511",
+        "vibetrading/providers/kis.py": "d72cdee903d50fd69227b16cb76ddb95d9b941826d5c7822e3282d1acbd3ddf4",
+        "vibetrading/providers/crypto_perp.py": "dacbf7971413c6095984f0d0fa3f9587bdb3508221fa53d0a5fe7fec87e20288",
+        "vibetrading/providers/extended_perp.py": "c2d175e2eb8d1ec08d05a7a0ef5db6f16d7230c074c005df0b07df05bedc0e00"
+      }
+    },
+    {
+      "name": "/vibetrading-etf-csv-sync-1",
+      "image": "vibetrading:etf-recovery-07a74502d725-etf-csv-sync",
+      "image_id": "sha256:4fcad834cf0748c357f7cc37cb9447c805064ec3d46728406dbe6fc06b7bbbf9",
+      "status": "running",
+      "health": "healthy",
+      "started": "2026-10-15T03:53:27.561135507Z",
+      "oom_killed": false,
+      "restarts": 0,
+      "command": [
+        "python",
+        "-m",
+        "vibetrading.etf_csv_sync",
+        "run"
+      ],
+      "memory_limit": 536870912,
+      "nano_cpus": 0,
+      "compose_files": "/opt/vibetrading/releases/telegram-recovery-20261014/runtime.yml",
+      "working_dir": "/opt/vibetrading/releases/telegram-recovery-20261014",
+      "environment_allowlist": {
+        "ARCHIVE_LOCAL_RETENTION_SECONDS": "86400",
+        "CRYPTO_NATS_MAX_BYTES": "134217728",
+        "ARROW_NUM_THREADS": "1",
+        "NATS_FILE_STORE_MAX_BYTES": "2415919104",
+        "OMP_NUM_THREADS": "1",
+        "VIBETRADING_DATA_ROOT": "/data"
+      },
+      "mounts": [
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "destination": "/data",
+          "rw": true
+        },
+        {
+          "source": "/root/vibetrading/config",
+          "destination": "/app/config",
+          "rw": false
+        },
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "destination": "/data/crypto_state",
+          "rw": true
+        }
+      ],
+      "cgroup": {
+        "memory.current": "79052800\n",
+        "memory.peak": "236154880\n",
+        "memory.swap.current": "85475328\n",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+        "cpu.stat": "usage_usec 6536264242\nuser_usec 5970655858\nsystem_usec 565608384\ncore_sched.force_idle_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\n"
+      },
+      "source_hashes": {
+        "main.py": "838b5bf6c41f635104b9c3050a30c684284c0513b060cf415e1c545322a623b6",
+        "vibetrading/runtime.py": "693da3b04111d9ec15ba10c173189b8b555a2395c4165c463be91adb0d5d2c8b",
+        "vibetrading/bus.py": "0f5da044e104e88bc041546e2316a758950953c2370ef246ff379411d09232fc",
+        "vibetrading/hot_path.py": "a1ae594c9783bcefa269c88a4469763fcdc391895ce0c796ca65f67b79d12d44",
+        "vibetrading/strategy_runner.py": "f07324b657bf9b1857488b3dd7b86f505faa08ebc22e35d5c5d3bb88d0ba4943",
+        "vibetrading/real_runner.py": "691b7cc4c04e7a33055c06b0e795fd55593817b411e3308a843a184c9bf2897d",
+        "vibetrading/models.py": "d432fea6e114b76c3e5df2a801998679c5d6c84196f075905acb02b93c0d416f",
+        "vibetrading/settings.py": "d5ae255b15e07c31d57a55ebe5d522f83c8f0d9002fbec0179a41e4ec72915a5",
+        "vibetrading/sqlite_store.py": "d11e3ac45baf9c3cfe1799d43c49fe60c08f1fbf455171f26dc9d68075a8f0ea",
+        "vibetrading/storage_worker.py": "896334414c422f0083efc3f6f6855638b88ee61308b3b1e15daa42d071c35faa",
+        "vibetrading/parquet_store.py": "72665b0d28433ec8d70845a4da9fd4ce20215b7ff7f68915b11a94a01ae9c6c2",
+        "vibetrading/archive.py": "a627aaed463bc5a7f6dd4eb9b999a2f06d4cc9881b7e5f14025a00174fd40d3b",
+        "vibetrading/storage_backend.py": "18f1b886251c1a0a52215a6392ce2a99aba55985a8db5e0e70d8dc6a94927f15",
+        "vibetrading/event_index_runs.py": "39deb9bded2a5d10dc2138d7dbdd28a5d442dd2871b2cedec58cc2e2be70f5e0",
+        "vibetrading/etf_trading.py": "566497a5407eddd8337cc277e4aeeb2beec9520ef61f7ba611d311bbb5025da0",
+        "vibetrading/etf_journal.py": "254e59a02705246e2779f052281312602525ae8ac65903696a28968811894b12",
+        "vibetrading/etf_intraday_store.py": "a786b1e182db673b0e6a606d62f4c0e81080c776553b3513e0ce4880c9aea60b",
+        "vibetrading/etf_csv_history.py": "5c5024a155488112b68fddceb1c31e6118e3985d828021b19077fca13706f486",
+        "vibetrading/telegram.py": "7b7f6dcdf1bc363f79f638d7adc56e43885ba3147294463a697f5136916b2139",
+        "vibetrading/telegram_trade.py": "12c1440906ec5b7f2500ce0c9159d9429acc8d42aaaed6532abf07d0d626cecb",
+        "vibetrading/providers/kis.py": "d72cdee903d50fd69227b16cb76ddb95d9b941826d5c7822e3282d1acbd3ddf4",
+        "vibetrading/providers/crypto_perp.py": "dacbf7971413c6095984f0d0fa3f9587bdb3508221fa53d0a5fe7fec87e20288",
+        "vibetrading/providers/extended_perp.py": "c2d175e2eb8d1ec08d05a7a0ef5db6f16d7230c074c005df0b07df05bedc0e00"
+      }
+    },
+    {
+      "name": "/vibetrading-collectors-1",
+      "image": "vibetrading:etf-recovery-07a74502d725-collectors",
+      "image_id": "sha256:2c79d456b0e7c7918198480f7037edb1dfd5b28c09e6b378adc95bebce3702d7",
+      "status": "running",
+      "health": "healthy",
+      "started": "2026-10-15T03:53:16.380288686Z",
+      "oom_killed": false,
+      "restarts": 0,
+      "command": [
+        "python",
+        "main.py",
+        "run",
+        "--config",
+        "/app/config/runtime.yaml",
+        "--role",
+        "collectors"
+      ],
+      "memory_limit": 805306368,
+      "nano_cpus": 0,
+      "compose_files": "/opt/vibetrading/releases/telegram-recovery-20261014/runtime.yml",
+      "working_dir": "/opt/vibetrading/releases/telegram-recovery-20261014",
+      "environment_allowlist": {
+        "ARCHIVE_LOCAL_RETENTION_SECONDS": "86400",
+        "VIBETRADING_DATA_ROOT": "/data",
+        "OMP_NUM_THREADS": "1",
+        "ARROW_NUM_THREADS": "1",
+        "NATS_FILE_STORE_MAX_BYTES": "2415919104",
+        "CRYPTO_NATS_MAX_BYTES": "134217728"
+      },
+      "mounts": [
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "destination": "/data",
+          "rw": true
+        },
+        {
+          "source": "/root/vibetrading/config",
+          "destination": "/app/config",
+          "rw": false
+        },
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "destination": "/data/crypto_state",
+          "rw": true
+        }
+      ],
+      "cgroup": {
+        "memory.current": "52293632\n",
+        "memory.peak": "157155328\n",
+        "memory.swap.current": "124575744\n",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+        "cpu.stat": "usage_usec 9920220021\nuser_usec 9024073520\nsystem_usec 896146500\ncore_sched.force_idle_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\n"
+      },
+      "source_hashes": {
+        "main.py": "838b5bf6c41f635104b9c3050a30c684284c0513b060cf415e1c545322a623b6",
+        "vibetrading/runtime.py": "69a4e401016cdfb4be8a2ef6dad2142a2601c10a569a01faefdf8c7a19d28832",
+        "vibetrading/bus.py": "dea0b7bf1f494d6ce0fcff18ba17654c2c48f6e89dce57ab3e9153f50ff20476",
+        "vibetrading/hot_path.py": "a1ae594c9783bcefa269c88a4469763fcdc391895ce0c796ca65f67b79d12d44",
+        "vibetrading/strategy_runner.py": "f07324b657bf9b1857488b3dd7b86f505faa08ebc22e35d5c5d3bb88d0ba4943",
+        "vibetrading/real_runner.py": "691b7cc4c04e7a33055c06b0e795fd55593817b411e3308a843a184c9bf2897d",
+        "vibetrading/models.py": "d432fea6e114b76c3e5df2a801998679c5d6c84196f075905acb02b93c0d416f",
+        "vibetrading/settings.py": "d5ae255b15e07c31d57a55ebe5d522f83c8f0d9002fbec0179a41e4ec72915a5",
+        "vibetrading/sqlite_store.py": "d11e3ac45baf9c3cfe1799d43c49fe60c08f1fbf455171f26dc9d68075a8f0ea",
+        "vibetrading/storage_worker.py": "896334414c422f0083efc3f6f6855638b88ee61308b3b1e15daa42d071c35faa",
+        "vibetrading/parquet_store.py": "72665b0d28433ec8d70845a4da9fd4ce20215b7ff7f68915b11a94a01ae9c6c2",
+        "vibetrading/archive.py": "a627aaed463bc5a7f6dd4eb9b999a2f06d4cc9881b7e5f14025a00174fd40d3b",
+        "vibetrading/storage_backend.py": "18f1b886251c1a0a52215a6392ce2a99aba55985a8db5e0e70d8dc6a94927f15",
+        "vibetrading/event_index_runs.py": "39deb9bded2a5d10dc2138d7dbdd28a5d442dd2871b2cedec58cc2e2be70f5e0",
+        "vibetrading/etf_trading.py": "566497a5407eddd8337cc277e4aeeb2beec9520ef61f7ba611d311bbb5025da0",
+        "vibetrading/etf_journal.py": "254e59a02705246e2779f052281312602525ae8ac65903696a28968811894b12",
+        "vibetrading/etf_intraday_store.py": "a786b1e182db673b0e6a606d62f4c0e81080c776553b3513e0ce4880c9aea60b",
+        "vibetrading/etf_csv_history.py": "5c5024a155488112b68fddceb1c31e6118e3985d828021b19077fca13706f486",
+        "vibetrading/telegram.py": "7b7f6dcdf1bc363f79f638d7adc56e43885ba3147294463a697f5136916b2139",
+        "vibetrading/telegram_trade.py": "12c1440906ec5b7f2500ce0c9159d9429acc8d42aaaed6532abf07d0d626cecb",
+        "vibetrading/providers/kis.py": "f077a067c0566c0944ddbceb9eb4c2231d552077a82288aec7d9da65f5f462b1",
+        "vibetrading/providers/crypto_perp.py": "dacbf7971413c6095984f0d0fa3f9587bdb3508221fa53d0a5fe7fec87e20288",
+        "vibetrading/providers/extended_perp.py": "c2d175e2eb8d1ec08d05a7a0ef5db6f16d7230c074c005df0b07df05bedc0e00"
+      }
+    },
+    {
+      "name": "/vibetrading-crypto-collector-arcus-1",
+      "image": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "status": "running",
+      "health": "healthy",
+      "started": "2026-10-14T14:41:53.032591507Z",
+      "oom_killed": false,
+      "restarts": 0,
+      "command": [
+        "python",
+        "main.py",
+        "run",
+        "--config",
+        "/app/config/crypto_runtime.yaml",
+        "--role",
+        "crypto-collectors",
+        "--provider",
+        "arcus-perp"
+      ],
+      "memory_limit": 268435456,
+      "nano_cpus": 0,
+      "compose_files": "/opt/vibetrading/releases/telegram-recovery-20261014/runtime.yml",
+      "working_dir": "/opt/vibetrading/releases/telegram-recovery-20261014",
+      "environment_allowlist": {
+        "VIBETRADING_DATA_ROOT": "/data",
+        "NATS_FILE_STORE_MAX_BYTES": "2415919104",
+        "ARCHIVE_LOCAL_RETENTION_SECONDS": "86400",
+        "OMP_NUM_THREADS": "1",
+        "CRYPTO_NATS_MAX_BYTES": "134217728",
+        "ARROW_NUM_THREADS": "1"
+      },
+      "mounts": [
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "destination": "/data",
+          "rw": true
+        },
+        {
+          "source": "/root/vibetrading/config",
+          "destination": "/app/config",
+          "rw": false
+        },
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "destination": "/data/crypto_state",
+          "rw": true
+        }
+      ],
+      "cgroup": {
+        "memory.current": "66924544\n",
+        "memory.peak": "114343936\n",
+        "memory.swap.current": "16445440\n",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+        "cpu.stat": "usage_usec 52578270657\nuser_usec 46675312614\nsystem_usec 5902958043\ncore_sched.force_idle_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\n"
+      },
+      "source_hashes": {
+        "main.py": "838b5bf6c41f635104b9c3050a30c684284c0513b060cf415e1c545322a623b6",
+        "vibetrading/runtime.py": "c8c34ff8b92116a5b540543adeece42abe61cd1824d6099bf8e19b975ca54246",
+        "vibetrading/bus.py": "0f5da044e104e88bc041546e2316a758950953c2370ef246ff379411d09232fc",
+        "vibetrading/hot_path.py": "a1ae594c9783bcefa269c88a4469763fcdc391895ce0c796ca65f67b79d12d44",
+        "vibetrading/strategy_runner.py": "f07324b657bf9b1857488b3dd7b86f505faa08ebc22e35d5c5d3bb88d0ba4943",
+        "vibetrading/real_runner.py": "691b7cc4c04e7a33055c06b0e795fd55593817b411e3308a843a184c9bf2897d",
+        "vibetrading/models.py": "d432fea6e114b76c3e5df2a801998679c5d6c84196f075905acb02b93c0d416f",
+        "vibetrading/settings.py": "d5ae255b15e07c31d57a55ebe5d522f83c8f0d9002fbec0179a41e4ec72915a5",
+        "vibetrading/sqlite_store.py": "d11e3ac45baf9c3cfe1799d43c49fe60c08f1fbf455171f26dc9d68075a8f0ea",
+        "vibetrading/storage_worker.py": "896334414c422f0083efc3f6f6855638b88ee61308b3b1e15daa42d071c35faa",
+        "vibetrading/parquet_store.py": "72665b0d28433ec8d70845a4da9fd4ce20215b7ff7f68915b11a94a01ae9c6c2",
+        "vibetrading/archive.py": "a627aaed463bc5a7f6dd4eb9b999a2f06d4cc9881b7e5f14025a00174fd40d3b",
+        "vibetrading/storage_backend.py": "18f1b886251c1a0a52215a6392ce2a99aba55985a8db5e0e70d8dc6a94927f15",
+        "vibetrading/event_index_runs.py": "39deb9bded2a5d10dc2138d7dbdd28a5d442dd2871b2cedec58cc2e2be70f5e0",
+        "vibetrading/etf_trading.py": "566497a5407eddd8337cc277e4aeeb2beec9520ef61f7ba611d311bbb5025da0",
+        "vibetrading/etf_journal.py": "254e59a02705246e2779f052281312602525ae8ac65903696a28968811894b12",
+        "vibetrading/etf_csv_history.py": "5c5024a155488112b68fddceb1c31e6118e3985d828021b19077fca13706f486",
+        "vibetrading/telegram.py": "7b7f6dcdf1bc363f79f638d7adc56e43885ba3147294463a697f5136916b2139",
+        "vibetrading/telegram_trade.py": "12c1440906ec5b7f2500ce0c9159d9429acc8d42aaaed6532abf07d0d626cecb",
+        "vibetrading/providers/kis.py": "d72cdee903d50fd69227b16cb76ddb95d9b941826d5c7822e3282d1acbd3ddf4",
+        "vibetrading/providers/crypto_perp.py": "dacbf7971413c6095984f0d0fa3f9587bdb3508221fa53d0a5fe7fec87e20288",
+        "vibetrading/providers/extended_perp.py": "c2d175e2eb8d1ec08d05a7a0ef5db6f16d7230c074c005df0b07df05bedc0e00"
+      }
+    },
+    {
+      "name": "/vibetrading-crypto-collector-binance-1",
+      "image": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "status": "running",
+      "health": "healthy",
+      "started": "2026-10-14T14:41:53.189986015Z",
+      "oom_killed": false,
+      "restarts": 0,
+      "command": [
+        "python",
+        "main.py",
+        "run",
+        "--config",
+        "/app/config/crypto_runtime.yaml",
+        "--role",
+        "crypto-collectors",
+        "--provider",
+        "binance-perp"
+      ],
+      "memory_limit": 268435456,
+      "nano_cpus": 0,
+      "compose_files": "/opt/vibetrading/releases/telegram-recovery-20261014/runtime.yml",
+      "working_dir": "/opt/vibetrading/releases/telegram-recovery-20261014",
+      "environment_allowlist": {
+        "VIBETRADING_DATA_ROOT": "/data",
+        "CRYPTO_NATS_MAX_BYTES": "134217728",
+        "OMP_NUM_THREADS": "1",
+        "NATS_FILE_STORE_MAX_BYTES": "2415919104",
+        "ARROW_NUM_THREADS": "1",
+        "ARCHIVE_LOCAL_RETENTION_SECONDS": "86400"
+      },
+      "mounts": [
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "destination": "/data",
+          "rw": true
+        },
+        {
+          "source": "/root/vibetrading/config",
+          "destination": "/app/config",
+          "rw": false
+        },
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "destination": "/data/crypto_state",
+          "rw": true
+        }
+      ],
+      "cgroup": {
+        "memory.current": "69337088\n",
+        "memory.peak": "109072384\n",
+        "memory.swap.current": "17334272\n",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+        "cpu.stat": "usage_usec 23255292141\nuser_usec 20928445234\nsystem_usec 2326846907\ncore_sched.force_idle_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\n"
+      },
+      "source_hashes": {
+        "main.py": "838b5bf6c41f635104b9c3050a30c684284c0513b060cf415e1c545322a623b6",
+        "vibetrading/runtime.py": "c8c34ff8b92116a5b540543adeece42abe61cd1824d6099bf8e19b975ca54246",
+        "vibetrading/bus.py": "0f5da044e104e88bc041546e2316a758950953c2370ef246ff379411d09232fc",
+        "vibetrading/hot_path.py": "a1ae594c9783bcefa269c88a4469763fcdc391895ce0c796ca65f67b79d12d44",
+        "vibetrading/strategy_runner.py": "f07324b657bf9b1857488b3dd7b86f505faa08ebc22e35d5c5d3bb88d0ba4943",
+        "vibetrading/real_runner.py": "691b7cc4c04e7a33055c06b0e795fd55593817b411e3308a843a184c9bf2897d",
+        "vibetrading/models.py": "d432fea6e114b76c3e5df2a801998679c5d6c84196f075905acb02b93c0d416f",
+        "vibetrading/settings.py": "d5ae255b15e07c31d57a55ebe5d522f83c8f0d9002fbec0179a41e4ec72915a5",
+        "vibetrading/sqlite_store.py": "d11e3ac45baf9c3cfe1799d43c49fe60c08f1fbf455171f26dc9d68075a8f0ea",
+        "vibetrading/storage_worker.py": "896334414c422f0083efc3f6f6855638b88ee61308b3b1e15daa42d071c35faa",
+        "vibetrading/parquet_store.py": "72665b0d28433ec8d70845a4da9fd4ce20215b7ff7f68915b11a94a01ae9c6c2",
+        "vibetrading/archive.py": "a627aaed463bc5a7f6dd4eb9b999a2f06d4cc9881b7e5f14025a00174fd40d3b",
+        "vibetrading/storage_backend.py": "18f1b886251c1a0a52215a6392ce2a99aba55985a8db5e0e70d8dc6a94927f15",
+        "vibetrading/event_index_runs.py": "39deb9bded2a5d10dc2138d7dbdd28a5d442dd2871b2cedec58cc2e2be70f5e0",
+        "vibetrading/etf_trading.py": "566497a5407eddd8337cc277e4aeeb2beec9520ef61f7ba611d311bbb5025da0",
+        "vibetrading/etf_journal.py": "254e59a02705246e2779f052281312602525ae8ac65903696a28968811894b12",
+        "vibetrading/etf_csv_history.py": "5c5024a155488112b68fddceb1c31e6118e3985d828021b19077fca13706f486",
+        "vibetrading/telegram.py": "7b7f6dcdf1bc363f79f638d7adc56e43885ba3147294463a697f5136916b2139",
+        "vibetrading/telegram_trade.py": "12c1440906ec5b7f2500ce0c9159d9429acc8d42aaaed6532abf07d0d626cecb",
+        "vibetrading/providers/kis.py": "d72cdee903d50fd69227b16cb76ddb95d9b941826d5c7822e3282d1acbd3ddf4",
+        "vibetrading/providers/crypto_perp.py": "dacbf7971413c6095984f0d0fa3f9587bdb3508221fa53d0a5fe7fec87e20288",
+        "vibetrading/providers/extended_perp.py": "c2d175e2eb8d1ec08d05a7a0ef5db6f16d7230c074c005df0b07df05bedc0e00"
+      }
+    },
+    {
+      "name": "/vibetrading-crypto-collector-grvt-1",
+      "image": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "status": "running",
+      "health": "healthy",
+      "started": "2026-10-14T14:41:52.903657186Z",
+      "oom_killed": false,
+      "restarts": 0,
+      "command": [
+        "python",
+        "main.py",
+        "run",
+        "--config",
+        "/app/config/crypto_runtime.yaml",
+        "--role",
+        "crypto-collectors",
+        "--provider",
+        "grvt-perp"
+      ],
+      "memory_limit": 268435456,
+      "nano_cpus": 0,
+      "compose_files": "/opt/vibetrading/releases/telegram-recovery-20261014/runtime.yml",
+      "working_dir": "/opt/vibetrading/releases/telegram-recovery-20261014",
+      "environment_allowlist": {
+        "ARCHIVE_LOCAL_RETENTION_SECONDS": "86400",
+        "CRYPTO_NATS_MAX_BYTES": "134217728",
+        "VIBETRADING_DATA_ROOT": "/data",
+        "ARROW_NUM_THREADS": "1",
+        "NATS_FILE_STORE_MAX_BYTES": "2415919104",
+        "OMP_NUM_THREADS": "1"
+      },
+      "mounts": [
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "destination": "/data",
+          "rw": true
+        },
+        {
+          "source": "/root/vibetrading/config",
+          "destination": "/app/config",
+          "rw": false
+        },
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "destination": "/data/crypto_state",
+          "rw": true
+        }
+      ],
+      "cgroup": {
+        "memory.current": "59322368\n",
+        "memory.peak": "98107392\n",
+        "memory.swap.current": "32329728\n",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+        "cpu.stat": "usage_usec 12172643810\nuser_usec 11051172616\nsystem_usec 1121471193\ncore_sched.force_idle_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\n"
+      },
+      "source_hashes": {
+        "main.py": "838b5bf6c41f635104b9c3050a30c684284c0513b060cf415e1c545322a623b6",
+        "vibetrading/runtime.py": "c8c34ff8b92116a5b540543adeece42abe61cd1824d6099bf8e19b975ca54246",
+        "vibetrading/bus.py": "0f5da044e104e88bc041546e2316a758950953c2370ef246ff379411d09232fc",
+        "vibetrading/hot_path.py": "a1ae594c9783bcefa269c88a4469763fcdc391895ce0c796ca65f67b79d12d44",
+        "vibetrading/strategy_runner.py": "f07324b657bf9b1857488b3dd7b86f505faa08ebc22e35d5c5d3bb88d0ba4943",
+        "vibetrading/real_runner.py": "691b7cc4c04e7a33055c06b0e795fd55593817b411e3308a843a184c9bf2897d",
+        "vibetrading/models.py": "d432fea6e114b76c3e5df2a801998679c5d6c84196f075905acb02b93c0d416f",
+        "vibetrading/settings.py": "d5ae255b15e07c31d57a55ebe5d522f83c8f0d9002fbec0179a41e4ec72915a5",
+        "vibetrading/sqlite_store.py": "d11e3ac45baf9c3cfe1799d43c49fe60c08f1fbf455171f26dc9d68075a8f0ea",
+        "vibetrading/storage_worker.py": "896334414c422f0083efc3f6f6855638b88ee61308b3b1e15daa42d071c35faa",
+        "vibetrading/parquet_store.py": "72665b0d28433ec8d70845a4da9fd4ce20215b7ff7f68915b11a94a01ae9c6c2",
+        "vibetrading/archive.py": "a627aaed463bc5a7f6dd4eb9b999a2f06d4cc9881b7e5f14025a00174fd40d3b",
+        "vibetrading/storage_backend.py": "18f1b886251c1a0a52215a6392ce2a99aba55985a8db5e0e70d8dc6a94927f15",
+        "vibetrading/event_index_runs.py": "39deb9bded2a5d10dc2138d7dbdd28a5d442dd2871b2cedec58cc2e2be70f5e0",
+        "vibetrading/etf_trading.py": "566497a5407eddd8337cc277e4aeeb2beec9520ef61f7ba611d311bbb5025da0",
+        "vibetrading/etf_journal.py": "254e59a02705246e2779f052281312602525ae8ac65903696a28968811894b12",
+        "vibetrading/etf_csv_history.py": "5c5024a155488112b68fddceb1c31e6118e3985d828021b19077fca13706f486",
+        "vibetrading/telegram.py": "7b7f6dcdf1bc363f79f638d7adc56e43885ba3147294463a697f5136916b2139",
+        "vibetrading/telegram_trade.py": "12c1440906ec5b7f2500ce0c9159d9429acc8d42aaaed6532abf07d0d626cecb",
+        "vibetrading/providers/kis.py": "d72cdee903d50fd69227b16cb76ddb95d9b941826d5c7822e3282d1acbd3ddf4",
+        "vibetrading/providers/crypto_perp.py": "dacbf7971413c6095984f0d0fa3f9587bdb3508221fa53d0a5fe7fec87e20288",
+        "vibetrading/providers/extended_perp.py": "c2d175e2eb8d1ec08d05a7a0ef5db6f16d7230c074c005df0b07df05bedc0e00"
+      }
+    },
+    {
+      "name": "/vibetrading-monitor-timefolio-1",
+      "image": "vibetrading-dashboard-timefolio:recovery-20261014",
+      "image_id": "sha256:ab19a73e70432025162a3bc80df29036bd52a279244b8ca606a59be2ad77926b",
+      "status": "running",
+      "health": null,
+      "started": "2026-10-14T11:56:30.09558506Z",
+      "oom_killed": false,
+      "restarts": 0,
+      "command": [
+        "python",
+        "-m",
+        "vibetrading.dashboard.timefolio_monitor"
+      ],
+      "memory_limit": 402653184,
+      "nano_cpus": 500000000,
+      "compose_files": "/opt/vibetrading/releases/telegram-recovery-20261014/dashboard.yml",
+      "working_dir": "/opt/vibetrading/releases/telegram-recovery-20261014",
+      "environment_allowlist": {
+        "VIBETRADING_DATA_ROOT": "/tmp/dashboard"
+      },
+      "mounts": [
+        {
+          "source": "/srv/vibetrading-data/runtime_data/dashboard-monitor",
+          "destination": "/monitor",
+          "rw": true
+        }
+      ],
+      "cgroup": {
+        "memory.current": "3043328\n",
+        "memory.peak": "50528256\n",
+        "memory.swap.current": "34578432\n",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+        "cpu.stat": "usage_usec 1982592\nuser_usec 1530340\nsystem_usec 452252\ncore_sched.force_idle_usec 0\nnr_periods 1775\nnr_throttled 6\nthrottled_usec 152151\nnr_bursts 0\nburst_usec 0\n"
+      },
+      "source_hashes": {
+        "main.py": "838b5bf6c41f635104b9c3050a30c684284c0513b060cf415e1c545322a623b6",
+        "vibetrading/runtime.py": "c8c34ff8b92116a5b540543adeece42abe61cd1824d6099bf8e19b975ca54246",
+        "vibetrading/bus.py": "0f5da044e104e88bc041546e2316a758950953c2370ef246ff379411d09232fc",
+        "vibetrading/hot_path.py": "a1ae594c9783bcefa269c88a4469763fcdc391895ce0c796ca65f67b79d12d44",
+        "vibetrading/strategy_runner.py": "f07324b657bf9b1857488b3dd7b86f505faa08ebc22e35d5c5d3bb88d0ba4943",
+        "vibetrading/real_runner.py": "691b7cc4c04e7a33055c06b0e795fd55593817b411e3308a843a184c9bf2897d",
+        "vibetrading/models.py": "d432fea6e114b76c3e5df2a801998679c5d6c84196f075905acb02b93c0d416f",
+        "vibetrading/settings.py": "d5ae255b15e07c31d57a55ebe5d522f83c8f0d9002fbec0179a41e4ec72915a5",
+        "vibetrading/sqlite_store.py": "d11e3ac45baf9c3cfe1799d43c49fe60c08f1fbf455171f26dc9d68075a8f0ea",
+        "vibetrading/storage_worker.py": "896334414c422f0083efc3f6f6855638b88ee61308b3b1e15daa42d071c35faa",
+        "vibetrading/parquet_store.py": "72665b0d28433ec8d70845a4da9fd4ce20215b7ff7f68915b11a94a01ae9c6c2",
+        "vibetrading/archive.py": "a627aaed463bc5a7f6dd4eb9b999a2f06d4cc9881b7e5f14025a00174fd40d3b",
+        "vibetrading/storage_backend.py": "18f1b886251c1a0a52215a6392ce2a99aba55985a8db5e0e70d8dc6a94927f15",
+        "vibetrading/event_index_runs.py": "39deb9bded2a5d10dc2138d7dbdd28a5d442dd2871b2cedec58cc2e2be70f5e0",
+        "vibetrading/etf_trading.py": "566497a5407eddd8337cc277e4aeeb2beec9520ef61f7ba611d311bbb5025da0",
+        "vibetrading/etf_journal.py": "254e59a02705246e2779f052281312602525ae8ac65903696a28968811894b12",
+        "vibetrading/etf_csv_history.py": "5c5024a155488112b68fddceb1c31e6118e3985d828021b19077fca13706f486",
+        "vibetrading/telegram.py": "7b7f6dcdf1bc363f79f638d7adc56e43885ba3147294463a697f5136916b2139",
+        "vibetrading/telegram_trade.py": "12c1440906ec5b7f2500ce0c9159d9429acc8d42aaaed6532abf07d0d626cecb",
+        "vibetrading/providers/kis.py": "d72cdee903d50fd69227b16cb76ddb95d9b941826d5c7822e3282d1acbd3ddf4",
+        "vibetrading/providers/crypto_perp.py": "dacbf7971413c6095984f0d0fa3f9587bdb3508221fa53d0a5fe7fec87e20288",
+        "vibetrading/providers/extended_perp.py": "c2d175e2eb8d1ec08d05a7a0ef5db6f16d7230c074c005df0b07df05bedc0e00"
+      }
+    },
+    {
+      "name": "/vibetrading-monitor-bridge-1",
+      "image": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "status": "running",
+      "health": "healthy",
+      "started": "2026-10-14T11:51:56.089423795Z",
+      "oom_killed": false,
+      "restarts": 0,
+      "command": [
+        "python",
+        "-m",
+        "vibetrading.dashboard.bridge"
+      ],
+      "memory_limit": 201326592,
+      "nano_cpus": 500000000,
+      "compose_files": "/opt/vibetrading/releases/telegram-recovery-20261014/dashboard.yml",
+      "working_dir": "/opt/vibetrading/releases/telegram-recovery-20261014",
+      "environment_allowlist": {},
+      "mounts": [
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "destination": "/data",
+          "rw": false
+        },
+        {
+          "source": "/srv/vibetrading-data/runtime_data/dashboard-monitor",
+          "destination": "/monitor",
+          "rw": true
+        },
+        {
+          "source": "/srv/vibetrading-data/runtime_data/liquidity_mm",
+          "destination": "/pilot",
+          "rw": false
+        },
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "destination": "/data/crypto_state",
+          "rw": false
+        }
+      ],
+      "cgroup": {
+        "memory.current": "192700416\n",
+        "memory.peak": "203325440\n",
+        "memory.swap.current": "122261504\n",
+        "memory.events": "low 0\nhigh 0\nmax 7154\noom 0\noom_kill 0\noom_group_kill 0\n",
+        "cpu.stat": "usage_usec 56336889792\nuser_usec 53866884866\nsystem_usec 2470004926\ncore_sched.force_idle_usec 0\nnr_periods 3140662\nnr_throttled 137898\nthrottled_usec 2998778009\nnr_bursts 0\nburst_usec 0\n"
+      },
+      "source_hashes": {
+        "main.py": "838b5bf6c41f635104b9c3050a30c684284c0513b060cf415e1c545322a623b6",
+        "vibetrading/runtime.py": "c8c34ff8b92116a5b540543adeece42abe61cd1824d6099bf8e19b975ca54246",
+        "vibetrading/bus.py": "0f5da044e104e88bc041546e2316a758950953c2370ef246ff379411d09232fc",
+        "vibetrading/hot_path.py": "a1ae594c9783bcefa269c88a4469763fcdc391895ce0c796ca65f67b79d12d44",
+        "vibetrading/strategy_runner.py": "f07324b657bf9b1857488b3dd7b86f505faa08ebc22e35d5c5d3bb88d0ba4943",
+        "vibetrading/real_runner.py": "691b7cc4c04e7a33055c06b0e795fd55593817b411e3308a843a184c9bf2897d",
+        "vibetrading/models.py": "d432fea6e114b76c3e5df2a801998679c5d6c84196f075905acb02b93c0d416f",
+        "vibetrading/settings.py": "d5ae255b15e07c31d57a55ebe5d522f83c8f0d9002fbec0179a41e4ec72915a5",
+        "vibetrading/sqlite_store.py": "d11e3ac45baf9c3cfe1799d43c49fe60c08f1fbf455171f26dc9d68075a8f0ea",
+        "vibetrading/storage_worker.py": "896334414c422f0083efc3f6f6855638b88ee61308b3b1e15daa42d071c35faa",
+        "vibetrading/parquet_store.py": "72665b0d28433ec8d70845a4da9fd4ce20215b7ff7f68915b11a94a01ae9c6c2",
+        "vibetrading/archive.py": "a627aaed463bc5a7f6dd4eb9b999a2f06d4cc9881b7e5f14025a00174fd40d3b",
+        "vibetrading/storage_backend.py": "18f1b886251c1a0a52215a6392ce2a99aba55985a8db5e0e70d8dc6a94927f15",
+        "vibetrading/event_index_runs.py": "39deb9bded2a5d10dc2138d7dbdd28a5d442dd2871b2cedec58cc2e2be70f5e0",
+        "vibetrading/etf_trading.py": "566497a5407eddd8337cc277e4aeeb2beec9520ef61f7ba611d311bbb5025da0",
+        "vibetrading/etf_journal.py": "254e59a02705246e2779f052281312602525ae8ac65903696a28968811894b12",
+        "vibetrading/etf_csv_history.py": "5c5024a155488112b68fddceb1c31e6118e3985d828021b19077fca13706f486",
+        "vibetrading/telegram.py": "7b7f6dcdf1bc363f79f638d7adc56e43885ba3147294463a697f5136916b2139",
+        "vibetrading/telegram_trade.py": "12c1440906ec5b7f2500ce0c9159d9429acc8d42aaaed6532abf07d0d626cecb",
+        "vibetrading/providers/kis.py": "d72cdee903d50fd69227b16cb76ddb95d9b941826d5c7822e3282d1acbd3ddf4",
+        "vibetrading/providers/crypto_perp.py": "dacbf7971413c6095984f0d0fa3f9587bdb3508221fa53d0a5fe7fec87e20288",
+        "vibetrading/providers/extended_perp.py": "c2d175e2eb8d1ec08d05a7a0ef5db6f16d7230c074c005df0b07df05bedc0e00"
+      }
+    },
+    {
+      "name": "/vibetrading-crypto-maintenance-1",
+      "image": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "status": "running",
+      "health": null,
+      "started": "2026-10-14T11:48:06.997557334Z",
+      "oom_killed": false,
+      "restarts": 0,
+      "command": [
+        "python",
+        "main.py",
+        "run",
+        "--role",
+        "crypto-maintenance"
+      ],
+      "memory_limit": 536870912,
+      "nano_cpus": 0,
+      "compose_files": "/opt/vibetrading/releases/telegram-recovery-20261014/runtime.yml",
+      "working_dir": "/opt/vibetrading/releases/telegram-recovery-20261014",
+      "environment_allowlist": {
+        "VIBETRADING_DATA_ROOT": "/data",
+        "PARQUET_DATA_ROOT": "/data/crypto_market_data",
+        "ARCHIVE_UPLOAD_BATCH": "32",
+        "SQLITE_CACHE_KIB": "32768",
+        "CRYPTO_NATS_MAX_BYTES": "134217728",
+        "OMP_NUM_THREADS": "1",
+        "VIBETRADING_STATE_DIR": "/data/crypto_state",
+        "ARCHIVE_LOCAL_RETENTION_SECONDS": "1800",
+        "NATS_FILE_STORE_MAX_BYTES": "2415919104",
+        "ARROW_NUM_THREADS": "1"
+      },
+      "mounts": [
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "destination": "/data",
+          "rw": true
+        },
+        {
+          "source": "/root/vibetrading/config",
+          "destination": "/app/config",
+          "rw": false
+        },
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "destination": "/data/crypto_state",
+          "rw": true
+        },
+        {
+          "source": "/etc/vibetrading/secrets/archive_access_key",
+          "destination": "/run/secrets/archive_access_key",
+          "rw": false
+        },
+        {
+          "source": "/etc/vibetrading/secrets/archive_secret_key",
+          "destination": "/run/secrets/archive_secret_key",
+          "rw": false
+        }
+      ],
+      "cgroup": {
+        "memory.current": "453627904\n",
+        "memory.peak": "537722880\n",
+        "memory.swap.current": "16039936\n",
+        "memory.events": "low 0\nhigh 0\nmax 339127\noom 0\noom_kill 0\noom_group_kill 0\n",
+        "cpu.stat": "usage_usec 4031184395\nuser_usec 3157764304\nsystem_usec 873420091\ncore_sched.force_idle_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\n"
+      },
+      "source_hashes": {
+        "main.py": "838b5bf6c41f635104b9c3050a30c684284c0513b060cf415e1c545322a623b6",
+        "vibetrading/runtime.py": "c8c34ff8b92116a5b540543adeece42abe61cd1824d6099bf8e19b975ca54246",
+        "vibetrading/bus.py": "0f5da044e104e88bc041546e2316a758950953c2370ef246ff379411d09232fc",
+        "vibetrading/hot_path.py": "a1ae594c9783bcefa269c88a4469763fcdc391895ce0c796ca65f67b79d12d44",
+        "vibetrading/strategy_runner.py": "f07324b657bf9b1857488b3dd7b86f505faa08ebc22e35d5c5d3bb88d0ba4943",
+        "vibetrading/real_runner.py": "691b7cc4c04e7a33055c06b0e795fd55593817b411e3308a843a184c9bf2897d",
+        "vibetrading/models.py": "d432fea6e114b76c3e5df2a801998679c5d6c84196f075905acb02b93c0d416f",
+        "vibetrading/settings.py": "d5ae255b15e07c31d57a55ebe5d522f83c8f0d9002fbec0179a41e4ec72915a5",
+        "vibetrading/sqlite_store.py": "d11e3ac45baf9c3cfe1799d43c49fe60c08f1fbf455171f26dc9d68075a8f0ea",
+        "vibetrading/storage_worker.py": "896334414c422f0083efc3f6f6855638b88ee61308b3b1e15daa42d071c35faa",
+        "vibetrading/parquet_store.py": "72665b0d28433ec8d70845a4da9fd4ce20215b7ff7f68915b11a94a01ae9c6c2",
+        "vibetrading/archive.py": "a627aaed463bc5a7f6dd4eb9b999a2f06d4cc9881b7e5f14025a00174fd40d3b",
+        "vibetrading/storage_backend.py": "18f1b886251c1a0a52215a6392ce2a99aba55985a8db5e0e70d8dc6a94927f15",
+        "vibetrading/event_index_runs.py": "39deb9bded2a5d10dc2138d7dbdd28a5d442dd2871b2cedec58cc2e2be70f5e0",
+        "vibetrading/etf_trading.py": "566497a5407eddd8337cc277e4aeeb2beec9520ef61f7ba611d311bbb5025da0",
+        "vibetrading/etf_journal.py": "254e59a02705246e2779f052281312602525ae8ac65903696a28968811894b12",
+        "vibetrading/etf_csv_history.py": "5c5024a155488112b68fddceb1c31e6118e3985d828021b19077fca13706f486",
+        "vibetrading/telegram.py": "7b7f6dcdf1bc363f79f638d7adc56e43885ba3147294463a697f5136916b2139",
+        "vibetrading/telegram_trade.py": "12c1440906ec5b7f2500ce0c9159d9429acc8d42aaaed6532abf07d0d626cecb",
+        "vibetrading/providers/kis.py": "d72cdee903d50fd69227b16cb76ddb95d9b941826d5c7822e3282d1acbd3ddf4",
+        "vibetrading/providers/crypto_perp.py": "dacbf7971413c6095984f0d0fa3f9587bdb3508221fa53d0a5fe7fec87e20288",
+        "vibetrading/providers/extended_perp.py": "c2d175e2eb8d1ec08d05a7a0ef5db6f16d7230c074c005df0b07df05bedc0e00"
+      }
+    },
+    {
+      "name": "/vibetrading-crypto-storage-1",
+      "image": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "status": "running",
+      "health": "healthy",
+      "started": "2026-10-14T11:48:06.646904948Z",
+      "oom_killed": false,
+      "restarts": 0,
+      "command": [
+        "python",
+        "main.py",
+        "run",
+        "--role",
+        "crypto-storage"
+      ],
+      "memory_limit": 1342177280,
+      "nano_cpus": 0,
+      "compose_files": "/opt/vibetrading/releases/telegram-recovery-20261014/runtime.yml",
+      "working_dir": "/opt/vibetrading/releases/telegram-recovery-20261014",
+      "environment_allowlist": {
+        "NATS_FILE_STORE_MAX_BYTES": "2415919104",
+        "STORAGE_FLUSH_BUFFER_BYTES": "33554432",
+        "SQLITE_CACHE_KIB": "65536",
+        "ARCHIVE_LOCAL_RETENTION_SECONDS": "86400",
+        "ARROW_NUM_THREADS": "1",
+        "CRYPTO_NATS_MAX_BYTES": "134217728",
+        "STORAGE_FLUSH_SECONDS": "60",
+        "VIBETRADING_DATA_ROOT": "/data",
+        "OMP_NUM_THREADS": "1",
+        "STORAGE_MAX_PENDING_BEFORE_FLUSH": "8192",
+        "VIBETRADING_STATE_DIR": "/data/crypto_state",
+        "PARQUET_DATA_ROOT": "/data/crypto_market_data"
+      },
+      "mounts": [
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "destination": "/data",
+          "rw": true
+        },
+        {
+          "source": "/root/vibetrading/config",
+          "destination": "/app/config",
+          "rw": false
+        },
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "destination": "/data/crypto_state",
+          "rw": true
+        }
+      ],
+      "cgroup": {
+        "memory.current": "839282688\n",
+        "memory.peak": "1342631936\n",
+        "memory.swap.current": "34516992\n",
+        "memory.events": "low 0\nhigh 0\nmax 5851\noom 0\noom_kill 0\noom_group_kill 0\n",
+        "cpu.stat": "usage_usec 93140460273\nuser_usec 77867854200\nsystem_usec 15272606073\ncore_sched.force_idle_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\n"
+      },
+      "source_hashes": {
+        "main.py": "838b5bf6c41f635104b9c3050a30c684284c0513b060cf415e1c545322a623b6",
+        "vibetrading/runtime.py": "c8c34ff8b92116a5b540543adeece42abe61cd1824d6099bf8e19b975ca54246",
+        "vibetrading/bus.py": "0f5da044e104e88bc041546e2316a758950953c2370ef246ff379411d09232fc",
+        "vibetrading/hot_path.py": "a1ae594c9783bcefa269c88a4469763fcdc391895ce0c796ca65f67b79d12d44",
+        "vibetrading/strategy_runner.py": "f07324b657bf9b1857488b3dd7b86f505faa08ebc22e35d5c5d3bb88d0ba4943",
+        "vibetrading/real_runner.py": "691b7cc4c04e7a33055c06b0e795fd55593817b411e3308a843a184c9bf2897d",
+        "vibetrading/models.py": "d432fea6e114b76c3e5df2a801998679c5d6c84196f075905acb02b93c0d416f",
+        "vibetrading/settings.py": "d5ae255b15e07c31d57a55ebe5d522f83c8f0d9002fbec0179a41e4ec72915a5",
+        "vibetrading/sqlite_store.py": "d11e3ac45baf9c3cfe1799d43c49fe60c08f1fbf455171f26dc9d68075a8f0ea",
+        "vibetrading/storage_worker.py": "896334414c422f0083efc3f6f6855638b88ee61308b3b1e15daa42d071c35faa",
+        "vibetrading/parquet_store.py": "72665b0d28433ec8d70845a4da9fd4ce20215b7ff7f68915b11a94a01ae9c6c2",
+        "vibetrading/archive.py": "a627aaed463bc5a7f6dd4eb9b999a2f06d4cc9881b7e5f14025a00174fd40d3b",
+        "vibetrading/storage_backend.py": "18f1b886251c1a0a52215a6392ce2a99aba55985a8db5e0e70d8dc6a94927f15",
+        "vibetrading/event_index_runs.py": "39deb9bded2a5d10dc2138d7dbdd28a5d442dd2871b2cedec58cc2e2be70f5e0",
+        "vibetrading/etf_trading.py": "566497a5407eddd8337cc277e4aeeb2beec9520ef61f7ba611d311bbb5025da0",
+        "vibetrading/etf_journal.py": "254e59a02705246e2779f052281312602525ae8ac65903696a28968811894b12",
+        "vibetrading/etf_csv_history.py": "5c5024a155488112b68fddceb1c31e6118e3985d828021b19077fca13706f486",
+        "vibetrading/telegram.py": "7b7f6dcdf1bc363f79f638d7adc56e43885ba3147294463a697f5136916b2139",
+        "vibetrading/telegram_trade.py": "12c1440906ec5b7f2500ce0c9159d9429acc8d42aaaed6532abf07d0d626cecb",
+        "vibetrading/providers/kis.py": "d72cdee903d50fd69227b16cb76ddb95d9b941826d5c7822e3282d1acbd3ddf4",
+        "vibetrading/providers/crypto_perp.py": "dacbf7971413c6095984f0d0fa3f9587bdb3508221fa53d0a5fe7fec87e20288",
+        "vibetrading/providers/extended_perp.py": "c2d175e2eb8d1ec08d05a7a0ef5db6f16d7230c074c005df0b07df05bedc0e00"
+      }
+    },
+    {
+      "name": "/vibetrading-maintenance-1",
+      "image": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "status": "running",
+      "health": "healthy",
+      "started": "2026-10-16T06:02:12.68220169Z",
+      "oom_killed": false,
+      "restarts": 4,
+      "command": [
+        "ionice",
+        "-c2",
+        "-n7",
+        "nice",
+        "-n",
+        "10",
+        "python",
+        "main.py",
+        "run",
+        "--role",
+        "maintenance"
+      ],
+      "memory_limit": 536870912,
+      "nano_cpus": 0,
+      "compose_files": "/opt/vibetrading/releases/telegram-recovery-20261014/runtime.yml",
+      "working_dir": "/opt/vibetrading/releases/telegram-recovery-20261014",
+      "environment_allowlist": {
+        "ARCHIVE_LOCAL_RETENTION_SECONDS": "86400",
+        "NATS_FILE_STORE_MAX_BYTES": "2415919104",
+        "ARROW_NUM_THREADS": "1",
+        "CRYPTO_NATS_MAX_BYTES": "134217728",
+        "OMP_NUM_THREADS": "1",
+        "VIBETRADING_DATA_ROOT": "/data"
+      },
+      "mounts": [
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "destination": "/data",
+          "rw": true
+        },
+        {
+          "source": "/root/vibetrading/config",
+          "destination": "/app/config",
+          "rw": false
+        },
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "destination": "/data/crypto_state",
+          "rw": true
+        },
+        {
+          "source": "/etc/vibetrading/secrets/archive_access_key",
+          "destination": "/run/secrets/archive_access_key",
+          "rw": false
+        },
+        {
+          "source": "/etc/vibetrading/secrets/archive_secret_key",
+          "destination": "/run/secrets/archive_secret_key",
+          "rw": false
+        }
+      ],
+      "cgroup": {
+        "memory.current": "499875840\n",
+        "memory.peak": "538521600\n",
+        "memory.swap.current": "536649728\n",
+        "memory.events": "low 0\nhigh 0\nmax 129027\noom 0\noom_kill 0\noom_group_kill 0\n",
+        "cpu.stat": "usage_usec 7867189907\nuser_usec 7156704552\nsystem_usec 710485354\ncore_sched.force_idle_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\n"
+      },
+      "source_hashes": {
+        "main.py": "838b5bf6c41f635104b9c3050a30c684284c0513b060cf415e1c545322a623b6",
+        "vibetrading/runtime.py": "c8c34ff8b92116a5b540543adeece42abe61cd1824d6099bf8e19b975ca54246",
+        "vibetrading/bus.py": "0f5da044e104e88bc041546e2316a758950953c2370ef246ff379411d09232fc",
+        "vibetrading/hot_path.py": "a1ae594c9783bcefa269c88a4469763fcdc391895ce0c796ca65f67b79d12d44",
+        "vibetrading/strategy_runner.py": "f07324b657bf9b1857488b3dd7b86f505faa08ebc22e35d5c5d3bb88d0ba4943",
+        "vibetrading/real_runner.py": "691b7cc4c04e7a33055c06b0e795fd55593817b411e3308a843a184c9bf2897d",
+        "vibetrading/models.py": "d432fea6e114b76c3e5df2a801998679c5d6c84196f075905acb02b93c0d416f",
+        "vibetrading/settings.py": "d5ae255b15e07c31d57a55ebe5d522f83c8f0d9002fbec0179a41e4ec72915a5",
+        "vibetrading/sqlite_store.py": "d11e3ac45baf9c3cfe1799d43c49fe60c08f1fbf455171f26dc9d68075a8f0ea",
+        "vibetrading/storage_worker.py": "896334414c422f0083efc3f6f6855638b88ee61308b3b1e15daa42d071c35faa",
+        "vibetrading/parquet_store.py": "72665b0d28433ec8d70845a4da9fd4ce20215b7ff7f68915b11a94a01ae9c6c2",
+        "vibetrading/archive.py": "a627aaed463bc5a7f6dd4eb9b999a2f06d4cc9881b7e5f14025a00174fd40d3b",
+        "vibetrading/storage_backend.py": "18f1b886251c1a0a52215a6392ce2a99aba55985a8db5e0e70d8dc6a94927f15",
+        "vibetrading/event_index_runs.py": "39deb9bded2a5d10dc2138d7dbdd28a5d442dd2871b2cedec58cc2e2be70f5e0",
+        "vibetrading/etf_trading.py": "566497a5407eddd8337cc277e4aeeb2beec9520ef61f7ba611d311bbb5025da0",
+        "vibetrading/etf_journal.py": "254e59a02705246e2779f052281312602525ae8ac65903696a28968811894b12",
+        "vibetrading/etf_csv_history.py": "5c5024a155488112b68fddceb1c31e6118e3985d828021b19077fca13706f486",
+        "vibetrading/telegram.py": "7b7f6dcdf1bc363f79f638d7adc56e43885ba3147294463a697f5136916b2139",
+        "vibetrading/telegram_trade.py": "12c1440906ec5b7f2500ce0c9159d9429acc8d42aaaed6532abf07d0d626cecb",
+        "vibetrading/providers/kis.py": "d72cdee903d50fd69227b16cb76ddb95d9b941826d5c7822e3282d1acbd3ddf4",
+        "vibetrading/providers/crypto_perp.py": "dacbf7971413c6095984f0d0fa3f9587bdb3508221fa53d0a5fe7fec87e20288",
+        "vibetrading/providers/extended_perp.py": "c2d175e2eb8d1ec08d05a7a0ef5db6f16d7230c074c005df0b07df05bedc0e00"
+      }
+    },
+    {
+      "name": "/vibetrading-storage-1",
+      "image": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "status": "running",
+      "health": "healthy",
+      "started": "2026-10-14T11:46:56.772705636Z",
+      "oom_killed": false,
+      "restarts": 0,
+      "command": [
+        "python",
+        "main.py",
+        "run",
+        "--role",
+        "storage"
+      ],
+      "memory_limit": 1073741824,
+      "nano_cpus": 0,
+      "compose_files": "/opt/vibetrading/releases/telegram-recovery-20261014/runtime.yml",
+      "working_dir": "/opt/vibetrading/releases/telegram-recovery-20261014",
+      "environment_allowlist": {
+        "NATS_FILE_STORE_MAX_BYTES": "2415919104",
+        "CRYPTO_NATS_MAX_BYTES": "134217728",
+        "SQLITE_CACHE_KIB": "131072",
+        "ARROW_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "VIBETRADING_DATA_ROOT": "/data",
+        "ARCHIVE_LOCAL_RETENTION_SECONDS": "86400"
+      },
+      "mounts": [
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "destination": "/data",
+          "rw": true
+        },
+        {
+          "source": "/root/vibetrading/config",
+          "destination": "/app/config",
+          "rw": false
+        },
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "destination": "/data/crypto_state",
+          "rw": true
+        }
+      ],
+      "cgroup": {
+        "memory.current": "96415744\n",
+        "memory.peak": "862531584\n",
+        "memory.swap.current": "311144448\n",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+        "cpu.stat": "usage_usec 11674144269\nuser_usec 10140886478\nsystem_usec 1533257791\ncore_sched.force_idle_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\n"
+      },
+      "source_hashes": {
+        "main.py": "838b5bf6c41f635104b9c3050a30c684284c0513b060cf415e1c545322a623b6",
+        "vibetrading/runtime.py": "c8c34ff8b92116a5b540543adeece42abe61cd1824d6099bf8e19b975ca54246",
+        "vibetrading/bus.py": "0f5da044e104e88bc041546e2316a758950953c2370ef246ff379411d09232fc",
+        "vibetrading/hot_path.py": "a1ae594c9783bcefa269c88a4469763fcdc391895ce0c796ca65f67b79d12d44",
+        "vibetrading/strategy_runner.py": "f07324b657bf9b1857488b3dd7b86f505faa08ebc22e35d5c5d3bb88d0ba4943",
+        "vibetrading/real_runner.py": "691b7cc4c04e7a33055c06b0e795fd55593817b411e3308a843a184c9bf2897d",
+        "vibetrading/models.py": "d432fea6e114b76c3e5df2a801998679c5d6c84196f075905acb02b93c0d416f",
+        "vibetrading/settings.py": "d5ae255b15e07c31d57a55ebe5d522f83c8f0d9002fbec0179a41e4ec72915a5",
+        "vibetrading/sqlite_store.py": "d11e3ac45baf9c3cfe1799d43c49fe60c08f1fbf455171f26dc9d68075a8f0ea",
+        "vibetrading/storage_worker.py": "896334414c422f0083efc3f6f6855638b88ee61308b3b1e15daa42d071c35faa",
+        "vibetrading/parquet_store.py": "72665b0d28433ec8d70845a4da9fd4ce20215b7ff7f68915b11a94a01ae9c6c2",
+        "vibetrading/archive.py": "a627aaed463bc5a7f6dd4eb9b999a2f06d4cc9881b7e5f14025a00174fd40d3b",
+        "vibetrading/storage_backend.py": "18f1b886251c1a0a52215a6392ce2a99aba55985a8db5e0e70d8dc6a94927f15",
+        "vibetrading/event_index_runs.py": "39deb9bded2a5d10dc2138d7dbdd28a5d442dd2871b2cedec58cc2e2be70f5e0",
+        "vibetrading/etf_trading.py": "566497a5407eddd8337cc277e4aeeb2beec9520ef61f7ba611d311bbb5025da0",
+        "vibetrading/etf_journal.py": "254e59a02705246e2779f052281312602525ae8ac65903696a28968811894b12",
+        "vibetrading/etf_csv_history.py": "5c5024a155488112b68fddceb1c31e6118e3985d828021b19077fca13706f486",
+        "vibetrading/telegram.py": "7b7f6dcdf1bc363f79f638d7adc56e43885ba3147294463a697f5136916b2139",
+        "vibetrading/telegram_trade.py": "12c1440906ec5b7f2500ce0c9159d9429acc8d42aaaed6532abf07d0d626cecb",
+        "vibetrading/providers/kis.py": "d72cdee903d50fd69227b16cb76ddb95d9b941826d5c7822e3282d1acbd3ddf4",
+        "vibetrading/providers/crypto_perp.py": "dacbf7971413c6095984f0d0fa3f9587bdb3508221fa53d0a5fe7fec87e20288",
+        "vibetrading/providers/extended_perp.py": "c2d175e2eb8d1ec08d05a7a0ef5db6f16d7230c074c005df0b07df05bedc0e00"
+      }
+    },
+    {
+      "name": "/vibetrading-nats-1",
+      "image": "nats:2.10-alpine",
+      "image_id": "sha256:b83efabe3e7def1e0a4a31ec6e078999bb17c80363f881df35edc70fcb6bb927",
+      "status": "running",
+      "health": "healthy",
+      "started": "2026-10-14T11:46:34.892913905Z",
+      "oom_killed": false,
+      "restarts": 0,
+      "command": [
+        "-c",
+        "/etc/nats/nats.conf"
+      ],
+      "memory_limit": 536870912,
+      "nano_cpus": 0,
+      "compose_files": "/opt/vibetrading/releases/telegram-recovery-20261014/runtime.yml",
+      "working_dir": "/opt/vibetrading/releases/telegram-recovery-20261014",
+      "environment_allowlist": {},
+      "mounts": [
+        {
+          "source": "/srv/vibetrading-data/nats",
+          "destination": "/data",
+          "rw": true
+        },
+        {
+          "source": "/root/vibetrading/deploy/nats.conf",
+          "destination": "/etc/nats/nats.conf",
+          "rw": false
+        }
+      ],
+      "cgroup": {
+        "memory.current": "195616768\n",
+        "memory.peak": "478904320\n",
+        "memory.swap.current": "10100736\n",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+        "cpu.stat": "usage_usec 29877271078\nuser_usec 14529548569\nsystem_usec 15347722508\ncore_sched.force_idle_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\n"
+      }
+    }
+  ],
+  "public_configs": {
+    "/root/vibetrading/config/runtime.yaml": "# Long-lived read-only market-data jobs. Credentials are loaded from .env.\ncollectors:\n  # One coordinated KIS job prevents independent commodity/option sessions\n  # from racing each other's subscription registrations.\n  - provider: kis\n    symbols: \"auto:all\"\n  # KIS inquire-investor-time-by-market is a domestic-stock statistic;\n  # it must not be labelled KOSPI200 futures foreign flow.\n  - provider: kiwoom\n    symbols: \"@universe\"\n  - provider: toss\n    symbols: \"@universe\"\nstrategies: []\n",
+    "/root/vibetrading/config/crypto_runtime.yaml": "# Public perpetual feeds (Arcus quotes USD; other venues quote USDT). Start with the Docker crypto profile after\n# capacity validation; no trading credentials are required for collection.\ncollectors:\n  - provider: binance-perp\n    symbols: \"@crypto\"\n  - provider: arcus-perp\n    symbols: \"@crypto\"\n  - provider: grvt-perp\n    symbols: \"@crypto\"\nstrategies: []\n",
+    "/root/vibetrading/config/universe.yaml": "instruments:\n- symbol: 069500\n  asset_class: etf\n  providers:\n  - kiwoom\n  underlying: KOSPI200\n- symbol: '229200'\n  asset_class: etf\n  providers:\n  - kiwoom\n  underlying: KOSDAQ150\n- symbol: US:SPY\n  asset_class: etf\n  providers:\n  - toss\n  market: US\n  proxy_for: SP500\n- symbol: US:QQQ\n  asset_class: etf\n  providers:\n  - toss\n  market: US\n  proxy_for: NASDAQ100\n- symbol: 005930\n  asset_class: equity\n  providers:\n  - kiwoom\n  - toss\n- symbol: '000660'\n  asset_class: equity\n  providers:\n  - kiwoom\n  - toss\n- symbol: '122630'\n  asset_class: etf\n  providers:\n  - kiwoom\n  underlying: KOSPI200\n- symbol: '114800'\n  asset_class: etf\n  providers:\n  - kiwoom\n  underlying: KOSPI200\n- symbol: '252670'\n  asset_class: etf\n  providers:\n  - kiwoom\n  underlying: KOSPI200\n- symbol: '233740'\n  asset_class: etf\n  providers:\n  - kiwoom\n  underlying: KOSDAQ150\n- symbol: '251340'\n  asset_class: etf\n  providers:\n  - kiwoom\n  underlying: KOSDAQ150\ndynamic:\n  kis_index_derivatives:\n    underlyings:\n    - KOSPI200\n    - KOSDAQ150\n    option_expiries: 2\n    strikes_each_side: 1\n    collect_options: false\n  kis_commodity_futures:\n  - B10\n  - USD\n  kis_overseas_futures: []\n  kis_participant_flow:\n    enabled: false\n    market_code: K2I\n    market_subcodes:\n    - '0001'\n    interval_seconds: 60\n  kis_cash_index:\n    enabled: true\n    code: '2001'\n",
+    "/root/vibetrading/deploy/nats.conf": "# Server-wide JetStream limits belong in the NATS configuration file.  The\n# market and operations stream caps are enforced separately by nats-init.\njetstream {\n  store_dir: \"/data\"\n  max_file_store: 2304MiB\n  max_memory_store: 128MiB\n  # Per-message fsync stalls publish acknowledgements on this small shared\n  # disk.  A bounded one-second journal sync retains a durable replay window\n  # without turning transient disk latency into collector-wide backpressure.\n  sync_interval: \"1s\"\n}\n\nhttp_port: 8222\n"
+  },
+  "state_file_sizes": {
+    "/srv/vibetrading-data/runtime_data/state": {
+      "kis_access_token_93cc5695a6a59e41.json": 403,
+      "collection_gaps.sqlite3": 196608,
+      "kiwoom_token_real.json": 225,
+      "toss_access_token.json": 883,
+      "main-server-recovery-gaps.json": 934,
+      "kis_access_token_0f70134b8dd40c74.json": 403,
+      "kis_access_token_808f49ec5823a457.json": 403,
+      "kis_access_token.json": 403,
+      "telegram-command-verification.json": 217,
+      "vibetrading.sqlite3": 10291798016,
+      "kis_access_token_51f1d763148729f9.json": 403
+    },
+    "/srv/vibetrading-crypto-state": {
+      "replay-window-recovery.json": 83871,
+      "migration-offline-proof.json": 640,
+      "vibetrading.sqlite3": 7595970560
+    }
+  },
+  "samples": [
+    {
+      "utc": "2026-10-18T03:06:25.720501+00:00",
+      "mono": 1258994.854797611,
+      "varz": {
+        "version": "2.10.29",
+        "uptime": "3d15h19m50s",
+        "mem": 171429888,
+        "cpu": 4,
+        "connections": 11,
+        "in_msgs": 505478029,
+        "out_msgs": 362762863,
+        "in_bytes": 542396579931,
+        "out_bytes": 328113610236,
+        "slow_consumers": 4
+      },
+      "jsz": {
+        "memory": 0,
+        "storage": 20880655,
+        "reserved_memory": 0,
+        "reserved_storage": 1275068416,
+        "accounts": 1,
+        "ha_assets": 0,
+        "api": {
+          "total": 521627,
+          "errors": 0
+        },
+        "server_id": "NCLEUS27WKOFVXAHNYBIZRIUJXITHKO3Y5SSYCRD3IOPHHXNZOZ3N3FI",
+        "now": "2026-10-18T03:06:25.841410365Z",
+        "config": {
+          "max_memory": 134217728,
+          "max_storage": 2415919104,
+          "store_dir": "/data/jetstream",
+          "sync_interval": 1000000000,
+          "compress_ok": true
+        },
+        "streams": 3,
+        "consumers": 6,
+        "messages": 12834,
+        "bytes": 20880655,
+        "account_details": [
+          {
+            "name": "$G",
+            "id": "$G",
+            "memory": 0,
+            "storage": 20880655,
+            "reserved_memory": 18446744073709551615,
+            "reserved_storage": 18446744073709551615,
+            "accounts": 0,
+            "ha_assets": 0,
+            "api": {
+              "total": 521627,
+              "errors": 0
+            },
+            "stream_detail": [
+              {
+                "name": "CRYPTO_DATA",
+                "created": "2026-10-05T15:52:42.431025164Z",
+                "cluster": {
+                  "leader": "NCLEUS27WKOFVXAHNYBIZRIUJXITHKO3Y5SSYCRD3IOPHHXNZOZ3N3FI"
+                },
+                "config": {
+                  "name": "CRYPTO_DATA",
+                  "subjects": [
+                    "crypto.trade.>",
+                    "crypto.order_book.>",
+                    "crypto.funding_rate.>",
+                    "crypto.open_interest.>"
+                  ],
+                  "retention": "workqueue",
+                  "max_consumers": -1,
+                  "max_msgs": -1,
+                  "max_bytes": 134217728,
+                  "max_age": 0,
+                  "max_msgs_per_subject": -1,
+                  "max_msg_size": -1,
+                  "discard": "new",
+                  "storage": "file",
+                  "num_replicas": 1,
+                  "duplicate_window": 120000000000,
+                  "compression": "none",
+                  "allow_direct": false,
+                  "mirror_direct": false,
+                  "sealed": false,
+                  "deny_delete": false,
+                  "deny_purge": false,
+                  "allow_rollup_hdrs": false,
+                  "consumer_limits": {}
+                },
+                "state": {
+                  "messages": 7674,
+                  "bytes": 17386057,
+                  "first_seq": 696201366,
+                  "first_ts": "2026-10-18T03:05:33.50606289Z",
+                  "last_seq": 696222033,
+                  "last_ts": "2026-10-18T03:06:25.827239406Z",
+                  "num_subjects": 33,
+                  "num_deleted": 12994,
+                  "consumer_count": 1
+                }
+              },
+              {
+                "name": "MARKET_DATA",
+                "created": "2026-10-05T15:52:42.454495595Z",
+                "cluster": {
+                  "leader": "NCLEUS27WKOFVXAHNYBIZRIUJXITHKO3Y5SSYCRD3IOPHHXNZOZ3N3FI"
+                },
+                "config": {
+                  "name": "MARKET_DATA",
+                  "subjects": [
+                    "md.trade.>",
+                    "md.order_book.>",
+                    "md.bar_1m.>",
+                    "md.etf_nav.>",
+                    "md.funding_rate.>",
+                    "md.open_interest.>",
+                    "md.participant_flow.>",
+                    "md.index_quote.>"
+                  ],
+                  "retention": "workqueue",
+                  "max_consumers": -1,
+                  "max_msgs": -1,
+                  "max_bytes": 1073741824,
+                  "max_age": 0,
+                  "max_msgs_per_subject": -1,
+                  "max_msg_size": -1,
+                  "discard": "new",
+                  "storage": "file",
+                  "num_replicas": 1,
+                  "duplicate_window": 120000000000,
+                  "compression": "none",
+                  "allow_direct": false,
+                  "mirror_direct": false,
+                  "sealed": false,
+                  "deny_delete": false,
+                  "deny_purge": false,
+                  "allow_rollup_hdrs": false,
+                  "consumer_limits": {}
+                },
+                "state": {
+                  "messages": 0,
+                  "bytes": 0,
+                  "first_seq": 34141710,
+                  "first_ts": "1970-01-01T00:00:00Z",
+                  "last_seq": 34141709,
+                  "last_ts": "2026-10-17T00:11:07.898399669Z",
+                  "consumer_count": 1
+                }
+              },
+              {
+                "name": "OPERATIONS",
+                "created": "2026-09-25T05:16:08.99256433Z",
+                "cluster": {
+                  "leader": "NCLEUS27WKOFVXAHNYBIZRIUJXITHKO3Y5SSYCRD3IOPHHXNZOZ3N3FI"
+                },
+                "config": {
+                  "name": "OPERATIONS",
+                  "subjects": [
+                    "md.data_gap.>",
+                    "crypto.data_gap.>",
+                    "signal.>",
+                    "order.>",
+                    "system.>"
+                  ],
+                  "retention": "limits",
+                  "max_consumers": -1,
+                  "max_msgs": -1,
+                  "max_bytes": 67108864,
+                  "max_age": 0,
+                  "max_msgs_per_subject": -1,
+                  "max_msg_size": -1,
+                  "discard": "old",
+                  "storage": "file",
+                  "num_replicas": 1,
+                  "duplicate_window": 120000000000,
+                  "compression": "none",
+                  "allow_direct": false,
+                  "mirror_direct": false,
+                  "sealed": false,
+                  "deny_delete": false,
+                  "deny_purge": false,
+                  "allow_rollup_hdrs": false,
+                  "consumer_limits": {}
+                },
+                "state": {
+                  "messages": 5160,
+                  "bytes": 3494598,
+                  "first_seq": 1,
+                  "first_ts": "2026-09-08T05:22:00.981120765Z",
+                  "last_seq": 17758,
+                  "last_ts": "2026-10-17T15:49:00.246051219Z",
+                  "num_subjects": 19,
+                  "num_deleted": 12598,
+                  "consumer_count": 4
+                }
+              }
+            ]
+          }
+        ],
+        "total": 1
+      },
+      "pressure": {
+        "cpu": "some avg10=37.24 avg60=25.21 avg300=18.68 total=470100576069\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=0\n",
+        "memory": "some avg10=0.00 avg60=0.04 avg300=0.04 total=9539107082\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=3001154539\n",
+        "io": "some avg10=2.04 avg60=1.46 avg300=1.15 total=62924237920\nfull avg10=1.06 avg60=0.80 avg300=0.63 total=25929077118\n"
+      },
+      "vmstat_swap": {
+        "pswpin": 86647072,
+        "pswpout": 123517531
+      }
+    },
+    {
+      "utc": "2026-10-18T03:06:45.847181+00:00",
+      "mono": 1259014.981485626,
+      "varz": {
+        "version": "2.10.29",
+        "uptime": "3d15h20m10s",
+        "mem": 199704576,
+        "cpu": 7,
+        "connections": 11,
+        "in_msgs": 505504242,
+        "out_msgs": 362780978,
+        "in_bytes": 542423495417,
+        "out_bytes": 328129381582,
+        "slow_consumers": 4
+      },
+      "jsz": {
+        "memory": 0,
+        "storage": 17610184,
+        "reserved_memory": 0,
+        "reserved_storage": 1275068416,
+        "accounts": 1,
+        "ha_assets": 0,
+        "api": {
+          "total": 521649,
+          "errors": 0
+        },
+        "server_id": "NCLEUS27WKOFVXAHNYBIZRIUJXITHKO3Y5SSYCRD3IOPHHXNZOZ3N3FI",
+        "now": "2026-10-18T03:06:45.854894981Z",
+        "config": {
+          "max_memory": 134217728,
+          "max_storage": 2415919104,
+          "store_dir": "/data/jetstream",
+          "sync_interval": 1000000000,
+          "compress_ok": true
+        },
+        "streams": 3,
+        "consumers": 6,
+        "messages": 12049,
+        "bytes": 17610184,
+        "account_details": [
+          {
+            "name": "$G",
+            "id": "$G",
+            "memory": 0,
+            "storage": 17610184,
+            "reserved_memory": 18446744073709551615,
+            "reserved_storage": 18446744073709551615,
+            "accounts": 0,
+            "ha_assets": 0,
+            "api": {
+              "total": 521649,
+              "errors": 0
+            },
+            "stream_detail": [
+              {
+                "name": "CRYPTO_DATA",
+                "created": "2026-10-05T15:52:42.431025164Z",
+                "cluster": {
+                  "leader": "NCLEUS27WKOFVXAHNYBIZRIUJXITHKO3Y5SSYCRD3IOPHHXNZOZ3N3FI"
+                },
+                "config": {
+                  "name": "CRYPTO_DATA",
+                  "subjects": [
+                    "crypto.trade.>",
+                    "crypto.order_book.>",
+                    "crypto.funding_rate.>",
+                    "crypto.open_interest.>"
+                  ],
+                  "retention": "workqueue",
+                  "max_consumers": -1,
+                  "max_msgs": -1,
+                  "max_bytes": 134217728,
+                  "max_age": 0,
+                  "max_msgs_per_subject": -1,
+                  "max_msg_size": -1,
+                  "discard": "new",
+                  "storage": "file",
+                  "num_replicas": 1,
+                  "duplicate_window": 120000000000,
+                  "compression": "none",
+                  "allow_direct": false,
+                  "mirror_direct": false,
+                  "sealed": false,
+                  "deny_delete": false,
+                  "deny_purge": false,
+                  "allow_rollup_hdrs": false,
+                  "consumer_limits": {}
+                },
+                "state": {
+                  "messages": 6889,
+                  "bytes": 14115586,
+                  "first_seq": 696209527,
+                  "first_ts": "2026-10-18T03:05:55.177919236Z",
+                  "last_seq": 696229342,
+                  "last_ts": "2026-10-18T03:06:45.851683249Z",
+                  "num_subjects": 33,
+                  "num_deleted": 12927,
+                  "consumer_count": 1
+                }
+              },
+              {
+                "name": "MARKET_DATA",
+                "created": "2026-10-05T15:52:42.454495595Z",
+                "cluster": {
+                  "leader": "NCLEUS27WKOFVXAHNYBIZRIUJXITHKO3Y5SSYCRD3IOPHHXNZOZ3N3FI"
+                },
+                "config": {
+                  "name": "MARKET_DATA",
+                  "subjects": [
+                    "md.trade.>",
+                    "md.order_book.>",
+                    "md.bar_1m.>",
+                    "md.etf_nav.>",
+                    "md.funding_rate.>",
+                    "md.open_interest.>",
+                    "md.participant_flow.>",
+                    "md.index_quote.>"
+                  ],
+                  "retention": "workqueue",
+                  "max_consumers": -1,
+                  "max_msgs": -1,
+                  "max_bytes": 1073741824,
+                  "max_age": 0,
+                  "max_msgs_per_subject": -1,
+                  "max_msg_size": -1,
+                  "discard": "new",
+                  "storage": "file",
+                  "num_replicas": 1,
+                  "duplicate_window": 120000000000,
+                  "compression": "none",
+                  "allow_direct": false,
+                  "mirror_direct": false,
+                  "sealed": false,
+                  "deny_delete": false,
+                  "deny_purge": false,
+                  "allow_rollup_hdrs": false,
+                  "consumer_limits": {}
+                },
+                "state": {
+                  "messages": 0,
+                  "bytes": 0,
+                  "first_seq": 34141710,
+                  "first_ts": "1970-01-01T00:00:00Z",
+                  "last_seq": 34141709,
+                  "last_ts": "2026-10-17T00:11:07.898399669Z",
+                  "consumer_count": 1
+                }
+              },
+              {
+                "name": "OPERATIONS",
+                "created": "2026-09-25T05:16:08.99256433Z",
+                "cluster": {
+                  "leader": "NCLEUS27WKOFVXAHNYBIZRIUJXITHKO3Y5SSYCRD3IOPHHXNZOZ3N3FI"
+                },
+                "config": {
+                  "name": "OPERATIONS",
+                  "subjects": [
+                    "md.data_gap.>",
+                    "crypto.data_gap.>",
+                    "signal.>",
+                    "order.>",
+                    "system.>"
+                  ],
+                  "retention": "limits",
+                  "max_consumers": -1,
+                  "max_msgs": -1,
+                  "max_bytes": 67108864,
+                  "max_age": 0,
+                  "max_msgs_per_subject": -1,
+                  "max_msg_size": -1,
+                  "discard": "old",
+                  "storage": "file",
+                  "num_replicas": 1,
+                  "duplicate_window": 120000000000,
+                  "compression": "none",
+                  "allow_direct": false,
+                  "mirror_direct": false,
+                  "sealed": false,
+                  "deny_delete": false,
+                  "deny_purge": false,
+                  "allow_rollup_hdrs": false,
+                  "consumer_limits": {}
+                },
+                "state": {
+                  "messages": 5160,
+                  "bytes": 3494598,
+                  "first_seq": 1,
+                  "first_ts": "2026-09-08T05:22:00.981120765Z",
+                  "last_seq": 17758,
+                  "last_ts": "2026-10-17T15:49:00.246051219Z",
+                  "num_subjects": 19,
+                  "num_deleted": 12598,
+                  "consumer_count": 4
+                }
+              }
+            ]
+          }
+        ],
+        "total": 1
+      },
+      "pressure": {
+        "cpu": "some avg10=20.59 avg60=23.55 avg300=18.74 total=470104588534\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=0\n",
+        "memory": "some avg10=0.00 avg60=0.02 avg300=0.04 total=9539113433\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=3001159617\n",
+        "io": "some avg10=2.97 avg60=2.07 avg300=1.32 total=62924992900\nfull avg10=2.34 avg60=1.38 avg300=0.78 total=25929667520\n"
+      },
+      "vmstat_swap": {
+        "pswpin": 86647086,
+        "pswpout": 123517531
+      }
+    }
+  ],
+  "local_source_comparison": {
+    "/vibetrading-etf-mock-1": {
+      "vibetrading/runtime.py": false,
+      "vibetrading/bus.py": true,
+      "vibetrading/hot_path.py": true,
+      "vibetrading/strategy_runner.py": true,
+      "vibetrading/real_runner.py": true,
+      "vibetrading/models.py": true,
+      "vibetrading/settings.py": true,
+      "vibetrading/sqlite_store.py": true,
+      "vibetrading/storage_worker.py": true,
+      "vibetrading/parquet_store.py": true,
+      "vibetrading/archive.py": true,
+      "vibetrading/storage_backend.py": true,
+      "vibetrading/event_index_runs.py": true,
+      "vibetrading/etf_trading.py": true,
+      "vibetrading/etf_journal.py": true,
+      "vibetrading/etf_recovery.py": true,
+      "vibetrading/etf_intraday_store.py": true,
+      "vibetrading/etf_csv_history.py": true,
+      "vibetrading/telegram.py": false,
+      "vibetrading/telegram_trade.py": false,
+      "vibetrading/providers/kis.py": false,
+      "vibetrading/providers/crypto_perp.py": true,
+      "vibetrading/providers/extended_perp.py": true
+    },
+    "/vibetrading-telegram-1": {
+      "vibetrading/runtime.py": false,
+      "vibetrading/bus.py": false,
+      "vibetrading/hot_path.py": true,
+      "vibetrading/strategy_runner.py": true,
+      "vibetrading/real_runner.py": true,
+      "vibetrading/models.py": true,
+      "vibetrading/settings.py": true,
+      "vibetrading/sqlite_store.py": true,
+      "vibetrading/storage_worker.py": true,
+      "vibetrading/parquet_store.py": true,
+      "vibetrading/archive.py": true,
+      "vibetrading/storage_backend.py": true,
+      "vibetrading/event_index_runs.py": true,
+      "vibetrading/etf_trading.py": false,
+      "vibetrading/etf_journal.py": false,
+      "vibetrading/etf_csv_history.py": true,
+      "vibetrading/telegram.py": true,
+      "vibetrading/telegram_trade.py": true,
+      "vibetrading/providers/kis.py": false,
+      "vibetrading/providers/crypto_perp.py": true,
+      "vibetrading/providers/extended_perp.py": true
+    },
+    "/vibetrading-etf-csv-sync-1": {
+      "vibetrading/runtime.py": false,
+      "vibetrading/bus.py": false,
+      "vibetrading/hot_path.py": true,
+      "vibetrading/strategy_runner.py": true,
+      "vibetrading/real_runner.py": true,
+      "vibetrading/models.py": true,
+      "vibetrading/settings.py": true,
+      "vibetrading/sqlite_store.py": true,
+      "vibetrading/storage_worker.py": true,
+      "vibetrading/parquet_store.py": true,
+      "vibetrading/archive.py": true,
+      "vibetrading/storage_backend.py": true,
+      "vibetrading/event_index_runs.py": true,
+      "vibetrading/etf_trading.py": false,
+      "vibetrading/etf_journal.py": false,
+      "vibetrading/etf_intraday_store.py": true,
+      "vibetrading/etf_csv_history.py": true,
+      "vibetrading/telegram.py": false,
+      "vibetrading/telegram_trade.py": false,
+      "vibetrading/providers/kis.py": false,
+      "vibetrading/providers/crypto_perp.py": true,
+      "vibetrading/providers/extended_perp.py": true
+    },
+    "/vibetrading-collectors-1": {
+      "vibetrading/runtime.py": true,
+      "vibetrading/bus.py": true,
+      "vibetrading/hot_path.py": true,
+      "vibetrading/strategy_runner.py": true,
+      "vibetrading/real_runner.py": true,
+      "vibetrading/models.py": true,
+      "vibetrading/settings.py": true,
+      "vibetrading/sqlite_store.py": true,
+      "vibetrading/storage_worker.py": true,
+      "vibetrading/parquet_store.py": true,
+      "vibetrading/archive.py": true,
+      "vibetrading/storage_backend.py": true,
+      "vibetrading/event_index_runs.py": true,
+      "vibetrading/etf_trading.py": false,
+      "vibetrading/etf_journal.py": false,
+      "vibetrading/etf_intraday_store.py": true,
+      "vibetrading/etf_csv_history.py": true,
+      "vibetrading/telegram.py": false,
+      "vibetrading/telegram_trade.py": false,
+      "vibetrading/providers/kis.py": true,
+      "vibetrading/providers/crypto_perp.py": true,
+      "vibetrading/providers/extended_perp.py": true
+    },
+    "/vibetrading-crypto-collector-arcus-1": {
+      "vibetrading/runtime.py": false,
+      "vibetrading/bus.py": false,
+      "vibetrading/hot_path.py": true,
+      "vibetrading/strategy_runner.py": true,
+      "vibetrading/real_runner.py": true,
+      "vibetrading/models.py": true,
+      "vibetrading/settings.py": true,
+      "vibetrading/sqlite_store.py": true,
+      "vibetrading/storage_worker.py": true,
+      "vibetrading/parquet_store.py": true,
+      "vibetrading/archive.py": true,
+      "vibetrading/storage_backend.py": true,
+      "vibetrading/event_index_runs.py": true,
+      "vibetrading/etf_trading.py": false,
+      "vibetrading/etf_journal.py": false,
+      "vibetrading/etf_csv_history.py": true,
+      "vibetrading/telegram.py": false,
+      "vibetrading/telegram_trade.py": false,
+      "vibetrading/providers/kis.py": false,
+      "vibetrading/providers/crypto_perp.py": true,
+      "vibetrading/providers/extended_perp.py": true
+    },
+    "/vibetrading-crypto-collector-binance-1": {
+      "vibetrading/runtime.py": false,
+      "vibetrading/bus.py": false,
+      "vibetrading/hot_path.py": true,
+      "vibetrading/strategy_runner.py": true,
+      "vibetrading/real_runner.py": true,
+      "vibetrading/models.py": true,
+      "vibetrading/settings.py": true,
+      "vibetrading/sqlite_store.py": true,
+      "vibetrading/storage_worker.py": true,
+      "vibetrading/parquet_store.py": true,
+      "vibetrading/archive.py": true,
+      "vibetrading/storage_backend.py": true,
+      "vibetrading/event_index_runs.py": true,
+      "vibetrading/etf_trading.py": false,
+      "vibetrading/etf_journal.py": false,
+      "vibetrading/etf_csv_history.py": true,
+      "vibetrading/telegram.py": false,
+      "vibetrading/telegram_trade.py": false,
+      "vibetrading/providers/kis.py": false,
+      "vibetrading/providers/crypto_perp.py": true,
+      "vibetrading/providers/extended_perp.py": true
+    },
+    "/vibetrading-crypto-collector-grvt-1": {
+      "vibetrading/runtime.py": false,
+      "vibetrading/bus.py": false,
+      "vibetrading/hot_path.py": true,
+      "vibetrading/strategy_runner.py": true,
+      "vibetrading/real_runner.py": true,
+      "vibetrading/models.py": true,
+      "vibetrading/settings.py": true,
+      "vibetrading/sqlite_store.py": true,
+      "vibetrading/storage_worker.py": true,
+      "vibetrading/parquet_store.py": true,
+      "vibetrading/archive.py": true,
+      "vibetrading/storage_backend.py": true,
+      "vibetrading/event_index_runs.py": true,
+      "vibetrading/etf_trading.py": false,
+      "vibetrading/etf_journal.py": false,
+      "vibetrading/etf_csv_history.py": true,
+      "vibetrading/telegram.py": false,
+      "vibetrading/telegram_trade.py": false,
+      "vibetrading/providers/kis.py": false,
+      "vibetrading/providers/crypto_perp.py": true,
+      "vibetrading/providers/extended_perp.py": true
+    },
+    "/vibetrading-monitor-timefolio-1": {
+      "vibetrading/runtime.py": false,
+      "vibetrading/bus.py": false,
+      "vibetrading/hot_path.py": true,
+      "vibetrading/strategy_runner.py": true,
+      "vibetrading/real_runner.py": true,
+      "vibetrading/models.py": true,
+      "vibetrading/settings.py": true,
+      "vibetrading/sqlite_store.py": true,
+      "vibetrading/storage_worker.py": true,
+      "vibetrading/parquet_store.py": true,
+      "vibetrading/archive.py": true,
+      "vibetrading/storage_backend.py": true,
+      "vibetrading/event_index_runs.py": true,
+      "vibetrading/etf_trading.py": false,
+      "vibetrading/etf_journal.py": false,
+      "vibetrading/etf_csv_history.py": true,
+      "vibetrading/telegram.py": false,
+      "vibetrading/telegram_trade.py": false,
+      "vibetrading/providers/kis.py": false,
+      "vibetrading/providers/crypto_perp.py": true,
+      "vibetrading/providers/extended_perp.py": true
+    },
+    "/vibetrading-monitor-bridge-1": {
+      "vibetrading/runtime.py": false,
+      "vibetrading/bus.py": false,
+      "vibetrading/hot_path.py": true,
+      "vibetrading/strategy_runner.py": true,
+      "vibetrading/real_runner.py": true,
+      "vibetrading/models.py": true,
+      "vibetrading/settings.py": true,
+      "vibetrading/sqlite_store.py": true,
+      "vibetrading/storage_worker.py": true,
+      "vibetrading/parquet_store.py": true,
+      "vibetrading/archive.py": true,
+      "vibetrading/storage_backend.py": true,
+      "vibetrading/event_index_runs.py": true,
+      "vibetrading/etf_trading.py": false,
+      "vibetrading/etf_journal.py": false,
+      "vibetrading/etf_csv_history.py": true,
+      "vibetrading/telegram.py": false,
+      "vibetrading/telegram_trade.py": false,
+      "vibetrading/providers/kis.py": false,
+      "vibetrading/providers/crypto_perp.py": true,
+      "vibetrading/providers/extended_perp.py": true
+    },
+    "/vibetrading-crypto-maintenance-1": {
+      "vibetrading/runtime.py": false,
+      "vibetrading/bus.py": false,
+      "vibetrading/hot_path.py": true,
+      "vibetrading/strategy_runner.py": true,
+      "vibetrading/real_runner.py": true,
+      "vibetrading/models.py": true,
+      "vibetrading/settings.py": true,
+      "vibetrading/sqlite_store.py": true,
+      "vibetrading/storage_worker.py": true,
+      "vibetrading/parquet_store.py": true,
+      "vibetrading/archive.py": true,
+      "vibetrading/storage_backend.py": true,
+      "vibetrading/event_index_runs.py": true,
+      "vibetrading/etf_trading.py": false,
+      "vibetrading/etf_journal.py": false,
+      "vibetrading/etf_csv_history.py": true,
+      "vibetrading/telegram.py": false,
+      "vibetrading/telegram_trade.py": false,
+      "vibetrading/providers/kis.py": false,
+      "vibetrading/providers/crypto_perp.py": true,
+      "vibetrading/providers/extended_perp.py": true
+    },
+    "/vibetrading-crypto-storage-1": {
+      "vibetrading/runtime.py": false,
+      "vibetrading/bus.py": false,
+      "vibetrading/hot_path.py": true,
+      "vibetrading/strategy_runner.py": true,
+      "vibetrading/real_runner.py": true,
+      "vibetrading/models.py": true,
+      "vibetrading/settings.py": true,
+      "vibetrading/sqlite_store.py": true,
+      "vibetrading/storage_worker.py": true,
+      "vibetrading/parquet_store.py": true,
+      "vibetrading/archive.py": true,
+      "vibetrading/storage_backend.py": true,
+      "vibetrading/event_index_runs.py": true,
+      "vibetrading/etf_trading.py": false,
+      "vibetrading/etf_journal.py": false,
+      "vibetrading/etf_csv_history.py": true,
+      "vibetrading/telegram.py": false,
+      "vibetrading/telegram_trade.py": false,
+      "vibetrading/providers/kis.py": false,
+      "vibetrading/providers/crypto_perp.py": true,
+      "vibetrading/providers/extended_perp.py": true
+    },
+    "/vibetrading-maintenance-1": {
+      "vibetrading/runtime.py": false,
+      "vibetrading/bus.py": false,
+      "vibetrading/hot_path.py": true,
+      "vibetrading/strategy_runner.py": true,
+      "vibetrading/real_runner.py": true,
+      "vibetrading/models.py": true,
+      "vibetrading/settings.py": true,
+      "vibetrading/sqlite_store.py": true,
+      "vibetrading/storage_worker.py": true,
+      "vibetrading/parquet_store.py": true,
+      "vibetrading/archive.py": true,
+      "vibetrading/storage_backend.py": true,
+      "vibetrading/event_index_runs.py": true,
+      "vibetrading/etf_trading.py": false,
+      "vibetrading/etf_journal.py": false,
+      "vibetrading/etf_csv_history.py": true,
+      "vibetrading/telegram.py": false,
+      "vibetrading/telegram_trade.py": false,
+      "vibetrading/providers/kis.py": false,
+      "vibetrading/providers/crypto_perp.py": true,
+      "vibetrading/providers/extended_perp.py": true
+    },
+    "/vibetrading-storage-1": {
+      "vibetrading/runtime.py": false,
+      "vibetrading/bus.py": false,
+      "vibetrading/hot_path.py": true,
+      "vibetrading/strategy_runner.py": true,
+      "vibetrading/real_runner.py": true,
+      "vibetrading/models.py": true,
+      "vibetrading/settings.py": true,
+      "vibetrading/sqlite_store.py": true,
+      "vibetrading/storage_worker.py": true,
+      "vibetrading/parquet_store.py": true,
+      "vibetrading/archive.py": true,
+      "vibetrading/storage_backend.py": true,
+      "vibetrading/event_index_runs.py": true,
+      "vibetrading/etf_trading.py": false,
+      "vibetrading/etf_journal.py": false,
+      "vibetrading/etf_csv_history.py": true,
+      "vibetrading/telegram.py": false,
+      "vibetrading/telegram_trade.py": false,
+      "vibetrading/providers/kis.py": false,
+      "vibetrading/providers/crypto_perp.py": true,
+      "vibetrading/providers/extended_perp.py": true
+    },
+    "/vibetrading-nats-1": {}
+  }
+}
