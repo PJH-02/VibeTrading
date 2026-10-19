@@ -1,5 +1,23 @@
 # VibeTrading - 프로덕션 그레이드 트레이딩 시스템
 
+2026-10-13 수집 범위 변경과 C3/KP/KD KIS 모의 ETF 자동매매는
+[배포·운용 기록](docs/ETF_MOCK_COLLECTION_SCOPE_2026-10-13.md)을 참고하세요.
+현재 티커별 CSV 입력과 장 마감 갱신은 [공유 CSV 운영](docs/TICKER_CSV_COLLECTION_2026-10-13.md)을 따릅니다.
+
+웹 운용 대시보드: [개인 대시보드](https://vibetrading-monitor.mwm3870.chatgpt.site).
+주식·코인·타임폴리오 화면과 조회 서비스 운영 방법은 [대시보드 문서](docs/WEB_DASHBOARD.md)에 있습니다.
+
+잔여 주문흐름 기반 선택적 MM의 Bybit 테스트넷 전략과 실행 명령은
+[구현·운영 명세](docs/LIQUIDITY_MM_BYBIT_TESTNET.md)에 있습니다.
+`python -m vibetrading.liquidity_mm check`로 준비 상태를 확인하고,
+별도 운용 지시 후 `start --mode testnet --duration 30m`으로 지정 기간 실행합니다.
+초기 프로필은 검증 전 테스트넷 실험입니다.
+
+2026-10-07 S1–S4 상태 기반 개정은 [전략 명세](docs/mm_state/STRATEGY_SPEC.md),
+[새 training·shadow·replay 실행 절차](docs/mm_state/BACKTEST_PROTOCOL.md),
+[실측 결과와 서버 적합성 보고서](docs/evidence/mm_state_revision_20261007/REPORT_KO.md)를 참고하세요.
+기본 정상 진입·청산은 maker이며 새 state 모델이 필요합니다. 서버에는 격리 검토 소스만 복사했고 자동 운용은 활성화하지 않았습니다.
+
 ## 📋 프로젝트 개요
 
 ### 프로그램 설명
@@ -1359,6 +1377,8 @@ docker-compose down -v
 - [전체 시스템 사양서](docs/trading_spec.md)
 - [관측 가능성 가이드](docs/observability_interfaces.md)
 - [기술 스택 및 설계 원칙](docs/SKILLS.md)
+- [v4 독립 FV 전략 · Bybit/GRVT 테스트넷 운용](docs/FV_MM_V4_TESTNETS.md): `strategy/`의 S1–S4 Python 파일, Binance 기준가격, 사전 보정과 기간 제한 실행.
+- [실거래 호가 기반 4개 거래소 모의 거래](docs/FV_PILOT_MAINNET.md): Arcus·Bybit·Bitget·GRVT 공개 데이터, 주문 의도와 지연·queue 가정 체결, 실제 주문 제출 없음.
 
 ---
 

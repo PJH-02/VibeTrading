@@ -1,0 +1,541 @@
+{
+  "ts_ns": 1791310630929234850,
+  "date": "2026-10-07T03:17:10+09:00",
+  "containers": [
+    {
+      "name": "/vibetrading-collectors-1",
+      "image": "sha256:279ad22189ef35848f19f980143e9597debea5410500ad9aae5cf8ae4be4d83e",
+      "health": "healthy",
+      "restarts": 0,
+      "started": "2026-10-06T18:07:40.074691143Z",
+      "oom_killed": false,
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "memory_mib": {
+        "anon": 135.2,
+        "file": 45.5,
+        "slab": 3.3
+      }
+    },
+    {
+      "name": "/vibetrading-crypto-collector-binance-1",
+      "image": "sha256:279ad22189ef35848f19f980143e9597debea5410500ad9aae5cf8ae4be4d83e",
+      "health": "healthy",
+      "restarts": 0,
+      "started": "2026-10-06T18:08:05.341230953Z",
+      "oom_killed": false,
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "memory_mib": {
+        "anon": 45.2,
+        "file": 0.2,
+        "slab": 1.2
+      }
+    },
+    {
+      "name": "/vibetrading-crypto-collector-bybit-1",
+      "image": "sha256:279ad22189ef35848f19f980143e9597debea5410500ad9aae5cf8ae4be4d83e",
+      "health": "healthy",
+      "restarts": 0,
+      "started": "2026-10-06T18:08:34.997668043Z",
+      "oom_killed": false,
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "memory_mib": {
+        "anon": 38.2,
+        "file": 1.1,
+        "slab": 1.2
+      }
+    },
+    {
+      "name": "/vibetrading-crypto-collector-bitget-1",
+      "image": "sha256:279ad22189ef35848f19f980143e9597debea5410500ad9aae5cf8ae4be4d83e",
+      "health": "healthy",
+      "restarts": 0,
+      "started": "2026-10-06T18:08:18.012969807Z",
+      "oom_killed": false,
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "memory_mib": {
+        "anon": 41.3,
+        "file": 4.3,
+        "slab": 1.2
+      }
+    },
+    {
+      "name": "/vibetrading-crypto-collector-arcus-1",
+      "image": "sha256:279ad22189ef35848f19f980143e9597debea5410500ad9aae5cf8ae4be4d83e",
+      "health": "healthy",
+      "restarts": 0,
+      "started": "2026-10-06T18:08:54.941105355Z",
+      "oom_killed": false,
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "memory_mib": {
+        "anon": 40.0,
+        "file": 0.0,
+        "slab": 1.2
+      }
+    },
+    {
+      "name": "/vibetrading-crypto-collector-grvt-1",
+      "image": "sha256:279ad22189ef35848f19f980143e9597debea5410500ad9aae5cf8ae4be4d83e",
+      "health": "healthy",
+      "restarts": 0,
+      "started": "2026-10-06T18:09:10.003811762Z",
+      "oom_killed": false,
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "memory_mib": {
+        "anon": 38.2,
+        "file": 0.0,
+        "slab": 1.2
+      }
+    },
+    {
+      "name": "/vibetrading-maintenance-1",
+      "image": "sha256:279ad22189ef35848f19f980143e9597debea5410500ad9aae5cf8ae4be4d83e",
+      "health": "healthy",
+      "restarts": 0,
+      "started": "2026-10-06T18:09:14.622882839Z",
+      "oom_killed": false,
+      "memory.events": "low 0\nhigh 0\nmax 7657\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "memory_mib": {
+        "anon": 291.5,
+        "file": 198.4,
+        "slab": 14.0
+      }
+    },
+    {
+      "name": "/vibetrading-storage-1",
+      "image": "sha256:3f0a8ade56fbfba6fbf5b9304b54d7d45b35dbdf7319f2acd1f37fdf6eeec2fe",
+      "health": "healthy",
+      "restarts": 0,
+      "started": "2026-10-05T16:31:39.214955541Z",
+      "oom_killed": false,
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "memory_mib": {
+        "anon": 233.7,
+        "file": 175.5,
+        "slab": 15.6
+      }
+    },
+    {
+      "name": "/vibetrading-crypto-storage-1",
+      "image": "sha256:fcfe1a36a1efce6e7bbe843f4dab59df48e230bbda545b3ad9d94bd77758b026",
+      "health": "healthy",
+      "restarts": 0,
+      "started": "2026-10-05T15:52:42.819662589Z",
+      "oom_killed": false,
+      "memory.events": "low 0\nhigh 0\nmax 8383\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "memory_mib": {
+        "anon": 644.7,
+        "file": 304.7,
+        "slab": 15.4
+      }
+    },
+    {
+      "name": "/vibetrading-nats-1",
+      "image": "sha256:b83efabe3e7def1e0a4a31ec6e078999bb17c80363f881df35edc70fcb6bb927",
+      "health": "healthy",
+      "restarts": 0,
+      "started": "2026-10-05T15:52:42.099812594Z",
+      "oom_killed": false,
+      "memory.events": "low 0\nhigh 0\nmax 558\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "memory_mib": {
+        "anon": 212.4,
+        "file": 29.6,
+        "slab": 1.2
+      }
+    }
+  ],
+  "logs": {
+    "/vibetrading-collectors-1": "2026-10-06 18:07:46,856 INFO vibetrading.providers.hyperliquid Hyperliquid ready; exact UTC collection boundary=1791310080000000000 symbols=['xyz:SKHX', 'xyz:SKHY', 'xyz:SMSN']\n2026-10-06 18:07:47,464 INFO vibetrading.providers.binance Binance ready; exact UTC collection boundary=1791310080000000000 symbols=['SAMSUNGUSDT', 'SKHYNIXUSDT', 'SKHYUSDT']\n",
+    "/vibetrading-crypto-collector-binance-1": "",
+    "/vibetrading-crypto-collector-bybit-1": "",
+    "/vibetrading-crypto-collector-bitget-1": "",
+    "/vibetrading-crypto-collector-arcus-1": "",
+    "/vibetrading-crypto-collector-grvt-1": "",
+    "/vibetrading-maintenance-1": "2026-10-06 18:09:53,684 INFO vibetrading.runtime compactor deferred reason=storage_or_io_busy\n2026-10-06 18:11:27,543 INFO vibetrading.runtime compactor result={'ran': True, 'output': '/data/market_data/event_type=bar_1m/trading_date=2026-10-06/provider=binance/venue=binance/part-076323a54bbf434d93970861a6118235.parquet', 'source_files': 544, 'rows': 3981}\n2026-10-06 18:12:33,482 INFO vibetrading.runtime compactor result={'ran': True, 'output': '/data/market_data/event_type=bar_1m/trading_date=2026-10-06/provider=toss/venue=toss/part-b044f0b88c2948aba1c759497bb0794c.parquet', 'source_files': 149, 'rows': 2721}\n2026-10-06 18:13:38,462 INFO vibetrading.runtime compactor result={'ran': True, 'output': '/data/market_data/event_type=open_interest/trading_date=2026-10-06/provider=hyperliquid/venue=hyperliquid/part-c10e73ad2dd34f65a47a8ce93a6ede2d.parquet', 'source_files': 287, 'rows': 5199}\n2026-10-06 18:14:42,386 INFO vibetrading.runtime compactor result={'ran': True, 'output': '/data/market_data/event_type=open_interest/trading_date=2026-10-06/provider=binance/venue=binance/part-7194622f102340d7a07e2593dd439edb.parquet', 'source_files': 275, 'rows': 15***}\n2026-10-06 18:15:12,428 INFO vibetrading.runtime compactor deferred reason=heavy_maintenance_busy\n2026-10-06 18:15:54,612 INFO vibetrading.runtime compactor result={'ran': True, 'output': '/data/market_data/event_type=bar_1m/trading_date=2026-10-07/provider=binance/venue=binance/part-e5dc1c7d35d14f4a96ae36f3b8d8c32c.parquet', 'source_files': 189, 'rows': 567}\n2026-10-06 18:16:41,985 INFO vibetrading.runtime compactor deferred reason=storage_or_io_busy\n"
+  },
+  "kernel_oom_since_deployment": "Oct 07 03:09:14 hyfe kernel: br-c854d5734256: port 12(veth7acb0d9) entered disabled state\nOct 07 03:09:14 hyfe kernel: vethfe02da7: renamed from eth0\nOct 07 03:09:14 hyfe kernel: br-c854d5734256: port 12(veth7acb0d9) entered disabled state\nOct 07 03:09:14 hyfe kernel: veth7acb0d9 (unregistering): left allmulticast mode\nOct 07 03:09:14 hyfe kernel: veth7acb0d9 (unregistering): left promiscuous mode\nOct 07 03:09:14 hyfe kernel: br-c854d5734256: port 12(veth7acb0d9) entered disabled state\nOct 07 03:09:14 hyfe kernel: br-c854d5734256: port 12(vethf9fe44c) entered blocking state\nOct 07 03:09:14 hyfe kernel: br-c854d5734256: port 12(vethf9fe44c) entered disabled state\nOct 07 03:09:14 hyfe kernel: vethf9fe44c: entered allmulticast mode\nOct 07 03:09:14 hyfe kernel: vethf9fe44c: entered promiscuous mode\nOct 07 03:09:14 hyfe kernel: eth0: renamed from veth23d5e51\nOct 07 03:09:14 hyfe kernel: br-c854d5734256: port 12(vethf9fe44c) entered blocking state\nOct 07 03:09:14 hyfe kernel: br-c854d5734256: port 12(vethf9fe44c) entered forwarding state",
+  "nats": {
+    "memory": 0,
+    "storage": 18848055,
+    "reserved_memory": 0,
+    "reserved_storage": 1677721600,
+    "accounts": 1,
+    "ha_assets": 0,
+    "api": {
+      "total": 329727,
+      "errors": 0
+    },
+    "server_id": "ND635ASSULGU2RHRF7BDDDUHMFN6K6IL7BHYKQDFZ5PTOWZIHQPYGXWW",
+    "now": "2026-10-06T18:17:11.487041302Z",
+    "config": {
+      "max_memory": 134217728,
+      "max_storage": 2684354560,
+      "store_dir": "/data/jetstream",
+      "sync_interval": 1000000000,
+      "compress_ok": true
+    },
+    "streams": 3,
+    "consumers": 6,
+    "messages": 13355,
+    "bytes": 18848055,
+    "account_details": [
+      {
+        "name": "$G",
+        "id": "$G",
+        "memory": 0,
+        "storage": 18848055,
+        "reserved_memory": 18446744073709551615,
+        "reserved_storage": 18446744073709551615,
+        "accounts": 0,
+        "ha_assets": 0,
+        "api": {
+          "total": 329727,
+          "errors": 0
+        },
+        "stream_detail": [
+          {
+            "name": "CRYPTO_DATA",
+            "created": "2026-09-26T10:23:10.911121827Z",
+            "cluster": {
+              "leader": "ND635ASSULGU2RHRF7BDDDUHMFN6K6IL7BHYKQDFZ5PTOWZIHQPYGXWW"
+            },
+            "config": {
+              "name": "CRYPTO_DATA",
+              "subjects": [
+                "crypto.trade.>",
+                "crypto.order_book.>",
+                "crypto.funding_rate.>",
+                "crypto.open_interest.>"
+              ],
+              "retention": "workqueue",
+              "max_consumers": -1,
+              "max_msgs": -1,
+              "max_bytes": 536870912,
+              "max_age": 0,
+              "max_msgs_per_subject": -1,
+              "max_msg_size": -1,
+              "discard": "new",
+              "storage": "file",
+              "num_replicas": 1,
+              "duplicate_window": 120000000000,
+              "compression": "none",
+              "allow_direct": false,
+              "mirror_direct": false,
+              "sealed": false,
+              "deny_delete": false,
+              "deny_purge": false,
+              "allow_rollup_hdrs": false,
+              "consumer_limits": {}
+            },
+            "state": {
+              "messages": 7969,
+              "bytes": 14649838,
+              "first_seq": 184183971,
+              "first_ts": "2026-10-06T18:16:11.586119956Z",
+              "last_seq": 184228890,
+              "last_ts": "2026-10-06T18:17:11.486562963Z",
+              "num_subjects": 55,
+              "num_deleted": 36951,
+              "consumer_count": 1
+            },
+            "consumer_detail": [
+              {
+                "stream_name": "CRYPTO_DATA",
+                "name": "crypto-parquet-storage",
+                "created": "2026-09-26T10:23:10.918695863Z",
+                "config": {
+                  "durable_name": "crypto-parquet-storage",
+                  "deliver_policy": "all",
+                  "ack_policy": "explicit",
+                  "ack_wait": 1200000000000,
+                  "max_deliver": -1,
+                  "filter_subject": "crypto.>",
+                  "replay_policy": "instant",
+                  "max_waiting": 512,
+                  "max_ack_pending": 65536,
+                  "num_replicas": 0
+                },
+                "delivered": {
+                  "consumer_seq": 184245141,
+                  "stream_seq": 184228845,
+                  "last_active": "2026-10-06T18:17:11.462800452Z"
+                },
+                "ack_floor": {
+                  "consumer_seq": 184200266,
+                  "stream_seq": 184183970,
+                  "last_active": "2026-10-06T18:17:06.738662352Z"
+                },
+                "num_ack_pending": 7924,
+                "num_redelivered": 0,
+                "num_waiting": 0,
+                "num_pending": 45,
+                "ts": "2026-10-06T18:17:11.487081271Z"
+              }
+            ]
+          },
+          {
+            "name": "MARKET_DATA",
+            "created": "2026-09-25T05:16:08.990402386Z",
+            "cluster": {
+              "leader": "ND635ASSULGU2RHRF7BDDDUHMFN6K6IL7BHYKQDFZ5PTOWZIHQPYGXWW"
+            },
+            "config": {
+              "name": "MARKET_DATA",
+              "subjects": [
+                "md.trade.>",
+                "md.order_book.>",
+                "md.bar_1m.>",
+                "md.funding_rate.>",
+                "md.open_interest.>",
+                "md.participant_flow.>",
+                "md.index_quote.>"
+              ],
+              "retention": "workqueue",
+              "max_consumers": -1,
+              "max_msgs": -1,
+              "max_bytes": 1073741824,
+              "max_age": 0,
+              "max_msgs_per_subject": -1,
+              "max_msg_size": -1,
+              "discard": "new",
+              "storage": "file",
+              "num_replicas": 1,
+              "duplicate_window": 120000000000,
+              "compression": "none",
+              "allow_direct": false,
+              "mirror_direct": false,
+              "sealed": false,
+              "deny_delete": false,
+              "deny_purge": false,
+              "allow_rollup_hdrs": false,
+              "consumer_limits": {}
+            },
+            "state": {
+              "messages": 149,
+              "bytes": 365557,
+              "first_seq": 26538140,
+              "first_ts": "2026-10-06T18:17:06.75331932Z",
+              "last_seq": 26538313,
+              "last_ts": "2026-10-06T18:17:11.43622645Z",
+              "num_subjects": 11,
+              "num_deleted": 25,
+              "consumer_count": 1
+            },
+            "consumer_detail": [
+              {
+                "stream_name": "MARKET_DATA",
+                "name": "parquet-storage",
+                "created": "2026-09-15T01:15:05.936797311Z",
+                "config": {
+                  "durable_name": "parquet-storage",
+                  "deliver_policy": "all",
+                  "ack_policy": "explicit",
+                  "ack_wait": 1200000000000,
+                  "max_deliver": -1,
+                  "filter_subject": "md.>",
+                  "replay_policy": "instant",
+                  "max_waiting": 512,
+                  "max_ack_pending": 65536,
+                  "num_replicas": 0
+                },
+                "delivered": {
+                  "consumer_seq": 23635714,
+                  "stream_seq": 26538313,
+                  "last_active": "2026-10-06T18:17:11.436285508Z"
+                },
+                "ack_floor": {
+                  "consumer_seq": 23635540,
+                  "stream_seq": 26538139,
+                  "last_active": "2026-10-06T18:17:11.414055188Z"
+                },
+                "num_ack_pending": 149,
+                "num_redelivered": 0,
+                "num_waiting": 1,
+                "num_pending": 0,
+                "ts": "2026-10-06T18:17:11.487083435Z"
+              }
+            ]
+          },
+          {
+            "name": "OPERATIONS",
+            "created": "2026-09-25T05:16:08.99256433Z",
+            "cluster": {
+              "leader": "ND635ASSULGU2RHRF7BDDDUHMFN6K6IL7BHYKQDFZ5PTOWZIHQPYGXWW"
+            },
+            "config": {
+              "name": "OPERATIONS",
+              "subjects": [
+                "md.data_gap.>",
+                "crypto.data_gap.>",
+                "signal.>",
+                "order.>",
+                "system.>"
+              ],
+              "retention": "limits",
+              "max_consumers": -1,
+              "max_msgs": -1,
+              "max_bytes": 67108864,
+              "max_age": 0,
+              "max_msgs_per_subject": -1,
+              "max_msg_size": -1,
+              "discard": "old",
+              "storage": "file",
+              "num_replicas": 1,
+              "duplicate_window": 120000000000,
+              "compression": "none",
+              "allow_direct": false,
+              "mirror_direct": false,
+              "sealed": false,
+              "deny_delete": false,
+              "deny_purge": false,
+              "allow_rollup_hdrs": false,
+              "consumer_limits": {}
+            },
+            "state": {
+              "messages": 5237,
+              "bytes": 3832660,
+              "first_seq": 1,
+              "first_ts": "2026-09-08T05:22:00.981120765Z",
+              "last_seq": 16536,
+              "last_ts": "2026-10-06T18:10:32.011982069Z",
+              "num_subjects": 22,
+              "num_deleted": 11299,
+              "consumer_count": 4
+            },
+            "consumer_detail": [
+              {
+                "stream_name": "OPERATIONS",
+                "name": "telegram-event-bridge-0",
+                "created": "2026-09-08T05:23:54.517060419Z",
+                "config": {
+                  "durable_name": "telegram-event-bridge-0",
+                  "name": "telegram-event-bridge-0",
+                  "deliver_policy": "all",
+                  "ack_policy": "explicit",
+                  "ack_wait": 30000000000,
+                  "max_deliver": -1,
+                  "filter_subject": "system.>",
+                  "replay_policy": "instant",
+                  "max_waiting": 512,
+                  "max_ack_pending": 1000,
+                  "num_replicas": 0
+                },
+                "delivered": {
+                  "consumer_seq": 2266,
+                  "stream_seq": 16536,
+                  "last_active": "2026-10-06T18:10:32.012103742Z"
+                },
+                "ack_floor": {
+                  "consumer_seq": 2266,
+                  "stream_seq": 16536,
+                  "last_active": "2026-10-06T18:10:32.452183821Z"
+                },
+                "num_ack_pending": 0,
+                "num_redelivered": 0,
+                "num_waiting": 2,
+                "num_pending": 0,
+                "ts": "2026-10-06T18:17:11.48708723Z"
+              },
+              {
+                "stream_name": "OPERATIONS",
+                "name": "telegram-event-bridge-1",
+                "created": "2026-09-08T05:23:54.521793144Z",
+                "config": {
+                  "durable_name": "telegram-event-bridge-1",
+                  "name": "telegram-event-bridge-1",
+                  "deliver_policy": "all",
+                  "ack_policy": "explicit",
+                  "ack_wait": 30000000000,
+                  "max_deliver": -1,
+                  "filter_subject": "signal.>",
+                  "replay_policy": "instant",
+                  "max_waiting": 512,
+                  "max_ack_pending": 1000,
+                  "num_replicas": 0
+                },
+                "delivered": {
+                  "consumer_seq": 0,
+                  "stream_seq": 0
+                },
+                "ack_floor": {
+                  "consumer_seq": 0,
+                  "stream_seq": 0
+                },
+                "num_ack_pending": 0,
+                "num_redelivered": 0,
+                "num_waiting": 2,
+                "num_pending": 0,
+                "ts": "2026-10-06T18:17:11.487089664Z"
+              },
+              {
+                "stream_name": "OPERATIONS",
+                "name": "telegram-event-bridge-2",
+                "created": "2026-09-08T05:23:54.525412612Z",
+                "config": {
+                  "durable_name": "telegram-event-bridge-2",
+                  "name": "telegram-event-bridge-2",
+                  "deliver_policy": "all",
+                  "ack_policy": "explicit",
+                  "ack_wait": 30000000000,
+                  "max_deliver": -1,
+                  "filter_subject": "order.>",
+                  "replay_policy": "instant",
+                  "max_waiting": 512,
+                  "max_ack_pending": 1000,
+                  "num_replicas": 0
+                },
+                "delivered": {
+                  "consumer_seq": 0,
+                  "stream_seq": 0
+                },
+                "ack_floor": {
+                  "consumer_seq": 0,
+                  "stream_seq": 0
+                },
+                "num_ack_pending": 0,
+                "num_redelivered": 0,
+                "num_waiting": 2,
+                "num_pending": 0,
+                "ts": "2026-10-06T18:17:11.487123485Z"
+              },
+              {
+                "stream_name": "OPERATIONS",
+                "name": "telegram-event-bridge-3",
+                "created": "2026-09-08T05:23:54.528887433Z",
+                "config": {
+                  "durable_name": "telegram-event-bridge-3",
+                  "name": "telegram-event-bridge-3",
+                  "deliver_policy": "all",
+                  "ack_policy": "explicit",
+                  "ack_wait": 30000000000,
+                  "max_deliver": -1,
+                  "filter_subject": "md.data_gap.>",
+                  "replay_policy": "instant",
+                  "max_waiting": 512,
+                  "max_ack_pending": 1000,
+                  "num_replicas": 0
+                },
+                "delivered": {
+                  "consumer_seq": 120,
+                  "stream_seq": 716
+                },
+                "ack_floor": {
+                  "consumer_seq": 120,
+                  "stream_seq": 716
+                },
+                "num_ack_pending": 0,
+                "num_redelivered": 0,
+                "num_waiting": 2,
+                "num_pending": 0,
+                "ts": "2026-10-06T18:17:11.487139008Z"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "total": 1
+  },
+  "memory": "total        used        free      shared  buff/cache   available\nMem:            3914        2669         115           1        1399        1245\nSwap:           4095         725        3370",
+  "disks": "Filesystem      Size  Used Avail Use% Mounted on\n/dev/vda2       9.8G  7.7G  1.6G  83% /\n/dev/vdb         20G  4.2G   15G  23% /srv/vibetrading-data\n/dev/vdc        295G   73G  220G  25% /srv/vibetrading-capacity",
+  "unit_active": "active"
+}

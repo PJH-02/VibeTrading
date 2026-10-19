@@ -1,0 +1,80 @@
+# Collection scope revised 2026-10-13: seven ETFs, KIS futures only.
+instruments:
+- symbol: 069500
+  asset_class: etf
+  providers:
+  - kiwoom
+  underlying: KOSPI200
+- symbol: '229200'
+  asset_class: etf
+  providers:
+  - kiwoom
+  underlying: KOSDAQ150
+- symbol: US:SPY
+  asset_class: etf
+  providers:
+  - toss
+  market: US
+  proxy_for: SP500
+- symbol: US:QQQ
+  asset_class: etf
+  providers:
+  - toss
+  market: US
+  proxy_for: NASDAQ100
+- symbol: 005930
+  asset_class: equity
+  providers:
+  - kiwoom
+  - toss
+- symbol: '000660'
+  asset_class: equity
+  providers:
+  - kiwoom
+  - toss
+- symbol: '122630'
+  asset_class: etf
+  providers:
+  - kiwoom
+  underlying: KOSPI200
+- symbol: '114800'
+  asset_class: etf
+  providers:
+  - kiwoom
+  underlying: KOSPI200
+- symbol: '252670'
+  asset_class: etf
+  providers:
+  - kiwoom
+  underlying: KOSPI200
+- symbol: '233740'
+  asset_class: etf
+  providers:
+  - kiwoom
+  underlying: KOSDAQ150
+- symbol: '251340'
+  asset_class: etf
+  providers:
+  - kiwoom
+  underlying: KOSDAQ150
+dynamic:
+  kis_cash_index:
+    enabled: true
+    code: '2001'
+  kis_index_derivatives:
+    underlyings:
+    - KOSPI200
+    - KOSDAQ150
+    option_expiries: 2
+    strikes_each_side: 1
+    collect_options: false
+  kis_commodity_futures:
+  - B10
+  - USD
+  kis_overseas_futures: []
+  kis_participant_flow:
+    enabled: false
+    market_code: K2I
+    market_subcodes:
+    - '0001'
+    interval_seconds: 60

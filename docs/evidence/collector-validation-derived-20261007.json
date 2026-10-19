@@ -1,0 +1,120 @@
+{
+  "first_kst": "2026-10-07T03:09:44.824965+09:00",
+  "last_kst": "2026-10-07T03:15:45.702419+09:00",
+  "duration_seconds": 360.88,
+  "new_gaps": [],
+  "nats": {
+    "OPERATIONS": {
+      "events": 3,
+      "peak_bytes": 3832660,
+      "cap_bytes": 67108864,
+      "created_unchanged": true,
+      "consumer": [
+        {
+          "name": "telegram-event-bridge-0",
+          "num_pending": 0,
+          "num_ack_pending": 0,
+          "num_redelivered": 0
+        },
+        {
+          "name": "telegram-event-bridge-1",
+          "num_pending": 0,
+          "num_ack_pending": 0,
+          "num_redelivered": 0
+        },
+        {
+          "name": "telegram-event-bridge-2",
+          "num_pending": 0,
+          "num_ack_pending": 0,
+          "num_redelivered": 0
+        },
+        {
+          "name": "telegram-event-bridge-3",
+          "num_pending": 0,
+          "num_ack_pending": 0,
+          "num_redelivered": 0
+        }
+      ]
+    },
+    "CRYPTO_DATA": {
+      "events": 271587,
+      "peak_bytes": 14900969,
+      "cap_bytes": 536870912,
+      "created_unchanged": true,
+      "consumer": [
+        {
+          "name": "crypto-parquet-storage",
+          "num_pending": 5,
+          "num_ack_pending": 5162,
+          "num_redelivered": 0
+        }
+      ]
+    },
+    "MARKET_DATA": {
+      "events": 11753,
+      "peak_bytes": 1846476,
+      "cap_bytes": 1073741824,
+      "created_unchanged": true,
+      "consumer": [
+        {
+          "name": "parquet-storage",
+          "num_pending": 0,
+          "num_ack_pending": 81,
+          "num_redelivered": 0
+        }
+      ]
+    }
+  },
+  "memory_ranges_mib": {
+    "/vibetrading-collectors-1": [
+      184.8,
+      209.1
+    ],
+    "/vibetrading-crypto-collector-binance-1": [
+      46.9,
+      57.9
+    ],
+    "/vibetrading-crypto-collector-bybit-1": [
+      40.4,
+      75.5
+    ],
+    "/vibetrading-crypto-collector-bitget-1": [
+      41.3,
+      46.9
+    ],
+    "/vibetrading-crypto-collector-arcus-1": [
+      40.1,
+      57.1
+    ],
+    "/vibetrading-crypto-collector-grvt-1": [
+      39.5,
+      58.2
+    ],
+    "/vibetrading-maintenance-1": [
+      211.0,
+      512.0
+    ],
+    "/vibetrading-storage-1": [
+      301.6,
+      443.8
+    ],
+    "/vibetrading-crypto-storage-1": [
+      865.4,
+      1015.7
+    ]
+  },
+  "toss_closed_gaps": [
+    {
+      "id": 845,
+      "start_kst": "2026-10-07T01:39:19.247666+09:00",
+      "end_kst": "2026-10-07T03:09:06.347098+09:00",
+      "reason": "RuntimeError: Toss /api/v1/candles failed status=401 code=invalid-token msg=유효하지 않은 토큰입니다."
+    },
+    {
+      "id": 840,
+      "start_kst": "2026-10-06T20:38:02.006078+09:00",
+      "end_kst": "2026-10-06T22:31:23.882551+09:00",
+      "reason": "RuntimeError: Toss /api/v1/candles failed status=401 code=invalid-token msg=유효하지 않은 토큰입니다."
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "built_ts_ns": 1791309978783518197,
+  "image": "sha256:279ad22189ef35848f19f980143e9597debea5410500ad9aae5cf8ae4be4d83e",
+  "base": "sha256:3f0a8ade56fbfba6fbf5b9304b54d7d45b35dbdf7319f2acd1f37fdf6eeec2fe",
+  "revision": "collector-recovery-16d0cce7638345bb",
+  "tests": "........................................................................ [ 75%]\n.......................                                                  [100%]\n95 passed in 8.61s",
+  "compactor_probe": {
+    "result": {
+      "ran": true,
+      "output": "/probe/work/market_data/event_type=order_book/trading_date=2026-10-06/provider=probe/venue=probe/part-8f8a839878cd4f3dad12bbc4902a064b.parquet",
+      "source_files": 2,
+      "rows": 4096
+    },
+    "duration_seconds": 6.02,
+    "peak_rss_mib": 159.1,
+    "logical_sha256": "70ecf0771f8257a7b2681a2d2d62ef2dd1c4858bde6e4a3fe0a145a3247ae919"
+  },
+  "old_probe": {
+    "Status": "exited",
+    "Running": false,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": true,
+    "Dead": false,
+    "Pid": 0,
+    "ExitCode": 137,
+    "Error": "",
+    "StartedAt": "2026-10-06T18:02:44.937600188Z",
+    "FinishedAt": "2026-10-06T18:02:52.857285173Z"
+  }
+}

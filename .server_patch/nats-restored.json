@@ -1,0 +1,373 @@
+{
+  "memory": 0,
+  "storage": 54370412,
+  "reserved_memory": 0,
+  "reserved_storage": 1275068416,
+  "accounts": 1,
+  "ha_assets": 0,
+  "api": {
+    "total": 0,
+    "errors": 0
+  },
+  "server_id": "NB72KPPP34UTFNL3XMROQKNDJ7IKIJJWXCEW6DGCNZBOSLNBJIM43ISO",
+  "now": "2026-10-02T04:40:37.995647309Z",
+  "config": {
+    "max_memory": 134217728,
+    "max_storage": 1342177280,
+    "store_dir": "/data/jetstream",
+    "sync_interval": 1000000000,
+    "compress_ok": true
+  },
+  "streams": 3,
+  "consumers": 6,
+  "messages": 28595,
+  "bytes": 54370412,
+  "account_details": [
+    {
+      "name": "$G",
+      "id": "$G",
+      "memory": 0,
+      "storage": 54370412,
+      "reserved_memory": 18446744073709551615,
+      "reserved_storage": 18446744073709551615,
+      "accounts": 0,
+      "ha_assets": 0,
+      "api": {
+        "total": 0,
+        "errors": 0
+      },
+      "stream_detail": [
+        {
+          "name": "CRYPTO_DATA",
+          "created": "2026-09-26T10:23:10.911121827Z",
+          "cluster": {
+            "leader": "NB72KPPP34UTFNL3XMROQKNDJ7IKIJJWXCEW6DGCNZBOSLNBJIM43ISO"
+          },
+          "config": {
+            "name": "CRYPTO_DATA",
+            "subjects": [
+              "crypto.trade.>",
+              "crypto.order_book.>",
+              "crypto.funding_rate.>",
+              "crypto.open_interest.>"
+            ],
+            "retention": "workqueue",
+            "max_consumers": -1,
+            "max_msgs": -1,
+            "max_bytes": 134217728,
+            "max_age": 0,
+            "max_msgs_per_subject": -1,
+            "max_msg_size": -1,
+            "discard": "new",
+            "storage": "file",
+            "num_replicas": 1,
+            "duplicate_window": 120000000000,
+            "compression": "none",
+            "allow_direct": false,
+            "mirror_direct": false,
+            "sealed": false,
+            "deny_delete": false,
+            "deny_purge": false,
+            "allow_rollup_hdrs": false,
+            "consumer_limits": {}
+          },
+          "state": {
+            "messages": 0,
+            "bytes": 0,
+            "first_seq": 25953579,
+            "first_ts": "0001-01-01T00:00:00Z",
+            "last_seq": 25953578,
+            "last_ts": "2026-10-02T04:12:43.461034155Z",
+            "consumer_count": 1
+          },
+          "consumer_detail": [
+            {
+              "stream_name": "CRYPTO_DATA",
+              "name": "crypto-parquet-storage",
+              "created": "2026-09-26T10:23:10.918695863Z",
+              "config": {
+                "durable_name": "crypto-parquet-storage",
+                "deliver_policy": "all",
+                "ack_policy": "explicit",
+                "ack_wait": 1200000000000,
+                "max_deliver": -1,
+                "filter_subject": "crypto.>",
+                "replay_policy": "instant",
+                "max_waiting": 512,
+                "max_ack_pending": 65536,
+                "num_replicas": 0
+              },
+              "delivered": {
+                "consumer_seq": 25961512,
+                "stream_seq": 25953578
+              },
+              "ack_floor": {
+                "consumer_seq": 25961512,
+                "stream_seq": 25953578
+              },
+              "num_ack_pending": 0,
+              "num_redelivered": 0,
+              "num_waiting": 0,
+              "num_pending": 0,
+              "ts": "2026-10-02T04:40:37.995682833Z"
+            }
+          ]
+        },
+        {
+          "name": "MARKET_DATA",
+          "created": "2026-09-25T05:16:08.990402386Z",
+          "cluster": {
+            "leader": "NB72KPPP34UTFNL3XMROQKNDJ7IKIJJWXCEW6DGCNZBOSLNBJIM43ISO"
+          },
+          "config": {
+            "name": "MARKET_DATA",
+            "subjects": [
+              "md.trade.>",
+              "md.order_book.>",
+              "md.bar_1m.>",
+              "md.funding_rate.>",
+              "md.open_interest.>",
+              "md.participant_flow.>",
+              "md.index_quote.>"
+            ],
+            "retention": "workqueue",
+            "max_consumers": -1,
+            "max_msgs": -1,
+            "max_bytes": 1073741824,
+            "max_age": 0,
+            "max_msgs_per_subject": -1,
+            "max_msg_size": -1,
+            "discard": "new",
+            "storage": "file",
+            "num_replicas": 1,
+            "duplicate_window": 120000000000,
+            "compression": "none",
+            "allow_direct": false,
+            "mirror_direct": false,
+            "sealed": false,
+            "deny_delete": false,
+            "deny_purge": false,
+            "allow_rollup_hdrs": false,
+            "consumer_limits": {}
+          },
+          "state": {
+            "messages": 26924,
+            "bytes": 53878335,
+            "first_seq": 18954814,
+            "first_ts": "2026-10-02T04:04:00.498059764Z",
+            "last_seq": 18981737,
+            "last_ts": "2026-10-02T04:12:31.227894184Z",
+            "num_subjects": 51,
+            "consumer_count": 1
+          },
+          "consumer_detail": [
+            {
+              "stream_name": "MARKET_DATA",
+              "name": "parquet-storage",
+              "created": "2026-09-15T01:15:05.936797311Z",
+              "config": {
+                "durable_name": "parquet-storage",
+                "deliver_policy": "all",
+                "ack_policy": "explicit",
+                "ack_wait": 1200000000000,
+                "max_deliver": -1,
+                "filter_subject": "md.>",
+                "replay_policy": "instant",
+                "max_waiting": 512,
+                "max_ack_pending": 65536,
+                "num_replicas": 0
+              },
+              "delivered": {
+                "consumer_seq": 16040205,
+                "stream_seq": 18954941
+              },
+              "ack_floor": {
+                "consumer_seq": 16040077,
+                "stream_seq": 18954813
+              },
+              "num_ack_pending": 128,
+              "num_redelivered": 0,
+              "num_waiting": 0,
+              "num_pending": 26796,
+              "ts": "2026-10-02T04:40:37.995689413Z"
+            }
+          ]
+        },
+        {
+          "name": "OPERATIONS",
+          "created": "2026-09-25T05:16:08.99256433Z",
+          "cluster": {
+            "leader": "NB72KPPP34UTFNL3XMROQKNDJ7IKIJJWXCEW6DGCNZBOSLNBJIM43ISO"
+          },
+          "config": {
+            "name": "OPERATIONS",
+            "subjects": [
+              "md.data_gap.>",
+              "crypto.data_gap.>",
+              "signal.>",
+              "order.>",
+              "system.>"
+            ],
+            "retention": "limits",
+            "max_consumers": -1,
+            "max_msgs": -1,
+            "max_bytes": 67108864,
+            "max_age": 0,
+            "max_msgs_per_subject": -1,
+            "max_msg_size": -1,
+            "discard": "old",
+            "storage": "file",
+            "num_replicas": 1,
+            "duplicate_window": 120000000000,
+            "compression": "none",
+            "allow_direct": false,
+            "mirror_direct": false,
+            "sealed": false,
+            "deny_delete": false,
+            "deny_purge": false,
+            "allow_rollup_hdrs": false,
+            "consumer_limits": {}
+          },
+          "state": {
+            "messages": 1671,
+            "bytes": 492077,
+            "first_seq": 1,
+            "first_ts": "2026-09-08T05:22:00.981120765Z",
+            "last_seq": 12970,
+            "last_ts": "2026-10-02T04:12:57.258560503Z",
+            "num_subjects": 16,
+            "num_deleted": 11299,
+            "consumer_count": 4
+          },
+          "consumer_detail": [
+            {
+              "stream_name": "OPERATIONS",
+              "name": "telegram-event-bridge-0",
+              "created": "2026-09-08T05:23:54.517060419Z",
+              "config": {
+                "durable_name": "telegram-event-bridge-0",
+                "name": "telegram-event-bridge-0",
+                "deliver_policy": "all",
+                "ack_policy": "explicit",
+                "ack_wait": 30000000000,
+                "max_deliver": -1,
+                "filter_subject": "system.>",
+                "replay_policy": "instant",
+                "max_waiting": 512,
+                "max_ack_pending": 1000,
+                "num_replicas": 0
+              },
+              "delivered": {
+                "consumer_seq": 1531,
+                "stream_seq": 12970
+              },
+              "ack_floor": {
+                "consumer_seq": 1531,
+                "stream_seq": 12970
+              },
+              "num_ack_pending": 0,
+              "num_redelivered": 0,
+              "num_waiting": 0,
+              "num_pending": 0,
+              "ts": "2026-10-02T04:40:37.995691185Z"
+            },
+            {
+              "stream_name": "OPERATIONS",
+              "name": "telegram-event-bridge-1",
+              "created": "2026-09-08T05:23:54.521793144Z",
+              "config": {
+                "durable_name": "telegram-event-bridge-1",
+                "name": "telegram-event-bridge-1",
+                "deliver_policy": "all",
+                "ack_policy": "explicit",
+                "ack_wait": 30000000000,
+                "max_deliver": -1,
+                "filter_subject": "signal.>",
+                "replay_policy": "instant",
+                "max_waiting": 512,
+                "max_ack_pending": 1000,
+                "num_replicas": 0
+              },
+              "delivered": {
+                "consumer_seq": 0,
+                "stream_seq": 0
+              },
+              "ack_floor": {
+                "consumer_seq": 0,
+                "stream_seq": 0
+              },
+              "num_ack_pending": 0,
+              "num_redelivered": 0,
+              "num_waiting": 0,
+              "num_pending": 0,
+              "ts": "2026-10-02T04:40:37.995691706Z"
+            },
+            {
+              "stream_name": "OPERATIONS",
+              "name": "telegram-event-bridge-2",
+              "created": "2026-09-08T05:23:54.525412612Z",
+              "config": {
+                "durable_name": "telegram-event-bridge-2",
+                "name": "telegram-event-bridge-2",
+                "deliver_policy": "all",
+                "ack_policy": "explicit",
+                "ack_wait": 30000000000,
+                "max_deliver": -1,
+                "filter_subject": "order.>",
+                "replay_policy": "instant",
+                "max_waiting": 512,
+                "max_ack_pending": 1000,
+                "num_replicas": 0
+              },
+              "delivered": {
+                "consumer_seq": 0,
+                "stream_seq": 0
+              },
+              "ack_floor": {
+                "consumer_seq": 0,
+                "stream_seq": 0
+              },
+              "num_ack_pending": 0,
+              "num_redelivered": 0,
+              "num_waiting": 0,
+              "num_pending": 0,
+              "ts": "2026-10-02T04:40:37.995717945Z"
+            },
+            {
+              "stream_name": "OPERATIONS",
+              "name": "telegram-event-bridge-3",
+              "created": "2026-09-08T05:23:54.528887433Z",
+              "config": {
+                "durable_name": "telegram-event-bridge-3",
+                "name": "telegram-event-bridge-3",
+                "deliver_policy": "all",
+                "ack_policy": "explicit",
+                "ack_wait": 30000000000,
+                "max_deliver": -1,
+                "filter_subject": "md.data_gap.>",
+                "replay_policy": "instant",
+                "max_waiting": 512,
+                "max_ack_pending": 1000,
+                "num_replicas": 0
+              },
+              "delivered": {
+                "consumer_seq": 120,
+                "stream_seq": 716
+              },
+              "ack_floor": {
+                "consumer_seq": 120,
+                "stream_seq": 716
+              },
+              "num_ack_pending": 0,
+              "num_redelivered": 0,
+              "num_waiting": 0,
+              "num_pending": 0,
+              "ts": "2026-10-02T04:40:37.995731827Z"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "total": 1
+}

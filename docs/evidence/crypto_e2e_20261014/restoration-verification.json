@@ -1,0 +1,208 @@
+{
+  "verified_ns": 1791989028484988831,
+  "service_configuration_restored": true,
+  "collectors": {
+    "binance": {
+      "running": true,
+      "status": "running",
+      "restart_count": 0,
+      "tracing_enabled": false,
+      "trace_mount": false,
+      "health": {
+        "component": "collectors-binance-perp",
+        "state": "running",
+        "ts_ns": 1791989014846972913,
+        "build": {
+          "build_revision": "telegram-recovery-0960f84aa12e2ac0",
+          "build_config_hash": "7d014bfd2100d26df9cc5ec237df6ac6433e139f98ddc0578eb3b67e85863eda",
+          "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+          "runtime_config_hash": "77bcade7e4a9da78d5ecc57e191ef3ed72603d9f8ec692d00b48b5d63a05379f"
+        },
+        "provider": "binance-perp",
+        "phase": "publishing",
+        "last_event_ts_ns": 1791989014824003453,
+        "published_count": 9970,
+        "published_bytes": 48059537,
+        "symbol_last_seen_ns": {
+          "SOLUSDT": 1791989014772591120,
+          "ETHUSDT": 1791989014798769470,
+          "BTCUSDT": 1791989014824003453
+        },
+        "event_age_seconds": 0.0,
+        "stream_probe": {
+          "status": "fresh",
+          "stream": "CRYPTO_DATA",
+          "bytes": 5624313,
+          "max_bytes": 134217728,
+          "ratio": 0.04190439730882645,
+          "generation": "2026-10-05 15:52:42.431025+00:00",
+          "observed_age_seconds": 0.0013617939548566937,
+          "last_success_age_seconds": 0.0013617939548566937,
+          "error": null,
+          "config_mismatch": false,
+          "consecutive_failures": 0
+        },
+        "disk": {
+          "used_ratio": 0.2308,
+          "free_bytes": 243018981376,
+          "reserve_bytes": 4294967296,
+          "resume_margin_bytes": 6318526300,
+          "warning": false,
+          "upload_priority": false,
+          "direct_upload": false,
+          "fail_closed": false,
+          "probe_error": null,
+          "state_free_bytes": 243018981376,
+          "state_reserve_bytes": 1073741824,
+          "state_resume_margin_bytes": 268435456,
+          "nats_free_bytes": 14522654720,
+          "nats_reserve_bytes": 3221225472,
+          "nats_resume_margin_bytes": 536870912
+        },
+        "publisher": {
+          "accepted": 9970,
+          "published": 9970,
+          "failed": 0,
+          "pending": 0,
+          "queued_bytes": 0
+        }
+      },
+      "docker_health": "healthy"
+    },
+    "arcus": {
+      "running": true,
+      "status": "running",
+      "restart_count": 0,
+      "tracing_enabled": false,
+      "trace_mount": false,
+      "health": {
+        "component": "collectors-arcus-perp",
+        "state": "running",
+        "ts_ns": 1791989014487107610,
+        "build": {
+          "build_revision": "telegram-recovery-0960f84aa12e2ac0",
+          "build_config_hash": "ad517cedb5ca8bdf2730793c3742663375c165a75e7d64e069d6b4b1a11508a7",
+          "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+          "runtime_config_hash": "b31b1a922cae43c0d7847a7af90e98be8cd572e169a758a4f016a479fc3b51c1"
+        },
+        "provider": "arcus-perp",
+        "phase": "publishing",
+        "last_event_ts_ns": 1791989014458564229,
+        "published_count": 69694,
+        "published_bytes": 100177977,
+        "symbol_last_seen_ns": {
+          "BTCUSDT": 1791989014298948795,
+          "ETHUSDT": 1791989014458564229,
+          "SOLUSDT": 1791989014435850621
+        },
+        "event_age_seconds": 0.0,
+        "stream_probe": {
+          "status": "fresh",
+          "stream": "CRYPTO_DATA",
+          "bytes": 5091710,
+          "max_bytes": 134217728,
+          "ratio": 0.037936195731163025,
+          "generation": "2026-10-05 15:52:42.431025+00:00",
+          "observed_age_seconds": 0.0006003209855407476,
+          "last_success_age_seconds": 0.0006003209855407476,
+          "error": null,
+          "config_mismatch": false,
+          "consecutive_failures": 0
+        },
+        "disk": {
+          "used_ratio": 0.2308,
+          "free_bytes": 243018981376,
+          "reserve_bytes": 4294967296,
+          "resume_margin_bytes": 6318526300,
+          "warning": false,
+          "upload_priority": false,
+          "direct_upload": false,
+          "fail_closed": false,
+          "probe_error": null,
+          "state_free_bytes": 243018981376,
+          "state_reserve_bytes": 1073741824,
+          "state_resume_margin_bytes": 268435456,
+          "nats_free_bytes": 14523158528,
+          "nats_reserve_bytes": 3221225472,
+          "nats_resume_margin_bytes": 536870912
+        },
+        "publisher": {
+          "accepted": 69694,
+          "published": 69694,
+          "failed": 0,
+          "pending": 0,
+          "queued_bytes": 0
+        }
+      },
+      "docker_health": "healthy"
+    },
+    "grvt": {
+      "running": true,
+      "status": "running",
+      "restart_count": 0,
+      "tracing_enabled": false,
+      "trace_mount": false,
+      "health": {
+        "component": "collectors-grvt-perp",
+        "state": "running",
+        "ts_ns": 1791989014349340976,
+        "build": {
+          "build_revision": "telegram-recovery-0960f84aa12e2ac0",
+          "build_config_hash": "d833d3cc7c340b39fb902fe314d6d042d596e27cf868831b9231f0ff0402a554",
+          "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+          "runtime_config_hash": "1d8e9665d7a48593912e0682dbbfe309c3227245b7d9f9869858b7d3dc23d08a"
+        },
+        "provider": "grvt-perp",
+        "phase": "publishing",
+        "last_event_ts_ns": 1791989014330386543,
+        "published_count": 3055,
+        "published_bytes": 10229962,
+        "symbol_last_seen_ns": {
+          "BTCUSDT": 1791989014330386543,
+          "SOLUSDT": 1791989014120703307,
+          "ETHUSDT": 1791989014329948505
+        },
+        "event_age_seconds": 0.0,
+        "stream_probe": {
+          "status": "fresh",
+          "stream": "CRYPTO_DATA",
+          "bytes": 16897585,
+          "max_bytes": 134217728,
+          "ratio": 0.12589681893587112,
+          "generation": "2026-10-05 15:52:42.431025+00:00",
+          "observed_age_seconds": 0.0014689560048282146,
+          "last_success_age_seconds": 0.0014689560048282146,
+          "error": null,
+          "config_mismatch": false,
+          "consecutive_failures": 0
+        },
+        "disk": {
+          "used_ratio": 0.2308,
+          "free_bytes": 243018977280,
+          "reserve_bytes": 4294967296,
+          "resume_margin_bytes": 6318526300,
+          "warning": false,
+          "upload_priority": false,
+          "direct_upload": false,
+          "fail_closed": false,
+          "probe_error": null,
+          "state_free_bytes": 243018977280,
+          "state_reserve_bytes": 1073741824,
+          "state_resume_margin_bytes": 268435456,
+          "nats_free_bytes": 14515470336,
+          "nats_reserve_bytes": 3221225472,
+          "nats_resume_margin_bytes": 536870912
+        },
+        "publisher": {
+          "accepted": 3055,
+          "published": 3055,
+          "failed": 0,
+          "pending": 0,
+          "queued_bytes": 0
+        }
+      },
+      "docker_health": "healthy"
+    }
+  },
+  "running_containers": 12
+}

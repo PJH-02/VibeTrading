@@ -1,0 +1,177 @@
+{
+  "verified_ns": 1791898024351711991,
+  "revision": "etf-scope-5a70b17a7b2478a4",
+  "containers": {
+    "collectors": {
+      "status": "running",
+      "health": "healthy",
+      "image": "sha256:8227ac19c1d0aa9844797004eb1a05818d1539af8e49b2c767a0d3b14175626a",
+      "restart": "unless-stopped"
+    },
+    "storage": {
+      "status": "running",
+      "health": "healthy",
+      "image": "sha256:8227ac19c1d0aa9844797004eb1a05818d1539af8e49b2c767a0d3b14175626a",
+      "restart": "unless-stopped"
+    },
+    "maintenance": {
+      "status": "running",
+      "health": "healthy",
+      "image": "sha256:8227ac19c1d0aa9844797004eb1a05818d1539af8e49b2c767a0d3b14175626a",
+      "restart": "unless-stopped"
+    },
+    "etf-mock": {
+      "status": "running",
+      "health": "healthy",
+      "image": "sha256:8227ac19c1d0aa9844797004eb1a05818d1539af8e49b2c767a0d3b14175626a",
+      "restart": "unless-stopped",
+      "account_mode": "mock",
+      "command": [
+        "python",
+        "-m",
+        "vibetrading.etf_trading",
+        "run"
+      ]
+    },
+    "etf-csv-sync": {
+      "status": "running",
+      "health": "healthy",
+      "image": "sha256:8227ac19c1d0aa9844797004eb1a05818d1539af8e49b2c767a0d3b14175626a",
+      "restart": "unless-stopped"
+    },
+    "crypto-collector-binance": {
+      "status": "running",
+      "health": "healthy",
+      "image": "sha256:279ad22189ef35848f19f980143e9597debea5410500ad9aae5cf8ae4be4d83e",
+      "restart": "unless-stopped"
+    },
+    "crypto-collector-arcus": {
+      "status": "running",
+      "health": "healthy",
+      "image": "sha256:279ad22189ef35848f19f980143e9597debea5410500ad9aae5cf8ae4be4d83e",
+      "restart": "unless-stopped"
+    },
+    "crypto-collector-grvt": {
+      "status": "running",
+      "health": "healthy",
+      "image": "sha256:279ad22189ef35848f19f980143e9597debea5410500ad9aae5cf8ae4be4d83e",
+      "restart": "unless-stopped"
+    },
+    "crypto-collector-bitget": {
+      "status": "exited",
+      "health": "unhealthy",
+      "image": "sha256:279ad22189ef35848f19f980143e9597debea5410500ad9aae5cf8ae4be4d83e",
+      "restart": "no"
+    },
+    "crypto-collector-bybit": {
+      "status": "exited",
+      "health": "unhealthy",
+      "image": "sha256:279ad22189ef35848f19f980143e9597debea5410500ad9aae5cf8ae4be4d83e",
+      "restart": "no"
+    }
+  },
+  "service": {
+    "enabled": "enabled",
+    "active": "active"
+  },
+  "mock_health": {
+    "component": "etf-mock",
+    "state": "running",
+    "ts_ns": 1791898016295540851,
+    "build": {
+      "build_revision": "etf-scope-5a70b17a7b2478a4",
+      "build_config_hash": "4aa701733a52d1f23e6cc417843db638ded4018c96f86dde405ce1937fca4b17",
+      "image_id": "sha256:8227ac19c1d0aa9844797004eb1a05818d1539af8e49b2c767a0d3b14175626a",
+      "runtime_config_hash": "0ddccdb7a7eccee7a8432241b0008d9933bfd066d6787b24ac7d55d97220cc6b"
+    },
+    "phase": "waiting_session",
+    "account_mode": "mock",
+    "day": "2026-10-13",
+    "books": {
+      "C3": {
+        "strategy": "C3",
+        "cash": "33333333",
+        "day": "2026-10-13",
+        "entries": 0,
+        "direction": 0,
+        "safety_stop": null,
+        "positions": {},
+        "reserved": "0"
+      },
+      "KP": {
+        "strategy": "KP",
+        "cash": "33333333",
+        "day": "2026-10-13",
+        "entries": 0,
+        "direction": 0,
+        "safety_stop": null,
+        "positions": {},
+        "reserved": "0"
+      },
+      "KD": {
+        "strategy": "KD",
+        "cash": "33333333",
+        "day": "2026-10-13",
+        "entries": 0,
+        "direction": 0,
+        "safety_stop": null,
+        "positions": {},
+        "reserved": "0"
+      }
+    },
+    "pending_orders": 0,
+    "c3_inputs_ready": false,
+    "vehicle_bars": {
+      "069500": {
+        "completed_today": 0,
+        "latest_close": null
+      },
+      "122630": {
+        "completed_today": 0,
+        "latest_close": null
+      },
+      "229200": {
+        "completed_today": 0,
+        "latest_close": null
+      },
+      "251340": {
+        "completed_today": 0,
+        "latest_close": null
+      }
+    }
+  },
+  "actual_order_count": 0,
+  "csv_file_count": 10,
+  "csv_health": {
+    "component": "etf-csv-sync",
+    "state": "running",
+    "ts_ns": 1791898020726292448,
+    "build": {
+      "build_revision": "etf-scope-5a70b17a7b2478a4",
+      "build_config_hash": "32382ef355305f7cf8db457231e6da23950b3f474b7623b609cac7e77df36d89",
+      "image_id": "sha256:8227ac19c1d0aa9844797004eb1a05818d1539af8e49b2c767a0d3b14175626a",
+      "runtime_config_hash": "4a93f8f113dbc9fc83824d642033b0e02c97cb2e31a5f4c1284fe558b6d9dedc"
+    },
+    "phase": "waiting_close",
+    "last_sync": {
+      "checked_ns": 1791898000698640349,
+      "domestic_completed_session": "2026-10-13",
+      "us_completed_session": "2026-10-12",
+      "receipts": [],
+      "files": {
+        "069500_daily": "2026-10-13",
+        "069500_minute": "2026-10-13",
+        "122630_daily": "2026-10-13",
+        "122630_minute": "2026-10-13",
+        "229200_daily": "2026-10-13",
+        "229200_minute": "2026-10-13",
+        "251340_daily": "2026-10-13",
+        "251340_minute": "2026-10-13",
+        "KOSPI200_daily": "2026-10-13",
+        "SP500_daily": "2026-10-12"
+      }
+    },
+    "error": null
+  },
+  "crypto_subject_count": 33
+}

@@ -1,0 +1,206 @@
+{
+  "time": "2026-10-01T16:01:41.964943",
+  "states": {
+    "nats": {
+      "pid": 1851280,
+      "status": "running",
+      "health": "healthy",
+      "restarts": 0,
+      "image_id": "sha256:b83efabe3e7def1e0a4a31ec6e078999bb17c80363f881df35edc70fcb6bb927"
+    },
+    "storage": {
+      "pid": 4115622,
+      "status": "running",
+      "health": "healthy",
+      "restarts": 0,
+      "image_id": "sha256:c8689b8f46e9e79cf8c43c4460f5465dc724095b0c5223d2554eedb682f011f2"
+    },
+    "crypto-storage": {
+      "pid": 843387,
+      "status": "running",
+      "health": "healthy",
+      "restarts": 0,
+      "image_id": "sha256:d2714b445da301e705786c7f24414313a9c8ebcdb606aec1b4b4b74cb7a7d8d6"
+    },
+    "maintenance": {
+      "pid": 414703,
+      "status": "running",
+      "health": "healthy",
+      "restarts": 1,
+      "image_id": "sha256:c8689b8f46e9e79cf8c43c4460f5465dc724095b0c5223d2554eedb682f011f2"
+    },
+    "crypto-maintenance": {
+      "pid": 844537,
+      "status": "running",
+      "health": "healthy",
+      "restarts": 0,
+      "image_id": "sha256:d2714b445da301e705786c7f24414313a9c8ebcdb606aec1b4b4b74cb7a7d8d6"
+    },
+    "crypto-collector-binance": {
+      "pid": 844450,
+      "status": "running",
+      "health": "healthy",
+      "restarts": 0,
+      "image_id": "sha256:d2714b445da301e705786c7f24414313a9c8ebcdb606aec1b4b4b74cb7a7d8d6"
+    },
+    "crypto-collector-bitget": {
+      "pid": 845233,
+      "status": "running",
+      "health": "healthy",
+      "restarts": 0,
+      "image_id": "sha256:d2714b445da301e705786c7f24414313a9c8ebcdb606aec1b4b4b74cb7a7d8d6"
+    },
+    "crypto-collector-bybit": {
+      "pid": 845986,
+      "status": "running",
+      "health": "healthy",
+      "restarts": 0,
+      "image_id": "sha256:d2714b445da301e705786c7f24414313a9c8ebcdb606aec1b4b4b74cb7a7d8d6"
+    }
+  },
+  "health": {
+    "state/collectors-bybit-perp": {
+      "state": "running",
+      "phase": "publishing",
+      "published_count": 48872,
+      "published_bytes": 80949335,
+      "symbol_last_seen_ns": {
+        "BTCUSDT": 1790838091165125868,
+        "SOLUSDT": 1790838091169146581,
+        "ETHUSDT": 1790838091166026774
+      },
+      "publisher": {
+        "accepted": 48872,
+        "published": 48872,
+        "failed": 0,
+        "pending": 0,
+        "queued_bytes": 0
+      },
+      "age_seconds": 10.8
+    },
+    "state/storage": {
+      "state": "running",
+      "pending": 105,
+      "messages": 5356704,
+      "acked": 5356599,
+      "buffer_bytes": 194935,
+      "rss_bytes": 204759040,
+      "cgroup_used_bytes": 274481152,
+      "last_commit_ms": 0,
+      "last_ack_ms": 1,
+      "age_seconds": 9.1
+    },
+    "state/collectors-binance-perp": {
+      "state": "running",
+      "phase": "publishing",
+      "published_count": 27864,
+      "published_bytes": 124685429,
+      "symbol_last_seen_ns": {
+        "ETHUSDT": 1790838100282459097,
+        "BTCUSDT": 1790838100273677487,
+        "SOLUSDT": 1790838100280048408
+      },
+      "publisher": {
+        "accepted": 27864,
+        "published": 27864,
+        "failed": 0,
+        "pending": 0,
+        "queued_bytes": 0
+      },
+      "age_seconds": 1.6
+    },
+    "state/maintenance": {
+      "state": "running",
+      "archive": {
+        "ran": false,
+        "reason": "heavy_maintenance_busy"
+      },
+      "age_seconds": 15.3
+    },
+    "state/collectors": {
+      "state": "running",
+      "age_seconds": 9.7
+    },
+    "state/collectors-bitget-perp": {
+      "state": "running",
+      "phase": "publishing",
+      "published_count": 36787,
+      "published_bytes": 94440982,
+      "symbol_last_seen_ns": {
+        "BTCUSDT": 1790838091930490589,
+        "ETHUSDT": 1790838091874684743,
+        "SOLUSDT": 1790838091874485543
+      },
+      "age_seconds": 10.0
+    },
+    "crypto_state/crypto-storage": {
+      "state": "running",
+      "ready": true,
+      "pending": 6347,
+      "messages": 113494,
+      "acked": 107147,
+      "buffer_bytes": 13176873,
+      "rss_bytes": 465354752,
+      "cgroup_used_bytes": 422264832,
+      "last_commit_ms": 0,
+      "last_ack_ms": 13,
+      "age_seconds": 9.5
+    },
+    "crypto_state/maintenance": {
+      "state": "running",
+      "age_seconds": 22.8
+    }
+  },
+  "nats": {
+    "created": "2026-09-26T10:23:10.911121827Z",
+    "messages": 3416,
+    "bytes": 7317383,
+    "first_seq": 11059706,
+    "first_ts": "2026-10-01T07:00:52.405976011Z",
+    "last_seq": 11072513,
+    "last_ts": "2026-10-01T07:01:41.966213015Z",
+    "num_subjects": 33,
+    "num_deleted": 9392,
+    "consumer_count": 1,
+    "consumer": {
+      "stream_name": "CRYPTO_DATA",
+      "name": "crypto-parquet-storage",
+      "created": "2026-09-26T10:23:10.918630724Z",
+      "delivered": {
+        "consumer_seq": 11075462,
+        "stream_seq": 11072512,
+        "last_active": "2026-10-01T07:01:41.965749978Z"
+      },
+      "ack_floor": {
+        "consumer_seq": 11062655,
+        "stream_seq": 11059705,
+        "last_active": "2026-10-01T07:01:39.845725373Z"
+      },
+      "num_ack_pending": 3415,
+      "num_redelivered": 0,
+      "num_waiting": 0,
+      "num_pending": 1,
+      "ts": "2026-10-01T07:01:41.967701385Z"
+    }
+  },
+  "disk_free_bytes": 7481147392,
+  "io_pressure": "some avg10=1.46 avg60=2.03 avg300=2.56 total=325980318817\nfull avg10=0.74 avg60=1.12 avg300=1.76 total=310569131849\n",
+  "oom_kills": {
+    "nats": "0",
+    "storage": "0",
+    "crypto-storage": "0",
+    "maintenance": "0",
+    "crypto-maintenance": "0",
+    "crypto-collector-binance": "0",
+    "crypto-collector-bitget": "0",
+    "crypto-collector-bybit": "0"
+  },
+  "db_files": {
+    "vibetrading.sqlite3-wal": 6954592,
+    "vibetrading.sqlite3-shm": 32768,
+    "vibetrading.sqlite3.r2-ready-shm": 32768,
+    "vibetrading.sqlite3.r2-ready-wal": 0,
+    "vibetrading.sqlite3": 1775529984
+  },
+  "mem_available_kib": "1428332"
+}

@@ -1,0 +1,14 @@
+{
+  "subjects": [
+    "md.trade.>",
+    "md.order_book.>",
+    "md.bar_1m.>",
+    "md.etf_nav.>",
+    "md.funding_rate.>",
+    "md.open_interest.>",
+    "md.participant_flow.>",
+    "md.index_quote.>"
+  ],
+  "messages": 92,
+  "max_bytes": 1073741824
+}

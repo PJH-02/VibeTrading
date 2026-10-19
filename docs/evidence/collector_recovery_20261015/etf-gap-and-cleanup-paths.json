@@ -1,0 +1,1738 @@
+{
+  "observed_at": "2026-10-15T10:28:58.062086+09:00",
+  "bars": {
+    "069500": {
+      "path": "/srv/vibetrading-data/runtime_data/state/etf-csv-sync/sessions/2026-10-15-069500.jsonl",
+      "raw_rows": 405,
+      "unique_rows": 87,
+      "first": "2026-10-15 09:01:00",
+      "last": "2026-10-15 10:27:00",
+      "timestamp_semantics": "bar_end",
+      "outage_expected": 68,
+      "outage_present": 68,
+      "outage_missing": [],
+      "duplicate_rows": 318,
+      "conflicting_timestamps": [
+        "2026-10-15 10:09:00",
+        "2026-10-15 10:13:00"
+      ]
+    },
+    "122630": {
+      "path": "/srv/vibetrading-data/runtime_data/state/etf-csv-sync/sessions/2026-10-15-122630.jsonl",
+      "raw_rows": 396,
+      "unique_rows": 86,
+      "first": "2026-10-15 09:03:00",
+      "last": "2026-10-15 10:28:00",
+      "timestamp_semantics": "bar_end",
+      "outage_expected": 68,
+      "outage_present": 66,
+      "outage_missing": [
+        "2026-10-15 09:01:00",
+        "2026-10-15 09:02:00"
+      ],
+      "duplicate_rows": 310,
+      "conflicting_timestamps": []
+    },
+    "229200": {
+      "path": "/srv/vibetrading-data/runtime_data/state/etf-csv-sync/sessions/2026-10-15-229200.jsonl",
+      "raw_rows": 405,
+      "unique_rows": 87,
+      "first": "2026-10-15 09:01:00",
+      "last": "2026-10-15 10:27:00",
+      "timestamp_semantics": "bar_end",
+      "outage_expected": 68,
+      "outage_present": 68,
+      "outage_missing": [],
+      "duplicate_rows": 318,
+      "conflicting_timestamps": [
+        "2026-10-15 10:19:00"
+      ]
+    },
+    "251340": {
+      "path": "/srv/vibetrading-data/runtime_data/state/etf-csv-sync/sessions/2026-10-15-251340.jsonl",
+      "raw_rows": 406,
+      "unique_rows": 88,
+      "first": "2026-10-15 09:01:00",
+      "last": "2026-10-15 10:28:00",
+      "timestamp_semantics": "bar_end",
+      "outage_expected": 68,
+      "outage_present": 68,
+      "outage_missing": [],
+      "duplicate_rows": 318,
+      "conflicting_timestamps": []
+    }
+  },
+  "files": {
+    "/srv/vibetrading-capacity/market-state": [
+      {
+        "path": "/srv/vibetrading-capacity/market-state/vibetrading.sqlite3-shm",
+        "bytes": 32768
+      },
+      {
+        "path": "/srv/vibetrading-capacity/market-state/kis_access_token_93cc5695a6a59e41.json",
+        "bytes": 403
+      },
+      {
+        "path": "/srv/vibetrading-capacity/market-state/collection_gaps.sqlite3",
+        "bytes": 180224
+      },
+      {
+        "path": "/srv/vibetrading-capacity/market-state/vibetrading.sqlite3-wal",
+        "bytes": 9508992
+      },
+      {
+        "path": "/srv/vibetrading-capacity/market-state/kiwoom_token_real.json",
+        "bytes": 225
+      },
+      {
+        "path": "/srv/vibetrading-capacity/market-state/toss_access_token.json",
+        "bytes": 883
+      },
+      {
+        "path": "/srv/vibetrading-capacity/market-state/main-server-recovery-gaps.json",
+        "bytes": 934
+      },
+      {
+        "path": "/srv/vibetrading-capacity/market-state/kis_access_token_0f70134b8dd40c74.json",
+        "bytes": 403
+      },
+      {
+        "path": "/srv/vibetrading-capacity/market-state/kiwoom_token_real.lock",
+        "bytes": 0
+      },
+      {
+        "path": "/srv/vibetrading-capacity/market-state/kis_access_token_808f49ec5823a457.json",
+        "bytes": 403
+      },
+      {
+        "path": "/srv/vibetrading-capacity/market-state/kis_access_token.json",
+        "bytes": 403
+      },
+      {
+        "path": "/srv/vibetrading-capacity/market-state/telegram-command-verification.json",
+        "bytes": 217
+      },
+      {
+        "path": "/srv/vibetrading-capacity/market-state/vibetrading.sqlite3",
+        "bytes": 9249783808
+      }
+    ],
+    "/srv/vibetrading-capacity/crypto-state": [
+      {
+        "path": "/srv/vibetrading-capacity/crypto-state/vibetrading.sqlite3-shm",
+        "bytes": 557056
+      },
+      {
+        "path": "/srv/vibetrading-capacity/crypto-state/replay-window-recovery.json",
+        "bytes": 83871
+      },
+      {
+        "path": "/srv/vibetrading-capacity/crypto-state/vibetrading.sqlite3-wal",
+        "bytes": 284984552
+      },
+      {
+        "path": "/srv/vibetrading-capacity/crypto-state/migration-offline-proof.json",
+        "bytes": 640
+      },
+      {
+        "path": "/srv/vibetrading-capacity/crypto-state/vibetrading.sqlite3",
+        "bytes": 7595970560
+      }
+    ],
+    "/srv/vibetrading-capacity/fv-research-20261004": [
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/bybit_seconds.parquet",
+        "bytes": 3533367
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/collector_gaps.json",
+        "bytes": 98415
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/grvt_selector_probe.json",
+        "bytes": 1198
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/grvt_ETH_seconds.parquet",
+        "bytes": 3867862
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/reduce_audit_grvt_SOL.json",
+        "bytes": 525
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/slim_progress.json",
+        "bytes": 32
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/reduce_audit_arcus_ETH.json",
+        "bytes": 630
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/grvt_SOL_seconds.parquet",
+        "bytes": 3064147
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/reduce_audit_arcus_BTC.json",
+        "bytes": 633
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/bitget_slim.tar.gz",
+        "bytes": 1193565338
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/slim_audit.json",
+        "bytes": 4169644
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/reduce_audit_grvt_ETH.json",
+        "bytes": 525
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/arcus_slim.tar.gz",
+        "bytes": 212376180
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/bybit_native/cfe49bb8b8504619af53476166b65a94.parquet",
+        "bytes": 1062139
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/fv_research_server_finish.py",
+        "bytes": 294
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/archive_audit.json",
+        "bytes": 6152844
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/catalogue.json",
+        "bytes": 54387865
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/extract.py",
+        "bytes": 12844
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/arcus_ETH_seconds.parquet",
+        "bytes": 5382207
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/arcus_seconds.parquet",
+        "bytes": 18265393
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/reduce.py",
+        "bytes": 4716
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/duckdb-temp/duckdb_temp_storage_S64K-0.tmp",
+        "bytes": 208928768
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/duckdb-temp/duckdb_temp_storage_DEFAULT-1.tmp",
+        "bytes": 2113929216
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/duckdb-temp/duckdb_temp_storage_S128K-1.tmp",
+        "bytes": 1290534912
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/duckdb-temp/duckdb_temp_storage_S96K-0.tmp",
+        "bytes": 447774720
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/duckdb-temp/duckdb_temp_storage_S128K-0.tmp",
+        "bytes": 786432000
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/duckdb-temp/duckdb_temp_storage_S96K-2.tmp",
+        "bytes": 1609531392
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/duckdb-temp/duckdb_temp_storage_DEFAULT-0.tmp",
+        "bytes": 1292369920
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/duckdb-temp/duckdb_temp_storage_S32K-0.tmp",
+        "bytes": 8749056
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/duckdb-temp/duckdb_temp_storage_S128K-2.tmp",
+        "bytes": 397279232
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/duckdb-temp/duckdb_temp_storage_S160K-0.tmp",
+        "bytes": 2621440
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/duckdb-temp/duckdb_temp_storage_DEFAULT-2.tmp",
+        "bytes": 2328363008
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/duckdb-temp/duckdb_temp_storage_S96K-1.tmp",
+        "bytes": 787906560
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/grvt_slim.tar.gz",
+        "bytes": 43779342
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/bybit_slim.tar.gz",
+        "bytes": 822667984
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_seconds.parquet",
+        "bytes": 50568806
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/slim.py",
+        "bytes": 1479
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/reduce_audit_arcus_SOL.json",
+        "bytes": 630
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/fv_research_reduce.py",
+        "bytes": 5743
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/deps/_duckdb.cpython-312-x86_64-linux-gnu.so",
+        "bytes": 57826648
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/grvt_seconds.parquet",
+        "bytes": 10926814
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/reduce_audit_grvt_BTC.json",
+        "bytes": 525
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/probe.py",
+        "bytes": 767
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/arcus_SOL_seconds.parquet",
+        "bytes": 5872266
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/14253c65594e423ea2c7d2a859526099.parquet",
+        "bytes": 1285360
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/921e4fd600d448bb992efe57f72cc18d.parquet",
+        "bytes": 1071175
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/00a2c64c11914d8f9f04e5ca8689c036.parquet",
+        "bytes": 1180391
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/99a87f9425d4403eb27e68045bc50fc2.parquet",
+        "bytes": 1559683
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/29da696c6cfe48bb9c8c66521f871993.parquet",
+        "bytes": 1062473
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/388814081c1f45528fb04f822b2ec99a.parquet",
+        "bytes": 1069706
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/0b457d065c324324977e9797202da2ac.parquet",
+        "bytes": 1496784
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/12d1e307fb9745c8919b6fbf699a54a5.parquet",
+        "bytes": 1137380
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/f7c20edbc05b4fd8b469547f1e978882.parquet",
+        "bytes": 1236722
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/08a2447a922a4928ad443aa906aa0732.parquet",
+        "bytes": 1163518
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/b13fe9796b5a44ac8dcdafa29aaf9b86.parquet",
+        "bytes": 1144967
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/9f991998c6444a8d8cf79d8896f6dc72.parquet",
+        "bytes": 1210293
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/6396154e4d4244f99495ec8359db6196.parquet",
+        "bytes": 1268323
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/94b1fd1af00444388e61f1d4960b41a5.parquet",
+        "bytes": 1333060
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/a8c28d06b1e943b5ac8da888a2d60596.parquet",
+        "bytes": 1089492
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/0b87c3faa6b34c29b44bdd5a4251b7a7.parquet",
+        "bytes": 1126800
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/f2a2ff8e639c48a396e741f961dc18d3.parquet",
+        "bytes": 1155239
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/8cad9cf827394cb898e771d021da3d31.parquet",
+        "bytes": 1067026
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/bd90ceab3bb042fc95e599ece9e4bdb3.parquet",
+        "bytes": 1096845
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/3e2f90a844c84e29a6e5102fa7325750.parquet",
+        "bytes": 1267474
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/350d1baa86c74c3b9cb5d445cb9a5160.parquet",
+        "bytes": 1097082
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/720ff9b3306a472ba0cd30fac3c0874c.parquet",
+        "bytes": 1280565
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/ff757981a5954887ae6eb96308054340.parquet",
+        "bytes": 1130670
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/5fca3d386ad54df1ab4af30287110b21.parquet",
+        "bytes": 1150859
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/0c16c8b9d8174ce9b603cac86b05dd8d.parquet",
+        "bytes": 1060695
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/08ce1fad5b994defbfdfa5f8a8d22270.parquet",
+        "bytes": 1295815
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/e0285eec6e9f4614bf6c0ee47b78ce9c.parquet",
+        "bytes": 1084172
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/fabdb918f8ac4bb1af27b1732d8cff70.parquet",
+        "bytes": 1172900
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/c65b105d0897476e8678193dfa11ea62.parquet",
+        "bytes": 1115291
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/fbed662c3a6b42cc84e042386484065b.parquet",
+        "bytes": 1187166
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/fafbcde4a3384ef0a85788dc4dee209d.parquet",
+        "bytes": 1065409
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/11f16bee4597474bb83809f1947efaf6.parquet",
+        "bytes": 1197747
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/cc485bfcfb8344d7ad91b8ed5d59fdc2.parquet",
+        "bytes": 1128099
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/fd21596296b74e919032c24a92a21f90.parquet",
+        "bytes": 1140579
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/fcfc0f9178514024aaebc91b00c87ab9.parquet",
+        "bytes": 1137958
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/65dc9e3c859049eb915c6a2504f29267.parquet",
+        "bytes": 1105785
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/3bb09bb57ae1441eb830c40bf82ab5ee.parquet",
+        "bytes": 1421598
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/8e81ac408e7a4f7790da07c50e4e1e7a.parquet",
+        "bytes": 1146264
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/a03b801505ae4d8da99c6a193a6b1849.parquet",
+        "bytes": 1322503
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/614d1503766e4fd5ba216c15766bfa91.parquet",
+        "bytes": 1104249
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/e88919b473ca49788b3f64296559b3b6.parquet",
+        "bytes": 1237654
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/534402002beb4493a8aad6952f83554d.parquet",
+        "bytes": 1171300
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/fe8667868cdb4a7cb451101353a5f24f.parquet",
+        "bytes": 1166708
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/7fb4f48ec89d4390a592936ff5b55fb3.parquet",
+        "bytes": 1519130
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/989ab7b7e70345bd9a37d8f5cfed8c13.parquet",
+        "bytes": 1168364
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/664fa8df6bbb43fab4b6a61e8e8fbbd9.parquet",
+        "bytes": 1094391
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/340cc2e2483145c4820066c0e9e3c3f7.parquet",
+        "bytes": 1208948
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/f93e77a55f4d4025ac5e42aecb958bf2.parquet",
+        "bytes": 1224461
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/6d0663906fd6487b92524236155f30f5.parquet",
+        "bytes": 1115877
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_normalized/9170333aa8fb408ebe7d62d9f72cf9a2.parquet",
+        "bytes": 1185893
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/grvt_BTC_seconds.parquet",
+        "bytes": 3318582
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/slim/slim_bitget_audit.json",
+        "bytes": 1643646
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/slim/slim_bybit_audit.json",
+        "bytes": 1583454
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/reduce_progress.json",
+        "bytes": 76
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/reduce_audit.json",
+        "bytes": 4620
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/arcus_BTC_seconds.parquet",
+        "bytes": 6672518
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/progress.json",
+        "bytes": 79
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/benchmark.py",
+        "bytes": 712
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/6416d77b7a7e490e8bef5e308a59d710.parquet",
+        "bytes": 1436626
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/66c59cd4e11f4afdbcbc45404d205b15.parquet",
+        "bytes": 1145824
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/ddb18bbe528f45d6ad6c61a7ffc0b0fa.parquet",
+        "bytes": 1106003
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/b4dfe84bd5b042bfb1b39b6c4bf35e9c.parquet",
+        "bytes": 1076184
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/2ef0ac4cf62945c4bad7fb2ff13ef9a0.parquet",
+        "bytes": 1137769
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/5a475b61cd734225815e4b32574a90e9.parquet",
+        "bytes": 1088026
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/de49ba63703b4aac8b07fbcfdeb95040.parquet",
+        "bytes": 1341021
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/c0a4928226714d42b454a37587564fd1.parquet",
+        "bytes": 1148777
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/68a5c062a8d04eec8e5520c9da302e4b.parquet",
+        "bytes": 1092546
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/7cb992d6af384b84a940f1475c4a4a7a.parquet",
+        "bytes": 1104194
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/15cadf67fd554c6089d0955b04b7e1d4.parquet",
+        "bytes": 1187112
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/eb116e1f4ee24d17bc75fc9e8d15ef83.parquet",
+        "bytes": 1139932
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/a707d49461af4203b2ac5b8b20ee83e2.parquet",
+        "bytes": 1054647
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/7a8bd8fc06fe43ca81cd7ed4cc543ef9.parquet",
+        "bytes": 1102607
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/7209bcda669248e190bc46c94b1ba009.parquet",
+        "bytes": 1079584
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/ea1b1be4a7ee4a229255cd7c58f51a87.parquet",
+        "bytes": 1178150
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/ad2598f466ae46fe8eb7943a4093f936.parquet",
+        "bytes": 1108931
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/637f4ef74a4548b09c3a80468fe0756c.parquet",
+        "bytes": 1072157
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/001e2a2dd1f94546bf10601bff54f2d8.parquet",
+        "bytes": 1133351
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/05985fe0a6654d8a952e100213b66392.parquet",
+        "bytes": 1189944
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/9b675380aad2497e89f253d578109828.parquet",
+        "bytes": 1113641
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/271c1452e9c74c2cb14152d0827077a3.parquet",
+        "bytes": 1111234
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/14253c65594e423ea2c7d2a859526099.parquet",
+        "bytes": 1231723
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/fe6fd705372d41c9bdc662a938b99be6.parquet",
+        "bytes": 1067686
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/00a2c64c11914d8f9f04e5ca8689c036.parquet",
+        "bytes": 1118848
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/99a87f9425d4403eb27e68045bc50fc2.parquet",
+        "bytes": 1586115
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/1a67c6a001304eeb9cc1bb4f59d2f98e.parquet",
+        "bytes": 1096313
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/8301635e7f9148ef9d77f6fb19881ad7.parquet",
+        "bytes": 1092701
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/4d237ba3f9254026b72ba9f6bad44132.parquet",
+        "bytes": 1232163
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/a1138c80f3344443800c97b5cf059dd2.parquet",
+        "bytes": 1311494
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/ef4e4a9c65584d2e9d16d1ac18fbe7b9.parquet",
+        "bytes": 1091901
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/e51f29204f3d448795daee70e2e7b807.parquet",
+        "bytes": 1164662
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/b28b4c587c274bab924940244e718509.parquet",
+        "bytes": 1178046
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/cd9fbecb9163493db66f92484cd20efc.parquet",
+        "bytes": 1069020
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/c1d8fdb20e494a9d8bd300baa1ae08e5.parquet",
+        "bytes": 1179367
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/0630186634264fcc84d73f7fbe32a29f.parquet",
+        "bytes": 1096286
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/4091c7c2a1004408aa0eb1ea0d2947d4.parquet",
+        "bytes": 1157910
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/68219fd1b20b4e5f8eb7ddacd1598735.parquet",
+        "bytes": 1058982
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/0ff73216cd9a4ce2ad833954039c4c33.parquet",
+        "bytes": 1215122
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/0745b735a3764f39907ab423d38e0dd0.parquet",
+        "bytes": 1076239
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/d2aa89b44fec44ac95d6df52f02d6054.parquet",
+        "bytes": 1086648
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/0b457d065c324324977e9797202da2ac.parquet",
+        "bytes": 1435507
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/18bb02251cfe462abd0a220c13358c27.parquet",
+        "bytes": 1166489
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/297fe3f4e2ea48f48e0eae34651e797e.parquet",
+        "bytes": 1083553
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/b8b107208380435898b0cda65cd04b96.parquet",
+        "bytes": 1053900
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/84ca5b24aa2d41f88c1ea28f0624b89c.parquet",
+        "bytes": 1067532
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/12d1e307fb9745c8919b6fbf699a54a5.parquet",
+        "bytes": 1079996
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/c7569e682a7c4a7d9d5322ddc433c10b.parquet",
+        "bytes": 1088695
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/17d4430046284bfdb6d73d665c01720b.parquet",
+        "bytes": 1221841
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/77486796a7b74b7e8a185e05489fa673.parquet",
+        "bytes": 1068851
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/f7c20edbc05b4fd8b469547f1e978882.parquet",
+        "bytes": 1185500
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/65b41bf564e14126ac5aed2da48f43fd.parquet",
+        "bytes": 1177030
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/aeeb4318069743b0848bbda789f29b8e.parquet",
+        "bytes": 1071885
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/55179dff62124286a366ea003fde7981.parquet",
+        "bytes": 1096657
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/41ad52a512464124bd0baf4c79053d5c.parquet",
+        "bytes": 1144108
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/361e568a73374d1eaa6b39960656a563.parquet",
+        "bytes": 1193531
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/65834e4036144243ba2a3997ff7fd21a.parquet",
+        "bytes": 1054432
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/a46a3100c29440858aaf2b48c3301c49.parquet",
+        "bytes": 1122915
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/ae02e1a1596d4beabd17d0dea815a03b.parquet",
+        "bytes": 1056672
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/ff7f2b5d5ea0479d8274524579884adb.parquet",
+        "bytes": 1168554
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/9d69aa7d106e435bb514214ec4120690.parquet",
+        "bytes": 1163328
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/59e36599c5f94404a641a0a0cc71c652.parquet",
+        "bytes": 1142968
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/dd148523d6e648c39a773ec85a8e1d9c.parquet",
+        "bytes": 1099657
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/7f03dc549fee403980c9076080551a3f.parquet",
+        "bytes": 1092820
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/553b21fabecc4ba5ac34beb864340f3c.parquet",
+        "bytes": 1118787
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/08a2447a922a4928ad443aa906aa0732.parquet",
+        "bytes": 1091476
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/b13fe9796b5a44ac8dcdafa29aaf9b86.parquet",
+        "bytes": 1091551
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/acdf87ba834042629cb536ecde39ab48.parquet",
+        "bytes": 1126269
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/9f991998c6444a8d8cf79d8896f6dc72.parquet",
+        "bytes": 1133414
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/d42c869c429e4f7281d5a0cc01d9c930.parquet",
+        "bytes": 1161035
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/4330f558b1db4687b7a1fac523e6e799.parquet",
+        "bytes": 1067773
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/4e949d2019b44ccf83ca979a8101db6a.parquet",
+        "bytes": 1063285
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/99b47755ce95472ab6b5e202813f737e.parquet",
+        "bytes": 1185809
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/44917ea6c91a4b6cba35967e0477fb5c.parquet",
+        "bytes": 1269650
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/5304132dcc39465fb7645182e1c731e6.parquet",
+        "bytes": 1243672
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/bca90aa17cb64c2b985ea1936ce2fafb.parquet",
+        "bytes": 1062375
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/5dd598bae5af47e0ac91266064821524.parquet",
+        "bytes": 1107891
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/3ce37cad822f454593f41fa0dc274290.parquet",
+        "bytes": 1052384
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/160246403dfd44f5b2c3cd278e9b8397.parquet",
+        "bytes": 1049935
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/6ccdc8e5036342b780ad5068591e70fb.parquet",
+        "bytes": 1172714
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/3d2a4da5e6f54e8abdd81523e34cacc8.parquet",
+        "bytes": 1050023
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/6396154e4d4244f99495ec8359db6196.parquet",
+        "bytes": 1231168
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/6b01765af3664266b08c0c50e2d9510b.parquet",
+        "bytes": 1308826
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/0a3e1f03426a43919f77c29bcb691594.parquet",
+        "bytes": 1235901
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/287e1e49d0f748d8a13f690f5cfa1a9e.parquet",
+        "bytes": 1224040
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/0c67c737876d4a4693690b45be9e884c.parquet",
+        "bytes": 1139115
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/ec3f641c2c834dfa8b687b3970f4ef70.parquet",
+        "bytes": 1113161
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/94b1fd1af00444388e61f1d4960b41a5.parquet",
+        "bytes": 1249242
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/484b65d63ce34a0e97c14145a7bb4d8c.parquet",
+        "bytes": 1086453
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/81f6f698bcfc43fc972fa4c87c5d57b7.parquet",
+        "bytes": 1180764
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/783d2104525341bdac982daad1f4b50a.parquet",
+        "bytes": 1183625
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/c94998e8b19f4606a5032eec7961b283.parquet",
+        "bytes": 1095477
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/69b9966f3c714ce88a483dc94f84be99.parquet",
+        "bytes": 1096217
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/ab7583bbe7cf48949ef16547e78593f3.parquet",
+        "bytes": 1098064
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/7586655c16c641268475005e4e51dbfc.parquet",
+        "bytes": 1143092
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/5320991caacd44fa99172e5d1ebebed0.parquet",
+        "bytes": 1206799
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/0b87c3faa6b34c29b44bdd5a4251b7a7.parquet",
+        "bytes": 1062663
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/fc9a85865e4b4de392691865644aa170.parquet",
+        "bytes": 1628830
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/bc794d3c279a4494a9dcac55741d3688.parquet",
+        "bytes": 1389981
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/9ce4b1de8cf140df9e528eabd0f12ce3.parquet",
+        "bytes": 1180412
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/bde72bd48cb14eddaf5f88ac8b6fa145.parquet",
+        "bytes": 1353883
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/71477af5907541159ffb00100f04006d.parquet",
+        "bytes": 1087534
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/2f3e104eaa9f47ef98d9f134d75a6d39.parquet",
+        "bytes": 1176846
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/fc8546b776224e42b1d278b1aeb3822f.parquet",
+        "bytes": 1200891
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/43e79b95d6c74523b47526ebfa5a1e8a.parquet",
+        "bytes": 1238565
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/4fc638e25b3c46c6b394729dac7fb5cf.parquet",
+        "bytes": 1050184
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/77eaaa89ac9e493a905d2a01206e3324.parquet",
+        "bytes": 1234798
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/4409599fae814555af6619a1f488398e.parquet",
+        "bytes": 1190114
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/1f63f0f79ce043bca550a85c30832611.parquet",
+        "bytes": 1312453
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/efbc02b723ef495293a94ee114a0b71e.parquet",
+        "bytes": 1229715
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/0355aa88864e4f8a831875e009818ab3.parquet",
+        "bytes": 1072211
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/0546535a837f4426b966f48ed792a176.parquet",
+        "bytes": 1057114
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/478e8090920748848bbe4bb28decd11e.parquet",
+        "bytes": 1106999
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/b3c63fd493054167becad034a26b19c2.parquet",
+        "bytes": 1057949
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/235e02cae7494fb79c5f09631a6a9164.parquet",
+        "bytes": 1183540
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/a712a8b53f3844c4851cd4c714c60151.parquet",
+        "bytes": 1100026
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/277767d220c84283a3b24dd984fa6494.parquet",
+        "bytes": 1065388
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/e347588ac1a940419dd08d548d83b46b.parquet",
+        "bytes": 1101649
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/f2a2ff8e639c48a396e741f961dc18d3.parquet",
+        "bytes": 1097143
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/00699d47e6b54836a91e8e78ead330f3.parquet",
+        "bytes": 1308938
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/8cad9cf827394cb898e771d021da3d31.parquet",
+        "bytes": 1051721
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/7b221962fda54d9a8bb6670f198ae0eb.parquet",
+        "bytes": 1049153
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/32dedfb2bec2486ab2dde5220c0dbc9d.parquet",
+        "bytes": 1294679
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/85cb43a23cd24b09ae283ef0a4b2d53e.parquet",
+        "bytes": 1198684
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/3e2f90a844c84e29a6e5102fa7325750.parquet",
+        "bytes": 1224518
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/d90aaee9b65a44efab987dafcfc663a4.parquet",
+        "bytes": 1151068
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/2a0ff9b6e19e4abf86ab935e13d889a5.parquet",
+        "bytes": 1249064
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/f48d0388175d491fa8185307dc8f17b0.parquet",
+        "bytes": 1141808
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/d095f769fc934cce97d3d953fb6fa781.parquet",
+        "bytes": 1078616
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/eeb9f78b85ea46ebb35027f8dfa6720c.parquet",
+        "bytes": 1065270
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/350d1baa86c74c3b9cb5d445cb9a5160.parquet",
+        "bytes": 1073718
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/720ff9b3306a472ba0cd30fac3c0874c.parquet",
+        "bytes": 1261827
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/f49b2b7e341f4a4db3ce67e763981c5e.parquet",
+        "bytes": 1086581
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/ff757981a5954887ae6eb96308054340.parquet",
+        "bytes": 1088667
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/17dde64b73fc413e8579c68a76f9d173.parquet",
+        "bytes": 1074478
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/fd9c4886df6f4697b649a60258b1d39a.parquet",
+        "bytes": 1301180
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/ac35e76f5ef44fbdb40ac8837d869d30.parquet",
+        "bytes": 1239299
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/b0691c49eb514783890bd08f428a2cca.parquet",
+        "bytes": 1126145
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/5fca3d386ad54df1ab4af30287110b21.parquet",
+        "bytes": 1116303
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/23d1ecbf38f643d19423700fb3bec870.parquet",
+        "bytes": 1239334
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/5b3a4d5f6b0146af9eb9a7a8dd6b36a6.parquet",
+        "bytes": 1079828
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/08ce1fad5b994defbfdfa5f8a8d22270.parquet",
+        "bytes": 1215452
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/5a413b498bac4972866242c111ee1253.parquet",
+        "bytes": 1233118
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/d2ceaaa970734cf2a5a18c45481fc0dd.parquet",
+        "bytes": 1318290
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/47498f96b27249508c0e05c52ac077dd.parquet",
+        "bytes": 1357100
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/0e5b0959c8244c8f8c9c0763a06eeefc.parquet",
+        "bytes": 1389881
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/e0285eec6e9f4614bf6c0ee47b78ce9c.parquet",
+        "bytes": 1061841
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/c37018be07834beaae94ce73e3370010.parquet",
+        "bytes": 1377568
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/fdf3c674b5024e73892bccbd2122ef7e.parquet",
+        "bytes": 1167818
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/dcff2066327b4b39931215bdb90baba2.parquet",
+        "bytes": 1388283
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/02f1419ab0a0448790fed391f3747d20.parquet",
+        "bytes": 1088793
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/47397c131d1845bcbb90beca37dcc560.parquet",
+        "bytes": 1098848
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/e60c120c16594098baa21656e426a445.parquet",
+        "bytes": 1049511
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/ba76a8ee6aee4dc5ad2985c90afa1c23.parquet",
+        "bytes": 1091909
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/fabdb918f8ac4bb1af27b1732d8cff70.parquet",
+        "bytes": 1133175
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/c65b105d0897476e8678193dfa11ea62.parquet",
+        "bytes": 1060130
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/2b8bd06e5a274fe8b447abf44181d8d7.parquet",
+        "bytes": 1092847
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/8cc04142c4bb43ea99f4461484088797.parquet",
+        "bytes": 1100990
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/60afd3ff6a1045e3be620da303314e7c.parquet",
+        "bytes": 1316435
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/deb6a4cd16a94fb2bb4bb07f0654e17a.parquet",
+        "bytes": 1059023
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/94ca42f491894a86a36504362ee94c89.parquet",
+        "bytes": 1170792
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/a1f6cff376e742e496c03d4142c7468f.parquet",
+        "bytes": 1320344
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/fbed662c3a6b42cc84e042386484065b.parquet",
+        "bytes": 1175083
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/bb57f8dceae340789b1128e49484bc52.parquet",
+        "bytes": 1113360
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/37f84c8bea6d413ebb9525845da4cb20.parquet",
+        "bytes": 1087551
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/6c74d38ba1d24887b126b4a29d9d5e96.parquet",
+        "bytes": 1125971
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/0e4bc0dd203c4965891963932970d08e.parquet",
+        "bytes": 1149283
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/4b8ecf841d6849bc95c1c6f1a7a0ec34.parquet",
+        "bytes": 1118951
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/8db37666c6974f0280e772ff8f3c71c5.parquet",
+        "bytes": 1135587
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/476265128292434eb5668abdb73681f5.parquet",
+        "bytes": 1203989
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/7433f1d8e97f482d9f535d704e89d5ef.parquet",
+        "bytes": 1249100
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/81036dfcd32b4158930c559ba553ce51.parquet",
+        "bytes": 1295400
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/11f16bee4597474bb83809f1947efaf6.parquet",
+        "bytes": 1143284
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/cc485bfcfb8344d7ad91b8ed5d59fdc2.parquet",
+        "bytes": 1090432
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/075b5c2904cc413a8a4e18a4981ddd0f.parquet",
+        "bytes": 1093373
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/fd21596296b74e919032c24a92a21f90.parquet",
+        "bytes": 1059554
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/1e9f2638327548bca74a9226dbe5beda.parquet",
+        "bytes": 1275707
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/e7599be3605d47ca803affed89b90da4.parquet",
+        "bytes": 1103511
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/8a0842282752441b9970174d87ca1abe.parquet",
+        "bytes": 1146207
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/599a84dea92e41a096d04daf3d254af6.parquet",
+        "bytes": 1098126
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/09293a9adeef40d7bf3ad6c3dacea866.parquet",
+        "bytes": 1086409
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/58d506798e5b44f98b8f070fa944b445.parquet",
+        "bytes": 1129490
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/40af9b68f66c4086aadca6a6c2f07040.parquet",
+        "bytes": 1271279
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/7d562767808c4c47a6b59d18f92deacf.parquet",
+        "bytes": 1050290
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/f0008baaca7f40cd8c8dd4372b28ee06.parquet",
+        "bytes": 1161165
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/fcfc0f9178514024aaebc91b00c87ab9.parquet",
+        "bytes": 1094659
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/65dc9e3c859049eb915c6a2504f29267.parquet",
+        "bytes": 1061539
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/2e4de0c710244cbea2a80a42012a10b1.parquet",
+        "bytes": 1108563
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/244654c6232d4d36a6df3758b4fb5b8d.parquet",
+        "bytes": 1063602
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/5517c326082749f1ada07d3bcf49ffeb.parquet",
+        "bytes": 1217799
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/3bb09bb57ae1441eb830c40bf82ab5ee.parquet",
+        "bytes": 1405831
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/1c4b3b4ff754432e8ece68c2a8f7c62d.parquet",
+        "bytes": 1354235
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/f88b0b5752ab4a8b81127018db799e68.parquet",
+        "bytes": 1149398
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/fbfdc9aa4fc14f24b44a07e0900cf7d5.parquet",
+        "bytes": 1267722
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/8e81ac408e7a4f7790da07c50e4e1e7a.parquet",
+        "bytes": 1119683
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/17d35252abc4436eb8ffbe3983787acd.parquet",
+        "bytes": 1215083
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/a03b801505ae4d8da99c6a193a6b1849.parquet",
+        "bytes": 1244257
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/c84b4c9ca495489ab32e6c6bd00538c5.parquet",
+        "bytes": 1157894
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/20ddfeda1b0f4fe1b0c17a5fded26bcc.parquet",
+        "bytes": 1066750
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/9dadbef464ce48b9a4219dcd7ea8c7da.parquet",
+        "bytes": 1190566
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/614d1503766e4fd5ba216c15766bfa91.parquet",
+        "bytes": 1062650
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/a4e0a9a2a1db494fba8cdb2267705c68.parquet",
+        "bytes": 1070877
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/e88919b473ca49788b3f64296559b3b6.parquet",
+        "bytes": 1240546
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/534402002beb4493a8aad6952f83554d.parquet",
+        "bytes": 1133245
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/186bfb97450345e6b3f9cfe626ff6762.parquet",
+        "bytes": 1066112
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/a68ef5bd764e4570887ffb64450512a5.parquet",
+        "bytes": 1127624
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/e3483bb117bf47ba8c1d2aeee5146b34.parquet",
+        "bytes": 1055432
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/bb008913805c4bef9e6aceb05f7803eb.parquet",
+        "bytes": 1154791
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/62afaf5b034f481aa198b008c17b74e2.parquet",
+        "bytes": 1389441
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/76f9da59b65a4460b03d1eda6cb86b36.parquet",
+        "bytes": 1071391
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/a185a8b9d4e84927b1937a4721629d29.parquet",
+        "bytes": 1268066
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/21b16e77259b4e3abb75cd5ff8e10137.parquet",
+        "bytes": 1080655
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/da28de96141443baa4eb233c0dbd1839.parquet",
+        "bytes": 1055372
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/80084e5ba59a4ec5b98903fb17a5fb25.parquet",
+        "bytes": 1132767
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/f05bcaefab8d41ec85aba221a7cbccda.parquet",
+        "bytes": 1289264
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/47cb6e6be3684333960a90e5947bd224.parquet",
+        "bytes": 1114668
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/3c69e1cf881c438fbe8faff78aec1824.parquet",
+        "bytes": 1093167
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/7ad29906f5b44528ba1a1433a857f89a.parquet",
+        "bytes": 1145563
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/bc8d9d7268af4a70999415f54bf6431b.parquet",
+        "bytes": 1066288
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/0aa4ea9b6c2b49a2846bc0ad9f4db9bf.parquet",
+        "bytes": 1140145
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/f384ddfb26c64239a516a56b50a725ce.parquet",
+        "bytes": 1081406
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/0189e9e8b8014652ac14220bcf5851e1.parquet",
+        "bytes": 1114601
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/bde0c649d5664386a7819943a90158f3.parquet",
+        "bytes": 1296585
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/2567c0865e8146ac81ccf057d6b4797c.parquet",
+        "bytes": 1098562
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/fe8667868cdb4a7cb451101353a5f24f.parquet",
+        "bytes": 1103332
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/3bf98d9dd65e4654804a0e1a7ee327b6.parquet",
+        "bytes": 1179529
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/76636cb7bc7c4cb2875fb87a794a7f25.parquet",
+        "bytes": 1101800
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/bc708769bfe34604950df9c454df923b.parquet",
+        "bytes": 1103782
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/7fb4f48ec89d4390a592936ff5b55fb3.parquet",
+        "bytes": 1456831
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/989ab7b7e70345bd9a37d8f5cfed8c13.parquet",
+        "bytes": 1136988
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/8cac1e0897384c9cbe5db754ba34a264.parquet",
+        "bytes": 1154211
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/664fa8df6bbb43fab4b6a61e8e8fbbd9.parquet",
+        "bytes": 1059185
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/4688620d013b4da79ba1252caeca8c75.parquet",
+        "bytes": 1061715
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/38541cc25ea84048b2a5e485943e1d56.parquet",
+        "bytes": 1074762
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/1f4ad00556a94adbbcd2e1177253a9db.parquet",
+        "bytes": 1383952
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/2c0da6617df44d1091d95bc20c32b21d.parquet",
+        "bytes": 1176075
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/340cc2e2483145c4820066c0e9e3c3f7.parquet",
+        "bytes": 1195328
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/52f837fc5a0946eabe7111b4eccf74b8.parquet",
+        "bytes": 1111896
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/f672cb4844034957884564e4f4654d58.parquet",
+        "bytes": 1271768
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/96e6ffefbde64bd0931dccd5922af8fb.parquet",
+        "bytes": 1145506
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/3d96b7ddb47d41e58195f685a40d6c8e.parquet",
+        "bytes": 1125300
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/fb4473a8555d4c37a22ea23971c603ca.parquet",
+        "bytes": 1109283
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/420785ad0f264be39b11444f897941b4.parquet",
+        "bytes": 1089686
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/49d6602c7c414b81a7a6b22779ab1b0d.parquet",
+        "bytes": 1209936
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/1c1f5aeb0746441c91736099b5ee5552.parquet",
+        "bytes": 1182496
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/131b8b23d5e34651802905d7bcab6c7f.parquet",
+        "bytes": 1239974
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/f93e77a55f4d4025ac5e42aecb958bf2.parquet",
+        "bytes": 1182974
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/b3b6db57ede74ec7998d0c68dd6a72a7.parquet",
+        "bytes": 1195396
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/cdcd235744d344c29cebf669fbff88f0.parquet",
+        "bytes": 1233195
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/a351b51b0b724cd18581d7d56d42f0f8.parquet",
+        "bytes": 1080495
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/ad31d9a7e0144f74958ebcd9ea14f05c.parquet",
+        "bytes": 1245056
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/2b6851c99b1e4c2892920f29b5eaef8e.parquet",
+        "bytes": 1176446
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/6d0663906fd6487b92524236155f30f5.parquet",
+        "bytes": 1069641
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/d312b9839b074be486d7d43c621ceb63.parquet",
+        "bytes": 1050761
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/cc70ddb67c7a450995dd6f8b6a04acc5.parquet",
+        "bytes": 1089343
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/43ddcee09c534a4cb1c302b46d561560.parquet",
+        "bytes": 1094572
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/ad8669ac02d54776b6f92c5185156285.parquet",
+        "bytes": 1240945
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/8299c721da794621b4ddde69c395651f.parquet",
+        "bytes": 1056131
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/f1602478fdf24fc2a8217e94649d1fd1.parquet",
+        "bytes": 1079359
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/1e5ccb689b8149f0ae49ef2bc4e976e7.parquet",
+        "bytes": 1122319
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/f74a5319cf8f43b4859cb9246ad265c6.parquet",
+        "bytes": 1100282
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/ba75858a2e8343cfa0ecbb5338aa8bf6.parquet",
+        "bytes": 1286168
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/binance_native/9170333aa8fb408ebe7d62d9f72cf9a2.parquet",
+        "bytes": 1126505
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/bitget_native/589ca1e6b3ba4742b30caaea933296ff.parquet",
+        "bytes": 1059729
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/bitget_native/ac6411a9c4c44e5ab1a7f764ec6992d4.parquet",
+        "bytes": 1113643
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/bitget_native/62155c0a19394fd596570f2cd0fcfbdf.parquet",
+        "bytes": 1126720
+      },
+      {
+        "path": "/srv/vibetrading-capacity/fv-research-20261004/shard_closed_fv_research.py",
+        "bytes": 1610
+      }
+    ],
+    "/srv/vibetrading-capacity/migration-retained-20261006": [
+      {
+        "path": "/srv/vibetrading-capacity/migration-retained-20261006/market-exports/kospi200-only-20261001-final.tar.gz",
+        "bytes": 80903867
+      },
+      {
+        "path": "/srv/vibetrading-capacity/migration-retained-20261006/market-exports/sk-usdt-only-20261001.tar.gz",
+        "bytes": 1128508438
+      },
+      {
+        "path": "/srv/vibetrading-capacity/migration-retained-20261006/market-exports/vibetrading-market-20260914T130416Z.tar.gz",
+        "bytes": 189041454
+      },
+      {
+        "path": "/srv/vibetrading-capacity/migration-retained-20261006/market-exports/all-history-20260923.tar.gz",
+        "bytes": 823153540
+      },
+      {
+        "path": "/srv/vibetrading-capacity/migration-retained-20261006/market-state/vibetrading.sqlite3",
+        "bytes": 6355726336
+      }
+    ],
+    "/srv/vibetrading-data/releases/collector-recovery-20261015": [
+      {
+        "path": "/srv/vibetrading-data/releases/collector-recovery-20261015/build.json",
+        "bytes": 1419
+      },
+      {
+        "path": "/srv/vibetrading-data/releases/collector-recovery-20261015/tests-final.txt",
+        "bytes": 100
+      },
+      {
+        "path": "/srv/vibetrading-data/releases/collector-recovery-20261015/runtime.before.json",
+        "bytes": 35334
+      },
+      {
+        "path": "/srv/vibetrading-data/releases/collector-recovery-20261015/tests-mock.txt",
+        "bytes": 112
+      },
+      {
+        "path": "/srv/vibetrading-data/releases/collector-recovery-20261015/revision.txt",
+        "bytes": 31
+      },
+      {
+        "path": "/srv/vibetrading-data/releases/collector-recovery-20261015/tests.txt",
+        "bytes": 99
+      },
+      {
+        "path": "/srv/vibetrading-data/releases/collector-recovery-20261015/Dockerfile",
+        "bytes": 239
+      },
+      {
+        "path": "/srv/vibetrading-data/releases/collector-recovery-20261015/tests-collectors.txt",
+        "bytes": 112
+      },
+      {
+        "path": "/srv/vibetrading-data/releases/collector-recovery-20261015/journal-before.sqlite3",
+        "bytes": 94208
+      },
+      {
+        "path": "/srv/vibetrading-data/releases/collector-recovery-20261015/verification.json",
+        "bytes": 10073
+      },
+      {
+        "path": "/srv/vibetrading-data/releases/collector-recovery-20261015/deployment.json",
+        "bytes": 249
+      }
+    ],
+    "/opt/vibetrading/releases/telegram-recovery-20261014": [
+      {
+        "path": "/opt/vibetrading/releases/telegram-recovery-20261014/Dockerfile.timefolio",
+        "bytes": 230
+      },
+      {
+        "path": "/opt/vibetrading/releases/telegram-recovery-20261014/test-exclusion-verification.json",
+        "bytes": 3454
+      },
+      {
+        "path": "/opt/vibetrading/releases/telegram-recovery-20261014/etf-mock.service.before",
+        "bytes": 587
+      },
+      {
+        "path": "/opt/vibetrading/releases/telegram-recovery-20261014/dashboard.yml",
+        "bytes": 2502
+      },
+      {
+        "path": "/opt/vibetrading/releases/telegram-recovery-20261014/etf-csv-sync.service.before",
+        "bytes": 599
+      },
+      {
+        "path": "/opt/vibetrading/releases/telegram-recovery-20261014/build.json",
+        "bytes": 134
+      },
+      {
+        "path": "/opt/vibetrading/releases/telegram-recovery-20261014/runtime.yml",
+        "bytes": 35262
+      },
+      {
+        "path": "/opt/vibetrading/releases/telegram-recovery-20261014/vibetrading.service.before",
+        "bytes": 878
+      },
+      {
+        "path": "/opt/vibetrading/releases/telegram-recovery-20261014/verification.json",
+        "bytes": 14202
+      },
+      {
+        "path": "/opt/vibetrading/releases/telegram-recovery-20261014/dashboard-build.log",
+        "bytes": 55815
+      },
+      {
+        "path": "/opt/vibetrading/releases/telegram-recovery-20261014/final-verification.json",
+        "bytes": 5964
+      }
+    ]
+  },
+  "oracle_units": "oracle-a1-catcher.service disabled enabled\n",
+  "oracle-a1-catcher.service": "inactive",
+  "oracle-a1-catcher.timer": "inactive"
+}

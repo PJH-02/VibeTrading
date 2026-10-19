@@ -1,0 +1,801 @@
+{
+  "run_id": "crypto-e2e-1791988738275858741",
+  "release": "/opt/vibetrading/latency-audits/crypto-e2e-1791988738275858741",
+  "output": "/srv/vibetrading-data/testnet_latency_audits/crypto-e2e-1791988738275858741",
+  "clock_ntp": "NTPSynchronized=yes",
+  "before": {
+    "time_ns": 1791988738321904915,
+    "cpu_count": 2,
+    "load": [
+      2.99462890625,
+      3.0439453125,
+      3.41845703125
+    ],
+    "memory": "total        used        free      shared  buff/cache   available\nMem:            3914        2288         179           0        1743        1626\nSwap:           4095         578        3517",
+    "stats": "vibetrading-crypto-collector-binance-1 7.83% 46.79MiB / 256MiB\nvibetrading-crypto-collector-arcus-1 27.76% 41.7MiB / 256MiB\nvibetrading-crypto-collector-grvt-1 2.40% 39.56MiB / 256MiB\nvibetrading-telegram-1 0.26% 39.38MiB / 256MiB\nvibetrading-etf-mock-1 40.99% 86.75MiB / 512MiB\nvibetrading-monitor-timefolio-1 0.00% 21.42MiB / 384MiB\nvibetrading-monitor-bridge-1 22.52% 120.5MiB / 192MiB\nvibetrading-crypto-maintenance-1 4.01% 174.4MiB / 512MiB\nvibetrading-crypto-storage-1 27.25% 725.3MiB / 1.25GiB\nvibetrading-etf-csv-sync-1 20.75% 17.45MiB / 512MiB\nvibetrading-maintenance-1 0.00% 269.8MiB / 512MiB\nvibetrading-storage-1 21.70% 228.4MiB / 1GiB\nvibetrading-collectors-1 0.59% 44.33MiB / 768MiB\nvibetrading-nats-1 18.07% 191.6MiB / 512MiB"
+  },
+  "mutated_production_data": false,
+  "instrumented_ready_ns": 1791988764308970515,
+  "probe_exit_code": 0,
+  "during_or_after": {
+    "time_ns": 1791988894324450856,
+    "cpu_count": 2,
+    "load": [
+      4.03759765625,
+      3.39208984375,
+      3.48681640625
+    ],
+    "memory": "total        used        free      shared  buff/cache   available\nMem:            3914        2251         451           0        1507        1662\nSwap:           4095         595        3500",
+    "stats": "vibetrading-crypto-collector-arcus-1 26.57% 42.51MiB / 256MiB\nvibetrading-crypto-collector-binance-1 5.61% 48.09MiB / 256MiB\nvibetrading-crypto-collector-grvt-1 1.77% 39.93MiB / 256MiB\nvibetrading-telegram-1 0.22% 40.31MiB / 256MiB\nvibetrading-etf-mock-1 0.02% 45.32MiB / 512MiB\nvibetrading-monitor-timefolio-1 0.00% 18.12MiB / 384MiB\nvibetrading-monitor-bridge-1 15.24% 120.5MiB / 192MiB\nvibetrading-crypto-maintenance-1 0.00% 190.7MiB / 512MiB\nvibetrading-crypto-storage-1 41.68% 543MiB / 1.25GiB\nvibetrading-etf-csv-sync-1 0.00% 17.45MiB / 512MiB\nvibetrading-maintenance-1 0.00% 172.5MiB / 512MiB\nvibetrading-storage-1 1.33% 241.8MiB / 1GiB\nvibetrading-collectors-1 0.32% 40MiB / 768MiB\nvibetrading-nats-1 24.32% 181MiB / 512MiB"
+  },
+  "measurement": {
+    "started_ns": 1791988765556847171,
+    "finished_ns": 1791988892430714399,
+    "grvt_testnet": {
+      "maker": {
+        "intent_creation_ms": {
+          "n": 15,
+          "p50_ms": 0.0492,
+          "p95_ms": 0.0975,
+          "p99_ms": 0.1401,
+          "min_ms": 0.0395,
+          "max_ms": 0.1508
+        },
+        "signing_ms": {
+          "n": 15,
+          "p50_ms": 8.6257,
+          "p95_ms": 24.1188,
+          "p99_ms": 25.3466,
+          "min_ms": 5.7217,
+          "max_ms": 25.6536
+        },
+        "intent_to_submit_ms": {
+          "n": 15,
+          "p50_ms": 12.8431,
+          "p95_ms": 37.8385,
+          "p99_ms": 38.021,
+          "min_ms": 10.2523,
+          "max_ms": 38.0667
+        },
+        "submit_to_ack_ms": {
+          "n": 15,
+          "p50_ms": 36.8767,
+          "p95_ms": 41.309,
+          "p99_ms": 41.8046,
+          "min_ms": 35.6132,
+          "max_ms": 41.9286
+        },
+        "submit_to_private_reflected_ms": {
+          "n": 15,
+          "p50_ms": 45.7121,
+          "p95_ms": 51.7595,
+          "p99_ms": 57.2011,
+          "min_ms": 44.1938,
+          "max_ms": 58.5615
+        },
+        "submit_to_public_book_ms": {
+          "n": 13,
+          "p50_ms": 181.3397,
+          "p95_ms": 189.7549,
+          "p99_ms": 193.9729,
+          "min_ms": 136.9781,
+          "max_ms": 195.0274
+        },
+        "rpc_dispatch_to_send_ms": {
+          "n": 15,
+          "p50_ms": 2.0092,
+          "p95_ms": 8.4752,
+          "p99_ms": 11.4681,
+          "min_ms": 1.507,
+          "max_ms": 12.2163
+        },
+        "receive_to_private_reflected_ms": {
+          "n": 15,
+          "p50_ms": 64.5409,
+          "p95_ms": 93.984,
+          "p99_ms": 94.2162,
+          "min_ms": 57.167,
+          "max_ms": 94.2742
+        },
+        "live_to_private_reflected_ms": {
+          "n": 15,
+          "p50_ms": 61.4334,
+          "p95_ms": 84.4917,
+          "p99_ms": 85.0772,
+          "min_ms": 54.975,
+          "max_ms": 85.2236
+        },
+        "source_to_private_reflected_unadjusted_ms": {
+          "n": 15,
+          "p50_ms": 96.0231,
+          "p95_ms": 126.9387,
+          "p99_ms": 127.6186,
+          "min_ms": 79.9041,
+          "max_ms": 127.7885
+        },
+        "submit_to_fill_ms": {
+          "n": 2,
+          "p50_ms": 128.9562,
+          "p95_ms": 130.5773,
+          "p99_ms": 130.7214,
+          "min_ms": 127.1549,
+          "max_ms": 130.7574
+        },
+        "receive_to_fill_ms": {
+          "n": 2,
+          "p50_ms": 153.0979,
+          "p95_ms": 162.1025,
+          "p99_ms": 162.9029,
+          "min_ms": 143.0929,
+          "max_ms": 163.103
+        }
+      },
+      "BTCUSDT/maker": {
+        "intent_creation_ms": {
+          "n": 5,
+          "p50_ms": 0.057,
+          "p95_ms": 0.1324,
+          "p99_ms": 0.1471,
+          "min_ms": 0.0395,
+          "max_ms": 0.1508
+        },
+        "signing_ms": {
+          "n": 5,
+          "p50_ms": 8.6257,
+          "p95_ms": 13.7031,
+          "p99_ms": 14.631,
+          "min_ms": 5.7217,
+          "max_ms": 14.863
+        },
+        "intent_to_submit_ms": {
+          "n": 5,
+          "p50_ms": 12.8431,
+          "p95_ms": 26.1655,
+          "p99_ms": 28.6574,
+          "min_ms": 10.4268,
+          "max_ms": 29.2803
+        },
+        "submit_to_ack_ms": {
+          "n": 5,
+          "p50_ms": 36.072,
+          "p95_ms": 36.7582,
+          "p99_ms": 36.8195,
+          "min_ms": 35.6132,
+          "max_ms": 36.8349
+        },
+        "submit_to_private_reflected_ms": {
+          "n": 5,
+          "p50_ms": 44.4579,
+          "p95_ms": 55.7893,
+          "p99_ms": 58.0071,
+          "min_ms": 44.3179,
+          "max_ms": 58.5615
+        },
+        "submit_to_public_book_ms": {
+          "n": 4,
+          "p50_ms": 183.606,
+          "p95_ms": 193.3258,
+          "p99_ms": 194.6871,
+          "min_ms": 181.7953,
+          "max_ms": 195.0274
+        },
+        "rpc_dispatch_to_send_ms": {
+          "n": 5,
+          "p50_ms": 2.0092,
+          "p95_ms": 3.0231,
+          "p99_ms": 3.1945,
+          "min_ms": 1.8266,
+          "max_ms": 3.2373
+        },
+        "receive_to_private_reflected_ms": {
+          "n": 5,
+          "p50_ms": 60.5189,
+          "p95_ms": 79.0935,
+          "p99_ms": 80.1038,
+          "min_ms": 57.167,
+          "max_ms": 80.3564
+        },
+        "live_to_private_reflected_ms": {
+          "n": 5,
+          "p50_ms": 58.3873,
+          "p95_ms": 73.1558,
+          "p99_ms": 73.6744,
+          "min_ms": 54.975,
+          "max_ms": 73.804
+        },
+        "source_to_private_reflected_unadjusted_ms": {
+          "n": 5,
+          "p50_ms": 83.6439,
+          "p95_ms": 102.6087,
+          "p99_ms": 103.9258,
+          "min_ms": 81.399,
+          "max_ms": 104.2551
+        },
+        "submit_to_fill_ms": {
+          "n": 1,
+          "p50_ms": 127.1549,
+          "p95_ms": 127.1549,
+          "p99_ms": 127.1549,
+          "min_ms": 127.1549,
+          "max_ms": 127.1549
+        },
+        "receive_to_fill_ms": {
+          "n": 1,
+          "p50_ms": 163.103,
+          "p95_ms": 163.103,
+          "p99_ms": 163.103,
+          "min_ms": 163.103,
+          "max_ms": 163.103
+        }
+      },
+      "ETHUSDT/maker": {
+        "intent_creation_ms": {
+          "n": 5,
+          "p50_ms": 0.0492,
+          "p95_ms": 0.0546,
+          "p99_ms": 0.0551,
+          "min_ms": 0.0408,
+          "max_ms": 0.0553
+        },
+        "signing_ms": {
+          "n": 5,
+          "p50_ms": 8.1503,
+          "p95_ms": 22.4977,
+          "p99_ms": 23.2684,
+          "min_ms": 6.1655,
+          "max_ms": 23.4611
+        },
+        "intent_to_submit_ms": {
+          "n": 5,
+          "p50_ms": 12.4277,
+          "p95_ms": 37.7884,
+          "p99_ms": 38.011,
+          "min_ms": 10.4166,
+          "max_ms": 38.0667
+        },
+        "submit_to_ack_ms": {
+          "n": 5,
+          "p50_ms": 40.1928,
+          "p95_ms": 41.7515,
+          "p99_ms": 41.8931,
+          "min_ms": 36.8767,
+          "max_ms": 41.9286
+        },
+        "submit_to_private_reflected_ms": {
+          "n": 5,
+          "p50_ms": 47.2628,
+          "p95_ms": 48.5744,
+          "p99_ms": 48.7904,
+          "min_ms": 45.7513,
+          "max_ms": 48.8444
+        },
+        "submit_to_public_book_ms": {
+          "n": 4,
+          "p50_ms": 164.9843,
+          "p95_ms": 184.4458,
+          "p99_ms": 184.8843,
+          "min_ms": 148.5665,
+          "max_ms": 184.994
+        },
+        "rpc_dispatch_to_send_ms": {
+          "n": 5,
+          "p50_ms": 1.9391,
+          "p95_ms": 10.986,
+          "p99_ms": 11.9702,
+          "min_ms": 1.8263,
+          "max_ms": 12.2163
+        },
+        "receive_to_private_reflected_ms": {
+          "n": 5,
+          "p50_ms": 65.47,
+          "p95_ms": 94.1913,
+          "p99_ms": 94.2577,
+          "min_ms": 58.4095,
+          "max_ms": 94.2742
+        },
+        "live_to_private_reflected_ms": {
+          "n": 5,
+          "p50_ms": 61.4334,
+          "p95_ms": 85.0145,
+          "p99_ms": 85.1818,
+          "min_ms": 56.4421,
+          "max_ms": 85.2236
+        },
+        "source_to_private_reflected_unadjusted_ms": {
+          "n": 5,
+          "p50_ms": 87.6643,
+          "p95_ms": 119.3113,
+          "p99_ms": 119.3144,
+          "min_ms": 81.7359,
+          "max_ms": 119.3152
+        },
+        "submit_to_fill_ms": {
+          "n": 1,
+          "p50_ms": 130.7574,
+          "p95_ms": 130.7574,
+          "p99_ms": 130.7574,
+          "min_ms": 130.7574,
+          "max_ms": 130.7574
+        },
+        "receive_to_fill_ms": {
+          "n": 1,
+          "p50_ms": 143.0929,
+          "p95_ms": 143.0929,
+          "p99_ms": 143.0929,
+          "min_ms": 143.0929,
+          "max_ms": 143.0929
+        }
+      },
+      "SOLUSDT/maker": {
+        "intent_creation_ms": {
+          "n": 5,
+          "p50_ms": 0.0469,
+          "p95_ms": 0.0724,
+          "p99_ms": 0.0742,
+          "min_ms": 0.0435,
+          "max_ms": 0.0746
+        },
+        "signing_ms": {
+          "n": 5,
+          "p50_ms": 12.5058,
+          "p95_ms": 23.8962,
+          "p99_ms": 25.3021,
+          "min_ms": 5.8959,
+          "max_ms": 25.6536
+        },
+        "intent_to_submit_ms": {
+          "n": 5,
+          "p50_ms": 18.6075,
+          "p95_ms": 35.8014,
+          "p99_ms": 37.3529,
+          "min_ms": 10.2523,
+          "max_ms": 37.7407
+        },
+        "submit_to_ack_ms": {
+          "n": 5,
+          "p50_ms": 36.944,
+          "p95_ms": 37.1492,
+          "p99_ms": 37.1885,
+          "min_ms": 36.2596,
+          "max_ms": 37.1983
+        },
+        "submit_to_private_reflected_ms": {
+          "n": 5,
+          "p50_ms": 44.7086,
+          "p95_ms": 46.1646,
+          "p99_ms": 46.2552,
+          "min_ms": 44.1938,
+          "max_ms": 46.2778
+        },
+        "submit_to_public_book_ms": {
+          "n": 5,
+          "p50_ms": 158.8758,
+          "p95_ms": 182.4379,
+          "p99_ms": 185.4795,
+          "min_ms": 136.9781,
+          "max_ms": 186.2399
+        },
+        "rpc_dispatch_to_send_ms": {
+          "n": 5,
+          "p50_ms": 3.5139,
+          "p95_ms": 6.8708,
+          "p99_ms": 6.8717,
+          "min_ms": 1.507,
+          "max_ms": 6.8719
+        },
+        "receive_to_private_reflected_ms": {
+          "n": 5,
+          "p50_ms": 64.5409,
+          "p95_ms": 88.5124,
+          "p99_ms": 90.6361,
+          "min_ms": 58.6604,
+          "max_ms": 91.1671
+        },
+        "live_to_private_reflected_ms": {
+          "n": 5,
+          "p50_ms": 62.9574,
+          "p95_ms": 81.4083,
+          "p99_ms": 83.1382,
+          "min_ms": 55.1257,
+          "max_ms": 83.5707
+        },
+        "source_to_private_reflected_unadjusted_ms": {
+          "n": 5,
+          "p50_ms": 106.7851,
+          "p95_ms": 127.5457,
+          "p99_ms": 127.74,
+          "min_ms": 79.9041,
+          "max_ms": 127.7885
+        }
+      },
+      "ioc": {
+        "intent_creation_ms": {
+          "n": 20,
+          "p50_ms": 0.0423,
+          "p95_ms": 0.0491,
+          "p99_ms": 0.0553,
+          "min_ms": 0.0332,
+          "max_ms": 0.0569
+        },
+        "signing_ms": {
+          "n": 20,
+          "p50_ms": 17.5081,
+          "p95_ms": 26.245,
+          "p99_ms": 30.4369,
+          "min_ms": 5.7476,
+          "max_ms": 31.4849
+        },
+        "intent_to_submit_ms": {
+          "n": 20,
+          "p50_ms": 34.6427,
+          "p95_ms": 47.6333,
+          "p99_ms": 49.6658,
+          "min_ms": 9.568,
+          "max_ms": 50.1739
+        },
+        "submit_to_ack_ms": {
+          "n": 20,
+          "p50_ms": 36.9508,
+          "p95_ms": 39.6056,
+          "p99_ms": 40.4726,
+          "min_ms": 35.6157,
+          "max_ms": 40.6894
+        },
+        "submit_to_private_reflected_ms": {
+          "n": 20,
+          "p50_ms": 66.2446,
+          "p95_ms": 101.6343,
+          "p99_ms": 103.0341,
+          "min_ms": 57.0571,
+          "max_ms": 103.3841
+        },
+        "submit_to_fill_ms": {
+          "n": 20,
+          "p50_ms": 66.2482,
+          "p95_ms": 109.7077,
+          "p99_ms": 205.3841,
+          "min_ms": 56.9346,
+          "max_ms": 229.3032
+        },
+        "rpc_dispatch_to_send_ms": {
+          "n": 20,
+          "p50_ms": 6.805,
+          "p95_ms": 12.6933,
+          "p99_ms": 14.7471,
+          "min_ms": 1.8209,
+          "max_ms": 15.2605
+        },
+        "receive_to_private_reflected_ms": {
+          "n": 20,
+          "p50_ms": 109.5835,
+          "p95_ms": 145.2416,
+          "p99_ms": 145.5377,
+          "min_ms": 74.968,
+          "max_ms": 145.6117
+        },
+        "receive_to_fill_ms": {
+          "n": 20,
+          "p50_ms": 108.8283,
+          "p95_ms": 153.6131,
+          "p99_ms": 240.8951,
+          "min_ms": 74.4793,
+          "max_ms": 262.7156
+        },
+        "live_to_private_reflected_ms": {
+          "n": 20,
+          "p50_ms": 105.0103,
+          "p95_ms": 140.6358,
+          "p99_ms": 141.3215,
+          "min_ms": 73.2089,
+          "max_ms": 141.4929
+        },
+        "source_to_private_reflected_unadjusted_ms": {
+          "n": 20,
+          "p50_ms": 139.3964,
+          "p95_ms": 174.6856,
+          "p99_ms": 206.8322,
+          "min_ms": 105.0795,
+          "max_ms": 214.8689
+        }
+      },
+      "ETHUSDT/ioc": {
+        "intent_creation_ms": {
+          "n": 7,
+          "p50_ms": 0.0396,
+          "p95_ms": 0.0429,
+          "p99_ms": 0.0432,
+          "min_ms": 0.0358,
+          "max_ms": 0.0433
+        },
+        "signing_ms": {
+          "n": 7,
+          "p50_ms": 13.8187,
+          "p95_ms": 27.3467,
+          "p99_ms": 30.6572,
+          "min_ms": 5.7476,
+          "max_ms": 31.4849
+        },
+        "intent_to_submit_ms": {
+          "n": 7,
+          "p50_ms": 27.7932,
+          "p95_ms": 46.4579,
+          "p99_ms": 49.4307,
+          "min_ms": 9.568,
+          "max_ms": 50.1739
+        },
+        "submit_to_ack_ms": {
+          "n": 7,
+          "p50_ms": 37.0503,
+          "p95_ms": 39.408,
+          "p99_ms": 39.511,
+          "min_ms": 36.0001,
+          "max_ms": 39.5367
+        },
+        "submit_to_private_reflected_ms": {
+          "n": 7,
+          "p50_ms": 63.5025,
+          "p95_ms": 68.1517,
+          "p99_ms": 68.5374,
+          "min_ms": 57.0571,
+          "max_ms": 68.6338
+        },
+        "submit_to_fill_ms": {
+          "n": 7,
+          "p50_ms": 63.0139,
+          "p95_ms": 68.1436,
+          "p99_ms": 68.5153,
+          "min_ms": 57.2674,
+          "max_ms": 68.6083
+        },
+        "rpc_dispatch_to_send_ms": {
+          "n": 7,
+          "p50_ms": 6.2797,
+          "p95_ms": 12.7758,
+          "p99_ms": 14.7636,
+          "min_ms": 1.8209,
+          "max_ms": 15.2605
+        },
+        "receive_to_private_reflected_ms": {
+          "n": 7,
+          "p50_ms": 96.4116,
+          "p95_ms": 113.6835,
+          "p99_ms": 114.8287,
+          "min_ms": 74.968,
+          "max_ms": 115.115
+        },
+        "receive_to_fill_ms": {
+          "n": 7,
+          "p50_ms": 96.3862,
+          "p95_ms": 113.734,
+          "p99_ms": 114.8854,
+          "min_ms": 74.4793,
+          "max_ms": 115.1732
+        },
+        "live_to_private_reflected_ms": {
+          "n": 7,
+          "p50_ms": 90.8429,
+          "p95_ms": 108.1634,
+          "p99_ms": 109.2525,
+          "min_ms": 73.2089,
+          "max_ms": 109.5248
+        },
+        "source_to_private_reflected_unadjusted_ms": {
+          "n": 7,
+          "p50_ms": 122.3421,
+          "p95_ms": 139.9963,
+          "p99_ms": 140.7161,
+          "min_ms": 105.0795,
+          "max_ms": 140.896
+        }
+      },
+      "BTCUSDT/ioc": {
+        "intent_creation_ms": {
+          "n": 7,
+          "p50_ms": 0.0468,
+          "p95_ms": 0.0486,
+          "p99_ms": 0.0487,
+          "min_ms": 0.0332,
+          "max_ms": 0.0487
+        },
+        "signing_ms": {
+          "n": 7,
+          "p50_ms": 21.8329,
+          "p95_ms": 25.6247,
+          "p99_ms": 25.9003,
+          "min_ms": 11.7429,
+          "max_ms": 25.9692
+        },
+        "intent_to_submit_ms": {
+          "n": 7,
+          "p50_ms": 41.0858,
+          "p95_ms": 46.5029,
+          "p99_ms": 47.3003,
+          "min_ms": 22.2172,
+          "max_ms": 47.4996
+        },
+        "submit_to_ack_ms": {
+          "n": 7,
+          "p50_ms": 37.0423,
+          "p95_ms": 39.3916,
+          "p99_ms": 39.5172,
+          "min_ms": 35.8192,
+          "max_ms": 39.5485
+        },
+        "submit_to_private_reflected_ms": {
+          "n": 7,
+          "p50_ms": 59.3925,
+          "p95_ms": 75.7124,
+          "p99_ms": 76.8022,
+          "min_ms": 57.1464,
+          "max_ms": 77.0746
+        },
+        "submit_to_fill_ms": {
+          "n": 7,
+          "p50_ms": 58.8765,
+          "p95_ms": 75.9086,
+          "p99_ms": 76.8817,
+          "min_ms": 56.9346,
+          "max_ms": 77.125
+        },
+        "rpc_dispatch_to_send_ms": {
+          "n": 7,
+          "p50_ms": 6.4616,
+          "p95_ms": 11.8661,
+          "p99_ms": 12.4197,
+          "min_ms": 4.8388,
+          "max_ms": 12.5582
+        },
+        "receive_to_private_reflected_ms": {
+          "n": 7,
+          "p50_ms": 107.2343,
+          "p95_ms": 124.4769,
+          "p99_ms": 128.4377,
+          "min_ms": 84.7031,
+          "max_ms": 129.4279
+        },
+        "receive_to_fill_ms": {
+          "n": 7,
+          "p50_ms": 107.2081,
+          "p95_ms": 123.2918,
+          "p99_ms": 128.241,
+          "min_ms": 84.9914,
+          "max_ms": 129.4782
+        },
+        "live_to_private_reflected_ms": {
+          "n": 7,
+          "p50_ms": 100.6861,
+          "p95_ms": 114.7072,
+          "p99_ms": 117.895,
+          "min_ms": 79.5059,
+          "max_ms": 118.692
+        },
+        "source_to_private_reflected_unadjusted_ms": {
+          "n": 7,
+          "p50_ms": 135.8659,
+          "p95_ms": 163.1293,
+          "p99_ms": 166.1997,
+          "min_ms": 109.5402,
+          "max_ms": 166.9673
+        }
+      },
+      "SOLUSDT/ioc": {
+        "intent_creation_ms": {
+          "n": 6,
+          "p50_ms": 0.0435,
+          "p95_ms": 0.0545,
+          "p99_ms": 0.0564,
+          "min_ms": 0.0384,
+          "max_ms": 0.0569
+        },
+        "signing_ms": {
+          "n": 6,
+          "p50_ms": 19.4584,
+          "p95_ms": 23.602,
+          "p99_ms": 23.9489,
+          "min_ms": 13.4084,
+          "max_ms": 24.0357
+        },
+        "intent_to_submit_ms": {
+          "n": 6,
+          "p50_ms": 34.7507,
+          "p95_ms": 40.4801,
+          "p99_ms": 40.656,
+          "min_ms": 27.617,
+          "max_ms": 40.6999
+        },
+        "submit_to_ack_ms": {
+          "n": 6,
+          "p50_ms": 36.8581,
+          "p95_ms": 39.8505,
+          "p99_ms": 40.5216,
+          "min_ms": 35.6157,
+          "max_ms": 40.6894
+        },
+        "submit_to_private_reflected_ms": {
+          "n": 6,
+          "p50_ms": 100.0066,
+          "p95_ms": 102.9236,
+          "p99_ms": 103.292,
+          "min_ms": 99.1201,
+          "max_ms": 103.3841
+        },
+        "submit_to_fill_ms": {
+          "n": 6,
+          "p50_ms": 101.9349,
+          "p95_ms": 197.8307,
+          "p99_ms": 223.0087,
+          "min_ms": 99.0835,
+          "max_ms": 229.3032
+        },
+        "rpc_dispatch_to_send_ms": {
+          "n": 6,
+          "p50_ms": 8.6076,
+          "p95_ms": 9.253,
+          "p99_ms": 9.3556,
+          "min_ms": 5.0766,
+          "max_ms": 9.3813
+        },
+        "receive_to_private_reflected_ms": {
+          "n": 6,
+          "p50_ms": 142.0435,
+          "p95_ms": 145.5143,
+          "p99_ms": 145.5922,
+          "min_ms": 130.8732,
+          "max_ms": 145.6117
+        },
+        "receive_to_fill_ms": {
+          "n": 6,
+          "p50_ms": 144.8924,
+          "p95_ms": 234.0044,
+          "p99_ms": 256.9734,
+          "min_ms": 131.2812,
+          "max_ms": 262.7156
+        },
+        "live_to_private_reflected_ms": {
+          "n": 6,
+          "p50_ms": 135.9302,
+          "p95_ms": 141.2674,
+          "p99_ms": 141.4478,
+          "min_ms": 127.1673,
+          "max_ms": 141.4929
+        },
+        "source_to_private_reflected_unadjusted_ms": {
+          "n": 6,
+          "p50_ms": 169.9036,
+          "p95_ms": 204.2943,
+          "p99_ms": 212.754,
+          "min_ms": 165.3346,
+          "max_ms": 214.8689
+        }
+      }
+    },
+    "observed_live": {
+      "arcus": 102288,
+      "binance": 13844,
+      "grvt": 3241
+    },
+    "matched_sample_events": 26468,
+    "snapshots_excluded": 0,
+    "errors": [
+      {
+        "cleanup_error": "RuntimeError",
+        "message": "grvt RPC rejected by exchange"
+      }
+    ],
+    "method": "production raw WS receive -> existing parser -> production durable NATS -> live feed -> probe intent; GRVT production trigger -> testnet quote/sign/RPC -> private order/fill; source clock unadjusted",
+    "final_account": {}
+  },
+  "original_services_restored": true,
+  "finished_ns": 1791988913481786741,
+  "after": {
+    "time_ns": 1791988913481788544,
+    "cpu_count": 2,
+    "load": [
+      3.09375,
+      3.21923828125,
+      3.42724609375
+    ],
+    "memory": "total        used        free      shared  buff/cache   available\nMem:            3914        2193         516           0        1501        1721\nSwap:           4095         595        3500",
+    "stats": "vibetrading-crypto-collector-arcus-1 28.16% 39.61MiB / 256MiB\nvibetrading-crypto-collector-binance-1 23.29% 47.62MiB / 256MiB\nvibetrading-crypto-collector-grvt-1 5.21% 39.73MiB / 256MiB\nvibetrading-telegram-1 0.17% 40.31MiB / 256MiB\nvibetrading-etf-mock-1 0.02% 45.32MiB / 512MiB\nvibetrading-monitor-timefolio-1 0.00% 18.12MiB / 384MiB\nvibetrading-monitor-bridge-1 26.89% 120.9MiB / 192MiB\nvibetrading-crypto-maintenance-1 4.17% 190.7MiB / 512MiB\nvibetrading-crypto-storage-1 31.69% 542.8MiB / 1.25GiB\nvibetrading-etf-csv-sync-1 0.00% 17.45MiB / 512MiB\nvibetrading-maintenance-1 0.00% 172.5MiB / 512MiB\nvibetrading-storage-1 0.63% 241.9MiB / 1GiB\nvibetrading-collectors-1 0.45% 40MiB / 768MiB\nvibetrading-nats-1 12.42% 198.8MiB / 512MiB"
+  }
+}

@@ -1,0 +1,203 @@
+{
+  "captured_ns": 1792025929976989453,
+  "state": {
+    "Status": "exited",
+    "ExitCode": 0,
+    "OOMKilled": false,
+    "StartedAt": "2026-10-14T11:46:55.857331712Z",
+    "FinishedAt": "2026-10-14T19:33:46.099591331Z"
+  },
+  "command": [
+    "python",
+    "main.py",
+    "run",
+    "--config",
+    "/app/config/runtime.yaml",
+    "--role",
+    "collectors"
+  ],
+  "restart": {
+    "Name": "unless-stopped",
+    "MaximumRetryCount": 0
+  },
+  "image": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+  "health": {
+    "collectors": {
+      "component": "collectors",
+      "state": "running",
+      "ts_ns": 1792006407960421854,
+      "build": {
+        "build_revision": "telegram-recovery-0960f84aa12e2ac0",
+        "build_config_hash": "aaaf1c44eba58d07befecf734dab86125694680341714123f8a7609f61a6704c",
+        "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+        "runtime_config_hash": "be695190559ffa53498dee4b71b9dd3db271fcb83b9e1cecd53aba77d7f76d86"
+      },
+      "providers": [
+        "kis",
+        "kiwoom",
+        "toss"
+      ]
+    },
+    "collectors-kis": {
+      "component": "collectors-kis",
+      "state": "running",
+      "ts_ns": 1792006392532415487,
+      "build": {
+        "build_revision": "telegram-recovery-0960f84aa12e2ac0",
+        "build_config_hash": "aaaf1c44eba58d07befecf734dab86125694680341714123f8a7609f61a6704c",
+        "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+        "runtime_config_hash": "be695190559ffa53498dee4b71b9dd3db271fcb83b9e1cecd53aba77d7f76d86"
+      },
+      "provider": "kis",
+      "phase": "market_closed"
+    },
+    "collectors-kiwoom": {
+      "component": "collectors-kiwoom",
+      "state": "running",
+      "ts_ns": 1792006392578947864,
+      "build": {
+        "build_revision": "telegram-recovery-0960f84aa12e2ac0",
+        "build_config_hash": "aaaf1c44eba58d07befecf734dab86125694680341714123f8a7609f61a6704c",
+        "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+        "runtime_config_hash": "be695190559ffa53498dee4b71b9dd3db271fcb83b9e1cecd53aba77d7f76d86"
+      },
+      "provider": "kiwoom",
+      "phase": "market_closed"
+    },
+    "collectors-toss": {
+      "component": "collectors-toss",
+      "state": "running",
+      "ts_ns": 1792006414653142874,
+      "build": {
+        "build_revision": "telegram-recovery-0960f84aa12e2ac0",
+        "build_config_hash": "aaaf1c44eba58d07befecf734dab86125694680341714123f8a7609f61a6704c",
+        "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+        "runtime_config_hash": "be695190559ffa53498dee4b71b9dd3db271fcb83b9e1cecd53aba77d7f76d86"
+      },
+      "provider": "toss",
+      "phase": "publishing",
+      "last_event_ts_ns": 1792006414467878766,
+      "published_count": 199080,
+      "published_bytes": 199699589,
+      "symbol_last_seen_ns": {
+        "SPY": 1792006414346543523,
+        "QQQ": 1792006414467878766
+      },
+      "event_age_seconds": 0.2,
+      "stream_probe": {
+        "status": "fresh",
+        "stream": "MARKET_DATA",
+        "bytes": 31403,
+        "max_bytes": 1073741824,
+        "ratio": 2.9246322810649872e-05,
+        "generation": "2026-10-05 15:52:42.454495+00:00",
+        "observed_age_seconds": 0.0008453599875792861,
+        "last_success_age_seconds": 0.0008453599875792861,
+        "error": null,
+        "config_mismatch": false,
+        "consecutive_failures": 0
+      },
+      "disk": {
+        "used_ratio": 0.2323,
+        "free_bytes": 242526150656,
+        "reserve_bytes": 4294967296,
+        "resume_margin_bytes": 6318526300,
+        "warning": false,
+        "upload_priority": false,
+        "direct_upload": false,
+        "fail_closed": false,
+        "probe_error": null,
+        "state_free_bytes": 242526150656,
+        "state_reserve_bytes": 1073741824,
+        "state_resume_margin_bytes": 268435456,
+        "nats_free_bytes": 14513618944,
+        "nats_reserve_bytes": 3221225472,
+        "nats_resume_margin_bytes": 536870912
+      },
+      "publisher": {
+        "accepted": 199080,
+        "published": 199080,
+        "failed": 0,
+        "pending": 0,
+        "queued_bytes": 0
+      }
+    },
+    "etf-mock": {
+      "component": "etf-mock",
+      "state": "running",
+      "ts_ns": 1792025928901162111,
+      "build": {
+        "build_revision": "telegram-recovery-bbbdef1ab3d6e488",
+        "build_config_hash": "276dfe4cb0b5e749f5874ab365094048778196b72a4b94eed9ebd2dcf301ba92",
+        "image_id": "sha256:a1e51b15b7065c18263c335ffb4029a4f4a9eecd3203e593f8289a70349ba81f",
+        "runtime_config_hash": "8cb778df42e446d9de11509bcc677165c305c88476a4e5a20337d66e4bbaec3e"
+      },
+      "phase": "ready",
+      "account_mode": "mock",
+      "account_routes": {
+        "mock": [
+          "069500",
+          "229200"
+        ],
+        "mock2": [
+          "122630",
+          "251340"
+        ]
+      },
+      "assumed_positions": {},
+      "day": "2026-10-15",
+      "books": {
+        "C3": {
+          "strategy": "C3",
+          "cash": "33333333",
+          "day": "2026-10-15",
+          "entries": 0,
+          "direction": 0,
+          "safety_stop": null,
+          "positions": {},
+          "reserved": "0"
+        },
+        "KP": {
+          "strategy": "KP",
+          "cash": "33333333",
+          "day": "2026-10-15",
+          "entries": 0,
+          "direction": 1,
+          "safety_stop": null,
+          "positions": {},
+          "reserved": "0"
+        },
+        "KD": {
+          "strategy": "KD",
+          "cash": "33333333",
+          "day": "2026-10-15",
+          "entries": 0,
+          "direction": -1,
+          "safety_stop": 14036.407799896868,
+          "positions": {},
+          "reserved": "0"
+        }
+      },
+      "pending_orders": 0,
+      "c3_inputs_ready": true,
+      "vehicle_bars": {
+        "069500": {
+          "completed_today": 0,
+          "latest_close": null
+        },
+        "122630": {
+          "completed_today": 0,
+          "latest_close": null
+        },
+        "229200": {
+          "completed_today": 0,
+          "latest_close": null
+        },
+        "251340": {
+          "completed_today": 0,
+          "latest_close": null
+        }
+      }
+    }
+  }
+}

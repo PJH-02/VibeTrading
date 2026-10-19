@@ -1,0 +1,51 @@
+{
+  "verified_ns": 1792036671464376935,
+  "recovery_marker_present": false,
+  "etf-mock": {
+    "age_s": 9.32,
+    "state": "running",
+    "phase": "ready",
+    "publisher": null,
+    "pending_orders": 0
+  },
+  "collectors-kis": {
+    "age_s": 11.3,
+    "state": "running",
+    "phase": "publishing",
+    "publisher": {
+      "accepted": 10068,
+      "published": 10068,
+      "failed": 0,
+      "pending": 0,
+      "queued_bytes": 0
+    },
+    "pending_orders": null
+  },
+  "collectors-kiwoom": {
+    "age_s": 11.32,
+    "state": "running",
+    "phase": "publishing",
+    "publisher": {
+      "accepted": 3351,
+      "published": 3351,
+      "failed": 0,
+      "pending": 0,
+      "queued_bytes": 0
+    },
+    "pending_orders": null
+  },
+  "collectors-toss": {
+    "age_s": 0.06,
+    "state": "running",
+    "phase": "publishing",
+    "publisher": null,
+    "pending_orders": null
+  },
+  "etf-csv-sync": {
+    "age_s": 6.87,
+    "state": "running",
+    "phase": "waiting_close",
+    "publisher": null,
+    "pending_orders": null
+  }
+}

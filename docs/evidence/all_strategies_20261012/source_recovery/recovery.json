@@ -1,0 +1,30 @@
+{
+  "v1": {
+    "path": "docs/evidence/all_strategies_20261012/source_recovery/v1_recorded_original.md",
+    "chars": 38411,
+    "sections": 22,
+    "sha256": "d41b9c2fe988c0d1132bfaf9a88cdfdca6567ded7387115161f517961692640a",
+    "provenance": "original attachment text recovered from this chat command stdout; not a byte-identical original file hash"
+  },
+  "v3": {
+    "path": "docs/evidence/all_strategies_20261012/source_recovery/v3_recorded_original.md",
+    "chars": 17091,
+    "sections": 13,
+    "sha256": "c665261d3851854bd4b7470fdec016f15e9c1f5d50e4292e881b32db20707b84",
+    "provenance": "original attachment text recovered from this chat command stdout; not a byte-identical original file hash"
+  },
+  "v4": {
+    "path": "docs/evidence/all_strategies_20261012/source_recovery/v4_recorded_original.md",
+    "chars": 22274,
+    "sections": 14,
+    "sha256": "a79be18c8c8b8f3b222090d831ce668876593c87620ebfdde79e1a1f29f8ac1b",
+    "provenance": "original attachment text recovered from this chat command stdout; not a byte-identical original file hash"
+  },
+  "feedback": {
+    "path": "docs/evidence/all_strategies_20261012/source_recovery/feedback_recorded_original.md",
+    "chars": 33543,
+    "sections": 78,
+    "sha256": "0f40acc6668642d9ff78521c4966c3fda0f736bf0d1d1dbffd49ea42ca77e23e",
+    "provenance": "original attachment text recovered from this chat command stdout; not a byte-identical original file hash"
+  }
+}

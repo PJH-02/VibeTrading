@@ -1,0 +1,4 @@
+import gzip,hashlib,json,pathlib,subprocess
+r=pathlib.Path('/srv/vibetrading-capacity/incident-20261006');p=r/'market-migration/complete.json';data=p.read_bytes();full=json.loads(data)
+result={'completed_ts_ns':full['ts_ns'],'full_receipt_sha256':hashlib.sha256(data).hexdigest(),'full_receipt_path':str(p),'trees':[{'source':e['source'],'target':e['target'],'retained':e['retained'],'files':len(e['files']),'bytes':sum(v['bytes'] for v in e['files'].values()),'all_files_sha256_verified':True} for e in full['verified']],'disk':subprocess.check_output(['df','-h','/','/srv/vibetrading-data','/srv/vibetrading-capacity'],text=True),'mounts':subprocess.check_output(['findmnt','-n','-o','SOURCE,TARGET','--target','/srv/vibetrading-data/runtime_data/state'],text=True)}
+(r/'market-migration-summary.json').write_text(json.dumps(result,indent=2));(r/'market-migration-complete.json.gz').write_bytes(gzip.compress(data,compresslevel=3));print(json.dumps(result,indent=2))

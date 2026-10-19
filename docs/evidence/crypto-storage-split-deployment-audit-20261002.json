@@ -1,0 +1,157 @@
+{
+  "utc": "2026-10-02T06:31:43Z",
+  "image": "sha256:a0832388c6645b63c2a551001434671c809000e282da85a09031a24142fdcab8",
+  "revision": "r2-split-db-938b277a55e1e480",
+  "containers": {
+    "/vibetrading-crypto-storage-1": {
+      "mounts": {
+        "/data": "/srv/vibetrading-data/runtime_data",
+        "/data/crypto_state": "/srv/vibetrading-crypto-state"
+      },
+      "memory_limit": 1073741824,
+      "restart_policy": {
+        "Name": "unless-stopped",
+        "MaximumRetryCount": 0
+      },
+      "configuration": {
+        "MARKET_EVENT_MAX_AGE_SECONDS": "43200",
+        "NATS_FILE_STORE_MAX_BYTES": "1342177280",
+        "SQLITE_CACHE_KIB": "131072",
+        "STORAGE_RESERVE_GB": "4",
+        "STORAGE_STATE_DISK_ROOT": "/data/crypto_state",
+        "STORAGE_STATE_RESERVE_BYTES": "1073741824",
+        "STORAGE_STATE_RESUME_MARGIN_BYTES": "268435456",
+        "VIBETRADING_STATE_DIR": "/data/crypto_state"
+      }
+    },
+    "/vibetrading-crypto-maintenance-1": {
+      "mounts": {
+        "/data": "/srv/vibetrading-data/runtime_data",
+        "/data/crypto_state": "/srv/vibetrading-crypto-state",
+        "/run/secrets/archive_access_key": "/etc/vibetrading/secrets/archive_access_key",
+        "/run/secrets/archive_secret_key": "/etc/vibetrading/secrets/archive_secret_key"
+      },
+      "memory_limit": 536870912,
+      "restart_policy": {
+        "Name": "unless-stopped",
+        "MaximumRetryCount": 0
+      },
+      "configuration": {
+        "ARCHIVE_BACKLOG_IDLE_SECONDS": "5",
+        "ARCHIVE_DELIVERY_HISTORY_PRUNE_LIMIT": "8192",
+        "ARCHIVE_DELIVERY_HISTORY_RETENTION_SECONDS": "21600",
+        "ARCHIVE_DELIVERY_PRUNE_MAX_IO_PRESSURE": "70",
+        "ARCHIVE_RELIEF_MAX_IO_PRESSURE": "90",
+        "MARKET_EVENT_MAX_AGE_SECONDS": "43200",
+        "NATS_FILE_STORE_MAX_BYTES": "1342177280",
+        "SQLITE_CACHE_KIB": "131072",
+        "STORAGE_RESERVE_GB": "4",
+        "STORAGE_STATE_DISK_ROOT": "/data/crypto_state",
+        "STORAGE_STATE_RESERVE_BYTES": "1073741824",
+        "STORAGE_STATE_RESUME_MARGIN_BYTES": "268435456",
+        "VIBETRADING_STATE_DIR": "/data/crypto_state"
+      }
+    },
+    "/vibetrading-crypto-collector-binance-1": {
+      "mounts": {
+        "/data": "/srv/vibetrading-data/runtime_data",
+        "/data/crypto_state": "/srv/vibetrading-crypto-state"
+      },
+      "memory_limit": 536870912,
+      "restart_policy": {
+        "Name": "unless-stopped",
+        "MaximumRetryCount": 0
+      },
+      "configuration": {
+        "MARKET_EVENT_MAX_AGE_SECONDS": "43200",
+        "NATS_FILE_STORE_MAX_BYTES": "1342177280",
+        "STORAGE_RESERVE_GB": "4",
+        "STORAGE_STATE_DISK_ROOT": "/data/crypto_state",
+        "STORAGE_STATE_RESERVE_BYTES": "1073741824",
+        "STORAGE_STATE_RESUME_MARGIN_BYTES": "268435456"
+      }
+    },
+    "/vibetrading-crypto-collector-bitget-1": {
+      "mounts": {
+        "/data": "/srv/vibetrading-data/runtime_data",
+        "/data/crypto_state": "/srv/vibetrading-crypto-state"
+      },
+      "memory_limit": 536870912,
+      "restart_policy": {
+        "Name": "unless-stopped",
+        "MaximumRetryCount": 0
+      },
+      "configuration": {
+        "MARKET_EVENT_MAX_AGE_SECONDS": "43200",
+        "NATS_FILE_STORE_MAX_BYTES": "1342177280",
+        "STORAGE_RESERVE_GB": "4",
+        "STORAGE_STATE_DISK_ROOT": "/data/crypto_state",
+        "STORAGE_STATE_RESERVE_BYTES": "1073741824",
+        "STORAGE_STATE_RESUME_MARGIN_BYTES": "268435456"
+      }
+    },
+    "/vibetrading-crypto-collector-bybit-1": {
+      "mounts": {
+        "/data": "/srv/vibetrading-data/runtime_data",
+        "/data/crypto_state": "/srv/vibetrading-crypto-state"
+      },
+      "memory_limit": 536870912,
+      "restart_policy": {
+        "Name": "unless-stopped",
+        "MaximumRetryCount": 0
+      },
+      "configuration": {
+        "MARKET_EVENT_MAX_AGE_SECONDS": "43200",
+        "NATS_FILE_STORE_MAX_BYTES": "1342177280",
+        "STORAGE_RESERVE_GB": "4",
+        "STORAGE_STATE_DISK_ROOT": "/data/crypto_state",
+        "STORAGE_STATE_RESERVE_BYTES": "1073741824",
+        "STORAGE_STATE_RESUME_MARGIN_BYTES": "268435456"
+      }
+    }
+  },
+  "separate_devices": true,
+  "protected_exports_preserved": true,
+  "market_db_inode_preserved": true,
+  "source_duplicate_removed": true,
+  "boot_enabled": "enabled",
+  "boot_active": "active",
+  "storage_error_count": 0,
+  "crypto_logs": {
+    "crypto-storage": {
+      "error_lines": 0,
+      "tracebacks": 0,
+      "pressure_pauses": 0,
+      "warnings": 0
+    },
+    "crypto-maintenance": {
+      "error_lines": 0,
+      "tracebacks": 0,
+      "pressure_pauses": 0,
+      "warnings": 0
+    },
+    "crypto-collector-binance": {
+      "error_lines": 0,
+      "tracebacks": 0,
+      "pressure_pauses": 0,
+      "warnings": 0
+    },
+    "crypto-collector-bitget": {
+      "error_lines": 0,
+      "tracebacks": 0,
+      "pressure_pauses": 0,
+      "warnings": 0
+    },
+    "crypto-collector-bybit": {
+      "error_lines": 0,
+      "tracebacks": 0,
+      "pressure_pauses": 0,
+      "warnings": 0
+    }
+  },
+  "protected_export_count": 6,
+  "telegram_state_mount": {
+    "source": "/srv/vibetrading-crypto-state",
+    "readonly": true
+  }
+}

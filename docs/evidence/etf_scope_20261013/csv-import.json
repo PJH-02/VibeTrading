@@ -1,0 +1,106 @@
+{
+  "version": 2,
+  "storage": "shared_ticker_csv_close_only_append",
+  "files": {
+    "069500_daily": {
+      "path": "raw/069500_daily.csv",
+      "sha256": "f27f81aaa31751e4a27a24e327e2eb5461cff44e8e46467bd9a5349bfec26025",
+      "bytes": 395824,
+      "rows": 5921,
+      "last_date": "2026-10-13",
+      "symbol": "069500",
+      "provider": "TOSS",
+      "timestamp_semantics": "completed_session"
+    },
+    "069500_minute": {
+      "path": "raw/069500_minute.csv",
+      "sha256": "6bdb57bf764cacb0db76c7d1cc32a60842357a87e1e7579749675cd30eccbf9f",
+      "bytes": 29026384,
+      "rows": 369210,
+      "last_date": "2026-10-13",
+      "symbol": "069500",
+      "provider": "TOSS",
+      "timestamp_semantics": "bar_end"
+    },
+    "122630_daily": {
+      "path": "raw/122630_daily.csv",
+      "sha256": "caa61977a2842b667a52ba84b172ed057732d819828783bd0dc082da23126973",
+      "bytes": 281520,
+      "rows": 4094,
+      "last_date": "2026-10-13",
+      "symbol": "122630",
+      "provider": "TOSS",
+      "timestamp_semantics": "completed_session"
+    },
+    "122630_minute": {
+      "path": "raw/122630_minute.csv",
+      "sha256": "bdaa38d242b6e6e403ca8479e88eaefdf64d4bfbd6792a2dffaa446312fe0bb4",
+      "bytes": 29595735,
+      "rows": 369210,
+      "last_date": "2026-10-13",
+      "symbol": "122630",
+      "provider": "TOSS",
+      "timestamp_semantics": "bar_end"
+    },
+    "229200_daily": {
+      "path": "raw/229200_daily.csv",
+      "sha256": "1edc59e86f7dc75750b0d1bacda51c97a3d57ba6ac97b72c5602b474cc01c9b7",
+      "bytes": 182665,
+      "rows": 2704,
+      "last_date": "2026-10-13",
+      "symbol": "229200",
+      "provider": "TOSS",
+      "timestamp_semantics": "completed_session"
+    },
+    "229200_minute": {
+      "path": "raw/229200_minute.csv",
+      "sha256": "688a4781090cf9f97ef6597cb6d5e3836f70eec9e8d3bb1bbc0410dd382fd41d",
+      "bytes": 29239720,
+      "rows": 369210,
+      "last_date": "2026-10-13",
+      "symbol": "229200",
+      "provider": "TOSS",
+      "timestamp_semantics": "bar_end"
+    },
+    "251340_daily": {
+      "path": "raw/251340_daily.csv",
+      "sha256": "9007b8800cf2ccc9938643fa004ad2efea1bc18fc44a130eb6cd6beabb44e1be",
+      "bytes": 162140,
+      "rows": 2492,
+      "last_date": "2026-10-13",
+      "symbol": "251340",
+      "provider": "TOSS",
+      "timestamp_semantics": "completed_session"
+    },
+    "251340_minute": {
+      "path": "raw/251340_minute.csv",
+      "sha256": "b7d4bcf84aea45be3d25aa71d0bd7014df1aca8a1cbd608d76cd4595895f03f8",
+      "bytes": 27913977,
+      "rows": 369210,
+      "last_date": "2026-10-13",
+      "symbol": "251340",
+      "provider": "TOSS",
+      "timestamp_semantics": "bar_end"
+    },
+    "KOSPI200_daily": {
+      "path": "raw/KOSPI200_daily.csv",
+      "sha256": "f6bf11a5be085fbb06a6e4fb646b3ef836afbfcda2dae4ced648c67020882f59",
+      "bytes": 139061,
+      "rows": 3008,
+      "last_date": "2026-10-13",
+      "symbol": "KOSPI200",
+      "provider": "user_index_csv",
+      "timestamp_semantics": "completed_session"
+    },
+    "SP500_daily": {
+      "path": "raw/SP500_daily.csv",
+      "sha256": "6b42b3ed76c1250c574425b202e02b66234366caa61777a3cbf6a23eafb0f0b8",
+      "bytes": 642158,
+      "rows": 9262,
+      "last_date": "2026-10-12",
+      "symbol": "SP500",
+      "provider": "user_index_csv",
+      "timestamp_semantics": "completed_session"
+    }
+  }
+}

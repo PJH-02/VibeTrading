@@ -1,0 +1,36 @@
+{
+  "archives": {
+    "expansion-20261003.tar.gz": {
+      "kiwoom_sha256": "e696f7decc4918ad6f2add4886211bcc407ed893733fd1d233746a0e61d4eb27",
+      "auth_method_sha256": {
+        "access_token": "fda3748725804538e9a063de49e6e0ccdd6edd78b7c1b7ee7a68ef59d6a8bd2b",
+        "_read_token_cache": "e6d6acc5d6168038b61fc36405ace8145ebec14edb33487d75ca80c8ca5ae370",
+        "_write_token_cache": "1f87ea5df9c1d39d77b31219459752b9ef723dcabe1b55e3a9380de209c1c4f7"
+      },
+      "parallel_bar_poll": false,
+      "cache_invalidation": false
+    },
+    "etf-scope-20261013.tar.gz": {
+      "kiwoom_sha256": "6dce3d32140f5425c0abf453b681ba05f8c9ac1dc476ba003af34d5244bbd4d4",
+      "auth_method_sha256": {
+        "access_token": "fda3748725804538e9a063de49e6e0ccdd6edd78b7c1b7ee7a68ef59d6a8bd2b",
+        "_read_token_cache": "e6d6acc5d6168038b61fc36405ace8145ebec14edb33487d75ca80c8ca5ae370",
+        "_write_token_cache": "1f87ea5df9c1d39d77b31219459752b9ef723dcabe1b55e3a9380de209c1c4f7"
+      },
+      "parallel_bar_poll": true,
+      "cache_invalidation": false
+    },
+    "telegram-recovery-20261014.tar.gz": {
+      "kiwoom_sha256": "6dce3d32140f5425c0abf453b681ba05f8c9ac1dc476ba003af34d5244bbd4d4",
+      "auth_method_sha256": {
+        "access_token": "fda3748725804538e9a063de49e6e0ccdd6edd78b7c1b7ee7a68ef59d6a8bd2b",
+        "_read_token_cache": "e6d6acc5d6168038b61fc36405ace8145ebec14edb33487d75ca80c8ca5ae370",
+        "_write_token_cache": "1f87ea5df9c1d39d77b31219459752b9ef723dcabe1b55e3a9380de209c1c4f7"
+      },
+      "parallel_bar_poll": true,
+      "cache_invalidation": false
+    }
+  },
+  "auth_methods_identical": true,
+  "note": "Archive and AST text comparison. This does not establish the original rejected token issuer or revocation reason."
+}

@@ -1,0 +1,10 @@
+{
+  "source": "/root/.vscode-server/cli/servers",
+  "destination": "/srv/vibetrading-data/host-tools/vscode-servers",
+  "files_verified": 14404,
+  "bytes_verified": 2730053376,
+  "started_ns": 1792026005945976227,
+  "finished_ns": 1792026152133728425,
+  "free_after": 3723788288,
+  "path_preserved_by_symlink": true
+}

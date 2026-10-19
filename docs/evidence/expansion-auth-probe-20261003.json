@@ -1,0 +1,36 @@
+[
+  {
+    "venue": "arcus",
+    "testnet": false,
+    "order_submission_attempted": false,
+    "connect": "ok",
+    "error_class": "ClientResponseError",
+    "http_status": 404
+  },
+  {
+    "venue": "grvt",
+    "testnet": true,
+    "order_submission_attempted": false,
+    "error_class": "RuntimeError",
+    "configuration_error": "GRVT API-key login rejected status=403",
+    "auth_content_type": "application/json",
+    "auth_challenge": null,
+    "auth_response": {
+      "status": "failure",
+      "error": "IP is not whitelisted"
+    }
+  },
+  {
+    "venue": "grvt",
+    "testnet": false,
+    "order_submission_attempted": false,
+    "error_class": "RuntimeError",
+    "configuration_error": "GRVT API-key login rejected status=403",
+    "auth_content_type": "application/json",
+    "auth_challenge": null,
+    "auth_response": {
+      "status": "failure",
+      "error": "IP is not whitelisted"
+    }
+  }
+]

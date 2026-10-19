@@ -1,0 +1,742 @@
+{
+  "time_ns": 1791038060755892793,
+  "manifest": [
+    {
+      "provider": "arcus-perp",
+      "venue": "arcus",
+      "event_type": "funding_rate",
+      "files": 19,
+      "rows": 723,
+      "bytes": 276946
+    },
+    {
+      "provider": "arcus-perp",
+      "venue": "arcus",
+      "event_type": "open_interest",
+      "files": 19,
+      "rows": 723,
+      "bytes": 295849
+    },
+    {
+      "provider": "arcus-perp",
+      "venue": "arcus",
+      "event_type": "order_book",
+      "files": 48,
+      "rows": 179521,
+      "bytes": 16893350
+    },
+    {
+      "provider": "arcus-perp",
+      "venue": "arcus",
+      "event_type": "trade",
+      "files": 19,
+      "rows": 1766,
+      "bytes": 374201
+    },
+    {
+      "provider": "binance-perp",
+      "venue": "binance",
+      "event_type": "funding_rate",
+      "files": 19,
+      "rows": 2245,
+      "bytes": 374829
+    },
+    {
+      "provider": "binance-perp",
+      "venue": "binance",
+      "event_type": "open_interest",
+      "files": 19,
+      "rows": 702,
+      "bytes": 305240
+    },
+    {
+      "provider": "binance-perp",
+      "venue": "binance",
+      "event_type": "order_book",
+      "files": 46,
+      "rows": 36073,
+      "bytes": 21277724
+    },
+    {
+      "provider": "binance-perp",
+      "venue": "binance",
+      "event_type": "trade",
+      "files": 20,
+      "rows": 8354,
+      "bytes": 892499
+    },
+    {
+      "provider": "bitget-perp",
+      "venue": "bitget",
+      "event_type": "funding_rate",
+      "files": 20,
+      "rows": 3358,
+      "bytes": 464810
+    },
+    {
+      "provider": "bitget-perp",
+      "venue": "bitget",
+      "event_type": "open_interest",
+      "files": 20,
+      "rows": 3358,
+      "bytes": 491402
+    },
+    {
+      "provider": "bitget-perp",
+      "venue": "bitget",
+      "event_type": "order_book",
+      "files": 45,
+      "rows": 67212,
+      "bytes": 15450392
+    },
+    {
+      "provider": "bitget-perp",
+      "venue": "bitget",
+      "event_type": "trade",
+      "files": 19,
+      "rows": 3383,
+      "bytes": 509668
+    },
+    {
+      "provider": "bybit-perp",
+      "venue": "bybit",
+      "event_type": "funding_rate",
+      "files": 13,
+      "rows": 24,
+      "bytes": 160050
+    },
+    {
+      "provider": "bybit-perp",
+      "venue": "bybit",
+      "event_type": "open_interest",
+      "files": 19,
+      "rows": 349,
+      "bytes": 289088
+    },
+    {
+      "provider": "bybit-perp",
+      "venue": "bybit",
+      "event_type": "order_book",
+      "files": 35,
+      "rows": 81766,
+      "bytes": 11401808
+    },
+    {
+      "provider": "bybit-perp",
+      "venue": "bybit",
+      "event_type": "trade",
+      "files": 20,
+      "rows": 7382,
+      "bytes": 1049999
+    },
+    {
+      "provider": "grvt-perp",
+      "venue": "grvt",
+      "event_type": "funding_rate",
+      "files": 17,
+      "rows": 1898,
+      "bytes": 328302
+    },
+    {
+      "provider": "grvt-perp",
+      "venue": "grvt",
+      "event_type": "open_interest",
+      "files": 17,
+      "rows": 1898,
+      "bytes": 346044
+    },
+    {
+      "provider": "grvt-perp",
+      "venue": "grvt",
+      "event_type": "order_book",
+      "files": 17,
+      "rows": 12590,
+      "bytes": 2632717
+    },
+    {
+      "provider": "grvt-perp",
+      "venue": "grvt",
+      "event_type": "trade",
+      "files": 3,
+      "rows": 166,
+      "bytes": 52353
+    }
+  ],
+  "parquet_read": [
+    {
+      "path": "/data/crypto_market_data/event_type=trade/trading_date=2026-10-03/provider=arcus-perp/venue=arcus/part-733aa57a01bc47b98c098512489f6b2a.parquet",
+      "provider": "arcus-perp",
+      "venue": "arcus",
+      "event_type": "trade",
+      "rows": 64,
+      "actual_rows": 64,
+      "columns": [
+        "schema_version",
+        "event_id",
+        "event_type",
+        "source_ts_ns",
+        "source_timestamp_kind",
+        "observed_delay_ms",
+        "wallclock_ts_ns",
+        "receive_ts_ns",
+        "receive_monotonic_ns",
+        "collector_run_id",
+        "connection_id",
+        "receive_sequence",
+        "record_index",
+        "native_event_id",
+        "collection_start_ts_ns",
+        "ingest_mode",
+        "sampled_at_ns",
+        "trading_date",
+        "session",
+        "venue",
+        "provider",
+        "sequence",
+        "nats_stream",
+        "nats_stream_sequence",
+        "instrument_venue",
+        "instrument_asset_class",
+        "instrument_raw_symbol",
+        "instrument_std_symbol",
+        "instrument_contract_month",
+        "instrument_expiry",
+        "instrument_strike",
+        "instrument_option_right",
+        "instrument_underlying",
+        "instrument_security_kind",
+        "instrument_currency",
+        "instrument_exchange",
+        "price",
+        "quantity",
+        "aggressor_side",
+        "trade_id"
+      ],
+      "symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "SOLUSDT"
+      ],
+      "quotes": [
+        "USD"
+      ],
+      "native_symbols": [
+        "BTC-USD",
+        "ETH-USD",
+        "SOL-USD"
+      ]
+    },
+    {
+      "path": "/data/crypto_market_data/event_type=funding_rate/trading_date=2026-10-03/provider=grvt-perp/venue=grvt/part-4a5de6bf28c84328843673ccda446215.parquet",
+      "provider": "grvt-perp",
+      "venue": "grvt",
+      "event_type": "funding_rate",
+      "rows": 106,
+      "actual_rows": 106,
+      "columns": [
+        "schema_version",
+        "event_id",
+        "event_type",
+        "source_ts_ns",
+        "source_timestamp_kind",
+        "observed_delay_ms",
+        "wallclock_ts_ns",
+        "receive_ts_ns",
+        "receive_monotonic_ns",
+        "collector_run_id",
+        "connection_id",
+        "receive_sequence",
+        "record_index",
+        "native_event_id",
+        "collection_start_ts_ns",
+        "ingest_mode",
+        "sampled_at_ns",
+        "trading_date",
+        "session",
+        "venue",
+        "provider",
+        "sequence",
+        "nats_stream",
+        "nats_stream_sequence",
+        "instrument_venue",
+        "instrument_asset_class",
+        "instrument_raw_symbol",
+        "instrument_std_symbol",
+        "instrument_contract_month",
+        "instrument_expiry",
+        "instrument_strike",
+        "instrument_option_right",
+        "instrument_underlying",
+        "instrument_security_kind",
+        "instrument_currency",
+        "instrument_exchange",
+        "funding_rate",
+        "premium",
+        "funding_interval_hours"
+      ],
+      "symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "SOLUSDT"
+      ],
+      "quotes": [
+        "USDT"
+      ],
+      "native_symbols": [
+        "BTC_USDT_Perp",
+        "ETH_USDT_Perp",
+        "SOL_USDT_Perp"
+      ]
+    },
+    {
+      "path": "/data/crypto_market_data/event_type=open_interest/trading_date=2026-10-03/provider=grvt-perp/venue=grvt/part-ed4040423f3c489db842a9f9c3f8e5b4.parquet",
+      "provider": "grvt-perp",
+      "venue": "grvt",
+      "event_type": "open_interest",
+      "rows": 106,
+      "actual_rows": 106,
+      "columns": [
+        "schema_version",
+        "event_id",
+        "event_type",
+        "source_ts_ns",
+        "source_timestamp_kind",
+        "observed_delay_ms",
+        "wallclock_ts_ns",
+        "receive_ts_ns",
+        "receive_monotonic_ns",
+        "collector_run_id",
+        "connection_id",
+        "receive_sequence",
+        "record_index",
+        "native_event_id",
+        "collection_start_ts_ns",
+        "ingest_mode",
+        "sampled_at_ns",
+        "trading_date",
+        "session",
+        "venue",
+        "provider",
+        "sequence",
+        "nats_stream",
+        "nats_stream_sequence",
+        "instrument_venue",
+        "instrument_asset_class",
+        "instrument_raw_symbol",
+        "instrument_std_symbol",
+        "instrument_contract_month",
+        "instrument_expiry",
+        "instrument_strike",
+        "instrument_option_right",
+        "instrument_underlying",
+        "instrument_security_kind",
+        "instrument_currency",
+        "instrument_exchange",
+        "open_interest",
+        "open_interest_unit",
+        "open_interest_value",
+        "value_currency",
+        "mark_price",
+        "observation_method"
+      ],
+      "symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "SOLUSDT"
+      ],
+      "quotes": [
+        "USDT"
+      ],
+      "native_symbols": [
+        "BTC_USDT_Perp",
+        "ETH_USDT_Perp",
+        "SOL_USDT_Perp"
+      ]
+    },
+    {
+      "path": "/data/crypto_market_data/event_type=funding_rate/trading_date=2026-10-03/provider=arcus-perp/venue=arcus/part-dc2775978b22400d9a064a87202e5a82.parquet",
+      "provider": "arcus-perp",
+      "venue": "arcus",
+      "event_type": "funding_rate",
+      "rows": 39,
+      "actual_rows": 39,
+      "columns": [
+        "schema_version",
+        "event_id",
+        "event_type",
+        "source_ts_ns",
+        "source_timestamp_kind",
+        "observed_delay_ms",
+        "wallclock_ts_ns",
+        "receive_ts_ns",
+        "receive_monotonic_ns",
+        "collector_run_id",
+        "connection_id",
+        "receive_sequence",
+        "record_index",
+        "native_event_id",
+        "collection_start_ts_ns",
+        "ingest_mode",
+        "sampled_at_ns",
+        "trading_date",
+        "session",
+        "venue",
+        "provider",
+        "sequence",
+        "nats_stream",
+        "nats_stream_sequence",
+        "instrument_venue",
+        "instrument_asset_class",
+        "instrument_raw_symbol",
+        "instrument_std_symbol",
+        "instrument_contract_month",
+        "instrument_expiry",
+        "instrument_strike",
+        "instrument_option_right",
+        "instrument_underlying",
+        "instrument_security_kind",
+        "instrument_currency",
+        "instrument_exchange",
+        "funding_rate",
+        "premium",
+        "funding_interval_hours"
+      ],
+      "symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "SOLUSDT"
+      ],
+      "quotes": [
+        "USD"
+      ],
+      "native_symbols": [
+        "BTC-USD",
+        "ETH-USD",
+        "SOL-USD"
+      ]
+    },
+    {
+      "path": "/data/crypto_market_data/event_type=open_interest/trading_date=2026-10-03/provider=arcus-perp/venue=arcus/part-861abca32a9f41b8ac2503b0fd847075.parquet",
+      "provider": "arcus-perp",
+      "venue": "arcus",
+      "event_type": "open_interest",
+      "rows": 39,
+      "actual_rows": 39,
+      "columns": [
+        "schema_version",
+        "event_id",
+        "event_type",
+        "source_ts_ns",
+        "source_timestamp_kind",
+        "observed_delay_ms",
+        "wallclock_ts_ns",
+        "receive_ts_ns",
+        "receive_monotonic_ns",
+        "collector_run_id",
+        "connection_id",
+        "receive_sequence",
+        "record_index",
+        "native_event_id",
+        "collection_start_ts_ns",
+        "ingest_mode",
+        "sampled_at_ns",
+        "trading_date",
+        "session",
+        "venue",
+        "provider",
+        "sequence",
+        "nats_stream",
+        "nats_stream_sequence",
+        "instrument_venue",
+        "instrument_asset_class",
+        "instrument_raw_symbol",
+        "instrument_std_symbol",
+        "instrument_contract_month",
+        "instrument_expiry",
+        "instrument_strike",
+        "instrument_option_right",
+        "instrument_underlying",
+        "instrument_security_kind",
+        "instrument_currency",
+        "instrument_exchange",
+        "open_interest",
+        "open_interest_unit",
+        "open_interest_value",
+        "value_currency",
+        "mark_price",
+        "observation_method"
+      ],
+      "symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "SOLUSDT"
+      ],
+      "quotes": [
+        "USD"
+      ],
+      "native_symbols": [
+        "BTC-USD",
+        "ETH-USD",
+        "SOL-USD"
+      ]
+    },
+    {
+      "path": "/data/crypto_market_data/event_type=order_book/trading_date=2026-10-03/provider=arcus-perp/venue=arcus/part-fd42423d38a24ed29959be7cbcddfd61.parquet",
+      "provider": "arcus-perp",
+      "venue": "arcus",
+      "event_type": "order_book",
+      "rows": 3526,
+      "actual_rows": 3526,
+      "columns": [
+        "schema_version",
+        "event_id",
+        "event_type",
+        "source_ts_ns",
+        "source_timestamp_kind",
+        "observed_delay_ms",
+        "wallclock_ts_ns",
+        "receive_ts_ns",
+        "receive_monotonic_ns",
+        "collector_run_id",
+        "connection_id",
+        "receive_sequence",
+        "record_index",
+        "native_event_id",
+        "collection_start_ts_ns",
+        "ingest_mode",
+        "sampled_at_ns",
+        "trading_date",
+        "session",
+        "venue",
+        "provider",
+        "sequence",
+        "nats_stream",
+        "nats_stream_sequence",
+        "instrument_venue",
+        "instrument_asset_class",
+        "instrument_raw_symbol",
+        "instrument_std_symbol",
+        "instrument_contract_month",
+        "instrument_expiry",
+        "instrument_strike",
+        "instrument_option_right",
+        "instrument_underlying",
+        "instrument_security_kind",
+        "instrument_currency",
+        "instrument_exchange",
+        "update_type",
+        "depth",
+        "is_full_depth",
+        "channel",
+        "provider_depth",
+        "first_update_id",
+        "final_update_id",
+        "previous_update_id",
+        "sync_generation",
+        "fast",
+        "raw_payload",
+        "bids",
+        "asks"
+      ],
+      "symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "SOLUSDT"
+      ],
+      "quotes": [
+        "USD"
+      ],
+      "native_symbols": [
+        "BTC-USD",
+        "ETH-USD",
+        "SOL-USD"
+      ]
+    },
+    {
+      "path": "/data/crypto_market_data/event_type=order_book/trading_date=2026-10-03/provider=grvt-perp/venue=grvt/part-0b8a592529a34508b7affad5cf75b79b.parquet",
+      "provider": "grvt-perp",
+      "venue": "grvt",
+      "event_type": "order_book",
+      "rows": 852,
+      "actual_rows": 852,
+      "columns": [
+        "schema_version",
+        "event_id",
+        "event_type",
+        "source_ts_ns",
+        "source_timestamp_kind",
+        "observed_delay_ms",
+        "wallclock_ts_ns",
+        "receive_ts_ns",
+        "receive_monotonic_ns",
+        "collector_run_id",
+        "connection_id",
+        "receive_sequence",
+        "record_index",
+        "native_event_id",
+        "collection_start_ts_ns",
+        "ingest_mode",
+        "sampled_at_ns",
+        "trading_date",
+        "session",
+        "venue",
+        "provider",
+        "sequence",
+        "nats_stream",
+        "nats_stream_sequence",
+        "instrument_venue",
+        "instrument_asset_class",
+        "instrument_raw_symbol",
+        "instrument_std_symbol",
+        "instrument_contract_month",
+        "instrument_expiry",
+        "instrument_strike",
+        "instrument_option_right",
+        "instrument_underlying",
+        "instrument_security_kind",
+        "instrument_currency",
+        "instrument_exchange",
+        "update_type",
+        "depth",
+        "is_full_depth",
+        "channel",
+        "provider_depth",
+        "first_update_id",
+        "final_update_id",
+        "previous_update_id",
+        "sync_generation",
+        "fast",
+        "raw_payload",
+        "bids",
+        "asks"
+      ],
+      "symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "SOLUSDT"
+      ],
+      "quotes": [
+        "USDT"
+      ],
+      "native_symbols": [
+        "BTC_USDT_Perp",
+        "ETH_USDT_Perp",
+        "SOL_USDT_Perp"
+      ]
+    },
+    {
+      "path": "/data/crypto_market_data/event_type=trade/trading_date=2026-10-03/provider=grvt-perp/venue=grvt/part-bd67599aa1de4a2f95d658d480c4114d.parquet",
+      "provider": "grvt-perp",
+      "venue": "grvt",
+      "event_type": "trade",
+      "rows": 4,
+      "actual_rows": 4,
+      "columns": [
+        "schema_version",
+        "event_id",
+        "event_type",
+        "source_ts_ns",
+        "source_timestamp_kind",
+        "observed_delay_ms",
+        "wallclock_ts_ns",
+        "receive_ts_ns",
+        "receive_monotonic_ns",
+        "collector_run_id",
+        "connection_id",
+        "receive_sequence",
+        "record_index",
+        "native_event_id",
+        "collection_start_ts_ns",
+        "ingest_mode",
+        "sampled_at_ns",
+        "trading_date",
+        "session",
+        "venue",
+        "provider",
+        "sequence",
+        "nats_stream",
+        "nats_stream_sequence",
+        "instrument_venue",
+        "instrument_asset_class",
+        "instrument_raw_symbol",
+        "instrument_std_symbol",
+        "instrument_contract_month",
+        "instrument_expiry",
+        "instrument_strike",
+        "instrument_option_right",
+        "instrument_underlying",
+        "instrument_security_kind",
+        "instrument_currency",
+        "instrument_exchange",
+        "price",
+        "quantity",
+        "aggressor_side",
+        "trade_id"
+      ],
+      "symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "SOLUSDT"
+      ],
+      "quotes": [
+        "USDT"
+      ],
+      "native_symbols": [
+        "BTC_USDT_Perp",
+        "ETH_USDT_Perp",
+        "SOL_USDT_Perp"
+      ]
+    }
+  ],
+  "credential_presence": {
+    "GRVT_ACCOUNT_ID": {
+      "runtime_present": true,
+      "source_present": true,
+      "same": true
+    },
+    "GRVT_ADDRESS": {
+      "runtime_present": true,
+      "source_present": true,
+      "same": true
+    },
+    "GRVT_API_KEY": {
+      "runtime_present": true,
+      "source_present": true,
+      "same": true
+    },
+    "GRVT_API_SECRET": {
+      "runtime_present": true,
+      "source_present": true,
+      "same": true
+    },
+    "GRVT_TESTNET_ACCOUNT_ID": {
+      "runtime_present": true,
+      "source_present": true,
+      "same": true
+    },
+    "GRVT_TESTNET_ADDRESS": {
+      "runtime_present": true,
+      "source_present": true,
+      "same": true
+    },
+    "GRVT_TESTNET_API_KEY": {
+      "runtime_present": true,
+      "source_present": true,
+      "same": true
+    },
+    "GRVT_TESTNET_API_SECRET": {
+      "runtime_present": true,
+      "source_present": true,
+      "same": true
+    }
+  },
+  "disk_usage": "Filesystem      Size  Used Avail Use% Mounted on\n/dev/vda2       9.8G  5.6G  3.7G  61% /\n/dev/vdb         20G   14G  5.3G  72% /srv/vibetrading-data\n/dev/vdc        295G  7.8G  284G   3% /srv/vibetrading-capacity",
+  "mounts": {
+    "/srv/vibetrading-data": "TARGET                SOURCE   OPTIONS\n/srv/vibetrading-data /dev/vdb rw,relatime",
+    "/srv/vibetrading-capacity": "TARGET                    SOURCE   OPTIONS\n/srv/vibetrading-capacity /dev/vdc rw,noatime",
+    "/srv/vibetrading-crypto-state": "TARGET                        SOURCE                  OPTIONS\n/srv/vibetrading-crypto-state /dev/vdc[/crypto-state] rw,noatime",
+    "/srv/vibetrading-data/runtime_data/crypto_market_data": "TARGET                                                SOURCE                        OPTIONS\n/srv/vibetrading-data/runtime_data/crypto_market_data /dev/vdc[/crypto-market-data] rw,noatime"
+  },
+  "unit_verify": "Binding to IPv6 address not available since kernel does not support IPv6.\nBinding to IPv6 address not available since kernel does not support IPv6.\n",
+  "service_status": "active\nactive"
+}

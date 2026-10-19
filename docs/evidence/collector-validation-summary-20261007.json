@@ -1,0 +1,30 @@
+{
+  "completed_ts_ns": 1791310545796997573,
+  "duration_seconds": 360.88,
+  "new_gaps": [],
+  "toss_gaps": [
+    {
+      "id": 845,
+      "provider": "toss",
+      "symbols": "@universe",
+      "started_ns": 1791304759247665627,
+      "ended_ns": 1791310146347098328,
+      "reason": "RuntimeError: Toss /api/v1/candles failed status=401 code=invalid-token msg=\uc720\ud6a8\ud558\uc9c0 \uc54a\uc740 \ud1a0\ud070\uc785\ub2c8\ub2e4.",
+      "details_json": "{\"accepted\": 0, \"failed\": 0, \"pending\": 0, \"published\": 0, \"queued_bytes\": 0}",
+      "unsent_events": 0,
+      "unsent_bytes": 0
+    },
+    {
+      "id": 840,
+      "provider": "toss",
+      "symbols": "@universe",
+      "started_ns": 1791286682006078122,
+      "ended_ns": 1791293483882551133,
+      "reason": "RuntimeError: Toss /api/v1/candles failed status=401 code=invalid-token msg=\uc720\ud6a8\ud558\uc9c0 \uc54a\uc740 \ud1a0\ud070\uc785\ub2c8\ub2e4.",
+      "details_json": "{\"accepted\": 319746, \"failed\": 0, \"pending\": 0, \"published\": 319746, \"queued_bytes\": 0}",
+      "unsent_events": 0,
+      "unsent_bytes": 0
+    }
+  ],
+  "samples": 13
+}

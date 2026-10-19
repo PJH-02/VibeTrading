@@ -1,0 +1,161 @@
+{
+  "checked_ns": 1791938555979183386,
+  "revision": "etf-scope-7ae250b692bfc9d6",
+  "containers": {
+    "collectors": {
+      "running": true,
+      "status": "running",
+      "health": "healthy",
+      "started": "2026-10-14T00:39:21.323196668Z",
+      "restart": "unless-stopped"
+    },
+    "storage": {
+      "running": true,
+      "status": "running",
+      "health": "healthy",
+      "started": "2026-10-14T00:38:17.849203424Z",
+      "restart": "unless-stopped"
+    },
+    "maintenance": {
+      "running": true,
+      "status": "running",
+      "health": "healthy",
+      "started": "2026-10-14T00:38:17.674124586Z",
+      "restart": "unless-stopped"
+    },
+    "telegram": {
+      "running": true,
+      "status": "running",
+      "health": null,
+      "started": "2026-10-14T00:40:53.008297883Z",
+      "restart": "unless-stopped"
+    },
+    "etf-mock": {
+      "running": true,
+      "status": "running",
+      "health": "healthy",
+      "started": "2026-10-14T00:40:40.678614349Z",
+      "restart": "unless-stopped"
+    },
+    "etf-csv-sync": {
+      "running": true,
+      "status": "running",
+      "health": "healthy",
+      "started": "2026-10-14T00:40:40.908273575Z",
+      "restart": "unless-stopped"
+    },
+    "crypto-collector-binance": {
+      "running": true,
+      "status": "running",
+      "health": "healthy",
+      "started": "2026-10-06T18:08:05.341230953Z",
+      "restart": "unless-stopped"
+    },
+    "crypto-collector-arcus": {
+      "running": true,
+      "status": "running",
+      "health": "healthy",
+      "started": "2026-10-06T18:08:54.941105355Z",
+      "restart": "unless-stopped"
+    },
+    "crypto-collector-grvt": {
+      "running": true,
+      "status": "running",
+      "health": "healthy",
+      "started": "2026-10-06T18:09:10.003811762Z",
+      "restart": "unless-stopped"
+    },
+    "crypto-collector-bitget": {
+      "running": false,
+      "status": "exited",
+      "health": "unhealthy",
+      "started": "2026-10-06T18:08:18.012969807Z",
+      "restart": "no"
+    },
+    "crypto-collector-bybit": {
+      "running": false,
+      "status": "exited",
+      "health": "unhealthy",
+      "started": "2026-10-06T18:08:34.997668043Z",
+      "restart": "no"
+    }
+  },
+  "collector_log_errors": {
+    "nats_publish_timeout": 0,
+    "NatsPublishError": 0,
+    "collector task failed": 0,
+    "NameError": 0
+  },
+  "collector_health": {
+    "kis": {
+      "phase": "publishing",
+      "heartbeat_age": 16.18,
+      "symbols": [
+        "A01612",
+        "A01703",
+        "A06612",
+        "A06703",
+        "A67612",
+        "A67703",
+        "A75610",
+        "A75611"
+      ]
+    },
+    "kiwoom": {
+      "phase": "publishing",
+      "heartbeat_age": 4.28,
+      "symbols": [
+        "000660",
+        "005930",
+        "069500",
+        "114800",
+        "122630",
+        "229200",
+        "233740",
+        "251340",
+        "252670"
+      ]
+    },
+    "toss": {
+      "phase": "publishing",
+      "heartbeat_age": 19.5,
+      "symbols": [
+        "QQQ",
+        "SPY"
+      ]
+    },
+    "binance-perp": {
+      "phase": "publishing",
+      "heartbeat_age": 13.79,
+      "symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "SOLUSDT"
+      ]
+    },
+    "arcus-perp": {
+      "phase": "publishing",
+      "heartbeat_age": 3.2,
+      "symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "SOLUSDT"
+      ]
+    },
+    "grvt-perp": {
+      "phase": "publishing",
+      "heartbeat_age": 11.22,
+      "symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "SOLUSDT"
+      ]
+    }
+  },
+  "universe_cache_age_seconds": {
+    "kis_index_derivatives_kospi200.json": 48.22,
+    "kis_commodity_futures.json": 48.6,
+    "kis_index_derivatives_kosdaq150.json": 47.93,
+    "kr_derivatives_dynamic.json": 47.93
+  }
+}
