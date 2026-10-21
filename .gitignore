@@ -16,3 +16,8 @@ dashboard/outputs/
 deploy/*release.env
 __pycache__/
 *.pyc
+
+# Disposable validation copies and generated build caches.
+/tmp/
+/trashbin/
+*.tsbuildinfo

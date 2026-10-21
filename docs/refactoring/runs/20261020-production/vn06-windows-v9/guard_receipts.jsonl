@@ -1,0 +1,5 @@
+{"pid": 33084, "kind": "guard_loaded"}
+{"pid": 39776, "kind": "guard_loaded"}
+{"pid": 39776, "kind": "blocked_subprocess", "executable": "C:\\WINDOWS\\system32\\cmd.exe"}
+{"pid": 39776, "kind": "blocked_subprocess", "executable": "C:\\WINDOWS\\system32\\cmd.exe"}
+{"pid": 39776, "kind": "blocked_subprocess", "executable": "C:\\WINDOWS\\system32\\cmd.exe"}

@@ -1,0 +1,36 @@
+{
+  "date_kst": "2026-10-21",
+  "task": "VN11/VN12",
+  "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+  "source_manifest": "docs/refactoring/runs/20261020-production/vn12-ack-v1-source.json",
+  "source_set_sha256": "e4fed01f469ab6796c14ced71cb682af08365355f44fd25ebb8eac77f0bfdab7",
+  "file_count": 546,
+  "linux_full": {
+    "receipt": "docs/refactoring/runs/20261020-production/vn12-ack-full-linux-v1/linux_result.json",
+    "passed": 1329,
+    "deselected": 2,
+    "elapsed_seconds": 115.67807354400003,
+    "matching_tested_source_hashes": 252,
+    "guard_sha256": "eb34edb62d47e484d6d7bf5fb6572750c8cbfa0ac5a4abd40bc1fbd9d3e130b9"
+  },
+  "linux_scoped": {
+    "receipt": "docs/refactoring/runs/20261020-production/vn12-ack-linux-focus2/linux_result.json",
+    "passed": 138
+  },
+  "review": {
+    "reviewer": "luna_vn10_review",
+    "unresolved_p1_p2": 0
+  },
+  "changes": [
+    "LateACK cannot reopen terminal orders, rebind native IDs or reset accepted_ns",
+    "Native IDs bounded and reject whitespace/control, omittedorganization preservesoriginal",
+    "Confirmedcancel remains terminal across stale status; monotoniclatefillsstillapplyonce",
+    "Genericledgerunchanged, partialACKreservationregressionadded"
+  ],
+  "limits": [
+    "Local guarded source only; external provider uniqueness/capability and account/order verification still open",
+    "No server deployment, account mutation, 30min/72h or production performance acceptance"
+  ],
+  "production_ready": false,
+  "committed": false
+}

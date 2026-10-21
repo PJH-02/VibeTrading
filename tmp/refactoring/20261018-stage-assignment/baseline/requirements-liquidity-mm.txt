@@ -1,9 +1,0 @@
-# Minimal isolated runtime for the liquidity-MM strategy. Existing project
-# requirements already include these; this file also supports a clean venv.
-aiohttp==3.13.2
-websockets==15.0.1
-python-dotenv==1.2.1
-PyYAML==6.0.3
-pydantic>=2.5.0,<3
-pytest>=7.4.0
-pytest-asyncio>=0.23.0

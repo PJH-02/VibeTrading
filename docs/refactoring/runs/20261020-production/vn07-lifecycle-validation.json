@@ -1,0 +1,36 @@
+{
+  "date_kst": "2026-10-21",
+  "task": "VN07-J1/J2/J3",
+  "status": "COMPLETE_LOCAL_SUBUNITS_ONLY",
+  "source_manifest": "docs/refactoring/runs/20261020-production/vn07-lifecycle-v1-source.json",
+  "source_set_sha256": "2416dc12839b70fbc61e88979c5e37b4f974b31726b450b34cd935c6b3846e12",
+  "source_file_count": 543,
+  "linux_full": {
+    "receipt": "docs/refactoring/runs/20261020-production/vn07-lifecycle-full-linux-v2/linux_result.json",
+    "junit": "docs/refactoring/runs/20261020-production/cleanup_summary.json#vn07-lifecycle-full-linux-v2",
+    "passed": 1263,
+    "failures": 0,
+    "errors": 0,
+    "deselected": 2,
+    "elapsed_seconds": 114.78898926200009,
+    "guard_sha256": "eb34edb62d47e484d6d7bf5fb6572750c8cbfa0ac5a4abd40bc1fbd9d3e130b9"
+  },
+  "review": {
+    "reviewer": "vn06_safety",
+    "unresolved_p1_p2": 0,
+    "scope": "independent static review of each lifecycle delta; tests by root"
+  },
+  "prior_attempts": {
+    "full_v1": "600s timeout at 91%; no PASS claim; same source used for successful v2",
+    "j3_scope": "91 PASS plus one 50ms initialization test setup failure; setup corrected, product timeout unchanged, focused case and final full suite passed"
+  },
+  "limits": [
+    "Market-only explicit opt-in; no default service/config activation",
+    "Missing durable order suffix fails closed, no automatic rollback",
+    "Crash before pointer commit may block old generation recovery",
+    "No ETF/Paper account or strategy atomic restore",
+    "No actual server performance, 30min/72h stability or cutover proof"
+  ],
+  "production_ready": false,
+  "committed": false
+}

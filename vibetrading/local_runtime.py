@@ -25,6 +25,8 @@ from .local_config import LocalRuntimePlan
 from .local_engine import EngineBudgets, LocalMarketEngine
 from .local_pipeline import SpoolingMarketPublisher
 from .local_transport import AppliedReceipt, LocalTransportClient, LocalTransportServer
+from .market_apply_order import ApplyOrder
+from .checkpoint_journal import CheckpointJournal
 from .market_spool import MarketSpool, SpoolCursor, SpoolReader, scan_spool
 from .settings import RuntimeSettings
 
@@ -148,7 +150,7 @@ async def replay_startup(engine,producers,*,promote=True):
     return handoffs
 
 
-async def save_engine_checkpoint(engine,codec,path):
+async def save_engine_checkpoint(engine,codec,path,*,order_spool=None):
     """Capture on the owner loop; persist one immutable checkpoint off-loop.
 
     Cancellation cannot overlap an older write with a newer capture. The
@@ -158,7 +160,8 @@ async def save_engine_checkpoint(engine,codec,path):
     pending=getattr(engine,'_checkpoint_file_task',None)
     if pending is not None and not pending.done():
         raise RuntimeError('checkpoint write already pending')
-    payload=engine.capture_checkpoint(codec)
+    options={} if order_spool is None else {'order_spool':order_spool}
+    payload=engine.capture_checkpoint(codec,**options)
     operation=asyncio.create_task(asyncio.to_thread(
         _write_checkpoint_file,path,payload,codec.max_bytes),name='local-market-checkpoint-write')
     engine._checkpoint_file_task=operation
@@ -168,11 +171,10 @@ async def save_engine_checkpoint(engine,codec,path):
     return hashlib.sha256(payload).hexdigest()
 
 
-async def replay_checkpoint_startup(engine,producers,*,codec,payload,expected_engine_incarnation):
+async def replay_checkpoint_startup(engine,producers,*,codec,payload,expected_engine_incarnation,apply_order=None):
     """Restore market state only, with independently checked C and fixed H.
 
-    Producer logs have no global apply journal. More than one nonempty suffix
-    has no provable cross-producer order and is deliberately unsupported.
+    Multiple nonempty suffixes require an exact durable apply-order proof.
     This function never arms initial resume or grants execution readiness.
     """
     if not isinstance(producers,(tuple,list)) or not 0<len(producers)<=engine.budgets.max_producers:
@@ -209,11 +211,35 @@ async def replay_checkpoint_startup(engine,producers,*,codec,payload,expected_en
         if digest!=point.digest:
             raise RuntimeError('checkpoint original cursor digest mismatch')
         verified[producer]=AppliedReceipt(point.cursor,digest)
-    if sum(highwaters[p].sequence>checkpoints[p].cursor.sequence for p in items)>1:
+    if apply_order is not None:
+        if type(apply_order) is not ApplyOrder:
+            raise ValueError('checkpoint startup requires an apply order proof')
+        apply_order.validate(payload,[(point.cursor,highwaters[p]) for p,point in checkpoints.items()])
+    elif sum(highwaters[p].sequence>checkpoints[p].cursor.sequence for p in items)>1:
         raise RuntimeError('multiple checkpoint suffixes require a verified global apply order')
     handoffs=engine.restore_virgin(codec,payload,highwaters,
-        verified_cursors=verified,expected_engine_incarnation=expected_engine_incarnation)
+        verified_cursors=verified,expected_engine_incarnation=expected_engine_incarnation,apply_order=apply_order)
     try:
+        if apply_order is not None:
+            for receipt in apply_order.receipts:
+                c=receipt.cursor
+                item=items[c.producer]
+                reader=readers.get(c.producer)
+                if reader is None:
+                    initial=checkpoints[c.producer].cursor
+                    reader=await asyncio.to_thread(lambda:SpoolReader(item.spool_root,item.producer,item.incarnation,
+                        after=SpoolCursor(initial.producer,initial.incarnation,initial.sequence),
+                        **item.limits.reader_kwargs))
+                    readers[c.producer]=reader
+                rows=await asyncio.to_thread(reader.read_batch,max_records=1,max_bytes=item.pipeline.max_bytes)
+                if len(rows)!=1:
+                    raise RuntimeError('durable checkpoint suffix is incomplete')
+                row=rows[0]
+                frame=RecoveryFrame(EngineCursor(row.cursor.producer,row.cursor.incarnation,row.cursor.sequence),row.payload)
+                if AppliedReceipt(frame.cursor,frame.digest)!=receipt:
+                    raise RuntimeError('checkpoint apply order payload mismatch')
+                engine.apply_replay(frame)
+            return handoffs
         for initial,high in handoffs:
             if initial==high:continue
             item=items[initial.producer]
@@ -293,9 +319,17 @@ def etf_feed_dependencies(plan, producer):
 
 async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_feed_dependencies=None,
                      recovery_readiness=None,checkpoint_path=None,checkpoint_codec=None,
-                     checkpoint_engine_incarnation=None,checkpoint_readiness=None):
+                     checkpoint_engine_incarnation=None,checkpoint_readiness=None,checkpoint_apply_order=None,
+                     checkpoint_journal=None,on_command=None):
     checkpoint_enabled=any(value is not None for value in (
-        checkpoint_path,checkpoint_codec,checkpoint_engine_incarnation,checkpoint_readiness))
+        checkpoint_path,checkpoint_codec,checkpoint_engine_incarnation,checkpoint_apply_order)) or (
+            checkpoint_readiness is not None and checkpoint_journal is None)
+    if checkpoint_journal is not None:
+        if (type(checkpoint_journal) is not CheckpointJournal or checkpoint_enabled
+                or not callable(checkpoint_readiness) or inspect.iscoroutinefunction(checkpoint_readiness)):
+            raise ValueError('Journal startup requires an explicit manager and synchronous readiness, without legacy checkpoint options')
+        if plan.etf_enabled or paper_runtime is not None:
+            raise ValueError('ETF/Paper checkpoint startup requires separate strategy and owner state recovery')
     if checkpoint_enabled:
         if (any(value is None for value in (checkpoint_path,checkpoint_codec,
                 checkpoint_engine_incarnation,checkpoint_readiness))
@@ -304,6 +338,8 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
             raise ValueError('Checkpoint startup requires explicit codec/path/incarnation and synchronous readiness validator')
         if plan.etf_enabled or paper_runtime is not None:
             raise ValueError('ETF/Paper checkpoint startup requires separate strategy and owner state recovery')
+        if checkpoint_apply_order is not None and type(checkpoint_apply_order) is not ApplyOrder:
+            raise ValueError('Checkpoint startup requires an apply order proof')
     if recovery_readiness is not None:
         if not callable(recovery_readiness) or inspect.iscoroutinefunction(recovery_readiness):
             raise TypeError('Recovery readiness must be an explicit synchronous state validator')
@@ -315,6 +351,7 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
             raise ValueError('Paper feed ownership requires an exact producer inventory and known feed keys')
     etf=None
     engine=None
+    journal_restored=False
     def invalid(producer,reason):
         if etf is not None:
             # Synchronous local gate closes before a timer/order can run again.
@@ -338,7 +375,7 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
         trading_filter=(lambda event:event.provider=='kiwoom' and event.instrument.asset_class==AssetClass.ETF)
             if plan.etf_enabled else lambda event:False)
     def recovery_commit(high_water,digest):
-        if checkpoint_enabled:
+        if checkpoint_enabled or journal_restored:
             receipt=engine.query_cursor(high_water.producer)
             if receipt.cursor!=high_water or receipt.digest!=digest:
                 return False
@@ -355,16 +392,20 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
         recovery_hooks={'on_replay':engine.apply_replay,'on_recovery_query':engine.begin_delivery_recovery,
                         'on_recovery_commit':recovery_commit}
     server=LocalTransportServer(plan.endpoint,budgets=plan.transport,on_frame=engine.on_frame,
-        on_gap=engine.on_gap,on_resume=engine.resume_receipt,allowed_uid=plan.allowed_uid,**recovery_hooks)
+        on_gap=engine.on_gap,on_resume=engine.resume_receipt,allowed_uid=plan.allowed_uid,
+        on_command=on_command,**recovery_hooks)
     observation=None
     snapshot_writer=None
     task=None
     try:
-        if checkpoint_enabled:
+        if checkpoint_journal is not None:
+            journal_restored=await checkpoint_journal.restore(engine,plan.producers,checkpoint_readiness)
+            handoffs=() if journal_restored else await replay_startup(engine,plan.producers,promote=False)
+        elif checkpoint_enabled:
             from .market_checkpoint import _read_checkpoint_file
             payload=await asyncio.to_thread(_read_checkpoint_file,checkpoint_path,checkpoint_codec.max_bytes)
             handoffs=await replay_checkpoint_startup(engine,plan.producers,codec=checkpoint_codec,
-                payload=payload,expected_engine_incarnation=checkpoint_engine_incarnation)
+                payload=payload,expected_engine_incarnation=checkpoint_engine_incarnation,apply_order=checkpoint_apply_order)
         else:
             handoffs=await replay_startup(engine,plan.producers,promote=False)
         if plan.etf_enabled:
@@ -388,9 +429,10 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
         if checkpoint_enabled:
             if engine.complete_checkpoint_recovery(checkpoint_readiness) is not True:
                 raise RuntimeError('checkpoint readiness validation did not permit startup')
-        else:
+        elif not journal_restored:
             for initial,high in handoffs:
                 engine.arm_initial_resume(initial,high)
+        if checkpoint_journal is not None:await checkpoint_journal.rotate(engine)
         await server.start()
         await engine.start()
         from .local_snapshot import LocalSnapshotWriter, SnapshotBudgets
@@ -398,6 +440,7 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
         await snapshot_writer.start()
         if etf is not None:task=asyncio.create_task(etf.run(initialized=True),name='local-etf')
         if task is not None:await task
+        elif checkpoint_journal is not None:await checkpoint_journal.run()
         else:await asyncio.Event().wait()
     finally:
         invalid('shutdown','runtime_closed')
@@ -411,14 +454,18 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
                     if snapshot_writer is not None:await snapshot_writer.close()
                 finally:
                     try:
-                        await engine.close()
+                        try:
+                            if checkpoint_journal is not None:await checkpoint_journal.close()
+                        finally:await engine.close()
                     finally:
                         try:
                             if observation is not None:await observation.close()
                         finally:
                             # Account initialization/replay/listen can fail
                             # before etf.run enters its own finally block.
-                            if etf is not None:etf.journal.db.close()
+                            if etf is not None:
+                                if callable(getattr(etf,'close',None)):await etf.close()
+                                else:etf.journal.db.close()
 
 
 def main(argv=None):

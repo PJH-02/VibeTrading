@@ -19,7 +19,8 @@ def main():
     run = Path(__file__).resolve().parent
     root = run.parents[3]
     manifest = json.loads((root / "docs/refactoring/vnext/source_manifest.json").read_text(encoding="utf-8"))
-    selected = set(manifest["files"])
+    removed = {name for name in manifest["files"] if not (root / name).is_file()}
+    selected = set(manifest["files"]) - removed
     for directory in ("vibetrading", "tests", "scripts/refactoring"):
         selected.update(path.relative_to(root).as_posix()
                         for path in (root / directory).rglob("*.py")
@@ -48,6 +49,7 @@ def main():
         ["git", "rev-parse", "HEAD"], cwd=root).decode().strip(),
         "source_set_sha256": source_set, "files": hashes,
         "excluded_work_in_progress": sorted(excluded),
+        "removed_baseline_paths": sorted(removed),
         "scope": "Current local candidate; credential-free copy, not a test PASS"}
     (run / (args.label + "-source.json")).write_text(
         json.dumps(proof, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

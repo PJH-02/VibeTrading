@@ -55,6 +55,16 @@ class KisCashBroker:
             raise RuntimeError('KIS cash account is not configured')
         return {'CANO': values['KIS_ACCOUNT_NUMBER'], 'ACNT_PRDT_CD': '01'}
 
+    @property
+    def authority_check(self):
+        return getattr(self,'_authority_check',None)
+
+    @authority_check.setter
+    def authority_check(self, check):
+        if hasattr(self,'_authority_check') or not callable(check):
+            raise RuntimeError('KIS account authority must be callable and bound once')
+        self._authority_check = check
+
     def tr(self, suffix: str) -> str:
         return ('VTTC' if self.mode in {'mock','mock2'} else 'TTTC') + suffix
 
@@ -72,13 +82,19 @@ class KisCashBroker:
                 response = await self.client.get('/uapi/domestic-stock/v1/trading/' + endpoint,
                     tr_id=tr_id, params=data, tr_cont=tr_cont)
             else:
+                if not callable(getattr(self,'authority_check',None)):
+                    raise RuntimeError('KIS mutation requires account authority')
                 token, _ = await self.client.issue_access_token()
                 headers = self.client._base_headers() | {'authorization': 'Bearer ' + token,
                     'appkey': self.client._app_key(), 'appsecret': self.client._app_secret(),
                     'tr_id': tr_id, 'custtype': 'P'}
                 async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=20)) as session:
-                    if permit is not None:
-                        result = permit()
+                    authority = getattr(self,'authority_check',None)
+                    if not callable(authority):
+                        raise RuntimeError('KIS mutation requires account authority')
+                    for check in (authority,permit):
+                        if check is None: continue
+                        result = check()
                         if inspect.isawaitable(result):
                             if inspect.iscoroutine(result):
                                 result.close()

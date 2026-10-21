@@ -16,7 +16,7 @@
     {
       "task_id": "VN00",
       "existing_phase": "P00/P09",
-      "status": "PARTIAL_LOCAL_INDEX_ONLY_CURRENT_SERVER_IDENTITY_OPEN",
+      "status": "COMPLETE_CURRENT_READ_ONLY_BASELINE",
       "depends_on": [],
       "baseline": {
         "head": "6443eb94133bc0075b0860885829e112adc657c8",
@@ -107,9 +107,21 @@
         "builder_executed": false,
         "deployable": false
       },
-      "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "v9 후보 index만 완료. 현재 서버/image/mount/runtime drift 재고정 필요",
-      "commit_scope": "LOCAL_INDEX_ARTIFACT_ONLY"
+      "stage_classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage_status_detail": "2026-10-21 현재14역할 image/config/mount 및13개 Python역할 전체소스 hash 고정·drift 분류 완료. 로컬/서버 동일 또는 배포/장기자원 완료를 뜻하지 않음",
+      "commit_scope": "LOCAL_INDEX_ARTIFACT_ONLY",
+      "current_refresh": {
+        "status": "COMPLETE_READ_ONLY_BASELINE",
+        "date_kst": "2026-10-21",
+        "collector": "docs/refactoring/runs/20261020-production/collect_vn00_identity.py",
+        "goal": "Refresh exact known 14 role source/image/config/mount hashes and classify prior/current/local drift, no server writes",
+        "authority": "Read-only server identity; no product import, orders or secret values",
+        "owner": "root",
+        "collector_editor": "luna_evidence (gpt-6-luna)",
+        "receipt": "docs/refactoring/runs/20261020-vnext/vn00-package/current-identity-full-20261021.json",
+        "classification": "docs/refactoring/runs/20261020-vnext/vn00-package/current-classification-20261021.json",
+        "local_server_equal": false
+      }
     },
     {
       "task_id": "VN01",
@@ -1073,7 +1085,7 @@
     {
       "task_id": "VN07",
       "existing_phase": "P06",
-      "status": "PARTIAL_MARKET_RECOVERY_COMPLETE_MULTI_PRODUCER_AND_STRATEGY_OPEN",
+      "status": "PARTIAL_MARKET_ORDER_AND_JOURNAL_LIFECYCLE_COMPLETE_STRATEGY_OPEN",
       "depends_on": [
         "VN06",
         "VN04B"
@@ -1198,7 +1210,7 @@
       "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
       "source_ticket": "docs/refactoring/vnext/tickets.json#VN07",
       "capacity_impacts": "Measure relevant CPU/event, bounded bytes/records/age/inflight, aggregate RSS/PSS and disk/WAL on 2vCPU/3.8GiB; no inferred production values.",
-      "next_action": "Design and implement atomic owner barrier using VN06 codec; no engine restore/LIVE/GC enabled yet",
+      "next_action": "Single next VN07 ticket: caller/runtime journal creation, flush/close and new-checkpoint lifecycle; retain missing-order fail-closed. Account/strategy atomic recovery remains behind TX02/TX04; no VN08 gate waiver.",
       "dispatch_baseline": {
         "candidate": "production-v9",
         "source_set_sha256": "8f29817700632248741789f1cf703b18e9aff50ec3c59e2c5f5437bffff8bebf",
@@ -1218,7 +1230,7 @@
       "contract_before_edit": {
         "capture": "Synchronous engine-owner barrier, no apply/callback in progress, empty pending queue, nonpoisoned authority; exact config/provider/instrument/C/digest/state vector",
         "restore": "Fresh engine only, verify original retained spool C digest, freeze all H, bounded after=C readers, never reset a poisoned engine",
-        "ordering": "No historical global order journal: H==C or at most one advancing producer; multiple nonempty suffixes fail closed",
+        "ordering": "Historical restriction before order_subtask: no journal; at most one suffix. Current optional ApplyOrder proves complete durable C..H; absent/uncovered order still rejected.",
         "readiness": "State-only replay, no automatic initial resume/owner/strategy readiness; explicit validator before LIVE; Paper/ETF checkpoint startup unsupported until separate state authority is proven",
         "permissions": "Local code and guarded isolated tests only; no server/exchange/commit/GC",
         "persistence": "Reuse existing strict bounded fsync/readback IO for engine wrapper; one retained off-loop write per engine, shield caller cancellation; no background service"
@@ -1265,8 +1277,163 @@
         "supported_scope": "Market-only explicit whole-vector recovery; no multi-source order or ETF/Paper owner/strategy restore"
       },
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "완료: callback-free market checkpoint+최대 한 producer suffix 복구·명시 재개·healthy peer lease 보존. 미완료: 여러 suffix의 global order, ETF/Paper owner/strategy 복구",
-      "commit_scope": "COMPLETED_SUBUNIT_ONLY"
+      "stage_status_detail": "완료: market 다중 producer 내구 순서 증명, 세대별 checkpoint/journal 생성·교체·복원·종료 및 runtime 통합. 미완료: ETF/Paper account/strategy/pending-action 원자 복구와 운영 검증",
+      "commit_scope": "COMPLETED_SUBUNIT_ONLY",
+      "order_subtask": {
+        "status": "COMPLETE_LOCAL_SUBUNIT_ONLY",
+        "date_kst": "2026-10-21",
+        "head": "90847f84243d01ec98c9815216c96c8f2749028b",
+        "owner": "root",
+        "reviewer": "vn06_safety",
+        "scope": "Market-only exact durable apply order for complete multi-producer C..H; no inference of never-applied order",
+        "edit_paths": [
+          "vibetrading/local_engine.py",
+          "vibetrading/local_runtime.py",
+          "vibetrading/market_apply_order.py",
+          "tests/refactoring/test_checkpoint_startup.py"
+        ],
+        "before_sha256": {
+          "vibetrading/local_engine.py": "5bf457491a10dc856283cc79b1c7fb80824e834f87127ec18a7e3b66290802e1",
+          "vibetrading/local_runtime.py": "e30838b8ce3bf72022b04bfd05d3419e5f7b30bfecb2978c1202e4cc5172c3de",
+          "vibetrading/market_apply_order.py": null,
+          "tests/refactoring/test_checkpoint_startup.py": "6f594981140c91307ffedbc11b34c2ae8f8b0c39aa9daaa61fb99c1edd26d7f9"
+        },
+        "contract": [
+          "One empty single-writer bounded MarketSpool binds exact checkpoint SHA under owner capture barrier; no rebind/rollover",
+          "Every newly committed cursor appends reference after state success and before receipt; transport duplicates do not append",
+          "No per-event fsync; explicit caller-owned flush returns exact spool cursor; no automatic rotation/service",
+          "Journal append failure closes common authority; no continued apply/readiness/checkpoint",
+          "Bounded durable proof binds journal endpoint and checkpoint; complete contiguous C..H per producer before install; consume exact cursor/digest order",
+          "Uncovered H, missing/extra/wrong anchor/digest/order, uncertain tail or callback state fail closed",
+          "No checkpoint schema change, ETF/Paper/account restoration, GC, server writes or runtime activation",
+          "Canonical encoding uses spool frame budget inside shared failure fence; factory-only immutable proof, no caller receipt permutation"
+        ],
+        "acceptance": [
+          "Interleaved suffix recovers identical global apply order/state with zero delivery and explicit readiness",
+          "Wrong/missing/non-durable/incomplete/extra proof never grants readiness",
+          "Append failure poisons common authority; duplicate/raw-only cursor handling complete",
+          "Unchanged legacy single-suffix path and checkpoint/runtime regression pass"
+        ],
+        "tests": "Credential-free candidate; test_checkpoint_startup.py -k order then checkpoint/engine/runtime/spool scoped regression on Windows/Linux",
+        "open": "Caller-managed checkpoint/journal persistence/flush/rotation; no automatic runtime journal provisioning or performance claim",
+        "source_manifest": "docs/refactoring/runs/20261020-production/vn07-order-v2-source.json",
+        "source_set_sha256": "8e1a7107e23bcdd5098cbeb38947aed499ed32ec449fb50c3438d0983e6f8a54",
+        "after_sha256": {
+          "vibetrading/local_engine.py": "66d2732c81bff8c6e9e44a882a6bfa077b7114b450424f9b6d8bd51b4c92849e",
+          "vibetrading/local_runtime.py": "2e5ca66029d0bb7e7a17f2f870092487da72f43a9eeb70eee969b6415104e2db",
+          "vibetrading/market_apply_order.py": "4769ce170935f336bcffce4d0a588918473154e30d3275f09053354de83fb224",
+          "tests/refactoring/test_checkpoint_startup.py": "9e7fe7056956167fade6c60c12d4669a4faf8b9d973ca9920a07d76d47b446c9"
+        },
+        "validation_receipt": "docs/refactoring/runs/20261020-production/vn07-order-validation.json",
+        "review": {
+          "editor": "root",
+          "independent_safety_reviewer": "vn06_safety",
+          "simple_evidence_reviewer": "luna_evidence (gpt-6-luna)",
+          "unresolved_p1_p2": 0,
+          "closed": [
+            "Public construction/per-producer-valid permutation of proof rejected; factory-only immutable tuple",
+            "Anchor and reference failure poison every feed and fence common authority",
+            "Serialization executes inside same bounded append failure fence"
+          ],
+          "scope": "Trusted owner, callback-free market recovery; no tests executed by safety reviewer"
+        },
+        "next_action": "Single next VN07 ticket: caller/runtime journal creation, flush/close and new-checkpoint lifecycle; retain missing-order fail-closed. Account/strategy atomic recovery remains behind TX02/TX04; no VN08 gate waiver."
+      },
+      "lifecycle_tickets": [
+        {
+          "task_id": "VN07-J1",
+          "status": "COMPLETE_LOCAL_SUBUNIT",
+          "goal": "Reuse bounded single-thread spool lifecycle for raw async apply-order journal, exact durable flush and common failure fence",
+          "edit_paths": [
+            "vibetrading/market_apply_order.py",
+            "vibetrading/local_observation.py",
+            "vibetrading/local_engine.py",
+            "tests/refactoring/test_apply_order_lifecycle.py"
+          ],
+          "before_sha256": {
+            "vibetrading/market_apply_order.py": "4769ce170935f336bcffce4d0a588918473154e30d3275f09053354de83fb224",
+            "vibetrading/local_observation.py": "1820c1220c44238e71f29cae9592054e1fb56605af7ae793425a58ba88ea0646",
+            "vibetrading/local_engine.py": "66d2732c81bff8c6e9e44a882a6bfa077b7114b450424f9b6d8bd51b4c92849e",
+            "tests/refactoring/test_checkpoint_startup.py": "9e7fe7056956167fade6c60c12d4669a4faf8b9d973ca9920a07d76d47b446c9"
+          },
+          "acceptance": [
+            "No disk IO on owner append; finite queue/bytes/inflight",
+            "Exact order ordinal flush and no reopened nonempty journal",
+            "Admission, encoding, fsync and cleanup failure fence common authority",
+            "Thread startup/close/cancel ownership preserved; raw journal compatible"
+          ],
+          "reviewer": "vn06_safety",
+          "verification": "WSL Ubuntu Linux filesystem, credential-free guard; scoped tests first",
+          "after_sha256": {
+            "vibetrading/market_apply_order.py": "252961ab01211e7d894eda499eb2c77e1fd96bf585a5054ea75cce62b1f5b056",
+            "vibetrading/local_observation.py": "1fda418e25523174fa3486eac3958b917234142038f2c5a6f72880feff287a1c",
+            "vibetrading/local_engine.py": "a0c12e2a92b140f1b9e0a6d65d6a7ed30051b785b975dace3dca6b175fc890de",
+            "tests/refactoring/test_apply_order_lifecycle.py": "da6745006e2a611e69bc40663c4918a08bb626716d14e05a37b69e6d56e2def9"
+          },
+          "receipt": "docs/refactoring/runs/20261020-production/vn07-j1-linux-final/linux_result.json",
+          "linux_passed": 150,
+          "unresolved_p1_p2": 0,
+          "next": "VN07-J2"
+        },
+        {
+          "task_id": "VN07-J2",
+          "status": "COMPLETE_LOCAL_SUBUNIT",
+          "goal": "Atomic checkpoint+journal generation persistence, owner switch and runtime lifecycle; never reuse prior generation or silently rollback after failure",
+          "depends_on": [
+            "VN07-J1"
+          ],
+          "edit_paths": [
+            "vibetrading/checkpoint_journal.py",
+            "vibetrading/local_engine.py",
+            "tests/refactoring/test_checkpoint_journal.py"
+          ],
+          "contract": [
+            "Exact engine/loop and Linux root flock ownership",
+            "At most current+retiring writer; aggregate logical byte/generation cap, no deletion",
+            "New checkpoint hash+exact durable anchor before pointer publication authorization",
+            "Cancellation before authorization prevents publication; after authorization pointer may commit, authority always fenced",
+            "Any failure closes authority; no old LIVE rollback; close retains lock until actual executor cleanup",
+            "Crash before pointer switch may make old pointer short of producer H; strict recovery blocks, no availability promise"
+          ],
+          "after_sha256": {
+            "vibetrading/checkpoint_journal.py": "bd45696d285cf1a09a31f1cce07e4cac917a97d1914f11a8f69ac364cc10735f",
+            "vibetrading/local_engine.py": "f9520d6ff4256ae5271c1c5e430acbe08c096720099e0b20be5b8448796420a9",
+            "tests/refactoring/test_checkpoint_journal.py": "e59d93a05a55b2276dbfced137e92ecf112f66108d6d65331b67eb88476ece13"
+          },
+          "receipt": "docs/refactoring/runs/20261020-production/vn07-j2-linux-reviewfix/linux_result.json",
+          "linux_passed": 76,
+          "unresolved_p1_p2": 0,
+          "next": "VN07-J3"
+        },
+        {
+          "task_id": "VN07-J3",
+          "status": "COMPLETE_LOCAL_SUBUNIT",
+          "goal": "Strict selected-generation restore and opt-in runtime start/rotation/close on Ubuntu; no silent fallback or account recovery",
+          "depends_on": [
+            "VN07-J2"
+          ],
+          "edit_paths": [
+            "vibetrading/checkpoint_journal.py",
+            "vibetrading/local_runtime.py",
+            "tests/refactoring/test_checkpoint_journal.py",
+            "tests/refactoring/test_checkpoint_runtime.py"
+          ],
+          "after_sha256": {
+            "vibetrading/checkpoint_journal.py": "3ffec2d6bd17764dd928673c5629905a03016551cffdc4c25a404183dd40b7e9",
+            "vibetrading/local_runtime.py": "765706e53d186d8bd3dd59ad8852e3ec5ff957bde7f60982e8146d0b0b2b7dc0",
+            "tests/refactoring/test_checkpoint_journal.py": "ac89167ccef8b590259e2fbef8cf2db01f2094db992f9549ed6db5a22a2224b9",
+            "tests/refactoring/test_checkpoint_runtime.py": "c962775b0950c028b2aad6c13a7ecdf9ff2e0c6e197e9e57074004171fcc30bf"
+          },
+          "receipts": [
+            "docs/refactoring/runs/20261020-production/cleanup_summary.json#vn07-j3-linux-final",
+            "docs/refactoring/runs/20261020-production/vn07-j3-close-deadline/linux_result.json"
+          ],
+          "verification": "Final exact source Linux full regression 1263 PASS / 2 DESELECTED",
+          "unresolved_p1_p2": 0,
+          "next": "VN00 current identity refresh",
+          "final_validation": "docs/refactoring/runs/20261020-production/vn07-lifecycle-validation.json"
+        }
+      ]
     },
     {
       "task_id": "VN08",
@@ -1513,7 +1680,7 @@
     {
       "task_id": "VN10",
       "existing_phase": "P04/P09",
-      "status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
       "depends_on": [
         "VN00"
       ],
@@ -1631,14 +1798,88 @@
       "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
       "source_ticket": "docs/refactoring/vnext/tickets.json#VN10",
       "capacity_impacts": "Measure relevant CPU/event, bounded bytes/records/age/inflight, aggregate RSS/PSS and disk/WAL on 2vCPU/3.8GiB; no inferred production values.",
-      "stage_classification": "NOT_STARTED",
-      "stage_status_detail": "Cooperating duplicate owners across alternate DB paths rejected; Mock and Mock2 remain separate; lease failure leaves account closed.",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage_status_detail": "공유 물리 계좌 authority·DB lease, ETF startup/POST/close fencing 완료. Linux전체1294 PASS/2제외·리뷰미해결P1/P2 0; 실제 legacy stop/cross-host/배포는 별도 gate",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "subtasks": [
+        {
+          "task_id": "VN10-A",
+          "status": "COMPLETE_LOCAL_SUBUNIT",
+          "goal": "Explicit shared authority root and conservative whole physical-account lease across alternate DB paths; retain DB lease and scope wire compatibility",
+          "scope": "Local fake ExecutionLedger only; physical parent account, venue, canonical environment; all products share one conservative lease",
+          "edit_paths": [
+            "vibetrading/process_lease.py",
+            "vibetrading/execution_ledger.py",
+            "tests/refactoring/test_execution_owner.py",
+            "tests/refactoring/test_vnext_vn10.py"
+          ],
+          "contract_reviewer": "vn06_safety",
+          "acceptance": [
+            "same account different DB rejected before SQLite",
+            "different accounts remain independent",
+            "product aliases cannot split authority",
+            "symlink/nonregular/missing authority rejected",
+            "constructor failure releases both leases; DB cleanup precedes authority release"
+          ],
+          "source_manifest": "docs/refactoring/runs/20261020-production/vn10-a-v1-source.json",
+          "source_set_sha256": "0cb967d03e6bce1795096c88c10a1bc4bc07bb6be64409a15f64fea57dbb005a",
+          "receipt": "docs/refactoring/runs/20261020-production/vn10-a-linux-focus2/linux_result.json",
+          "linux_passed": 35,
+          "unresolved_p1_p2": 0,
+          "reviewer": "luna_vn10_review; prior safety contract review",
+          "limitation": "Only canonical physical-parent identities under same protected shared volume; no cross-host/legacy stop proof"
+        },
+        {
+          "task_id": "VN10-B",
+          "status": "COMPLETE_LOCAL_SUBUNIT",
+          "goal": "Legacy ETF resolves mock/mock2 physical accounts, leases before backend initialization and retains through complete cleanup; dispatch fail closed",
+          "edit_paths": [
+            "vibetrading/etf_trading.py",
+            "vibetrading/kis_execution.py",
+            "vibetrading/local_runtime.py",
+            "tests/refactoring/test_vnext_vn10.py",
+            "tests/refactoring/test_etf_dispatch_guards.py",
+            "tests/test_etf_execution_update.py",
+            "tests/test_dual_mock_and_assumed.py"
+          ],
+          "acceptance": [
+            "acquire distinct physical CANO leases before journal/backend initialization",
+            "same physical account via mock/mock2 rejected before connect",
+            "all mutations recheck ownership immediately before POST, guards flag does not bypass ownership",
+            "run/check/startup failure cleanup retains ownership until backend/journal close completes"
+          ],
+          "source_manifest": "docs/refactoring/runs/20261020-production/vn10-owner-v1-source.json",
+          "source_set_sha256": "9dcb9de8d92f3e05f323ef3f0a92a1d5c2c45bb256459ad519536e3fc87686c1",
+          "scoped_receipt": "docs/refactoring/runs/20261020-production/vn10-b-linux-focus3/linux_result.json",
+          "scoped_passed": 157,
+          "final_close_receipt": "docs/refactoring/runs/20261020-production/vn10-b-linux-close-final/linux_result.json",
+          "final_close_passed": 8,
+          "final_close_deselected": 47,
+          "reviewer": "luna_vn10_review",
+          "unresolved_p1_p2": 0,
+          "compatibility": [
+            "Existing account_scope column supplies route for replacement of old payloads without account metadata",
+            "Explicit shared EXECUTION_AUTHORITY_ROOT now mandatory for ETF startup; no per-DB fallback",
+            "All KIS mutation calls require a bound-once authority callback; standalone unfenced mutation now rejects before token",
+            "Shared root must be the same protected Linux volume in every cooperating process; no exchange-side or uncooperative legacy fencing claim"
+          ],
+          "review_fixes": [
+            "Reject missing callback before token and immediately before POST",
+            "Public authority callback binding is immutable once installed",
+            "External close awaits active runner, warmup/report tasks and bus/db cleanup before lease release",
+            "Lost lease permanently fails verification until explicit close/restart"
+          ],
+          "final_validation": "docs/refactoring/runs/20261020-production/vn10-owner-validation.json"
+        }
+      ],
+      "gate_evidence": [
+        "docs/refactoring/runs/20261020-production/vn10-owner-validation.json"
+      ]
     },
     {
       "task_id": "VN11",
       "existing_phase": "P04",
-      "status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
       "depends_on": [
         "VN10"
       ],
@@ -1746,14 +1987,28 @@
       "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
       "source_ticket": "docs/refactoring/vnext/tickets.json#VN11",
       "capacity_impacts": "Measure relevant CPU/event, bounded bytes/records/age/inflight, aggregate RSS/PSS and disk/WAL on 2vCPU/3.8GiB; no inferred production values.",
-      "stage_classification": "NOT_STARTED",
-      "stage_status_detail": "Guarded stage requires evidence; duplicate immutable intent/evidence collision rejected; commit failure cannot submit; existing cumulative fill reservations unchanged.",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage_status_detail": "guarded evidence/schema/hash·중복불변충돌·COMMIT rollback 및 기존요청 재사용 완료. Linux관련86 PASS·리뷰P1/P2 0; VN12 후 전체통합 예정",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "current_subtask": {
+        "status": "COMPLETE_LOCAL_SUBUNIT",
+        "owner": "root",
+        "reviewer": "luna_vn10_review",
+        "contract_review": "strict evidence binding and 16KiB cap, exact duplicate matching, place stable request idempotency before regenerating volatile quote/time, COMMIT inside rollback try",
+        "before_sha256": {
+          "vibetrading/etf_journal.py": "cd81396df9174c73fcaa80f479fe8c06a11a37e99f16daa269eb75a84644d79d",
+          "vibetrading/etf_trading.py": "2c60013fbf70a4696e4905dcf34980ff2f5c6d41a8f7ba25c98be1837f8ab943",
+          "tests/refactoring/test_etf_dispatch_guards.py": "2ad017302ae3b30bef6d4c7444ed35890d4a4d540bf6de2ec6a0c0ea0914b658"
+        },
+        "validation": "docs/refactoring/runs/20261020-production/vn11-stage-validation.json",
+        "source_set_sha256": "4f1d5f1057aedc8b5b37472e45d62f062cce3ed7b396d0e36b74a400f5d2a3a5",
+        "final_integration": "docs/refactoring/runs/20261020-production/vn12-ack-validation.json"
+      }
     },
     {
       "task_id": "VN12",
       "existing_phase": "P04",
-      "status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
       "depends_on": [
         "VN11"
       ],
@@ -1864,9 +2119,31 @@
       "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
       "source_ticket": "docs/refactoring/vnext/tickets.json#VN12",
       "capacity_impacts": "Measure relevant CPU/event, bounded bytes/records/age/inflight, aggregate RSS/PSS and disk/WAL on 2vCPU/3.8GiB; no inferred production values.",
-      "stage_classification": "NOT_STARTED",
-      "stage_status_detail": "ACK after partial/full fill never regresses terminal state/accounting; cancel/fill cumulative effects applied once; no unsupported broker absence inference.",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage_status_detail": "늦은 ACK·native ID 결합·최초 타이머·취소완료/latefill 단조성 완료. Linux관련138 PASS·통합1329 PASS/2제외·리뷰P1/P2 0",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "current_subtask": {
+        "owner": "root",
+        "status": "COMPLETE_LOCAL_SUBUNIT",
+        "scope": "EtfJournal.accepted/apply_status terminal/accounting monotonicity; verify generic ledger existing contract without rewriting",
+        "before_sha256": {
+          "vibetrading/etf_journal.py": "06691bd25d0a2780a893042c3d179def498b4958c457ab79befa0211ca2f93df",
+          "vibetrading/execution_ledger.py": "84296516ac8a4ea511a0098693936519221a04552591aebd3f8a43376a850d8a"
+        },
+        "source_manifest": "docs/refactoring/runs/20261020-production/vn12-ack-v1-source.json",
+        "source_set_sha256": "e4fed01f469ab6796c14ced71cb682af08365355f44fd25ebb8eac77f0bfdab7",
+        "receipt": "docs/refactoring/runs/20261020-production/vn12-ack-linux-focus2/linux_result.json",
+        "linux_scoped_passed": 138,
+        "reviewer": "luna_vn10_review",
+        "unresolved_p1_p2": 0,
+        "changes": [
+          "LateACK preserves terminal order/attempt state and accounting",
+          "Bound native IDs cannot conflict or contain whitespace/control; duplicateACK preserves initial accepted_ns/org",
+          "Confirmedcomplete state survives stale partial status, while monotonic latefills applyonce",
+          "Genericledgerunchanged; addedpartialACK reservationregression"
+        ],
+        "validation": "docs/refactoring/runs/20261020-production/vn12-ack-validation.json"
+      }
     },
     {
       "task_id": "VN13",
@@ -2018,7 +2295,7 @@
     {
       "task_id": "VN14A",
       "existing_phase": "P04/P08",
-      "status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
       "depends_on": [
         "VN12"
       ],
@@ -2073,6 +2350,14 @@
         {
           "path": "tests/refactoring/test_vnext_vn14a.py",
           "action": "ADD"
+        },
+        {
+          "path": "vibetrading/execution_owner.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_execution_owner.py",
+          "action": "MODIFY"
         }
       ],
       "forbidden_paths": [
@@ -2135,14 +2420,57 @@
       "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
       "source_ticket": "docs/refactoring/vnext/tickets.json#VN14A",
       "capacity_impacts": "Measure relevant CPU/event, bounded bytes/records/age/inflight, aggregate RSS/PSS and disk/WAL on 2vCPU/3.8GiB; no inferred production values.",
-      "stage_classification": "NOT_STARTED",
-      "stage_status_detail": "Duplicate command effect once; scoped resume cannot reopen broader halt; pause/halt/reduce-only semantics approved before editing.",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage_status_detail": "범위별 재개·명령 효과/receipt 원자 저장·중복 불변성 완료. Linux 전체1372 PASS/2제외·리뷰미해결P1/P2 0; 외부 명령 연결은 VN14B",
+      "commit_scope": "LOCAL_VALIDATED_NOT_COMMITTED",
+      "current_subtask": {
+        "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+        "owner": "root",
+        "scope": "Existing scoped resume invariant and command-effect idempotency; no risk-reducing policy expansion or external command",
+        "contract_basis": "03_contract_delta C04/C07; preserve existing owned ETF reduce-only SELL and no halt=flatten inference"
+      },
+      "subtasks": [
+        {
+          "task_id": "VN14A-1",
+          "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+          "goal": "Selected-scope resume cannot reopen ancestors/other strategies; explicit parent-first startup",
+          "source_manifest": "docs/refactoring/runs/20261020-production/vn14a1-scope-v1-source.json",
+          "source_set_sha256": "334d06b66f5085f264efdb826fa90889f47f3ce559cdd21ef6f061e6ef739762",
+          "receipt": "docs/refactoring/runs/20261020-production/vn14a1-scope-linux-focus1/linux_result.json",
+          "linux_passed": 66,
+          "edit_paths": [
+            "vibetrading/runtime_control.py",
+            "vibetrading/execution_owner.py",
+            "tests/refactoring/test_execution_owner.py",
+            "tests/refactoring/test_halt_races.py",
+            "tests/refactoring/test_vnext_vn14a.py"
+          ],
+          "review": {
+            "reviewer": "luna_vn10_review",
+            "unresolved_p1_p2": 0
+          }
+        },
+        {
+          "task_id": "VN14A-2",
+          "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+          "goal": "Atomic bounded owner command receipt and gate effect; duplicate exact command has no repeated effect after restart or later resume",
+          "contract_review": "Exact retries before TTL/state checks; atomic effect+receipt; HALT memory before write, RESUME clear after commit",
+          "receipt": "docs/refactoring/runs/20261020-production/vn14a-command-validation.json",
+          "linux_full_passed": 1372,
+          "review": {
+            "reviewer": "luna_vn10_review",
+            "unresolved_p1_p2": 0
+          }
+        }
+      ],
+      "gate_evidence": [
+        "docs/refactoring/runs/20261020-production/vn14a-command-validation.json"
+      ]
     },
     {
       "task_id": "VN14B",
       "existing_phase": "P08",
-      "status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
       "depends_on": [
         "VN14A",
         "VN04B"
@@ -2201,6 +2529,18 @@
         {
           "path": "tests/refactoring/test_vnext_vn14b.py",
           "action": "ADD"
+        },
+        {
+          "path": "vibetrading/runtime_control.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/execution_owner.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/telegram_state.py",
+          "action": "MODIFY"
         }
       ],
       "forbidden_paths": [
@@ -2252,7 +2592,12 @@
         ],
         "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
         "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
-        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness.",
+        "final_linux": {
+          "receipt": "docs/refactoring/runs/20261020-production/vn14b-control-validation.json",
+          "passed": 1419,
+          "deselected": 2
+        }
       },
       "independent_reviewer": "independent safety/recovery reviewer; Luna may check simple diff only",
       "final_integrator": "root",
@@ -2264,9 +2609,48 @@
       "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
       "source_ticket": "docs/refactoring/vnext/tickets.json#VN14B",
       "capacity_impacts": "Measure relevant CPU/event, bounded bytes/records/age/inflight, aggregate RSS/PSS and disk/WAL on 2vCPU/3.8GiB; no inferred production values.",
-      "stage_classification": "NOT_STARTED",
-      "stage_status_detail": "Numeric user/chat allowlists and TTL; owner durable receipt before accepted; lost replies/429 cause no repeated effect; status/trade preserved.",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage_status_detail": "명시 opt-in UDS owner receipt·numeric allowlist·불변 TTL·재전달/429 및 압박 격리 완료. Linux 전체1419 PASS/2제외·독립 리뷰 P1/P2 0; offline owner만 지원, 운영 활성 미검증",
+      "commit_scope": "LOCAL_VALIDATED_NOT_COMMITTED",
+      "current_subtask": {
+        "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+        "owner": "root",
+        "scope": "Bounded one-shot command on existing control UDS; strict Telegram identities, stable TTL/body, durable owner receipt to existing outbox; offline owner only"
+      },
+      "contract_review": {
+        "reviewer": "luna_vn10_review",
+        "unresolved_p1_p2": 0,
+        "boundary": "Persist canonical command before send; owner dedupe before TTL/readiness; cached synchronous verifier; no default activation"
+      },
+      "review": {
+        "diff_reviewer": "luna_vn10_review",
+        "safety_reviewer": "vn06_safety",
+        "method": "Independent static contract/diff review; Linux tests separately run by root",
+        "unresolved_p1_p2": 0,
+        "fixed_findings": [
+          "First focused run exposed data-only reservation rejection of commands; corrected and tested",
+          "Luna review found multi-list-only enablement gap; corrected and tested",
+          "Integration audit reserved independent control capacity so full market sessions cannot deny command admission",
+          "Root found mutable expected_epochs could diverge from canonical payload during readiness callback; copy before validation and serialization",
+          "Independent safety review found NaN/infinite/float readiness lease could bypass comparison; strict integer clock/lease and 0<=clock<lease<=2**63-1 required"
+        ]
+      },
+      "gate_evidence": [
+        "docs/refactoring/runs/20261020-production/vn14b-control-validation.json"
+      ],
+      "source_hashes": {
+        "vibetrading/telegram.py": "f502ed273c4580d5a62fae6af92831991baf5bed35d2b552da7a2b3ec0fa81ad",
+        "vibetrading/local_transport.py": "fb2fe3aa1f93b56cb2baba90b093e7002d6c8f91374be061107e55394ec3d43b",
+        "vibetrading/local_runtime.py": "e9e2d46778fa1ce0475af082e5efc3559883c2a622f5179881d4131978ee0444",
+        "tests/refactoring/test_control_inbox.py": "62d72a8bba0f5e9368224a0513adcae4405f3098088281a4c0ed571b2817cf32",
+        "tests/refactoring/test_outbox_isolation.py": "846cfd85842b8759856a69cfcf3a2b440c01b3f69e61e802fbb19590147b2138",
+        "tests/refactoring/test_vnext_vn14b.py": "64b350f6c0dea571db6ab2c06c5737793bed9732869572d38b3eab39b5326c5f",
+        "vibetrading/runtime_control.py": "5f9297648d7138a949b8be62ea944ed53ef9c8c1c216fac86695dbb4f2f86a1d",
+        "vibetrading/execution_owner.py": "adfea4b451d57b07f880cd93d37f17c8de029bc4aef9ac533b1a30fc3c33491d",
+        "vibetrading/telegram_state.py": "2346baaa309c79803c1c38f1d8316c90edb46f2ea13f827ef8d3a87c92dbc9b1"
+      },
+      "source_manifest": "docs/refactoring/runs/20261020-production/vn14b-control-v3-source.json",
+      "source_set_sha256": "9052bb299e137c61f779e9a158e85b100ddccf60221ba0f1e0d38a4f004e786e"
     },
     {
       "task_id": "VN15",
@@ -2392,7 +2776,7 @@
     {
       "task_id": "VN16",
       "existing_phase": "P07",
-      "status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
       "depends_on": [
         "VN00"
       ],
@@ -2478,9 +2862,30 @@
       "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
       "source_ticket": "docs/refactoring/vnext/tickets.json#VN16",
       "capacity_impacts": "Measure relevant CPU/event, bounded bytes/records/age/inflight, aggregate RSS/PSS and disk/WAL on 2vCPU/3.8GiB; no inferred production values.",
-      "stage_classification": "NOT_STARTED",
-      "stage_status_detail": "Source corruption isolated and observable; healthy round-robin lanes progress; common ledger/volume error still global and bounded.",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage_status_detail": "순수 typed source corruption·payload/fingerprint preflight quarantine와 healthy round-robin 완료. 공통writer/ledger/volume/unknownproof는 global유지. Linux관련111 PASS·리뷰P1/P2 0",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "current_subtask": {
+        "status": "COMPLETE_LOCAL_SUBUNIT",
+        "owner": "root",
+        "reviewer": "luna_vn10_review",
+        "edit_paths": [
+          "vibetrading/local_storage.py",
+          "tests/refactoring/test_local_storage.py"
+        ],
+        "before_sha256": {
+          "vibetrading/local_storage.py": "21233fc68e52d74bc8c9ae96cea44eece74e6c7f998cba7898f971ba46a22c61",
+          "tests/refactoring/test_local_storage.py": "c694f445a1b15fb9cd8d58481337b0e99edd1fc9cb4855ac5d4ccbd3030ab0e5"
+        },
+        "contract": [
+          "At most17 bounded per-source faults, no automatic retry/GC/source deletion",
+          "Only pure SpoolCorruption and deterministic source preflight errors quarantine before shared mutations",
+          "OSError/SQLite/catalogue/writer/flush/commit/unknown attestation or checkpoint proof stays global",
+          "Startup existing-progress proof remains globally fail-closed; no inferred healthy source from unverified checkpoint"
+        ],
+        "validation": "docs/refactoring/runs/20261020-production/vn16-lane-validation.json",
+        "source_set_sha256": "5de1a496e6085cde2164098aed09cb12c5565af3c2bdaf717d0fd084ccd821b6"
+      }
     },
     {
       "task_id": "VN17",
@@ -5290,13 +5695,20 @@
   ],
   "updated_local": "2026-10-21",
   "current_validation": {
-    "candidate": "completed-market-v1",
-    "scope": "Selected completed-source full offline regression",
-    "windows": "1199 PASS / 14 SKIP / 2 DESELECTED",
-    "linux": "1213 PASS / 2 DESELECTED",
-    "receipt": "docs/refactoring/runs/20261020-production/completed-market-v1-validation.json",
-    "workspace_only_candidate": "production-v12",
+    "candidate": "vn14b-control-v3",
+    "scope": "Exact selected-source full Linux regression after all safety fixes",
+    "linux": "1419 PASS / 2 DESELECTED",
+    "receipt": "docs/refactoring/runs/20261020-production/vn14b-control-validation.json",
     "production_ready": false
   },
-  "user_request_latest": "2026-10-21: classify stages, commit completed units only, present exact remaining steps; stop further implementation"
+  "user_request_latest": "2026-10-21: clean or move unused artifacts to ignored trashbin, commit and push all changes, then read .freebuff/repo-analysis-review.md; no next product ticket requested",
+  "execution_control": {
+    "status": "STOPPED_AT_USER_REQUEST",
+    "last_completed_ticket": "VN14B",
+    "active_ticket": null,
+    "start_next_ticket": false,
+    "stop_after_ticket": "VN14B"
+  },
+  "git_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
+  "git_snapshot_policy": "All current code including unfinished prototypes included; stage classifications unchanged; no deployment authorization"
 }

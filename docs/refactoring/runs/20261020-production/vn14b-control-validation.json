@@ -1,0 +1,79 @@
+{
+  "date_kst": "2026-10-21",
+  "task": "VN14B",
+  "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+  "source_manifest": "docs/refactoring/runs/20261020-production/vn14b-control-v3-source.json",
+  "source_set_sha256": "9052bb299e137c61f779e9a158e85b100ddccf60221ba0f1e0d38a4f004e786e",
+  "source_files": 548,
+  "linux_full": {
+    "passed": 1419,
+    "deselected": 2,
+    "receipt": "docs/refactoring/runs/20261020-production/vn14b-control-full-linux-v3/linux_result.json",
+    "elapsed_seconds": 113.62433072700003,
+    "guard_sha256": "eb34edb62d47e484d6d7bf5fb6572750c8cbfa0ac5a4abd40bc1fbd9d3e130b9"
+  },
+  "linux_scoped": {
+    "passed": 184,
+    "receipt": "docs/refactoring/runs/20261020-production/vn14b-control-linux-final/linux_result.json",
+    "note": "Final full additionally includes command capacity rejection/release test"
+  },
+  "review": {
+    "diff_reviewer": "luna_vn10_review",
+    "unresolved_diff_p1_p2": 0,
+    "safety_reviewer": "vn06_safety",
+    "safety_status": "COMPLETE_STATIC_REVIEW",
+    "unresolved_safety_p1_p2": 0
+  },
+  "changes": [
+    "Opt-in one-shot COMMAND/RESULT on existing protected control UDS; UID/deadline/frame bounds; no market session/cursor effects",
+    "Separate finite command connection/byte/record capacity; HALT admits while all market sessions/partial DATA capacity are occupied",
+    "Strict bounded integer numeric user/chat allowlists; default control handler absent; multi-list-only setup supported",
+    "Canonical command/body/expiry frozen durably from original update/date and explicit TTL; changed-TTL restart reuses original request",
+    "Fresh resume uses explicit full epoch vector and synchronous trusted cached owner readiness inside effect/receipt transaction; client readiness field rejected",
+    "Durable owner receipt precedes existing outbox; HTTP429/outbox loss/socket response loss never repeat command effect"
+  ],
+  "fixed_findings": [
+    "First focused run exposed data-only reservation rejection of commands; corrected and tested",
+    "Luna review found multi-list-only enablement gap; corrected and tested",
+    "Integration audit reserved independent control capacity so full market sessions cannot deny command admission",
+    "Root found mutable expected_epochs could diverge from canonical payload during readiness callback; copy before validation and serialization",
+    "Independent safety review found NaN/infinite/float readiness lease could bypass comparison; strict integer clock/lease and 0<=clock<lease<=2**63-1 required"
+  ],
+  "coverage": [
+    "Expired retry after later resume/restart only returns historical receipt",
+    "Readiness/stale/expired/async/nested/forged checks do not create effect or receipt",
+    "Real Linux UDS, wrong UID, disabled handler, frame limit, partial market admission pressure, partial command capacity rejection/release",
+    "Original status/trade/inbox/outbox regression and exact current-source full regression",
+    "Original epoch vector stays bound despite provider mutating caller-owned dictionary",
+    "Readiness lease NaN/inf/bool/float/int64 overflow and NaN clock cannot resume"
+  ],
+  "limits": [
+    "Only explicitly injected local handler/async client; default CLI remains inactive for control",
+    "Generic ExecutionOwner remains offline fake-adapter only; no real account/provider verification or activation",
+    "Synchronous SQLite owner path and aggregate CPU/RAM/disk production budget/latency remain unmeasured",
+    "No actual Telegram HTTP/external messages, server mutation, GC/deletion, deployment or push",
+    "Local/server parity not established; current changes remain uncommitted"
+  ],
+  "production_ready": false,
+  "committed": false,
+  "stop_after_ticket": "VN14B",
+  "next_ticket_started": false,
+  "stopped_at_user_request": true,
+  "linux_scoped_final": {
+    "passed": 102,
+    "receipt": "docs/refactoring/runs/20261020-production/vn14b-readiness-linux-final/linux_result.json",
+    "scope": "Final code including epoch binding and strict readiness time; final full supersedes"
+  },
+  "superseded_full_runs": [
+    {
+      "receipt": "docs/refactoring/runs/20261020-production/vn14b-control-full-linux-v1/linux_result.json",
+      "passed": 1411,
+      "reason": "Before epoch-copy and strict lease fixes"
+    },
+    {
+      "receipt": "docs/refactoring/runs/20261020-production/vn14b-control-full-linux-v2/linux_result.json",
+      "passed": 1413,
+      "reason": "Before strict lease fix"
+    }
+  ]
+}

@@ -1,6 +1,0 @@
-{
-  "arcus": {"entry_seconds": 0.10, "cancel_seconds": 0.10, "source_venue": "arcus", "provenance": "configured_sensitivity_unmeasured", "market_data_receive_latency": null, "decision_latency": null, "order_send_latency": null, "exchange_ack_latency": null},
-  "bybit": {"entry_seconds": 0.025, "cancel_seconds": 0.025, "source_venue": "bybit", "provenance": "configured_sensitivity_unmeasured", "market_data_receive_latency": null, "decision_latency": null, "order_send_latency": null, "exchange_ack_latency": null},
-  "bitget": {"entry_seconds": 0.050, "cancel_seconds": 0.050, "source_venue": "bitget", "provenance": "configured_sensitivity_unmeasured", "market_data_receive_latency": null, "decision_latency": null, "order_send_latency": null, "exchange_ack_latency": null},
-  "grvt": {"entry_seconds": 0.075, "cancel_seconds": 0.075, "source_venue": "grvt", "provenance": "configured_sensitivity_unmeasured", "market_data_receive_latency": null, "decision_latency": null, "order_send_latency": null, "exchange_ack_latency": null}
-}

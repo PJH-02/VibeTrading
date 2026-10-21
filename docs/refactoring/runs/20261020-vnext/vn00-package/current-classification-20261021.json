@@ -1,0 +1,1299 @@
+{
+  "schema_version": 1,
+  "task_id": "VN00",
+  "classification_only": true,
+  "generated_utc": "2026-10-21T01:13:05.034289+00:00",
+  "inputs": {
+    "current_identity": "docs/refactoring/runs/20261020-vnext/vn00-package/current-identity-20261021.json",
+    "current_observed_utc": "2026-10-21T01:05:45.878991+00:00",
+    "current_status": "READ_ONLY_IDENTITY_ONLY_NOT_CUTOVER_PROOF",
+    "historical_identity": "docs/refactoring/vnext/server_readonly_identity.json",
+    "historical_observed_utc": "2026-10-20T06:30:38.488966+00:00",
+    "collection_errors": []
+  },
+  "summary": {
+    "roles_observed": 14,
+    "roles_ok": 14,
+    "roles_missing_from_historical": [],
+    "historical_roles_missing_now": [],
+    "images_same_as_historical": 14,
+    "mount_maps_same_as_historical": 14
+  },
+  "source_coverage": {
+    "role_path_hash_pairs": 1412,
+    "unique_observed_source_paths": 113,
+    "local_python_source_paths_counted": 141,
+    "current_vs_historical_hashes": {
+      "equal": 1412,
+      "different": 0,
+      "historical_missing": 0
+    },
+    "current_server_vs_local_bytes": {
+      "equal": 946,
+      "different": 466,
+      "local_missing": 0,
+      "different_unique_paths": 36,
+      "status": "OBSERVED_SUBSET_MISMATCH"
+    },
+    "full_source_tree_parity": "NOT_ESTABLISHED_FROM_PER_FILE_SAMPLE_SET",
+    "roles": [
+      {
+        "container": "vibetrading-collectors-1",
+        "source_hash_counts": {
+          "observed": 110,
+          "local_equal": 74,
+          "local_different": 36,
+          "local_missing": 0,
+          "historical_equal": 110,
+          "historical_different": 0,
+          "historical_missing": 0
+        },
+        "source_errors": []
+      },
+      {
+        "container": "vibetrading-crypto-collector-arcus-1",
+        "source_hash_counts": {
+          "observed": 108,
+          "local_equal": 72,
+          "local_different": 36,
+          "local_missing": 0,
+          "historical_equal": 108,
+          "historical_different": 0,
+          "historical_missing": 0
+        },
+        "source_errors": []
+      },
+      {
+        "container": "vibetrading-crypto-collector-binance-1",
+        "source_hash_counts": {
+          "observed": 108,
+          "local_equal": 72,
+          "local_different": 36,
+          "local_missing": 0,
+          "historical_equal": 108,
+          "historical_different": 0,
+          "historical_missing": 0
+        },
+        "source_errors": []
+      },
+      {
+        "container": "vibetrading-crypto-collector-grvt-1",
+        "source_hash_counts": {
+          "observed": 108,
+          "local_equal": 72,
+          "local_different": 36,
+          "local_missing": 0,
+          "historical_equal": 108,
+          "historical_different": 0,
+          "historical_missing": 0
+        },
+        "source_errors": []
+      },
+      {
+        "container": "vibetrading-crypto-maintenance-1",
+        "source_hash_counts": {
+          "observed": 108,
+          "local_equal": 72,
+          "local_different": 36,
+          "local_missing": 0,
+          "historical_equal": 108,
+          "historical_different": 0,
+          "historical_missing": 0
+        },
+        "source_errors": []
+      },
+      {
+        "container": "vibetrading-crypto-storage-1",
+        "source_hash_counts": {
+          "observed": 108,
+          "local_equal": 72,
+          "local_different": 36,
+          "local_missing": 0,
+          "historical_equal": 108,
+          "historical_different": 0,
+          "historical_missing": 0
+        },
+        "source_errors": []
+      },
+      {
+        "container": "vibetrading-etf-csv-sync-1",
+        "source_hash_counts": {
+          "observed": 109,
+          "local_equal": 74,
+          "local_different": 35,
+          "local_missing": 0,
+          "historical_equal": 109,
+          "historical_different": 0,
+          "historical_missing": 0
+        },
+        "source_errors": []
+      },
+      {
+        "container": "vibetrading-etf-mock-1",
+        "source_hash_counts": {
+          "observed": 112,
+          "local_equal": 76,
+          "local_different": 36,
+          "local_missing": 0,
+          "historical_equal": 112,
+          "historical_different": 0,
+          "historical_missing": 0
+        },
+        "source_errors": []
+      },
+      {
+        "container": "vibetrading-maintenance-1",
+        "source_hash_counts": {
+          "observed": 108,
+          "local_equal": 72,
+          "local_different": 36,
+          "local_missing": 0,
+          "historical_equal": 108,
+          "historical_different": 0,
+          "historical_missing": 0
+        },
+        "source_errors": []
+      },
+      {
+        "container": "vibetrading-monitor-bridge-1",
+        "source_hash_counts": {
+          "observed": 108,
+          "local_equal": 72,
+          "local_different": 36,
+          "local_missing": 0,
+          "historical_equal": 108,
+          "historical_different": 0,
+          "historical_missing": 0
+        },
+        "source_errors": []
+      },
+      {
+        "container": "vibetrading-monitor-timefolio-1",
+        "source_hash_counts": {
+          "observed": 108,
+          "local_equal": 72,
+          "local_different": 36,
+          "local_missing": 0,
+          "historical_equal": 108,
+          "historical_different": 0,
+          "historical_missing": 0
+        },
+        "source_errors": []
+      },
+      {
+        "container": "vibetrading-nats-1",
+        "source_hash_counts": {
+          "observed": 0,
+          "local_equal": 0,
+          "local_different": 0,
+          "local_missing": 0,
+          "historical_equal": 0,
+          "historical_different": 0,
+          "historical_missing": 0
+        },
+        "source_errors": []
+      },
+      {
+        "container": "vibetrading-storage-1",
+        "source_hash_counts": {
+          "observed": 108,
+          "local_equal": 72,
+          "local_different": 36,
+          "local_missing": 0,
+          "historical_equal": 108,
+          "historical_different": 0,
+          "historical_missing": 0
+        },
+        "source_errors": []
+      },
+      {
+        "container": "vibetrading-telegram-1",
+        "source_hash_counts": {
+          "observed": 109,
+          "local_equal": 74,
+          "local_different": 35,
+          "local_missing": 0,
+          "historical_equal": 109,
+          "historical_different": 0,
+          "historical_missing": 0
+        },
+        "source_errors": []
+      }
+    ]
+  },
+  "roles": [
+    {
+      "container": "vibetrading-collectors-1",
+      "service": "collectors",
+      "status": "OK",
+      "image_id": "sha256:2c79d456b0e7c7918198480f7037edb1dfd5b28c09e6b378adc95bebce3702d7",
+      "image_matches_historical": true,
+      "source_hash_counts": {
+        "observed": 110,
+        "local_equal": 74,
+        "local_different": 36,
+        "local_missing": 0,
+        "historical_equal": 110,
+        "historical_different": 0,
+        "historical_missing": 0
+      },
+      "source_errors": [],
+      "mount_count": 3,
+      "mounts_match_historical": true,
+      "mounts": [
+        {
+          "source": "/root/vibetrading/config",
+          "target": "/app/config",
+          "read_only": true
+        },
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "target": "/data/crypto_state",
+          "read_only": false
+        },
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "target": "/data",
+          "read_only": false
+        }
+      ]
+    },
+    {
+      "container": "vibetrading-crypto-collector-arcus-1",
+      "service": "crypto-collector-arcus",
+      "status": "OK",
+      "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "image_matches_historical": true,
+      "source_hash_counts": {
+        "observed": 108,
+        "local_equal": 72,
+        "local_different": 36,
+        "local_missing": 0,
+        "historical_equal": 108,
+        "historical_different": 0,
+        "historical_missing": 0
+      },
+      "source_errors": [],
+      "mount_count": 3,
+      "mounts_match_historical": true,
+      "mounts": [
+        {
+          "source": "/root/vibetrading/config",
+          "target": "/app/config",
+          "read_only": true
+        },
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "target": "/data/crypto_state",
+          "read_only": false
+        },
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "target": "/data",
+          "read_only": false
+        }
+      ]
+    },
+    {
+      "container": "vibetrading-crypto-collector-binance-1",
+      "service": "crypto-collector-binance",
+      "status": "OK",
+      "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "image_matches_historical": true,
+      "source_hash_counts": {
+        "observed": 108,
+        "local_equal": 72,
+        "local_different": 36,
+        "local_missing": 0,
+        "historical_equal": 108,
+        "historical_different": 0,
+        "historical_missing": 0
+      },
+      "source_errors": [],
+      "mount_count": 3,
+      "mounts_match_historical": true,
+      "mounts": [
+        {
+          "source": "/root/vibetrading/config",
+          "target": "/app/config",
+          "read_only": true
+        },
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "target": "/data/crypto_state",
+          "read_only": false
+        },
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "target": "/data",
+          "read_only": false
+        }
+      ]
+    },
+    {
+      "container": "vibetrading-crypto-collector-grvt-1",
+      "service": "crypto-collector-grvt",
+      "status": "OK",
+      "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "image_matches_historical": true,
+      "source_hash_counts": {
+        "observed": 108,
+        "local_equal": 72,
+        "local_different": 36,
+        "local_missing": 0,
+        "historical_equal": 108,
+        "historical_different": 0,
+        "historical_missing": 0
+      },
+      "source_errors": [],
+      "mount_count": 3,
+      "mounts_match_historical": true,
+      "mounts": [
+        {
+          "source": "/root/vibetrading/config",
+          "target": "/app/config",
+          "read_only": true
+        },
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "target": "/data/crypto_state",
+          "read_only": false
+        },
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "target": "/data",
+          "read_only": false
+        }
+      ]
+    },
+    {
+      "container": "vibetrading-crypto-maintenance-1",
+      "service": "crypto-maintenance",
+      "status": "OK",
+      "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "image_matches_historical": true,
+      "source_hash_counts": {
+        "observed": 108,
+        "local_equal": 72,
+        "local_different": 36,
+        "local_missing": 0,
+        "historical_equal": 108,
+        "historical_different": 0,
+        "historical_missing": 0
+      },
+      "source_errors": [],
+      "mount_count": 5,
+      "mounts_match_historical": true,
+      "mounts": [
+        {
+          "source": "/etc/vibetrading/secrets/archive_access_key",
+          "target": "/run/secrets/archive_access_key",
+          "read_only": true
+        },
+        {
+          "source": "/etc/vibetrading/secrets/archive_secret_key",
+          "target": "/run/secrets/archive_secret_key",
+          "read_only": true
+        },
+        {
+          "source": "/root/vibetrading/config",
+          "target": "/app/config",
+          "read_only": true
+        },
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "target": "/data/crypto_state",
+          "read_only": false
+        },
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "target": "/data",
+          "read_only": false
+        }
+      ]
+    },
+    {
+      "container": "vibetrading-crypto-storage-1",
+      "service": "crypto-storage",
+      "status": "OK",
+      "image_id": "sha256:3fcaa490d47d13d1df5aca7d6321d8313ea480bc1a18dddcb5139c84a0bdde3c",
+      "image_matches_historical": true,
+      "source_hash_counts": {
+        "observed": 108,
+        "local_equal": 72,
+        "local_different": 36,
+        "local_missing": 0,
+        "historical_equal": 108,
+        "historical_different": 0,
+        "historical_missing": 0
+      },
+      "source_errors": [],
+      "mount_count": 3,
+      "mounts_match_historical": true,
+      "mounts": [
+        {
+          "source": "/root/vibetrading/config",
+          "target": "/app/config",
+          "read_only": true
+        },
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "target": "/data/crypto_state",
+          "read_only": false
+        },
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "target": "/data",
+          "read_only": false
+        }
+      ]
+    },
+    {
+      "container": "vibetrading-etf-csv-sync-1",
+      "service": "etf-csv-sync",
+      "status": "OK",
+      "image_id": "sha256:4fcad834cf0748c357f7cc37cb9447c805064ec3d46728406dbe6fc06b7bbbf9",
+      "image_matches_historical": true,
+      "source_hash_counts": {
+        "observed": 109,
+        "local_equal": 74,
+        "local_different": 35,
+        "local_missing": 0,
+        "historical_equal": 109,
+        "historical_different": 0,
+        "historical_missing": 0
+      },
+      "source_errors": [],
+      "mount_count": 3,
+      "mounts_match_historical": true,
+      "mounts": [
+        {
+          "source": "/root/vibetrading/config",
+          "target": "/app/config",
+          "read_only": true
+        },
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "target": "/data/crypto_state",
+          "read_only": false
+        },
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "target": "/data",
+          "read_only": false
+        }
+      ]
+    },
+    {
+      "container": "vibetrading-etf-mock-1",
+      "service": "etf-mock",
+      "status": "OK",
+      "image_id": "sha256:8705060301df148daa21c973b9d7d82e6469c3d26f901d9ab0718f0d200d567c",
+      "image_matches_historical": true,
+      "source_hash_counts": {
+        "observed": 112,
+        "local_equal": 76,
+        "local_different": 36,
+        "local_missing": 0,
+        "historical_equal": 112,
+        "historical_different": 0,
+        "historical_missing": 0
+      },
+      "source_errors": [],
+      "mount_count": 3,
+      "mounts_match_historical": true,
+      "mounts": [
+        {
+          "source": "/root/vibetrading/config",
+          "target": "/app/config",
+          "read_only": true
+        },
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "target": "/data/crypto_state",
+          "read_only": false
+        },
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "target": "/data",
+          "read_only": false
+        }
+      ]
+    },
+    {
+      "container": "vibetrading-maintenance-1",
+      "service": "maintenance",
+      "status": "OK",
+      "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "image_matches_historical": true,
+      "source_hash_counts": {
+        "observed": 108,
+        "local_equal": 72,
+        "local_different": 36,
+        "local_missing": 0,
+        "historical_equal": 108,
+        "historical_different": 0,
+        "historical_missing": 0
+      },
+      "source_errors": [],
+      "mount_count": 5,
+      "mounts_match_historical": true,
+      "mounts": [
+        {
+          "source": "/etc/vibetrading/secrets/archive_access_key",
+          "target": "/run/secrets/archive_access_key",
+          "read_only": true
+        },
+        {
+          "source": "/etc/vibetrading/secrets/archive_secret_key",
+          "target": "/run/secrets/archive_secret_key",
+          "read_only": true
+        },
+        {
+          "source": "/root/vibetrading/config",
+          "target": "/app/config",
+          "read_only": true
+        },
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "target": "/data/crypto_state",
+          "read_only": false
+        },
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "target": "/data",
+          "read_only": false
+        }
+      ]
+    },
+    {
+      "container": "vibetrading-monitor-bridge-1",
+      "service": "bridge",
+      "status": "OK",
+      "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+      "image_matches_historical": true,
+      "source_hash_counts": {
+        "observed": 108,
+        "local_equal": 72,
+        "local_different": 36,
+        "local_missing": 0,
+        "historical_equal": 108,
+        "historical_different": 0,
+        "historical_missing": 0
+      },
+      "source_errors": [],
+      "mount_count": 4,
+      "mounts_match_historical": true,
+      "mounts": [
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "target": "/data/crypto_state",
+          "read_only": true
+        },
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "target": "/data",
+          "read_only": true
+        },
+        {
+          "source": "/srv/vibetrading-data/runtime_data/dashboard-monitor",
+          "target": "/monitor",
+          "read_only": false
+        },
+        {
+          "source": "/srv/vibetrading-data/runtime_data/liquidity_mm",
+          "target": "/pilot",
+          "read_only": true
+        }
+      ]
+    },
+    {
+      "container": "vibetrading-monitor-timefolio-1",
+      "service": "timefolio",
+      "status": "OK",
+      "image_id": "sha256:ab19a73e70432025162a3bc80df29036bd52a279244b8ca606a59be2ad77926b",
+      "image_matches_historical": true,
+      "source_hash_counts": {
+        "observed": 108,
+        "local_equal": 72,
+        "local_different": 36,
+        "local_missing": 0,
+        "historical_equal": 108,
+        "historical_different": 0,
+        "historical_missing": 0
+      },
+      "source_errors": [],
+      "mount_count": 1,
+      "mounts_match_historical": true,
+      "mounts": [
+        {
+          "source": "/srv/vibetrading-data/runtime_data/dashboard-monitor",
+          "target": "/monitor",
+          "read_only": false
+        }
+      ]
+    },
+    {
+      "container": "vibetrading-nats-1",
+      "service": "nats",
+      "status": "OK",
+      "image_id": "sha256:b83efabe3e7def1e0a4a31ec6e078999bb17c80363f881df35edc70fcb6bb927",
+      "image_matches_historical": true,
+      "source_hash_counts": {
+        "observed": 0,
+        "local_equal": 0,
+        "local_different": 0,
+        "local_missing": 0,
+        "historical_equal": 0,
+        "historical_different": 0,
+        "historical_missing": 0
+      },
+      "source_errors": [],
+      "mount_count": 2,
+      "mounts_match_historical": true,
+      "mounts": [
+        {
+          "source": "/root/vibetrading/deploy/nats.conf",
+          "target": "/etc/nats/nats.conf",
+          "read_only": true
+        },
+        {
+          "source": "/srv/vibetrading-data/nats",
+          "target": "/data",
+          "read_only": false
+        }
+      ]
+    },
+    {
+      "container": "vibetrading-storage-1",
+      "service": "storage",
+      "status": "OK",
+      "image_id": "sha256:3fcaa490d47d13d1df5aca7d6321d8313ea480bc1a18dddcb5139c84a0bdde3c",
+      "image_matches_historical": true,
+      "source_hash_counts": {
+        "observed": 108,
+        "local_equal": 72,
+        "local_different": 36,
+        "local_missing": 0,
+        "historical_equal": 108,
+        "historical_different": 0,
+        "historical_missing": 0
+      },
+      "source_errors": [],
+      "mount_count": 3,
+      "mounts_match_historical": true,
+      "mounts": [
+        {
+          "source": "/root/vibetrading/config",
+          "target": "/app/config",
+          "read_only": true
+        },
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "target": "/data/crypto_state",
+          "read_only": false
+        },
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "target": "/data",
+          "read_only": false
+        }
+      ]
+    },
+    {
+      "container": "vibetrading-telegram-1",
+      "service": "telegram",
+      "status": "OK",
+      "image_id": "sha256:39069192e2184d3dc0932b9f60bd38413c0b0870240021ce42308b7b8b8e0f90",
+      "image_matches_historical": true,
+      "source_hash_counts": {
+        "observed": 109,
+        "local_equal": 74,
+        "local_different": 35,
+        "local_missing": 0,
+        "historical_equal": 109,
+        "historical_different": 0,
+        "historical_missing": 0
+      },
+      "source_errors": [],
+      "mount_count": 3,
+      "mounts_match_historical": true,
+      "mounts": [
+        {
+          "source": "/root/vibetrading/config",
+          "target": "/app/config",
+          "read_only": true
+        },
+        {
+          "source": "/srv/vibetrading-crypto-state",
+          "target": "/data/crypto_state",
+          "read_only": false
+        },
+        {
+          "source": "/srv/vibetrading-data/runtime_data",
+          "target": "/data",
+          "read_only": false
+        }
+      ]
+    }
+  ],
+  "compose": {
+    "runtime.yml": {
+      "server_path": "/opt/vibetrading/releases/telegram-recovery-20261014/runtime.yml",
+      "server_sha256": "b8453debc65936fd5d9d4b8dccc824dbf611d41ec88a5020745e233671293e83",
+      "historical_sha256": "b8453debc65936fd5d9d4b8dccc824dbf611d41ec88a5020745e233671293e83",
+      "matches_historical": true,
+      "local_exact_basename_present": false,
+      "local_candidates": [
+        {
+          "path": "docker-compose.yml",
+          "size_bytes": 8987,
+          "sha256": "ca55fc26e8cd7125f4e8138c06c6d82fa145a7432e7667fa995f1d2323645e68",
+          "relationship": "candidate_only_equivalence_unproven"
+        },
+        {
+          "path": "deploy/release1-overlay.yml",
+          "size_bytes": 2590,
+          "sha256": "a84b732916f8a3c6cf8a0c5ca5e907db54db52a8753d30e27eb4df8f617c34b9",
+          "relationship": "candidate_only_equivalence_unproven"
+        }
+      ],
+      "comparison": "NO_DIRECT_COUNTERPART; candidate files are not proven equivalent"
+    },
+    "dashboard.yml": {
+      "server_path": "/opt/vibetrading/releases/telegram-recovery-20261014/dashboard.yml",
+      "server_sha256": "145bae53817aa15d85d8925abdfe34657e50ff20d1b65aae0687336169af2279",
+      "historical_sha256": "145bae53817aa15d85d8925abdfe34657e50ff20d1b65aae0687336169af2279",
+      "matches_historical": true,
+      "local_exact_basename_present": false,
+      "local_candidates": [
+        {
+          "path": "deploy/dashboard-compose.yml",
+          "size_bytes": 1993,
+          "sha256": "b9fbb1388089c6b41d9cbdb8bf383a11106702c6d31577269000e2ff27f16f9e",
+          "relationship": "candidate_only_equivalence_unproven"
+        }
+      ],
+      "comparison": "NO_DIRECT_COUNTERPART; candidate files are not proven equivalent"
+    }
+  },
+  "mount_coverage": {
+    "all_role_maps_match_historical": true,
+    "whole_code_directory_bind_mounts": [],
+    "whole_code_directory_fully_pinned": false,
+    "note": "Observed mounts do not bind /app or /app/vibetrading; /app/config and data mounts do not pin the code tree. Sampled source hashes are not a full-tree proof."
+  },
+  "host_resources": {
+    "cpu_count": 2,
+    "memory_bytes": {
+      "MemAvailable": 1374371840,
+      "MemTotal": 4105048064
+    },
+    "disk": [
+      {
+        "available_bytes": 3727093760,
+        "filesystem": "/dev/vda2",
+        "mount": "/",
+        "size_bytes": 10460876800,
+        "use_percent": "63%",
+        "used_bytes": 6180294656
+      },
+      {
+        "available_bytes": 11054342144,
+        "filesystem": "/dev/vdb",
+        "mount": "/srv/vibetrading-data",
+        "size_bytes": 20957446144,
+        "use_percent": "45%",
+        "used_bytes": 8812584960
+      },
+      {
+        "available_bytes": 239093460992,
+        "filesystem": "/dev/vdc",
+        "mount": "/srv/vibetrading-crypto-state",
+        "size_bytes": 315926315008,
+        "use_percent": "24%",
+        "used_bytes": 73594851328
+      },
+      {
+        "available_bytes": 11054342144,
+        "filesystem": "/dev/vdb",
+        "mount": "/srv/vibetrading-data",
+        "size_bytes": 20957446144,
+        "use_percent": "45%",
+        "used_bytes": 8812584960
+      }
+    ],
+    "classification": "instantaneous snapshot only; not capacity or stability evidence"
+  },
+  "acceptance": {
+    "current_identity_capture": "14-role identity observed; role/image/mount and source results enumerated above",
+    "server_vs_historical_observed_subset": "MATCH",
+    "local_vs_server_observed_subset": "MISMATCH",
+    "full_deployment_parity": "NOT_ESTABLISHED",
+    "vn00_whole_pin_satisfied": true,
+    "remaining_gaps": [
+      "466 role/path Python source entries differ from local current bytes across 36 unique paths; review source drift before parity claim.",
+      "Server runtime.yml/dashboard.yml have no exact local counterparts; local Compose candidates are not proven equivalent.",
+      "Python tree plus immutable image/config/process-config/mount identities pin the observed baseline, but do not establish non-Python filesystem or full deployment parity.",
+      "Host memory/disk observations are instantaneous only."
+    ],
+    "deployment_ready": false
+  },
+  "full_python_pin": {
+    "evidence": "docs/refactoring/runs/20261020-vnext/vn00-package/current-identity-full-20261021.json",
+    "scope": "Complete sorted Python source manifests per Python-bearing container, plus immutable image IDs, config/process-config hashes, and mount maps. Pins the observed server baseline; does not establish full deployment equivalence or non-Python filesystem identity.",
+    "python_bearing_roles": 13,
+    "python_manifests_complete": true,
+    "unique_python_paths": 112,
+    "unique_manifest_sha256": "5420c38e7247ee41a0ba0712f7571467d54cce89c26cf165f2a69a85ea020be2",
+    "role_path_entries": 1399,
+    "local_comparison": {
+      "equal_entries": 933,
+      "different_entries": 466,
+      "missing_entries": 0,
+      "different_unique_paths": 36
+    },
+    "roles": [
+      {
+        "container": "vibetrading-collectors-1",
+        "service": "collectors",
+        "image_id": "sha256:2c79d456b0e7c7918198480f7037edb1dfd5b28c09e6b378adc95bebce3702d7",
+        "config_sha256": "cab02490bee349e1d5d03f82b2cd522c3d74869c04d44a298e6c9e9ca7b8a1a4",
+        "process_config_sha256": "1cd222026c6c225f91c3edeb86bcc8bf7a4af8beffc969495c5d9e54bbc12274",
+        "mounts": [
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-data/runtime_data",
+            "target": "/data"
+          },
+          {
+            "read_only": true,
+            "source": "/root/vibetrading/config",
+            "target": "/app/config"
+          },
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-crypto-state",
+            "target": "/data/crypto_state"
+          }
+        ],
+        "python_files": 109,
+        "entries_seen": 117,
+        "complete": true,
+        "manifest_sha256": "f03a5e01884bfeb03df071ca26771d23cfcd123690ee6dc9fcf7d21f442306e0",
+        "local_equal": 73,
+        "local_different": 36,
+        "local_missing": 0
+      },
+      {
+        "container": "vibetrading-crypto-collector-arcus-1",
+        "service": "crypto-collector-arcus",
+        "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+        "config_sha256": "b338dd04889214be19913f438d033430c14c15076305bfb1c9388d3c0c408f76",
+        "process_config_sha256": "eb5c8725053773e390f5adb2af2e69c2c2a7f3845d6903f90bb9fd804756d2cf",
+        "mounts": [
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-data/runtime_data",
+            "target": "/data"
+          },
+          {
+            "read_only": true,
+            "source": "/root/vibetrading/config",
+            "target": "/app/config"
+          },
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-crypto-state",
+            "target": "/data/crypto_state"
+          }
+        ],
+        "python_files": 107,
+        "entries_seen": 115,
+        "complete": true,
+        "manifest_sha256": "124efe6ed6f7ed2541c49cc53cdef9160314884234d43ac9675bc8affb76b869",
+        "local_equal": 71,
+        "local_different": 36,
+        "local_missing": 0
+      },
+      {
+        "container": "vibetrading-crypto-collector-binance-1",
+        "service": "crypto-collector-binance",
+        "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+        "config_sha256": "8c9e1a388e6980b9db801a24dec01220f0650593fb882a55e594c616b555b57b",
+        "process_config_sha256": "7ea1a7a71cb344453792c07d9b08db3cbd6ccf5ffcc3ce08401f1eec326fe3e2",
+        "mounts": [
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-data/runtime_data",
+            "target": "/data"
+          },
+          {
+            "read_only": true,
+            "source": "/root/vibetrading/config",
+            "target": "/app/config"
+          },
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-crypto-state",
+            "target": "/data/crypto_state"
+          }
+        ],
+        "python_files": 107,
+        "entries_seen": 115,
+        "complete": true,
+        "manifest_sha256": "124efe6ed6f7ed2541c49cc53cdef9160314884234d43ac9675bc8affb76b869",
+        "local_equal": 71,
+        "local_different": 36,
+        "local_missing": 0
+      },
+      {
+        "container": "vibetrading-crypto-collector-grvt-1",
+        "service": "crypto-collector-grvt",
+        "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+        "config_sha256": "88d95d179f349f53b7bb81c696e008c30ff67be769e18261233941d51ac836ed",
+        "process_config_sha256": "56fe84e78ac8465c77efcc2c659263f6aa1253388d894063c49a35d615e98f78",
+        "mounts": [
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-data/runtime_data",
+            "target": "/data"
+          },
+          {
+            "read_only": true,
+            "source": "/root/vibetrading/config",
+            "target": "/app/config"
+          },
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-crypto-state",
+            "target": "/data/crypto_state"
+          }
+        ],
+        "python_files": 107,
+        "entries_seen": 115,
+        "complete": true,
+        "manifest_sha256": "124efe6ed6f7ed2541c49cc53cdef9160314884234d43ac9675bc8affb76b869",
+        "local_equal": 71,
+        "local_different": 36,
+        "local_missing": 0
+      },
+      {
+        "container": "vibetrading-crypto-maintenance-1",
+        "service": "crypto-maintenance",
+        "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+        "config_sha256": "590bcf5f4adacaf322f15160b46763273e95f6ffc6aac906fe5d81de6650d668",
+        "process_config_sha256": "d289a129228ed8131f29306d674784588fc0657c0606ffd66244bd29d427d986",
+        "mounts": [
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-data/runtime_data",
+            "target": "/data"
+          },
+          {
+            "read_only": true,
+            "source": "/root/vibetrading/config",
+            "target": "/app/config"
+          },
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-crypto-state",
+            "target": "/data/crypto_state"
+          },
+          {
+            "read_only": true,
+            "source": "/etc/vibetrading/secrets/archive_access_key",
+            "target": "/run/secrets/archive_access_key"
+          },
+          {
+            "read_only": true,
+            "source": "/etc/vibetrading/secrets/archive_secret_key",
+            "target": "/run/secrets/archive_secret_key"
+          }
+        ],
+        "python_files": 107,
+        "entries_seen": 115,
+        "complete": true,
+        "manifest_sha256": "124efe6ed6f7ed2541c49cc53cdef9160314884234d43ac9675bc8affb76b869",
+        "local_equal": 71,
+        "local_different": 36,
+        "local_missing": 0
+      },
+      {
+        "container": "vibetrading-crypto-storage-1",
+        "service": "crypto-storage",
+        "image_id": "sha256:3fcaa490d47d13d1df5aca7d6321d8313ea480bc1a18dddcb5139c84a0bdde3c",
+        "config_sha256": "fbb066dec10954436cf589ee8d4469d31b69d4523ad9a83c2bdc6aed2f21db7f",
+        "process_config_sha256": "1d1feb0476a77fcb98d53fe952156918d40970fbdd51b111ce316aa4468b087e",
+        "mounts": [
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-data/runtime_data",
+            "target": "/data"
+          },
+          {
+            "read_only": true,
+            "source": "/root/vibetrading/config",
+            "target": "/app/config"
+          },
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-crypto-state",
+            "target": "/data/crypto_state"
+          }
+        ],
+        "python_files": 107,
+        "entries_seen": 115,
+        "complete": true,
+        "manifest_sha256": "193a0c938447b3643f0f1e80f94cbc854aa0eb7f3bab7f451c87b00e5a498bfa",
+        "local_equal": 71,
+        "local_different": 36,
+        "local_missing": 0
+      },
+      {
+        "container": "vibetrading-etf-csv-sync-1",
+        "service": "etf-csv-sync",
+        "image_id": "sha256:4fcad834cf0748c357f7cc37cb9447c805064ec3d46728406dbe6fc06b7bbbf9",
+        "config_sha256": "932d390813c85acc70c73bdc43ae18a1eb1df7f9f8687d1e153582b915320747",
+        "process_config_sha256": "652befe74d474387d1db80c62d048695c3c3bc3b6ff2440e6c50aecad7bd75d9",
+        "mounts": [
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-data/runtime_data",
+            "target": "/data"
+          },
+          {
+            "read_only": true,
+            "source": "/root/vibetrading/config",
+            "target": "/app/config"
+          },
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-crypto-state",
+            "target": "/data/crypto_state"
+          }
+        ],
+        "python_files": 108,
+        "entries_seen": 116,
+        "complete": true,
+        "manifest_sha256": "7f4933de8f89925dd4c587d271a16fa970bb923f80ed7ca36d1883f8d1c82302",
+        "local_equal": 73,
+        "local_different": 35,
+        "local_missing": 0
+      },
+      {
+        "container": "vibetrading-etf-mock-1",
+        "service": "etf-mock",
+        "image_id": "sha256:8705060301df148daa21c973b9d7d82e6469c3d26f901d9ab0718f0d200d567c",
+        "config_sha256": "c03071b815577d2c8b774e4a0f03484fb020ff3ef2ecbabefde3a347ec4b55e1",
+        "process_config_sha256": "8b7a13e92461f17c1708e45bf4e352ed2ddba2d73e9f36b701928b1d3299f487",
+        "mounts": [
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-data/runtime_data",
+            "target": "/data"
+          },
+          {
+            "read_only": true,
+            "source": "/root/vibetrading/config",
+            "target": "/app/config"
+          },
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-crypto-state",
+            "target": "/data/crypto_state"
+          }
+        ],
+        "python_files": 111,
+        "entries_seen": 119,
+        "complete": true,
+        "manifest_sha256": "3adef7cce9746fe22fbba630918cad745e0a8592a87408ffdfd96419205dffb5",
+        "local_equal": 75,
+        "local_different": 36,
+        "local_missing": 0
+      },
+      {
+        "container": "vibetrading-maintenance-1",
+        "service": "maintenance",
+        "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+        "config_sha256": "068c635894a35a7e30ef9ecb2a110a01d5d4d61d444fbde74cf2970afd78d965",
+        "process_config_sha256": "df17067052396d64c8bf9d5400c19aee393245e0fdfb310af71d35e0751973b1",
+        "mounts": [
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-data/runtime_data",
+            "target": "/data"
+          },
+          {
+            "read_only": true,
+            "source": "/root/vibetrading/config",
+            "target": "/app/config"
+          },
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-crypto-state",
+            "target": "/data/crypto_state"
+          },
+          {
+            "read_only": true,
+            "source": "/etc/vibetrading/secrets/archive_access_key",
+            "target": "/run/secrets/archive_access_key"
+          },
+          {
+            "read_only": true,
+            "source": "/etc/vibetrading/secrets/archive_secret_key",
+            "target": "/run/secrets/archive_secret_key"
+          }
+        ],
+        "python_files": 107,
+        "entries_seen": 115,
+        "complete": true,
+        "manifest_sha256": "124efe6ed6f7ed2541c49cc53cdef9160314884234d43ac9675bc8affb76b869",
+        "local_equal": 71,
+        "local_different": 36,
+        "local_missing": 0
+      },
+      {
+        "container": "vibetrading-monitor-bridge-1",
+        "service": "bridge",
+        "image_id": "sha256:2e74238908fbca9e7d14d6de180114866ff0e26b0e29ac7dbe76a324bdcdfa35",
+        "config_sha256": "8d148c4cdf72cfd893cecb1ab1f784350f0358705d4e94ebbc2c8fce2870f3d2",
+        "process_config_sha256": "f4ca27d685fe53f28b291ffacf0c327d3004a066c55721d55c9254eb13bca7f3",
+        "mounts": [
+          {
+            "read_only": true,
+            "source": "/srv/vibetrading-data/runtime_data",
+            "target": "/data"
+          },
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-data/runtime_data/dashboard-monitor",
+            "target": "/monitor"
+          },
+          {
+            "read_only": true,
+            "source": "/srv/vibetrading-data/runtime_data/liquidity_mm",
+            "target": "/pilot"
+          },
+          {
+            "read_only": true,
+            "source": "/srv/vibetrading-crypto-state",
+            "target": "/data/crypto_state"
+          }
+        ],
+        "python_files": 107,
+        "entries_seen": 115,
+        "complete": true,
+        "manifest_sha256": "124efe6ed6f7ed2541c49cc53cdef9160314884234d43ac9675bc8affb76b869",
+        "local_equal": 71,
+        "local_different": 36,
+        "local_missing": 0
+      },
+      {
+        "container": "vibetrading-monitor-timefolio-1",
+        "service": "timefolio",
+        "image_id": "sha256:ab19a73e70432025162a3bc80df29036bd52a279244b8ca606a59be2ad77926b",
+        "config_sha256": "9b4e75f9505216f07bf3524abc5218ba79380c5173cc181ffa52df3835c6c5ae",
+        "process_config_sha256": "d289a129228ed8131f29306d674784588fc0657c0606ffd66244bd29d427d986",
+        "mounts": [
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-data/runtime_data/dashboard-monitor",
+            "target": "/monitor"
+          }
+        ],
+        "python_files": 107,
+        "entries_seen": 115,
+        "complete": true,
+        "manifest_sha256": "124efe6ed6f7ed2541c49cc53cdef9160314884234d43ac9675bc8affb76b869",
+        "local_equal": 71,
+        "local_different": 36,
+        "local_missing": 0
+      },
+      {
+        "container": "vibetrading-nats-1",
+        "service": "nats",
+        "image_id": "sha256:b83efabe3e7def1e0a4a31ec6e078999bb17c80363f881df35edc70fcb6bb927",
+        "config_sha256": "5b687dfb1d3faf2f3217b05de7e85e0c14ffb9b1a40cc48158b255f261697b4e",
+        "process_config_sha256": "e67c8a9e028504f6f37a7c40ecfdaa7fd8dec62e336365d993599691602f6a7b",
+        "mounts": [
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-data/nats",
+            "target": "/data"
+          },
+          {
+            "read_only": true,
+            "source": "/root/vibetrading/deploy/nats.conf",
+            "target": "/etc/nats/nats.conf"
+          }
+        ],
+        "python_source": "not_applicable_no_python_source_baseline"
+      },
+      {
+        "container": "vibetrading-storage-1",
+        "service": "storage",
+        "image_id": "sha256:3fcaa490d47d13d1df5aca7d6321d8313ea480bc1a18dddcb5139c84a0bdde3c",
+        "config_sha256": "2038d2a35e6f9267dcc331ea341da83435275a58bdf29d973e992f02554c125c",
+        "process_config_sha256": "ec274293ee6be75ef0b13f5a9513135a243aee9e71c3ea11d6615e4808949f15",
+        "mounts": [
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-data/runtime_data",
+            "target": "/data"
+          },
+          {
+            "read_only": true,
+            "source": "/root/vibetrading/config",
+            "target": "/app/config"
+          },
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-crypto-state",
+            "target": "/data/crypto_state"
+          }
+        ],
+        "python_files": 107,
+        "entries_seen": 115,
+        "complete": true,
+        "manifest_sha256": "193a0c938447b3643f0f1e80f94cbc854aa0eb7f3bab7f451c87b00e5a498bfa",
+        "local_equal": 71,
+        "local_different": 36,
+        "local_missing": 0
+      },
+      {
+        "container": "vibetrading-telegram-1",
+        "service": "telegram",
+        "image_id": "sha256:39069192e2184d3dc0932b9f60bd38413c0b0870240021ce42308b7b8b8e0f90",
+        "config_sha256": "f6583992c1a1ba861aadd434a91dc9daf4f7ea2ce85781511d4492d4cc1ea0e2",
+        "process_config_sha256": "d289a129228ed8131f29306d674784588fc0657c0606ffd66244bd29d427d986",
+        "mounts": [
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-data/runtime_data",
+            "target": "/data"
+          },
+          {
+            "read_only": true,
+            "source": "/root/vibetrading/config",
+            "target": "/app/config"
+          },
+          {
+            "read_only": false,
+            "source": "/srv/vibetrading-crypto-state",
+            "target": "/data/crypto_state"
+          }
+        ],
+        "python_files": 108,
+        "entries_seen": 116,
+        "complete": true,
+        "manifest_sha256": "93a78b96ff26508483c0b2a7aa5940fbca8bb2e5a37460a21d3e0089f7f22e4c",
+        "local_equal": 73,
+        "local_different": 35,
+        "local_missing": 0
+      }
+    ],
+    "whole_code_directory_bind_mount": false,
+    "baseline_pin_satisfied": true
+  }
+}

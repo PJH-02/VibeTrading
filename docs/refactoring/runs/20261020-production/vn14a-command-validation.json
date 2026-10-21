@@ -1,0 +1,37 @@
+{
+  "date_kst": "2026-10-21",
+  "task": "VN14A",
+  "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+  "source_manifest": "docs/refactoring/runs/20261020-production/vn14a-command-v1-source.json",
+  "source_set_sha256": "f1880e53a5b1343b0cf341a32505695114684eb9adb5be75945e93ceea473078",
+  "linux_scoped": {
+    "passed": 88,
+    "receipt": "docs/refactoring/runs/20261020-production/vn14a2-command-linux-focus1/linux_result.json",
+    "note": "Before test helper signature cleanup only; final full supersedes"
+  },
+  "linux_full": {
+    "passed": 1372,
+    "deselected": 2,
+    "receipt": "docs/refactoring/runs/20261020-production/vn14a-command-full-linux-v1/linux_result.json",
+    "elapsed_seconds": 111.71619337599999,
+    "guard_sha256": "eb34edb62d47e484d6d7bf5fb6572750c8cbfa0ac5a4abd40bc1fbd9d3e130b9"
+  },
+  "review": {
+    "reviewer": "luna_vn10_review",
+    "unresolved_p1_p2": 0
+  },
+  "changes": [
+    "Selected-scope resume changes only its epoch/gate; ancestors must be open; startup parent-first",
+    "Bounded command ID/payload/receipt; exact replay before expiry and state checks; collisions reject",
+    "Gate effect and receipt commit atomically; HALT memory precedes write; RESUME clear follows commit",
+    "Receipt replay is historical, never current execution permission; pause/halt never cancel or flatten"
+  ],
+  "limits": [
+    "No Telegram/UDS activation in this ticket; VN14B next",
+    "Offline fake ExecutionOwner only; existing ETF reduce-only exception unchanged",
+    "No GC/capacity measurement or operational readiness claim",
+    "Local and server sources differ; no server write, commit or push"
+  ],
+  "production_ready": false,
+  "committed": false
+}

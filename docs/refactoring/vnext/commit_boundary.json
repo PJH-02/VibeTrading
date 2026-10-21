@@ -107,5 +107,12 @@
   "server_deployment": false,
   "verified_normalized_git_source_blob_set_sha256": "369ed728fbf5b81625b87c26ba53ba22931da7e38752e2fd0788bf71771e99a7",
   "verified_index_source_file_count": 539,
-  "line_endings": "Source working-copy SHA256s plus matching normalized Git blob OIDs; core.autocrlf=true. Evidence files retain exact bytes via .gitattributes."
+  "line_endings": "Source working-copy SHA256s plus matching normalized Git blob OIDs; core.autocrlf=true. Evidence files retain exact bytes via .gitattributes.",
+  "legacy_boundary": true,
+  "current_all_source_snapshot": {
+    "candidate": "worktree-snapshot-20261021",
+    "validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
+    "scope": "All current source plus cleanup, including prior unfinished prototype exclusions and dashboard; excludes tmp/trashbin/generated caches/credentials",
+    "production_ready": false
+  }
 }

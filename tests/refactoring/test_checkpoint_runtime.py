@@ -195,3 +195,94 @@ async def test_false_checkpoint_readiness_closes_before_transport_starts(tmp_pat
         assert calls == {"start": 0, "close": 1}
     finally:
         await source.close()
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize('restored',[False,True])
+async def test_managed_journal_is_persisted_before_listen_and_never_initial_arms_restored(tmp_path,monkeypatch,restored):
+    from test_checkpoint_startup import capture,producer
+    from test_checkpoint_journal import journal
+    item=producer(tmp_path)
+    source,codec,_=capture([item])
+    root=tmp_path/'journal'
+    if restored:
+        first=journal(root,codec);await first.rotate(source);await first.close()
+    manager=journal(root,codec)
+    calls=[];armed=[]
+    original=LocalMarketEngine.arm_initial_resume
+    def arm(self,*args):
+        armed.append(True)
+        return original(self,*args)
+    class Stop(Exception):pass
+    class Server:
+        def __init__(self,*args,**kwargs):pass
+        async def start(self):
+            assert (root/'current.json').exists()
+            calls.append('start')
+            raise Stop()
+        async def close(self):calls.append('close')
+    monkeypatch.setattr(local_runtime,'LocalTransportServer',Server)
+    monkeypatch.setattr(local_runtime,'HotPathStore',lambda:HotPathStore(max_trades=16,max_books=16,max_index_quotes=16))
+    monkeypatch.setattr(LocalMarketEngine,'arm_initial_resume',arm)
+    budgets=EngineBudgets(4,16,4096,16,65536,60_000_000_000,32,2,60_000_000_000,.01)
+    item.delivery=None
+    plan=SimpleNamespace(producers=(item,),engine=asdict(budgets),endpoint=tmp_path/'unused.sock',
+        transport=object(),allowed_uid=0,etf_enabled=False,snapshot={})
+    try:
+        with pytest.raises(Stop):
+            await local_runtime.run_engine(plan,SimpleNamespace(state_dir=tmp_path),
+                checkpoint_journal=manager,checkpoint_readiness=lambda *args:True)
+        assert calls==['start','close']
+        assert bool(armed) is not restored
+        assert manager._lock is None
+    finally:await source.close()
+
+
+@pytest.mark.asyncio
+async def test_managed_journal_option_conflicts_reject_before_initialization(tmp_path):
+    from test_checkpoint_startup import capture,producer
+    from test_checkpoint_journal import journal
+    item=producer(tmp_path)
+    source,codec,_=capture([item]);manager=journal(tmp_path/'journal',codec)
+    try:
+        with pytest.raises(ValueError,match='without legacy'):
+            await local_runtime.run_engine(SimpleNamespace(etf_enabled=False),SimpleNamespace(),
+                checkpoint_journal=manager,checkpoint_codec=codec,checkpoint_readiness=lambda *args:True)
+        assert not manager.root.exists()
+    finally:await source.close()
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize('scenario',['periodic_failure','headroom','readiness','corrupt'])
+async def test_managed_failure_stops_before_listen_or_propagates_cadence(tmp_path,monkeypatch,scenario):
+    import vibetrading.local_snapshot as snapshots
+    from test_checkpoint_startup import capture,producer
+    from test_checkpoint_journal import journal
+    item=producer(tmp_path);item.delivery=None
+    source,codec,_=capture([item]);root=tmp_path/'journal'
+    if scenario!='periodic_failure':
+        old=journal(root,codec);await old.rotate(source);await old.close()
+    if scenario=='corrupt':(root/'current.json').write_bytes(b'{}')
+    manager=journal(root,codec,max_generations=1,interval_seconds=.01)
+    calls=[]
+    class Server:
+        def __init__(self,*args,**kwargs):pass
+        async def start(self):calls.append('start')
+        async def close(self):calls.append('close')
+    class Snapshot:
+        def __init__(self,*args):pass
+        async def start(self):pass
+        async def close(self):pass
+    monkeypatch.setattr(local_runtime,'LocalTransportServer',Server)
+    monkeypatch.setattr(local_runtime,'HotPathStore',lambda:HotPathStore(max_trades=16,max_books=16,max_index_quotes=16))
+    monkeypatch.setattr(snapshots,'SnapshotBudgets',lambda **kwargs:None)
+    monkeypatch.setattr(snapshots,'LocalSnapshotWriter',Snapshot)
+    plan=SimpleNamespace(producers=(item,),engine=asdict(source.budgets),endpoint=tmp_path/'unused.sock',
+        transport=object(),allowed_uid=0,etf_enabled=False,snapshot={})
+    try:
+        with pytest.raises(RuntimeError):
+            await local_runtime.run_engine(plan,SimpleNamespace(state_dir=tmp_path),
+                checkpoint_journal=manager,checkpoint_readiness=lambda *args:scenario!='readiness')
+        assert calls==(['start','close'] if scenario=='periodic_failure' else ['close'])
+        assert manager._lock is None
+    finally:await source.close()

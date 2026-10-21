@@ -41,6 +41,7 @@ class TelegramState:
                     CREATE TABLE IF NOT EXISTS outbox(identity TEXT PRIMARY KEY,chat_id TEXT NOT NULL,text TEXT NOT NULL,bytes INTEGER NOT NULL,notification_id TEXT,attempts INTEGER NOT NULL DEFAULT 0,next_ns INTEGER NOT NULL DEFAULT 0,created_ns INTEGER NOT NULL);
                     CREATE TABLE IF NOT EXISTS delivered(identity TEXT PRIMARY KEY,notification_id TEXT,delivered_ns INTEGER NOT NULL);
                     CREATE UNIQUE INDEX IF NOT EXISTS delivered_notification ON delivered(notification_id) WHERE notification_id IS NOT NULL;
+                    CREATE TABLE IF NOT EXISTS commands(update_id INTEGER PRIMARY KEY,digest TEXT NOT NULL,payload TEXT NOT NULL);
                 """)
                 db.execute("BEGIN IMMEDIATE")
                 yield db
@@ -84,10 +85,31 @@ class TelegramState:
     def complete(self, identity: int) -> None:
         with self.transaction() as db:
             db.execute("UPDATE inbox SET state='DONE' WHERE update_id=?", (identity,))
+            db.execute('DELETE FROM commands WHERE update_id=?', (identity,))
             db.execute("DELETE FROM delivered WHERE identity=? AND notification_id IS NULL", ("reply:"+str(identity),))
             # Retain a bounded audit tail; acknowledged updates below offset
             # cannot be returned by a correctly behaving Telegram poller.
             db.execute("DELETE FROM inbox WHERE state='DONE' AND update_id < (SELECT COALESCE(MIN(update_id),0) FROM (SELECT update_id FROM inbox WHERE state='DONE' ORDER BY update_id DESC LIMIT 10000))")
+
+    def command_request(self, update: dict, request: dict) -> dict:
+        """Freeze first request/TTL across retry and restart; never replace its update body."""
+        identity = update.get('update_id')
+        if type(identity) is not int or identity < 0:
+            raise ValueError('Invalid command update identity')
+        raw = json.dumps(update, sort_keys=True, separators=(',', ':'), allow_nan=False).encode()
+        payload = json.dumps(request, sort_keys=True, separators=(',', ':'), allow_nan=False)
+        if len(raw) > 65536 or len(payload.encode()) > 65536:
+            raise ValueError('Command exceeds inbox frame limit')
+        digest = hashlib.sha256(raw).hexdigest()
+        with self.transaction() as db:
+            old = db.execute('SELECT digest,payload FROM commands WHERE update_id=?', (identity,)).fetchone()
+            if old:
+                if old[0] != digest: raise ValueError('Command update identity has conflicting content')
+                return json.loads(old[1])
+            if db.execute('SELECT COUNT(*) FROM commands').fetchone()[0] >= self.max_pending:
+                raise OutboxFull('Telegram command capacity exceeded')
+            db.execute('INSERT INTO commands VALUES(?,?,?)', (identity, digest, payload))
+        return json.loads(payload)
 
     def enqueue(self, identity: str, chat_id: str, text: str, notification_id: str | None = None) -> bool:
         size = len(text.encode("utf-8"))

@@ -1,6 +1,7 @@
 """State-only local market application and a bounded ETF event source.
 
-There is no broker, bus, durable writer or network dependency here. Market
+There is no broker, bus or network dependency here. An optional caller-owned
+spool records checkpoint suffix order without per-event fsync. Market
 checkpoints require a quiescent owner and restore only into an unused engine.
 They do not contain strategy/account state or prove external readiness.
 """
@@ -22,6 +23,8 @@ from .feed_recovery import EngineCursor, FeedMode, RecoveryFrame
 from .hot_path import ApplyResult, DecisionSnapshot, HotPathStore, freeze_market_event
 from .local_transport import AppliedReceipt
 from .market_checkpoint import CheckpointCodec, CheckpointProducer, _canonical
+from .market_apply_order import ApplyOrder, ApplyOrderWriter, order_anchor, order_record
+from .market_spool import MarketSpool
 from .models import AssetClass, BaseMarketEvent, EventType, SCHEMA_VERSION, event_from_dict
 
 
@@ -148,6 +151,8 @@ class LocalMarketEngine:
         self._owner_depth = 0
         self._checkpoint_active = False
         self._checkpoint_restored = False
+        self._order_spool = None
+        self._replay_order = deque()
         self._committed_feed_cursors = {}
         self._checkpoint_origin_verified = hot_path is not None and self._checkpoint_store_virgin(hot_path)
         self._committed_store_cursor = ((hot_path.engine_incarnation, hot_path.apply_seq)
@@ -240,6 +245,8 @@ class LocalMarketEngine:
             return self._begin_recovery(checkpoint, high_water, verified_checkpoint=verified_checkpoint)
 
     def _begin_recovery(self, checkpoint, high_water, *, verified_checkpoint):
+        if self._replay_order:
+            raise EngineError("checkpoint_apply_order_not_consumed")
         feed = self._feed(checkpoint)
         _cursor(high_water)
         committed = self._committed_feed_cursors.get(checkpoint.producer)
@@ -453,13 +460,19 @@ class LocalMarketEngine:
                     raise EngineError("checkpoint_state_provider_mismatch")
 
     def capture_checkpoint(self, codec: CheckpointCodec, *, capture_epoch_ns=None,
-                           capture_monotonic_ns=None) -> bytes:
+                           capture_monotonic_ns=None, order_spool=None) -> bytes:
         """Capture market state/C atomically; decision consumers must be quiesced."""
         with self._owner_operation(exclusive=True):
             if not isinstance(codec, CheckpointCodec):
                 raise EngineError("checkpoint_codec_required")
             self.check_health()
             self._checkpoint_idle()
+            if self._order_spool is not None and not (
+                    type(self._order_spool) is ApplyOrderWriter and type(order_spool) is ApplyOrderWriter):
+                raise EngineError("checkpoint_apply_order_already_bound")
+            if order_spool is not None and (type(order_spool) not in {MarketSpool,ApplyOrderWriter}
+                    or order_spool.appended_cursor.sequence or self.state_callbacks or self.post_apply_callbacks):
+                raise EngineError("checkpoint_apply_order_requires_empty_spool_and_callback_free_owner")
             if not self._checkpoint_origin_verified:
                 raise EngineError("checkpoint_store_origin_unverified")
             vector = []
@@ -489,6 +502,11 @@ class LocalMarketEngine:
                 self._checkpoint_idle()
                 if signature != self._checkpoint_signature():
                     raise EngineError("checkpoint_owner_changed_during_capture")
+                if order_spool is not None:
+                    if type(order_spool) is ApplyOrderWriter:
+                        order_spool.claim(self)
+                    self._append_apply_order(order_spool,order_anchor(payload))
+                    self._order_spool = order_spool
                 return payload
             finally:
                 self._checkpoint_active = False
@@ -557,7 +575,8 @@ class LocalMarketEngine:
             raise EngineError("checkpoint_restore_requires_virgin_engine")
 
     def restore_virgin(self, codec, payload, highwaters, *, verified_cursors,
-                       expected_engine_incarnation, restore_epoch_ns=None, restore_monotonic_ns=None):
+                       expected_engine_incarnation, restore_epoch_ns=None, restore_monotonic_ns=None,
+                       apply_order=None):
         """Install only independently verified C state; no lease/readiness transfers."""
         with self._owner_operation(exclusive=True):
             self._virgin_checkpoint_target()
@@ -581,7 +600,12 @@ class LocalMarketEngine:
                             or high.sequence < checkpoint.sequence):
                         raise EngineError("checkpoint_spool_cursor_or_digest_mismatch")
                     handoffs.append((checkpoint, high))
-                if sum(checkpoint != high for checkpoint, high in handoffs) > 1:
+                ordered = ()
+                if apply_order is not None:
+                    if type(apply_order) is not ApplyOrder:
+                        raise EngineError("checkpoint_apply_order_proof_required")
+                    ordered = apply_order.validate(payload, handoffs)
+                elif sum(checkpoint != high for checkpoint, high in handoffs) > 1:
                     raise EngineError("checkpoint_global_delta_order_unproven")
                 # All validations complete before the first target mutation.
                 self._virgin_checkpoint_target()
@@ -598,6 +622,7 @@ class LocalMarketEngine:
                     feed.state_checkpoint_verified = True
                     if checkpoint.sequence:feed.digests[checkpoint.sequence] = item.digest
                 self._checkpoint_restored = True
+                self._replay_order = deque(ordered)
                 self._checkpoint_origin_verified = True
                 self._had_fault = True  # A restored process can never use virgin initial-resume proofs.
                 return tuple(handoffs)
@@ -612,7 +637,7 @@ class LocalMarketEngine:
         with self._owner_operation(exclusive=True):
             self.check_health()
             self._checkpoint_idle()
-            if not self._checkpoint_restored or any(
+            if not self._checkpoint_restored or self._replay_order or any(
                     feed.mode not in {FeedMode.WARMING, FeedMode.LIVE}
                     or feed.state_poisoned or not feed.state_checkpoint_verified
                     or (feed.mode == FeedMode.WARMING and feed.applied != feed.high_water)
@@ -769,7 +794,32 @@ class LocalMarketEngine:
                 raise EngineError("state_callback_rejected")
         return not (event.event_type == EventType.ORDER_BOOK and getattr(event, "fast", None) is False)
 
+    def _append_apply_order(self, spool, record):
+        try:
+            spool.append(_canonical(record,spool.max_frame_bytes))
+        except BaseException:
+            self._fail_order_journal()
+            raise
+
+    def _fail_order_journal(self):
+        for feed in self._feeds.values():
+            feed.state_poisoned, feed.state_checkpoint_verified = True, False
+        self._invalidate_feed("", "checkpoint_apply_order_write_failed", fault=True)
+
+    def fail_order_journal(self, reason=None):
+        with self._owner_operation():
+            self._fail_order_journal()
+
+    def verify_order_journal(self, writer):
+        with self._owner_operation(exclusive=True):
+            self._checkpoint_idle()
+            if self._order_spool is not writer or any(
+                    feed.state_poisoned or not feed.state_checkpoint_verified for feed in self._feeds.values()):
+                raise EngineError('checkpoint_apply_order_authority_unverified')
+
     def _commit_cursor(self, frame, feed, replay):
+        if self._order_spool is not None:
+            self._append_apply_order(self._order_spool,order_record(frame))
         feed.applied = frame.cursor
         committed = self._committed_feed_cursors.get(frame.cursor.producer)
         if (committed is None or (committed.incarnation == frame.cursor.incarnation
@@ -804,6 +854,8 @@ class LocalMarketEngine:
         try:
             feed, duplicate = self._frame(frame, replay=True)
             if not duplicate:
+                if self._replay_order and self._replay_order[0] != AppliedReceipt(frame.cursor, frame.digest):
+                    raise EngineError("checkpoint_apply_order_cursor_or_digest_mismatch")
                 generation = feed.generation
                 event = self._decode(frame, feed)
                 if event.event_type == EventType.DATA_GAP:
@@ -813,6 +865,8 @@ class LocalMarketEngine:
                 if feed.generation != generation or feed.mode not in {FeedMode.REPLAY, FeedMode.WARMING}:
                     raise EngineError("state_callback_invalidated_recovery")
                 self._commit_cursor(frame, feed, True)
+                if self._replay_order:
+                    self._replay_order.popleft()
             return AppliedReceipt(frame.cursor, frame.digest)
         except BaseException:
             if state_started:

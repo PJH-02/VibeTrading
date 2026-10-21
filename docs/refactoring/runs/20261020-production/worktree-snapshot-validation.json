@@ -1,0 +1,37 @@
+{
+  "date_kst": "2026-10-21",
+  "candidate": "worktree-snapshot-20261021",
+  "baseline_git_head": "90847f84243d01ec98c9815216c96c8f2749028b",
+  "source_manifest": "docs/refactoring/runs/20261020-production/worktree-snapshot-20261021-source.json",
+  "source_set_sha256": "1ab8d78dc9a968f1febf7c877177b6007cf6155a1af72c6bf8a4ff8652d31b64",
+  "python_source_files": 555,
+  "scope": "All current Python source/tests, including previously excluded unfinished Paper/strategy/venue/group prototypes; not production activation",
+  "linux": {
+    "passed": 1532,
+    "deselected": 2,
+    "exit_code": 0,
+    "receipt": "docs/refactoring/runs/20261020-production/worktree-snapshot-full-linux/linux_result.json",
+    "elapsed_seconds": 205.39723454200004,
+    "guard_sha256": "eb34edb62d47e484d6d7bf5fb6572750c8cbfa0ac5a4abd40bc1fbd9d3e130b9"
+  },
+  "source_verification": "Every tested Python file matches copied manifest and current workspace bytes",
+  "post_validation_non_runtime_changes": [
+    ".gitignore excludes trashbin",
+    "documentation/cleanup metadata",
+    "dashboard EOF whitespace normalization"
+  ],
+  "source_copy_retained": false,
+  "source_copy_location": "trashbin/worktree-snapshot-20261021 (ignored, user may delete)",
+  "dashboard": {
+    "original_git_head": "f7e0e8b",
+    "history_preserved_locally": ".git/local-repositories/dashboard.git",
+    "source_included": true,
+    "build_status": "Not rerun; existing independent dashboard source imported, no feature edits"
+  },
+  "cleanup_summary": "docs/refactoring/runs/20261020-production/cleanup_summary.json",
+  "production_ready": false,
+  "server_deployed": false,
+  "live_active": false,
+  "commit_authorization": "Latest human explicitly requested all changes committed and pushed; prior selective commit restriction superseded",
+  "readiness_rule": "Passing prototype tests does not complete unfinished tickets or operating gates"
+}

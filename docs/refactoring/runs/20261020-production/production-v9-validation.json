@@ -87,9 +87,9 @@
       "guard_receipt_count": 5,
       "artifacts": {
         "docs/refactoring/runs/20261020-production/vn06-windows-v9/result.json": "c0eef34cae9b9bda17118b1e725516c27e3d07ace378b0763aab9c7d4a395700",
-        "docs/refactoring/runs/20261020-production/vn06-windows-v9/junit.xml": "96cc643452a77491d185fcbe99145e9f48eae16bf5c8c260898312716d39938f",
+        "docs/refactoring/runs/20261020-production/cleanup_summary.json#vn06-windows-v9": "96cc643452a77491d185fcbe99145e9f48eae16bf5c8c260898312716d39938f",
         "docs/refactoring/runs/20261020-production/vn06-windows-v9/guard_receipts.jsonl": "85d27a4ed43285af6eb80c85dd804e9e76a14af2fa31b676259eae13e4b4e467",
-        "docs/refactoring/runs/20261020-production/vn06-windows-v9/stdout.txt": "c3ad9226899dca78cffd5472779872a38c0147bfbac6ace58b42064817d2076b"
+        "docs/refactoring/runs/20261020-production/cleanup_summary.json#vn06-windows-v9": "c3ad9226899dca78cffd5472779872a38c0147bfbac6ace58b42064817d2076b"
       }
     },
     "linux": {
@@ -113,7 +113,7 @@
         "--basetemp",
         "/tmp/vt-r-dsu20aoi/t/p",
         "--junitxml",
-        "/mnt/c/Users/박제형/Desktop/VibeTrading/docs/refactoring/runs/20261020-production/vn06-linux-v9/junit.xml",
+        "/mnt/c/Users/박제형/Desktop/VibeTrading/docs/refactoring/runs/20261020-production/cleanup_summary.json#vn06-linux-v9",
         "tests/refactoring/test_vnext_vn06.py",
         "tests/refactoring/test_market_checkpoint_bounds.py",
         "tests/refactoring/test_shared_state.py",
@@ -424,9 +424,9 @@
       "guard_receipt_count": 1,
       "artifacts": {
         "docs/refactoring/runs/20261020-production/vn06-linux-v9/linux_result.json": "3c7dfcca3c7fceae094d3585e7e7ad23a3992625d688c0d58bf40bcd9e245f0c",
-        "docs/refactoring/runs/20261020-production/vn06-linux-v9/junit.xml": "6e4fe29b906e7d8d6001ce377e98e8304a95f9b23516a3949578172ba0c87233",
+        "docs/refactoring/runs/20261020-production/cleanup_summary.json#vn06-linux-v9": "6e4fe29b906e7d8d6001ce377e98e8304a95f9b23516a3949578172ba0c87233",
         "docs/refactoring/runs/20261020-production/vn06-linux-v9/guard_receipts.jsonl": "a29f43e4a59c10ba0a93142f84a2a040f526ada216c5d841eece18c428c50b47",
-        "docs/refactoring/runs/20261020-production/vn06-linux-v9/stdout.txt": "11a84b95940de64652f30368952f8aa416dc6aa5ad1d52c4a8472581aa0eb607"
+        "docs/refactoring/runs/20261020-production/cleanup_summary.json#vn06-linux-v9": "11a84b95940de64652f30368952f8aa416dc6aa5ad1d52c4a8472581aa0eb607"
       }
     }
   },

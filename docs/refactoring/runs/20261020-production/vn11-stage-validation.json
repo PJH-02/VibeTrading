@@ -1,0 +1,30 @@
+{
+  "date_kst": "2026-10-21",
+  "task": "VN11",
+  "status": "COMPLETE_LOCAL_IMPLEMENTATION_SCOPED",
+  "source_manifest": "docs/refactoring/runs/20261020-production/vn11-stage-v1-source.json",
+  "source_set_sha256": "4f1d5f1057aedc8b5b37472e45d62f062cce3ed7b396d0e36b74a400f5d2a3a5",
+  "linux_scoped": {
+    "receipt": "docs/refactoring/runs/20261020-production/vn11-stage-linux-focus2/linux_result.json",
+    "passed": 86,
+    "elapsed_seconds": 36.56716795,
+    "guard_sha256": "eb34edb62d47e484d6d7bf5fb6572750c8cbfa0ac5a4abd40bc1fbd9d3e130b9"
+  },
+  "review": {
+    "reviewer": "luna_vn10_review",
+    "unresolved_p1_p2": 0
+  },
+  "changes": [
+    "Guarded stage requires exact intent-bound schema/hash/quote and canonical type evidence in 16KiB protocol envelope",
+    "Duplicate immutable payload/day/evidence conflicts reject without changing fill or reserve",
+    "place and market replacement retry existing immutable requests before fresh quote/time/power work; changed day/quantity/flags reject",
+    "COMMIT errors enter rollback handler, preserve original exception and cannot reach adapter handoff"
+  ],
+  "limits": [
+    "Local guarded ETF staging only, no actual account mutation",
+    "Full integration follows VN12; prior VN10 full1294 PASS is not reused as VN11 full result",
+    "No server deployment, production capacity or sustained market proof"
+  ],
+  "production_ready": false,
+  "committed": false
+}

@@ -1,0 +1,36 @@
+{
+  "date_kst": "2026-10-21",
+  "task": "VN10",
+  "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+  "source_manifest": "docs/refactoring/runs/20261020-production/vn10-owner-v1-source.json",
+  "source_set_sha256": "9dcb9de8d92f3e05f323ef3f0a92a1d5c2c45bb256459ad519536e3fc87686c1",
+  "file_count": 544,
+  "linux_full": {
+    "receipt": "docs/refactoring/runs/20261020-production/vn10-owner-full-linux-v1/linux_result.json",
+    "passed": 1294,
+    "deselected": 2,
+    "elapsed_seconds": 105.029888876,
+    "matching_tested_source_hashes": 250,
+    "guard_sha256": "eb34edb62d47e484d6d7bf5fb6572750c8cbfa0ac5a4abd40bc1fbd9d3e130b9"
+  },
+  "review": {
+    "reviewer": "luna_vn10_review",
+    "scope": "bounded diff, cooperative Python owner trust boundary",
+    "unresolved_p1_p2": 0
+  },
+  "changes": [
+    "Mandatory shared authority root; physical-parent-account lease across alternate DB paths and products; DB lease retained",
+    "Resolve Mock/Mock2 CANO before journal/backend work; distinct physical accounts required",
+    "Bound-once mandatory KIS authority callback before token and every POST, independent of ETF_EXECUTION_GUARDS",
+    "Close waits active runner, background tasks, bus and DB before lease release; caller cancellation retains cleanup",
+    "Persisted account_scope supplies legacy replacement route; no discarded server strategy/economics demonstrated by baseline diff"
+  ],
+  "limits": [
+    "Requires same protected shared volume and canonical physical parent identity for every cooperating process",
+    "No cross-host exchange fence or proof that uncooperative legacy owner stopped",
+    "Explicit EXECUTION_AUTHORITY_ROOT required for ETF startup; standalone unfenced KIS mutation now rejects",
+    "No server deployment, actual accounts, 30min/72h or performance acceptance"
+  ],
+  "production_ready": false,
+  "committed": false
+}

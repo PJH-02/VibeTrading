@@ -1,0 +1,1957 @@
+{
+  "date_kst": "2026-10-21",
+  "status": "COMPLETED",
+  "scope": "Retired source exports, intermediate validation/cache files and completed one-off release scripts; reusable source/tests and final evidence retained",
+  "removed_paths": [
+    {
+      "path": "docs/refactoring/runs/20261020-production/completed-market-commit-message.txt",
+      "files": 1,
+      "bytes": 694
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/completed-market-full-linux-v1/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1098
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/completed-market-full-windows-v1/matplotlib/fontlist-v390.json",
+      "files": 1,
+      "bytes": 147781
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/foundation-linux-v1",
+      "files": 6,
+      "bytes": 47800
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/foundation-v1-source.json",
+      "files": 1,
+      "bytes": 59751
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/foundation-v2-source.json",
+      "files": 1,
+      "bytes": 60082
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/foundation-windows-v1",
+      "files": 4,
+      "bytes": 75030
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/foundation-windows-v2",
+      "files": 4,
+      "bytes": 83606
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/integration-v1-source.json",
+      "files": 1,
+      "bytes": 60427
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/integration-v2-source.json",
+      "files": 1,
+      "bytes": 60427
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/integration-windows-v1",
+      "files": 4,
+      "bytes": 119280
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/integration-windows-v2",
+      "files": 4,
+      "bytes": 87795
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-collect-windows-v5",
+      "files": 4,
+      "bytes": 187345
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-focus-linux-v3",
+      "files": 6,
+      "bytes": 129808
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-focus-linux-v4",
+      "files": 6,
+      "bytes": 39595
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-focus-linux-v6",
+      "files": 6,
+      "bytes": 30821
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-focus-windows-v3",
+      "files": 4,
+      "bytes": 169963
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-focus-windows-v4",
+      "files": 4,
+      "bytes": 66847
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-focus-windows-v6",
+      "files": 4,
+      "bytes": 58024
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-full-linux-v12/launcher.json",
+      "files": 1,
+      "bytes": 273
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-full-linux-v12/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1087
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-full-linux-v5",
+      "files": 6,
+      "bytes": 214389
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-full-linux-v6/launcher.json",
+      "files": 1,
+      "bytes": 273
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-full-linux-v6/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1091
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-full-windows-v12/matplotlib/fontlist-v390.json",
+      "files": 1,
+      "bytes": 147781
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-full-windows-v5",
+      "files": 5,
+      "bytes": 401931
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-full-windows-v6/matplotlib/fontlist-v390.json",
+      "files": 1,
+      "bytes": 147781
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-observation-linux-v5",
+      "files": 6,
+      "bytes": 35024
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-target-linux-v1",
+      "files": 6,
+      "bytes": 100221
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-target-linux-v2",
+      "files": 6,
+      "bytes": 103878
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-target-windows-v1",
+      "files": 4,
+      "bytes": 136454
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-target-windows-v2",
+      "files": 4,
+      "bytes": 138602
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-v1-source.json",
+      "files": 1,
+      "bytes": 60653
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-v10-source.json",
+      "files": 1,
+      "bytes": 61358
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-v10-validation.json",
+      "files": 1,
+      "bytes": 22863
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-v11-source.json",
+      "files": 1,
+      "bytes": 61358
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-v11-validation.json",
+      "files": 1,
+      "bytes": 22849
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-v12-validation.json",
+      "files": 1,
+      "bytes": 22573
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-v2-source.json",
+      "files": 1,
+      "bytes": 60653
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-v3-source.json",
+      "files": 1,
+      "bytes": 60653
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-v4-source.json",
+      "files": 1,
+      "bytes": 60653
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-v5-source.json",
+      "files": 1,
+      "bytes": 60653
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-v7-source.json",
+      "files": 1,
+      "bytes": 60653
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-v7-validation.json",
+      "files": 1,
+      "bytes": 21905
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-v8-source.json",
+      "files": 1,
+      "bytes": 61002
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-v8-validation.json",
+      "files": 1,
+      "bytes": 22027
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/runtime-v1-source.json",
+      "files": 1,
+      "bytes": 60198
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/runtime-windows-v1",
+      "files": 4,
+      "bytes": 63404
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn01-linux-v1",
+      "files": 6,
+      "bytes": 36310
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn01-v1-source.json",
+      "files": 1,
+      "bytes": 58965
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn01-windows-v1",
+      "files": 4,
+      "bytes": 67533
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn01-windows-v2",
+      "files": 4,
+      "bytes": 63697
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn05-linux-v7",
+      "files": 6,
+      "bytes": 60689
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn05-probe-linux-after-b",
+      "files": 6,
+      "bytes": 42432
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn05-probe-linux-before-a",
+      "files": 6,
+      "bytes": 42427
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn05-probe-windows-after-b",
+      "files": 4,
+      "bytes": 69183
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn05-probe-windows-after-d",
+      "files": 4,
+      "bytes": 69060
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn05-probe-windows-before-a",
+      "files": 4,
+      "bytes": 69472
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn05-probe-windows-before-c",
+      "files": 4,
+      "bytes": 69448
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn05-windows-v7",
+      "files": 4,
+      "bytes": 90260
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn06-linux-v8",
+      "files": 6,
+      "bytes": 47970
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn06-linux-v9/launcher.json",
+      "files": 1,
+      "bytes": 273
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn06-linux-v9/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1386
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn06-windows-v8",
+      "files": 4,
+      "bytes": 76147
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j1-linux-final/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 37
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j1-linux-final/launcher.json",
+      "files": 1,
+      "bytes": 273
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j1-linux-final/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1362
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j1-linux-final/stdout.txt",
+      "files": 1,
+      "bytes": 260
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j1-linux-focus1",
+      "files": 6,
+      "bytes": 36103
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j2-linux-final",
+      "files": 6,
+      "bytes": 41465
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j2-linux-focus1",
+      "files": 6,
+      "bytes": 40919
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j2-linux-reviewfix/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 37
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j2-linux-reviewfix/launcher.json",
+      "files": 1,
+      "bytes": 273
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j2-linux-reviewfix/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1272
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j2-linux-reviewfix/stdout.txt",
+      "files": 1,
+      "bytes": 179
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j3-close-deadline/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 37
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j3-close-deadline/launcher.json",
+      "files": 1,
+      "bytes": 273
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j3-close-deadline/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1197
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j3-close-deadline/stdout.txt",
+      "files": 1,
+      "bytes": 98
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j3-linux-final/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 37
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j3-linux-final/launcher.json",
+      "files": 1,
+      "bytes": 273
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j3-linux-final/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1315
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j3-linux-final/stdout.txt",
+      "files": 1,
+      "bytes": 6209
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j3-linux-focus1",
+      "files": 6,
+      "bytes": 44151
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-lifecycle-dev-source.json",
+      "files": 1,
+      "bytes": 60887
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-lifecycle-full-linux-v1",
+      "files": 4,
+      "bytes": 3148
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-lifecycle-full-linux-v2/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 291
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-lifecycle-full-linux-v2/launcher.json",
+      "files": 1,
+      "bytes": 274
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-lifecycle-full-linux-v2/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1092
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-lifecycle-full-linux-v2/stdout.txt",
+      "files": 1,
+      "bytes": 1487
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-linux-v10",
+      "files": 6,
+      "bytes": 78100
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-linux-v11",
+      "files": 6,
+      "bytes": 78543
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-linux-v12",
+      "files": 6,
+      "bytes": 79300
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-baseline-fileaccess/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 362
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-baseline-fileaccess/junit.xml",
+      "files": 1,
+      "bytes": 405
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-baseline-fileaccess/stdout.txt",
+      "files": 1,
+      "bytes": 100
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-dev1-source.json",
+      "files": 1,
+      "bytes": 60760
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-final-linux-v2/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 37
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-final-linux-v2/launcher.json",
+      "files": 1,
+      "bytes": 273
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-final-linux-v2/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1488
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-final-linux-v2/stdout.txt",
+      "files": 1,
+      "bytes": 341
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-final-windows-v2/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 362
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-final-windows-v2/stdout.txt",
+      "files": 1,
+      "bytes": 357
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-focus1",
+      "files": 4,
+      "bytes": 66299
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-full-linux-v1/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 295
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-full-linux-v1/launcher.json",
+      "files": 1,
+      "bytes": 273
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-full-linux-v1/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1077
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-full-linux-v1/stdout.txt",
+      "files": 1,
+      "bytes": 1487
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-full-windows-v1/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 561
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-full-windows-v1/matplotlib/fontlist-v390.json",
+      "files": 1,
+      "bytes": 147781
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-full-windows-v1/stdout.txt",
+      "files": 1,
+      "bytes": 1518
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-scope1",
+      "files": 4,
+      "bytes": 57450
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-scope2/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 362
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-scope2/junit.xml",
+      "files": 1,
+      "bytes": 48276
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-scope2/stdout.txt",
+      "files": 1,
+      "bytes": 10717
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-windows-v10",
+      "files": 4,
+      "bytes": 108564
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-windows-v11",
+      "files": 4,
+      "bytes": 109004
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-windows-v12",
+      "files": 4,
+      "bytes": 109764
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-a-linux-focus1",
+      "files": 6,
+      "bytes": 41253
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-a-linux-focus2/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 37
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-a-linux-focus2/launcher.json",
+      "files": 1,
+      "bytes": 273
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-a-linux-focus2/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1206
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-a-linux-focus2/stdout.txt",
+      "files": 1,
+      "bytes": 99
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-b-linux-close-final/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 74
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-b-linux-close-final/launcher.json",
+      "files": 1,
+      "bytes": 273
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-b-linux-close-final/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1215
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-b-linux-close-final/stdout.txt",
+      "files": 1,
+      "bytes": 113
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-b-linux-focus1",
+      "files": 6,
+      "bytes": 60035
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-b-linux-focus2",
+      "files": 6,
+      "bytes": 65392
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-b-linux-focus3/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 74
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-b-linux-focus3/launcher.json",
+      "files": 1,
+      "bytes": 273
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-b-linux-focus3/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1481
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-b-linux-focus3/stdout.txt",
+      "files": 1,
+      "bytes": 261
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-owner-dev-source.json",
+      "files": 1,
+      "bytes": 61227
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-owner-full-linux-v1/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 332
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-owner-full-linux-v1/launcher.json",
+      "files": 1,
+      "bytes": 274
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-owner-full-linux-v1/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1079
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-owner-full-linux-v1/stdout.txt",
+      "files": 1,
+      "bytes": 1487
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn11-stage-dev-source.json",
+      "files": 1,
+      "bytes": 61340
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn11-stage-linux-focus1",
+      "files": 6,
+      "bytes": 61938
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn11-stage-linux-focus2/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 37
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn11-stage-linux-focus2/launcher.json",
+      "files": 1,
+      "bytes": 273
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn11-stage-linux-focus2/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1275
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn11-stage-linux-focus2/stdout.txt",
+      "files": 1,
+      "bytes": 180
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn12-ack-dev-source.json",
+      "files": 1,
+      "bytes": 61451
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn12-ack-full-linux-v1/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 328
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn12-ack-full-linux-v1/launcher.json",
+      "files": 1,
+      "bytes": 274
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn12-ack-full-linux-v1/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1080
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn12-ack-full-linux-v1/stdout.txt",
+      "files": 1,
+      "bytes": 1567
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn12-ack-linux-focus1",
+      "files": 6,
+      "bytes": 80276
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn12-ack-linux-focus2/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 37
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn12-ack-linux-focus2/launcher.json",
+      "files": 1,
+      "bytes": 273
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn12-ack-linux-focus2/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1448
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn12-ack-linux-focus2/stdout.txt",
+      "files": 1,
+      "bytes": 181
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14-control-dev-source.json",
+      "files": 1,
+      "bytes": 61569
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14a-command-full-linux-v1/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 327
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14a-command-full-linux-v1/launcher.json",
+      "files": 1,
+      "bytes": 273
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14a-command-full-linux-v1/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1088
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14a-command-full-linux-v1/stdout.txt",
+      "files": 1,
+      "bytes": 1647
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14a1-scope-linux-focus1/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 37
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14a1-scope-linux-focus1/launcher.json",
+      "files": 1,
+      "bytes": 273
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14a1-scope-linux-focus1/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1255
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14a1-scope-linux-focus1/stdout.txt",
+      "files": 1,
+      "bytes": 100
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14a2-command-linux-focus1/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 37
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14a2-command-linux-focus1/launcher.json",
+      "files": 1,
+      "bytes": 273
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14a2-command-linux-focus1/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1263
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14a2-command-linux-focus1/stdout.txt",
+      "files": 1,
+      "bytes": 180
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-control-dev-source.json",
+      "files": 1,
+      "bytes": 61684
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-control-full-linux-v1/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 328
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-control-full-linux-v1/launcher.json",
+      "files": 1,
+      "bytes": 273
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-control-full-linux-v1/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1089
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-control-full-linux-v1/stdout.txt",
+      "files": 1,
+      "bytes": 1647
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-control-full-linux-v2/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 328
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-control-full-linux-v2/launcher.json",
+      "files": 1,
+      "bytes": 273
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-control-full-linux-v2/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1083
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-control-full-linux-v2/stdout.txt",
+      "files": 1,
+      "bytes": 1647
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-control-linux-final/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 37
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-control-linux-final/launcher.json",
+      "files": 1,
+      "bytes": 273
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-control-linux-final/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1459
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-control-linux-final/stdout.txt",
+      "files": 1,
+      "bytes": 261
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-control-linux-focus1",
+      "files": 6,
+      "bytes": 175715
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-control-linux-focus2",
+      "files": 6,
+      "bytes": 57659
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-control-v1-source.json",
+      "files": 1,
+      "bytes": 61684
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-control-v2-source.json",
+      "files": 1,
+      "bytes": 61684
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-epoch-binding-linux",
+      "files": 6,
+      "bytes": 31116
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-readiness-linux-final/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 37
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-readiness-linux-final/launcher.json",
+      "files": 1,
+      "bytes": 273
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-readiness-linux-final/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1255
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-readiness-linux-final/stdout.txt",
+      "files": 1,
+      "bytes": 180
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn16-lane-dev-source.json",
+      "files": 1,
+      "bytes": 61452
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn16-lane-linux-final/guard_receipts.jsonl",
+      "files": 1,
+      "bytes": 37
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn16-lane-linux-final/launcher.json",
+      "files": 1,
+      "bytes": 273
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn16-lane-linux-final/launcher_stdout.txt",
+      "files": 1,
+      "bytes": 1212
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn16-lane-linux-final/stdout.txt",
+      "files": 1,
+      "bytes": 181
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn16-lane-linux-focus1",
+      "files": 6,
+      "bytes": 39973
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-vnext/vn00-package/current-identity-20261021.json",
+      "files": 1,
+      "bytes": 422685
+    },
+    {
+      "path": "scripts/refactoring/deploy_p02_schema.py",
+      "files": 1,
+      "bytes": 20838
+    },
+    {
+      "path": "scripts/refactoring/publish_progress.py",
+      "files": 1,
+      "bytes": 3847
+    },
+    {
+      "path": "scripts/refactoring/rebase_after_p02.py",
+      "files": 1,
+      "bytes": 2569
+    },
+    {
+      "path": "scripts/refactoring/update_execution_state.py",
+      "files": 1,
+      "bytes": 12069
+    },
+    {
+      "path": "tmp/refactoring",
+      "files": 16431,
+      "bytes": 155005621
+    },
+    {
+      "path": "tmp/rf-1aa9ab",
+      "files": 102,
+      "bytes": 2325386
+    },
+    {
+      "path": "tmp/rf-1c32e6",
+      "files": 18,
+      "bytes": 110208
+    },
+    {
+      "path": "tmp/rf-2588a4",
+      "files": 2252,
+      "bytes": 51973135
+    },
+    {
+      "path": "tmp/rf-35daa2",
+      "files": 166,
+      "bytes": 1290314
+    },
+    {
+      "path": "tmp/rf-35f850",
+      "files": 2005,
+      "bytes": 46612412
+    },
+    {
+      "path": "tmp/rf-39ed85",
+      "files": 18,
+      "bytes": 110208
+    },
+    {
+      "path": "tmp/rf-3a1086",
+      "files": 18,
+      "bytes": 110208
+    },
+    {
+      "path": "tmp/rf-3b084b",
+      "files": 85,
+      "bytes": 2041635
+    },
+    {
+      "path": "tmp/rf-3ed9a8",
+      "files": 166,
+      "bytes": 1290314
+    },
+    {
+      "path": "tmp/rf-4e0190",
+      "files": 2182,
+      "bytes": 46686686
+    },
+    {
+      "path": "tmp/rf-55070e",
+      "files": 2201,
+      "bytes": 51951619
+    },
+    {
+      "path": "tmp/rf-5abdb0",
+      "files": 4,
+      "bytes": 634
+    },
+    {
+      "path": "tmp/rf-632388",
+      "files": 222,
+      "bytes": 3603370
+    },
+    {
+      "path": "tmp/rf-6796ec",
+      "files": 338,
+      "bytes": 5705757
+    },
+    {
+      "path": "tmp/rf-6aa53e",
+      "files": 169,
+      "bytes": 1291825
+    },
+    {
+      "path": "tmp/rf-8ec4e1",
+      "files": 4,
+      "bytes": 44085
+    },
+    {
+      "path": "tmp/rf-95a079",
+      "files": 334,
+      "bytes": 5705229
+    },
+    {
+      "path": "tmp/rf-973b41",
+      "files": 3,
+      "bytes": 313
+    },
+    {
+      "path": "tmp/rf-987daa",
+      "files": 18,
+      "bytes": 110208
+    },
+    {
+      "path": "tmp/rf-99ffdc",
+      "files": 67,
+      "bytes": 1133053
+    },
+    {
+      "path": "tmp/rf-9f1b88",
+      "files": 384,
+      "bytes": 157345
+    },
+    {
+      "path": "tmp/rf-a58515",
+      "files": 4,
+      "bytes": 634
+    },
+    {
+      "path": "tmp/rf-a710a1",
+      "files": 4,
+      "bytes": 32965
+    },
+    {
+      "path": "tmp/rf-a83f06",
+      "files": 394,
+      "bytes": 179046
+    },
+    {
+      "path": "tmp/rf-b47667",
+      "files": 100,
+      "bytes": 1905381
+    },
+    {
+      "path": "tmp/rf-b8273b",
+      "files": 118,
+      "bytes": 1270158
+    },
+    {
+      "path": "tmp/rf-b88c70",
+      "files": 2200,
+      "bytes": 51951268
+    },
+    {
+      "path": "tmp/rf-d2be4b",
+      "files": 150,
+      "bytes": 66162
+    },
+    {
+      "path": "tmp/rf-d52363",
+      "files": 85,
+      "bytes": 2041635
+    },
+    {
+      "path": "tmp/rf-d6eacc",
+      "files": 0,
+      "bytes": 0
+    },
+    {
+      "path": "tmp/rf-ddd4a4",
+      "files": 3,
+      "bytes": 313
+    },
+    {
+      "path": "tmp/rf-e337d9",
+      "files": 103,
+      "bytes": 943173
+    },
+    {
+      "path": "tmp/rf-f0aa5f",
+      "files": 0,
+      "bytes": 0
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-full-linux-v12/junit.xml",
+      "files": 1,
+      "bytes": 192223,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-full-linux-v12/stdout.txt",
+      "files": 1,
+      "bytes": 1567,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-full-linux-v6/junit.xml",
+      "files": 1,
+      "bytes": 178380,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-full-linux-v6/stdout.txt",
+      "files": 1,
+      "bytes": 1487,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-full-windows-v12/junit.xml",
+      "files": 1,
+      "bytes": 196438,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-full-windows-v12/stdout.txt",
+      "files": 1,
+      "bytes": 1599,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-full-windows-v6/junit.xml",
+      "files": 1,
+      "bytes": 181441,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/production-full-windows-v6/stdout.txt",
+      "files": 1,
+      "bytes": 1518,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn06-linux-v9/junit.xml",
+      "files": 1,
+      "bytes": 17748,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn06-linux-v9/stdout.txt",
+      "files": 1,
+      "bytes": 180,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn06-windows-v9/junit.xml",
+      "files": 1,
+      "bytes": 18888,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn06-windows-v9/stdout.txt",
+      "files": 1,
+      "bytes": 194,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j1-linux-final/junit.xml",
+      "files": 1,
+      "bytes": 23681,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j2-linux-reviewfix/junit.xml",
+      "files": 1,
+      "bytes": 11636,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j3-close-deadline/junit.xml",
+      "files": 1,
+      "bytes": 401,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j3-linux-final/junit.xml",
+      "files": 1,
+      "bytes": 20154,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-j3-linux-final/linux_result.json",
+      "files": 1,
+      "bytes": 28570,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-lifecycle-full-linux-v2/junit.xml",
+      "files": 1,
+      "bytes": 182907,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-final-linux-v2/junit.xml",
+      "files": 1,
+      "bytes": 36848,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-final-windows-v2/junit.xml",
+      "files": 1,
+      "bytes": 38293,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-full-linux-v1/junit.xml",
+      "files": 1,
+      "bytes": 177473,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn07-order-full-windows-v1/junit.xml",
+      "files": 1,
+      "bytes": 181675,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-a-linux-focus2/junit.xml",
+      "files": 1,
+      "bytes": 5105,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-b-linux-close-final/junit.xml",
+      "files": 1,
+      "bytes": 1428,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-b-linux-focus3/junit.xml",
+      "files": 1,
+      "bytes": 22641,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn10-owner-full-linux-v1/junit.xml",
+      "files": 1,
+      "bytes": 187144,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn11-stage-linux-focus2/junit.xml",
+      "files": 1,
+      "bytes": 12729,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn12-ack-full-linux-v1/junit.xml",
+      "files": 1,
+      "bytes": 192176,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn12-ack-linux-focus2/junit.xml",
+      "files": 1,
+      "bytes": 20402,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14a-command-full-linux-v1/junit.xml",
+      "files": 1,
+      "bytes": 198468,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14a1-scope-linux-focus1/junit.xml",
+      "files": 1,
+      "bytes": 10101,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14a2-command-linux-focus1/junit.xml",
+      "files": 1,
+      "bytes": 13200,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-control-full-linux-v1/junit.xml",
+      "files": 1,
+      "bytes": 204252,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-control-full-linux-v2/junit.xml",
+      "files": 1,
+      "bytes": 204577,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-control-linux-final/junit.xml",
+      "files": 1,
+      "bytes": 26862,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn14b-readiness-linux-final/junit.xml",
+      "files": 1,
+      "bytes": 15096,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    },
+    {
+      "path": "docs/refactoring/runs/20261020-production/vn16-lane-linux-final/junit.xml",
+      "files": 1,
+      "bytes": 17732,
+      "pass": "TERMINAL_EVIDENCE_DEDUPLICATION"
+    }
+  ],
+  "files": 30809,
+  "bytes": 445647844,
+  "retired_source_paths": [
+    "scripts/refactoring/deploy_p02_schema.py",
+    "scripts/refactoring/rebase_after_p02.py",
+    "scripts/refactoring/publish_progress.py",
+    "scripts/refactoring/update_execution_state.py"
+  ],
+  "kept_evidence_files": 128,
+  "dashboard_history": "Preserved locally at .git/local-repositories/dashboard.git; source included in main repository",
+  "policy": "All current source including unfinished prototypes will be committed as a work snapshot; no production readiness promotion",
+  "run_summaries": [
+    {
+      "run": "completed-market-full-linux-v1",
+      "summary": "1213 passed, 2 deselected in 203.87s (0:03:23)"
+    },
+    {
+      "run": "completed-market-full-windows-v1",
+      "summary": "1199 passed, 14 skipped, 2 deselected in 225.07s (0:03:45)"
+    },
+    {
+      "run": "foundation-linux-v1",
+      "summary": "119 passed in 3.90s"
+    },
+    {
+      "run": "foundation-windows-v1",
+      "summary": "119 passed in 6.67s"
+    },
+    {
+      "run": "foundation-windows-v2",
+      "summary": "1 failed, 151 passed in 11.30s"
+    },
+    {
+      "run": "integration-windows-v1",
+      "summary": "8 failed, 73 passed, 1 skipped in 34.93s"
+    },
+    {
+      "run": "integration-windows-v2",
+      "summary": "2 failed, 126 passed, 1 skipped in 44.92s"
+    },
+    {
+      "run": "production-focus-linux-v3",
+      "summary": "3 failed in 11.08s"
+    },
+    {
+      "run": "production-focus-linux-v4",
+      "summary": "1 failed, 3 passed in 1.39s"
+    },
+    {
+      "run": "production-focus-linux-v6",
+      "summary": "2 passed in 1.81s"
+    },
+    {
+      "run": "production-focus-windows-v3",
+      "summary": "2 failed, 1 skipped in 10.48s"
+    },
+    {
+      "run": "production-focus-windows-v4",
+      "summary": "1 failed, 2 passed, 1 skipped in 37.76s"
+    },
+    {
+      "run": "production-focus-windows-v6",
+      "summary": "2 passed in 32.87s"
+    },
+    {
+      "run": "production-full-linux-v12",
+      "summary": "1326 passed, 2 deselected in 132.93s (0:02:12)"
+    },
+    {
+      "run": "production-full-linux-v5",
+      "summary": "1 failed, 1235 passed, 2 deselected in 382.30s (0:06:22)"
+    },
+    {
+      "run": "production-full-linux-v6",
+      "summary": "1236 passed, 2 deselected in 322.82s (0:05:22)"
+    },
+    {
+      "run": "production-full-windows-v12",
+      "summary": "1312 passed, 14 skipped, 2 deselected in 124.94s (0:02:04)"
+    },
+    {
+      "run": "production-full-windows-v5",
+      "summary": "2 failed, 1224 passed, 10 skipped, 2 deselected in 546.31s (0:09:06)"
+    },
+    {
+      "run": "production-full-windows-v6",
+      "summary": "1226 passed, 10 skipped, 2 deselected in 331.82s (0:05:31)"
+    },
+    {
+      "run": "production-observation-linux-v5",
+      "summary": "1 failed in 1.01s"
+    },
+    {
+      "run": "production-target-linux-v1",
+      "summary": "5 failed, 287 passed in 81.79s (0:01:21)"
+    },
+    {
+      "run": "production-target-linux-v2",
+      "summary": "3 failed, 291 passed in 54.10s"
+    },
+    {
+      "run": "production-target-windows-v1",
+      "summary": "4 failed, 280 passed, 8 skipped in 96.47s (0:01:36)"
+    },
+    {
+      "run": "production-target-windows-v2",
+      "summary": "2 failed, 284 passed, 8 skipped in 111.34s (0:01:51)"
+    },
+    {
+      "run": "runtime-windows-v1",
+      "summary": "42 passed in 6.30s"
+    },
+    {
+      "run": "vn01-linux-v1",
+      "summary": "48 passed in 1.74s"
+    },
+    {
+      "run": "vn01-windows-v1",
+      "summary": "2 failed, 46 passed in 2.64s"
+    },
+    {
+      "run": "vn01-windows-v2",
+      "summary": "48 passed in 11.30s"
+    },
+    {
+      "run": "vn05-linux-v7",
+      "summary": "193 passed in 11.38s"
+    },
+    {
+      "run": "vn05-probe-linux-after-b",
+      "summary": "6 passed in 4.14s"
+    },
+    {
+      "run": "vn05-probe-linux-before-a",
+      "summary": "6 passed in 5.96s"
+    },
+    {
+      "run": "vn05-probe-windows-after-b",
+      "summary": "6 passed in 3.82s"
+    },
+    {
+      "run": "vn05-probe-windows-after-d",
+      "summary": "6 passed in 3.69s"
+    },
+    {
+      "run": "vn05-probe-windows-before-a",
+      "summary": "6 passed in 5.74s"
+    },
+    {
+      "run": "vn05-probe-windows-before-c",
+      "summary": "6 passed in 5.55s"
+    },
+    {
+      "run": "vn05-windows-v7",
+      "summary": "185 passed, 8 skipped in 37.57s"
+    },
+    {
+      "run": "vn06-linux-v8",
+      "summary": "111 passed in 6.37s"
+    },
+    {
+      "run": "vn06-linux-v9",
+      "summary": "116 passed in 6.16s"
+    },
+    {
+      "run": "vn06-windows-v8",
+      "summary": "107 passed, 4 skipped in 6.18s"
+    },
+    {
+      "run": "vn06-windows-v9",
+      "summary": "112 passed, 4 skipped in 6.41s"
+    },
+    {
+      "run": "vn07-j1-linux-final",
+      "summary": "150 passed in 5.13s"
+    },
+    {
+      "run": "vn07-j1-linux-focus1",
+      "summary": "39 passed in 4.56s"
+    },
+    {
+      "run": "vn07-j2-linux-final",
+      "summary": "73 passed in 5.19s"
+    },
+    {
+      "run": "vn07-j2-linux-focus1",
+      "summary": "70 passed in 5.37s"
+    },
+    {
+      "run": "vn07-j2-linux-reviewfix",
+      "summary": "76 passed in 5.63s"
+    },
+    {
+      "run": "vn07-j3-close-deadline",
+      "summary": "1 passed in 4.56s"
+    },
+    {
+      "run": "vn07-j3-linux-final",
+      "summary": "1 failed, 91 passed in 114.92s (0:01:54)"
+    },
+    {
+      "run": "vn07-j3-linux-focus1",
+      "summary": "88 passed in 109.80s (0:01:49)"
+    },
+    {
+      "run": "vn07-lifecycle-full-linux-v2",
+      "summary": "1263 passed, 2 deselected in 113.70s (0:01:53)"
+    },
+    {
+      "run": "vn07-linux-v10",
+      "summary": "298 passed in 12.67s"
+    },
+    {
+      "run": "vn07-linux-v11",
+      "summary": "301 passed in 12.65s"
+    },
+    {
+      "run": "vn07-linux-v12",
+      "summary": "306 passed in 13.00s"
+    },
+    {
+      "run": "vn07-order-baseline-fileaccess",
+      "summary": "1 passed in 2.06s"
+    },
+    {
+      "run": "vn07-order-final-linux-v2",
+      "summary": "240 passed in 11.41s"
+    },
+    {
+      "run": "vn07-order-final-windows-v2",
+      "summary": "235 passed, 5 skipped in 10.00s"
+    },
+    {
+      "run": "vn07-order-focus1",
+      "summary": "1 failed, 13 passed, 8 deselected in 4.82s"
+    },
+    {
+      "run": "vn07-order-full-linux-v1",
+      "summary": "1228 passed, 2 deselected in 192.66s (0:03:12)"
+    },
+    {
+      "run": "vn07-order-full-windows-v1",
+      "summary": "1214 passed, 14 skipped, 2 deselected in 225.83s (0:03:45)"
+    },
+    {
+      "run": "vn07-order-scope2",
+      "summary": "1 failed, 233 passed, 5 skipped in 20.90s"
+    },
+    {
+      "run": "vn07-windows-v10",
+      "summary": "286 passed, 12 skipped in 10.81s"
+    },
+    {
+      "run": "vn07-windows-v11",
+      "summary": "289 passed, 12 skipped in 9.43s"
+    },
+    {
+      "run": "vn07-windows-v12",
+      "summary": "294 passed, 12 skipped in 10.09s"
+    },
+    {
+      "run": "vn10-a-linux-focus1",
+      "summary": "1 failed, 33 passed in 1.75s"
+    },
+    {
+      "run": "vn10-a-linux-focus2",
+      "summary": "35 passed in 1.26s"
+    },
+    {
+      "run": "vn10-b-linux-close-final",
+      "summary": "8 passed, 47 deselected in 6.35s"
+    },
+    {
+      "run": "vn10-b-linux-focus1",
+      "summary": "2 failed, 84 passed, 1 warning in 16.71s"
+    },
+    {
+      "run": "vn10-b-linux-focus2",
+      "summary": "4 failed, 152 passed in 27.88s"
+    },
+    {
+      "run": "vn10-b-linux-focus3",
+      "summary": "157 passed in 23.54s"
+    },
+    {
+      "run": "vn10-owner-full-linux-v1",
+      "summary": "1294 passed, 2 deselected in 103.78s (0:01:43)"
+    },
+    {
+      "run": "vn11-stage-linux-focus1",
+      "summary": "2 failed, 83 passed in 12.14s"
+    },
+    {
+      "run": "vn11-stage-linux-focus2",
+      "summary": "86 passed in 34.70s"
+    },
+    {
+      "run": "vn12-ack-full-linux-v1",
+      "summary": "1329 passed, 2 deselected in 113.81s (0:01:53)"
+    },
+    {
+      "run": "vn12-ack-linux-focus1",
+      "summary": "124 passed, 12 errors in 21.13s"
+    },
+    {
+      "run": "vn12-ack-linux-focus2",
+      "summary": "138 passed in 21.87s"
+    },
+    {
+      "run": "vn14a-command-full-linux-v1",
+      "summary": "1372 passed, 2 deselected in 110.82s (0:01:50)"
+    },
+    {
+      "run": "vn14a1-scope-linux-focus1",
+      "summary": "66 passed in 11.76s"
+    },
+    {
+      "run": "vn14a2-command-linux-focus1",
+      "summary": "88 passed in 14.26s"
+    },
+    {
+      "run": "vn14b-control-full-linux-v1",
+      "summary": "1411 passed, 2 deselected in 128.02s (0:02:08)"
+    },
+    {
+      "run": "vn14b-control-full-linux-v2",
+      "summary": "1413 passed, 2 deselected in 150.27s (0:02:30)"
+    },
+    {
+      "run": "vn14b-control-full-linux-v3",
+      "summary": "1419 passed, 2 deselected in 112.69s (0:01:52)"
+    },
+    {
+      "run": "vn14b-control-linux-final",
+      "summary": "184 passed in 23.59s"
+    },
+    {
+      "run": "vn14b-control-linux-focus1",
+      "summary": "9 failed, 172 passed in 19.53s"
+    },
+    {
+      "run": "vn14b-control-linux-focus2",
+      "summary": "181 passed in 36.12s"
+    },
+    {
+      "run": "vn14b-epoch-binding-linux",
+      "summary": "2 passed, 39 deselected in 0.65s"
+    },
+    {
+      "run": "vn14b-readiness-linux-final",
+      "summary": "102 passed in 9.41s"
+    },
+    {
+      "run": "vn16-lane-linux-final",
+      "summary": "111 passed in 26.04s"
+    },
+    {
+      "run": "vn16-lane-linux-focus1",
+      "summary": "60 passed in 13.48s"
+    }
+  ],
+  "performance_summary": {
+    "schema_version": 1,
+    "date_kst": "2026-10-21",
+    "harness_sha256": "90b66c342c59d6bee73e0d0e95a3d157eac927746718b6b611225a541c76b2f9",
+    "sources": {
+      "before": "d5fde35c75586881c7b17ed1027ede19e8f252e2f04b7d6217dcaadef1353323",
+      "after": "878765a502bf48e6a1834e5b17632a84915f72b063cbe9afcbcd276ecb7c31cd"
+    },
+    "platforms": {
+      "windows": {
+        "profiles": {
+          "burst8": {
+            "before": {
+              "runs": 6,
+              "events": 1152,
+              "mean_ms": 34.743466059027774,
+              "p50_ms": 31.0613,
+              "p95_ms": 45.1929,
+              "p99_ms": 48.0919,
+              "repeat_p99_ms_range": [
+                45.0441,
+                49.9245
+              ],
+              "mean_process_cpu_ns_per_event": 461154.5138888889
+            },
+            "after": {
+              "runs": 6,
+              "events": 1152,
+              "mean_ms": 9.91354609375,
+              "p50_ms": 9.8313,
+              "p95_ms": 11.2243,
+              "p99_ms": 11.8182,
+              "repeat_p99_ms_range": [
+                10.9189,
+                15.0206
+              ],
+              "mean_process_cpu_ns_per_event": 556098.0902777778
+            },
+            "after_over_before_p99_ratio": 0.24574200645015062
+          },
+          "sparse1": {
+            "before": {
+              "runs": 6,
+              "events": 144,
+              "mean_ms": 34.44960694444445,
+              "p50_ms": 30.9419,
+              "p95_ms": 45.0688,
+              "p99_ms": 46.0504,
+              "repeat_p99_ms_range": [
+                42.4137,
+                46.0504
+              ],
+              "mean_process_cpu_ns_per_event": 3255208.3333333335
+            },
+            "after": {
+              "runs": 6,
+              "events": 144,
+              "mean_ms": 35.44965208333333,
+              "p50_ms": 30.9342,
+              "p95_ms": 45.9986,
+              "p99_ms": 47.5974,
+              "repeat_p99_ms_range": [
+                41.6888,
+                47.5974
+              ],
+              "mean_process_cpu_ns_per_event": 3797743.0555555555
+            },
+            "after_over_before_p99_ratio": 1.0335936278512239
+          }
+        },
+        "artifacts": {
+          "vn05-probe-windows-before-a": {
+            "result.json": "657b401b5962d1eb8a1a14db4f89bc94a53366158aa512d2ee44f5bffa366d57",
+            "stdout.txt": "b146af296e9c2bbb18d89f0b725303a00596e893fa6bb0f85bd90e0527517413",
+            "junit.xml": "839be01d6175e5e69634a0fffdc2f0568332d55fd2acba61017777e6b7b7bc59",
+            "guard_receipts.jsonl": "669c40827744a8029e3a66defc99dd5b91294b5b41b47fce7cd484361b455eec"
+          },
+          "vn05-probe-windows-before-c": {
+            "result.json": "38ef1ee9944b83fa2b5d9d2b3635cd7eeec6ffaeaeba942f88e451d6013eacbe",
+            "stdout.txt": "953e3375db828ad394c0258bdde9302295f07fc4a07d650bb16e6a877909c7b2",
+            "junit.xml": "0fd18aee6562c78b01c292865efa6c81e49e4cb5bd12b31f71bdc7ea50ddc1a3",
+            "guard_receipts.jsonl": "a7a4a29901b8863dd0e98757523ca8211d91539282ae80bac3880ab5bbea54ca"
+          },
+          "vn05-probe-windows-after-b": {
+            "result.json": "5c881117af5809da221357909b4cae6405f805d421bb7330e5722bb709bee5dd",
+            "stdout.txt": "c4a3b40d35b3578b24fe463d54ed3bd632fda57050c440cecca4b363e1becfc4",
+            "junit.xml": "64def2c236ca12574010f6ef1255b40e852326efc98bd034f765ada534a72869",
+            "guard_receipts.jsonl": "eda918f9547008ae89e48fa5b487c815d09a62a3a6ca506939759e53477822cb"
+          },
+          "vn05-probe-windows-after-d": {
+            "result.json": "2e1c7325364975ca20affc31bfb113db74e81cacad160ec084ff83b94545db09",
+            "stdout.txt": "1d6e682026c5e504395cbdacfac0af07cf8296dea18eb9e3bd3b8ff7428c540e",
+            "junit.xml": "f456d81da33d576fb010f1f802f0fed846370a8d987f4081a43a833e4ee96023",
+            "guard_receipts.jsonl": "45a1d9e6bb3407b87235d57cda3bfd2d97a4a738ad655e1fff6505ed633fb313"
+          }
+        }
+      },
+      "linux": {
+        "profiles": {
+          "burst8": {
+            "before": {
+              "runs": 3,
+              "events": 576,
+              "mean_ms": 37.495919871527775,
+              "p50_ms": 36.726428,
+              "p95_ms": 41.02151,
+              "p99_ms": 57.34891,
+              "repeat_p99_ms_range": [
+                40.104947,
+                57.366128
+              ],
+              "mean_process_cpu_ns_per_event": 149708.97222222222
+            },
+            "after": {
+              "runs": 3,
+              "events": 576,
+              "mean_ms": 15.623059465277779,
+              "p50_ms": 15.055263,
+              "p95_ms": 19.892872,
+              "p99_ms": 28.199734,
+              "repeat_p99_ms_range": [
+                19.642729,
+                28.212079
+              ],
+              "mean_process_cpu_ns_per_event": 123867.68402777778
+            },
+            "after_over_before_p99_ratio": 0.4917222315123339
+          },
+          "sparse1": {
+            "before": {
+              "runs": 3,
+              "events": 72,
+              "mean_ms": 37.23459845833334,
+              "p50_ms": 36.566554,
+              "p95_ms": 40.981264,
+              "p99_ms": 47.517436,
+              "repeat_p99_ms_range": [
+                40.281089,
+                41.834531
+              ],
+              "mean_process_cpu_ns_per_event": 993037.6805555555
+            },
+            "after": {
+              "runs": 3,
+              "events": 72,
+              "mean_ms": 35.865281083333336,
+              "p50_ms": 35.355679,
+              "p95_ms": 38.90102,
+              "p99_ms": 46.670649,
+              "repeat_p99_ms_range": [
+                36.687583,
+                46.670649
+              ],
+              "mean_process_cpu_ns_per_event": 1008142.7222222222
+            },
+            "after_over_before_p99_ratio": 0.9821794467193053
+          }
+        },
+        "artifacts": {
+          "vn05-probe-linux-before-a": {
+            "linux_result.json": "9f2fe70639fe08388fa111b1c0d9bf527bf123c4459c25baa3e8371733796bfd",
+            "stdout.txt": "27c766708579b3ef230b86826bd62e24daff3909796d50cf7bb5561d844be96d",
+            "junit.xml": "948aa38843d4e15df9e77c6b5d1b93d52e9bab5b334232fab6fc3ce6b373e417",
+            "guard_receipts.jsonl": "01c3390538bd81067190b309dcc2f8fce73a0d173be9e28631aebce25e6e93f6"
+          },
+          "vn05-probe-linux-after-b": {
+            "linux_result.json": "69203f5121af33417d7214607b5d3515ba1ea5b0b5e90d3d14c2aec7ae654373",
+            "stdout.txt": "ea17559140aad733d4c5c10f66ffea55656fd41313d5d1f03982629412552198",
+            "junit.xml": "e5775153d0278be219633432dea5b745a7e0e8939ab5afd7d63f6ba0755a1d22",
+            "guard_receipts.jsonl": "2543d1edd3f28b8e0dc5d138c12a330855534ed6da8a981f093f09782b44fbd3"
+          }
+        }
+      }
+    },
+    "production_performance_gate": "OPEN_MISSING_EVIDENCE",
+    "limitations": [
+      "Real local fsync with fake ACK; no engine/strategy/account/NATS/venue",
+      "Alternating before/after warm-state runs; cold-cache and instrumentation overhead not measured",
+      "Small synthetic input; p99.9 not evaluated, no production latency/capacity or 20% CPU claim",
+      "Windows native disk and Linux WSL /tmp are different filesystems; never pool across platforms"
+    ]
+  },
+  "deletion_method": "WINDOWS_RECYCLE_BIN_AND_IGNORED_TRASHBIN",
+  "permanent_deletion": false,
+  "failed_raw_runs_removed": [
+    "vn07-j3-linux-final"
+  ],
+  "moved_to_trashbin": [
+    {
+      "path": "trashbin/worktree-snapshot-20261021",
+      "files": 555,
+      "bytes": 5479671
+    }
+  ],
+  "total_files_removed_or_moved": 31364,
+  "remaining_user_action": "User may delete trashbin/ and empty the Windows Recycle Bin; both are excluded from commit",
+  "retained_run_files_after_cleanup": 99
+}

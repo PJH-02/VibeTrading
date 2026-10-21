@@ -17,6 +17,9 @@ import sqlite3
 from datetime import datetime
 from decimal import Decimal, ROUND_CEILING, ROUND_FLOOR
 from contextlib import closing
+from pathlib import Path
+
+from .process_lease import ProcessLease
 
 import numpy as np
 import pandas as pd
@@ -60,30 +63,94 @@ def intraday_decision(strategy: str, feature: dict, book: dict) -> tuple[int, fl
 
 
 class EtfTradingLoop:
-    def __init__(self, *, settings=None, bus=None, event_source=None, gap_recovery_verifier=None):
+    def __init__(self, *, settings=None, bus=None, event_source=None, gap_recovery_verifier=None, authority_root=None):
         self.settings = settings if settings is not None else get_settings()
+        authority_root = authority_root if authority_root is not None else self.settings.env.get('EXECUTION_AUTHORITY_ROOT')
+        if not authority_root:
+            raise ValueError('ETF requires an explicit shared EXECUTION_AUTHORITY_ROOT')
+        self._close_task, self._closing = None, False
         self.broker = KisCashBroker(self.settings, mode='mock')
         self.brokers = {'mock':self.broker,'mock2':KisCashBroker(self.settings,mode='mock2')}
-        self.kiwoom = KiwoomAuthClient(self.settings)
-        self.market_client = KisAuthClient(self.settings,mode='real')
-        root = self.settings.state_dir / 'etf-mock'
-        self.journal = EtfJournal(root / 'journal.sqlite3')
-        self.history = EtfHistory(self.kiwoom, root / 'warmup')
-        self.bus = bus if bus is not None else NatsJetStreamBus(self.settings)
-        self._event_source = event_source
-        self._gap_recovery_verifier = gap_recovery_verifier
-        self._feed_invalid = set()
-        self._feed_snapshots = set()
-        self._feed_history_ready = False
-        self._feed_gap_generation = 0
-        self.today: dict[str, dict[int, dict]] = {s:{} for s in ETF_HISTORY_ROLES}
-        self.quotes: dict[str, tuple[Decimal,Decimal,int]] = {}
-        self.features: dict[str, dict] = {}
-        self._lock = asyncio.Lock()
-        self._day = ''
-        self._warmup_task = None
-        self.phase = 'starting'
-        self._c3_attempt_ns = 0
+        self._acquire_ownership(Path(authority_root))
+        try:
+            self.kiwoom = KiwoomAuthClient(self.settings)
+            self.market_client = KisAuthClient(self.settings,mode='real')
+            root = self.settings.state_dir / 'etf-mock'
+            self.journal = EtfJournal(root / 'journal.sqlite3')
+            self.history = EtfHistory(self.kiwoom, root / 'warmup')
+            self.bus = bus if bus is not None else NatsJetStreamBus(self.settings)
+            self._event_source = event_source
+            self._gap_recovery_verifier = gap_recovery_verifier
+            self._feed_invalid = set()
+            self._feed_snapshots = set()
+            self._feed_history_ready = False
+            self._feed_gap_generation = 0
+            self.today: dict[str, dict[int, dict]] = {s:{} for s in ETF_HISTORY_ROLES}
+            self.quotes: dict[str, tuple[Decimal,Decimal,int]] = {}
+            self.features: dict[str, dict] = {}
+            self._lock = asyncio.Lock()
+            self._day = ''
+            self._warmup_task = None
+            self.phase = 'starting'
+            self._c3_attempt_ns = 0
+        except BaseException:
+            if hasattr(self,'journal'): self.journal.db.close()
+            for lease in reversed(tuple(self._owner_leases.values())): lease.close()
+            raise
+
+    def _acquire_ownership(self, root):
+        self._owner_leases, self._account_ids = {}, {}
+        planned = {}
+        for route, broker in self.brokers.items():
+            if route not in {'mock','mock2'} or broker.mode != route:
+                raise ValueError('ETF requires explicit mock routes')
+            account = broker.account_params()['CANO']
+            planned[route] = ProcessLease.account(root,'kis',account,'mock')
+            self._account_ids[route] = account
+        if set(planned) != {'mock','mock2'} or len({x.path for x in planned.values()}) != 2:
+            raise ValueError('The two mock routes must refer to distinct physical accounts')
+        try:
+            for route in sorted(planned,key=lambda name:str(planned[name].path)):
+                lease = planned[route]
+                lease.acquire()
+                self._owner_leases[route] = lease
+            for broker in self.brokers.values(): broker.authority_check = self._check_ownership
+        except BaseException:
+            for lease in reversed(tuple(self._owner_leases.values())): lease.close()
+            raise
+
+    def _check_ownership(self):
+        if getattr(self,'_closing',False) or set(getattr(self,'_owner_leases',{})) != {'mock','mock2'}:
+            raise EtfDispatchBlocked('ETF account ownership is closed or missing')
+        try:
+            for route, lease in self._owner_leases.items():
+                broker = self.brokers[route]
+                if (broker.mode != route or broker.account_params()['CANO'] != self._account_ids[route]
+                        or getattr(broker,'authority_check',None) != self._check_ownership):
+                    raise RuntimeError('ETF physical account configuration changed')
+                lease.check()
+        except (RuntimeError,OSError) as exc:
+            self._closing = True
+            raise EtfDispatchBlocked('ETF account ownership verification failed') from exc
+
+    async def close(self):
+        if getattr(self,'_close_task',None) is None:
+            self._closing = True
+            self._close_task = asyncio.create_task(self._close(),name='etf-owner-close')
+        await asyncio.shield(self._close_task)
+
+    async def _close(self):
+        runner = getattr(self,'_runner_task',None)
+        if runner is not None:
+            runner.cancel()
+            await asyncio.gather(runner,return_exceptions=True)
+        background = [task for name in ('_warmup_task','_report_task')
+                      if (task := getattr(self,name,None)) is not None]
+        for task in background: task.cancel()
+        await asyncio.gather(*background,return_exceptions=True)
+        await self.bus.close()
+        self.journal.db.close()
+        for lease in reversed(tuple(self._owner_leases.values())): lease.close()
 
     def broker_for(self,symbol,scope=None):
         scope=scope or ('mock2' if symbol in {'122630','251340'} else 'mock')
@@ -98,6 +165,7 @@ class EtfTradingLoop:
         self.journal.recover_assumptions(rate)
 
     async def initialize(self):
+        self._check_ownership()
         if self.execution_guards_enabled():
             self.journal.recover_dispatch_attempts()
         states={}
@@ -256,6 +324,7 @@ class EtfTradingLoop:
             'quote':intent.metadata.get('intent_quote'),'source_provider':intent.metadata.get('source_provider')}
 
     def _check_dispatch(self, intent):
+        self._check_ownership()
         symbol = intent.instrument.raw_symbol
         if intent.side == Side.BUY:
             if self.entry_blocked(intent.job_id,intent.metadata['account_scope']):
@@ -282,6 +351,9 @@ class EtfTradingLoop:
         """The observational bus never determines whether broker handoff occurred."""
         guarded = self.execution_guards_enabled()
         try:
+            self._check_ownership()
+            if broker is not self.brokers.get(intent.metadata.get('account_scope')):
+                raise EtfDispatchBlocked('ETF broker differs from the owned physical account route')
             try:
                 await self.bus.publish_order_intent(intent)
             except Exception as exc:
@@ -319,6 +391,21 @@ class EtfTradingLoop:
             raise
 
     async def place(self, strategy: str, symbol: str, side: Side, quantity: int, identity: str, *, direction: int = 0, safety_stop: float | None = None, auction_market: bool = False, recovery_cleanup: bool = False, valid_until_ts_ns: int | None = None):
+        self._check_ownership()
+        key = hashlib.sha256((identity+':'+symbol+':'+side.value).encode()).hexdigest()
+        requested_quantity, requested_expiry = quantity,valid_until_ts_ns
+        old = self.journal.db.execute('SELECT payload,day FROM orders WHERE intent_id=?',(key,)).fetchone()
+        if old:
+            previous = OrderIntent.model_validate_json(old['payload'])
+            meta = previous.metadata
+            actual = (previous.job_id,previous.instrument.raw_symbol,previous.side,
+                Decimal(str(meta.get('requested_quantity',previous.quantity))),meta.get('direction',0),
+                meta.get('safety_stop'),meta.get('closing_auction',False),meta.get('recovery_cleanup',False),
+                meta.get('requested_expiry'))
+            if (old['day'] != self._day.replace('-','')
+                    or actual != (strategy,symbol,side,Decimal(quantity),direction,safety_stop,auction_market,recovery_cleanup,valid_until_ts_ns)):
+                raise ValueError('ETF immutable request collision')
+            return
         valid_until_ts_ns = valid_until_ts_ns if valid_until_ts_ns is not None else time.time_ns()+90_000_000_000
         if side == Side.BUY and self._feed_entry_blocked(strategy):
             raise EtfDispatchBlocked('ETF entry feed requires snapshot and history recovery')
@@ -338,14 +425,14 @@ class EtfTradingLoop:
             quantity = min(quantity, int(Decimal(str(power['max_buy_qty']))))
         if quantity <= 0:
             return
-        key = hashlib.sha256((identity+':'+symbol+':'+side.value).encode()).hexdigest()
         history_context = self.history.vehicle_reference(symbol) if self.history.day else None
         intent = OrderIntent(intent_id=key,job_id=strategy,signal_id=identity,destination=OrderDestination.REAL,
             instrument=InstrumentId(venue=Venue.KIS,asset_class=AssetClass.ETF,raw_symbol=symbol,std_symbol=symbol,currency='KRW',exchange='KRX'),
             side=side,client_order_id=key[:32],quantity=Decimal(quantity),limit_price=price,
             metadata={'account_mode':'mock','account_scope':scope,'intent_quote':self.intent_quote(symbol),'source_provider':'kiwoom','strategy':strategy,'closing_auction':auction_market,'direction':direction,'safety_stop':safety_stop,'recovery_cleanup':recovery_cleanup,
-                'vehicle_history':history_context,'valid_until_ts_ns':valid_until_ts_ns})
-        if not self.journal.stage(intent,self._day.replace('-',''),direction,safety_stop,dispatch_evidence=self._dispatch_evidence(intent)):
+                'vehicle_history':history_context,'valid_until_ts_ns':valid_until_ts_ns,
+                'requested_quantity':requested_quantity,'requested_expiry':requested_expiry})
+        if not self.journal.stage(intent,self._day.replace('-',''),direction,safety_stop,dispatch_evidence=self._dispatch_evidence(intent),require_evidence=self.execution_guards_enabled()):
             return
         output = await self._submit_staged(broker,intent)
         if output is not None:
@@ -435,6 +522,7 @@ class EtfTradingLoop:
                         recovery_cleanup=True)
 
     async def reconcile(self):
+        self._check_ownership()
         for order in self.journal.pending():
             broker=self.broker_for(order['symbol'],order['account_scope'])
             if not order['order_number']:
@@ -462,6 +550,17 @@ class EtfTradingLoop:
 
     async def replace_with_market(self, original: dict):
         """One persistent replacement for the confirmed-cancelled remainder."""
+        self._check_ownership()
+        key = hashlib.sha256((original['intent_id']+':market-remainder').encode()).hexdigest()
+        old = self.journal.db.execute('SELECT payload,day FROM orders WHERE intent_id=?',(key,)).fetchone()
+        if old:
+            saved = OrderIntent.model_validate_json(old['payload'])
+            if (old['day'] != original['day'] or saved.job_id != original['strategy']
+                    or saved.instrument.raw_symbol != original['symbol'] or saved.side.value != original['side']
+                    or saved.metadata.get('account_scope') != original['account_scope']
+                    or saved.metadata.get('replacement_for') != original['intent_id']):
+                raise ValueError('ETF immutable replacement collision')
+            return
         remaining = original['quantity']-original['filled']
         if remaining <= 0:
             self.journal.db.execute('UPDATE orders SET fallback_done=1 WHERE intent_id=?',(original['intent_id'],))
@@ -482,12 +581,11 @@ class EtfTradingLoop:
             self.journal.db.execute('UPDATE orders SET fallback_done=1 WHERE intent_id=?',(original['intent_id'],))
             log.warning('No affordable/owned remainder for market replacement id=%s',original['intent_id'])
             return
-        key = hashlib.sha256((original['intent_id']+':market-remainder').encode()).hexdigest()
         replacement = previous.model_copy(update={'intent_id':key,'client_order_id':key[:32],
             'quantity':Decimal(remaining),'limit_price':None,'created_ts_ns':time.time_ns(),
-            'metadata':previous.metadata|{'replacement_for':original['intent_id'],'intent_quote':self.intent_quote(original['symbol']),
+            'metadata':previous.metadata|{'account_scope':original['account_scope'],'replacement_for':original['intent_id'],'intent_quote':self.intent_quote(original['symbol']),
                 'reserve_unit_price':str(reserve_price),'execution':'market_after_5_seconds'}})
-        if not self.journal.stage(replacement,original['day'],int(previous.metadata.get('direction',0)),previous.metadata.get('safety_stop'),replacement_for=original['intent_id'],dispatch_evidence=self._dispatch_evidence(replacement)):
+        if not self.journal.stage(replacement,original['day'],int(previous.metadata.get('direction',0)),previous.metadata.get('safety_stop'),replacement_for=original['intent_id'],dispatch_evidence=self._dispatch_evidence(replacement),require_evidence=self.execution_guards_enabled()):
             return
         output = await self._submit_staged(broker,replacement)
         if output is not None:
@@ -702,6 +800,7 @@ class EtfTradingLoop:
             if now.weekday()<5 and '09:00'<=now.strftime('%H:%M')<='15:35' and time.monotonic()-last_report>=60 and (report_task is None or report_task.done()):
                 last_report = time.monotonic()
                 report_task = asyncio.create_task(self.refresh_account_report(day))
+                self._report_task = report_task
             if day != self._day:
                 self._day = day
                 self.journal.roll_day(day)
@@ -760,6 +859,19 @@ class EtfTradingLoop:
             await asyncio.sleep(.1 if self.journal.pending() else 1)
 
     async def run(self, *, initialized: bool = False):
+        if getattr(self,'_runner_task',None) is not None:
+            raise RuntimeError('ETF runner already started')
+        self._check_ownership()
+        self._runner_task = asyncio.current_task()
+        try:
+            await self._run(initialized=initialized)
+        finally:
+            self._runner_task = None
+            if getattr(self,'_close_task',None) is None:
+                await self.close()
+
+    async def _run(self, *, initialized: bool):
+        self._check_ownership()
         if not initialized:
             await self.initialize()
         client, subscription, pending, iterator = None,None,None,None
@@ -811,40 +923,38 @@ class EtfTradingLoop:
             if pending is not None:
                 pending.cancel()
             await asyncio.gather(*[task for task in (timer,pending) if task is not None],return_exceptions=True)
-            try:
-                if iterator is not None and getattr(iterator,'aclose',None) is not None:
-                    await iterator.aclose()
-                if subscription is not None:
-                    await subscription.unsubscribe()
-                if client is not None:
-                    await client.close()
-            finally:
-                try:
-                    await self.bus.close()
-                finally:
-                    self.journal.db.close()
+            if iterator is not None and getattr(iterator,'aclose',None) is not None:
+                await iterator.aclose()
+            if subscription is not None:
+                await subscription.unsubscribe()
+            if client is not None:
+                await client.close()
 
 
 async def check(warmup: bool):
     loop = EtfTradingLoop()
-    await loop.initialize()
-    if warmup:
-        await loop.history.prepare(datetime.now(KST).strftime('%Y-%m-%d'))
-        etf = await loop.kiwoom.post_api('/api/dostk/stkinfo','ka10001',{'stk_cd':'069500'})
-        index = await loop.kiwoom.post_api('/api/dostk/sect','ka20001',{'mrkt_tp':'0','inds_cd':'201'})
-        c3_check = loop.history.c3(abs(float(etf['open_pric'])),abs(float(index['open_pric'])))
-    else:
-        c3_check = None
-    market_power = await loop.broker.buying_power('069500',Decimal(0),market=True)
-    if Decimal(str(market_power.get('psbl_qty_calc_unpr') or 0)) <= 0:
-        raise RuntimeError('Market fallback reservation price is unavailable')
-    result = {'mock':True,'books':loop.journal.summary(),'c3_ready':not loop.history.index.empty,'phase':loop.phase,
-        'reference_usage':loop.history.reference_usage,'execution':'immediate_limit_then_5s_confirmed_remaining_market',
-        'vehicle_history':{s:loop.history.vehicle_reference(s) for s in ETF_HISTORY_ROLES} if warmup else {},
-        'market_reservation_price':market_power['psbl_qty_calc_unpr'],'native_open_signal_probe':c3_check}
-    print(json.dumps(result,default=str))
-    await loop.bus.close()
-    loop.journal.db.close()
+    try:
+        await loop.initialize()
+        if warmup:
+            await loop.history.prepare(datetime.now(KST).strftime('%Y-%m-%d'))
+            etf = await loop.kiwoom.post_api('/api/dostk/stkinfo','ka10001',{'stk_cd':'069500'})
+            index = await loop.kiwoom.post_api('/api/dostk/sect','ka20001',{'mrkt_tp':'0','inds_cd':'201'})
+            c3_check = loop.history.c3(abs(float(etf['open_pric'])),abs(float(index['open_pric'])))
+        else:
+            c3_check = None
+        market_power = await loop.broker.buying_power('069500',Decimal(0),market=True)
+        if Decimal(str(market_power.get('psbl_qty_calc_unpr') or 0)) <= 0:
+            raise RuntimeError('Market fallback reservation price is unavailable')
+        result = {'mock':True,'books':loop.journal.summary(),'c3_ready':not loop.history.index.empty,'phase':loop.phase,
+            'reference_usage':loop.history.reference_usage,'execution':'immediate_limit_then_5s_confirmed_remaining_market',
+            'vehicle_history':{s:loop.history.vehicle_reference(s) for s in ETF_HISTORY_ROLES} if warmup else {},
+            'market_reservation_price':market_power['psbl_qty_calc_unpr'],'native_open_signal_probe':c3_check}
+        print(json.dumps(result,default=str))
+        await loop.bus.close()
+        loop.journal.db.close()
+    finally:
+        await loop.close()
+
 
 
 def main():

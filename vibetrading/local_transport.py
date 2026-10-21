@@ -79,7 +79,8 @@ class _Envelope:
     reason: str = ""
 
 
-_KINDS = {"HELLO", "HELLO_ACK", "DATA", "REPLAY", "ACK", "RESUME", "QUERY", "COMMIT", "PING", "GAP"}
+_KINDS = {"HELLO", "HELLO_ACK", "DATA", "REPLAY", "ACK", "RESUME", "QUERY", "COMMIT", "PING", "GAP", "COMMAND", "RESULT"}
+_PAYLOAD_KINDS = {"DATA", "REPLAY", "COMMAND", "RESULT"}
 _PHASES = {"", "RECEIVED", "APPLIED", "DURABLE", "RESUMED", "REJECTED", "PONG", "GAP", "QUERY", "BLOCKED"}
 _FIELDS = {"v", "kind", "session", "producer", "incarnation", "sequence", "payload_size", "digest", "phase", "reason"}
 
@@ -100,8 +101,9 @@ def _header(envelope: _Envelope, budgets: TransportBudgets) -> bytes:
             or any(x not in "0123456789abcdef" for x in envelope.session)
             or not isinstance(envelope.reason, str) or len(envelope.reason.encode("utf-8")) > 256
             or type(envelope.payload) is not bytes or len(envelope.payload) > budgets.max_frame_bytes
-            or (envelope.kind in {"DATA", "REPLAY"} and not envelope.payload)
-            or (envelope.kind not in {"DATA", "REPLAY"} and envelope.payload)):
+            or (envelope.kind in _PAYLOAD_KINDS and not envelope.payload)
+            or (envelope.kind not in _PAYLOAD_KINDS and envelope.payload)
+            or (envelope.kind in {'COMMAND','RESULT'} and len(envelope.payload) + budgets.max_header_bytes + 4 > budgets.max_control_bytes)):
         raise TransportError("invalid_header_or_payload")
     if (not isinstance(envelope.digest, str) or len(envelope.digest) != 64
             or any(x not in "0123456789abcdef" for x in envelope.digest)):
@@ -160,16 +162,18 @@ async def read_frame(reader: asyncio.StreamReader, budgets: TransportBudgets, *,
         raise TransportError("invalid_cursor") from error
     # Validate every bounded header field before reading a possibly large body.
     envelope = _Envelope(header["kind"], header["session"], cursor,
-        b"x" if header["payload_size"] and header["kind"] in {"DATA", "REPLAY"} else b"",
+        b"x" if header["payload_size"] and header["kind"] in _PAYLOAD_KINDS else b"",
         header["digest"], header["phase"], header["reason"])
     _header(envelope, budgets)
     if _allowed_kinds is not None and header["kind"] not in _allowed_kinds:
         raise TransportError("message_kind_not_allowed_on_lane")
-    if header["kind"] not in {"DATA", "REPLAY"} and header["payload_size"] != 0:
+    if header["kind"] in {'COMMAND','RESULT'} and header['payload_size'] + size + 4 > budgets.max_control_bytes:
+        raise TransportError('command_frame_budget_exceeded')
+    if header["kind"] not in _PAYLOAD_KINDS and header["payload_size"] != 0:
         raise TransportError("control_payload_forbidden")
-    if header["kind"] in {"DATA", "REPLAY"} and header["payload_size"] == 0:
+    if header["kind"] in _PAYLOAD_KINDS and header["payload_size"] == 0:
         raise TransportError("empty_market_frame")
-    if _reserve is not None and header["kind"] in {"DATA", "REPLAY"}:
+    if _reserve is not None and header["kind"] in _PAYLOAD_KINDS:
         _reserve(4 + size + header["payload_size"])
     payload = await reader.readexactly(header["payload_size"])
     # ACK digest describes its referenced market payload, not the empty body.
@@ -189,6 +193,51 @@ def _call(callback, *args):
             result.close()
         raise TransportError("transport_callback_must_be_synchronous")
     return result
+
+
+def validate_command_result(request, result):
+    if type(result) is dict and result == {'status': 'REJECTED', 'reason': 'command_rejected'}:
+        return result
+    scope = request['scope']
+    selected = result.get('scope') if type(result) is dict else None
+    valid_scope = scope in {'global','account','strategy'} and (selected == 'global' if scope == 'global' else
+                   selected == 'strategy:' + request['strategy'] if scope == 'strategy' else
+                   isinstance(selected, str) and selected.startswith('account:') and 8 < len(selected) <= 208)
+    if (type(result) is not dict or set(result) != {'command_id','status','action','scope','epoch','duplicate'}
+            or result['status'] != 'ACCEPTED' or result['command_id'] != request['command_id']
+            or result['action'] != request['action'] or not valid_scope
+            or type(result['epoch']) is not int or result['epoch'] <= 0 or type(result['duplicate']) is not bool
+            or (request['action'] == 'resume' and (type(request.get('expected_epochs')) is not dict
+                or result['epoch'] != request['expected_epochs'].get(selected, -2) + 1))):
+        raise TransportError('unverified_owner_command_receipt')
+    return result
+
+
+async def request_command(endpoint, request, *, budgets: TransportBudgets, allowed_uid: int):
+    """One command on the existing control socket; retry the identical request after loss."""
+    _profile('linux-uds', endpoint)
+    if type(allowed_uid) is not int or allowed_uid < 0:
+        raise TransportError('explicit_allowed_peer_uid_required')
+    payload = json.dumps(request, sort_keys=True, separators=(',', ':'), allow_nan=False).encode()
+    session, cursor = uuid.uuid4().hex, EngineCursor('control', 'command', 0)
+    raw = encode_frame(cursor, payload, session=session, budgets=budgets, kind='COMMAND')
+    async with asyncio.timeout(min(budgets.io_timeout_seconds, budgets.max_age_seconds)):
+        reader, writer = await asyncio.open_unix_connection(str(endpoint) + '.control', limit=budgets.max_header_bytes + 4)
+        try:
+            _, uid, _ = struct.unpack('3i', writer.get_extra_info('socket').getsockopt(socket.SOL_SOCKET, socket.SO_PEERCRED, 12))
+            if uid != allowed_uid:
+                raise TransportError('server_peer_uid_not_allowed')
+            writer.write(raw)
+            await writer.drain()
+            reply = await read_frame(reader, budgets, _allowed_kinds={'RESULT'})
+            if reply.session != session or reply.cursor != cursor:
+                raise TransportError('invalid_command_reply_identity')
+            return validate_command_result(request, json.loads(reply.payload, object_pairs_hook=_object_pairs))
+        except (asyncio.IncompleteReadError, ConnectionError) as error:
+            raise TransportError('command_reply_lost') from error
+        finally:
+            writer.close()
+            await writer.wait_closed()
 
 
 class _Outbox:
@@ -226,6 +275,7 @@ class _Connection:
         self.session = None
         self.lane = None
         self.reserved = 0
+        self.command_reservation = False
         self.frame_started = None
         self.failure_reason = ""
 
@@ -275,7 +325,7 @@ def _profile(profile, endpoint):
 class LocalTransportServer:
     def __init__(self, endpoint, *, budgets: TransportBudgets, on_frame, on_gap, on_resume,
                  on_replay=None, on_recovery_query=None, on_recovery_commit=None,
-                 allowed_uid: int | None = None, profile="linux-uds"):
+                 on_command=None, allowed_uid: int | None = None, profile="linux-uds"):
         _profile(profile, endpoint)
         if profile == "linux-uds" and (type(allowed_uid) is not int or allowed_uid < 0):
             raise TransportError("explicit_allowed_peer_uid_required")
@@ -283,11 +333,13 @@ class LocalTransportServer:
         self.on_frame, self.on_gap, self.on_resume = on_frame, on_gap, on_resume
         self.on_replay,self.on_recovery_query,self.on_recovery_commit=on_replay,on_recovery_query,on_recovery_commit
         self.allowed_uid = allowed_uid
+        self.on_command = on_command
         self.addresses = {}
         self._servers, self._connections, self._sessions = [], set(), {}
         self._paths, self._lease, self._watchdog = {}, None, None
         self._closed = False
         self._in_flight_bytes = self._in_flight_records = 0
+        self._command_bytes = self._command_records = 0
 
     async def start(self):
         if self._closed or self._servers:
@@ -329,7 +381,8 @@ class LocalTransportServer:
         return self
 
     def _accept(self, lane, reader, writer):
-        if self._closed or len(self._connections) >= 2 * self.budgets.max_sessions:
+        limit = self.budgets.max_sessions + (self.budgets.max_control_records if lane == 'control' and self.on_command is not None else 0)
+        if self._closed or sum(c.lane == lane for c in self._connections) >= limit:
             writer.close()
             return
         if self.profile == "linux-uds":
@@ -369,8 +422,17 @@ class LocalTransportServer:
         if notify:
             self._send(session, "GAP", session.received or session.checkpoint, reason=reason)
 
-    def _reserve(self, connection, size):
-        if (connection.lane != "data" or connection.reserved
+    def _reserve(self, connection, size, *, command=False):
+        if command:
+            if (connection.lane != 'control' or connection.reserved
+                    or self._command_bytes + size > self.budgets.max_control_bytes
+                    or self._command_records >= self.budgets.max_control_records):
+                raise TransportError('server_command_admission_overflow')
+            connection.reserved, connection.command_reservation = size, True
+            self._command_bytes += size
+            self._command_records += 1
+            return
+        if (connection.lane != ('control' if command else 'data') or connection.reserved
                 or self._in_flight_bytes + size > self.budgets.max_bytes
                 or self._in_flight_records >= self.budgets.max_records):
             raise TransportError("server_market_admission_overflow")
@@ -380,18 +442,28 @@ class LocalTransportServer:
 
     def _release(self, connection):
         if connection.reserved:
-            self._in_flight_bytes -= connection.reserved
-            self._in_flight_records -= 1
+            if connection.command_reservation:
+                self._command_bytes -= connection.reserved
+                self._command_records -= 1
+            else:
+                self._in_flight_bytes -= connection.reserved
+                self._in_flight_records -= 1
             connection.reserved = 0
+            connection.command_reservation = False
 
     async def _serve(self, connection):
         session = None
         reason = "disconnected"
         try:
             hello = await read_frame(connection.reader, self.budgets,
-                _on_start=lambda: setattr(connection, "frame_started", time.monotonic()), _allowed_kinds={"HELLO"})
+                _reserve=lambda size: self._reserve(connection, size, command=True),
+                _on_start=lambda: setattr(connection, "frame_started", time.monotonic()),
+                _allowed_kinds={"HELLO", "COMMAND"} if connection.lane == 'control' else {'HELLO'})
             connection.frame_started = None
             connection.last_activity = time.monotonic()
+            if hello.kind == 'COMMAND':
+                await self._command(connection, hello)
+                return
             if hello.kind != "HELLO":
                 raise TransportError("hello_required")
             if connection.lane == "control":
@@ -432,6 +504,7 @@ class LocalTransportServer:
         except (asyncio.IncompleteReadError, ConnectionError, OSError, ValueError, TransportError) as error:
             reason = str(error)[:128] if isinstance(error, TransportError) else type(error).__name__
         finally:
+            self._release(connection)
             if session:
                 try:
                     self._invalidate(session, connection.failure_reason or reason, notify=connection.lane == "data")
@@ -444,6 +517,22 @@ class LocalTransportServer:
                         session.data = None
             connection.stop()
             self._connections.discard(connection)
+
+    async def _command(self, connection, envelope):
+        if self.on_command is None:
+            raise TransportError('command_handler_unavailable')
+        request = json.loads(envelope.payload, object_pairs_hook=_object_pairs)
+        try:
+            result = _call(self.on_command, request)
+        except (ValueError, RuntimeError):
+            result = {'status': 'REJECTED', 'reason': 'command_rejected'}
+        except Exception as error:
+            raise TransportError('owner_command_failed') from error
+        payload = json.dumps(result, separators=(',', ':'), allow_nan=False).encode()
+        raw = encode_frame(envelope.cursor, payload, session=envelope.session,
+                           budgets=self.budgets, kind='RESULT')
+        connection.writer.write(raw)
+        await asyncio.wait_for(connection.writer.drain(), self.budgets.io_timeout_seconds)
 
     def _control(self, session, envelope):
         if envelope.kind == "PING":

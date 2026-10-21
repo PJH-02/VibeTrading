@@ -1,0 +1,8 @@
+{"pid": 910, "kind": "guard_loaded"}
+{"pid": 1996, "kind": "guard_loaded"}
+{"pid": 2152, "kind": "guard_loaded"}
+{"pid": 2153, "kind": "guard_loaded"}
+{"pid": 2212, "kind": "guard_loaded"}
+{"pid": 2224, "kind": "guard_loaded"}
+{"pid": 910, "kind": "blocked_subprocess", "executable": "fc-list"}
+{"pid": 2249, "kind": "guard_loaded"}
