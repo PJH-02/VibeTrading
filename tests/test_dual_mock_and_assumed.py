@@ -35,7 +35,8 @@ def test_mock2_credentials_and_tokens_are_isolated(tmp_path):
 
 
 class Broker:
-    def __init__(self,deny=None): self.calls=[]; self.deny=deny
+    def __init__(self,deny=None,mode='mock'): self.calls=[]; self.deny=deny; self.mode=mode
+    def account_params(self): return {'CANO':'001' if self.mode=='mock' else '002','ACNT_PRDT_CD':'01'}
     async def buying_power(self,*args,**kwargs): return {'max_buy_qty':'10000'}
     async def submit_order(self,intent):
         self.calls.append(('submit',intent.instrument.raw_symbol,intent.side))
@@ -49,7 +50,8 @@ class Broker:
 def loop(tmp_path,deny=None):
     x=EtfTradingLoop.__new__(EtfTradingLoop); x.settings=settings(tmp_path)
     x.journal=EtfJournal(tmp_path/'journal.sqlite3'); x.journal.initialize(Decimal(60000),'primary')
-    x.broker=Broker(); x.brokers={'mock':x.broker,'mock2':Broker(deny)}
+    x.broker=Broker(); x.brokers={'mock':x.broker,'mock2':Broker(deny,mode='mock2')}
+    x._acquire_ownership(tmp_path/'authority')
     x.quotes={s:(Decimal(99),Decimal(100),time.time_ns()) for s in ['069500','122630','229200','251340']}
     x._day='2026-10-14'; x.phase='ready'; x.history=SimpleNamespace(day='')
     async def publish(intent): pass
@@ -57,9 +59,22 @@ def loop(tmp_path,deny=None):
     return x
 
 
+@pytest.fixture
+def owned_loop(tmp_path):
+    items = []
+    def create(deny=None):
+        item = loop(tmp_path,deny)
+        items.append(item)
+        return item
+    yield create
+    for item in items:
+        item.journal.db.close()
+        for lease in item._owner_leases.values(): lease.close()
+
+
 @pytest.mark.asyncio
-async def test_each_symbol_uses_correct_account_for_submit_and_fill_poll(tmp_path):
-    x=loop(tmp_path)
+async def test_each_symbol_uses_correct_account_for_submit_and_fill_poll(tmp_path,owned_loop):
+    x=owned_loop()
     for symbol in ['069500','122630','229200','251340']:
         await x.place('C3',symbol,Side.BUY,10,'decision:'+symbol)
     await x.reconcile()
@@ -70,9 +85,9 @@ async def test_each_symbol_uses_correct_account_for_submit_and_fill_poll(tmp_pat
 
 
 @pytest.mark.asyncio
-async def test_permission_rejection_uses_captured_best_ask_without_real_fill(tmp_path):
+async def test_permission_rejection_uses_captured_best_ask_without_real_fill(tmp_path,owned_loop):
     denied=KisOrderRejected('mock permission denial',code='40070000',business_message='모의투자 주문처리가 안되었습니다(매매불가 종목)')
-    x=loop(tmp_path,denied)
+    x=owned_loop(denied)
     await x.place('KP','122630',Side.BUY,10,'signal',direction=1)
     assert x.journal.book('KP')['positions']=={}
     assert x.journal.logical_book('KP')['positions']=={'122630':10}
@@ -91,16 +106,16 @@ async def test_permission_rejection_uses_captured_best_ask_without_real_fill(tmp
     KisOrderRejected('insufficient cash',code='40000000',business_message='증거금 부족'),
     RuntimeError('transport outcome unknown'),
 ])
-async def test_market_or_uncertain_failures_never_create_assumed_fills(tmp_path,error):
-    x=loop(tmp_path,error)
+async def test_market_or_uncertain_failures_never_create_assumed_fills(tmp_path,error,owned_loop):
+    x=owned_loop(error)
     if isinstance(error,KisOrderRejected): await x.place('KP','122630',Side.BUY,10,'signal')
     else:
         with pytest.raises(RuntimeError): await x.place('KP','122630',Side.BUY,10,'signal')
     assert x.journal.assumed_positions()=={}
 
 
-def test_assumed_sell_offsets_real_holding_without_corrupting_broker_book(tmp_path):
-    x=loop(tmp_path); j=x.journal
+def test_assumed_sell_offsets_real_holding_without_corrupting_broker_book(tmp_path,owned_loop):
+    x=owned_loop(); j=x.journal
     j.db.execute('INSERT INTO positions VALUES(?,?,?)',('KP','122630',10))
     j.assume_fill('denied-sell','KP','122630','sell',10,110,x._day,time.time_ns(),'permission denial')
     assert j.book('KP')['positions']=={'122630':10}
@@ -110,8 +125,8 @@ def test_assumed_sell_offsets_real_holding_without_corrupting_broker_book(tmp_pa
 
 
 @pytest.mark.asyncio
-async def test_daily_report_sums_two_accounts_and_separates_counterfactual(tmp_path,monkeypatch):
-    x=loop(tmp_path); x.today={}; x.history=SimpleNamespace(daily={})
+async def test_daily_report_sums_two_accounts_and_separates_counterfactual(tmp_path,monkeypatch,owned_loop):
+    x=owned_loop(); x.today={}; x.history=SimpleNamespace(daily={})
     monkeypatch.setattr('vibetrading.etf_csv_sync.completed_session',lambda *args:True)
     async def one(): return {'summary':{'tot_evlu_amt':'20100','bfdy_tot_asst_evlu_amt':'20000','thdt_tlex_amt':'23'},'positions':[]}
     async def two(): return {'summary':{'tot_evlu_amt':'10050','bfdy_tot_asst_evlu_amt':'10000','thdt_tlex_amt':'7'},'positions':[]}

@@ -13,6 +13,27 @@ from vibetrading.etf_trading import EtfTradingLoop
 from vibetrading.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
 
 
+class AccountBroker:
+    mode = 'mock'
+
+    def account_params(self):
+        return {'CANO':'001' if self.mode == 'mock' else '002','ACNT_PRDT_CD':'01'}
+
+
+@pytest.fixture
+def acquire_owner(tmp_path):
+    owners = []
+    def acquire(loop):
+        secondary = type(loop.broker)()
+        secondary.mode = 'mock2'
+        loop.brokers = {'mock':loop.broker,'mock2':secondary}
+        loop._acquire_ownership(tmp_path/'authority')
+        owners.append(loop)
+    yield acquire
+    for loop in owners:
+        for lease in loop._owner_leases.values(): lease.close()
+
+
 def order(side=Side.BUY):
     return OrderIntent(intent_id='limit-1',job_id='C3',signal_id='s',destination=OrderDestination.REAL,
         instrument=InstrumentId(venue=Venue.KIS,asset_class=AssetClass.ETF,raw_symbol='069500',std_symbol='069500'),
@@ -27,7 +48,7 @@ class Bus:
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize('side',[Side.BUY,Side.SELL])
-async def test_cancel_fill_race_replaces_only_confirmed_remaining_once(tmp_path,side):
+async def test_cancel_fill_race_replaces_only_confirmed_remaining_once(tmp_path,side,acquire_owner):
     journal = EtfJournal(tmp_path/'journal.sqlite3')
     journal.initialize(Decimal(6000),'mock')
     if side==Side.SELL:
@@ -41,7 +62,7 @@ async def test_cancel_fill_race_replaces_only_confirmed_remaining_once(tmp_path,
     aged = time.time_ns()-6_000_000_000
     journal.db.execute('UPDATE orders SET created_ns=?,accepted_ns=?',(aged,aged))
     events = []
-    class Broker:
+    class Broker(AccountBroker):
         calls = 1
         async def order_status(self,number,**kwargs):
             if number=='M1':
@@ -59,6 +80,7 @@ async def test_cancel_fill_race_replaces_only_confirmed_remaining_once(tmp_path,
             return {'ODNO':'M1'}
     loop = EtfTradingLoop.__new__(EtfTradingLoop)
     loop.journal,loop.broker,loop.bus,loop.phase = journal,Broker(),Bus(),'ready'
+    acquire_owner(loop)
     await loop.reconcile()
     assert events==['cancel','status','market']
     assert journal.book('C3')['positions']=={'069500':5}
@@ -74,19 +96,20 @@ async def test_cancel_fill_race_replaces_only_confirmed_remaining_once(tmp_path,
 
 
 @pytest.mark.asyncio
-async def test_no_market_before_five_seconds_or_without_cancel_confirmation(tmp_path):
+async def test_no_market_before_five_seconds_or_without_cancel_confirmation(tmp_path,acquire_owner):
     journal = EtfJournal(tmp_path/'journal.sqlite3')
     journal.initialize(Decimal(6000),'mock')
     journal.stage(order(),'20261013',1,90)
     journal.accepted('limit-1',{'ODNO':'L1','KRX_FWDG_ORD_ORGNO':'org'})
     called = []
-    class Broker:
+    class Broker(AccountBroker):
         async def order_status(self,*args,**kwargs):
             return {'tot_ccld_qty':'0','tot_ccld_amt':'0','rmn_qty':'10'}
         async def cancel_order(self,*args): called.append('cancel')
         async def submit_order(self,*args): raise AssertionError('unconfirmed cancellation cannot create market order')
     loop = EtfTradingLoop.__new__(EtfTradingLoop)
     loop.journal,loop.broker,loop.bus,loop.phase = journal,Broker(),Bus(),'ready'
+    acquire_owner(loop)
     await loop.reconcile()
     assert called==[]
     aged = time.time_ns()-6_000_000_000
@@ -169,7 +192,7 @@ def test_execution_vehicles_have_independent_prior_prices_and_cannot_drive_signa
     ('KP',1,.8,{'069500'}),('KP',1,1.5,{'069500','122630'}),('KP',1,2.,{'122630'}),
     ('KD',1,1.,{'229200'}),('KD',-1,1.,{'251340'}),
 ])
-async def test_kp_leverage_and_kd_short_route_to_actual_vehicles(tmp_path,strategy,direction,leverage,expected):
+async def test_kp_leverage_and_kd_short_route_to_actual_vehicles(tmp_path,strategy,direction,leverage,expected,acquire_owner):
     from vibetrading.etf_history import EtfHistory
     reference = make_references(tmp_path/'history')
     history = EtfHistory(None,tmp_path/'warmup')
@@ -180,7 +203,7 @@ async def test_kp_leverage_and_kd_short_route_to_actual_vehicles(tmp_path,strate
     journal = EtfJournal(tmp_path/'journal.sqlite3')
     journal.initialize(Decimal(300000),'mock')
     intents = []
-    class Broker:
+    class Broker(AccountBroker):
         async def buying_power(self,*args,**kwargs): return {'max_buy_qty':'100000'}
         async def submit_order(self,intent):
             intents.append(intent)
@@ -190,6 +213,7 @@ async def test_kp_leverage_and_kd_short_route_to_actual_vehicles(tmp_path,strate
             assert signal.metadata['weights'].keys() >= expected
     loop = EtfTradingLoop.__new__(EtfTradingLoop)
     loop.journal,loop.broker,loop.bus,loop.history = journal,Broker(),SignalBus(),history
+    acquire_owner(loop)
     loop._day,loop.phase = history.day,'ready'
     loop.entry_blocked = lambda strategy:False
     loop.quotes = {s:(Decimal(100),Decimal(105),time.time_ns()) for s in ETF_HISTORY_ROLES}

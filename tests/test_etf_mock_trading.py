@@ -71,8 +71,9 @@ def test_partial_fills_are_idempotent_and_budget_is_independent(tmp_path):
     journal = EtfJournal(tmp_path/'book.sqlite3')
     journal.initialize(Decimal(6000),'mock-account')
     assert all(b['cash']==2000 for b in journal.summary().values())
-    assert journal.stage(intent(),'20261013',1,None)
-    assert not journal.stage(intent(),'20261013',1,None)
+    original = intent()
+    assert journal.stage(original,'20261013',1,None)
+    assert not journal.stage(original,'20261013',1,None)
     assert journal.book('C3')['positions'] == {}
     assert journal.book('C3')['reserved'] == 1005
     journal.accepted('one',{'ODNO':'1'})

@@ -8,16 +8,16 @@
   ],
   "definition": "완성은 로컬 기능 수락 범위. 운영/배포/장기 성능 완료와 별개. 부분 단계의 닫힌 하위 기능만 선별 커밋 가능",
   "counts": {
-    "INCOMPLETE": 24,
-    "COMPLETE_LOCAL_IMPLEMENTATION": 7,
-    "NOT_STARTED": 20
+    "COMPLETE_LOCAL_IMPLEMENTATION": 14,
+    "INCOMPLETE": 23,
+    "NOT_STARTED": 14
   },
   "tasks": [
     {
       "task_id": "VN00",
-      "category": "INCOMPLETE",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
       "existing_phase": "P00/P09",
-      "detail": "v9 후보 index만 완료. 현재 서버/image/mount/runtime drift 재고정 필요",
+      "detail": "2026-10-21 현재14역할 image/config/mount 및13개 Python역할 전체소스 hash 고정·drift 분류 완료. 로컬/서버 동일 또는 배포/장기자원 완료를 뜻하지 않음",
       "production_ready": false
     },
     {
@@ -73,8 +73,9 @@
       "task_id": "VN07",
       "category": "INCOMPLETE",
       "existing_phase": "P06",
-      "detail": "완료: callback-free market checkpoint+최대 한 producer suffix 복구·명시 재개·healthy peer lease 보존. 미완료: 여러 suffix의 global order, ETF/Paper owner/strategy 복구",
-      "production_ready": false
+      "detail": "완료: market 다중 producer 내구 순서 증명, 세대별 checkpoint/journal 생성·교체·복원·종료 및 runtime 통합. 미완료: ETF/Paper account/strategy/pending-action 원자 복구와 운영 검증",
+      "production_ready": false,
+      "order_subtask_validation": "docs/refactoring/runs/20261020-production/vn07-order-validation.json"
     },
     {
       "task_id": "VN08",
@@ -92,23 +93,23 @@
     },
     {
       "task_id": "VN10",
-      "category": "NOT_STARTED",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
       "existing_phase": "P04/P09",
-      "detail": "Cooperating duplicate owners across alternate DB paths rejected; Mock and Mock2 remain separate; lease failure leaves account closed.",
+      "detail": "공유 물리 계좌 authority·DB lease, ETF startup/POST/close fencing 완료. Linux전체1294 PASS/2제외·리뷰미해결P1/P2 0; 실제 legacy stop/cross-host/배포는 별도 gate",
       "production_ready": false
     },
     {
       "task_id": "VN11",
-      "category": "NOT_STARTED",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
       "existing_phase": "P04",
-      "detail": "Guarded stage requires evidence; duplicate immutable intent/evidence collision rejected; commit failure cannot submit; existing cumulative fill reservations unchanged.",
+      "detail": "guarded evidence/schema/hash·중복불변충돌·COMMIT rollback 및 기존요청 재사용 완료. Linux관련86 PASS·리뷰P1/P2 0; VN12 후 전체통합 예정",
       "production_ready": false
     },
     {
       "task_id": "VN12",
-      "category": "NOT_STARTED",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
       "existing_phase": "P04",
-      "detail": "ACK after partial/full fill never regresses terminal state/accounting; cancel/fill cumulative effects applied once; no unsupported broker absence inference.",
+      "detail": "늦은 ACK·native ID 결합·최초 타이머·취소완료/latefill 단조성 완료. Linux관련138 PASS·통합1329 PASS/2제외·리뷰P1/P2 0",
       "production_ready": false
     },
     {
@@ -120,16 +121,16 @@
     },
     {
       "task_id": "VN14A",
-      "category": "NOT_STARTED",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
       "existing_phase": "P04/P08",
-      "detail": "Duplicate command effect once; scoped resume cannot reopen broader halt; pause/halt/reduce-only semantics approved before editing.",
+      "detail": "범위별 재개·명령 효과/receipt 원자 저장·중복 불변성 완료. Linux 전체1372 PASS/2제외·리뷰미해결P1/P2 0; 외부 명령 연결은 VN14B",
       "production_ready": false
     },
     {
       "task_id": "VN14B",
-      "category": "NOT_STARTED",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
       "existing_phase": "P08",
-      "detail": "Numeric user/chat allowlists and TTL; owner durable receipt before accepted; lost replies/429 cause no repeated effect; status/trade preserved.",
+      "detail": "명시 opt-in UDS owner receipt·numeric allowlist·불변 TTL·재전달/429 및 압박 격리 완료. Linux 전체1419 PASS/2제외·독립 리뷰 P1/P2 0; offline owner만 지원, 운영 활성 미검증",
       "production_ready": false
     },
     {
@@ -141,9 +142,9 @@
     },
     {
       "task_id": "VN16",
-      "category": "NOT_STARTED",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
       "existing_phase": "P07",
-      "detail": "Source corruption isolated and observable; healthy round-robin lanes progress; common ledger/volume error still global and bounded.",
+      "detail": "순수 typed source corruption·payload/fingerprint preflight quarantine와 healthy round-robin 완료. 공통writer/ledger/volume/unknownproof는 global유지. Linux관련111 PASS·리뷰P1/P2 0",
       "production_ready": false
     },
     {
@@ -388,55 +389,33 @@
     "VN07 callback-free market checkpoint startup and explicit whole-vector recovery (multi-suffix unsupported)",
     "TX06E SignerNonceStore standalone durability/ownership/bounds only"
   ],
-  "commit_candidate": "completed-market-v1",
-  "commit_state": "VALIDATED_READY_TO_COMMIT",
+  "commit_candidate": "worktree-snapshot-20261021",
+  "commit_state": "RECORDED_IN_CONTAINING_COMMIT",
   "server_deployed": false,
   "live_active": false,
   "next_steps": [
     {
       "order": 1,
-      "stage": "VN07",
-      "work": "미완료 복구 경계: 여러 producer suffix의 실제 global apply order 증명/저장 계약, ETF/Paper account/strategy/pending-action 상태와 시장 checkpoint의 원자 커서 관계 확정",
-      "start_at": [
-        "vibetrading/local_engine.py",
-        "vibetrading/local_runtime.py",
-        "vibetrading/strategy_runtime.py",
-        "vibetrading/paper_execution.py"
-      ],
-      "gate": "순서를 입증하지 못하면 현행 fail-closed 유지. 완료 시장 전용 경로를 약화하지 않음"
+      "stage": "VN15",
+      "status": "NOT_STARTED",
+      "work": "Read-only actual/assumed/recovery reporting; unavailable valuation/currency/cashflow explicit",
+      "gate": "사용자 재개 지시 전 착수 금지; reporting IO on submit path forbidden"
     },
     {
       "order": 2,
-      "stage": "VN08",
-      "work": "retained-base cursor/first-segment reader format과 v1 호환 검증. GC 비활성",
-      "start_at": [
-        "vibetrading/market_spool.py::_inventory/scan_spool/SpoolReader._locate_start",
-        "vibetrading/local_storage.py::LocalSpoolStorage.__init__",
-        "tests/refactoring/test_vnext_vn08.py"
-      ],
-      "gate": "VN07 원자 capture 및 해당 복구 계약에 맞는 base 증명부터 확정; 원본 prefix 삭제 금지"
+      "stage": "TX01/TX02/TX04 → VN07/VN08",
+      "work": "Common owner/account/strategy recovery before retained-base reader; GC disabled",
+      "gate": "Prototype and recovery gates remain open"
     },
     {
       "order": 3,
-      "stage": "VN00 → VN10/VN11/VN12 + TX01/TX02/TX03/TX07A",
-      "work": "현재 서버 기준선 재확인 후 canonical owner/intent/FILL·ACK 회귀/공통 계약·회계·lifecycle 통합",
-      "gate": "실계좌 mutation/배포 없이 로컬 구현; 미확인 capability는 계속 차단"
-    },
-    {
-      "order": 4,
-      "stage": "VN16 → VN09 / TX04B → TX05 → TX06A-E → TX07B → TX08",
-      "work": "저장 lane 격리 후 GC 증명, 입력 연속 복구·전략 dispatch·실제 connector lifecycle와 재조정·shared/group 통합",
-      "gate": "sole-copy 삭제·UNKNOWN 무조건 retry·자동 위험 활성 금지"
-    },
-    {
-      "order": 5,
-      "stage": "VN14A/B/VN15/VN17/VN18/VN19/VN20 + TX09-TX12",
-      "work": "제어/보고/역할 패키지/실제 장기·부하 검증/전환/최종 legacy 정리",
-      "gate": "30m/24h/72h와 실제 계좌·production 성능은 fixture로 대체하지 않음; 별도 전환 권한 필요"
+      "stage": "VN09/VN17/VN18/VN19/VN20 + TX05-TX12",
+      "work": "GC proof, combined role budgets, actual operational evidence and reviewable cutover",
+      "gate": "No automatic deletion/deployment/real activation; 30m/24h/72h/account evidence not replaced by fixtures"
     }
   ],
-  "commit_candidate_source_set_sha256": "d4a4f02777d56c2f30b53d52db76021da7aa1fbe8adc4d03a179a2436863625b",
-  "commit_validation": "docs/refactoring/runs/20261020-production/completed-market-v1-validation.json",
+  "commit_candidate_source_set_sha256": "1ab8d78dc9a968f1febf7c877177b6007cf6155a1af72c6bf8a4ff8652d31b64",
+  "commit_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
   "commit_changed_source_paths": [
     "refactoring_ai.md",
     "refactoring_context.md",
@@ -465,6 +444,24 @@
     "tests/refactoring/test_checkpoint_runtime.py",
     "tests/refactoring/test_execution_nonce.py"
   ],
-  "commit_authorization": "Latest human request explicitly says commit completed work; local commit only, no deployment or push",
-  "git_identity": "The commit containing this status table records the selected boundary; obtain SHA via git log"
+  "commit_authorization": "2026-10-21 latest explicit user request: remove obsolete artifacts, commit and push all current source including unfinished work; this supersedes prior selective-commit restriction, without deployment authorization",
+  "git_identity": {
+    "baseline_head": "90847f84243d01ec98c9815216c96c8f2749028b",
+    "snapshot_head": "The Git commit containing this record; inspect git log -1"
+  },
+  "execution_control": {
+    "status": "STOPPED_AT_USER_REQUEST",
+    "last_completed_ticket": "VN14B",
+    "active_ticket": null,
+    "start_next_ticket": false,
+    "stop_after_ticket": "VN14B"
+  },
+  "current_wip": null,
+  "last_completed_ticket": "VN14B",
+  "work_in_progress_commit_policy": "All 11 former excluded source/test files included as unfinished snapshot; exclusions apply only to older completed-feature validation",
+  "legacy_completed_commit": {
+    "head": "90847f84243d01ec98c9815216c96c8f2749028b",
+    "candidate": "completed-market-v1"
+  },
+  "current_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json"
 }

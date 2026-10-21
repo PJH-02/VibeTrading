@@ -1,0 +1,10 @@
+{"pid": 44776, "kind": "guard_loaded"}
+{"pid": 41800, "kind": "guard_loaded"}
+{"pid": 41800, "kind": "blocked_subprocess", "executable": "C:\\WINDOWS\\system32\\cmd.exe"}
+{"pid": 41800, "kind": "blocked_subprocess", "executable": "C:\\WINDOWS\\system32\\cmd.exe"}
+{"pid": 41800, "kind": "blocked_subprocess", "executable": "C:\\WINDOWS\\system32\\cmd.exe"}
+{"pid": 50248, "kind": "guard_loaded"}
+{"pid": 32500, "kind": "guard_loaded"}
+{"pid": 38700, "kind": "guard_loaded"}
+{"pid": 39204, "kind": "guard_loaded"}
+{"pid": 52044, "kind": "guard_loaded"}

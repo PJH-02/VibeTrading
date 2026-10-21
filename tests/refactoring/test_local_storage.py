@@ -11,8 +11,8 @@ from types import SimpleNamespace
 import pyarrow.parquet as pq
 import pytest
 
-from vibetrading.local_storage import LocalSpoolStorage, LocalStorageError, StorageBudgets, fact_storage_reserve
-from vibetrading.market_spool import MarketSpool, SpoolCursor, SpoolRecord
+from vibetrading.local_storage import LocalSourceError, LocalSpoolStorage, LocalStorageError, StorageBudgets, fact_storage_reserve
+from vibetrading.market_spool import MarketSpool, SpoolCorruption, SpoolCursor, SpoolRecord
 from vibetrading.models import AssetClass, DataGapEvent, InstrumentId, TradeEvent, Venue
 from vibetrading.sqlite_store import RuntimeStore
 from vibetrading.settings import RuntimeSettings
@@ -231,8 +231,8 @@ def test_malformed_observation_is_fail_closed_without_fact_or_checkpoint(context
     context.plan.observation = source
     worker = context.create()
     worker.step()
-    with pytest.raises(LocalStorageError, match="namespace"):
-        worker.step()
+    assert worker.step()["records"] == 0
+    assert "namespace" in worker.source_failures["observations"]["reason"]
     assert worker._ledger.progress("observations", "inc-A") is None
     assert worker._ledger.connection.execute("SELECT COUNT(*) FROM local_fact").fetchone()[0] == 0
 
@@ -268,8 +268,8 @@ def test_same_event_id_with_changed_economic_content_is_rejected_before_any_batc
     changed=first.model_copy(update={'price':Decimal('999')})
     write_source(context.source,[wire(first),wire(changed)])
     worker=context.create()
-    with pytest.raises(LocalStorageError,match='conflicting canonical content'):
-        worker.step()
+    assert worker.step()['records'] == 0
+    assert 'conflicting canonical content' in worker.source_failures['collector']['reason']
     assert worker._ledger.progress('collector','inc-A') is None
     assert not context.store.list_manifest()
     assert not context.store.delivery_committed('LOCAL:collector','inc-A',2)
@@ -281,8 +281,8 @@ def test_cross_batch_conflict_cannot_claim_existing_manifest_coverage(context):
     write_source(context.source,[wire(first),wire(changed)])
     worker=context.create(limits=budgets(batch_records=1))
     worker.step()
-    with pytest.raises(LocalStorageError,match='conflicting canonical content'):
-        worker.step()
+    assert worker.step()['records'] == 0
+    assert 'conflicting canonical content' in worker.source_failures['collector']['reason']
     assert worker._ledger.progress('collector','inc-A')['sequence']==1
     assert not context.store.delivery_committed('LOCAL:collector','inc-A',2)
     assert sum(meta['rows'] for meta in context.store.list_manifest())==1
@@ -369,6 +369,100 @@ def test_fact_wal_space_reservation_blocks_commit_before_disk_exhaustion(context
         worker.step()
     assert worker._ledger.progress('collector','inc-A') is None
     assert worker._ledger.connection.execute('SELECT COUNT(*) FROM local_fact').fetchone()[0]==0
+
+
+def test_malformed_source_batch_quarantines_before_shared_mutation_and_healthy_lane_progresses(context):
+    healthy = item(context.settings.data_root/'healthy','healthy')
+    write_source(context.source,[wire(trade(1)),b'{invalid-json'])
+    write_source(healthy,[wire(trade(2))])
+    context.plan.producers = (context.source,healthy)
+    worker = context.create()
+    assert worker.step()['records'] == 0
+    assert worker.writer.buffer_bytes == 0 and not worker._fingerprints
+    assert not context.store.list_manifest() and worker.progress('collector','inc-A') is None
+    fault = worker.source_failures['collector']
+    assert fault['stage'] == 'preflight' and len(fault['reason']) <= 240
+    assert worker.step()['market'] == 1
+    assert worker.progress('healthy','inc-A')['sequence'] == 1
+    snapshot = worker.source_failures
+    snapshot['collector']['reason'] = 'caller cannot clear fault'
+    assert worker.source_failures['collector'] == fault
+    assert worker.step()['records'] == 0
+    assert len(worker.source_failures) == 1
+
+
+def test_invalid_unicode_source_identity_does_not_stop_healthy_lane(context):
+    healthy = item(context.settings.data_root/'healthy','healthy')
+    bad = trade(1).model_dump(mode='json')
+    bad['event_id'] = '\ud800'
+    write_source(context.source,[json.dumps(bad).encode()])
+    write_source(healthy,[wire(trade(2))])
+    context.plan.producers = (context.source,healthy)
+    worker = context.create()
+    assert worker.step()['records'] == 0
+    assert worker.source_failures['collector']['error'] == 'LocalSourceError'
+    assert worker.step()['market'] == 1
+
+
+@pytest.mark.parametrize('at_startup',[False,True])
+def test_spool_checksum_corruption_quarantines_only_its_lane(context, at_startup):
+    healthy = item(context.settings.data_root/'healthy','healthy')
+    write_source(context.source,[wire(trade(1))]);write_source(healthy,[wire(trade(2))])
+    context.plan.producers = (context.source,healthy)
+    worker = None if at_startup else context.create()
+    path = next(context.source.spool_root.glob('*.sealed'))
+    raw = bytearray(path.read_bytes());raw[-1] ^= 1;path.write_bytes(raw)
+    worker = worker or context.create()
+    assert worker.step()['records'] == 0
+    assert worker.source_failures['collector']['error'] == 'SpoolCorruption'
+    assert worker.progress('collector','inc-A') is None
+    assert worker.step()['market'] == 1
+    assert worker.progress('healthy','inc-A')['sequence'] == 1
+
+
+def test_bad_source_cannot_change_healthy_attestation_cache(context):
+    first = trade(1)
+    bad = item(context.settings.data_root/'bad','bad')
+    write_source(context.source,[wire(first),wire(trade(2))])
+    write_source(bad,[wire(first.model_copy(update={'price':Decimal('999')}))])
+    context.plan.producers = (context.source,bad)
+    worker = context.create(limits=budgets(batch_records=1))
+    assert worker.step()['market'] == 1
+    before = list(worker._fingerprints.items())
+    assert worker.step()['records'] == 0
+    assert list(worker._fingerprints.items()) == before
+    assert worker.step()['market'] == 1
+    assert worker.progress('collector','inc-A')['sequence'] == 2
+    assert worker.progress('bad','inc-A') is None
+
+
+@pytest.mark.parametrize('wrapped',[False,True])
+def test_source_read_io_error_is_common_fatal_not_quarantined(context, monkeypatch, wrapped):
+    write_source(context.source,[wire(trade(1))])
+    worker = context.create()
+    def broken(**kwargs):
+        if wrapped: raise SpoolCorruption('read wrapper') from OSError('volume failure')
+        raise OSError('volume failure')
+    monkeypatch.setattr(worker._sources[0][1],'read_batch',broken)
+    with pytest.raises((OSError,SpoolCorruption)): worker.step()
+    assert worker.source_failures == {} and worker._ledger.progress('collector','inc-A') is None
+    with pytest.raises(LocalStorageError,match='fail-closed'): worker.step()
+
+
+def test_even_typed_source_error_after_writer_mutation_remains_global(context, monkeypatch):
+    write_source(context.source,[wire(trade(1)),wire(trade(2))])
+    worker = context.create()
+    add = worker.writer.add
+    count = 0
+    def partial(event, **kwargs):
+        nonlocal count
+        count += 1
+        if count == 2: raise LocalSourceError('writer failed after buffering')
+        return add(event,**kwargs)
+    monkeypatch.setattr(worker.writer,'add',partial)
+    with pytest.raises(LocalSourceError,match='after buffering'): worker.step()
+    assert worker.source_failures == {} and worker._ledger.progress('collector','inc-A') is None
+    with pytest.raises(LocalStorageError,match='fail-closed'): worker.step()
 
 
 def test_fact_reservation_accounts_for_wal_frames_and_shm_regions():

@@ -9,6 +9,7 @@ import asyncio
 from dataclasses import dataclass
 from decimal import Decimal
 import math
+import inspect
 import json
 import sqlite3
 import time
@@ -99,9 +100,12 @@ class ExecutionOwner:
 
     def _readiness(self, provider: Callable[[], ExecutionReadiness]) -> ExecutionReadiness:
         state = provider()
+        if inspect.iscoroutine(state): state.close()
+        now = self.clock()
         if (not isinstance(state, ExecutionReadiness) or state.scope_key != self.ledger.scope.key
                 or state.account_verified is not True or state.risk_verified is not True
-                or state.feed_ready is not True or state.lease_until_ns <= self.clock()):
+                or state.feed_ready is not True or type(state.lease_until_ns) is not int
+                or type(now) is not int or not 0 <= now < state.lease_until_ns <= 2**63-1):
             raise GateBlocked("Verified account/risk/feed readiness is missing or expired")
         positive_decimal(state.position_notional, "position notional", zero=True)
         positive_decimal(state.available_notional, "available notional", zero=True)
@@ -193,11 +197,23 @@ class ExecutionOwner:
                 or any(not isinstance(k, str) or not k or not isinstance(v, int) or isinstance(v, bool) or v < 0 for k, v in versions.items())):
             raise GateBlocked("DecisionEvidence cursor/input versions are incomplete")
 
-    def resume(self, strategy, *, expected_epochs, readiness):
+    def resume(self, strategy, *, expected_epochs, readiness, scope='strategy'):
         if not self.supports_offline_handoff():
             raise GateBlocked("Production activation is unavailable in this implementation")
         self._readiness(readiness)
-        return self.control.resume_if_ready(strategy, expected_epochs=expected_epochs, readiness_verified=True)
+        return self.control.resume_if_ready(strategy, expected_epochs=expected_epochs, readiness_verified=True,scope=scope)
+
+    def apply_command(self, request: dict, *, readiness) -> dict:
+        if self._closing or not self.supports_offline_handoff():
+            raise GateBlocked('Production activation is unavailable in this implementation')
+        if type(request) is not dict or set(request) != {
+                'command_id','action','strategy','scope','expires_ns','expected_epochs'}:
+            raise ValueError('Invalid owner command fields')
+        def verify():
+            self._readiness(readiness)
+            return True
+        return self.control.apply_command(**request, readiness_verified=request['action']=='resume',
+                                          verify_readiness=verify)
 
     async def dispatch(self, intent: OrderIntent, *, expiry_ns: int, evidence: dict,
                        reserve_unit: Decimal, readiness: Callable[[], ExecutionReadiness],

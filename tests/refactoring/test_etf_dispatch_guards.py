@@ -18,10 +18,14 @@ from vibetrading.providers.kiwoom import KST
 class Broker:
     execution_permit_protocol = 1
 
-    def __init__(self):
+    def __init__(self, mode='mock'):
+        self.mode = mode
         self.before_permit = None
         self.after_handoff_error = None
         self.posts = []
+
+    def account_params(self):
+        return {'CANO':'001' if self.mode == 'mock' else '002','ACNT_PRDT_CD':'01'}
 
     async def buying_power(self, *args, **kwargs):
         return {'max_buy_qty':'100000','psbl_qty_calc_unpr':'110'}
@@ -54,6 +58,9 @@ class Bus:
         if self.failure:
             raise self.failure
 
+    async def close(self):
+        pass
+
 
 @pytest.fixture
 def loop(tmp_path):
@@ -65,25 +72,69 @@ def loop(tmp_path):
     instance.settings = SimpleNamespace(state_dir=state,env={'ETF_EXECUTION_GUARDS':'true'})
     instance.journal = EtfJournal(state/'etf-mock/journal.sqlite3')
     instance.journal.initialize(Decimal(300000),'fixture-dual-mock')
-    instance.brokers = {'mock':Broker(),'mock2':Broker()}
+    instance.brokers = {'mock':Broker(),'mock2':Broker('mock2')}
     instance.broker = instance.brokers['mock']
+    instance._acquire_ownership(tmp_path/'authority')
     instance.bus = Bus()
     instance.history = SimpleNamespace(day='',vehicle_reference=lambda symbol:{'symbol':symbol})
     instance._day, instance.phase = '2026-10-19','ready'
     instance.quotes = {symbol:(Decimal(100),Decimal(105),time.time_ns()) for symbol in ('069500','122630','229200','251340')}
     yield instance
     instance.journal.db.close()
+    for lease in instance._owner_leases.values(): lease.close()
 
 
 def intent(identity='one', side=Side.BUY, *, expiry=None):
+    now = time.time_ns()
     return OrderIntent(intent_id=identity,job_id='C3',signal_id='signal',destination=OrderDestination.REAL,
         instrument=InstrumentId(venue=Venue.KIS,asset_class=AssetClass.ETF,raw_symbol='069500',std_symbol='069500'),
         side=side,client_order_id=identity,quantity=Decimal(2),limit_price=Decimal(110),
-        metadata={'account_scope':'mock','valid_until_ts_ns':expiry or time.time_ns()+90_000_000_000})
+        metadata={'account_scope':'mock','valid_until_ts_ns':expiry or now+90_000_000_000,
+            'direction':1,'safety_stop':None,'source_provider':'kiwoom',
+            'intent_quote':{'bid':'100','ask':'105','received_ns':now,'intent_ns':now}})
 
 
 def row(loop):
     return dict(loop.journal.db.execute('SELECT * FROM orders ORDER BY created_ns DESC LIMIT 1').fetchone())
+
+
+@pytest.mark.asyncio
+async def test_stage_commit_failure_rolls_back_without_post(loop):
+    def deny_commit(action, value, *args):
+        return sqlite3.SQLITE_DENY if action == sqlite3.SQLITE_TRANSACTION and value == 'COMMIT' else sqlite3.SQLITE_OK
+    loop.journal.db.set_authorizer(deny_commit)
+    try:
+        with pytest.raises(sqlite3.DatabaseError):
+            await loop.place('C3','069500',Side.BUY,2,'commit-failure',direction=1)
+    finally:
+        loop.journal.db.set_authorizer(None)
+    assert loop.broker.posts == [] and not loop.journal.db.in_transaction
+    assert loop.journal.db.execute('SELECT COUNT(*) FROM orders').fetchone()[0] == 0
+    assert loop.journal.book('C3')['reserved'] == 0
+
+
+@pytest.mark.asyncio
+async def test_request_retry_uses_original_requested_quantity_before_new_quote(loop):
+    async def power(*args,**kwargs): return {'max_buy_qty':'1'}
+    loop.broker.buying_power = power
+    await loop.place('C3','069500',Side.BUY,2,'clamped',direction=1)
+    assert row(loop)['quantity'] == 1
+    loop.quotes.clear()
+    async def forbidden(*args,**kwargs): raise AssertionError('retry touched broker')
+    loop.broker.buying_power = forbidden
+    await loop.place('C3','069500',Side.BUY,2,'clamped',direction=1)
+    with pytest.raises(ValueError, match='request collision'):
+        await loop.place('C3','069500',Side.BUY,1,'clamped',direction=1)
+    assert len(loop.broker.posts) == 1
+
+
+@pytest.mark.asyncio
+async def test_request_identity_cannot_cross_trading_days(loop):
+    await loop.place('C3','069500',Side.BUY,2,'same-identity',direction=1)
+    loop._day = '2026-10-22'
+    with pytest.raises(ValueError, match='request collision'):
+        await loop.place('C3','069500',Side.BUY,2,'same-identity',direction=1)
+    assert len(loop.broker.posts) == 1
 
 
 @pytest.mark.asyncio
@@ -162,6 +213,8 @@ async def test_sell_is_reduce_only_but_allowed_while_halted(loop):
 @pytest.mark.parametrize('kind', ['legacy','inherited'])
 async def test_adapter_without_concrete_paired_capability_is_blocked(loop, kind):
     class Legacy:
+        mode = 'mock'
+        def account_params(self): return {'CANO':'001','ACNT_PRDT_CD':'01'}
         async def buying_power(self,*args,**kwargs):
             return {'max_buy_qty':'100'}
 
@@ -173,6 +226,7 @@ async def test_adapter_without_concrete_paired_capability_is_blocked(loop, kind)
 
     loop.broker = Legacy() if kind == 'legacy' else Inherited()
     loop.brokers['mock'] = loop.broker
+    loop.broker.authority_check = loop._check_ownership
     with pytest.raises(EtfDispatchBlocked,match='paired dispatch permit'):
         await loop.place('C3','069500',Side.BUY,2,'decision')
     assert loop.journal.dispatch_state(row(loop)['intent_id']) == 'NOT_SENT'
@@ -293,9 +347,11 @@ async def test_kis_permit_runs_after_token_and_session_enter_before_post(loop, m
 
     broker = KisCashBroker.__new__(KisCashBroker)
     broker.mode, broker._lock, broker._next_request_at = 'mock',asyncio.Lock(),0
-    broker.client = SimpleNamespace(provider=SimpleNamespace(values={'KIS_ACCOUNT_NUMBER':'fixture','KIS_ACCOUNT_PRODUCT_CODE':'01'}),
+    broker.client = SimpleNamespace(provider=SimpleNamespace(values={'KIS_ACCOUNT_NUMBER':'001','KIS_ACCOUNT_PRODUCT_CODE':'01'}),
         issue_access_token=token,_base_headers=lambda:{},_app_key=lambda:'fake',_app_secret=lambda:'fake',
         endpoints=SimpleNamespace(rest_base_url='https://invalid.example'),_safe_json=safe_json)
+    loop.broker = loop.brokers['mock'] = broker
+    broker.authority_check = loop._check_ownership
     monkeypatch.setattr('vibetrading.kis_execution.aiohttp.ClientSession',Session)
     if expire:
         with pytest.raises(EtfDispatchBlocked,match='TTL'):
@@ -305,6 +361,61 @@ async def test_kis_permit_runs_after_token_and_session_enter_before_post(loop, m
     else:
         assert (await loop._submit_staged(broker,value))['ODNO'] == 'fixture'
         assert trace == ['token','session','post']
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize('guards',[False,True])
+@pytest.mark.parametrize('operation',['new','cancel'])
+async def test_kis_rechecks_owner_after_token_for_all_mutations(loop, monkeypatch, guards, operation):
+    loop.settings.env['ETF_EXECUTION_GUARDS'] = str(guards).lower()
+    broker = KisCashBroker.__new__(KisCashBroker)
+    broker.mode, broker._lock, broker._next_request_at = 'mock',asyncio.Lock(),0
+    async def token():
+        loop._owner_leases['mock'].path.unlink()
+        return 'fixture-token',None
+    broker.client = SimpleNamespace(provider=SimpleNamespace(values={'KIS_ACCOUNT_NUMBER':'001','KIS_ACCOUNT_PRODUCT_CODE':'01'}),
+        issue_access_token=token,_base_headers=lambda:{},_app_key=lambda:'fake',_app_secret=lambda:'fake',
+        endpoints=SimpleNamespace(rest_base_url='https://invalid.example'))
+    broker.authority_check = loop._check_ownership
+    loop.broker = loop.brokers['mock'] = broker
+    class Session:
+        def __init__(self,*args,**kwargs): pass
+        async def __aenter__(self): return self
+        async def __aexit__(self,*args): pass
+        def post(self,*args,**kwargs): raise AssertionError('lost authority reached POST')
+    monkeypatch.setattr('vibetrading.kis_execution.aiohttp.ClientSession',Session)
+    with pytest.raises(EtfDispatchBlocked, match='verification failed'):
+        if operation == 'new':
+            value = intent()
+            loop.journal.stage(value,'20261019',1,None,dispatch_evidence=loop._dispatch_evidence(value))
+            await loop._submit_staged(broker,value)
+        else:
+            await broker.cancel_order('synthetic-order','synthetic-organization')
+    with pytest.raises(EtfDispatchBlocked, match='closed'): loop._check_ownership()
+
+
+@pytest.mark.asyncio
+async def test_kis_mutation_without_authority_fails_before_token(loop):
+    broker = KisCashBroker.__new__(KisCashBroker)
+    broker._lock, broker._next_request_at = asyncio.Lock(),0
+    with pytest.raises(RuntimeError, match='requires account authority'):
+        await broker.request('POST','order-cash','fixture',{})
+
+
+@pytest.mark.asyncio
+async def test_kis_bound_authority_cannot_be_replaced_during_token_await():
+    broker = KisCashBroker.__new__(KisCashBroker)
+    broker._lock, broker._next_request_at = asyncio.Lock(),0
+    broker.authority_check = lambda:None
+    original = broker.authority_check
+    async def token():
+        await asyncio.sleep(0)
+        broker.authority_check = lambda:None
+        raise AssertionError('replacement succeeded')
+    broker.client = SimpleNamespace(issue_access_token=token)
+    with pytest.raises(RuntimeError, match='bound once'):
+        await broker.request('POST','order-cash','fixture',{})
+    assert broker.authority_check is original
 
 
 @pytest.mark.asyncio

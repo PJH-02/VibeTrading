@@ -49,7 +49,7 @@ async def test_stale_resume_and_restart_are_closed(tmp_path):
     with pytest.raises(GateBlocked, match="stale"):
         owner.resume("strategy", expected_epochs=before, readiness=ready)
     current = owner.control.snapshot("strategy")["epochs"]
-    owner.resume("strategy", expected_epochs=current, readiness=ready)
+    owner.resume("strategy", expected_epochs=current, readiness=ready,scope='global')
     await owner.close()
     reopened, _, _, _ = build_owner(tmp_path, resume=False)
     assert all(reopened.control.snapshot("strategy")["closed"].values())
@@ -61,7 +61,7 @@ async def test_old_decision_epochs_cannot_be_refreshed_after_halt_and_resume(tmp
     owner, adapter, ready, now = build_owner(tmp_path)
     old_evidence = evidence(expected_epochs=owner.control.snapshot("strategy")["epochs"])
     owner.control.halt("strategy")
-    owner.resume("strategy", expected_epochs=owner.control.snapshot("strategy")["epochs"], readiness=ready)
+    owner.resume("strategy", expected_epochs=owner.control.snapshot("strategy")["epochs"], readiness=ready,scope='global')
     with pytest.raises(GateBlocked, match="epoch vector is stale"):
         await owner.dispatch(intent(), expiry_ns=now[0]+1_000_000_000, evidence=old_evidence,
                              reserve_unit=Decimal("10"), readiness=ready)

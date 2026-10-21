@@ -2,9 +2,10 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import sqlite3
 import time
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
 from .models import OrderIntent, Side
@@ -67,11 +68,12 @@ class EtfJournal:
             self.db.execute('BEGIN IMMEDIATE')
             try:
                 yield
-            except BaseException:
-                self.db.execute('ROLLBACK')
-                raise
-            else:
                 self.db.execute('COMMIT')
+            except BaseException:
+                if self.db.in_transaction:
+                    try: self.db.execute('ROLLBACK')
+                    except Exception: pass
+                raise
         return transact()
 
     def book(self, strategy: str) -> dict:
@@ -150,14 +152,58 @@ class EtfJournal:
         sql = "SELECT * FROM orders WHERE status IN ('submitting','unknown','pending')"
         return [dict(r) for r in self.db.execute(sql + (' AND strategy=?' if strategy else ''), (strategy,) if strategy else ())]
 
-    def stage(self, intent: OrderIntent, day: str, direction: int, safety_stop: float | None, *, replacement_for: str | None = None, dispatch_evidence: dict | None = None) -> bool:
+    @staticmethod
+    def _evidence(intent, payload, evidence, required):
+        if evidence is None:
+            if required: raise ValueError('Guarded ETF stage requires dispatch evidence')
+            return None
+        meta = intent.metadata
+        expected = {'contract':'etf-dispatch-v1','intent_sha256':hashlib.sha256(payload.encode()).hexdigest(),
+            'account_scope':meta.get('account_scope'),'strategy':intent.job_id,'signal_id':intent.signal_id,
+            'valid_until_ts_ns':meta.get('valid_until_ts_ns'),'quote':meta.get('intent_quote'),
+            'source_provider':meta.get('source_provider')}
+        if type(evidence) is not dict or evidence != expected:
+            raise ValueError('ETF dispatch evidence differs from immutable intent')
+        encoded = json.dumps(evidence,sort_keys=True,separators=(',',':'),allow_nan=False)
+        if encoded != json.dumps(expected,sort_keys=True,separators=(',',':'),allow_nan=False):
+            raise ValueError('ETF dispatch evidence types differ from immutable intent')
+        if len(encoded.encode()) > 16384:
+            raise ValueError('ETF dispatch evidence exceeds the 16KiB protocol envelope')
+        if (expected['account_scope'] not in {'mock','mock2'} or type(expected['valid_until_ts_ns']) is not int
+                or expected['valid_until_ts_ns'] <= 0 or any(not isinstance(expected[k],str)
+                or not expected[k] or len(expected[k])>200 for k in ('strategy','signal_id','source_provider'))):
+            raise ValueError('ETF dispatch evidence identities are invalid')
+        quote = expected['quote']
+        if type(quote) is not dict or set(quote) != {'bid','ask','received_ns','intent_ns'}:
+            raise ValueError('ETF dispatch evidence requires the exact quote')
+        if (any(type(quote[k]) is not int or quote[k] <= 0 for k in ('received_ns','intent_ns'))
+                or any(not isinstance(quote[k],str) for k in ('bid','ask'))):
+            raise ValueError('ETF dispatch quote types are invalid')
+        try: bid, ask = Decimal(quote['bid']),Decimal(quote['ask'])
+        except InvalidOperation as exc: raise ValueError('ETF dispatch quote prices are invalid') from exc
+        if not bid.is_finite() or not ask.is_finite() or bid <= 0 or ask < bid:
+            raise ValueError('ETF dispatch quote prices are invalid')
+        return encoded
+
+    def stage(self, intent: OrderIntent, day: str, direction: int, safety_stop: float | None, *, replacement_for: str | None = None, dispatch_evidence: dict | None = None, require_evidence: bool = False) -> bool:
         """Commit before any network submission; unknown results keep reservations."""
+        if type(require_evidence) is not bool: raise ValueError('Explicit guarded stage mode required')
+        payload = intent.model_dump_json()
+        evidence = self._evidence(intent,payload,dispatch_evidence,require_evidence)
+        if require_evidence and (intent.metadata.get('direction') != direction
+                or intent.metadata.get('safety_stop') != safety_stop
+                or intent.metadata.get('replacement_for') != replacement_for):
+            raise ValueError('ETF stage context differs from immutable intent')
         unit = intent.limit_price or Decimal(str(intent.metadata.get('reserve_unit_price',0)))
         if intent.side == Side.BUY and unit <= 0:
             raise ValueError('Market buy requires a verified reservation price')
         reserve = intent.quantity * unit * Decimal('1.005') if intent.side == Side.BUY else Decimal(0)
         with self.transaction():
-            if self.db.execute('SELECT 1 FROM orders WHERE intent_id=?',(intent.intent_id,)).fetchone():
+            old = self.db.execute('SELECT payload,day FROM orders WHERE intent_id=?',(intent.intent_id,)).fetchone()
+            if old:
+                old_evidence = self.db.execute('SELECT evidence FROM dispatch_attempts WHERE intent_id=?',(intent.intent_id,)).fetchone()
+                if old['payload'] != payload or old['day'] != day or (old_evidence[0] if old_evidence else None) != evidence:
+                    raise ValueError('ETF immutable intent/evidence collision')
                 return False
             book = self.book(intent.job_id)
             if intent.side == Side.BUY and reserve > book['cash']-book['reserved']:
@@ -166,13 +212,13 @@ class EtfJournal:
                 if int(intent.quantity) > book['positions'].get(intent.instrument.raw_symbol,0):
                     raise RuntimeError('Sell exceeds the strategy-owned filled position')
             self.db.execute('INSERT INTO orders(intent_id,strategy,symbol,side,quantity,price,reserve,status,day,created_ns,payload) VALUES(?,?,?,?,?,?,?,?,?,?,?)',
-                (intent.intent_id,intent.job_id,intent.instrument.raw_symbol,intent.side.value,int(intent.quantity),str(unit),str(reserve),'submitting',day,time.time_ns(),intent.model_dump_json()))
+                (intent.intent_id,intent.job_id,intent.instrument.raw_symbol,intent.side.value,int(intent.quantity),str(unit),str(reserve),'submitting',day,time.time_ns(),payload))
             self.db.execute('UPDATE orders SET order_type=? WHERE intent_id=?',('limit' if intent.limit_price is not None else 'market',intent.intent_id))
             self.db.execute('UPDATE orders SET account_scope=? WHERE intent_id=?',(intent.metadata.get('account_scope','mock'),intent.intent_id))
-            if dispatch_evidence is not None:
+            if evidence is not None:
                 now = time.time_ns()
                 self.db.execute("INSERT INTO dispatch_attempts(intent_id,evidence,state,prepared_ns,updated_ns) VALUES(?,?,'PREPARED',?,?)",
-                    (intent.intent_id,json.dumps(dispatch_evidence,sort_keys=True,separators=(',',':'),default=str),now,now))
+                    (intent.intent_id,evidence,now,now))
             from .etf_recovery_ledger import active, exclude
             iso_day=day if '-' in day else day[:4]+'-'+day[4:6]+'-'+day[6:]
             if active(self.db,intent.job_id,iso_day):
@@ -218,9 +264,20 @@ class EtfJournal:
 
     def accepted(self, identity: str, output: dict):
         with self.transaction():
-            self.db.execute("UPDATE dispatch_attempts SET state='ACKED',updated_ns=? WHERE intent_id=?",(time.time_ns(),identity))
-            self.db.execute("UPDATE orders SET status='pending',order_number=?,organization=?,accepted_ns=? WHERE intent_id=?",
-                (output.get('ODNO',output.get('odno')),output.get('KRX_FWDG_ORD_ORGNO',output.get('krx_fwdg_ord_orgno','')),time.time_ns(),identity))
+            prior = self.db.execute('SELECT * FROM orders WHERE intent_id=?',(identity,)).fetchone()
+            if prior is None: raise ValueError('ACK requires an existing ETF intent')
+            number = output.get('ODNO',output.get('odno'))
+            organization = output.get('KRX_FWDG_ORD_ORGNO',output.get('krx_fwdg_ord_orgno',''))
+            if (not isinstance(number,str) or not number or len(number)>200
+                    or not isinstance(organization,str) or len(organization)>200
+                    or any(c.isspace() or ord(c)<32 or ord(c)==127 for c in number+organization)):
+                raise ValueError('ETF ACK requires bounded native order identity')
+            if ((prior['order_number'] and prior['order_number'] != number)
+                    or (prior['organization'] and organization and prior['organization'] != organization)):
+                raise ValueError('ETF ACK conflicts with bound native order identity')
+            self.db.execute("UPDATE dispatch_attempts SET state=CASE WHEN state IN ('REJECTED','NOT_SENT') THEN state ELSE 'ACKED' END,updated_ns=? WHERE intent_id=?",(time.time_ns(),identity))
+            self.db.execute("UPDATE orders SET status=CASE WHEN status IN ('complete','rejected','blocked') THEN status ELSE 'pending' END,order_number=?,organization=?,accepted_ns=COALESCE(accepted_ns,?) WHERE intent_id=?",
+                (number,organization or prior['organization'] or '',time.time_ns(),identity))
             row=dict(self.db.execute('SELECT * FROM orders WHERE intent_id=?',(identity,)).fetchone())
             from .etf_recovery_ledger import exclude
             policy=self.db.execute('SELECT reason,mirror FROM strategy_order_exclusions WHERE intent_id=?',(identity,)).fetchone()
@@ -274,7 +331,7 @@ class EtfJournal:
             self.db.execute('UPDATE books SET cash=? WHERE strategy=?',(str(cash),row['strategy']))
             self.db.execute('INSERT INTO positions VALUES(?,?,?) ON CONFLICT(strategy,symbol) DO UPDATE SET quantity=excluded.quantity', (row['strategy'],row['symbol'],owned))
             remaining = int(Decimal(str(broker.get('rmn_qty',row['quantity']-filled))))
-            terminal = filled == row['quantity'] or str(broker.get('cncl_yn','')).upper() == 'Y' or remaining == 0
+            terminal = row['status'] == 'complete' or filled == row['quantity'] or str(broker.get('cncl_yn','')).upper() == 'Y' or remaining == 0
             reserve = Decimal(0) if terminal or row['side']=='sell' else (row['quantity']-filled)*Decimal(row['price'])*Decimal('1.005')
             self.db.execute('UPDATE orders SET filled=?,notional=?,reserve=?,status=? WHERE intent_id=?',
                 (filled,str(notional),str(reserve),'complete' if terminal else 'pending',identity))

@@ -13,6 +13,7 @@ from collections import OrderedDict
 from dataclasses import dataclass
 import hashlib
 import json
+import logging
 import os
 from pathlib import Path
 import re
@@ -22,7 +23,7 @@ import threading
 import time
 import uuid
 
-from .market_spool import SpoolCursor, SpoolReader
+from .market_spool import SpoolCorruption, SpoolCursor, SpoolReader
 from .models import AssetClass, EventType, event_from_dict
 from .hot_path import _event_fingerprint
 from .parquet_store import ParquetBatchWriter
@@ -50,6 +51,18 @@ class StorageBudgets:
 
 class LocalStorageError(RuntimeError):
     pass
+
+
+class LocalSourceError(LocalStorageError):
+    """Deterministic source preflight failure, before any shared writer mutation."""
+
+
+def _source_only(exc):
+    for _ in range(8):
+        if isinstance(exc,OSError): return False
+        exc = exc.__cause__ or exc.__context__
+        if exc is None: return True
+    return False
 
 
 def fact_storage_reserve(maximum: int, page_size: int = 512) -> int:
@@ -85,13 +98,17 @@ def _document(raw: bytes) -> dict:
             raise ValueError("object required")
         return document
     except (ValueError, TypeError, RecursionError) as exc:
-        raise LocalStorageError("invalid local storage JSON") from exc
+        raise LocalSourceError("invalid local storage JSON") from exc
 
 
 def _text(value, label, maximum=256, empty=False):
-    if (not isinstance(value, str) or (not value and not empty) or len(value.encode("utf-8")) > maximum
-            or any(ord(char) < 32 or ord(char) == 127 for char in value)):
-        raise LocalStorageError("invalid " + label)
+    try:
+        invalid = (not isinstance(value,str) or (not value and not empty) or len(value.encode('utf-8')) > maximum
+                   or any(ord(char)<32 or ord(char)==127 for char in value))
+    except UnicodeError as exc:
+        raise LocalSourceError('invalid '+label) from exc
+    if invalid:
+        raise LocalSourceError("invalid " + label)
     return value
 
 
@@ -101,9 +118,9 @@ def _market(raw: bytes):
     try:
         event = event_from_dict(document)
     except (ValueError, TypeError, KeyError) as exc:
-        raise LocalStorageError("invalid historical market event") from exc
+        raise LocalSourceError("invalid historical market event") from exc
     if event.event_id != identity:
-        raise LocalStorageError("market identity changed during validation")
+        raise LocalSourceError("market identity changed during validation")
     return event
 
 
@@ -111,22 +128,22 @@ def _observation(raw: bytes, maximum: int):
     envelope = _document(raw)
     if (set(envelope) != {"version", "subject", "msg_id", "payload_base64"}
             or type(envelope["version"]) is not int or envelope["version"] != 1):
-        raise LocalStorageError("invalid observation_v1 envelope")
+        raise LocalSourceError("invalid observation_v1 envelope")
     subject = _text(envelope["subject"], "observation subject")
     if re.fullmatch(r"(?:signal|order|system)\.[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)*", subject) is None:
-        raise LocalStorageError("invalid observation subject namespace")
+        raise LocalSourceError("invalid observation subject namespace")
     message_id = envelope["msg_id"]
     if message_id is not None:
         _text(message_id, "observation message ID", empty=True)
     encoded = envelope["payload_base64"]
     if not isinstance(encoded, str) or len(encoded) > maximum:
-        raise LocalStorageError("observation base64 byte budget exceeded")
+        raise LocalSourceError("observation base64 byte budget exceeded")
     try:
         payload = base64.b64decode(encoded, validate=True)
     except (ValueError, binascii.Error) as exc:
-        raise LocalStorageError("invalid observation base64") from exc
+        raise LocalSourceError("invalid observation base64") from exc
     if not payload or len(payload) > maximum:
-        raise LocalStorageError("observation decoded payload byte budget exceeded")
+        raise LocalSourceError("observation decoded payload byte budget exceeded")
     _document(payload)
     return subject, message_id, payload
 
@@ -305,6 +322,7 @@ class LocalSpoolStorage:
         self.writer = writer
         self._ledger = None
         self._sources = []
+        self._source_failures = {}
         self._next = 0
         # This is an attestation cache, not a second permanent event index.
         # A cache miss for a committed ID/new cursor fails closed; no history
@@ -325,11 +343,19 @@ class LocalSpoolStorage:
             if not 0 < len(items) <= 17 or len({item.producer for item, _ in items}) != len(items):
                 raise LocalStorageError("bounded unique local storage producers required")
             for item, observation in items:
+                _text(item.producer,"producer")
+                _text(item.incarnation,"incarnation")
                 progress = self._ledger.progress(item.producer, item.incarnation)
                 sequence = int(progress["sequence"]) if progress is not None else 0
                 before = SpoolCursor(item.producer, item.incarnation, max(0, sequence - 1))
-                reader = SpoolReader(item.spool_root, item.producer, item.incarnation,
-                                     after=before, **item.limits.reader_kwargs)
+                try:
+                    reader = SpoolReader(item.spool_root, item.producer, item.incarnation,
+                                         after=before, **item.limits.reader_kwargs)
+                except SpoolCorruption as exc:
+                    if sequence or not _source_only(exc): raise
+                    self._quarantine(item,'open',exc)
+                    self._sources.append((item,None,observation))
+                    continue
                 if sequence:
                     rows = reader.read_batch(max_records=1, max_bytes=self.budgets.batch_bytes)
                     if (len(rows) != 1 or rows[0].cursor.sequence != sequence
@@ -344,6 +370,15 @@ class LocalSpoolStorage:
         except BaseException:
             self.close()
             raise
+
+    @property
+    def source_failures(self):
+        return {producer:dict(fault) for producer,fault in self._source_failures.items()}
+
+    def _quarantine(self, item, stage, exc):
+        if item.producer not in self._source_failures:
+            self._source_failures[item.producer] = {'stage':stage,'error':type(exc).__name__,'reason':str(exc)[:240]}
+            logging.getLogger(__name__).error('local storage quarantined producer=%s stage=%s error=%s',item.producer,stage,type(exc).__name__)
 
     def _check(self):
         if threading.get_ident() != self._thread:
@@ -385,15 +420,18 @@ class LocalSpoolStorage:
         item, reader, observation = self._sources[self._next]
         self._next = (self._next + 1) % len(self._sources)
         stats = {"records": 0, "market": 0, "facts": 0, "deduplicated": 0}
+        if item.producer in self._source_failures: return stats
+        preflight, stage = True,'read'
         pending, aliases, entries = [], [], []
         pending_ids = set()
         stream = "LOCAL:" + item.producer
         try:
             rows = reader.read_batch(max_records=self.budgets.batch_records, max_bytes=self.budgets.batch_bytes)
+            stage = 'preflight'
             prepared = []
             for record in rows:
                 if not record.payload or len(record.payload) > self.budgets.max_payload_bytes:
-                    raise LocalStorageError("local record payload byte budget exceeded")
+                    raise LocalSourceError("local record payload byte budget exceeded")
                 value = _observation(record.payload, self.budgets.max_payload_bytes) if observation else _market(record.payload)
                 prepared.append((record, value))
             market = [(record, value) for record, value in prepared
@@ -407,13 +445,12 @@ class LocalSpoolStorage:
                 fingerprint=_event_fingerprint(value)
                 previous=fingerprints.get(identity,self._fingerprints.get(identity))
                 if previous is not None and previous!=fingerprint:
-                    raise LocalStorageError('market event ID has conflicting canonical content')
-                if identity in self._fingerprints:
-                    self._fingerprints.move_to_end(identity)
+                    raise LocalSourceError('market event ID has conflicting canonical content')
                 key=(stream,item.incarnation,record.cursor.sequence)
                 if identity in known_ids and key not in known_deliveries and identity not in self._fingerprints:
                     raise LocalStorageError('committed event content is unverifiable after attestation cache miss')
                 fingerprints[identity]=fingerprint
+            preflight = False
             for record, value in prepared:
                 if observation:
                     subject, message_id, decoded = value
@@ -430,6 +467,7 @@ class LocalSpoolStorage:
                     else:
                         identity = event.event_id
                         key = (stream, item.incarnation, record.cursor.sequence)
+                        if identity in self._fingerprints: self._fingerprints.move_to_end(identity)
                         if key in known_deliveries:
                             stats["deduplicated"] += 1
                         elif identity in pending_ids:
@@ -460,6 +498,12 @@ class LocalSpoolStorage:
             # market delivery has durable manifest coverage. Mixed GAP/facts
             # cannot skip earlier market input or commit a partial checkpoint.
             self._ledger.commit_batch(entries)
+            return stats
+        except (LocalSourceError,SpoolCorruption) as exc:
+            if not preflight or not _source_only(exc):
+                self._error = exc
+                raise
+            self._quarantine(item,stage,exc)
             return stats
         except BaseException as exc:
             self._error = exc

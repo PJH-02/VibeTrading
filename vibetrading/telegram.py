@@ -28,6 +28,7 @@ from .telegram_trade import trade_report
 from .trade_reporting import daily_report_view
 from .process_lease import ProcessLease
 from .telegram_state import OutboxFull, TelegramState
+from .local_transport import TransportError, validate_command_result, _object_pairs
 
 logger = logging.getLogger(__name__)
 _reply_identity: ContextVar[str | None] = ContextVar("telegram_reply_identity", default=None)
@@ -54,10 +55,28 @@ class TelegramRateLimit(RuntimeError):
         super().__init__("Telegram rate limited")
 
 
+def _numeric_ids(raw, *, chats=False):
+    if not isinstance(raw, str) or len(raw) > 1024:
+        raise ValueError('Invalid numeric Telegram allowlist')
+    entries = raw.split(',') if raw else []
+    if len(entries) > 32:
+        raise ValueError('Telegram allowlist exceeds 32 identities')
+    result = set()
+    for text in entries:
+        text = text.strip()
+        digits = text[1:] if chats and text.startswith('-') else text
+        if (not digits or any(c not in '0123456789' for c in digits) or len(digits) > 19
+                or str(int(text)) != text or not 0 < abs(int(text)) <= 2**63-1):
+            raise ValueError('Telegram identities must be canonical integers')
+        result.add(int(text))
+    return frozenset(result)
+
+
 class TelegramController:
     """Minimal allowlisted control/observability loop; inactive without credentials."""
 
-    def __init__(self, settings: RuntimeSettings | None = None, *, bus=None, bus_factory=None) -> None:
+    def __init__(self, settings: RuntimeSettings | None = None, *, bus=None, bus_factory=None,
+                 command_handler=None, command_ttl_seconds=None) -> None:
         if bus is not None and bus_factory is not None:
             raise ValueError("select either bus or bus_factory")
         if bus_factory is not None and (not callable(bus_factory) or inspect.iscoroutinefunction(bus_factory)):
@@ -65,6 +84,16 @@ class TelegramController:
         self.settings = settings or get_settings()
         self.token = self.settings.env.get("TELEGRAM_BOT_TOKEN")
         self.allowed_id = str(self.settings.telegram_user_id or "")
+        self.allowed_users = _numeric_ids(self.settings.env.get('TELEGRAM_USER_IDS', self.allowed_id))
+        self.allowed_chats = _numeric_ids(self.settings.env.get('TELEGRAM_CHAT_IDS',
+            self.settings.env.get('TELEGRAM_CHAT_ID') or self.allowed_id), chats=True)
+        if not self.allowed_id and self.allowed_chats:
+            # Multi-list-only setups use the first explicitly approved chat for alerts.
+            self.allowed_id = (self.settings.env.get('TELEGRAM_CHAT_IDS') or self.settings.env['TELEGRAM_CHAT_ID']).split(',')[0].strip()
+        if command_handler is not None and (not callable(command_handler)
+                or type(command_ttl_seconds) is not int or not 0 < command_ttl_seconds <= 300):
+            raise ValueError('Control requires a handler and explicit TTL within 300 seconds')
+        self._command_handler, self._command_ttl_seconds = command_handler, command_ttl_seconds
         self.base_url = f"https://api.telegram.org/bot{self.token}" if self.token else ""
         self._offset = 0
         self._sent_session: set[str] = set()
@@ -79,7 +108,7 @@ class TelegramController:
 
     @property
     def enabled(self) -> bool:
-        return bool(self.token and self.allowed_id)
+        return bool(self.token and self.allowed_users and self.allowed_chats)
 
     async def run(self, poll_seconds: int = 25) -> None:
         if not self.enabled:
@@ -148,7 +177,7 @@ class TelegramController:
                     await self._handle(session, update)
                     await asyncio.to_thread(self._state.complete, update["update_id"])
                     return
-                except (asyncio.TimeoutError, aiohttp.ClientError, OutboxFull) as exc:
+                except (asyncio.TimeoutError, aiohttp.ClientError, OutboxFull, TransportError, OSError, sqlite3.Error) as exc:
                     failures += 1
                     logger.warning('Telegram reply deferred (%s)', type(exc).__name__)
                     await asyncio.sleep(min(30, 2**min(failures, 5)))
@@ -564,10 +593,10 @@ class TelegramController:
 
     async def _handle(self, session: aiohttp.ClientSession, update: dict[str, Any]) -> None:
         message = update.get("message") or {}
-        sender = str((message.get("from") or {}).get("id", ""))
+        sender = (message.get("from") or {}).get("id")
         chat_id = message.get("chat", {}).get("id")
-        allowed_chat = str(self.settings.env.get("TELEGRAM_CHAT_ID") or self.allowed_id)
-        if not sender.isdecimal() or sender != self.allowed_id or str(chat_id) != allowed_chat:
+        if (type(sender) is not int or type(chat_id) is not int
+                or sender not in self.allowed_users or chat_id not in self.allowed_chats):
             return
         text = str(message.get("text") or "").strip().lower()
         command = text.split(maxsplit=1)[0].split('@', 1)[0].lstrip('/') if text else ''
@@ -589,6 +618,38 @@ class TelegramController:
             logger.info('Telegram command replied command=trade')
         elif command in {'help', 'start'}:
             await self._send(session, chat_id, 'status: 수집기별 상태·수집 종목\ntrade: 당일 종목별 거래·당일 및 전체 기록기간 순수익·수수료')
+        elif command in {'pause', 'halt', 'resume'}:
+            await self._control_command(session, update, command, chat_id)
+
+    async def _control_command(self, session, update, action, chat_id):
+        if self._command_handler is None:
+            await self._send(session, chat_id, '제어 owner가 연결되지 않았습니다.')
+            return
+        try:
+            message = update['message']
+            date, identity = message.get('date'), update.get('update_id')
+            if (type(date) is not int or date <= 0 or date * 1_000_000_000 > time.time_ns()
+                    or type(identity) is not int or identity < 0):
+                raise ValueError('Invalid command identity or original timestamp')
+            fields = message['text'].strip().split(maxsplit=3)
+            if (len(fields) != (4 if action == 'resume' else 3) or len(fields[1]) > 128
+                    or fields[2] not in {'global','account','strategy'}):
+                raise ValueError('Explicit strategy and scope required')
+            request = dict(command_id=f'telegram:{chat_id}:{identity}', action=action,
+                strategy=fields[1], scope=fields[2], expires_ns=(date + self._command_ttl_seconds)*1_000_000_000,
+                expected_epochs=json.loads(fields[3], object_pairs_hook=_object_pairs) if action == 'resume' else None)
+            if action == 'resume' and (type(request['expected_epochs']) is not dict
+                    or len(request['expected_epochs']) != 3
+                    or any(len(k) > 208 or type(v) is not int or v < 0 for k,v in request['expected_epochs'].items())):
+                raise ValueError('Full epoch vector required')
+            request = await asyncio.to_thread(self._state.command_request, update, request)
+        except (ValueError, TypeError, KeyError, TransportError):
+            await self._send(session, chat_id, '명령 형식·원래 시각·ID를 확인하세요. resume에는 전체 epoch JSON이 필요합니다.')
+            return
+        result = validate_command_result(request, await self._command_handler(request))
+        text = ('명령 거절: owner의 만료·범위·준비 상태를 확인하세요.' if result['status'] == 'REJECTED' else
+                f"명령 ACCEPTED: {result['command_id']} · {result['scope']} · epoch {result['epoch']} (과거 처리 결과; 현재 권한 아님)")
+        await self._send(session, chat_id, text)
 
     async def _send(self, session: aiohttp.ClientSession, chat_id: Any, text: str) -> None:
         if self._outbox_enabled:

@@ -59,7 +59,8 @@ def build_owner(tmp_path, *, adapter=None, resume=True, clock=None):
     now = clock if clock is not None else [1_000_000_000]
     scope = AccountScope("binance", "synthetic-account", "spot", "offline")
     ledger = ExecutionLedger(tmp_path / "orders.sqlite3", scope,
-                             max_intents=16, max_evidence_bytes=16384, max_fills=32)
+                             max_intents=16, max_evidence_bytes=16384, max_fills=32,
+                             authority_root=tmp_path / 'authority')
     control = RuntimeControl(ledger)
     transport = adapter if adapter is not None else FakeAdapter()
     budgets = ExecutionBudgets(Decimal("100"), Decimal("1000"), 4,
@@ -73,8 +74,13 @@ def build_owner(tmp_path, *, adapter=None, resume=True, clock=None):
         allowed_instruments=(intent().instrument.key,),
         market_price_caps=((intent().instrument.key, Decimal("10")),))
     if resume:
-        owner.resume("strategy", expected_epochs=control.snapshot("strategy")["epochs"], readiness=ready)
+        resume_owner(owner,ready)
     return owner, transport, ready, now
+
+
+def resume_owner(owner, ready):
+    for scope in ('global','account','strategy'):
+        owner.resume('strategy',expected_epochs=owner.control.snapshot('strategy')['epochs'],readiness=ready,scope=scope)
 
 
 async def send(owner, ready, now, order=None, **changes):
@@ -124,6 +130,22 @@ async def test_exact_fill_once_and_ack_after_fill_preserve_terminal_state(tmp_pa
 
 
 @pytest.mark.asyncio
+async def test_ack_after_partial_fill_preserves_exact_remaining_reservation(tmp_path):
+    owner, adapter, ready, now = build_owner(tmp_path)
+    async def partial():
+        owner.ledger.apply_fill_once('one','partial',quantity='1',price='10',fee='0.001')
+    adapter.after_permit = partial
+    await send(owner,ready,now)
+    before = owner.ledger.get('one')
+    owner.ledger.outcome('one','SUBMITTED',{'order_id':'fake-one'})
+    after = owner.ledger.get('one')
+    assert after['state'] == 'SUBMITTED'
+    assert {k:after[k] for k in ('filled','notional','fees','reservation')} == {k:before[k] for k in ('filled','notional','fees','reservation')}
+    assert Decimal(after['reservation']) == 10 and owner.ledger.position(intent().instrument.key) == 1
+    await owner.close()
+
+
+@pytest.mark.asyncio
 async def test_payload_collision_and_risk_limit_cannot_make_new_mutation(tmp_path):
     owner, adapter, ready, now = build_owner(tmp_path)
     await send(owner, ready, now)
@@ -140,11 +162,12 @@ async def test_payload_collision_and_risk_limit_cannot_make_new_mutation(tmp_pat
 async def test_one_file_lease_and_account_environment_binding(tmp_path):
     owner, _, _, _ = build_owner(tmp_path)
     with pytest.raises(RuntimeError, match="another process"):
-        ExecutionLedger(owner.ledger.path, owner.ledger.scope, max_intents=16, max_evidence_bytes=16384, max_fills=32)
+        ExecutionLedger(owner.ledger.path, owner.ledger.scope, max_intents=16, max_evidence_bytes=16384, max_fills=32,
+                        authority_root=tmp_path / 'authority')
     await owner.close()
     with pytest.raises(ValueError, match="different account"):
         ExecutionLedger(tmp_path / "orders.sqlite3", AccountScope("binance", "other", "spot", "offline"),
-                        max_intents=16, max_evidence_bytes=16384, max_fills=32)
+                        max_intents=16, max_evidence_bytes=16384, max_fills=32, authority_root=tmp_path / 'authority')
 
 
 @pytest.mark.asyncio
@@ -268,7 +291,7 @@ async def test_account_version_fill_dedupe_restart_and_explicit_reconciliation(t
     reopened, _, ready2, _ = build_owner(tmp_path, resume=False, clock=now)
     assert reopened.ledger.account_version() == 2
     snapshot = replace(ready2(), position_notional=Decimal("20"), available_notional=Decimal("980"))
-    reopened.resume("strategy", expected_epochs=reopened.control.snapshot("strategy")["epochs"], readiness=lambda: snapshot)
+    resume_owner(reopened,lambda: snapshot)
     await reopened.close()
 
 

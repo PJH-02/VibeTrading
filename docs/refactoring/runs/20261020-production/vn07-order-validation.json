@@ -1,0 +1,96 @@
+{
+  "date_kst": "2026-10-21T09:30:37.274298+09:00",
+  "task": "VN07_ORDER_PROOF",
+  "status": "COMPLETE_LOCAL_SUBUNIT_ONLY",
+  "source_manifest": "docs/refactoring/runs/20261020-production/vn07-order-v2-source.json",
+  "source_set_sha256": "8e1a7107e23bcdd5098cbeb38947aed499ed32ec449fb50c3438d0983e6f8a54",
+  "product_and_test_sha256": {
+    "vibetrading/local_engine.py": "66d2732c81bff8c6e9e44a882a6bfa077b7114b450424f9b6d8bd51b4c92849e",
+    "vibetrading/local_runtime.py": "2e5ca66029d0bb7e7a17f2f870092487da72f43a9eeb70eee969b6415104e2db",
+    "vibetrading/market_apply_order.py": "4769ce170935f336bcffce4d0a588918473154e30d3275f09053354de83fb224",
+    "tests/refactoring/test_checkpoint_startup.py": "9e7fe7056956167fade6c60c12d4669a4faf8b9d973ca9920a07d76d47b446c9"
+  },
+  "final_scoped": {
+    "windows": {
+      "receipt": "docs/refactoring/runs/20261020-production/vn07-order-final-windows-v2/result.json",
+      "junit": "docs/refactoring/runs/20261020-production/cleanup_summary.json#vn07-order-final-windows-v2",
+      "exit_code": 0,
+      "passed": 235,
+      "failed": 0,
+      "skipped": 5,
+      "elapsed_seconds": 11.280999999988126,
+      "matching_candidate_hashes": 498,
+      "guard_sha256": "eb34edb62d47e484d6d7bf5fb6572750c8cbfa0ac5a4abd40bc1fbd9d3e130b9"
+    },
+    "linux": {
+      "receipt": "docs/refactoring/runs/20261020-production/vn07-order-final-linux-v2/linux_result.json",
+      "junit": "docs/refactoring/runs/20261020-production/cleanup_summary.json#vn07-order-final-linux-v2",
+      "exit_code": 0,
+      "passed": 240,
+      "failed": 0,
+      "skipped": 0,
+      "elapsed_seconds": 11.988900041999955,
+      "matching_candidate_hashes": 246,
+      "guard_sha256": "eb34edb62d47e484d6d7bf5fb6572750c8cbfa0ac5a4abd40bc1fbd9d3e130b9"
+    }
+  },
+  "full_predecessor_only": {
+    "manifest": "docs/refactoring/runs/20261020-production/vn07-order-v1-source.json",
+    "source_set_sha256": "4cea787d47da953c1e1a132ccf04c4de42368085566f1df6b2ed72310d2ccba8",
+    "windows": {
+      "receipt": "docs/refactoring/runs/20261020-production/vn07-order-full-windows-v1/result.json",
+      "junit": "docs/refactoring/runs/20261020-production/cleanup_summary.json#vn07-order-full-windows-v1",
+      "exit_code": 0,
+      "passed": 1214,
+      "failed": 0,
+      "skipped": 14,
+      "elapsed_seconds": 230.20300000000861,
+      "matching_candidate_hashes": 498,
+      "guard_sha256": "eb34edb62d47e484d6d7bf5fb6572750c8cbfa0ac5a4abd40bc1fbd9d3e130b9"
+    },
+    "linux": {
+      "receipt": "docs/refactoring/runs/20261020-production/vn07-order-full-linux-v1/linux_result.json",
+      "junit": "docs/refactoring/runs/20261020-production/cleanup_summary.json#vn07-order-full-linux-v1",
+      "exit_code": 0,
+      "passed": 1228,
+      "failed": 0,
+      "skipped": 0,
+      "elapsed_seconds": 194.771264528,
+      "matching_candidate_hashes": 246,
+      "guard_sha256": "eb34edb62d47e484d6d7bf5fb6572750c8cbfa0ac5a4abd40bc1fbd9d3e130b9"
+    },
+    "limitation": "Precedes final serialization-fence fix and one extra encoding-failure parameter. These are NOT full-v2 results; final scoped tests cover all changed APIs and their engine/runtime/spool callers."
+  },
+  "review": {
+    "editor": "root",
+    "independent_safety_reviewer": "vn06_safety",
+    "simple_evidence_reviewer": "luna_evidence (gpt-6-luna)",
+    "unresolved_p1_p2": 0,
+    "closed": [
+      "Public construction/per-producer-valid permutation of proof rejected; factory-only immutable tuple",
+      "Anchor and reference failure poison every feed and fence common authority",
+      "Serialization executes inside same bounded append failure fence"
+    ],
+    "scope": "Trusted owner, callback-free market recovery; no tests executed by safety reviewer"
+  },
+  "earlier_failure": {
+    "receipt": "docs/refactoring/runs/20261020-production/vn07-order-scope2/result.json",
+    "underlying": "Windows PermissionError WinError5 at untouched MarketSpool._write_checkpoint os.replace, collector outage test",
+    "baseline_check": "docs/refactoring/runs/20261020-production/vn07-order-baseline-fileaccess/result.json",
+    "baseline_exit": 0,
+    "later_final_scoped_windows_exit": 0,
+    "later_full_predecessor_windows_exit": 0,
+    "conclusion": "Not reproduced in the baseline check or later runs; cause not established. Retain original failure; no product workaround, retry loop or skip added."
+  },
+  "limits": [
+    "Caller owns same-thread journal flush/seal/close; no automatic runtime writer provisioning/rotation",
+    "One checkpoint anchor per empty journal/engine binding; no rebind",
+    "Only complete exact durable C..frozen-H history accepted; never-applied/unrecorded suffix is rejected",
+    "Reference order is market state only; no owner/account/strategy restore",
+    "Windows filesystem durability and production resource/long-duration gates remain open"
+  ],
+  "production_ready": false,
+  "server_deploy": false,
+  "new_dependencies": [],
+  "git_action": "Working tree only; no commit or push in this resumed subtask"
+}

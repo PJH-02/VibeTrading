@@ -72,7 +72,7 @@ class ExecutionLedger:
     UNRESOLVED = ("AUTHORIZED", "HANDOFF", "UNKNOWN", "LEGACY_UNKNOWN", "SUBMITTED")
 
     def __init__(self, path: Path, scope: AccountScope, *, max_intents: int,
-                 max_evidence_bytes: int, max_fills: int):
+                 max_evidence_bytes: int, max_fills: int, authority_root: Path):
         for value in (max_intents, max_evidence_bytes, max_fills):
             if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
                 raise ValueError("Execution ledger budgets must be explicit positive integers")
@@ -81,9 +81,11 @@ class ExecutionLedger:
         self.max_intents, self.max_evidence_bytes, self.max_fills = max_intents, max_evidence_bytes, max_fills
         self._thread = threading.get_ident()
         self._closed = False
+        self._authority = ProcessLease.account(authority_root, scope.venue, scope.account, scope.environment)
         self._lease = ProcessLease(self.path.with_suffix(self.path.suffix + ".owner.lock"))
-        self._lease.acquire()
+        self._authority.acquire()
         try:
+            self._lease.acquire()
             self._db = sqlite3.connect(self.path, isolation_level=None, timeout=2)
             self._db.row_factory = sqlite3.Row
             self._db.execute("PRAGMA journal_mode=WAL")
@@ -122,11 +124,14 @@ class ExecutionLedger:
             if hasattr(self, "_db"):
                 self._db.close()
             self._lease.close()
+            self._authority.close()
             raise
 
     def _check_thread(self):
         if self._closed or threading.get_ident() != self._thread:
             raise RuntimeError("Execution ledger must be used by its open owning thread")
+        self._authority.check()
+        self._lease.check()
 
     def _commit(self):
         self._db.execute("COMMIT")
@@ -272,9 +277,9 @@ class ExecutionLedger:
 
     def close(self):
         if not self._closed:
-            self._check_thread()
-            try:
-                self._db.close()
-            finally:
-                self._closed = True
-                self._lease.close()
+            if threading.get_ident() != self._thread:
+                raise RuntimeError('Execution ledger must be closed by its owning thread')
+            self._db.close()
+            self._lease.close()
+            self._authority.close()
+            self._closed = True

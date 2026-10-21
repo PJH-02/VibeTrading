@@ -23,8 +23,20 @@
       "sha256": "121a3cbbd92a630cfb46c1740dea79f96180df60da27ad531f2358458bda4be7",
       "scope": "Credential-free copies with cooperative guard; not an OS sandbox or production proof",
       "counts": {
-        "windows": {"tests": 116, "passed": 112, "skipped": 4, "failures": 0, "errors": 0},
-        "linux": {"tests": 116, "passed": 116, "skipped": 0, "failures": 0, "errors": 0}
+        "windows": {
+          "tests": 116,
+          "passed": 112,
+          "skipped": 4,
+          "failures": 0,
+          "errors": 0
+        },
+        "linux": {
+          "tests": 116,
+          "passed": 116,
+          "skipped": 0,
+          "failures": 0,
+          "errors": 0
+        }
       },
       "production_ready": false,
       "live_active": false,
@@ -62,7 +74,10 @@
       "sha256": "07f1b3bbec71c2d584de616f5d8a8a3246bd90cd6c4f22f225105f8e8de74fa1",
       "observed_utc": "2026-10-20T06:30:38.488966+00:00",
       "mode": "READ_ONLY_NOT_CUTOVER_PROOF",
-      "summary": {"container_count": 14, "observed_running": 14},
+      "summary": {
+        "container_count": 14,
+        "observed_running": 14
+      },
       "classification": "historical observation only; does not establish current server identity or mounts"
     },
     {
@@ -70,7 +85,12 @@
       "path": "docs/refactoring/vnext/source_comparison.json",
       "sha256": "2a9fdb02f7ebd14f86278b7ee42b19e7dd417a18e4e8ce2ce4e3ba722c88bef8",
       "observed_utc": "2026-10-20T06:30:38.488966+00:00",
-      "counts": {"EXACT": 79, "DIFFERENT": 20, "LF_EQUIVALENT": 14, "LOCAL_ONLY": 18},
+      "counts": {
+        "EXACT": 79,
+        "DIFFERENT": 20,
+        "LF_EQUIVALENT": 14,
+        "LOCAL_ONLY": 18
+      },
       "not_verified": [
         "Full dependencies/mount content/account process inventory",
         "Writer connection PRAGMAs",
@@ -105,5 +125,32 @@
     "Resolve the validation receipt's open production gates; this package does not establish deployment readiness."
   ],
   "package_scope": "Small index only; source and validation payloads are referenced in place, not copied.",
-  "deployability": false
+  "deployability": false,
+  "current_baseline": {
+    "date_kst": "2026-10-21",
+    "status": "COMPLETE_READ_ONLY_BASELINE_PIN",
+    "roles": 14,
+    "complete_python_roles": 13,
+    "non_python_roles": [
+      "vibetrading-nats-1"
+    ],
+    "source_scope": "Entire /app/vibetrading Python tree, immutable image and observed config/mount identity; not all filesystem bytes",
+    "identity": {
+      "path": "docs/refactoring/runs/20261020-vnext/vn00-package/current-identity-full-20261021.json",
+      "sha256": "f6fe39dd9dcc7820be94b97ee4b7ae9650a3926024273514a69b200b74b01a9b"
+    },
+    "classification": {
+      "path": "docs/refactoring/runs/20261020-vnext/vn00-package/current-classification-20261021.json",
+      "sha256": "cbb741555da6aaf659f743e73a637d402a102ef6aea736430b18c2d7e501b3fa"
+    },
+    "local_server_equal": false,
+    "server_changes": false,
+    "resource_scope": "Instantaneous host memory/disk counts only; no sustained CPU/latency/capacity proof",
+    "vn10_baseline_sources": {
+      "etf_trading.py": "bbdd0f48b04fa51630476773e0969637bd5fe56d2dcf63f3eb8ddb2db042ea3b",
+      "etf_journal.py": "f86a3befcd9a723a89563ce3910aa422d402feac2f95f23f07688ca50265917f",
+      "kis_execution.py": "f40ac766d2b39a676aa8ed3d007be477f44eb1f028c4a52bfd956de3e55d551d"
+    },
+    "vn10_diff_review": "Luna diff-only: local dispatch evidence/permits/feed integration changes, no demonstrated lost server-only economic/strategy behavior; not full runtime safety"
+  }
 }

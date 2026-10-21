@@ -104,10 +104,13 @@ class LocalObservationBus(SpoolingMarketPublisher):
 
     def enqueue_observation(self, subject: str, payload: bytes, msg_id: str | None = '') -> ObservationAdmission:
         envelope=encode_observation(subject,payload,msg_id,max_payload_bytes=self.budgets.max_frame_bytes)
-        self.accept_payload(envelope)
+        return self._admit_payload(envelope)
+
+    def _admit_payload(self, payload: bytes) -> ObservationAdmission:
+        self.accept_payload(payload)
         return ObservationAdmission(self._publisher_id,
             EngineCursor(self.producer,self.incarnation,self._baseline_sequence+self._accepted),
-            hashlib.sha256(envelope).hexdigest())
+            hashlib.sha256(payload).hexdigest())
 
     async def publish_signal(self, signal):
         return self.enqueue_observation(subject_for_signal(signal),dumps(signal),signal.signal_id)

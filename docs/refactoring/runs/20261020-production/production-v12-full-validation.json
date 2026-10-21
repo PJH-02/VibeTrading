@@ -81,9 +81,9 @@
       "guard_receipt_count": 10,
       "artifacts": {
         "docs/refactoring/runs/20261020-production/production-full-windows-v12/result.json": "032801aee22edb4d4d9064febe8d4fc8582bf37cef8b34fb892e893e10ccfd95",
-        "docs/refactoring/runs/20261020-production/production-full-windows-v12/junit.xml": "9f8bbbcf5a09b871b1d23f8d7dd814d12c4fdffd7f0da27eb86c151bb8a104da",
+        "docs/refactoring/runs/20261020-production/cleanup_summary.json#production-full-windows-v12": "9f8bbbcf5a09b871b1d23f8d7dd814d12c4fdffd7f0da27eb86c151bb8a104da",
         "docs/refactoring/runs/20261020-production/production-full-windows-v12/guard_receipts.jsonl": "fd60b00d089f92931e9a51836e7c551e69642585f7e34e847f843aa01ac628aa",
-        "docs/refactoring/runs/20261020-production/production-full-windows-v12/stdout.txt": "76d463a4085115d530eb872c54d34c1e1b5ee9c499b5cff8312e84a8e8edb0ab"
+        "docs/refactoring/runs/20261020-production/cleanup_summary.json#production-full-windows-v12": "76d463a4085115d530eb872c54d34c1e1b5ee9c499b5cff8312e84a8e8edb0ab"
       }
     },
     "linux": {
@@ -107,7 +107,7 @@
         "--basetemp",
         "/tmp/vt-r-f94jt7d3/t/p",
         "--junitxml",
-        "/mnt/c/Users/박제형/Desktop/VibeTrading/docs/refactoring/runs/20261020-production/production-full-linux-v12/junit.xml",
+        "/mnt/c/Users/박제형/Desktop/VibeTrading/docs/refactoring/runs/20261020-production/cleanup_summary.json#production-full-linux-v12",
         "tests"
       ],
       "elapsed_seconds": 134.51504587,
@@ -412,9 +412,9 @@
       "guard_receipt_count": 7,
       "artifacts": {
         "docs/refactoring/runs/20261020-production/production-full-linux-v12/linux_result.json": "885df73ca8ae7f5ea5cfdb91bf7e53ed06854818c09069d08ae8e3d3f22a20b8",
-        "docs/refactoring/runs/20261020-production/production-full-linux-v12/junit.xml": "183844887d253c7f7cc23a443a12565f287fe70eef3728231ce8e66b59a1b7fc",
+        "docs/refactoring/runs/20261020-production/cleanup_summary.json#production-full-linux-v12": "183844887d253c7f7cc23a443a12565f287fe70eef3728231ce8e66b59a1b7fc",
         "docs/refactoring/runs/20261020-production/production-full-linux-v12/guard_receipts.jsonl": "0a9c81f3c0306fc2c6ea89cebcfed05cbcb37558dc9a93c66b7d79447cef52c5",
-        "docs/refactoring/runs/20261020-production/production-full-linux-v12/stdout.txt": "ad3b1b712b43948d9e051ae2a75fcd195f8f0d1294e9059f668b39915e63e707"
+        "docs/refactoring/runs/20261020-production/cleanup_summary.json#production-full-linux-v12": "ad3b1b712b43948d9e051ae2a75fcd195f8f0d1294e9059f668b39915e63e707"
       }
     }
   },
