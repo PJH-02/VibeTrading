@@ -1399,7 +1399,6 @@
   "files": 30809,
   "bytes": 445647844,
   "retired_source_paths": [
-    "scripts/refactoring/deploy_p02_schema.py",
     "scripts/refactoring/rebase_after_p02.py",
     "scripts/refactoring/publish_progress.py",
     "scripts/refactoring/update_execution_state.py"
@@ -1953,5 +1952,23 @@
   ],
   "total_files_removed_or_moved": 31364,
   "remaining_user_action": "User may delete trashbin/ and empty the Windows Recycle Bin; both are excluded from commit",
-  "retained_run_files_after_cleanup": 99
+  "retained_run_files_after_cleanup": 99,
+  "recovered_essential_paths": [
+    {
+      "path": "scripts/refactoring/deploy_p02_schema.py",
+      "restored_from_git": "90847f84243d01ec98c9815216c96c8f2749028b",
+      "reason": "Active P02 rollback remains required; prior cleanup preservation rule confirmed",
+      "sha256": "41c0de8939767fa7c91d3ff556a61725f6798f15d3aa975d051e3e31e8d3804b",
+      "historical_recycle_event_retained": true
+    }
+  ],
+  "net_files_absent_after_restoration": 30808,
+  "cleanup_count_reconciliation": {
+    "initial_planned_files": 30772,
+    "additional_raw_log_files": 37,
+    "historical_recycled_files": 30809,
+    "recovered_essential_files": 1,
+    "net_absent_files": 30808,
+    "last_validation_copy_moved_to_trashbin": 555
+  }
 }

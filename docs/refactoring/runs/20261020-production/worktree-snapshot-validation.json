@@ -18,7 +18,8 @@
   "post_validation_non_runtime_changes": [
     ".gitignore excludes trashbin",
     "documentation/cleanup metadata",
-    "dashboard EOF whitespace normalization"
+    "dashboard EOF whitespace normalization",
+    "P02 rollback helper restored byte-for-byte from90847f8 after reviewing repo-analysis-review.md; AST and CLI help checked, no rollback executed"
   ],
   "source_copy_retained": false,
   "source_copy_location": "trashbin/worktree-snapshot-20261021 (ignored, user may delete)",
@@ -33,5 +34,11 @@
   "server_deployed": false,
   "live_active": false,
   "commit_authorization": "Latest human explicitly requested all changes committed and pushed; prior selective commit restriction superseded",
-  "readiness_rule": "Passing prototype tests does not complete unfinished tickets or operating gates"
+  "readiness_rule": "Passing prototype tests does not complete unfinished tickets or operating gates",
+  "review_correction": {
+    "review_path": ".freebuff/repo-analysis-review.md",
+    "essential_rollback_tool_restored": "scripts/refactoring/deploy_p02_schema.py",
+    "product_source_changed": false,
+    "product_tickets_started": false
+  }
 }

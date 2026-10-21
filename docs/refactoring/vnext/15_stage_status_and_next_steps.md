@@ -210,3 +210,11 @@ VN14A-1: selected-scope resume와 상위 halt/다른 전략 보존, 명시 paren
 미완성 초안11파일까지 포함한 Python 전체 **1532 PASS/2 DESELECTED**, Ubuntu /tmp·clean env·offline guard로 검증했다. [전체 스냅샷 검증](../runs/20261020-production/worktree-snapshot-validation.json). 이전 완료 기능만의1419 PASS와 범위를 구분한다. 단계 집계14완성/23미완성/14미착수는 유지하며 초안이나 실운영 gate를 완료로 승격하지 않는다. 기존 대시보드 소스를 주 저장소에 포함했고 별도 frontend build는 재실행하지 않았다.
 
 이 문서가 포함된 Git commit이 전체 스냅샷 경계이며 실제 SHA/원격 반영은 git log와 origin/main에서 확인한다. 커밋·푸시 후 사용자 지정 .freebuff/repo-analysis-review.md를 읽으며 새로운 제품 티켓은 시작하지 않는다.
+
+### 2026-10-21 외부 리뷰 확인·필수 rollback 도구 복원
+
+전체 스냅샷 adaf3bf를 origin/main에 반영한 뒤 사용자 지정 .freebuff/repo-analysis-review.md를 읽었다. 보고서의 P02 rollback 보존 지적을 기존 CLEANUP_DELETE_LIST_20261019.md 및 활성 P02 상태 문서와 대조했다. deploy_p02_schema.py를 사용 종료 도구로 분류한 것은 잘못이므로 90847f8의 원본 바이트 그대로 복원해 보존한다. 실제 rollback/배포는 실행하지 않았다. 기존 패키지 p02-server-package.tar.gz도 남아 있다.
+
+정리 수치는 최초 계획30772 + raw 중복37 = 휴지통 이동30809다. 그중 필수 도구1개를 Git에서 복원했으므로 현재 부재 파일은30808개, 마지막 검증 사본555개는 trashbin에 있다. 계획/실행/복원 차이를 cleanup_summary.json에 명시했다.
+
+미착수 리뷰 후속은 ingest의 읽기 전 UTF-8 byte 상한, Paper strategy pause/halt의 자동 취소 의미, dashboard 계정 수 제한의 원자성, 미사용 UI catalog 축소다. 보고서는 Python1532 PASS가 dashboard 검증이나 운영 승인이 아니라고 명시하며, checkpoint frame-budget 지적은 철회했다. 이 후속 제품 변경은 착수하지 않았다.

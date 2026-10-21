@@ -29,3 +29,7 @@ Ubuntu /tmp credential-free 복사본에서 clean env/guard로만 제품 검증�
 ## 최신 정리·커밋 작업
 
 과거 임시 검증 소스·중간 결과는 휴지통으로 정리했고 마지막 검증 사본은 ignored trashbin/worktree-snapshot-20261021에 있다. 사용자가 직접 삭제할 수 있다. [정리·전체 검증 경계](../runs/20261020-production/worktree-snapshot-validation.json). Git 푸시 후 .freebuff/repo-analysis-review.md를 읽는다. 제품 실행은 계속 VN14B 종료 상태다.
+
+## 외부 리뷰 확인 후 정리 정정
+
+.freebuff/repo-analysis-review.md 확인 완료. 활성 P02의 rollback 도구 deploy_p02_schema.py는 필수이므로 원본 Git90847f8에서 복원했다. 이는 정리 오류 정정이며 rollback/배포 실행이 아니다. 향후 정리에서 삭제하지 않는다. ingest byte 제한·Paper pause/halt 취소 의미·계정 수 원자성·미사용 UI는 검토 후속으로만 남겼고 새 제품 작업은 시작하지 않았다.
