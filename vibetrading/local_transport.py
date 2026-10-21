@@ -79,8 +79,8 @@ class _Envelope:
     reason: str = ""
 
 
-_KINDS = {"HELLO", "HELLO_ACK", "DATA", "ACK", "RESUME", "PING", "GAP"}
-_PHASES = {"", "RECEIVED", "APPLIED", "DURABLE", "RESUMED", "REJECTED", "PONG", "GAP"}
+_KINDS = {"HELLO", "HELLO_ACK", "DATA", "REPLAY", "ACK", "RESUME", "QUERY", "COMMIT", "PING", "GAP"}
+_PHASES = {"", "RECEIVED", "APPLIED", "DURABLE", "RESUMED", "REJECTED", "PONG", "GAP", "QUERY", "BLOCKED"}
 _FIELDS = {"v", "kind", "session", "producer", "incarnation", "sequence", "payload_size", "digest", "phase", "reason"}
 
 
@@ -100,8 +100,8 @@ def _header(envelope: _Envelope, budgets: TransportBudgets) -> bytes:
             or any(x not in "0123456789abcdef" for x in envelope.session)
             or not isinstance(envelope.reason, str) or len(envelope.reason.encode("utf-8")) > 256
             or type(envelope.payload) is not bytes or len(envelope.payload) > budgets.max_frame_bytes
-            or (envelope.kind == "DATA" and not envelope.payload)
-            or (envelope.kind != "DATA" and envelope.payload)):
+            or (envelope.kind in {"DATA", "REPLAY"} and not envelope.payload)
+            or (envelope.kind not in {"DATA", "REPLAY"} and envelope.payload)):
         raise TransportError("invalid_header_or_payload")
     if (not isinstance(envelope.digest, str) or len(envelope.digest) != 64
             or any(x not in "0123456789abcdef" for x in envelope.digest)):
@@ -149,7 +149,8 @@ async def read_frame(reader: asyncio.StreamReader, budgets: TransportBudgets, *,
                             parse_constant=lambda value: (_ for _ in ()).throw(TransportError("nonfinite_header")))
     except (ValueError, UnicodeError) as error:
         raise TransportError("invalid_json_header") from error
-    if (not isinstance(header, dict) or set(header) != _FIELDS or type(header["v"]) is not int
+    if (not isinstance(header, dict) or set(header) != _FIELDS or type(header["kind"]) is not str
+            or type(header["v"]) is not int
             or header["v"] != 1 or type(header["payload_size"]) is not int
             or not 0 <= header["payload_size"] <= budgets.max_frame_bytes):
         raise TransportError("invalid_header")
@@ -159,20 +160,23 @@ async def read_frame(reader: asyncio.StreamReader, budgets: TransportBudgets, *,
         raise TransportError("invalid_cursor") from error
     # Validate every bounded header field before reading a possibly large body.
     envelope = _Envelope(header["kind"], header["session"], cursor,
-        b"x" if header["payload_size"] and header["kind"] == "DATA" else b"",
+        b"x" if header["payload_size"] and header["kind"] in {"DATA", "REPLAY"} else b"",
         header["digest"], header["phase"], header["reason"])
     _header(envelope, budgets)
     if _allowed_kinds is not None and header["kind"] not in _allowed_kinds:
         raise TransportError("message_kind_not_allowed_on_lane")
-    if header["kind"] != "DATA" and header["payload_size"] != 0:
+    if header["kind"] not in {"DATA", "REPLAY"} and header["payload_size"] != 0:
         raise TransportError("control_payload_forbidden")
-    if header["kind"] == "DATA" and header["payload_size"] == 0:
+    if header["kind"] in {"DATA", "REPLAY"} and header["payload_size"] == 0:
         raise TransportError("empty_market_frame")
-    if _reserve is not None and header["kind"] == "DATA":
+    if _reserve is not None and header["kind"] in {"DATA", "REPLAY"}:
         _reserve(4 + size + header["payload_size"])
     payload = await reader.readexactly(header["payload_size"])
     # ACK digest describes its referenced market payload, not the empty body.
-    if header["kind"] != "ACK" and hashlib.sha256(payload).hexdigest() != header["digest"]:
+    # COMMIT carries an empty body but references the digest at its high-water
+    # cursor, just as ACK refers to the applied payload. Other frames prove
+    # their own body digest here.
+    if header["kind"] not in {"ACK", "COMMIT"} and hashlib.sha256(payload).hexdigest() != header["digest"]:
         raise TransportError("checksum_mismatch")
     return _Envelope(header["kind"], header["session"], cursor, payload,
                      header["digest"], header["phase"], header["reason"])
@@ -252,6 +256,7 @@ class _Session:
     received: EngineCursor | None = None
     applied: EngineCursor | None = None
     history: OrderedDict | None = None
+    recovery_high_water: EngineCursor | None = None
 
 
 def _profile(profile, endpoint):
@@ -269,12 +274,14 @@ def _profile(profile, endpoint):
 
 class LocalTransportServer:
     def __init__(self, endpoint, *, budgets: TransportBudgets, on_frame, on_gap, on_resume,
+                 on_replay=None, on_recovery_query=None, on_recovery_commit=None,
                  allowed_uid: int | None = None, profile="linux-uds"):
         _profile(profile, endpoint)
         if profile == "linux-uds" and (type(allowed_uid) is not int or allowed_uid < 0):
             raise TransportError("explicit_allowed_peer_uid_required")
         self.endpoint, self.budgets, self.profile = endpoint, budgets, profile
         self.on_frame, self.on_gap, self.on_resume = on_frame, on_gap, on_resume
+        self.on_replay,self.on_recovery_query,self.on_recovery_commit=on_replay,on_recovery_query,on_recovery_commit
         self.allowed_uid = allowed_uid
         self.addresses = {}
         self._servers, self._connections, self._sessions = [], set(), {}
@@ -405,7 +412,7 @@ class LocalTransportServer:
                     envelope = await read_frame(connection.reader, self.budgets,
                         _reserve=lambda size: self._reserve(connection, size),
                         _on_start=lambda: setattr(connection, "frame_started", time.monotonic()),
-                        _allowed_kinds={"DATA"} if connection.lane == "data" else {"PING", "RESUME", "GAP"})
+                        _allowed_kinds={"DATA", "REPLAY"} if connection.lane == "data" else {"PING", "RESUME", "QUERY", "COMMIT", "GAP"})
                     connection.last_activity = time.monotonic()
                     if (envelope.session != session.identity or
                         (envelope.cursor.producer, envelope.cursor.incarnation) !=
@@ -413,7 +420,7 @@ class LocalTransportServer:
                         raise TransportError("session_or_incarnation_changed")
                     if connection.lane == "control":
                         self._control(session, envelope)
-                    elif envelope.kind == "DATA":
+                    elif envelope.kind in {"DATA", "REPLAY"}:
                         self._data(session, envelope)
                     else:
                         raise TransportError("market_lane_requires_data")
@@ -447,17 +454,91 @@ class LocalTransportServer:
             if session.busy or session.data is None:
                 self._send(session, "REJECTED", envelope.cursor, reason="resume_busy_or_missing_data_lane")
                 return
-            if _call(self.on_resume, envelope.cursor) is not True:
+            result=_call(self.on_resume,envelope.cursor)
+            if isinstance(result,AppliedReceipt):
+                if result.cursor!=envelope.cursor:
+                    self._send(session,"REJECTED",envelope.cursor,reason="resume_checkpoint_mismatch")
+                    return
+                resume_digest=result.digest
+            elif result is True:
+                # Compatibility with the original boolean RESUME callback.
+                resume_digest=hashlib.sha256(b"").hexdigest()
+            else:
                 self._send(session, "REJECTED", envelope.cursor, reason="resume_not_verified")
                 return
             session.received = session.applied = envelope.cursor
             session.history.clear()
             session.valid = True
-            self._send(session, "RESUMED", envelope.cursor)
+            self._send(session, "RESUMED", envelope.cursor,resume_digest)
+        elif envelope.kind == "QUERY":
+            high_water=envelope.cursor
+            if session.busy or session.data is None or self.on_recovery_query is None:
+                self._send(session,"REJECTED",high_water,reason="recovery_query_unavailable")
+                return
+            try:
+                result=_call(self.on_recovery_query,high_water)
+            except Exception:
+                self._send(session,"REJECTED",high_water,reason="recovery_query_failed")
+                return
+            if (not isinstance(result,AppliedReceipt)
+                    or (result.cursor.producer,result.cursor.incarnation)!=(high_water.producer,high_water.incarnation)
+                    or result.cursor.sequence>high_water.sequence):
+                self._send(session,"REJECTED",high_water,reason="recovery_checkpoint_unverified")
+                return
+            session.checkpoint=high_water
+            session.recovery_high_water=high_water
+            session.received=session.applied=result.cursor
+            session.history.clear()
+            session.history[result.cursor.sequence]=result.digest
+            session.valid=False
+            self._send(session,"QUERY",result.cursor,result.digest)
+        elif envelope.kind == "COMMIT":
+            high_water=envelope.cursor
+            if (session.recovery_high_water!=high_water or session.applied!=high_water
+                    or session.history.get(high_water.sequence)!=envelope.digest
+                    or self.on_recovery_commit is None):
+                self._send(session,"BLOCKED",high_water,envelope.digest,reason="recovery_not_ready")
+                return
+            try:
+                committed=_call(self.on_recovery_commit,high_water,envelope.digest)
+            except Exception:
+                self._invalidate(session,"recovery_commit_failed")
+                self._send(session,"BLOCKED",high_water,envelope.digest,reason="recovery_commit_failed")
+                return
+            if committed is not True:
+                self._send(session,"BLOCKED",high_water,envelope.digest,reason="owner_readiness_blocked")
+                return
+            session.valid=True
+            session.checkpoint=high_water
+            self._send(session,"RESUMED",high_water,envelope.digest)
         else:
             raise TransportError("invalid_control_message")
 
     def _data(self, session, envelope):
+        if envelope.kind == "REPLAY":
+            if (session.valid or session.recovery_high_water is None or session.applied is None
+                    or envelope.cursor.sequence != session.applied.sequence+1
+                    or envelope.cursor.sequence > session.recovery_high_water.sequence
+                    or self.on_replay is None):
+                self._send(session,"REJECTED",envelope.cursor,envelope.digest,"replay_outside_recovery")
+                return
+            frame=RecoveryFrame(envelope.cursor,envelope.payload)
+            session.received=frame.cursor;session.busy=True
+            try:
+                result=_call(self.on_replay,frame)
+                if not isinstance(result,AppliedReceipt) or result.cursor!=frame.cursor or result.digest!=frame.digest:
+                    raise TransportError("replay_application_receipt_mismatch")
+                session.applied=frame.cursor
+                session.history[frame.cursor.sequence]=frame.digest
+                while len(session.history)>self.budgets.max_records:
+                    session.history.popitem(last=False)
+                self._send(session,"APPLIED",frame.cursor,frame.digest)
+            except Exception as error:
+                self._invalidate(session,"replay_application_failed")
+                self._send(session,"REJECTED",frame.cursor,frame.digest,type(error).__name__)
+            finally:
+                session.busy=False
+            return
         if not session.valid or session.received is None:
             self._send(session, "REJECTED", envelope.cursor, envelope.digest, "explicit_resume_required")
             return
@@ -554,9 +635,12 @@ class LocalTransportClient:
         self._ack_bytes = 0
         self._hello = None
         self._resume = None
+        self._query = None
+        self._commit = None
         self._watchdog = None
         self._accepted = self._applied = self._failed = 0
         self._faulted = False
+        self._last_ack_phase = self._last_ack_reason = self._last_error_type = ""
 
     async def connect(self):
         if self._closed or self._connections:
@@ -614,15 +698,16 @@ class LocalTransportClient:
             if not self._connections["control"].out.put(raw):
                 self._connections["control"].stop()
 
-    def try_send(self, frame: RecoveryFrame) -> bool:
-        if self._closed or self._faulted or not self.valid or "data" not in self._connections:
+    def try_send(self, frame: RecoveryFrame, *, replay=False) -> bool:
+        if self._closed or self._faulted or "data" not in self._connections or (not replay and not self.valid):
             return False
         try:
             _cursor_valid(frame.cursor)
             if ((frame.cursor.producer, frame.cursor.incarnation) != (self.cursor.producer, self.cursor.incarnation)
                     or frame.cursor.sequence != self.cursor.sequence + 1):
                 raise TransportError("producer_cursor_gap_or_restart")
-            raw = encode_frame(frame.cursor, frame.payload, session=self.session, budgets=self.budgets)
+            raw = encode_frame(frame.cursor, frame.payload, session=self.session, budgets=self.budgets,
+                               kind="REPLAY" if replay else "DATA")
             retained = sum(len(item[0]) for item in self._pending.values())
             if self._pending and time.monotonic() - next(iter(self._pending.values()))[2] > self.budgets.max_age_seconds:
                 raise TransportError("market_oldest_age_exceeded")
@@ -677,13 +762,26 @@ class LocalTransportClient:
                         or (envelope.cursor.producer, envelope.cursor.incarnation) != (self.cursor.producer, self.cursor.incarnation)):
                     raise TransportError("invalid_ack_identity")
                 ack = TransportAck(envelope.phase, envelope.cursor, envelope.digest, envelope.reason)
+                self._last_ack_phase,self._last_ack_reason=ack.phase,ack.reason
+                expected_control_rejection = False
                 if ack.phase == "PONG" and ack.reason.startswith("hello_"):
                     if self._hello is not None and not self._hello.done():
                         self._hello.set_result(ack)
                     continue
+                if ack.phase in {"QUERY","REJECTED"} and self._query is not None:
+                    if not self._query.done():
+                        self._query.set_result(ack)
+                        expected_control_rejection = ack.phase == "REJECTED"
+                    continue
+                if ack.phase in {"RESUMED","BLOCKED","REJECTED"} and self._commit is not None:
+                    if not self._commit.done():
+                        self._commit.set_result(ack)
+                        expected_control_rejection = ack.phase == "REJECTED"
+                    continue
                 if ack.phase in {"RESUMED", "REJECTED"} and self._resume is not None:
                     if not self._resume.done():
                         self._resume.set_result(ack)
+                        expected_control_rejection = ack.phase == "REJECTED"
                     continue
                 if ack.phase == "GAP":
                     self._invalidate(ack.reason or "server_gap", notify=False)
@@ -700,7 +798,7 @@ class LocalTransportClient:
                 elif ack.phase == "DURABLE":
                     if self._receipts.get(ack.cursor.sequence) != ack.digest:
                         raise TransportError("durable_receipt_not_applied")
-                elif ack.phase == "REJECTED":
+                elif ack.phase == "REJECTED" and not expected_control_rejection:
                     self._invalidate(ack.reason or "rejected", notify=False)
                 elif ack.phase != "PONG":
                     raise TransportError("invalid_ack_phase")
@@ -712,6 +810,7 @@ class LocalTransportClient:
         except asyncio.CancelledError:
             raise
         except (asyncio.IncompleteReadError, ConnectionError, OSError, ValueError, TransportError) as error:
+            self._last_error_type=type(error).__name__
             self._invalidate(str(error)[:128] or type(error).__name__, notify=False)
         finally:
             if not self._closed:
@@ -750,6 +849,55 @@ class LocalTransportClient:
         finally:
             self._resume = None
 
+    async def query_cursor(self, high_water: EngineCursor) -> TransportAck:
+        _cursor_valid(high_water)
+        if (self._closed or self._faulted or len(self._connections)!=2 or self._query is not None
+                or self._pending or (high_water.producer,high_water.incarnation)!=(self.cursor.producer,self.cursor.incarnation)):
+            raise TransportError("query_requires_same_idle_producer_incarnation")
+        self.valid=False
+        self._query=asyncio.get_running_loop().create_future()
+        try:
+            raw=encode_frame(high_water,b"",session=self.session,budgets=self.budgets,
+                             kind="QUERY",digest=hashlib.sha256(b"").hexdigest())
+            if not self._connections["control"].out.put(raw):
+                raise TransportError("control_admission_overflow")
+            ack=await asyncio.wait_for(self._query,self.budgets.io_timeout_seconds)
+            if ack.phase!="QUERY" or ack.cursor.sequence>high_water.sequence:
+                raise TransportError("recovery_query_result_invalid")
+            self.cursor=ack.cursor
+            self._receipts.clear()
+            return ack
+        except BaseException:
+            self._invalidate("recovery_query_result_uncertain")
+            raise
+        finally:
+            self._query=None
+
+    async def commit_recovery(self, high_water: EngineCursor, digest: str) -> bool:
+        _cursor_valid(high_water)
+        if (self._closed or self._faulted or len(self._connections)!=2 or self._commit is not None
+                or self._pending or (high_water.producer,high_water.incarnation)!=(self.cursor.producer,self.cursor.incarnation)
+                or high_water.sequence!=self.cursor.sequence):
+            raise TransportError("recovery_commit_requires_exact_idle_high_water")
+        self._commit=asyncio.get_running_loop().create_future()
+        try:
+            raw=encode_frame(high_water,b"",session=self.session,budgets=self.budgets,
+                             kind="COMMIT",digest=digest)
+            if not self._connections["control"].out.put(raw):
+                raise TransportError("control_admission_overflow")
+            ack=await asyncio.wait_for(self._commit,self.budgets.io_timeout_seconds)
+            if ack.phase=="BLOCKED":return False
+            if ack.phase!="RESUMED" or ack.cursor!=high_water or ack.digest!=digest:
+                raise TransportError("recovery_commit_result_invalid")
+            self.cursor=high_water
+            self.valid=True
+            return True
+        except BaseException:
+            self._invalidate("recovery_commit_result_uncertain")
+            raise
+        finally:
+            self._commit=None
+
     async def heartbeat(self) -> bool:
         if self._closed or "control" not in self._connections:
             return False
@@ -780,7 +928,9 @@ class LocalTransportClient:
             "failed": self._failed, "pending": len(self._pending),
             "retained_bytes": sum(len(value[0]) for value in self._pending.values()),
             "oldest_age_seconds": now - next(iter(self._pending.values()))[2] if self._pending else 0,
-            "ack_records": self._acks.qsize(), "ack_bytes": self._ack_bytes}
+            "ack_records": self._acks.qsize(), "ack_bytes": self._ack_bytes,
+            "last_ack_phase":self._last_ack_phase,"last_ack_reason":self._last_ack_reason,
+            "last_error_type":self._last_error_type,"faulted":self._faulted}
 
     async def close(self):
         if self._closed:

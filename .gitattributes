@@ -1,0 +1,4 @@
+# Preserve validation evidence bytes and recorded hashes across checkouts.
+docs/refactoring/runs/20261020-production/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+docs/refactoring/runs/20261020-vnext/vn00-package/*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+docs/refactoring/vnext/*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

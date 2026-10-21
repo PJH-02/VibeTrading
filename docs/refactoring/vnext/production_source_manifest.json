@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "validated_candidate": "completed-market-v1",
+  "validation_scope": "FULL_OFFLINE_REGRESSION_OF_SELECTED_COMPLETED_CODE_ONLY",
+  "source_set_sha256": "d4a4f02777d56c2f30b53d52db76021da7aa1fbe8adc4d03a179a2436863625b",
+  "file_count": 539,
+  "immutable_manifest": "docs/refactoring/runs/20261020-production/completed-market-v1-source.json",
+  "manifest_sha256": "d60eefafbe83d0d70e5adfea98752b0135b4425e3de98592f22a1ba4378f2d7e",
+  "base_git_head": "6443eb94133bc0075b0860885829e112adc657c8",
+  "workspace_source_hashes_match": true,
+  "excluded_work_in_progress": [
+    "vibetrading/trading_contracts.py",
+    "vibetrading/portfolio_ledger.py",
+    "vibetrading/paper_execution.py",
+    "vibetrading/strategy_runtime.py",
+    "vibetrading/perp_execution.py",
+    "vibetrading/execution_groups.py",
+    "tests/refactoring/test_portfolio_ledger.py",
+    "tests/refactoring/test_paper_execution.py",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_perp_execution.py",
+    "tests/refactoring/test_execution_groups.py"
+  ],
+  "server_parity": false,
+  "commit_allowed": true,
+  "commit_authorization": "Latest human request explicitly says commit completed work; local commit only, no deployment or push",
+  "deployment_allowed": false,
+  "live_active": false
+}

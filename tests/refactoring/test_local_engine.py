@@ -54,6 +54,121 @@ def build(*, fresh=True, budgets=None, hot_path=None, callbacks=(), producer_pro
 
 
 @pytest.mark.asyncio
+async def test_post_apply_hook_receives_frozen_epoch_snapshot_and_phase():
+    received = []
+    hot = HotPathStore()
+    engine = LocalMarketEngine(producer_providers={PRODUCER: PROVIDER}, budgets=limits(),
+        on_invalidate=lambda *args: None, hot_path=hot,
+        post_apply_callbacks=(lambda result, snapshot: received.append((result, snapshot)),),
+        snapshot_clock=lambda: 123456789, fresh_starts={PRODUCER: INCARNATION},
+        verified_fresh_start=True)
+    try:
+        result = engine.on_frame(frame(1))
+        assert len(received) == 1
+        applied, snapshot = received[0]
+        assert applied.event.event_id == "event-1"
+        assert (applied.engine_incarnation, applied.apply_seq) == snapshot.cursor
+        assert snapshot.now_ns == 123456789 and snapshot.phase == "LIVE"
+        assert result.cursor == cursor(1)
+        with pytest.raises((AttributeError, TypeError)):
+            snapshot.phase = "REPLAY"
+    finally:
+        await engine.close()
+
+
+def test_post_apply_hook_requires_hot_path_and_separate_epoch_clock():
+    with pytest.raises(ValueError, match="Post-apply callbacks"):
+        LocalMarketEngine(producer_providers={PRODUCER: PROVIDER}, budgets=limits(),
+            on_invalidate=lambda *args: None, state_callbacks=(lambda *args: None,),
+            post_apply_callbacks=(lambda *args: None,), snapshot_clock=lambda: 1)
+    with pytest.raises(ValueError, match="Post-apply callbacks"):
+        LocalMarketEngine(producer_providers={PRODUCER: PROVIDER}, budgets=limits(),
+            on_invalidate=lambda *args: None, hot_path=HotPathStore(),
+            post_apply_callbacks=(lambda *args: None,))
+
+
+def test_query_replay_and_commit_require_exact_digest_and_owner_readiness():
+    engine, _, _ = build()
+    try:
+        proof = engine.query_cursor(PRODUCER)
+        assert proof.cursor == cursor(0) and proof.digest
+        engine.begin_recovery(proof.cursor, cursor(1), verified_checkpoint=True)
+        applied = engine.apply_replay(frame(1))
+        assert applied.cursor == cursor(1)
+        assert not engine.commit_recovery(cursor(1), "0" * 64, ready=True)
+        assert not engine.commit_recovery(cursor(1), applied.digest, ready=False)
+        assert engine.stats["feeds"][PRODUCER]["mode"] == "WARMING"
+        assert engine.commit_recovery(cursor(1), applied.digest, ready=True)
+        assert engine.request_resume(cursor(1))
+    finally:
+        asyncio.run(engine.close())
+
+
+@pytest.mark.asyncio
+async def test_isolated_source_retains_healthy_interleaved_delivery_after_other_feed_gap():
+    other = "synthetic-second"
+    engine, invalid, _ = build(producer_providers={PRODUCER: PROVIDER, other: PROVIDER})
+    source = engine.event_source(required_producers=())
+    try:
+        first = frame()
+        second_instrument = event().instrument.model_copy(update={"raw_symbol": "229200", "std_symbol": "229200"})
+        engine.on_frame(first)
+        engine.on_frame(frame(producer=other, changes={"event_id": "other-1", "instrument": second_instrument}))
+        engine.on_gap(cursor(1, producer=other), "disconnected")
+        assert engine.stats["discarded"] == 1
+        assert engine.stats["queued_records"] == 1
+        assert engine.stats["queued_bytes"] == len(first.payload)
+        assert engine.stats["feeds"][PRODUCER]["mode"] == "LIVE"
+        assert [name for name, _ in invalid] == [other]
+        assert (await anext(source))["event_id"] == "event-1"
+        engine.on_frame(frame(2))
+        assert (await anext(source))["event_id"] == "event-2"
+        assert engine.stats["queued_bytes"] == 0
+    finally:
+        await source.aclose()
+        await engine.close()
+
+
+def test_partial_state_failure_poison_cannot_be_cleared_by_boolean_restore_claim():
+    engine, _, _ = build(post_apply_callbacks=(lambda result, snapshot: (_ for _ in ()).throw(RuntimeError("hook failed")),),
+                         snapshot_clock=lambda: 1_800_000_000_000_000_000)
+    try:
+        with pytest.raises(RuntimeError,match="hook failed"):
+            engine.on_frame(frame(1))
+        assert engine.stats["feeds"][PRODUCER]["state_poisoned"]
+        with pytest.raises(EngineError,match="recovery_cursor_unavailable"):
+            engine.begin_delivery_recovery(cursor(1))
+        with pytest.raises(EngineError,match="same_engine_state_restore_unsupported"):
+            engine.authorize_state_restore(cursor(0),verified=True)
+        with pytest.raises(EngineError,match="recovery_cursor_unavailable"):
+            engine.query_cursor(PRODUCER)
+        with pytest.raises(EngineError,match="checkpoint_high_water_unverified"):
+            engine.begin_recovery(cursor(0),cursor(1),verified_checkpoint=True)
+        assert engine.stats["feeds"][PRODUCER]["state_poisoned"]
+    finally:
+        asyncio.run(engine.close())
+
+
+@pytest.mark.asyncio
+async def test_explicit_source_dependencies_and_unknown_authority_failure_remain_fail_closed():
+    other = "synthetic-second"
+    engine, _, _ = build(producer_providers={PRODUCER: PROVIDER, other: PROVIDER})
+    source = engine.event_source(required_producers=(PRODUCER,))
+    try:
+        engine.on_gap(cursor(producer=other), "unrelated")
+        engine.on_frame(frame())
+        assert (await anext(source))["event_id"] == "event-1"
+        engine.on_frame(frame(2))
+        engine.invalidate("unknown-authority", "state_identity_unproven")
+        assert engine.stats["queued_records"] == engine.stats["queued_bytes"] == 0
+        with pytest.raises(EngineError, match="source_invalid"):
+            await anext(source)
+    finally:
+        await source.aclose()
+        await engine.close()
+
+
+@pytest.mark.asyncio
 async def test_exact_state_application_one_etf_input_and_idempotent_cursor_duplicate():
     engine, invalid, _ = build()
     source = engine.event_source()

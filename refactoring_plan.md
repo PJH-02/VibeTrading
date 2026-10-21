@@ -1,5 +1,11 @@
 # VibeTrading 서버 리팩토링 실행 계획
 
+2026-10-21 최신 작업 지시: [단계별 완료·미완료·미착수 및 다음 작업](docs/refactoring/vnext/15_stage_status_and_next_steps.md)을 기준으로 완료한 로컬 구현만 선별 커밋한다. 상위 P00~P12의 운영 완료와 하위 VN/TX 구현 완료는 별도로 표시한다. 이번 명시적 완료분 커밋 요청은 아래 과거 커밋 보류 기록보다 최신 지시이며, 서버 배포·동일성 확인·미완성 코드 커밋을 허용하는 뜻은 아니다.
+
+2026-10-21 재개: v6 전체 오프라인 회귀를 고정하고 VN05의 배치 count/byte/deadline 구현 및 v7 영향 범위 회귀를 마쳤다. 현재 VN06의 시장 상태 체크포인트 codec을 구현·독립 검토한다. 단계별 파일/함수·검증·다음 작업은 [production tickets](docs/refactoring/vnext/tickets_production.json), 정확 후보와 결과는 [검증 상태](docs/refactoring/vnext/production_validation.json)에 저장한다. VN06/VN07 원자 복구·실제 운영 성능 gate는 아직 완료되지 않았다.
+
+2026-10-20 후속 범위: NATS-free + 공통 Multi-Asset/Paper 실행 구현은 [VN/TX 통합 계획](docs/refactoring/vnext/11_integrated_vn_tx_plan.md), [production tickets](docs/refactoring/vnext/tickets_production.json), [현재 구현·시험·재개점](docs/refactoring/vnext/14_agent_execution_handoff.md)을 따른다. 아래 P/KR 이력은 보존한다. 이번 권한은 로컬 구현·격리 시험이며 서버 배포/외부 주문/Live 활성/커밋 권한으로 해석하지 않는다. 한국장 누락 분봉 작업은 계속 보류한다. 전체 단계 완료 및 운영 준비 여부는 정확 후보 증거와 별도 gate로 판정한다.
+
 작성일: 2026-10-18 KST · 갱신: 2026-10-19 · 버전: 1.2 · 상태: **서버 기준 구현·격리 검증, 운영 전환 전**
 
 최신 사용자 결정: 최종 운영 구조는 **NATS를 사용하지 않는다**. 30분을 넘는 독립 실행도 필수다. 기존 NATS 코드 보존은 전환 호환성 목적이며 최종 아키텍처의 필수 의존성이 아니다.

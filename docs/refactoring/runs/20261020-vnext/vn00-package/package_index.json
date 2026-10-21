@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "task_id": "VN00",
+  "package_kind": "local_candidate_and_historical_read_only_identity_index",
+  "candidate": {
+    "name": "production-v9",
+    "frozen_copy": "tmp/refactoring/20261020-production/production-v9",
+    "git_head": "6443eb94133bc0075b0860885829e112adc657c8",
+    "source_set_sha256": "8f29817700632248741789f1cf703b18e9aff50ec3c59e2c5f5437bffff8bebf",
+    "file_count": 547,
+    "source_rehash": {
+      "status": "MATCH",
+      "files_checked": 547,
+      "missing_files": 0,
+      "hash_mismatches": 0
+    },
+    "manifest": {
+      "path": "docs/refactoring/runs/20261020-production/production-v9-source.json",
+      "sha256": "438c5f3f054e1431abaa107441599ade60a45f233caae24d51ac7d4607972c0d"
+    },
+    "validation": {
+      "path": "docs/refactoring/runs/20261020-production/production-v9-validation.json",
+      "sha256": "121a3cbbd92a630cfb46c1740dea79f96180df60da27ad531f2358458bda4be7",
+      "scope": "Credential-free copies with cooperative guard; not an OS sandbox or production proof",
+      "counts": {
+        "windows": {"tests": 116, "passed": 112, "skipped": 4, "failures": 0, "errors": 0},
+        "linux": {"tests": 116, "passed": 116, "skipped": 0, "failures": 0, "errors": 0}
+      },
+      "production_ready": false,
+      "live_active": false,
+      "open_gates": [
+        "server_source_parity",
+        "account_owner_legacy_fencing",
+        "full_checkpoint_and_continuous_input_recovery",
+        "venue_transport_and_private_lifecycle",
+        "actual_live_input_paper",
+        "early_latency_and_capacity",
+        "30min_nats_free",
+        "24h_cloud_outage",
+        "72h_stability",
+        "cutover"
+      ]
+    },
+    "review": {
+      "path": "docs/refactoring/runs/20261020-production/vn06-review.json",
+      "sha256": "9698f26e7b7566617cd1fe82c4ea7d6e14d75d78c2a0acddc52f61752c7a41cf",
+      "scope": "CODEC_ONLY; reviewer did not run tests",
+      "unresolved_blocking_findings": 0,
+      "remaining_authority_gates": [
+        "VN07 atomic engine capture and verified cursor vector",
+        "Global delta order and state-only replay/handoff proof",
+        "Owner/strategy/pending execution recovery",
+        "LIVE promotion and retained reader/GC"
+      ]
+    },
+    "classification": "last frozen scoped-validated candidate; not a full-regression or production-ready claim"
+  },
+  "historical_read_only_metadata": [
+    {
+      "kind": "server/container identity snapshot",
+      "path": "docs/refactoring/vnext/server_readonly_identity.json",
+      "sha256": "07f1b3bbec71c2d584de616f5d8a8a3246bd90cd6c4f22f225105f8e8de74fa1",
+      "observed_utc": "2026-10-20T06:30:38.488966+00:00",
+      "mode": "READ_ONLY_NOT_CUTOVER_PROOF",
+      "summary": {"container_count": 14, "observed_running": 14},
+      "classification": "historical observation only; does not establish current server identity or mounts"
+    },
+    {
+      "kind": "local/server source comparison",
+      "path": "docs/refactoring/vnext/source_comparison.json",
+      "sha256": "2a9fdb02f7ebd14f86278b7ee42b19e7dd417a18e4e8ce2ce4e3ba722c88bef8",
+      "observed_utc": "2026-10-20T06:30:38.488966+00:00",
+      "counts": {"EXACT": 79, "DIFFERENT": 20, "LF_EQUIVALENT": 14, "LOCAL_ONLY": 18},
+      "not_verified": [
+        "Full dependencies/mount content/account process inventory",
+        "Writer connection PRAGMAs",
+        "Non-Python runtime configuration semantic equivalence",
+        "Source equivalence to archived package or active orders"
+      ],
+      "classification": "historical comparison only; current runtime.yml drift remains unverified"
+    }
+  ],
+  "gate_status": {
+    "frozen_v9_candidate_identity": "VERIFIED",
+    "actual_current_server_identity": "MISSING_UNVERIFIED",
+    "actual_current_mount_contract": "MISSING_UNVERIFIED",
+    "current_runtime_yaml_drift": "MISSING_UNVERIFIED",
+    "current_server_source_parity": "MISSING_UNVERIFIED",
+    "deployment": "BLOCKED"
+  },
+  "builder_assessment": {
+    "path": "scripts/refactoring/build_release_manifest.py",
+    "symbol": "build",
+    "execution": "NOT_RUN",
+    "assessment": "The helper uses Python standard-library file, hash, and JSON operations. It hashes the supplied root's current vibetrading tree and requires a snapshot with current container, image, mount, memory, and CPU fields. The available identity and source-comparison records are historical read-only observations from 2026-10-20, while the requested candidate is the frozen production-v9 copy. Running the helper with those inputs would bind the wrong source tree and cannot establish current-host drift."
+  },
+  "fulfilled": [
+    "Pinned the exact frozen production-v9 source manifest and validation receipt by path and SHA-256.",
+    "Rehashed all 547 files in the frozen production-v9 copy; all match its manifest.",
+    "Pinned the scoped VN06 review and historical read-only identity/comparison inputs by path and SHA-256."
+  ],
+  "still_open": [
+    "Obtain an authorized current server/container identity and mount inventory.",
+    "Compare current runtime.yml and observed mounted source against the frozen candidate.",
+    "Resolve the validation receipt's open production gates; this package does not establish deployment readiness."
+  ],
+  "package_scope": "Small index only; source and validation payloads are referenced in place, not copied.",
+  "deployability": false
+}

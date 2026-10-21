@@ -1,0 +1,470 @@
+{
+  "schema_version": 1,
+  "date_kst": "2026-10-21",
+  "basis": [
+    "refactoring_plan.md P00-P12",
+    "docs/refactoring/vnext/11_integrated_vn_tx_plan.md",
+    "docs/refactoring/vnext/tickets_production.json"
+  ],
+  "definition": "완성은 로컬 기능 수락 범위. 운영/배포/장기 성능 완료와 별개. 부분 단계의 닫힌 하위 기능만 선별 커밋 가능",
+  "counts": {
+    "INCOMPLETE": 24,
+    "COMPLETE_LOCAL_IMPLEMENTATION": 7,
+    "NOT_STARTED": 20
+  },
+  "tasks": [
+    {
+      "task_id": "VN00",
+      "category": "INCOMPLETE",
+      "existing_phase": "P00/P09",
+      "detail": "v9 후보 index만 완료. 현재 서버/image/mount/runtime drift 재고정 필요",
+      "production_ready": false
+    },
+    {
+      "task_id": "VN01",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "existing_phase": "P05/P10",
+      "detail": "bounded first-fault/age/lag와 소유권 회계 구현·검증 완료",
+      "production_ready": false
+    },
+    {
+      "task_id": "VN02",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "existing_phase": "P03/P05",
+      "detail": "feed별 queue/generation/lease 격리와 공통 권위 실패 차단 완료",
+      "production_ready": false
+    },
+    {
+      "task_id": "VN03",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "existing_phase": "P03/P06",
+      "detail": "한국 ETF 입력 의존성/관측 오류 격리 완료. 실제 장중 연속성 증거는 별도",
+      "production_ready": false
+    },
+    {
+      "task_id": "VN04A",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "existing_phase": "P05",
+      "detail": "opt-in 유한 durable spool writer와 엔진 부재 중 기록 완료",
+      "production_ready": false
+    },
+    {
+      "task_id": "VN04B",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "existing_phase": "P05/P06",
+      "detail": "C/H·incarnation/digest 확인·state-only replay·명시 readiness 복구 완료",
+      "production_ready": false
+    },
+    {
+      "task_id": "VN05",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "existing_phase": "P02/P05",
+      "detail": "count/byte/고정 deadline gather 및 합성 A/B 완료. 운영 성능 gate는 열림",
+      "production_ready": false
+    },
+    {
+      "task_id": "VN06",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "existing_phase": "P06",
+      "detail": "native/window/history/dedup codec과 engine-owner 원자 capture 완료",
+      "production_ready": false
+    },
+    {
+      "task_id": "VN07",
+      "category": "INCOMPLETE",
+      "existing_phase": "P06",
+      "detail": "완료: callback-free market checkpoint+최대 한 producer suffix 복구·명시 재개·healthy peer lease 보존. 미완료: 여러 suffix의 global order, ETF/Paper owner/strategy 복구",
+      "production_ready": false
+    },
+    {
+      "task_id": "VN08",
+      "category": "NOT_STARTED",
+      "existing_phase": "P06/P07",
+      "detail": "New reader validates a retained prefix base and v1 data; corrupt/missing segments never become a valid start; GC still disabled.",
+      "production_ready": false
+    },
+    {
+      "task_id": "VN09",
+      "category": "NOT_STARTED",
+      "existing_phase": "P07",
+      "detail": "Only checkpoint+consumer+manifest/facts+remote/lease/retention proven segments eligible; unique copy deletion count=0 under injected crashes.",
+      "production_ready": false
+    },
+    {
+      "task_id": "VN10",
+      "category": "NOT_STARTED",
+      "existing_phase": "P04/P09",
+      "detail": "Cooperating duplicate owners across alternate DB paths rejected; Mock and Mock2 remain separate; lease failure leaves account closed.",
+      "production_ready": false
+    },
+    {
+      "task_id": "VN11",
+      "category": "NOT_STARTED",
+      "existing_phase": "P04",
+      "detail": "Guarded stage requires evidence; duplicate immutable intent/evidence collision rejected; commit failure cannot submit; existing cumulative fill reservations unchanged.",
+      "production_ready": false
+    },
+    {
+      "task_id": "VN12",
+      "category": "NOT_STARTED",
+      "existing_phase": "P04",
+      "detail": "ACK after partial/full fill never regresses terminal state/accounting; cancel/fill cumulative effects applied once; no unsupported broker absence inference.",
+      "production_ready": false
+    },
+    {
+      "task_id": "VN13",
+      "category": "INCOMPLETE",
+      "existing_phase": "P03/P05",
+      "detail": "단일 apply/shared snapshot Paper fixture 연결만 구현. lifecycle·강한 격리·실제 지속 운용 미완료",
+      "production_ready": false
+    },
+    {
+      "task_id": "VN14A",
+      "category": "NOT_STARTED",
+      "existing_phase": "P04/P08",
+      "detail": "Duplicate command effect once; scoped resume cannot reopen broader halt; pause/halt/reduce-only semantics approved before editing.",
+      "production_ready": false
+    },
+    {
+      "task_id": "VN14B",
+      "category": "NOT_STARTED",
+      "existing_phase": "P08",
+      "detail": "Numeric user/chat allowlists and TTL; owner durable receipt before accepted; lost replies/429 cause no repeated effect; status/trade preserved.",
+      "production_ready": false
+    },
+    {
+      "task_id": "VN15",
+      "category": "NOT_STARTED",
+      "existing_phase": "P08/P09",
+      "detail": "Actual/assumed/recovery separated; missing valuation/currency/cashflow evidence shown unavailable; no reporting IO on submit path.",
+      "production_ready": false
+    },
+    {
+      "task_id": "VN16",
+      "category": "NOT_STARTED",
+      "existing_phase": "P07",
+      "detail": "Source corruption isolated and observable; healthy round-robin lanes progress; common ledger/volume error still global and bounded.",
+      "production_ready": false
+    },
+    {
+      "task_id": "VN17",
+      "category": "NOT_STARTED",
+      "existing_phase": "P09",
+      "detail": "Per-role exact digest/mount/config contract with finite combined CPU/RAM/physical-volume budgets, no secret render and no activation.",
+      "production_ready": false
+    },
+    {
+      "task_id": "VN18",
+      "category": "NOT_STARTED",
+      "existing_phase": "P10",
+      "detail": "Execute validation matrix with raw sample counts and source hashes; 30m wall clock/24h cloud/15m Parquet/72h representative coverage never substituted by fixtures.",
+      "production_ready": false
+    },
+    {
+      "task_id": "VN19",
+      "category": "NOT_STARTED",
+      "existing_phase": "P11",
+      "detail": "Reviewable per-role cutover/rollback package with exact commands/digests/accounts/current-ledger compatibility; separate execution authorization.",
+      "production_ready": false
+    },
+    {
+      "task_id": "VN20",
+      "category": "NOT_STARTED",
+      "existing_phase": "P12",
+      "detail": "After actual cutover stabilization, archived legacy backlog and rollback proof, pin remaining callers and split exact retire paths before dispatch; no automatic deletion.",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX00",
+      "category": "INCOMPLETE",
+      "existing_phase": null,
+      "detail": "product/environment별 매핑 조사. 실제 계좌·margin·capability 확인 미완료",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX01",
+      "category": "INCOMPLETE",
+      "existing_phase": null,
+      "detail": "공통 mode/action/product 초안과 Paper 범위. 미완성 TX 구현과 함께 커밋 제외",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX02A",
+      "category": "INCOMPLETE",
+      "existing_phase": null,
+      "detail": "Paper scope owner lease만 구현. 기존 ETF journal/전체 계좌 fencing 미완료",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX02B",
+      "category": "INCOMPLETE",
+      "existing_phase": null,
+      "detail": "Paper virtual/physical 귀속 fixture만 구현",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX02",
+      "category": "INCOMPLETE",
+      "existing_phase": null,
+      "detail": "하위 작업이 진행 중인 집계 단계; 별도 완료로 계산하지 않음",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX03A",
+      "category": "INCOMPLETE",
+      "existing_phase": null,
+      "detail": "cash/isolated-linear Paper만 구현. inverse/hedge/cross-currency/실제 margin 미지원",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX03B",
+      "category": "INCOMPLETE",
+      "existing_phase": null,
+      "detail": "Paper fee/rebate/funding 회계. 실제 margin/equity 대조 미완료",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX03",
+      "category": "INCOMPLETE",
+      "existing_phase": null,
+      "detail": "하위 작업이 진행 중인 집계 단계; 별도 완료로 계산하지 않음",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX04A",
+      "category": "INCOMPLETE",
+      "existing_phase": null,
+      "detail": "matcher durable state/fill dedup 구현. 전체 입력 C/H 연속 복구 미완료",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX04B",
+      "category": "INCOMPLETE",
+      "existing_phase": null,
+      "detail": "인과적 matcher fixture. 실제 live-input Paper/continuous input 복구 미완료",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX04",
+      "category": "INCOMPLETE",
+      "existing_phase": null,
+      "detail": "하위 작업이 진행 중인 집계 단계; 별도 완료로 계산하지 않음",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX05",
+      "category": "INCOMPLETE",
+      "existing_phase": null,
+      "detail": "공유 state Paper runtime fixture. callback hard isolation/전체 lifecycle 미완료",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX07A",
+      "category": "NOT_STARTED",
+      "existing_phase": null,
+      "detail": "Canonical acceptance/fill/cancel/funding/account facts and UNKNOWN/reconciliation contract",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX06A",
+      "category": "INCOMPLETE",
+      "existing_phase": null,
+      "detail": "Binance Perp request/sign/query 매핑만 구현. transport/private lifecycle/실계좌 미완료",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX06B",
+      "category": "INCOMPLETE",
+      "existing_phase": null,
+      "detail": "Arcus Perp request/sign/query 매핑만 구현. transport/private lifecycle/실계좌 미완료",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX06C",
+      "category": "INCOMPLETE",
+      "existing_phase": null,
+      "detail": "GRVT Perp request/sign/query 매핑만 구현. transport/private lifecycle/실계좌 미완료",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX06D",
+      "category": "INCOMPLETE",
+      "existing_phase": null,
+      "detail": "Bybit Perp request/sign/query 매핑만 구현. transport/private lifecycle/실계좌 미완료",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX06E",
+      "category": "INCOMPLETE",
+      "existing_phase": null,
+      "detail": "Hyperliquid request/sign/query 매핑만 구현. 독립 signer nonce 저장소만 완료·선별 커밋",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX06",
+      "category": "INCOMPLETE",
+      "existing_phase": null,
+      "detail": "하위 작업이 진행 중인 집계 단계; 별도 완료로 계산하지 않음",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX07B",
+      "category": "NOT_STARTED",
+      "existing_phase": null,
+      "detail": "Per-venue paginated query/private gap/timeout/cancel reconciliation with UNKNOWN reservations; no absence inference",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX07",
+      "category": "NOT_STARTED",
+      "existing_phase": null,
+      "detail": "Order lifecycle/reconciliation acceptance aggregate",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX08A",
+      "category": "INCOMPLETE",
+      "existing_phase": null,
+      "detail": "Paper shared-account fixture만 구현. 실제 canonical owner/권위 통합 미완료",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX08B",
+      "category": "INCOMPLETE",
+      "existing_phase": null,
+      "detail": "Paper 관측 group facts만 구현. 선행 owner/lifecycle 통합 미완료",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX08",
+      "category": "INCOMPLETE",
+      "existing_phase": null,
+      "detail": "하위 작업이 진행 중인 집계 단계; 별도 완료로 계산하지 않음",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX09",
+      "category": "NOT_STARTED",
+      "existing_phase": null,
+      "detail": "Single actual/Paper PnL-position projection, owner-scoped control and promotion permissions",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX10",
+      "category": "NOT_STARTED",
+      "existing_phase": null,
+      "detail": "Off-server backtest export manifest/metadata and strategy registration/promotion gate; no server research",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX11",
+      "category": "NOT_STARTED",
+      "existing_phase": null,
+      "detail": "Scenarios A-F, exact candidate regression, live-market Paper mutation0, 2vCPU resources and >30m/72h/outage evidence",
+      "production_ready": false
+    },
+    {
+      "task_id": "TX12",
+      "category": "NOT_STARTED",
+      "existing_phase": null,
+      "detail": "Separate readiness states and reviewable local release/cutover/promotion package; no server deployment or LIVE_ACTIVE",
+      "production_ready": false
+    }
+  ],
+  "excluded_work_in_progress": [
+    "vibetrading/trading_contracts.py",
+    "vibetrading/portfolio_ledger.py",
+    "vibetrading/paper_execution.py",
+    "vibetrading/strategy_runtime.py",
+    "vibetrading/perp_execution.py",
+    "vibetrading/execution_groups.py",
+    "tests/refactoring/test_portfolio_ledger.py",
+    "tests/refactoring/test_paper_execution.py",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_perp_execution.py",
+    "tests/refactoring/test_execution_groups.py"
+  ],
+  "completed_subunits_in_partial_stages": [
+    "VN07 callback-free market checkpoint startup and explicit whole-vector recovery (multi-suffix unsupported)",
+    "TX06E SignerNonceStore standalone durability/ownership/bounds only"
+  ],
+  "commit_candidate": "completed-market-v1",
+  "commit_state": "VALIDATED_READY_TO_COMMIT",
+  "server_deployed": false,
+  "live_active": false,
+  "next_steps": [
+    {
+      "order": 1,
+      "stage": "VN07",
+      "work": "미완료 복구 경계: 여러 producer suffix의 실제 global apply order 증명/저장 계약, ETF/Paper account/strategy/pending-action 상태와 시장 checkpoint의 원자 커서 관계 확정",
+      "start_at": [
+        "vibetrading/local_engine.py",
+        "vibetrading/local_runtime.py",
+        "vibetrading/strategy_runtime.py",
+        "vibetrading/paper_execution.py"
+      ],
+      "gate": "순서를 입증하지 못하면 현행 fail-closed 유지. 완료 시장 전용 경로를 약화하지 않음"
+    },
+    {
+      "order": 2,
+      "stage": "VN08",
+      "work": "retained-base cursor/first-segment reader format과 v1 호환 검증. GC 비활성",
+      "start_at": [
+        "vibetrading/market_spool.py::_inventory/scan_spool/SpoolReader._locate_start",
+        "vibetrading/local_storage.py::LocalSpoolStorage.__init__",
+        "tests/refactoring/test_vnext_vn08.py"
+      ],
+      "gate": "VN07 원자 capture 및 해당 복구 계약에 맞는 base 증명부터 확정; 원본 prefix 삭제 금지"
+    },
+    {
+      "order": 3,
+      "stage": "VN00 → VN10/VN11/VN12 + TX01/TX02/TX03/TX07A",
+      "work": "현재 서버 기준선 재확인 후 canonical owner/intent/FILL·ACK 회귀/공통 계약·회계·lifecycle 통합",
+      "gate": "실계좌 mutation/배포 없이 로컬 구현; 미확인 capability는 계속 차단"
+    },
+    {
+      "order": 4,
+      "stage": "VN16 → VN09 / TX04B → TX05 → TX06A-E → TX07B → TX08",
+      "work": "저장 lane 격리 후 GC 증명, 입력 연속 복구·전략 dispatch·실제 connector lifecycle와 재조정·shared/group 통합",
+      "gate": "sole-copy 삭제·UNKNOWN 무조건 retry·자동 위험 활성 금지"
+    },
+    {
+      "order": 5,
+      "stage": "VN14A/B/VN15/VN17/VN18/VN19/VN20 + TX09-TX12",
+      "work": "제어/보고/역할 패키지/실제 장기·부하 검증/전환/최종 legacy 정리",
+      "gate": "30m/24h/72h와 실제 계좌·production 성능은 fixture로 대체하지 않음; 별도 전환 권한 필요"
+    }
+  ],
+  "commit_candidate_source_set_sha256": "d4a4f02777d56c2f30b53d52db76021da7aa1fbe8adc4d03a179a2436863625b",
+  "commit_validation": "docs/refactoring/runs/20261020-production/completed-market-v1-validation.json",
+  "commit_changed_source_paths": [
+    "refactoring_ai.md",
+    "refactoring_context.md",
+    "refactoring_plan.md",
+    "tests/refactoring/test_local_engine.py",
+    "tests/refactoring/test_local_observation.py",
+    "tests/refactoring/test_local_pipeline.py",
+    "tests/refactoring/test_local_runtime.py",
+    "tests/refactoring/test_local_transport.py",
+    "tests/refactoring/test_outbox_isolation.py",
+    "tests/test_local_snapshot.py",
+    "vibetrading/hot_path.py",
+    "vibetrading/local_config.py",
+    "vibetrading/local_engine.py",
+    "vibetrading/local_observation.py",
+    "vibetrading/local_pipeline.py",
+    "vibetrading/local_runtime.py",
+    "vibetrading/local_snapshot.py",
+    "vibetrading/local_transport.py",
+    "vibetrading/market_checkpoint.py",
+    "vibetrading/execution_nonce.py",
+    "tests/refactoring/test_vnext_vn06.py",
+    "tests/refactoring/test_market_checkpoint_bounds.py",
+    "tests/refactoring/test_vnext_vn07.py",
+    "tests/refactoring/test_checkpoint_startup.py",
+    "tests/refactoring/test_checkpoint_runtime.py",
+    "tests/refactoring/test_execution_nonce.py"
+  ],
+  "commit_authorization": "Latest human request explicitly says commit completed work; local commit only, no deployment or push",
+  "git_identity": "The commit containing this status table records the selected boundary; obtain SHA via git log"
+}

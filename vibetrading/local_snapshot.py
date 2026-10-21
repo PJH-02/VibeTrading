@@ -92,10 +92,13 @@ def _document(engine, budgets, now_ns):
         events = [event for event in (trade, book, index, bar) if event is not None]
         latest = max(events, key=_stamp)
         instrument = latest.instrument
+        source_feeds = [item for item in feeds.values() if item.get("provider") == latest.provider]
+        source_healthy = (not health.get("closed", False) and bool(source_feeds)
+                          and all(item.get("mode") == "LIVE" for item in source_feeds))
         quote = max((event for event in (index, bar) if event is not None), key=_stamp, default=None)
         quality = decision.quality.get(key, "WARMING")
         age = None if book is None else now_ns - _stamp(book)
-        valid = (healthy and quality == "VALID" and book is not None
+        valid = (source_healthy and quality == "VALID" and book is not None
                  and age is not None and 0 <= age <= budgets.max_age_seconds * 1_000_000_000
                  and bool(book.bids) and bool(book.asks))
         visible = book if valid else None
@@ -105,11 +108,12 @@ def _document(engine, budgets, now_ns):
                 context.prec = 128
                 price = str((visible.bids[0].price + visible.asks[0].price) / Decimal(2))
         rows.append({"key": key, "venue": instrument.venue.value, "symbol": instrument.std_symbol,
+            "provider": latest.provider,
             "asset_class": instrument.asset_class.value, "currency": instrument.currency,
             "section": "crypto" if instrument.asset_class.value in {"crypto_perp", "crypto_spot"} else "stocks",
             "price": price, "last_event_ms": _ms(latest.receive_ts_ns), "session": latest.session,
             "observed_delay_ms": latest.observed_delay_ms, "book_valid": bool(valid),
-            "gap_reason": None if valid else ("engine_not_ready" if not healthy else "book_" + quality.lower()),
+            "gap_reason": None if valid else ("engine_not_ready" if not source_healthy else "book_" + quality.lower()),
             "book": None if visible is None else {"receive_ms": _ms(visible.receive_ts_ns),
                 "source_ms": _ms(visible.source_ts_ns),
                 "bids": [[str(level.price), str(level.quantity)] for level in visible.bids[:budgets.book_depth]],
@@ -200,7 +204,13 @@ def _validate(document, budgets, now_ns):
             _decimal(row["price"])
         book = row.get("book")
         if row["book_valid"]:
-            if (not health["healthy"] or not isinstance(book, dict) or type(book.get("receive_ms")) is not int
+            source_feeds = [item for item in health["feeds"].values()
+                            if isinstance(item, dict) and item.get("provider") == row.get("provider")]
+            isolated_health = (bool(source_feeds)
+                               and all(item.get("mode") == "LIVE" for item in source_feeds)
+                               and any(not isinstance(item, dict) or item.get("mode") != "LIVE"
+                                       for item in health["feeds"].values()))
+            if ((not health["healthy"] and not isolated_health) or not isinstance(book, dict) or type(book.get("receive_ms")) is not int
                     or not 0 <= now_ns // 1_000_000 - book["receive_ms"] <= budgets.max_age_seconds * 1000):
                 raise SnapshotError("snapshot_stale_or_invalid_book")
             prices = {}

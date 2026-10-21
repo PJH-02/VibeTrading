@@ -229,6 +229,7 @@ class HotPathStore:
         max_books: int = 512,
         max_index_quotes: int = 2048,
     ) -> None:
+        self.max_trades, self.max_books, self.max_index_quotes = max_trades, max_books, max_index_quotes
         self._trades: dict[str, deque[TradeEvent]] = defaultdict(lambda: deque(maxlen=max_trades))
         self._books: dict[str, deque[OrderBookEvent]] = defaultdict(lambda: deque(maxlen=max_books))
         self._index_quotes: dict[str, deque[IndexQuoteEvent]] = defaultdict(lambda: deque(maxlen=max_index_quotes))
@@ -244,6 +245,27 @@ class HotPathStore:
         self._book_versions: dict[str, int] = {}
         self._quality: dict[str, str] = {}
         self.history = PreparedHistory()
+
+    def checkpoint_capacity(self) -> dict:
+        return {"max_trades": self.max_trades, "max_books": self.max_books,
+                "max_index_quotes": self.max_index_quotes,
+                "history_max_rows": self.history.max_rows, "history_max_feeds": self.history.max_feeds,
+                "history_max_bytes": self.history.max_bytes,
+                "dedup_max_entries": self._seen.max_entries, "dedup_ttl_seconds": self._seen.ttl_seconds}
+
+    def export_checkpoint_state(self, *, capture_monotonic_ns: int, max_event_bytes: int, max_bytes: int) -> dict:
+        """Synchronous owner-only capture; the caller must establish its cursor barrier."""
+        from .market_checkpoint import _export_store
+        return _export_store(self, capture_monotonic_ns, max_event_bytes, max_bytes)
+
+    @classmethod
+    def restore_checkpoint_state(cls, state: dict, *, expected_capacity: dict,
+                                 elapsed_ns: int, restore_monotonic_ns: int,
+                                 max_event_bytes: int, max_bytes: int) -> "HotPathStore":
+        """Build a separate store. This does not recover an engine or enable LIVE."""
+        from .market_checkpoint import _restore_store
+        return _restore_store(cls, state, expected_capacity, elapsed_ns,
+                              restore_monotonic_ns, max_event_bytes, max_bytes)
 
     def apply(self, event: BaseMarketEvent | dict) -> bool:
         return self.apply_versioned(event).applied

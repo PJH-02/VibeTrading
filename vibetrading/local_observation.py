@@ -98,8 +98,8 @@ class LocalObservationBus(SpoolingMarketPublisher):
         self._ready=True
         self._workers=[asyncio.create_task(self._writer(),name='local-observation-writer')]
 
-    def _invalidate(self, error):
-        super()._invalidate(error)
+    def _invalidate(self, error, **kwargs):
+        super()._invalidate(error, **kwargs)
         self._durability_changed.set()
 
     def enqueue_observation(self, subject: str, payload: bytes, msg_id: str | None = '') -> ObservationAdmission:

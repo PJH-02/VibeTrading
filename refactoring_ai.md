@@ -1,5 +1,11 @@
 # VibeTrading 리팩토링 AI·서브 에이전트 운영 지침
 
+2026-10-21 최신 인계: 사용자가 완료분 커밋을 명시했다. [단계 상태표](docs/refactoring/vnext/15_stage_status_and_next_steps.md)의 완료 코드/완료 하위 작업만 allowlist로 stage하고, 미완성 모듈·원본 데이터·tmp·dashboard는 제외한다. 커밋 대상만 복사한 격리 회귀를 통과해야 한다. 과거의 커밋 보류 기록을 현재 상태로 재사용하지 않으며 실제 Git 결과를 남긴다. 다음 구현은 표의 단계·선행 조건·파일 소유권부터 재개한다.
+
+2026-10-21 재개 규칙: 단계 진척·수정 전/후 hash·검증 receipt·reviewer·다음 시작점을 저장소의 [production tickets](docs/refactoring/vnext/tickets_production.json)와 [handoff](docs/refactoring/vnext/14_agent_execution_handoff.md)에 저장한다. 단순 증거 대조와 VN05 좁은 diff 리뷰는 Luna를 사용했고, VN06 복구 codec은 편집자와 별도의 safety reviewer로 분리한다. 이미 읽은 파일은 필요한 함수·diff만 다시 읽는다. 로컬/서버 불일치 조건이 유지되므로 git staging/commit/push 없이 파일로 상태를 보존한다.
+
+2026-10-20 운영 규칙: 현재 [통합 티켓](docs/refactoring/vnext/tickets_production.json)과 [실제 역할·재개점](docs/refactoring/vnext/14_agent_execution_handoff.md)에서 한 파일 한 편집자를 정한다. 단순 diff 리뷰는 Luna, 회계·signer nonce·복구 권위는 독립 safety reviewer가 맡는다. 한 번 읽은 전체 내용을 반복해서 읽지 않고 변경된 함수·diff·실패 구간을 중심으로 확인한다. KISS/DRY/YAGNI를 적용하고 새 서비스·DB 서버·broker·불필요한 추상화를 추가하지 않는다. 원본 .env가 있는 레포에서 제품 import/pytest를 실행하지 않으며, 고정한 credential-free copy와 clean env/guard로 검증한다. AST·fixture·실환경 증거를 서로 대신하지 않는다.
+
 작성일: 2026-10-18 KST · 버전: 1.0
 
 2026-10-19 추가 지침: 최종 구조는 NATS-free다. 불필요해진 신규 spool→NATS bridge는 제거했고 재도입하지 않는다. storage 역할은 direct spool→Parquet·manifest 확인, control 역할은 로컬 관측·ETF 상태만 복원하는 replay, execution 리뷰 역할은 startup barrier·실행 seam·bounded ownership·causal coverage를 검토한다. root는 config/runtime 연결과 전체 격리 테스트를 맡는다. 구현자→독립 리뷰어→수정자 역할 변경을 기록하며 본인 AST 검증을 테스트 PASS로 기록하지 않는다. 가상 시간·오프라인 broker·Linux 로컬 proof와 운영 장중/계좌/72시간 gate를 구분한다.

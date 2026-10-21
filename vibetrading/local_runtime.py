@@ -9,11 +9,14 @@ from __future__ import annotations
 import argparse
 import asyncio
 from dataclasses import asdict
+import hashlib
+import inspect
 import json
 import os
 from pathlib import Path
 import shutil
 import sys
+import time
 from types import SimpleNamespace
 
 from .feed_recovery import EngineCursor, RecoveryFrame
@@ -21,8 +24,8 @@ from .hot_path import HotPathStore
 from .local_config import LocalRuntimePlan
 from .local_engine import EngineBudgets, LocalMarketEngine
 from .local_pipeline import SpoolingMarketPublisher
-from .local_transport import LocalTransportClient, LocalTransportServer
-from .market_spool import MarketSpool, SpoolReader, scan_spool
+from .local_transport import AppliedReceipt, LocalTransportClient, LocalTransportServer
+from .market_spool import MarketSpool, SpoolCursor, SpoolReader, scan_spool
 from .settings import RuntimeSettings
 
 
@@ -94,12 +97,20 @@ async def run_collector(plan,item,settings,*,collector=None):
         collector=_collector_for_args(SimpleNamespace(provider=item.provider,symbols=item.symbols))
     failures=[]
     def invalid(reason):failures.append(reason)
-    transport=LocalTransportClient(plan.endpoint,producer=item.producer,incarnation=item.incarnation,
-        budgets=plan.transport,on_gap=lambda cursor,reason:publisher._invalidate(RuntimeError(reason)),
-        allowed_uid=plan.allowed_uid)
+    def transport_factory():
+        return LocalTransportClient(plan.endpoint,producer=item.producer,incarnation=item.incarnation,
+            budgets=plan.transport,
+            on_gap=(lambda cursor,reason:None) if item.delivery is not None else
+                lambda cursor,reason:publisher._invalidate(RuntimeError(reason)),
+            allowed_uid=plan.allowed_uid)
+    delivery={}
+    if item.delivery is not None:
+        delivery={'delivery_budgets':item.delivery,'transport_factory':transport_factory,
+            'reader_factory':lambda cursor:SpoolReader(item.spool_root,item.producer,item.incarnation,
+                after=SpoolCursor(cursor.producer,cursor.incarnation,cursor.sequence),**item.limits.reader_kwargs)}
     publisher=SpoolingMarketPublisher(producer=item.producer,incarnation=item.incarnation,
-        spool_factory=lambda:create_spool(item),transport=transport,budgets=item.pipeline,env=settings.env,
-        on_invalid=invalid,resume_existing=True)
+        spool_factory=lambda:create_spool(item),transport=None if delivery else transport_factory(),
+        budgets=item.pipeline,env=settings.env,on_invalid=invalid,resume_existing=True,**delivery)
     try:
         await publisher.connect()
         await collector.run(publisher,duration_sec=None)
@@ -109,6 +120,8 @@ async def run_collector(plan,item,settings,*,collector=None):
 
 async def replay_startup(engine,producers,*,promote=True):
     """Restore fresh process state from exact C=0..durable-H, never trade it."""
+    if engine.hot_path is not None and engine.hot_path.apply_seq!=0:
+        raise RuntimeError('startup replay requires a virgin state authority; verified state restore is not implemented')
     handoffs=[]
     for item in producers:
         report=await asyncio.to_thread(_scan,item)
@@ -119,7 +132,8 @@ async def replay_startup(engine,producers,*,promote=True):
         reader=await asyncio.to_thread(lambda:SpoolReader(item.spool_root,item.producer,item.incarnation,
             **item.limits.reader_kwargs))
         while reader.cursor.sequence<high.sequence:
-            records=await asyncio.to_thread(reader.read_batch,max_records=item.pipeline.batch_records,
+            records=await asyncio.to_thread(reader.read_batch,
+                max_records=min(item.pipeline.batch_records,high.sequence-reader.cursor.sequence),
                 max_bytes=item.pipeline.max_bytes)
             if not records:raise RuntimeError('durable replay prefix is incomplete')
             for record in records:
@@ -132,6 +146,95 @@ async def replay_startup(engine,producers,*,promote=True):
         for initial,high in handoffs:
             engine.handoff(initial,high,verified=True,ready=True,lease_ns=engine.budgets.feed_lease_ns)
     return handoffs
+
+
+async def save_engine_checkpoint(engine,codec,path):
+    """Capture on the owner loop; persist one immutable checkpoint off-loop.
+
+    Cancellation cannot overlap an older write with a newer capture. The
+    single retained task owns the write until fsync/readback finishes.
+    """
+    from .market_checkpoint import _write_checkpoint_file
+    pending=getattr(engine,'_checkpoint_file_task',None)
+    if pending is not None and not pending.done():
+        raise RuntimeError('checkpoint write already pending')
+    payload=engine.capture_checkpoint(codec)
+    operation=asyncio.create_task(asyncio.to_thread(
+        _write_checkpoint_file,path,payload,codec.max_bytes),name='local-market-checkpoint-write')
+    engine._checkpoint_file_task=operation
+    # A cancelled caller may no longer retrieve a failed write's exception.
+    operation.add_done_callback(lambda task:None if task.cancelled() else task.exception())
+    await asyncio.shield(operation)
+    return hashlib.sha256(payload).hexdigest()
+
+
+async def replay_checkpoint_startup(engine,producers,*,codec,payload,expected_engine_incarnation):
+    """Restore market state only, with independently checked C and fixed H.
+
+    Producer logs have no global apply journal. More than one nonempty suffix
+    has no provable cross-producer order and is deliberately unsupported.
+    This function never arms initial resume or grants execution readiness.
+    """
+    if not isinstance(producers,(tuple,list)) or not 0<len(producers)<=engine.budgets.max_producers:
+        raise ValueError('Checkpoint startup requires a bounded producer inventory')
+    metadata=engine.inspect_checkpoint(codec,payload)
+    checkpoints={item.cursor.producer:item for item in metadata.producers}
+    items={item.producer:item for item in producers}
+    if len(items)!=len(producers) or set(items)!=set(checkpoints):
+        raise RuntimeError('checkpoint producer inventory mismatch')
+    highwaters={}
+    verified={}
+    readers={}
+    for producer,item in items.items():
+        point=checkpoints[producer]
+        report=await asyncio.to_thread(_scan,item)
+        if report.uncertain:
+            raise RuntimeError('uncertain producer tail requires explicit repair')
+        if (point.cursor.incarnation!=item.incarnation
+                or point.cursor.sequence>report.durable_sequence):
+            raise RuntimeError('checkpoint cursor exceeds matching durable producer prefix')
+        highwaters[producer]=EngineCursor(producer,item.incarnation,report.durable_sequence)
+        if point.cursor.sequence==0:
+            digest=hashlib.sha256(b'').hexdigest()
+        else:
+            reader=await asyncio.to_thread(lambda item=item,point=point:SpoolReader(
+                item.spool_root,item.producer,item.incarnation,
+                after=SpoolCursor(item.producer,item.incarnation,point.cursor.sequence-1),
+                **item.limits.reader_kwargs))
+            rows=await asyncio.to_thread(reader.read_batch,max_records=1,max_bytes=item.pipeline.max_bytes)
+            if len(rows)!=1 or rows[0].cursor.sequence!=point.cursor.sequence:
+                raise RuntimeError('checkpoint original cursor is not retained')
+            digest=hashlib.sha256(rows[0].payload).hexdigest()
+            readers[producer]=reader
+        if digest!=point.digest:
+            raise RuntimeError('checkpoint original cursor digest mismatch')
+        verified[producer]=AppliedReceipt(point.cursor,digest)
+    if sum(highwaters[p].sequence>checkpoints[p].cursor.sequence for p in items)>1:
+        raise RuntimeError('multiple checkpoint suffixes require a verified global apply order')
+    handoffs=engine.restore_virgin(codec,payload,highwaters,
+        verified_cursors=verified,expected_engine_incarnation=expected_engine_incarnation)
+    try:
+        for initial,high in handoffs:
+            if initial==high:continue
+            item=items[initial.producer]
+            reader=readers.get(initial.producer)
+            if reader is None:
+                reader=await asyncio.to_thread(lambda:SpoolReader(item.spool_root,item.producer,item.incarnation,
+                    after=SpoolCursor(initial.producer,initial.incarnation,initial.sequence),
+                    **item.limits.reader_kwargs))
+            while reader.cursor.sequence<high.sequence:
+                rows=await asyncio.to_thread(reader.read_batch,
+                    max_records=min(item.pipeline.batch_records,high.sequence-reader.cursor.sequence),
+                    max_bytes=item.pipeline.max_bytes)
+                if not rows:raise RuntimeError('durable checkpoint suffix is incomplete')
+                for row in rows:
+                    engine.apply_replay(RecoveryFrame(EngineCursor(row.cursor.producer,
+                        row.cursor.incarnation,row.cursor.sequence),row.payload))
+        return handoffs
+    except BaseException:
+        # A partially restored candidate is never reused as a virgin fallback.
+        await engine.close()
+        raise
 
 
 async def restore_etf_startup(etf,producers,handoffs):
@@ -168,23 +271,102 @@ async def restore_etf_startup(etf,producers,handoffs):
                 await etf.event(data,state_only=True)
 
 
-async def run_engine(plan,settings,*,etf_factory=None):
+def etf_feed_dependencies(plan, producer):
+    """Legacy ETF live inputs are Kiwoom; other collectors are independent.
+
+    Unknown/shared-authority failures still fence every ETF symbol. An
+    observation writer failure is an authority failure, not a market-feed
+    dependency, and intentionally takes that conservative path.
+    """
+    from .etf_trading import SYMBOLS
+    item=next((item for item in plan.producers if item.producer==producer),None)
+    if item is None:return tuple(sorted(SYMBOLS))
+    if item.provider!='kiwoom':return ()
+    symbols=[]
+    for raw in item.symbols.split(','):
+        raw=raw.strip().upper()
+        if len(raw)==7 and raw.startswith('A'):raw=raw[1:]
+        if len(raw)!=6 or not raw.isdigit():return tuple(sorted(SYMBOLS))
+        if raw in SYMBOLS:symbols.append(raw)
+    return tuple(sorted(set(symbols)))
+
+
+async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_feed_dependencies=None,
+                     recovery_readiness=None,checkpoint_path=None,checkpoint_codec=None,
+                     checkpoint_engine_incarnation=None,checkpoint_readiness=None):
+    checkpoint_enabled=any(value is not None for value in (
+        checkpoint_path,checkpoint_codec,checkpoint_engine_incarnation,checkpoint_readiness))
+    if checkpoint_enabled:
+        if (any(value is None for value in (checkpoint_path,checkpoint_codec,
+                checkpoint_engine_incarnation,checkpoint_readiness))
+                or type(checkpoint_engine_incarnation) is not str or not checkpoint_engine_incarnation
+                or not callable(checkpoint_readiness) or inspect.iscoroutinefunction(checkpoint_readiness)):
+            raise ValueError('Checkpoint startup requires explicit codec/path/incarnation and synchronous readiness validator')
+        if plan.etf_enabled or paper_runtime is not None:
+            raise ValueError('ETF/Paper checkpoint startup requires separate strategy and owner state recovery')
+    if recovery_readiness is not None:
+        if not callable(recovery_readiness) or inspect.iscoroutinefunction(recovery_readiness):
+            raise TypeError('Recovery readiness must be an explicit synchronous state validator')
+    if paper_feed_dependencies is not None:
+        if (paper_runtime is None or set(paper_feed_dependencies)!={p.producer for p in plan.producers}
+                or any(not isinstance(keys,tuple) or len(set(keys))!=len(keys)
+                       or not set(keys)<=set(paper_runtime.known)
+                       for keys in paper_feed_dependencies.values())):
+            raise ValueError('Paper feed ownership requires an exact producer inventory and known feed keys')
     etf=None
+    engine=None
     def invalid(producer,reason):
         if etf is not None:
             # Synchronous local gate closes before a timer/order can run again.
-            from .etf_trading import SYMBOLS
-            for symbol in SYMBOLS:etf._invalidate_market_feed(symbol)
+            for symbol in etf_feed_dependencies(plan,producer):etf._invalidate_market_feed(symbol)
+        if paper_runtime is not None:
+            if paper_feed_dependencies is not None and producer in paper_feed_dependencies:
+                keys=paper_feed_dependencies[producer]
+            else:
+                # Observed exact ownership can narrow the fence. A producer
+                # without any ownership proof cannot attest independence.
+                keys=engine.feed_instruments(producer) if engine is not None and producer in {
+                    p.producer for p in plan.producers} else ()
+                keys=tuple(key for key in keys if key in paper_runtime.known) or tuple(paper_runtime.known)
+            if keys:paper_runtime.invalidate_inputs(keys,'local_source_invalid',time.time_ns())
+    from .models import AssetClass
     engine=LocalMarketEngine(producer_providers={p.producer:p.provider for p in plan.producers},
-        budgets=EngineBudgets(**plan.engine),on_invalidate=invalid,hot_path=HotPathStore(),
-        trading_filter=None if plan.etf_enabled else lambda event:False)
+        budgets=EngineBudgets(**plan.engine),on_invalidate=invalid,
+        hot_path=paper_runtime.hot_path if paper_runtime is not None else HotPathStore(),
+        post_apply_callbacks=(paper_runtime.process_applied,) if paper_runtime is not None else (),
+        snapshot_clock=time.time_ns,
+        trading_filter=(lambda event:event.provider=='kiwoom' and event.instrument.asset_class==AssetClass.ETF)
+            if plan.etf_enabled else lambda event:False)
+    def recovery_commit(high_water,digest):
+        if checkpoint_enabled:
+            receipt=engine.query_cursor(high_water.producer)
+            if receipt.cursor!=high_water or receipt.digest!=digest:
+                return False
+            return engine.complete_checkpoint_recovery(checkpoint_readiness)
+        ready=False
+        if recovery_readiness is not None:
+            ready=recovery_readiness(engine,high_water,digest)
+            if inspect.isawaitable(ready):
+                if inspect.iscoroutine(ready):ready.close()
+                raise TypeError('Recovery readiness must not return an awaitable')
+        return engine.commit_recovery(high_water,digest,ready=ready is True)
+    recovery_hooks={}
+    if any(p.delivery is not None for p in plan.producers):
+        recovery_hooks={'on_replay':engine.apply_replay,'on_recovery_query':engine.begin_delivery_recovery,
+                        'on_recovery_commit':recovery_commit}
     server=LocalTransportServer(plan.endpoint,budgets=plan.transport,on_frame=engine.on_frame,
-        on_gap=engine.on_gap,on_resume=engine.initial_resume,allowed_uid=plan.allowed_uid)
+        on_gap=engine.on_gap,on_resume=engine.resume_receipt,allowed_uid=plan.allowed_uid,**recovery_hooks)
     observation=None
     snapshot_writer=None
     task=None
     try:
-        handoffs=await replay_startup(engine,plan.producers,promote=False)
+        if checkpoint_enabled:
+            from .market_checkpoint import _read_checkpoint_file
+            payload=await asyncio.to_thread(_read_checkpoint_file,checkpoint_path,checkpoint_codec.max_bytes)
+            handoffs=await replay_checkpoint_startup(engine,plan.producers,codec=checkpoint_codec,
+                payload=payload,expected_engine_incarnation=checkpoint_engine_incarnation)
+        else:
+            handoffs=await replay_startup(engine,plan.producers,promote=False)
         if plan.etf_enabled:
             from .local_observation import LocalObservationBus
             item=plan.observation
@@ -195,13 +377,20 @@ async def run_engine(plan,settings,*,etf_factory=None):
             if etf_factory is None:
                 from .etf_trading import EtfTradingLoop
                 etf_factory=EtfTradingLoop
-            etf=etf_factory(settings=settings,bus=observation,event_source=engine.event_source())
+            # ETF has its own per-symbol/group gates. A crypto collector gap
+            # must not terminate this iterator and finally halt all ETFs.
+            etf=etf_factory(settings=settings,bus=observation,
+                event_source=engine.event_source(required_producers=()))
             # Reconcile accounts and prepare the legacy journal before any
             # local feed can be promoted or any strategy timer is scheduled.
             await etf.initialize()
             await restore_etf_startup(etf,plan.producers,handoffs)
-        for initial,high in handoffs:
-            engine.arm_initial_resume(initial,high)
+        if checkpoint_enabled:
+            if engine.complete_checkpoint_recovery(checkpoint_readiness) is not True:
+                raise RuntimeError('checkpoint readiness validation did not permit startup')
+        else:
+            for initial,high in handoffs:
+                engine.arm_initial_resume(initial,high)
         await server.start()
         await engine.start()
         from .local_snapshot import LocalSnapshotWriter, SnapshotBudgets

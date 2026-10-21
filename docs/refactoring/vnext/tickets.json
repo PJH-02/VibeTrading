@@ -1,0 +1,2417 @@
+{
+  "schema_version": 1,
+  "mode": "PLAN_ONLY",
+  "created_date_kst": "2026-10-20",
+  "not_execution_authorization": true,
+  "original_execution_history": "UNCHANGED",
+  "current_manifest_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+  "common_preserved_behaviors": [
+    "C3/KP/KD economics and Mock/Mock2",
+    "current collection scope and Decimal/native/raw semantics",
+    "WAL/FULL and Policy A",
+    "UNKNOWN/reservations/current ledger facts",
+    "inactive strategies remain inactive",
+    "no KR repair hotfix"
+  ],
+  "tasks": [
+    {
+      "task_id": "VN00",
+      "existing_phase": "P00/P09",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "depends_on": [],
+      "baseline": {
+        "head": "6443eb94133bc0075b0860885829e112adc657c8",
+        "source_manifest": "docs/refactoring/vnext/source_manifest.json",
+        "source_set_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+        "before_sha256": {
+          "tests/refactoring/test_runtime_mounts.py": "680d7c2e91c1472a48f93f4bd8c64cd8dc4117ea3f79f99c5e801397355a8898"
+        },
+        "rule": "Pin post-predecessor hashes before dispatch; never force old hashes by reverting user work."
+      },
+      "file_owner": "root-release",
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "docs/refactoring/vnext/server_readonly_identity.json",
+        "docs/refactoring/vnext/source_comparison.json",
+        "scripts/refactoring/build_release_manifest.py",
+        "scripts/refactoring/collect_korean_hotfix_metadata.py",
+        "scripts/refactoring/collect_release_metadata.py",
+        "tests/refactoring/test_runtime_mounts.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "docs/refactoring/runs/20261020-vnext/vn00-package/",
+          "action": "ADD"
+        }
+      ],
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "docs/refactoring/runs/20261018-stage-assignment/**",
+        "docs/evidence/**",
+        "server writes",
+        "real orders",
+        "external messages",
+        "production data deletion",
+        "KR missing-minute repair",
+        "any product/config file outside edit_paths"
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "scripts/refactoring/build_release_manifest.py::build"
+        ],
+        "ADD_PROPOSED": []
+      },
+      "goal_and_acceptance": "Pin current role source/image/config/mount identities and classify runtime.yml drift; no product writes.",
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08_PROPOSED",
+        "C09_PROPOSED"
+      ],
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ],
+      "tests": {
+        "existing_regression_paths": [
+          "tests/refactoring/test_runtime_mounts.py"
+        ],
+        "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
+        "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+      },
+      "independent_reviewer": "Luna independent diff reviewer",
+      "final_integrator": "root",
+      "rollback": "Disable route and reverse this ticket diff only; preserve latest ledger/UNKNOWN/reservations/evidence. Data-format/DB changes require reader compatibility proof or remain blocked. No reset/clean/stash/data restore.",
+      "deployability": "DOCUMENT_PACKAGE_ONLY_NOT_SERVER_EXECUTION",
+      "new_run_outputs": [
+        "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
+      ]
+    },
+    {
+      "task_id": "VN01",
+      "existing_phase": "P05/P10",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "depends_on": [
+        "VN00"
+      ],
+      "baseline": {
+        "head": "6443eb94133bc0075b0860885829e112adc657c8",
+        "source_manifest": "docs/refactoring/vnext/source_manifest.json",
+        "source_set_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+        "before_sha256": {
+          "vibetrading/local_pipeline.py": "5e3e0cbb559373e7ece320324f5adc0553c2ff58448e9ef3aeb2ed573c0b60aa",
+          "tests/refactoring/test_local_pipeline.py": "8fd611fae3aec1d469c7b3b9567db754ab60bf7994a865e8ed5d080e4d3072c8"
+        },
+        "rule": "Pin post-predecessor hashes before dispatch; never force old hashes by reverting user work."
+      },
+      "file_owner": "editor-pipeline",
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/refactoring/test_local_pipeline.py",
+        "vibetrading/local_pipeline.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/local_pipeline.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_local_pipeline.py",
+          "action": "MODIFY"
+        }
+      ],
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "docs/refactoring/runs/20261018-stage-assignment/**",
+        "docs/evidence/**",
+        "server writes",
+        "real orders",
+        "external messages",
+        "production data deletion",
+        "KR missing-minute repair",
+        "any product/config file outside edit_paths"
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/local_pipeline.py::SpoolingMarketPublisher._invalidate",
+          "vibetrading/local_pipeline.py::SpoolingMarketPublisher._writer",
+          "vibetrading/local_pipeline.py::SpoolingMarketPublisher._acks",
+          "vibetrading/local_pipeline.py::SpoolingMarketPublisher.stats"
+        ],
+        "ADD_PROPOSED": []
+      },
+      "goal_and_acceptance": "Bounded fault stage/reason/cursor/queue age/durable-applied lag; unchanged payload/order and zero accounting leak.",
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08_PROPOSED",
+        "C09_PROPOSED"
+      ],
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ],
+      "tests": {
+        "existing_regression_paths": [
+          "tests/refactoring/test_local_pipeline.py"
+        ],
+        "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
+        "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+      },
+      "independent_reviewer": "Luna independent diff reviewer",
+      "final_integrator": "root",
+      "rollback": "Disable route and reverse this ticket diff only; preserve latest ledger/UNKNOWN/reservations/evidence. Data-format/DB changes require reader compatibility proof or remain blocked. No reset/clean/stash/data restore.",
+      "deployability": "OFFLINE_ONLY_UNTIL_REQUIRED_GROUP_AND_GATES_PASS",
+      "new_run_outputs": [
+        "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
+      ]
+    },
+    {
+      "task_id": "VN02",
+      "existing_phase": "P03/P05",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "depends_on": [
+        "VN01"
+      ],
+      "baseline": {
+        "head": "6443eb94133bc0075b0860885829e112adc657c8",
+        "source_manifest": "docs/refactoring/vnext/source_manifest.json",
+        "source_set_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+        "before_sha256": {
+          "vibetrading/local_engine.py": "d83b4e21bc8b632da4f1227699b80175df41f56bbee1a99fc313c31f2918808c",
+          "vibetrading/local_snapshot.py": "c194d70c3810a76dbe02f5d748a152c6f821f78286f975f442555e78f391c8f1",
+          "tests/refactoring/test_local_engine.py": "10a6723834e13bb5c90e939059793d2d65039990959e57ce381d53666625707a",
+          "tests/test_local_snapshot.py": "07bc8982815a9a0bbf9534a0daf7c30a0c337c5b0989005151f78d2b5ed95b8c"
+        },
+        "rule": "Pin post-predecessor hashes before dispatch; never force old hashes by reverting user work."
+      },
+      "file_owner": "editor-market",
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/refactoring/test_local_engine.py",
+        "tests/test_local_snapshot.py",
+        "vibetrading/local_engine.py",
+        "vibetrading/local_snapshot.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/local_engine.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/local_snapshot.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_local_engine.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/test_local_snapshot.py",
+          "action": "MODIFY"
+        }
+      ],
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "docs/refactoring/runs/20261018-stage-assignment/**",
+        "docs/evidence/**",
+        "server writes",
+        "real orders",
+        "external messages",
+        "production data deletion",
+        "KR missing-minute repair",
+        "any product/config file outside edit_paths"
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/local_engine.py::LocalMarketEngine._invalidate",
+          "vibetrading/local_engine.py::LocalMarketEngine._flush",
+          "vibetrading/local_engine.py::LocalMarketEngine._queue_admissible",
+          "vibetrading/local_engine.py::LocalMarketEngine.event_source",
+          "vibetrading/local_snapshot.py::_document"
+        ],
+        "ADD_PROPOSED": []
+      },
+      "goal_and_acceptance": "Dependent generations invalidated while healthy interleaved delivery remains ordered and bounded; global corruption still blocks all.",
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08_PROPOSED",
+        "C09_PROPOSED"
+      ],
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ],
+      "tests": {
+        "existing_regression_paths": [
+          "tests/refactoring/test_local_engine.py",
+          "tests/test_local_snapshot.py"
+        ],
+        "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
+        "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+      },
+      "independent_reviewer": "independent safety/recovery reviewer; Luna may check simple diff only",
+      "final_integrator": "root",
+      "rollback": "Disable route and reverse this ticket diff only; preserve latest ledger/UNKNOWN/reservations/evidence. Data-format/DB changes require reader compatibility proof or remain blocked. No reset/clean/stash/data restore.",
+      "deployability": "OFFLINE_ONLY_UNTIL_REQUIRED_GROUP_AND_GATES_PASS",
+      "new_run_outputs": [
+        "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
+      ]
+    },
+    {
+      "task_id": "VN03",
+      "existing_phase": "P03/P06",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "depends_on": [
+        "VN02"
+      ],
+      "baseline": {
+        "head": "6443eb94133bc0075b0860885829e112adc657c8",
+        "source_manifest": "docs/refactoring/vnext/source_manifest.json",
+        "source_set_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+        "before_sha256": {
+          "vibetrading/local_runtime.py": "cb4893919d475f9f80023aa1faf52ef59fd1a7de93faeab9e0107b734a77e76b",
+          "vibetrading/etf_trading.py": "9c6a49238125f2746ac7c4b31014d17e1e42fae597d97bf36f22b003959ebb79",
+          "tests/refactoring/test_local_runtime.py": "89f073e1491ba2cb5b33f6c0a0885d8ecdf979dfe8104f3414059920d4432ec4",
+          "tests/refactoring/test_etf_dispatch_guards.py": "08ec596f1fd3d910a1db3aa18ad20fbe730a3335148ef34b0410d490f0bd2c67"
+        },
+        "rule": "Pin post-predecessor hashes before dispatch; never force old hashes by reverting user work."
+      },
+      "file_owner": "editor-market",
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/refactoring/test_etf_dispatch_guards.py",
+        "tests/refactoring/test_local_runtime.py",
+        "tests/test_etf_outage_recovery.py",
+        "vibetrading/etf_trading.py",
+        "vibetrading/local_runtime.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/local_runtime.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/etf_trading.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_local_runtime.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_etf_dispatch_guards.py",
+          "action": "MODIFY"
+        }
+      ],
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "docs/refactoring/runs/20261018-stage-assignment/**",
+        "docs/evidence/**",
+        "server writes",
+        "real orders",
+        "external messages",
+        "production data deletion",
+        "KR missing-minute repair",
+        "any product/config file outside edit_paths"
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/local_runtime.py::run_engine",
+          "vibetrading/etf_trading.py::EtfTradingLoop._invalidate_market_feed",
+          "vibetrading/etf_trading.py::EtfTradingLoop.event",
+          "vibetrading/etf_trading.py::EtfTradingLoop.timer"
+        ],
+        "ADD_PROPOSED": [
+          "producer-to-required-ETF-input dependency mapping (internal)"
+        ]
+      },
+      "goal_and_acceptance": "Crypto-only fault does not block unrelated ETF inputs; missing ETF dependency closes only dependent new risk without changed economics. Separate nonauthoritative observation delivery errors from market-feed corruption; retain journal-backed recovery and visible observation-gap evidence.",
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08_PROPOSED",
+        "C09_PROPOSED"
+      ],
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ],
+      "tests": {
+        "existing_regression_paths": [
+          "tests/refactoring/test_local_runtime.py",
+          "tests/refactoring/test_etf_dispatch_guards.py",
+          "tests/test_etf_outage_recovery.py"
+        ],
+        "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
+        "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+      },
+      "independent_reviewer": "independent safety/recovery reviewer; Luna may check simple diff only",
+      "final_integrator": "root",
+      "rollback": "Disable route and reverse this ticket diff only; preserve latest ledger/UNKNOWN/reservations/evidence. Data-format/DB changes require reader compatibility proof or remain blocked. No reset/clean/stash/data restore.",
+      "deployability": "OFFLINE_ONLY_UNTIL_REQUIRED_GROUP_AND_GATES_PASS",
+      "new_run_outputs": [
+        "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
+      ]
+    },
+    {
+      "task_id": "VN04A",
+      "existing_phase": "P05",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "depends_on": [
+        "VN03"
+      ],
+      "baseline": {
+        "head": "6443eb94133bc0075b0860885829e112adc657c8",
+        "source_manifest": "docs/refactoring/vnext/source_manifest.json",
+        "source_set_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+        "before_sha256": {
+          "vibetrading/local_pipeline.py": "5e3e0cbb559373e7ece320324f5adc0553c2ff58448e9ef3aeb2ed573c0b60aa",
+          "tests/refactoring/test_local_pipeline.py": "8fd611fae3aec1d469c7b3b9567db754ab60bf7994a865e8ed5d080e4d3072c8"
+        },
+        "rule": "Pin post-predecessor hashes before dispatch; never force old hashes by reverting user work."
+      },
+      "file_owner": "editor-pipeline",
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/refactoring/test_local_pipeline.py",
+        "vibetrading/local_pipeline.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/local_pipeline.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_local_pipeline.py",
+          "action": "MODIFY"
+        }
+      ],
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "docs/refactoring/runs/20261018-stage-assignment/**",
+        "docs/evidence/**",
+        "server writes",
+        "real orders",
+        "external messages",
+        "production data deletion",
+        "KR missing-minute repair",
+        "any product/config file outside edit_paths"
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/local_pipeline.py::SpoolingMarketPublisher.accept_payload",
+          "vibetrading/local_pipeline.py::SpoolingMarketPublisher._persist",
+          "vibetrading/local_pipeline.py::SpoolingMarketPublisher._writer",
+          "vibetrading/local_pipeline.py::SpoolingMarketPublisher._acks"
+        ],
+        "ADD_PROPOSED": [
+          "bounded persistence-versus-delivery ownership separation"
+        ]
+      },
+      "goal_and_acceptance": "Engine transport outage does not stop producer durability before finite capacity; accepted payload accounting remains exact.",
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08_PROPOSED",
+        "C09_PROPOSED"
+      ],
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ],
+      "tests": {
+        "existing_regression_paths": [
+          "tests/refactoring/test_local_pipeline.py"
+        ],
+        "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
+        "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+      },
+      "independent_reviewer": "independent safety/recovery reviewer; Luna may check simple diff only",
+      "final_integrator": "root",
+      "rollback": "Disable route and reverse this ticket diff only; preserve latest ledger/UNKNOWN/reservations/evidence. Data-format/DB changes require reader compatibility proof or remain blocked. No reset/clean/stash/data restore.",
+      "deployability": "NOT_INDEPENDENT: requires VN04B integration",
+      "new_run_outputs": [
+        "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
+      ]
+    },
+    {
+      "task_id": "VN04B",
+      "existing_phase": "P05/P06",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "depends_on": [
+        "VN04A"
+      ],
+      "baseline": {
+        "head": "6443eb94133bc0075b0860885829e112adc657c8",
+        "source_manifest": "docs/refactoring/vnext/source_manifest.json",
+        "source_set_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+        "before_sha256": {
+          "vibetrading/local_pipeline.py": "5e3e0cbb559373e7ece320324f5adc0553c2ff58448e9ef3aeb2ed573c0b60aa",
+          "vibetrading/local_transport.py": "ddc03ff61429006096238310667c68785729e58b9d20c36357587face50ca4e6",
+          "vibetrading/local_engine.py": "d83b4e21bc8b632da4f1227699b80175df41f56bbee1a99fc313c31f2918808c",
+          "tests/refactoring/test_local_pipeline.py": "8fd611fae3aec1d469c7b3b9567db754ab60bf7994a865e8ed5d080e4d3072c8",
+          "tests/refactoring/test_local_transport.py": "9fab494a7a1289e1eceb2eec6b07478d53db4f172af34b9ee9fa5460ac9efd25"
+        },
+        "rule": "Pin post-predecessor hashes before dispatch; never force old hashes by reverting user work."
+      },
+      "file_owner": "editor-transport",
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/refactoring/test_local_engine.py",
+        "tests/refactoring/test_local_pipeline.py",
+        "tests/refactoring/test_local_transport.py",
+        "tests/refactoring/test_replay_handoff.py",
+        "vibetrading/local_engine.py",
+        "vibetrading/local_pipeline.py",
+        "vibetrading/local_transport.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/local_pipeline.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/local_transport.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/local_engine.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_local_pipeline.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_local_transport.py",
+          "action": "MODIFY"
+        }
+      ],
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "docs/refactoring/runs/20261018-stage-assignment/**",
+        "docs/evidence/**",
+        "server writes",
+        "real orders",
+        "external messages",
+        "production data deletion",
+        "KR missing-minute repair",
+        "any product/config file outside edit_paths"
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/local_pipeline.py::SpoolingMarketPublisher._connect",
+          "vibetrading/local_transport.py::LocalTransportClient.request_resume",
+          "vibetrading/local_engine.py::LocalMarketEngine.initial_resume",
+          "vibetrading/local_engine.py::LocalMarketEngine.handoff"
+        ],
+        "ADD_PROPOSED": [
+          "bounded reconnect and disk-cursor catch-up"
+        ]
+      },
+      "goal_and_acceptance": "C/H and incarnation/digest continuity verified before LIVE; replay produces zero old orders; reconnect storm bounded.",
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08_PROPOSED",
+        "C09_PROPOSED"
+      ],
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ],
+      "tests": {
+        "existing_regression_paths": [
+          "tests/refactoring/test_local_pipeline.py",
+          "tests/refactoring/test_local_transport.py",
+          "tests/refactoring/test_local_engine.py",
+          "tests/refactoring/test_replay_handoff.py"
+        ],
+        "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
+        "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+      },
+      "independent_reviewer": "independent safety/recovery reviewer; Luna may check simple diff only",
+      "final_integrator": "root",
+      "rollback": "Disable route and reverse this ticket diff only; preserve latest ledger/UNKNOWN/reservations/evidence. Data-format/DB changes require reader compatibility proof or remain blocked. No reset/clean/stash/data restore.",
+      "deployability": "OFFLINE_ONLY_UNTIL_REQUIRED_GROUP_AND_GATES_PASS",
+      "new_run_outputs": [
+        "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
+      ]
+    },
+    {
+      "task_id": "VN05",
+      "existing_phase": "P02/P05",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "depends_on": [
+        "VN01",
+        "VN04B"
+      ],
+      "baseline": {
+        "head": "6443eb94133bc0075b0860885829e112adc657c8",
+        "source_manifest": "docs/refactoring/vnext/source_manifest.json",
+        "source_set_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+        "before_sha256": {
+          "vibetrading/local_pipeline.py": "5e3e0cbb559373e7ece320324f5adc0553c2ff58448e9ef3aeb2ed573c0b60aa",
+          "tests/refactoring/test_local_pipeline.py": "8fd611fae3aec1d469c7b3b9567db754ab60bf7994a865e8ed5d080e4d3072c8"
+        },
+        "rule": "Pin post-predecessor hashes before dispatch; never force old hashes by reverting user work."
+      },
+      "file_owner": "editor-pipeline",
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/refactoring/test_local_pipeline.py",
+        "vibetrading/local_pipeline.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/local_pipeline.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_local_pipeline.py",
+          "action": "MODIFY"
+        }
+      ],
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "docs/refactoring/runs/20261018-stage-assignment/**",
+        "docs/evidence/**",
+        "server writes",
+        "real orders",
+        "external messages",
+        "production data deletion",
+        "KR missing-minute repair",
+        "any product/config file outside edit_paths"
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/local_pipeline.py::SpoolingMarketPublisher._writer"
+        ],
+        "ADD_PROPOSED": []
+      },
+      "goal_and_acceptance": "Gather finishes at item/byte bound or group deadline, no transport before successful flush; A/B and timing evidence required.",
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08_PROPOSED",
+        "C09_PROPOSED"
+      ],
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ],
+      "tests": {
+        "existing_regression_paths": [
+          "tests/refactoring/test_local_pipeline.py"
+        ],
+        "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
+        "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+      },
+      "independent_reviewer": "Luna independent diff reviewer",
+      "final_integrator": "root",
+      "rollback": "Disable route and reverse this ticket diff only; preserve latest ledger/UNKNOWN/reservations/evidence. Data-format/DB changes require reader compatibility proof or remain blocked. No reset/clean/stash/data restore.",
+      "deployability": "OFFLINE_ONLY_UNTIL_REQUIRED_GROUP_AND_GATES_PASS",
+      "new_run_outputs": [
+        "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
+      ]
+    },
+    {
+      "task_id": "VN06",
+      "existing_phase": "P06",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "depends_on": [
+        "VN03"
+      ],
+      "baseline": {
+        "head": "6443eb94133bc0075b0860885829e112adc657c8",
+        "source_manifest": "docs/refactoring/vnext/source_manifest.json",
+        "source_set_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+        "before_sha256": {
+          "vibetrading/hot_path.py": "fa384f323d53b4b0a5eed58b59775b5611a2311a27f0b171ef5dd29e8258a378",
+          "tests/refactoring/test_shared_state.py": "538f851aa1d5b903d2e05b1a4cc9a1d19cefce3a4f3e6d88ba1eb82f9c10edd0",
+          "tests/refactoring/test_history_causality.py": "d46ab519606121cad6cf4a01d2aca19e6d18d2ab5b72599edf517385baf03eac"
+        },
+        "rule": "Pin post-predecessor hashes before dispatch; never force old hashes by reverting user work."
+      },
+      "file_owner": "editor-recovery",
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/refactoring/test_history_causality.py",
+        "tests/refactoring/test_shared_state.py",
+        "vibetrading/feed_recovery.py",
+        "vibetrading/hot_path.py",
+        "vibetrading/local_snapshot.py",
+        "vibetrading/local_storage.py",
+        "vibetrading/market_spool.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/market_checkpoint.py",
+          "action": "ADD"
+        },
+        {
+          "path": "vibetrading/hot_path.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_shared_state.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_history_causality.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_vnext_vn06.py",
+          "action": "ADD"
+        }
+      ],
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "docs/refactoring/runs/20261018-stage-assignment/**",
+        "docs/evidence/**",
+        "server writes",
+        "real orders",
+        "external messages",
+        "production data deletion",
+        "KR missing-minute repair",
+        "any product/config file outside edit_paths"
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/hot_path.py::HotPathStore",
+          "vibetrading/hot_path.py::PreparedHistory"
+        ],
+        "ADD_PROPOSED": [
+          "vibetrading/market_checkpoint.py (narrow bounded checkpoint codec, names fixed before implementation)",
+          "HotPathStore checkpoint export/restore seam"
+        ]
+      },
+      "goal_and_acceptance": "Atomic state/cursor-vector capture includes native book/window/quality/version; bounded size and checksum; no UI snapshot reuse.",
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08_PROPOSED",
+        "C09_PROPOSED"
+      ],
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ],
+      "tests": {
+        "existing_regression_paths": [
+          "tests/refactoring/test_shared_state.py",
+          "tests/refactoring/test_history_causality.py"
+        ],
+        "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
+        "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+      },
+      "independent_reviewer": "independent safety/recovery reviewer; Luna may check simple diff only",
+      "final_integrator": "root",
+      "rollback": "Disable route and reverse this ticket diff only; preserve latest ledger/UNKNOWN/reservations/evidence. Data-format/DB changes require reader compatibility proof or remain blocked. No reset/clean/stash/data restore.",
+      "deployability": "CODEC_ONLY: restore requires VN07; no production GC",
+      "new_run_outputs": [
+        "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
+      ]
+    },
+    {
+      "task_id": "VN07",
+      "existing_phase": "P06",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "depends_on": [
+        "VN06",
+        "VN04B"
+      ],
+      "baseline": {
+        "head": "6443eb94133bc0075b0860885829e112adc657c8",
+        "source_manifest": "docs/refactoring/vnext/source_manifest.json",
+        "source_set_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+        "before_sha256": {
+          "vibetrading/local_runtime.py": "cb4893919d475f9f80023aa1faf52ef59fd1a7de93faeab9e0107b734a77e76b",
+          "vibetrading/local_engine.py": "d83b4e21bc8b632da4f1227699b80175df41f56bbee1a99fc313c31f2918808c",
+          "tests/refactoring/test_local_runtime.py": "89f073e1491ba2cb5b33f6c0a0885d8ecdf979dfe8104f3414059920d4432ec4",
+          "tests/refactoring/test_replay_handoff.py": "a1baa4ed28740b89e90a78eb6abb39b80b4250e2d1ce5c2bac84c11638ce061d"
+        },
+        "rule": "Pin post-predecessor hashes before dispatch; never force old hashes by reverting user work."
+      },
+      "file_owner": "editor-recovery",
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/refactoring/test_local_runtime.py",
+        "tests/refactoring/test_replay_handoff.py",
+        "tests/test_etf_outage_recovery.py",
+        "vibetrading/feed_recovery.py",
+        "vibetrading/hot_path.py",
+        "vibetrading/local_engine.py",
+        "vibetrading/local_runtime.py",
+        "vibetrading/local_snapshot.py",
+        "vibetrading/local_storage.py",
+        "vibetrading/market_spool.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/local_runtime.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/local_engine.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_local_runtime.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_replay_handoff.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_vnext_vn07.py",
+          "action": "ADD"
+        }
+      ],
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "docs/refactoring/runs/20261018-stage-assignment/**",
+        "docs/evidence/**",
+        "server writes",
+        "real orders",
+        "external messages",
+        "production data deletion",
+        "KR missing-minute repair",
+        "any product/config file outside edit_paths"
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/local_runtime.py::replay_startup",
+          "vibetrading/local_runtime.py::restore_etf_startup",
+          "vibetrading/local_engine.py::LocalMarketEngine.begin_recovery",
+          "vibetrading/local_engine.py::LocalMarketEngine.handoff"
+        ],
+        "ADD_PROPOSED": []
+      },
+      "goal_and_acceptance": "Checkpoint+delta+live handoff validates native state; stale timestamps remain stale; bad checkpoint fails closed or restores a proven retained prefix; zero replay orders.",
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08_PROPOSED",
+        "C09_PROPOSED"
+      ],
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ],
+      "tests": {
+        "existing_regression_paths": [
+          "tests/refactoring/test_local_runtime.py",
+          "tests/refactoring/test_replay_handoff.py",
+          "tests/test_etf_outage_recovery.py"
+        ],
+        "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
+        "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+      },
+      "independent_reviewer": "independent safety/recovery reviewer; Luna may check simple diff only",
+      "final_integrator": "root",
+      "rollback": "Disable route and reverse this ticket diff only; preserve latest ledger/UNKNOWN/reservations/evidence. Data-format/DB changes require reader compatibility proof or remain blocked. No reset/clean/stash/data restore.",
+      "deployability": "OFFLINE_ONLY_UNTIL_REQUIRED_GROUP_AND_GATES_PASS",
+      "new_run_outputs": [
+        "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
+      ]
+    },
+    {
+      "task_id": "VN08",
+      "existing_phase": "P06/P07",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "depends_on": [
+        "VN07"
+      ],
+      "baseline": {
+        "head": "6443eb94133bc0075b0860885829e112adc657c8",
+        "source_manifest": "docs/refactoring/vnext/source_manifest.json",
+        "source_set_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+        "before_sha256": {
+          "vibetrading/market_spool.py": "0c735dbd5f03c9e915a18cc4b2c6a3056b8bff23955dc75fc58892082735a94b",
+          "vibetrading/local_storage.py": "21233fc68e52d74bc8c9ae96cea44eece74e6c7f998cba7898f971ba46a22c61",
+          "tests/refactoring/test_spool_recovery.py": "82308a0dc0f58fbe0f1bc02c992e7fd29db4fab4c3a545e592d764e9d2cd1dd1",
+          "tests/refactoring/test_local_storage.py": "c694f445a1b15fb9cd8d58481337b0e99edd1fc9cb4855ac5d4ccbd3030ab0e5"
+        },
+        "rule": "Pin post-predecessor hashes before dispatch; never force old hashes by reverting user work."
+      },
+      "file_owner": "editor-storage",
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/refactoring/test_local_storage.py",
+        "tests/refactoring/test_spool_recovery.py",
+        "vibetrading/feed_recovery.py",
+        "vibetrading/hot_path.py",
+        "vibetrading/local_snapshot.py",
+        "vibetrading/local_storage.py",
+        "vibetrading/market_spool.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/market_spool.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/local_storage.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_spool_recovery.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_local_storage.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_vnext_vn08.py",
+          "action": "ADD"
+        }
+      ],
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "docs/refactoring/runs/20261018-stage-assignment/**",
+        "docs/evidence/**",
+        "server writes",
+        "real orders",
+        "external messages",
+        "production data deletion",
+        "KR missing-minute repair",
+        "any product/config file outside edit_paths"
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/market_spool.py::_inventory",
+          "vibetrading/market_spool.py::scan_spool",
+          "vibetrading/market_spool.py::SpoolReader._locate_start",
+          "vibetrading/local_storage.py::LocalSpoolStorage.__init__"
+        ],
+        "ADD_PROPOSED": [
+          "retained-base cursor/first-segment format and validation"
+        ]
+      },
+      "goal_and_acceptance": "New reader validates a retained prefix base and v1 data; corrupt/missing segments never become a valid start; GC still disabled.",
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08_PROPOSED",
+        "C09_PROPOSED"
+      ],
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ],
+      "tests": {
+        "existing_regression_paths": [
+          "tests/refactoring/test_spool_recovery.py",
+          "tests/refactoring/test_local_storage.py"
+        ],
+        "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
+        "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+      },
+      "independent_reviewer": "independent safety/recovery reviewer; Luna may check simple diff only",
+      "final_integrator": "root",
+      "rollback": "Disable route and reverse this ticket diff only; preserve latest ledger/UNKNOWN/reservations/evidence. Data-format/DB changes require reader compatibility proof or remain blocked. No reset/clean/stash/data restore.",
+      "deployability": "FORMAT_READER_GROUP_ONLY: GC remains disabled",
+      "new_run_outputs": [
+        "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
+      ]
+    },
+    {
+      "task_id": "VN09",
+      "existing_phase": "P07",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "depends_on": [
+        "VN08",
+        "VN16"
+      ],
+      "baseline": {
+        "head": "6443eb94133bc0075b0860885829e112adc657c8",
+        "source_manifest": "docs/refactoring/vnext/source_manifest.json",
+        "source_set_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+        "before_sha256": {
+          "vibetrading/market_spool.py": "0c735dbd5f03c9e915a18cc4b2c6a3056b8bff23955dc75fc58892082735a94b",
+          "vibetrading/local_storage.py": "21233fc68e52d74bc8c9ae96cea44eece74e6c7f998cba7898f971ba46a22c61",
+          "vibetrading/archive.py": "a4ae7a0c29b96b486f4a08e8fe42e5609f9bdb43cde2c5229d61dc7016b74b23",
+          "tests/refactoring/test_spool_recovery.py": "82308a0dc0f58fbe0f1bc02c992e7fd29db4fab4c3a545e592d764e9d2cd1dd1",
+          "tests/refactoring/test_archive_integrity.py": "1dd842840313154120f055edaa18aa2ab953f8a4ab63fa4b970e1ade8ee0d260"
+        },
+        "rule": "Pin post-predecessor hashes before dispatch; never force old hashes by reverting user work."
+      },
+      "file_owner": "editor-storage",
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/refactoring/test_archive_integrity.py",
+        "tests/refactoring/test_local_storage.py",
+        "tests/refactoring/test_spool_recovery.py",
+        "vibetrading/archive.py",
+        "vibetrading/feed_recovery.py",
+        "vibetrading/hot_path.py",
+        "vibetrading/local_snapshot.py",
+        "vibetrading/local_storage.py",
+        "vibetrading/market_spool.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/market_spool.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/local_storage.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/archive.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_spool_recovery.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_archive_integrity.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_vnext_vn09.py",
+          "action": "ADD"
+        }
+      ],
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "docs/refactoring/runs/20261018-stage-assignment/**",
+        "docs/evidence/**",
+        "server writes",
+        "real orders",
+        "external messages",
+        "production data deletion",
+        "KR missing-minute repair",
+        "any product/config file outside edit_paths"
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/market_spool.py::MarketSpool.gc_disabled",
+          "vibetrading/local_storage.py::_FactLedger.commit_batch",
+          "vibetrading/archive.py::ArchiveMaintenance.run_once"
+        ],
+        "ADD_PROPOSED": [
+          "proof-only segment GC planner and fixture executor; production default remains no deletion"
+        ]
+      },
+      "goal_and_acceptance": "Only checkpoint+consumer+manifest/facts+remote/lease/retention proven segments eligible; unique copy deletion count=0 under injected crashes.",
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08_PROPOSED",
+        "C09_PROPOSED"
+      ],
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ],
+      "tests": {
+        "existing_regression_paths": [
+          "tests/refactoring/test_spool_recovery.py",
+          "tests/refactoring/test_archive_integrity.py",
+          "tests/refactoring/test_local_storage.py"
+        ],
+        "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
+        "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+      },
+      "independent_reviewer": "independent safety/recovery reviewer; Luna may check simple diff only",
+      "final_integrator": "root",
+      "rollback": "Disable route and reverse this ticket diff only; preserve latest ledger/UNKNOWN/reservations/evidence. Data-format/DB changes require reader compatibility proof or remain blocked. No reset/clean/stash/data restore.",
+      "deployability": "OFFLINE_ONLY_UNTIL_REQUIRED_GROUP_AND_GATES_PASS",
+      "new_run_outputs": [
+        "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
+      ]
+    },
+    {
+      "task_id": "VN10",
+      "existing_phase": "P04/P09",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "depends_on": [
+        "VN00"
+      ],
+      "baseline": {
+        "head": "6443eb94133bc0075b0860885829e112adc657c8",
+        "source_manifest": "docs/refactoring/vnext/source_manifest.json",
+        "source_set_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+        "before_sha256": {
+          "vibetrading/process_lease.py": "064decebc0d4f2a7ddb6b76188720418afd2022b379f675b7d61e385b52882eb",
+          "vibetrading/etf_trading.py": "9c6a49238125f2746ac7c4b31014d17e1e42fae597d97bf36f22b003959ebb79",
+          "vibetrading/execution_ledger.py": "657366cf0eb15c898786feb7704363043bb52674b507804d7a9b9d0ef350d70e",
+          "tests/refactoring/test_execution_owner.py": "09c605f72a99d21312522d820e1cc3ca7416d263c24fcb7632b1e8872af618c8",
+          "tests/refactoring/test_etf_dispatch_guards.py": "08ec596f1fd3d910a1db3aa18ad20fbe730a3335148ef34b0410d490f0bd2c67"
+        },
+        "rule": "Pin post-predecessor hashes before dispatch; never force old hashes by reverting user work."
+      },
+      "file_owner": "editor-execution",
+      "read_paths": [
+        "docs/refactoring/adapter_capabilities.json",
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/refactoring/test_etf_dispatch_guards.py",
+        "tests/refactoring/test_execution_owner.py",
+        "vibetrading/etf_journal.py",
+        "vibetrading/etf_trading.py",
+        "vibetrading/execution_ledger.py",
+        "vibetrading/execution_owner.py",
+        "vibetrading/kis_execution.py",
+        "vibetrading/process_lease.py",
+        "vibetrading/telegram_state.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/process_lease.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/etf_trading.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/execution_ledger.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_execution_owner.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_etf_dispatch_guards.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_vnext_vn10.py",
+          "action": "ADD"
+        }
+      ],
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "docs/refactoring/runs/20261018-stage-assignment/**",
+        "docs/evidence/**",
+        "server writes",
+        "real orders",
+        "external messages",
+        "production data deletion",
+        "KR missing-minute repair",
+        "any product/config file outside edit_paths"
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/process_lease.py::ProcessLease.acquire",
+          "vibetrading/process_lease.py::ProcessLease.close",
+          "vibetrading/etf_trading.py::EtfTradingLoop.initialize",
+          "vibetrading/execution_ledger.py::ExecutionLedger.__init__"
+        ],
+        "ADD_PROPOSED": [
+          "canonical account/environment lease-path helper on existing protected state root"
+        ]
+      },
+      "goal_and_acceptance": "Cooperating duplicate owners across alternate DB paths rejected; Mock and Mock2 remain separate; lease failure leaves account closed.",
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08_PROPOSED",
+        "C09_PROPOSED"
+      ],
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ],
+      "tests": {
+        "existing_regression_paths": [
+          "tests/refactoring/test_execution_owner.py",
+          "tests/refactoring/test_etf_dispatch_guards.py"
+        ],
+        "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
+        "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+      },
+      "independent_reviewer": "independent safety/recovery reviewer; Luna may check simple diff only",
+      "final_integrator": "root",
+      "rollback": "Disable route and reverse this ticket diff only; preserve latest ledger/UNKNOWN/reservations/evidence. Data-format/DB changes require reader compatibility proof or remain blocked. No reset/clean/stash/data restore.",
+      "deployability": "OFFLINE_ONLY_UNTIL_REQUIRED_GROUP_AND_GATES_PASS",
+      "new_run_outputs": [
+        "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
+      ]
+    },
+    {
+      "task_id": "VN11",
+      "existing_phase": "P04",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "depends_on": [
+        "VN10"
+      ],
+      "baseline": {
+        "head": "6443eb94133bc0075b0860885829e112adc657c8",
+        "source_manifest": "docs/refactoring/vnext/source_manifest.json",
+        "source_set_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+        "before_sha256": {
+          "vibetrading/etf_journal.py": "cd81396df9174c73fcaa80f479fe8c06a11a37e99f16daa269eb75a84644d79d",
+          "vibetrading/etf_trading.py": "9c6a49238125f2746ac7c4b31014d17e1e42fae597d97bf36f22b003959ebb79",
+          "tests/refactoring/test_etf_dispatch_guards.py": "08ec596f1fd3d910a1db3aa18ad20fbe730a3335148ef34b0410d490f0bd2c67",
+          "tests/test_etf_mock_trading.py": "08edc3da94af8c1154ff833fdf19ff62ae41e43755090f7b6c506475421a487b"
+        },
+        "rule": "Pin post-predecessor hashes before dispatch; never force old hashes by reverting user work."
+      },
+      "file_owner": "editor-execution",
+      "read_paths": [
+        "docs/refactoring/adapter_capabilities.json",
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/refactoring/test_etf_dispatch_guards.py",
+        "tests/test_etf_mock_trading.py",
+        "vibetrading/etf_journal.py",
+        "vibetrading/etf_trading.py",
+        "vibetrading/execution_owner.py",
+        "vibetrading/kis_execution.py",
+        "vibetrading/telegram_state.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/etf_journal.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/etf_trading.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_etf_dispatch_guards.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/test_etf_mock_trading.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_vnext_vn11.py",
+          "action": "ADD"
+        }
+      ],
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "docs/refactoring/runs/20261018-stage-assignment/**",
+        "docs/evidence/**",
+        "server writes",
+        "real orders",
+        "external messages",
+        "production data deletion",
+        "KR missing-minute repair",
+        "any product/config file outside edit_paths"
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/etf_journal.py::EtfJournal.stage",
+          "vibetrading/etf_journal.py::EtfJournal.dispatch_handoff",
+          "vibetrading/etf_trading.py::EtfTradingLoop._submit_staged"
+        ],
+        "ADD_PROPOSED": []
+      },
+      "goal_and_acceptance": "Guarded stage requires evidence; duplicate immutable intent/evidence collision rejected; commit failure cannot submit; existing cumulative fill reservations unchanged.",
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08_PROPOSED",
+        "C09_PROPOSED"
+      ],
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ],
+      "tests": {
+        "existing_regression_paths": [
+          "tests/refactoring/test_etf_dispatch_guards.py",
+          "tests/test_etf_mock_trading.py"
+        ],
+        "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
+        "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+      },
+      "independent_reviewer": "independent safety/recovery reviewer; Luna may check simple diff only",
+      "final_integrator": "root",
+      "rollback": "Disable route and reverse this ticket diff only; preserve latest ledger/UNKNOWN/reservations/evidence. Data-format/DB changes require reader compatibility proof or remain blocked. No reset/clean/stash/data restore.",
+      "deployability": "OFFLINE_ONLY_UNTIL_REQUIRED_GROUP_AND_GATES_PASS",
+      "new_run_outputs": [
+        "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
+      ]
+    },
+    {
+      "task_id": "VN12",
+      "existing_phase": "P04",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "depends_on": [
+        "VN11"
+      ],
+      "baseline": {
+        "head": "6443eb94133bc0075b0860885829e112adc657c8",
+        "source_manifest": "docs/refactoring/vnext/source_manifest.json",
+        "source_set_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+        "before_sha256": {
+          "vibetrading/etf_journal.py": "cd81396df9174c73fcaa80f479fe8c06a11a37e99f16daa269eb75a84644d79d",
+          "vibetrading/execution_ledger.py": "657366cf0eb15c898786feb7704363043bb52674b507804d7a9b9d0ef350d70e",
+          "tests/refactoring/test_execution_owner.py": "09c605f72a99d21312522d820e1cc3ca7416d263c24fcb7632b1e8872af618c8",
+          "tests/test_etf_execution_update.py": "9dc779f9f9860a2f49344050ab955399aa840b222d2b9975889960a4bb8be71f"
+        },
+        "rule": "Pin post-predecessor hashes before dispatch; never force old hashes by reverting user work."
+      },
+      "file_owner": "editor-execution",
+      "read_paths": [
+        "docs/refactoring/adapter_capabilities.json",
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/refactoring/test_etf_dispatch_guards.py",
+        "tests/refactoring/test_execution_owner.py",
+        "tests/test_etf_execution_update.py",
+        "vibetrading/etf_journal.py",
+        "vibetrading/execution_ledger.py",
+        "vibetrading/execution_owner.py",
+        "vibetrading/kis_execution.py",
+        "vibetrading/telegram_state.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/etf_journal.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/execution_ledger.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_execution_owner.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/test_etf_execution_update.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_vnext_vn12.py",
+          "action": "ADD"
+        }
+      ],
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "docs/refactoring/runs/20261018-stage-assignment/**",
+        "docs/evidence/**",
+        "server writes",
+        "real orders",
+        "external messages",
+        "production data deletion",
+        "KR missing-minute repair",
+        "any product/config file outside edit_paths"
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/etf_journal.py::EtfJournal.accepted",
+          "vibetrading/etf_journal.py::EtfJournal.apply_status",
+          "vibetrading/execution_ledger.py::ExecutionLedger.outcome",
+          "vibetrading/execution_ledger.py::ExecutionLedger.apply_fill_once"
+        ],
+        "ADD_PROPOSED": []
+      },
+      "goal_and_acceptance": "ACK after partial/full fill never regresses terminal state/accounting; cancel/fill cumulative effects applied once; no unsupported broker absence inference.",
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08_PROPOSED",
+        "C09_PROPOSED"
+      ],
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ],
+      "tests": {
+        "existing_regression_paths": [
+          "tests/refactoring/test_execution_owner.py",
+          "tests/test_etf_execution_update.py",
+          "tests/refactoring/test_etf_dispatch_guards.py"
+        ],
+        "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
+        "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+      },
+      "independent_reviewer": "independent safety/recovery reviewer; Luna may check simple diff only",
+      "final_integrator": "root",
+      "rollback": "Disable route and reverse this ticket diff only; preserve latest ledger/UNKNOWN/reservations/evidence. Data-format/DB changes require reader compatibility proof or remain blocked. No reset/clean/stash/data restore.",
+      "deployability": "OFFLINE_ONLY_UNTIL_REQUIRED_GROUP_AND_GATES_PASS",
+      "new_run_outputs": [
+        "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
+      ]
+    },
+    {
+      "task_id": "VN13",
+      "existing_phase": "P03/P05",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "depends_on": [
+        "VN03"
+      ],
+      "baseline": {
+        "head": "6443eb94133bc0075b0860885829e112adc657c8",
+        "source_manifest": "docs/refactoring/vnext/source_manifest.json",
+        "source_set_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+        "before_sha256": {
+          "vibetrading/strategy_runner.py": "78f500e1adf4e7f0a2d1a2a115e7979171f19438eb2fe892796bd73033d0a3c1",
+          "vibetrading/strategy_contract.py": "90c13b60901be209984e66f8910e31a19423ad59704e4bc6b3e64aeb6d85f0e6",
+          "vibetrading/local_runtime.py": "cb4893919d475f9f80023aa1faf52ef59fd1a7de93faeab9e0107b734a77e76b",
+          "tests/refactoring/test_strategy_dispatch.py": "157d63d29707f416b56acb1c948d7a231b31eec7ddd25f37968638a17a4739cf",
+          "tests/refactoring/test_shared_runtime_wiring.py": "e42dbb97ab412868ae462934bdc2d6435d6c0788db7cab0cb2cf39e07a0242b5"
+        },
+        "rule": "Pin post-predecessor hashes before dispatch; never force old hashes by reverting user work."
+      },
+      "file_owner": "editor-market",
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/refactoring/test_local_runtime.py",
+        "tests/refactoring/test_shared_runtime_wiring.py",
+        "tests/refactoring/test_strategy_dispatch.py",
+        "vibetrading/local_runtime.py",
+        "vibetrading/strategy_contract.py",
+        "vibetrading/strategy_runner.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/strategy_runner.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/strategy_contract.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/local_runtime.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_strategy_dispatch.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_shared_runtime_wiring.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_vnext_vn13.py",
+          "action": "ADD"
+        }
+      ],
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "docs/refactoring/runs/20261018-stage-assignment/**",
+        "docs/evidence/**",
+        "server writes",
+        "real orders",
+        "external messages",
+        "production data deletion",
+        "KR missing-minute repair",
+        "any product/config file outside edit_paths"
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/strategy_runner.py::SharedStrategyRunner.prepare",
+          "vibetrading/strategy_runner.py::SharedStrategyRunner.process_event",
+          "vibetrading/strategy_runner.py::SharedStrategyRunner.run",
+          "vibetrading/local_runtime.py::run_engine"
+        ],
+        "ADD_PROPOSED": [
+          "already-applied immutable snapshot consumption (shadow only)"
+        ]
+      },
+      "goal_and_acceptance": "Single state apply, shared feature input, isolated callback faults, no NATS construction and no live order activation.",
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08_PROPOSED",
+        "C09_PROPOSED"
+      ],
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ],
+      "tests": {
+        "existing_regression_paths": [
+          "tests/refactoring/test_strategy_dispatch.py",
+          "tests/refactoring/test_shared_runtime_wiring.py",
+          "tests/refactoring/test_local_runtime.py"
+        ],
+        "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
+        "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+      },
+      "independent_reviewer": "Luna independent diff reviewer",
+      "final_integrator": "root",
+      "rollback": "Disable route and reverse this ticket diff only; preserve latest ledger/UNKNOWN/reservations/evidence. Data-format/DB changes require reader compatibility proof or remain blocked. No reset/clean/stash/data restore.",
+      "deployability": "OFFLINE_ONLY_UNTIL_REQUIRED_GROUP_AND_GATES_PASS",
+      "new_run_outputs": [
+        "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
+      ]
+    },
+    {
+      "task_id": "VN14A",
+      "existing_phase": "P04/P08",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "depends_on": [
+        "VN12"
+      ],
+      "baseline": {
+        "head": "6443eb94133bc0075b0860885829e112adc657c8",
+        "source_manifest": "docs/refactoring/vnext/source_manifest.json",
+        "source_set_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+        "before_sha256": {
+          "vibetrading/runtime_control.py": "c162de94a24dfa4e772529044cb9c69016ea34150bdb45ce1fa37c97e69d441d",
+          "vibetrading/etf_journal.py": "cd81396df9174c73fcaa80f479fe8c06a11a37e99f16daa269eb75a84644d79d",
+          "vibetrading/etf_trading.py": "9c6a49238125f2746ac7c4b31014d17e1e42fae597d97bf36f22b003959ebb79",
+          "tests/refactoring/test_halt_races.py": "8b7ace5a7488a386150403e45e3fc9a5f8a86db46f0e703ee9cc45b49b14f32f",
+          "tests/refactoring/test_etf_dispatch_guards.py": "08ec596f1fd3d910a1db3aa18ad20fbe730a3335148ef34b0410d490f0bd2c67"
+        },
+        "rule": "Pin post-predecessor hashes before dispatch; never force old hashes by reverting user work."
+      },
+      "file_owner": "editor-control",
+      "read_paths": [
+        "docs/refactoring/adapter_capabilities.json",
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/refactoring/test_etf_dispatch_guards.py",
+        "tests/refactoring/test_halt_races.py",
+        "vibetrading/etf_journal.py",
+        "vibetrading/etf_trading.py",
+        "vibetrading/execution_owner.py",
+        "vibetrading/kis_execution.py",
+        "vibetrading/runtime_control.py",
+        "vibetrading/telegram_state.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/runtime_control.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/etf_journal.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/etf_trading.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_halt_races.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_etf_dispatch_guards.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_vnext_vn14a.py",
+          "action": "ADD"
+        }
+      ],
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "docs/refactoring/runs/20261018-stage-assignment/**",
+        "docs/evidence/**",
+        "server writes",
+        "real orders",
+        "external messages",
+        "production data deletion",
+        "KR missing-minute repair",
+        "any product/config file outside edit_paths"
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/runtime_control.py::RuntimeControl.halt",
+          "vibetrading/runtime_control.py::RuntimeControl.resume_if_ready",
+          "vibetrading/etf_journal.py::EtfJournal.transaction",
+          "vibetrading/etf_trading.py::EtfTradingLoop._check_dispatch"
+        ],
+        "ADD_PROPOSED": [
+          "owner journal durable command receipt and scoped gate application"
+        ]
+      },
+      "goal_and_acceptance": "Duplicate command effect once; scoped resume cannot reopen broader halt; pause/halt/reduce-only semantics approved before editing.",
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08_PROPOSED",
+        "C09_PROPOSED"
+      ],
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ],
+      "tests": {
+        "existing_regression_paths": [
+          "tests/refactoring/test_halt_races.py",
+          "tests/refactoring/test_etf_dispatch_guards.py"
+        ],
+        "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
+        "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+      },
+      "independent_reviewer": "independent safety/recovery reviewer; Luna may check simple diff only",
+      "final_integrator": "root",
+      "rollback": "Disable route and reverse this ticket diff only; preserve latest ledger/UNKNOWN/reservations/evidence. Data-format/DB changes require reader compatibility proof or remain blocked. No reset/clean/stash/data restore.",
+      "deployability": "OFFLINE_ONLY_UNTIL_REQUIRED_GROUP_AND_GATES_PASS",
+      "new_run_outputs": [
+        "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
+      ]
+    },
+    {
+      "task_id": "VN14B",
+      "existing_phase": "P08",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "depends_on": [
+        "VN14A",
+        "VN04B"
+      ],
+      "baseline": {
+        "head": "6443eb94133bc0075b0860885829e112adc657c8",
+        "source_manifest": "docs/refactoring/vnext/source_manifest.json",
+        "source_set_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+        "before_sha256": {
+          "vibetrading/telegram.py": "c8dd9e179e01f05ffe0d777d4bd11dbd04175aae8f651c4c8b5425afdca14cd8",
+          "vibetrading/local_transport.py": "ddc03ff61429006096238310667c68785729e58b9d20c36357587face50ca4e6",
+          "vibetrading/local_runtime.py": "cb4893919d475f9f80023aa1faf52ef59fd1a7de93faeab9e0107b734a77e76b",
+          "tests/refactoring/test_control_inbox.py": "62d72a8bba0f5e9368224a0513adcae4405f3098088281a4c0ed571b2817cf32",
+          "tests/refactoring/test_outbox_isolation.py": "259eb1d06a206aad512937cd017e909733678f68f48a90d07bcdec9070357bc2"
+        },
+        "rule": "Pin post-predecessor hashes before dispatch; never force old hashes by reverting user work."
+      },
+      "file_owner": "editor-control",
+      "read_paths": [
+        "docs/refactoring/adapter_capabilities.json",
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/refactoring/test_control_inbox.py",
+        "tests/refactoring/test_local_transport.py",
+        "tests/refactoring/test_outbox_isolation.py",
+        "tests/test_telegram_commands.py",
+        "vibetrading/etf_journal.py",
+        "vibetrading/execution_owner.py",
+        "vibetrading/kis_execution.py",
+        "vibetrading/local_runtime.py",
+        "vibetrading/local_transport.py",
+        "vibetrading/telegram.py",
+        "vibetrading/telegram_state.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/telegram.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/local_transport.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/local_runtime.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_control_inbox.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_outbox_isolation.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_vnext_vn14b.py",
+          "action": "ADD"
+        }
+      ],
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "docs/refactoring/runs/20261018-stage-assignment/**",
+        "docs/evidence/**",
+        "server writes",
+        "real orders",
+        "external messages",
+        "production data deletion",
+        "KR missing-minute repair",
+        "any product/config file outside edit_paths"
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/telegram.py::TelegramController._handle",
+          "vibetrading/telegram.py::TelegramController._handle_pending_update",
+          "vibetrading/local_runtime.py::run_engine"
+        ],
+        "ADD_PROPOSED": [
+          "bounded command/control frame and owner result query on existing UDS endpoint"
+        ]
+      },
+      "goal_and_acceptance": "Numeric user/chat allowlists and TTL; owner durable receipt before accepted; lost replies/429 cause no repeated effect; status/trade preserved.",
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08_PROPOSED",
+        "C09_PROPOSED"
+      ],
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ],
+      "tests": {
+        "existing_regression_paths": [
+          "tests/refactoring/test_control_inbox.py",
+          "tests/refactoring/test_outbox_isolation.py",
+          "tests/refactoring/test_local_transport.py",
+          "tests/test_telegram_commands.py"
+        ],
+        "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
+        "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+      },
+      "independent_reviewer": "independent safety/recovery reviewer; Luna may check simple diff only",
+      "final_integrator": "root",
+      "rollback": "Disable route and reverse this ticket diff only; preserve latest ledger/UNKNOWN/reservations/evidence. Data-format/DB changes require reader compatibility proof or remain blocked. No reset/clean/stash/data restore.",
+      "deployability": "OFFLINE_ONLY_UNTIL_REQUIRED_GROUP_AND_GATES_PASS",
+      "new_run_outputs": [
+        "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
+      ]
+    },
+    {
+      "task_id": "VN15",
+      "existing_phase": "P08/P09",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "depends_on": [
+        "VN14B"
+      ],
+      "baseline": {
+        "head": "6443eb94133bc0075b0860885829e112adc657c8",
+        "source_manifest": "docs/refactoring/vnext/source_manifest.json",
+        "source_set_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+        "before_sha256": {
+          "vibetrading/telegram_trade.py": "6b52dc6d514da224341eeab77f2e2338942da230dcb7c456d48ecd12d03aa511",
+          "vibetrading/telegram.py": "c8dd9e179e01f05ffe0d777d4bd11dbd04175aae8f651c4c8b5425afdca14cd8",
+          "vibetrading/dashboard/bridge.py": "4b1cb3881770356b7f290d6155638c4669243807c85580cfe5f6f9dfa5aff1f3",
+          "tests/test_trade_exclusions.py": "dc09440370a7b185252400551088e5bbe53cd58942f3c930dc35a3786c9d3968",
+          "tests/test_dual_mock_and_assumed.py": "1d55e8a74330a8321a6bed11b28e98e4936c2b33f7e270fcd35911d792cdde5a"
+        },
+        "rule": "Pin post-predecessor hashes before dispatch; never force old hashes by reverting user work."
+      },
+      "file_owner": "editor-reporting",
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/test_dashboard.py",
+        "tests/test_dual_mock_and_assumed.py",
+        "tests/test_telegram_status.py",
+        "tests/test_trade_exclusions.py",
+        "vibetrading/dashboard/bridge.py",
+        "vibetrading/telegram.py",
+        "vibetrading/telegram_trade.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/telegram_trade.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/telegram.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/dashboard/bridge.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/test_trade_exclusions.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/test_dual_mock_and_assumed.py",
+          "action": "MODIFY"
+        }
+      ],
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "docs/refactoring/runs/20261018-stage-assignment/**",
+        "docs/evidence/**",
+        "server writes",
+        "real orders",
+        "external messages",
+        "production data deletion",
+        "KR missing-minute repair",
+        "any product/config file outside edit_paths"
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/telegram_trade.py::trade_report",
+          "vibetrading/telegram_trade.py::summary",
+          "vibetrading/telegram.py::TelegramController._compact_status",
+          "vibetrading/dashboard/bridge.py::run"
+        ],
+        "ADD_PROPOSED": [
+          "read-only per-strategy PnL/Return projection and UI bindings"
+        ]
+      },
+      "goal_and_acceptance": "Actual/assumed/recovery separated; missing valuation/currency/cashflow evidence shown unavailable; no reporting IO on submit path.",
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08_PROPOSED",
+        "C09_PROPOSED"
+      ],
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ],
+      "tests": {
+        "existing_regression_paths": [
+          "tests/test_trade_exclusions.py",
+          "tests/test_dual_mock_and_assumed.py",
+          "tests/test_telegram_status.py",
+          "tests/test_dashboard.py"
+        ],
+        "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
+        "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+      },
+      "independent_reviewer": "Luna independent diff reviewer",
+      "final_integrator": "root",
+      "rollback": "Disable route and reverse this ticket diff only; preserve latest ledger/UNKNOWN/reservations/evidence. Data-format/DB changes require reader compatibility proof or remain blocked. No reset/clean/stash/data restore.",
+      "deployability": "OFFLINE_ONLY_UNTIL_REQUIRED_GROUP_AND_GATES_PASS",
+      "new_run_outputs": [
+        "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
+      ]
+    },
+    {
+      "task_id": "VN16",
+      "existing_phase": "P07",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "depends_on": [
+        "VN00"
+      ],
+      "baseline": {
+        "head": "6443eb94133bc0075b0860885829e112adc657c8",
+        "source_manifest": "docs/refactoring/vnext/source_manifest.json",
+        "source_set_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+        "before_sha256": {
+          "vibetrading/local_storage.py": "21233fc68e52d74bc8c9ae96cea44eece74e6c7f998cba7898f971ba46a22c61",
+          "tests/refactoring/test_local_storage.py": "c694f445a1b15fb9cd8d58481337b0e99edd1fc9cb4855ac5d4ccbd3030ab0e5"
+        },
+        "rule": "Pin post-predecessor hashes before dispatch; never force old hashes by reverting user work."
+      },
+      "file_owner": "editor-storage",
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/refactoring/test_local_storage.py",
+        "vibetrading/local_storage.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/local_storage.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_local_storage.py",
+          "action": "MODIFY"
+        }
+      ],
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "docs/refactoring/runs/20261018-stage-assignment/**",
+        "docs/evidence/**",
+        "server writes",
+        "real orders",
+        "external messages",
+        "production data deletion",
+        "KR missing-minute repair",
+        "any product/config file outside edit_paths"
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/local_storage.py::LocalSpoolStorage.step",
+          "vibetrading/local_storage.py::LocalSpoolStorage.__init__"
+        ],
+        "ADD_PROPOSED": []
+      },
+      "goal_and_acceptance": "Source corruption isolated and observable; healthy round-robin lanes progress; common ledger/volume error still global and bounded.",
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08_PROPOSED",
+        "C09_PROPOSED"
+      ],
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ],
+      "tests": {
+        "existing_regression_paths": [
+          "tests/refactoring/test_local_storage.py"
+        ],
+        "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
+        "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+      },
+      "independent_reviewer": "Luna independent diff reviewer",
+      "final_integrator": "root",
+      "rollback": "Disable route and reverse this ticket diff only; preserve latest ledger/UNKNOWN/reservations/evidence. Data-format/DB changes require reader compatibility proof or remain blocked. No reset/clean/stash/data restore.",
+      "deployability": "OFFLINE_ONLY_UNTIL_REQUIRED_GROUP_AND_GATES_PASS",
+      "new_run_outputs": [
+        "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
+      ]
+    },
+    {
+      "task_id": "VN17",
+      "existing_phase": "P09",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "depends_on": [
+        "VN09",
+        "VN15",
+        "VN16",
+        "VN13"
+      ],
+      "baseline": {
+        "head": "6443eb94133bc0075b0860885829e112adc657c8",
+        "source_manifest": "docs/refactoring/vnext/source_manifest.json",
+        "source_set_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+        "before_sha256": {
+          "vibetrading/local_config.py": "7b276ca1959f15da4fcc29543354cdd61da248e562018c270429a3a056856fa3",
+          "scripts/refactoring/build_release_manifest.py": "86cfce34fa9af0ec14b1bf37badcb2972491a85c181b28191c81f6c47566dbb8",
+          "tests/refactoring/test_local_runtime.py": "89f073e1491ba2cb5b33f6c0a0885d8ecdf979dfe8104f3414059920d4432ec4",
+          "tests/refactoring/test_runtime_mounts.py": "680d7c2e91c1472a48f93f4bd8c64cd8dc4117ea3f79f99c5e801397355a8898"
+        },
+        "rule": "Pin post-predecessor hashes before dispatch; never force old hashes by reverting user work."
+      },
+      "file_owner": "editor-release",
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "scripts/refactoring/build_release_manifest.py",
+        "tests/refactoring/test_local_runtime.py",
+        "tests/refactoring/test_runtime_mounts.py",
+        "tests/test_crypto_release.py",
+        "vibetrading/local_config.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/local_config.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "scripts/refactoring/build_release_manifest.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "deploy/local-runtime.yml",
+          "action": "ADD"
+        },
+        {
+          "path": "tests/refactoring/test_local_runtime.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_runtime_mounts.py",
+          "action": "MODIFY"
+        }
+      ],
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "docs/refactoring/runs/20261018-stage-assignment/**",
+        "docs/evidence/**",
+        "server writes",
+        "real orders",
+        "external messages",
+        "production data deletion",
+        "KR missing-minute repair",
+        "any product/config file outside edit_paths"
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/local_config.py::CapacityContract.required",
+          "vibetrading/local_config.py::CapacityContract.verify_evidence",
+          "scripts/refactoring/build_release_manifest.py::build"
+        ],
+        "ADD_PROPOSED": [
+          "deploy/local-runtime.yml candidate overlay"
+        ]
+      },
+      "goal_and_acceptance": "Per-role exact digest/mount/config contract with finite combined CPU/RAM/physical-volume budgets, no secret render and no activation.",
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08_PROPOSED",
+        "C09_PROPOSED"
+      ],
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ],
+      "tests": {
+        "existing_regression_paths": [
+          "tests/refactoring/test_local_runtime.py",
+          "tests/refactoring/test_runtime_mounts.py",
+          "tests/test_crypto_release.py"
+        ],
+        "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
+        "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+      },
+      "independent_reviewer": "Luna independent diff reviewer",
+      "final_integrator": "root",
+      "rollback": "Disable route and reverse this ticket diff only; preserve latest ledger/UNKNOWN/reservations/evidence. Data-format/DB changes require reader compatibility proof or remain blocked. No reset/clean/stash/data restore.",
+      "deployability": "OFFLINE_ONLY_UNTIL_REQUIRED_GROUP_AND_GATES_PASS",
+      "new_run_outputs": [
+        "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
+      ]
+    },
+    {
+      "task_id": "VN18",
+      "existing_phase": "P10",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "depends_on": [
+        "VN17",
+        "VN05"
+      ],
+      "baseline": {
+        "head": "6443eb94133bc0075b0860885829e112adc657c8",
+        "source_manifest": "docs/refactoring/vnext/source_manifest.json",
+        "source_set_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+        "before_sha256": {
+          "tests/refactoring/test_local_runtime.py": "89f073e1491ba2cb5b33f6c0a0885d8ecdf979dfe8104f3414059920d4432ec4",
+          "tests/test_crypto_replay_integrity.py": "de272eb0dcc07914dc09fc0b035068bb0f18813a265764bde7dc9ef60b8fc797"
+        },
+        "rule": "Pin post-predecessor hashes before dispatch; never force old hashes by reverting user work."
+      },
+      "file_owner": "editor-validation",
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/refactoring/test_local_runtime.py",
+        "tests/test_crypto_replay_integrity.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "scripts/refactoring/benchmark_vnext.py",
+          "action": "ADD"
+        },
+        {
+          "path": "tests/refactoring/test_local_runtime.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/test_crypto_replay_integrity.py",
+          "action": "MODIFY"
+        }
+      ],
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "docs/refactoring/runs/20261018-stage-assignment/**",
+        "docs/evidence/**",
+        "server writes",
+        "real orders",
+        "external messages",
+        "production data deletion",
+        "KR missing-minute repair",
+        "any product/config file outside edit_paths"
+      ],
+      "target_symbols": {
+        "EXISTING": [],
+        "ADD_PROPOSED": [
+          "small pinned trace A/B driver; CLI fixed and tested in this ticket"
+        ]
+      },
+      "goal_and_acceptance": "Execute validation matrix with raw sample counts and source hashes; 30m wall clock/24h cloud/15m Parquet/72h representative coverage never substituted by fixtures.",
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08_PROPOSED",
+        "C09_PROPOSED"
+      ],
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ],
+      "tests": {
+        "existing_regression_paths": [
+          "tests/refactoring/test_local_runtime.py",
+          "tests/test_crypto_replay_integrity.py"
+        ],
+        "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
+        "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+      },
+      "independent_reviewer": "Luna independent diff reviewer",
+      "final_integrator": "root",
+      "rollback": "Disable route and reverse this ticket diff only; preserve latest ledger/UNKNOWN/reservations/evidence. Data-format/DB changes require reader compatibility proof or remain blocked. No reset/clean/stash/data restore.",
+      "deployability": "OFFLINE_ONLY_UNTIL_REQUIRED_GROUP_AND_GATES_PASS",
+      "new_run_outputs": [
+        "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
+      ]
+    },
+    {
+      "task_id": "VN19",
+      "existing_phase": "P11",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "depends_on": [
+        "VN18"
+      ],
+      "baseline": {
+        "head": "6443eb94133bc0075b0860885829e112adc657c8",
+        "source_manifest": "docs/refactoring/vnext/source_manifest.json",
+        "source_set_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+        "before_sha256": {},
+        "rule": "Pin post-predecessor hashes before dispatch; never force old hashes by reverting user work."
+      },
+      "file_owner": "root-release",
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "scripts/refactoring/build_release_manifest.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "docs/refactoring/runs/20261020-vnext/vn19-package/",
+          "action": "ADD"
+        }
+      ],
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "docs/refactoring/runs/20261018-stage-assignment/**",
+        "docs/evidence/**",
+        "server writes",
+        "real orders",
+        "external messages",
+        "production data deletion",
+        "KR missing-minute repair",
+        "any product/config file outside edit_paths"
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "scripts/refactoring/build_release_manifest.py::build"
+        ],
+        "ADD_PROPOSED": []
+      },
+      "goal_and_acceptance": "Reviewable per-role cutover/rollback package with exact commands/digests/accounts/current-ledger compatibility; separate execution authorization.",
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08_PROPOSED",
+        "C09_PROPOSED"
+      ],
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ],
+      "tests": {
+        "existing_regression_paths": [],
+        "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
+        "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+      },
+      "independent_reviewer": "independent safety/recovery reviewer; Luna may check simple diff only",
+      "final_integrator": "root",
+      "rollback": "Disable route and reverse this ticket diff only; preserve latest ledger/UNKNOWN/reservations/evidence. Data-format/DB changes require reader compatibility proof or remain blocked. No reset/clean/stash/data restore.",
+      "deployability": "DOCUMENT_PACKAGE_ONLY_NOT_SERVER_EXECUTION",
+      "new_run_outputs": [
+        "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
+      ]
+    },
+    {
+      "task_id": "VN20",
+      "existing_phase": "P12",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "depends_on": [
+        "VN19"
+      ],
+      "baseline": {
+        "head": "6443eb94133bc0075b0860885829e112adc657c8",
+        "source_manifest": "docs/refactoring/vnext/source_manifest.json",
+        "source_set_sha256": "1b0dbadca1398b3350324443b55549d83453bc747776dd9837500ccdec7a903e",
+        "before_sha256": {
+          "vibetrading/bus.py": "2d4830b45b4ef549a2b7b1797d649e22fe1caab6e01a6329181f4fa2b628c4d2",
+          "vibetrading/runtime.py": "9e18689d0172020652fca418701a7746228090879d8b248ab6e63f4df05c3d92",
+          "vibetrading/market_fanout.py": "483c6c9c22a8dcfd0b796a4c98d0a077cbb4cd91b12ad9749226487cf7311760",
+          "requirements.txt": "7b0fec7c7a6cac952f34a683c42342866a097757a61ed097f606fc0841fd659b"
+        },
+        "rule": "Pin post-predecessor hashes before dispatch; never force old hashes by reverting user work."
+      },
+      "file_owner": "root-retire",
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "requirements.txt",
+        "vibetrading/bus.py",
+        "vibetrading/market_fanout.py",
+        "vibetrading/runtime.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/bus.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/runtime.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/market_fanout.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "requirements.txt",
+          "action": "MODIFY"
+        }
+      ],
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "docs/refactoring/runs/20261018-stage-assignment/**",
+        "docs/evidence/**",
+        "server writes",
+        "real orders",
+        "external messages",
+        "production data deletion",
+        "KR missing-minute repair",
+        "any product/config file outside edit_paths"
+      ],
+      "target_symbols": {
+        "EXISTING": [],
+        "ADD_PROPOSED": []
+      },
+      "goal_and_acceptance": "After actual cutover stabilization, archived legacy backlog and rollback proof, pin remaining callers and split exact retire paths before dispatch; no automatic deletion.",
+      "contracts": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08_PROPOSED",
+        "C09_PROPOSED"
+      ],
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived",
+        "Actual G11 cutover stabilization plus backlog/rollback/retention proof; split exact retire child tickets before editing"
+      ],
+      "tests": {
+        "existing_regression_paths": [],
+        "launcher": "New-run copy of run_offline_tests.py / run_linux_tests.py; see 05 for existing options. Unique source/label; tests NOT_RUN in this plan.",
+        "independent_oracle": "Pinned original provider/native/reference economic fixtures and before-state; never derive expected output from candidate.",
+        "production_matrix": "Required relevant rows of 05; fake broker cannot establish provider API readiness."
+      },
+      "independent_reviewer": "independent safety/recovery reviewer; Luna may check simple diff only",
+      "final_integrator": "root",
+      "rollback": "Disable route and reverse this ticket diff only; preserve latest ledger/UNKNOWN/reservations/evidence. Data-format/DB changes require reader compatibility proof or remain blocked. No reset/clean/stash/data restore.",
+      "deployability": "OFFLINE_ONLY_UNTIL_REQUIRED_GROUP_AND_GATES_PASS",
+      "new_run_outputs": [
+        "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
+      ]
+    }
+  ]
+}
