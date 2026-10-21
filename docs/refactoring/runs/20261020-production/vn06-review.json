@@ -1,0 +1,24 @@
+{
+  "kind": "Independent safety/recovery static review plus separate Luna boundary tests",
+  "core_source_sha256": {
+    "vibetrading/market_checkpoint.py": "e415d3920d400e5e0406ac38994e22ff39e1d035fde46c4153612534b50401bc",
+    "vibetrading/hot_path.py": "d11c51877c6ffdde657801b3bc9b8bc7b0bf302ab8ec97e53b416610a84f99d2"
+  },
+  "reviewed_test_sha256": {
+    "tests/refactoring/test_vnext_vn06.py": "669d919cce0ff0af3fcb4db27309271b29254b10f42b56db3de2c8903e2cb08d",
+    "tests/refactoring/test_market_checkpoint_bounds.py": "f74a57fc98416981af16a6f7f8389803fe32617a436fe09021890dad80ace9ed"
+  },
+  "unresolved_blocking_findings": 0,
+  "scope": "CODEC_ONLY; reviewer did not run tests",
+  "fixed_themes": [
+    "Exact event schemas/numeric canonicalization and tagged metadata",
+    "Aggregate/scalar/key/depth/node bounds before copying",
+    "Dedup TTL/order/retained fingerprint and native projection reconciliation"
+  ],
+  "remaining_authority_gates": [
+    "VN07 atomic engine capture and verified cursor vector",
+    "Global delta order and state-only replay/handoff proof",
+    "Owner/strategy/pending execution recovery",
+    "LIVE promotion and retained reader/GC"
+  ]
+}

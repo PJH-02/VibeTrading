@@ -49,7 +49,7 @@ def test_notification_receipts_never_write_trading_journal_and_pass_first_fifty(
 
 
 @pytest.mark.asyncio
-async def test_gateway_outage_does_not_block_command_receipt_and_reply_is_durable(tmp_path):
+async def test_gateway_outage_does_not_block_command_receipt_and_reply_is_durable(tmp_path,monkeypatch):
     bot = _controller(tmp_path)
     bot._outbox_enabled = True
     update = {"update_id":42,"message":{"from":{"id":123},"chat":{"id":123},"text":"help"}}
@@ -61,9 +61,20 @@ async def test_gateway_outage_does_not_block_command_receipt_and_reply_is_durabl
     async def unavailable(*args):
         raise RuntimeError("gateway offline")
     bot._send_direct = unavailable
+    loop=asyncio.get_running_loop()
+    retried=asyncio.Event()
+    original_retry=bot._state.retry
+    def committed_retry(*args):
+        original_retry(*args)
+        loop.call_soon_threadsafe(retried.set)
+    monkeypatch.setattr(bot._state,'retry',committed_retry)
     task = asyncio.create_task(bot._sender_loop(None))
-    await asyncio.sleep(.03)
-    task.cancel()
+    try:
+        # Wait for the real worker commit, rather than assuming that a 30ms
+        # timer also means its SQLite write has finished on a busy machine.
+        await asyncio.wait_for(retried.wait(),timeout=5)
+    finally:
+        task.cancel()
     with pytest.raises(asyncio.CancelledError):
         await task
     with bot._state.transaction() as db:

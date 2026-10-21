@@ -40,6 +40,20 @@ def write_document(path, document):
     atomic_write_snapshot(path, json.dumps(document, ensure_ascii=False, separators=(",", ":")).encode())
 
 
+def test_unrelated_feed_failure_preserves_valid_market_projection(tmp_path):
+    owner, _, now = engine()
+    owner.stats["feeds"]["unrelated-crypto"] = {
+        "provider": "arcus-perp", "mode": "INVALID", "reason": "transport_gap",
+        "generation": 2, "applied_sequence": 1,
+    }
+    document = capture_market_snapshot(owner, budgets(), now_ns=now)
+    assert document["engine"]["healthy"] is False
+    assert document["markets"][0]["book_valid"] is True
+    path = tmp_path / "partial-health.json"
+    write_document(path, document)
+    assert read_market_snapshot(path, budgets(), now_ns=now)["markets"][0]["book_valid"] is True
+
+
 def test_snapshot_reuses_existing_book_and_preserves_dashboard_row_schema(tmp_path, monkeypatch):
     owner, common, now = engine()
     def forbidden(*args, **kwargs):

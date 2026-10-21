@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "date_kst": "2026-10-21",
+  "harness_sha256": "90b66c342c59d6bee73e0d0e95a3d157eac927746718b6b611225a541c76b2f9",
+  "sources": {
+    "before": "d5fde35c75586881c7b17ed1027ede19e8f252e2f04b7d6217dcaadef1353323",
+    "after": "878765a502bf48e6a1834e5b17632a84915f72b063cbe9afcbcd276ecb7c31cd"
+  },
+  "platforms": {
+    "windows": {
+      "profiles": {
+        "burst8": {
+          "before": {
+            "runs": 6,
+            "events": 1152,
+            "mean_ms": 34.743466059027774,
+            "p50_ms": 31.0613,
+            "p95_ms": 45.1929,
+            "p99_ms": 48.0919,
+            "repeat_p99_ms_range": [
+              45.0441,
+              49.9245
+            ],
+            "mean_process_cpu_ns_per_event": 461154.5138888889
+          },
+          "after": {
+            "runs": 6,
+            "events": 1152,
+            "mean_ms": 9.91354609375,
+            "p50_ms": 9.8313,
+            "p95_ms": 11.2243,
+            "p99_ms": 11.8182,
+            "repeat_p99_ms_range": [
+              10.9189,
+              15.0206
+            ],
+            "mean_process_cpu_ns_per_event": 556098.0902777778
+          },
+          "after_over_before_p99_ratio": 0.24574200645015062
+        },
+        "sparse1": {
+          "before": {
+            "runs": 6,
+            "events": 144,
+            "mean_ms": 34.44960694444445,
+            "p50_ms": 30.9419,
+            "p95_ms": 45.0688,
+            "p99_ms": 46.0504,
+            "repeat_p99_ms_range": [
+              42.4137,
+              46.0504
+            ],
+            "mean_process_cpu_ns_per_event": 3255208.3333333335
+          },
+          "after": {
+            "runs": 6,
+            "events": 144,
+            "mean_ms": 35.44965208333333,
+            "p50_ms": 30.9342,
+            "p95_ms": 45.9986,
+            "p99_ms": 47.5974,
+            "repeat_p99_ms_range": [
+              41.6888,
+              47.5974
+            ],
+            "mean_process_cpu_ns_per_event": 3797743.0555555555
+          },
+          "after_over_before_p99_ratio": 1.0335936278512239
+        }
+      },
+      "artifacts": {
+        "vn05-probe-windows-before-a": {
+          "result.json": "657b401b5962d1eb8a1a14db4f89bc94a53366158aa512d2ee44f5bffa366d57",
+          "stdout.txt": "b146af296e9c2bbb18d89f0b725303a00596e893fa6bb0f85bd90e0527517413",
+          "junit.xml": "839be01d6175e5e69634a0fffdc2f0568332d55fd2acba61017777e6b7b7bc59",
+          "guard_receipts.jsonl": "669c40827744a8029e3a66defc99dd5b91294b5b41b47fce7cd484361b455eec"
+        },
+        "vn05-probe-windows-before-c": {
+          "result.json": "38ef1ee9944b83fa2b5d9d2b3635cd7eeec6ffaeaeba942f88e451d6013eacbe",
+          "stdout.txt": "953e3375db828ad394c0258bdde9302295f07fc4a07d650bb16e6a877909c7b2",
+          "junit.xml": "0fd18aee6562c78b01c292865efa6c81e49e4cb5bd12b31f71bdc7ea50ddc1a3",
+          "guard_receipts.jsonl": "a7a4a29901b8863dd0e98757523ca8211d91539282ae80bac3880ab5bbea54ca"
+        },
+        "vn05-probe-windows-after-b": {
+          "result.json": "5c881117af5809da221357909b4cae6405f805d421bb7330e5722bb709bee5dd",
+          "stdout.txt": "c4a3b40d35b3578b24fe463d54ed3bd632fda57050c440cecca4b363e1becfc4",
+          "junit.xml": "64def2c236ca12574010f6ef1255b40e852326efc98bd034f765ada534a72869",
+          "guard_receipts.jsonl": "eda918f9547008ae89e48fa5b487c815d09a62a3a6ca506939759e53477822cb"
+        },
+        "vn05-probe-windows-after-d": {
+          "result.json": "2e1c7325364975ca20affc31bfb113db74e81cacad160ec084ff83b94545db09",
+          "stdout.txt": "1d6e682026c5e504395cbdacfac0af07cf8296dea18eb9e3bd3b8ff7428c540e",
+          "junit.xml": "f456d81da33d576fb010f1f802f0fed846370a8d987f4081a43a833e4ee96023",
+          "guard_receipts.jsonl": "45a1d9e6bb3407b87235d57cda3bfd2d97a4a738ad655e1fff6505ed633fb313"
+        }
+      }
+    },
+    "linux": {
+      "profiles": {
+        "burst8": {
+          "before": {
+            "runs": 3,
+            "events": 576,
+            "mean_ms": 37.495919871527775,
+            "p50_ms": 36.726428,
+            "p95_ms": 41.02151,
+            "p99_ms": 57.34891,
+            "repeat_p99_ms_range": [
+              40.104947,
+              57.366128
+            ],
+            "mean_process_cpu_ns_per_event": 149708.97222222222
+          },
+          "after": {
+            "runs": 3,
+            "events": 576,
+            "mean_ms": 15.623059465277779,
+            "p50_ms": 15.055263,
+            "p95_ms": 19.892872,
+            "p99_ms": 28.199734,
+            "repeat_p99_ms_range": [
+              19.642729,
+              28.212079
+            ],
+            "mean_process_cpu_ns_per_event": 123867.68402777778
+          },
+          "after_over_before_p99_ratio": 0.4917222315123339
+        },
+        "sparse1": {
+          "before": {
+            "runs": 3,
+            "events": 72,
+            "mean_ms": 37.23459845833334,
+            "p50_ms": 36.566554,
+            "p95_ms": 40.981264,
+            "p99_ms": 47.517436,
+            "repeat_p99_ms_range": [
+              40.281089,
+              41.834531
+            ],
+            "mean_process_cpu_ns_per_event": 993037.6805555555
+          },
+          "after": {
+            "runs": 3,
+            "events": 72,
+            "mean_ms": 35.865281083333336,
+            "p50_ms": 35.355679,
+            "p95_ms": 38.90102,
+            "p99_ms": 46.670649,
+            "repeat_p99_ms_range": [
+              36.687583,
+              46.670649
+            ],
+            "mean_process_cpu_ns_per_event": 1008142.7222222222
+          },
+          "after_over_before_p99_ratio": 0.9821794467193053
+        }
+      },
+      "artifacts": {
+        "vn05-probe-linux-before-a": {
+          "linux_result.json": "9f2fe70639fe08388fa111b1c0d9bf527bf123c4459c25baa3e8371733796bfd",
+          "stdout.txt": "27c766708579b3ef230b86826bd62e24daff3909796d50cf7bb5561d844be96d",
+          "junit.xml": "948aa38843d4e15df9e77c6b5d1b93d52e9bab5b334232fab6fc3ce6b373e417",
+          "guard_receipts.jsonl": "01c3390538bd81067190b309dcc2f8fce73a0d173be9e28631aebce25e6e93f6"
+        },
+        "vn05-probe-linux-after-b": {
+          "linux_result.json": "69203f5121af33417d7214607b5d3515ba1ea5b0b5e90d3d14c2aec7ae654373",
+          "stdout.txt": "ea17559140aad733d4c5c10f66ffea55656fd41313d5d1f03982629412552198",
+          "junit.xml": "e5775153d0278be219633432dea5b745a7e0e8939ab5afd7d63f6ba0755a1d22",
+          "guard_receipts.jsonl": "2543d1edd3f28b8e0dc5d138c12a330855534ed6da8a981f093f09782b44fbd3"
+        }
+      }
+    }
+  },
+  "production_performance_gate": "OPEN_MISSING_EVIDENCE",
+  "limitations": [
+    "Real local fsync with fake ACK; no engine/strategy/account/NATS/venue",
+    "Alternating before/after warm-state runs; cold-cache and instrumentation overhead not measured",
+    "Small synthetic input; p99.9 not evaluated, no production latency/capacity or 20% CPU claim",
+    "Windows native disk and Linux WSL /tmp are different filesystems; never pool across platforms"
+  ]
+}

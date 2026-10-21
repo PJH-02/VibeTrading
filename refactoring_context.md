@@ -1,5 +1,11 @@
 # VibeTrading 리팩토링 컨텍스트
 
+2026-10-21 최신 정리: 로컬/서버 소스는 여전히 다르다. 최신 사용자의 완료분 커밋 지시에 따라 [완료 구현 경계와 잔여 단계](docs/refactoring/vnext/15_stage_status_and_next_steps.md)를 고정한 로컬 코드만 커밋한다. 미완성 Paper/포트폴리오/venue 구현은 작업 트리에 남기며, 전체 작업 트리와 커밋 대상의 시험 후보를 따로 검증한다. 서버 반영·실계좌 활성·운영 성능 완료로 해석하지 않는다.
+
+2026-10-21 재개: v6 전체 회귀 Windows1226/Linux1236 PASS, VN05 v7 영향 범위 Windows185/Linux193 PASS다(각 skip는 별도 receipt 참조). 작은 fsync/fake-ACK A/B에서 burst 지연은 개선됐지만 Windows CPU/event는 증가했다. 이를 실제 NATS 경로·2vCPU/3.8GiB·장기 운용 개선으로 해석하지 않는다. [단계별 측정과 제한](docs/refactoring/vnext/14_agent_execution_handoff.md)에 기록하며, 현재 VN06 codec 개발 중인 작업 트리와 이미 검증한 후보를 구분한다.
+
+2026-10-20 최신 실행 맥락은 [현재 상태 차이](docs/refactoring/vnext/01_current_state_delta.md), [production gap](docs/refactoring/vnext/07_production_readiness_gap.md), [구현·시험 기록](docs/refactoring/vnext/14_agent_execution_handoff.md)에 연결한다. 아래 로컬/서버 차이는 기존 시점의 증거이며, 새 로컬 구현을 서버에 반영한 사실이 아니다. 실제 30분 초과 독립 실행·2vCPU/3.8GiB 부하·72시간 및 실계좌 capability는 별도 미검증 gate다.
+
 **현재 로컬 코드 ≠ 서버 실행 코드 — 2026-10-19 재확인.** 실행 중인 Python 컨테이너 13개의 소스를 실제 모듈 소유자 기준으로 비교했다. 93개 파일은 동일하고, 기존 20개 파일은 다르며, 로컬에만 신규 모듈 18개가 있다. 로컬에는 NATS-free 후속 리팩토링 구현이 포함돼 있고 서버에는 P02 schema cache만 활성 적용됐다. 서버에 보존한 비활성 후보를 실행 코드로 해석하지 않는다. 사용자의 “로컬과 서버가 다르면 커밋하지 말 것” 조건에 따라 이번 정리에서는 커밋을 보류한다.
 
 실제 배포 소스와의 차이 예시(SHA-256 앞 12자리):

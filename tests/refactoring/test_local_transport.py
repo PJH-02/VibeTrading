@@ -91,6 +91,22 @@ async def test_header_length_duplicate_key_checksum_and_truncation_are_explicit(
             await read_bytes(truncated)
 
 
+@pytest.mark.asyncio
+async def test_replay_uses_market_admission_reservation_and_rejects_empty_payload():
+    raw=encode_frame(cursor(1),b"replay",session=SESSION,budgets=budgets(),kind="REPLAY")
+    reserved=[]
+    reader=asyncio.StreamReader();reader.feed_data(raw);reader.feed_eof()
+    parsed=await read_frame(reader,budgets(),_reserve=reserved.append,_allowed_kinds={"REPLAY"})
+    assert parsed.kind=="REPLAY" and reserved==[len(raw)]
+
+    empty_digest=hashlib.sha256(b"").hexdigest()
+    empty=mutate(raw,payload_size=0,digest=empty_digest)
+    size=struct.unpack("!I",empty[:4])[0]
+    empty=empty[:4+size]
+    with pytest.raises(TransportError,match="invalid_header_or_payload"):
+        await read_bytes(empty,budgets())
+
+
 @pytest.mark.parametrize("changes", [{"max_sessions": True}, {"max_records": 0},
     {"max_age_seconds": float("nan")}, {"max_frame_bytes": 8193}])
 def test_explicit_finite_budgets(changes):
@@ -109,7 +125,8 @@ def test_no_implicit_network_fallback_or_nonlocal_offline_endpoint(tmp_path):
             LocalTransportServer(tmp_path / "transport", allowed_uid=0, **kwargs)
 
 
-async def start_pair(*, limits=None, apply=None, resume=None, profile="offline-loopback", endpoint=None, uid=None):
+async def start_pair(*, limits=None, apply=None, resume=None, profile="offline-loopback", endpoint=None, uid=None,
+                     on_replay=None, on_recovery_query=None, on_recovery_commit=None):
     gaps, applied = [], []
     def on_frame(item):
         applied.append(item)
@@ -117,7 +134,9 @@ async def start_pair(*, limits=None, apply=None, resume=None, profile="offline-l
     limits = limits or budgets()
     server = LocalTransportServer(endpoint if endpoint is not None else ("127.0.0.1", 0), budgets=limits,
         on_frame=on_frame, on_gap=lambda cur, reason: gaps.append(("server", cur, reason)),
-        on_resume=resume or (lambda cur: True), profile=profile, allowed_uid=uid)
+        on_resume=resume or (lambda cur: True), on_replay=on_replay,
+        on_recovery_query=on_recovery_query,on_recovery_commit=on_recovery_commit,
+        profile=profile, allowed_uid=uid)
     await server.start()
     target = server.endpoint if profile == "linux-uds" else server.addresses
     client = LocalTransportClient(target, producer=cursor().producer, incarnation=cursor().incarnation,
@@ -157,11 +176,84 @@ async def test_explicit_resume_received_applied_and_separate_durable_receipts():
 
 
 @pytest.mark.asyncio
+async def test_query_fixed_high_water_replay_and_server_owned_commit_gate():
+    empty=hashlib.sha256(b"").hexdigest()
+    high=cursor(2)
+    readiness=[False]
+    replayed=[]
+    server,client,_,_=await start_pair(
+        on_replay=lambda item:(replayed.append(item) or AppliedReceipt(item.cursor,item.digest)),
+        on_recovery_query=lambda target:AppliedReceipt(cursor(0),empty),
+        on_recovery_commit=lambda target,digest:readiness[0])
+    try:
+        proof=await client.query_cursor(high)
+        assert (proof.cursor,proof.digest)==(cursor(0),empty)
+        for item in (frame(1),frame(2)):
+            assert client.try_send(item,replay=True)
+            ack=await asyncio.wait_for(client.receive_ack(),2)
+            assert ack.phase=="APPLIED" and ack.cursor==item.cursor
+        assert [item.cursor for item in replayed]==[cursor(1),cursor(2)]
+        try:
+            blocked=await client.commit_recovery(high,frame(2).digest)
+        except asyncio.TimeoutError as error:
+            sessions={key:{"applied":value.applied,"high_water":value.recovery_high_water,
+                           "history":dict(value.history)} for key,value in server._sessions.items()}
+            raise AssertionError(f"commit blocked ACK missing; client={client.stats}; sessions={sessions}") from error
+        assert not blocked, f"client={client.stats}; applied={applied}"
+        assert not client.valid
+        readiness[0]=True
+        assert await client.commit_recovery(high,frame(2).digest)
+        assert client.valid
+        assert client.try_send(frame(3))
+        assert [ack.phase for ack in await acks(client,2)]==["RECEIVED","APPLIED"]
+    finally:
+        await client.close()
+        await server.close()
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not sys.platform.startswith("linux"),reason="production UDS is Linux-only")
+async def test_query_fixed_high_water_replay_and_commit_gate_over_linux_uds(tmp_path):
+    empty=hashlib.sha256(b"").hexdigest()
+    high=cursor(1)
+    replayed=[]
+    server,client,_,_=await start_pair(profile="linux-uds",endpoint=tmp_path/"delivery",
+        uid=os.geteuid(),
+        on_replay=lambda item:(replayed.append(item) or AppliedReceipt(item.cursor,item.digest)),
+        on_recovery_query=lambda target:AppliedReceipt(cursor(0),empty),
+        on_recovery_commit=lambda target,digest:target==high and digest==frame(1).digest)
+    try:
+        assert (await client.query_cursor(high)).cursor==cursor(0)
+        assert client.try_send(frame(1),replay=True)
+        replay_ack=await asyncio.wait_for(client.receive_ack(),2)
+        assert replay_ack.phase=="APPLIED" and replay_ack.digest==frame(1).digest
+        assert await client.commit_recovery(high,frame(1).digest)
+        assert replayed==[frame(1)]
+    finally:
+        await client.close()
+        await server.close()
+
+
+@pytest.mark.asyncio
 async def test_resume_rejection_and_application_receipt_error_fail_closed():
     server, client, gaps, applied = await start_pair(resume=lambda cur: False)
     try:
         assert (await client.request_resume(cursor())).phase == "REJECTED"
         assert not client.try_send(frame()) and not applied
+    finally:
+        await client.close()
+        await server.close()
+
+
+@pytest.mark.asyncio
+async def test_rejected_resume_keeps_control_lane_available_for_query_recovery():
+    empty=hashlib.sha256(b"").hexdigest()
+    server,client,_,_=await start_pair(resume=lambda cur:False,
+        on_recovery_query=lambda target:AppliedReceipt(cursor(0),empty))
+    try:
+        assert (await client.request_resume(cursor(1))).phase=="REJECTED"
+        proof=await client.query_cursor(cursor(1))
+        assert (proof.phase,proof.cursor,proof.digest)==("QUERY",cursor(0),empty)
     finally:
         await client.close()
         await server.close()

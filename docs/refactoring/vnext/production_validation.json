@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "date_kst": "2026-10-21",
+  "committed_boundary_candidate": {
+    "source": "completed-market-v1",
+    "file_count": 539,
+    "source_set_sha256": "d4a4f02777d56c2f30b53d52db76021da7aa1fbe8adc4d03a179a2436863625b",
+    "receipt": "docs/refactoring/runs/20261020-production/completed-market-v1-validation.json",
+    "windows": {
+      "passed": 1199,
+      "skipped": 14,
+      "deselected": 2
+    },
+    "linux": {
+      "passed": 1213,
+      "skipped": 0,
+      "deselected": 2
+    }
+  },
+  "workspace_only_candidate": {
+    "source": "production-v12",
+    "file_count": 550,
+    "source_set_sha256": "322bb2cb849ecb5ab8849e70e87aba53d0622f6872196ed45bdb9079ba472b8a",
+    "receipt": "docs/refactoring/runs/20261020-production/production-v12-full-validation.json",
+    "raw_artifacts": "Retained locally; not needed for selected-source regression",
+    "windows": {
+      "passed": 1312,
+      "skipped": 14,
+      "deselected": 2
+    },
+    "linux": {
+      "passed": 1326,
+      "deselected": 2
+    }
+  },
+  "classification": "docs/refactoring/vnext/stage_status.json",
+  "review": "docs/refactoring/runs/20261020-production/vn07-review.json",
+  "production_ready": false,
+  "server_deployed": false,
+  "live_active": false,
+  "next_stage": "VN07 remaining global-order and owner/strategy recovery contract; then VN08 retained-base reader",
+  "open_gates": [
+    "server_source_parity",
+    "account_owner_legacy_fencing",
+    "full_checkpoint_and_continuous_input_recovery",
+    "venue_transport_and_private_lifecycle",
+    "actual_live_input_paper",
+    "early_latency_and_capacity",
+    "30min_nats_free",
+    "24h_cloud_outage",
+    "72h_stability",
+    "cutover"
+  ]
+}

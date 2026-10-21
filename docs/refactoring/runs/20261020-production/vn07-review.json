@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "candidate": "production-v12",
+  "source_set_sha256": "322bb2cb849ecb5ab8849e70e87aba53d0622f6872196ed45bdb9079ba472b8a",
+  "reviewed_sha256": {
+    "vibetrading/local_engine.py": "5bf457491a10dc856283cc79b1c7fb80824e834f87127ec18a7e3b66290802e1",
+    "vibetrading/local_runtime.py": "e30838b8ce3bf72022b04bfd05d3419e5f7b30bfecb2978c1202e4cc5172c3de",
+    "vibetrading/market_checkpoint.py": "15c8e42105ee54236e2c5c7de89e2d86735bdb23b5f9445d25300e2eff5ea937",
+    "tests/refactoring/test_vnext_vn07.py": "680627ba87e617ce71183100ed3c2fef0c421c729ee084c75b8b3c9c2c3c6d8a",
+    "tests/refactoring/test_checkpoint_startup.py": "6f594981140c91307ffedbc11b34c2ae8f8b0c39aa9daaa61fb99c1edd26d7f9",
+    "tests/refactoring/test_checkpoint_runtime.py": "421747f2f2521b18ac4d4ec83ddc6655c59e8e0149a4ab948c83eb8662e1c13b"
+  },
+  "reviewer_role": "Independent safety/recovery reviewer; Luna options/single-flight tests and fixture inspection",
+  "static_review": true,
+  "reviewer_executed_tests": false,
+  "unresolved_P1_P2": 0,
+  "closed_findings": [
+    "C rewind and replay cannot certify prior retained state",
+    "Constructor-populated and externally applied state cannot gain checkpoint authority",
+    "Filter/invalidation/postapply/failure/final clock callbacks cannot hide extra applications",
+    "Callback-bearing restoration rejected",
+    "False readiness stops before transport start",
+    "Retained C reader reused through suffix identity checks"
+  ],
+  "accepted_scope": "Trusted-owner, callback-free market state with exact producer/provider/ownership/config binding and explicit whole-vector readiness",
+  "open_gates": [
+    "No multi-producer nonempty suffix without persisted global apply order",
+    "ETF/Paper account/strategy/pending execution restore not provided",
+    "No GC/retained-base activation",
+    "No production performance/live input/long-run/activation proof"
+  ],
+  "selected_commit_candidate": "completed-market-v1",
+  "selected_commit_source_set_sha256": "d4a4f02777d56c2f30b53d52db76021da7aa1fbe8adc4d03a179a2436863625b",
+  "reviewed_code_unchanged_in_selected_candidate": true
+}

@@ -102,6 +102,8 @@ async def test_full_observation_queue_fails_closed_and_does_not_claim_unconfirme
         await bus.wait_durable(first)
     with pytest.raises(RuntimeError):await bus.close()
     assert errors and bus.stats['durable']==0 and bus.stats['pending']==0
+    assert bus.stats['fault_stage']=='admission'
+    assert bus.stats['fault_reason']=='invalid_frame_or_ownership_budget'
 
 
 @pytest.mark.asyncio

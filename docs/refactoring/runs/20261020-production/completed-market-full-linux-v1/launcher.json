@@ -1,0 +1,7 @@
+{
+  "started_utc": "2026-10-20T23:54:21.831002+00:00",
+  "completed_utc": "2026-10-20T23:58:05.324953+00:00",
+  "launcher_exit_code": 0,
+  "test_process_timeout_seconds": 900,
+  "launcher_sha256": "0a64a256eb9b8500172195697d206bdc2207ccc7649aed5ee959fdaaa4926ec2"
+}

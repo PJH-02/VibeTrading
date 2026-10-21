@@ -11,7 +11,7 @@ import json
 import math
 from pathlib import Path
 
-from .local_pipeline import PipelineBudgets
+from .local_pipeline import DeliveryBudgets, PipelineBudgets
 from .local_transport import TransportBudgets
 
 
@@ -107,6 +107,7 @@ class ProducerPlan:
     limits:SpoolLimits
     pipeline:PipelineBudgets
     capacity:CapacityContract
+    delivery:DeliveryBudgets|None=None
 
     def __post_init__(self):
         for value in (self.producer,self.incarnation):
@@ -119,6 +120,10 @@ class ProducerPlan:
             raise ValueError('spool frame must include payload plus header overhead')
         if self.limits.max_frame_bytes>self.pipeline.max_bytes:
             raise ValueError('one replay wire frame must fit the explicit ownership byte budget')
+        if self.delivery is not None and (
+                self.delivery.max_batch_records>self.pipeline.max_records
+                or not self.limits.max_frame_bytes<=self.delivery.max_batch_bytes<=self.pipeline.max_bytes):
+            raise ValueError('delivery bounds must fit the producer ownership capacity')
         records,size=self.capacity.required(self.limits)
         if records>self.limits.max_records or size>self.limits.max_disk_bytes:
             raise ValueError('spool cannot cover the measured independent operation window')
@@ -196,11 +201,15 @@ class LocalRuntimePlan:
         if not isinstance(entries,list) or not 0<len(entries)<=16:raise ValueError('bounded explicit producers required')
         producers=[]
         for entry in entries:
+            expected_entry={'producer','provider','incarnation','symbols','spool_root','spool','pipeline','capacity'}
+            if set(entry)-expected_entry-{'delivery'} or not expected_entry<=set(entry):
+                raise ValueError('invalid producer config fields')
             capacity=dict(entry['capacity'])
             capacity['evidence_file']=absolute(capacity['evidence_file'],'capacity evidence')
             producers.append(ProducerPlan(entry['producer'],entry['provider'],entry['incarnation'],entry['symbols'],
                 absolute(entry['spool_root'],'spool_root'),SpoolLimits(**entry['spool']),
-                PipelineBudgets(**entry['pipeline']),CapacityContract(**capacity)))
+                PipelineBudgets(**entry['pipeline']),CapacityContract(**capacity),
+                DeliveryBudgets(**entry['delivery']) if entry.get('delivery') is not None else None))
         if len({p.producer for p in producers})!=len(producers) or len({p.spool_root.resolve() for p in producers})!=len(producers):
             raise ValueError('duplicate producer or spool root')
         transport=TransportBudgets(**document['transport'])
