@@ -238,6 +238,12 @@ class TossAuthClient:
         json_body: dict[str, Any] | None = None,
         account_seq: str | None = None,
     ) -> dict[str, Any]:
+        # Early GET-only mutation gate for TOSS DATA_ONLY policy.  A
+        # non-string method cannot be proven to be a read, so it is rejected
+        # here before authentication or any transport access.
+        normalized_method = method.upper() if isinstance(method, str) else None
+        if normalized_method != "GET":
+            raise RuntimeError("TOSS DATA_ONLY: request rejected - mutations not permitted")
         token = await self.access_token()
         for attempt in range(2):
             try:
@@ -254,12 +260,18 @@ class TossAuthClient:
     async def _request_once(self, method: str, path: str, *, token: str,
                             params: dict[str, Any] | None, json_body: dict[str, Any] | None,
                             account_seq: str | None) -> dict[str, Any]:
+        # Early GET-only mutation gate for TOSS DATA_ONLY policy.  Runs
+        # before headers or a ClientSession exist so a blocked method can
+        # never touch the wire or leak a token.
+        normalized_method = method.upper() if isinstance(method, str) else None
+        if normalized_method != "GET":
+            raise RuntimeError("TOSS DATA_ONLY: _request_once rejected - mutations not permitted")
         headers = {"Authorization": f"Bearer {token}"}
         if account_seq is not None:
             headers["X-Tossinvest-Account"] = str(account_seq)
         timeout = aiohttp.ClientTimeout(total=20)
         async with aiohttp.ClientSession(timeout=timeout) as session:
-            request = session.get if method.upper() == "GET" else session.post
+            request = session.get  # The validated DATA_ONLY transport is always a read.
             async with request(f"{self.rest_url}{path}", params=params, json=json_body, headers=headers) as response:
                 data = await _safe_json(response)
                 if response.status >= 400 or data.get("error"):

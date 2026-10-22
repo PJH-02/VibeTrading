@@ -1,0 +1,12 @@
+{
+  "reviewer": "Codex gpt-6.1-sol",
+  "status": "VERIFIED_PENDING_INDEPENDENT_SOURCE_AUDIT",
+  "repair_delegations": 2,
+  "scope_proof": {
+    "vibetrading/brokers.py": "AST identical outside approved TOSS method bodies; OAuth/cache/other brokers preserved",
+    "vibetrading/providers/toss.py": "AST identical outside approved TOSS method bodies; OAuth/cache/other brokers preserved"
+  },
+  "owner_small_fix": "One-line final transport uses session.get unconditionally after GET-only validation; prevents a stateful str.upper override changing GET to POST after validation",
+  "counterexample": "reviewer-method-before.txt",
+  "parent_TX00_complete": false
+}
