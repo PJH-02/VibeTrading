@@ -1,0 +1,137 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "debug",
+  "worker_process": {
+    "exit_code": 0,
+    "elapsed_seconds": 75.22642160800024,
+    "relay_http_statuses": [],
+    "served_models": [],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-vn07-monotone-fix-31b91283",
+  "usage_reported": [
+    {
+      "total": 3858,
+      "input": 1658,
+      "output": 75,
+      "reasoning": 77,
+      "cache": {
+        "write": 0,
+        "read": 2048
+      }
+    },
+    {
+      "total": 4036,
+      "input": 373,
+      "output": 47,
+      "reasoning": 32,
+      "cache": {
+        "write": 0,
+        "read": 3584
+      }
+    },
+    {
+      "total": 13623,
+      "input": 9138,
+      "output": 51,
+      "reasoning": 594,
+      "cache": {
+        "write": 0,
+        "read": 3840
+      }
+    },
+    {
+      "total": 23833,
+      "input": 8365,
+      "output": 134,
+      "reasoning": 2406,
+      "cache": {
+        "write": 0,
+        "read": 12928
+      }
+    },
+    {
+      "total": 24961,
+      "input": 2600,
+      "output": 678,
+      "reasoning": 435,
+      "cache": {
+        "write": 0,
+        "read": 21248
+      }
+    },
+    {
+      "total": 25156,
+      "input": 1168,
+      "output": 160,
+      "reasoning": 20,
+      "cache": {
+        "write": 0,
+        "read": 23808
+      }
+    },
+    {
+      "total": 25848,
+      "input": 238,
+      "output": 134,
+      "reasoning": 516,
+      "cache": {
+        "write": 0,
+        "read": 24960
+      }
+    },
+    {
+      "total": 25985,
+      "input": 775,
+      "output": 122,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 25088
+      }
+    },
+    {
+      "total": 26729,
+      "input": 725,
+      "output": 134,
+      "reasoning": 14,
+      "cache": {
+        "write": 0,
+        "read": 25856
+      }
+    },
+    {
+      "total": 26904,
+      "input": 248,
+      "output": 160,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 26496
+      }
+    },
+    {
+      "total": 27507,
+      "input": 323,
+      "output": 466,
+      "reasoning": 94,
+      "cache": {
+        "write": 0,
+        "read": 26624
+      }
+    }
+  ],
+  "base_sha": "1d0b60da9ed4712613de4bdcfe770045eb44bab3",
+  "scope": [
+    "vibetrading/local_runtime.py",
+    "tests/refactoring/test_checkpoint_startup.py"
+  ],
+  "output_sha256": {
+    "vibetrading/local_runtime.py": "45d850cc31ef1a696cba5ccecb9fc36b902d25de95dae4d3c1fadd48135bf740",
+    "tests/refactoring/test_checkpoint_startup.py": "7d4f3e10962d28658de7d438dc784986d650a3441188b49074a4c602d760142b"
+  },
+  "automatic_acceptance": false
+}

@@ -1,0 +1,202 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "debug",
+  "worker_process": {
+    "exit_code": 143,
+    "elapsed_seconds": null,
+    "worker_exit_unknown": true,
+    "controller_stop": {
+      "status": "EXECUTOR_PREFLIGHT_FAILURE",
+      "reason": "Coordinator bootstrap omitted public .cache/vt-refactor-deps mount and PYTHONPATH containing pytest_asyncio. Actual requested pytest command failed import; no install authorized; stop rather than retry unchanged.",
+      "partial_edit_paths": [],
+      "worker_wrapper_pid": 25960,
+      "termination_signal": "SIGTERM"
+    }
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-vn07-executor-fixture-failure-b2f9382d",
+  "usage_reported": [
+    {
+      "total": 4593,
+      "input": 2413,
+      "output": 123,
+      "reasoning": 9,
+      "cache": {
+        "write": 0,
+        "read": 2048
+      }
+    },
+    {
+      "total": 4937,
+      "input": 435,
+      "output": 125,
+      "reasoning": 25,
+      "cache": {
+        "write": 0,
+        "read": 4352
+      }
+    },
+    {
+      "total": 22454,
+      "input": 17617,
+      "output": 93,
+      "reasoning": 8,
+      "cache": {
+        "write": 0,
+        "read": 4736
+      }
+    },
+    {
+      "total": 35111,
+      "input": 12697,
+      "output": 104,
+      "reasoning": 38,
+      "cache": {
+        "write": 0,
+        "read": 22272
+      }
+    },
+    {
+      "total": 36209,
+      "input": 1122,
+      "output": 96,
+      "reasoning": 47,
+      "cache": {
+        "write": 0,
+        "read": 34944
+      }
+    },
+    {
+      "total": 40150,
+      "input": 4056,
+      "output": 74,
+      "reasoning": 52,
+      "cache": {
+        "write": 0,
+        "read": 35968
+      }
+    },
+    {
+      "total": 40462,
+      "input": 279,
+      "output": 80,
+      "reasoning": 167,
+      "cache": {
+        "write": 0,
+        "read": 39936
+      }
+    },
+    {
+      "total": 41483,
+      "input": 389,
+      "output": 101,
+      "reasoning": 801,
+      "cache": {
+        "write": 0,
+        "read": 40192
+      }
+    },
+    {
+      "total": 55432,
+      "input": 4608,
+      "output": 156,
+      "reasoning": 10092,
+      "cache": {
+        "write": 0,
+        "read": 40576
+      }
+    },
+    {
+      "total": 64016,
+      "input": 18526,
+      "output": 103,
+      "reasoning": 203,
+      "cache": {
+        "write": 0,
+        "read": 45184
+      }
+    },
+    {
+      "total": 64300,
+      "input": 547,
+      "output": 114,
+      "reasoning": 23,
+      "cache": {
+        "write": 0,
+        "read": 63616
+      }
+    },
+    {
+      "total": 64844,
+      "input": 329,
+      "output": 82,
+      "reasoning": 305,
+      "cache": {
+        "write": 0,
+        "read": 64128
+      }
+    },
+    {
+      "total": 66579,
+      "input": 2080,
+      "output": 63,
+      "reasoning": 52,
+      "cache": {
+        "write": 0,
+        "read": 64384
+      }
+    },
+    {
+      "total": 70018,
+      "input": 3493,
+      "output": 79,
+      "reasoning": 14,
+      "cache": {
+        "write": 0,
+        "read": 66432
+      }
+    },
+    {
+      "total": 73774,
+      "input": 3798,
+      "output": 79,
+      "reasoning": 9,
+      "cache": {
+        "write": 0,
+        "read": 69888
+      }
+    },
+    {
+      "total": 76410,
+      "input": 2725,
+      "output": 79,
+      "reasoning": 6,
+      "cache": {
+        "write": 0,
+        "read": 73600
+      }
+    },
+    {
+      "total": 78046,
+      "input": 1547,
+      "output": 79,
+      "reasoning": 132,
+      "cache": {
+        "write": 0,
+        "read": 76288
+      }
+    }
+  ],
+  "base_sha": "99f25957ca5ec1614b4e8ee550e16077b5fd8773",
+  "scope": [
+    "vibetrading/local_runtime.py",
+    "tests/refactoring/test_checkpoint_startup.py"
+  ],
+  "output_sha256": {
+    "vibetrading/local_runtime.py": "de7ef50262adb91d3676f6774adf96f03d9fc2c41777e5a830b19630f4041a95",
+    "tests/refactoring/test_checkpoint_startup.py": "9e7fe7056956167fade6c60c12d4669a4faf8b9d973ca9920a07d76d47b446c9"
+  },
+  "automatic_acceptance": false
+}
