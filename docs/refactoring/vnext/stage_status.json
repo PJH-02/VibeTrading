@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "date_kst": "2026-10-21",
+  "date_kst": "2026-10-23",
   "basis": [
     "refactoring_plan.md P00-P12",
     "docs/refactoring/vnext/11_integrated_vn_tx_plan.md",
@@ -452,7 +452,7 @@
   "execution_control": {
     "status": "RUNNING_LOCAL_REFACTORING",
     "last_completed_ticket": "VN14B",
-    "last_completed_tooling_ticket": "R01",
+    "last_completed_tooling_ticket": "O00",
     "active_ticket": null,
     "start_next_ticket": true,
     "stop_after_ticket": null,
@@ -468,7 +468,7 @@
     "head": "90847f84243d01ec98c9815216c96c8f2749028b",
     "candidate": "completed-market-v1"
   },
-  "current_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
+  "current_snapshot_validation": "docs/refactoring/runs/20261023-v3/baseline/result.json",
   "execution_history": [
     {
       "recorded_kst": "2026-10-23T01:40:50.681101+09:00",
@@ -481,5 +481,6 @@
       },
       "superseded_by": "2026-10-23 user VibeTrading v3 execution request; local-only work resumed"
     }
-  ]
+  ],
+  "historical_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json"
 }

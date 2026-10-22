@@ -5693,19 +5693,21 @@
       "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
     }
   ],
-  "updated_local": "2026-10-21",
+  "updated_local": "2026-10-23",
   "current_validation": {
-    "candidate": "vn14b-control-v3",
-    "scope": "Exact selected-source full Linux regression after all safety fixes",
-    "linux": "1419 PASS / 2 DESELECTED",
-    "receipt": "docs/refactoring/runs/20261020-production/vn14b-control-validation.json",
-    "production_ready": false
+    "receipt": "docs/refactoring/runs/20261023-v3/baseline/result.json",
+    "passed": 1531,
+    "failed": 1,
+    "deselected": 2,
+    "state": "BASELINE_FAILURE_CONFIRMED",
+    "failure_scope": "VN07 checkpoint unopened suffix identity replacement",
+    "reproduction": "docs/refactoring/runs/20261023-v3/baseline/checkpoint-order-stdout.txt"
   },
   "user_request_latest": "2026-10-23: execute R00/R01/O00/O01 then all DAG-ready v3 local implementation/verification; preserve legacy IDs/evidence; no production mutation/deploy/push/merge",
   "execution_control": {
     "status": "RUNNING_LOCAL_REFACTORING",
     "last_completed_ticket": "VN14B",
-    "last_completed_tooling_ticket": "R01",
+    "last_completed_tooling_ticket": "O00",
     "active_ticket": null,
     "start_next_ticket": true,
     "stop_after_ticket": null,
@@ -5796,14 +5798,14 @@
     },
     {
       "task_id": "O00",
-      "status": "VERIFIED",
+      "status": "ACCEPTED",
       "depends_on": [
         "R00"
       ],
       "scope": "LOCAL_ONLY",
       "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
       "receipt": "docs/refactoring/runs/20261023-v3/o00/acceptance.json",
-      "source_sha": "440ef7e408be800d377f67373db2d3707d09de58"
+      "source_sha": "66758cb1f49d6a90e42238066b1edf9a2e4e8a1c"
     },
     {
       "task_id": "O01",
@@ -5927,5 +5929,17 @@
     "state": "BASELINE_FAILURE_CONFIRMED",
     "failure_scope": "VN07 checkpoint unopened suffix identity replacement",
     "reproduction": "docs/refactoring/runs/20261023-v3/baseline/checkpoint-order-stdout.txt"
-  }
+  },
+  "validation_history": [
+    {
+      "reason": "Historical pre-v3 validation preserved; current fresh baseline includes one confirmed failure",
+      "value": {
+        "candidate": "vn14b-control-v3",
+        "scope": "Exact selected-source full Linux regression after all safety fixes",
+        "linux": "1419 PASS / 2 DESELECTED",
+        "receipt": "docs/refactoring/runs/20261020-production/vn14b-control-validation.json",
+        "production_ready": false
+      }
+    }
+  ]
 }
