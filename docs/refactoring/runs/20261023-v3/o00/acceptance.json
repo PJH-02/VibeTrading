@@ -1,6 +1,6 @@
 {
   "task_id": "O00",
-  "status": "VERIFIED",
+  "status": "ACCEPTED",
   "qualified_models": [
     {
       "model_id": "opencode/glm-5.3-flash-free",
@@ -59,5 +59,7 @@
   "provider_quota_independence_assumed": false,
   "production_changes": 0,
   "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
-  "probe_sha256": "7b565518bd0e763a4310e21d21aa44c55050930cec60c977fd46b787c172f207"
+  "probe_sha256": "7b565518bd0e763a4310e21d21aa44c55050930cec60c977fd46b787c172f207",
+  "source_sha": "66758cb1f49d6a90e42238066b1edf9a2e4e8a1c",
+  "accepted_source_sha": "66758cb1f49d6a90e42238066b1edf9a2e4e8a1c"
 }
