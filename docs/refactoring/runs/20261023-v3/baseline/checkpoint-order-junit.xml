@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="2" time="0.230" timestamp="2026-10-22T16:52:27.116263+00:00" hostname="DESKTOP-REUS64B"><testcase classname="tests.refactoring.test_checkpoint_repro" name="test_segment_replacement_after_c_proof_cannot_open_a_new_suffix_authority_oldest" time="0.009" /><testcase classname="tests.refactoring.test_checkpoint_repro" name="test_segment_replacement_after_c_proof_cannot_open_a_new_suffix_authority_newest" time="0.008"><failure message="Failed: DID NOT RAISE &lt;class 'RuntimeError'&gt;">tmp_path = PosixPath('/tmp/checkpoint-order/test_segment_replacement_after1')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x762df1fa62a0&gt;
+
+    @pytest.mark.asyncio
+    async def test_segment_replacement_after_c_proof_cannot_open_a_new_suffix_authority_newest(tmp_path,monkeypatch):
+        item=producer(tmp_path)
+        source,codec,payload=capture([item])
+        append(item,[event('a',2)])
+        target=engine([item])
+        restore=target.restore_virgin
+    
+        def restore_then_replace(*args,**kwargs):
+            result=restore(*args,**kwargs)
+            segment=max((path for path in item.spool_root.iterdir() if path.suffix in {'.active','.sealed'}), key=lambda path:path.name)
+            replacement=segment.with_suffix('.replacement')
+            replacement.write_bytes(segment.read_bytes())
+            replacement.replace(segment)
+            return result
+    
+        monkeypatch.setattr(target,'restore_virgin',restore_then_replace)
+        try:
+&gt;           with pytest.raises(RuntimeError,match='identity changed'):
+E           Failed: DID NOT RAISE &lt;class 'RuntimeError'&gt;
+
+tests/refactoring/test_checkpoint_repro.py:47: Failed</failure></testcase></testsuite></testsuites>
