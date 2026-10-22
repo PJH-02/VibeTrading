@@ -1,0 +1,31 @@
+{
+  "task_id": "R02",
+  "status": "ACCEPTED",
+  "source_sha": "62c3e534e6785785006904e396c2c97622c8346d",
+  "source_hashes": {
+    "README.md": "ec184aebf7132783aa6c53d71a3bcea41ea0c95c5b688e4b2fdd15f0a7294f66",
+    "docs/architecture.md": "aa40ab7e8e56207514a9ab39d7a0111d83ac24b72badb1a89e451bad9da54ee3",
+    "docs/archive/README.md": "273c45ade6853f407117aec2b9dc982f5026cb12a4ed4b4b2b25e3c1294dd156"
+  },
+  "selected_model": "opencode/glm-5.3-flash-free",
+  "provider": "opencode",
+  "observed_upstream_model": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "worker_exit_codes": [
+    0,
+    0
+  ],
+  "repair_delegations": 1,
+  "local_markdown_links": 110,
+  "missing_links": 0,
+  "independent_safe_cli_help_exit_codes": [
+    0,
+    0,
+    0
+  ],
+  "product_edits_moves_deletions": 0,
+  "rollback_sha256": "41c0de8939767fa7c91d3ff556a61725f6798f15d3aa975d051e3e31e8d3804b",
+  "reviewer": "Codex gpt-6.1-sol",
+  "server_contact": false,
+  "operational_readiness": "EXTERNAL_OPERATIONAL_VALIDATION_PENDING"
+}
