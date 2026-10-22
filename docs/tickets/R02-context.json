@@ -1,0 +1,300 @@
+{
+  "source_sha": "99f25957ca5ec1614b4e8ee550e16077b5fd8773",
+  "facts": {
+    "deployment": "Last documented production P02 scoped release; deployed NATS retained. Current server NOT contacted, current exact state UNKNOWN.",
+    "candidate": "NATS-free local architecture partially implemented; original51 tasks:14localcomplete23incomplete14notstarted. Not deployed.",
+    "baseline": "Fresh isolated Linux:1531pass1fail2deselected; checkpoint unopened suffix replacement authority gap. No complete-green claim.",
+    "safety": "C3/KP/KD, Mock versus Mock2 routing unchanged; TOSS DATA_ONLY. No live readiness or five-venue readiness inferred.",
+    "rollback": "scripts/refactoring/deploy_p02_schema.py retained active rollback; do not move/delete.",
+    "no_evidence_of_current_commercial_databases": "Old generic PostgreSQL/QuestDB architecture statements are historical design, not proof of current deployed operations.",
+    "next": "O01 runner, R02 docs, bounded VN07 identity fix, R03 mechanical src move afterR02; VN20 actualcutover external."
+  },
+  "tracked_markdown_index": [
+    {
+      "path": "README.md",
+      "title": "VibeTrading - 프로덕션 그레이드 트레이딩 시스템"
+    },
+    {
+      "path": "docs/CLEANUP_DELETE_LIST_20261019.md",
+      "title": "로컬 파일 삭제 후보 목록 — 2026-10-19"
+    },
+    {
+      "path": "docs/CRYPTO_MARKET_IMPLEMENTATION.md",
+      "title": "코인 수집·Bybit testnet·시장 데이터 적용 현황"
+    },
+    {
+      "path": "docs/DATA_FEED_API_GUIDE.md",
+      "title": "Data Feed API Integration Guide"
+    },
+    {
+      "path": "docs/DUAL_MOCK_AND_PERMISSION_PNL_2026-10-14.md",
+      "title": "ETF별 모의계좌 선택 및 권한 거절 가정 손익"
+    },
+    {
+      "path": "docs/ETF_MOCK_COLLECTION_SCOPE_2026-10-13.md",
+      "title": "수집 대상 정리와 C3/KP/KD 모의 ETF 운용"
+    },
+    {
+      "path": "docs/EXPERIMENT_HISTORY.md",
+      "title": "실험·백테스트·지연 측정 요약"
+    },
+    {
+      "path": "docs/FV_MM_V4_TESTNETS.md",
+      "title": "v4 독립 FV 전략과 테스트넷 운용"
+    },
+    {
+      "path": "docs/FV_PILOT_MAINNET.md",
+      "title": "실거래 호가 기반 FV 모의 거래"
+    },
+    {
+      "path": "docs/LIQUIDITY_MM_BYBIT_TESTNET.md",
+      "title": "잔여 주문흐름 기반 MM — Bybit 테스트넷 구현·운영 명세"
+    },
+    {
+      "path": "docs/LS_MARKET_DATA_IMPLEMENTATION_2026-09-27.md",
+      "title": "LS증권 선물 데이터 수집 준비 (코드만, 2026-09-27)"
+    },
+    {
+      "path": "docs/MARKET_DATA_EXPORT_ANALYSIS.md",
+      "title": "Market data export and analysis"
+    },
+    {
+      "path": "docs/SERVER_STORAGE_DEPLOYMENT_PLAN.md",
+      "title": "VibeTrading 장기 수집·저장·서버 배포 통합 수정 계획"
+    },
+    {
+      "path": "docs/TICKER_CSV_COLLECTION_2026-10-13.md",
+      "title": "티커별 공유 CSV와 장 마감 갱신"
+    },
+    {
+      "path": "docs/TRADE_TEST_EXCLUSION_2026-10-14.md",
+      "title": "069500 신호 표시 및 테스트 실매매 제외"
+    },
+    {
+      "path": "docs/WEB_DASHBOARD.md",
+      "title": "VibeTrading 웹 운용 대시보드"
+    },
+    {
+      "path": "docs/mm_state/BACKTEST_PROTOCOL.md",
+      "title": "재현·실행 절차"
+    },
+    {
+      "path": "docs/mm_state/EDA_PLAN.md",
+      "title": "새 검증 계획과 이번 구현 검증의 경계"
+    },
+    {
+      "path": "docs/mm_state/EXECUTION_SIM_SPEC.md",
+      "title": "Maker 실행 시뮬레이터 명세"
+    },
+    {
+      "path": "docs/mm_state/RISK_CONTROLS.md",
+      "title": "위험·컴퓨팅 제한"
+    },
+    {
+      "path": "docs/mm_state/STATE_MACHINE_SPEC.md",
+      "title": "상태와 전이 명세"
+    },
+    {
+      "path": "docs/mm_state/STRATEGY_SPEC.md",
+      "title": "상태 기반 MM 명세 — 2026-10-07"
+    },
+    {
+      "path": "docs/observability_interfaces.md",
+      "title": "Observability & Control Interface Documentation"
+    },
+    {
+      "path": "docs/refactoring/contracts.md",
+      "title": "P01 구현 계약과 독립 오프라인 작업 경계"
+    },
+    {
+      "path": "docs/refactoring/cutover.md",
+      "title": "운영 전환 패키지"
+    },
+    {
+      "path": "docs/refactoring/decisions.md",
+      "title": "P01 결정 기록"
+    },
+    {
+      "path": "docs/refactoring/execution_board.md",
+      "title": "리팩토링 단계 작업과 에이전트 배정"
+    },
+    {
+      "path": "docs/refactoring/implementation_decisions.md",
+      "title": "구현 단계의 추가 결정과 P03 인계"
+    },
+    {
+      "path": "docs/refactoring/rollback.md",
+      "title": "복귀 절차와 보존 경계"
+    },
+    {
+      "path": "docs/refactoring/vnext/01_current_state_delta.md",
+      "title": "vNext 01 — 현재 상태와 기준선 차이"
+    },
+    {
+      "path": "docs/refactoring/vnext/02_architecture_review.md",
+      "title": "vNext 02 — 아키텍처 검토와 추천"
+    },
+    {
+      "path": "docs/refactoring/vnext/03_contract_delta.md",
+      "title": "vNext 03 — C 계약 증분"
+    },
+    {
+      "path": "docs/refactoring/vnext/04_implementation_plan.md",
+      "title": "vNext 04 — 기존 P단계의 증분 실행 계획"
+    },
+    {
+      "path": "docs/refactoring/vnext/05_validation_and_cutover.md",
+      "title": "vNext 05 — 검증·용량·서버 전환 Gate"
+    },
+    {
+      "path": "docs/refactoring/vnext/06_agent_handoff.md",
+      "title": "vNext 06 — 다음 Agent 인계"
+    },
+    {
+      "path": "docs/refactoring/vnext/07_production_readiness_gap.md",
+      "title": "Production 07 — 목표 확장과 현재 간극"
+    },
+    {
+      "path": "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+      "title": "Production 08 — 공통 실행·포트폴리오 계약"
+    },
+    {
+      "path": "docs/refactoring/vnext/09_paper_trading_runtime_design.md",
+      "title": "Production 09 — 실시간 Paper 설계와 검증 경계"
+    },
+    {
+      "path": "docs/refactoring/vnext/10_venue_capability_completion.md",
+      "title": "Production 10 — Venue/Product/Environment capability"
+    },
+    {
+      "path": "docs/refactoring/vnext/11_integrated_vn_tx_plan.md",
+      "title": "Production 11 — VN/TX 통합 실행 계획"
+    },
+    {
+      "path": "docs/refactoring/vnext/12_production_acceptance_matrix.md",
+      "title": "Production 12 — 준비 상태와 필수 증거"
+    },
+    {
+      "path": "docs/refactoring/vnext/13_strategy_deployment_lifecycle.md",
+      "title": "Production 13 — 전략 개발·Paper·Live 승격"
+    },
+    {
+      "path": "docs/refactoring/vnext/14_agent_execution_handoff.md",
+      "title": "실행 인계 — 2026-10-21"
+    },
+    {
+      "path": "docs/refactoring/vnext/15_stage_status_and_next_steps.md",
+      "title": "단계별 상태와 다음 작업 — 2026-10-21"
+    },
+    {
+      "path": "docs/refactoring/vnext/VibeTrading_Architecture_Requirements_v3.md",
+      "title": "VibeTrading v3 — 아키텍처·구현 요구사항 및 불변조건 상세 명세"
+    },
+    {
+      "path": "docs/refactoring/vnext/VibeTrading_Developer_Ticket_Spec_v3.md",
+      "title": "VibeTrading v3 — 개발자(GLM/DeepSeek)용 구현 명세 및 티켓 수락 기준"
+    },
+    {
+      "path": "docs/refactoring/vnext/VibeTrading_Refactoring_Final_Plan_v3.md",
+      "title": "VibeTrading 최종 리팩토링 실행 계획 v3"
+    },
+    {
+      "path": "docs/refactoring/vnext/conflict_register.md",
+      "title": "vNext — 기존 문서/코드/증거 충돌 등록부"
+    },
+    {
+      "path": "docs/status.md",
+      "title": "v3 local execution status"
+    },
+    {
+      "path": "docs/tickets/R01-authority-status.md",
+      "title": "R01 — Authority and status index"
+    },
+    {
+      "path": "docs/trading_spec.md",
+      "title": "🚀 Professional Trading System Specification"
+    }
+  ],
+  "relevant_paths": [
+    "Dockerfile",
+    "Dockerfile.crypto",
+    "deploy/Dockerfile.crypto-ledger",
+    "deploy/Dockerfile.dashboard-timefolio",
+    "deploy/README.md",
+    "deploy/compose.env.example",
+    "deploy/crypto-profile.yml",
+    "deploy/dashboard-compose.yml",
+    "deploy/ls-market-profile.yml",
+    "deploy/maintenance.env.example",
+    "deploy/nats.conf",
+    "deploy/preflight-data-disk.sh",
+    "deploy/release1-overlay.yml",
+    "deploy/vibetrading.cron.example",
+    "deploy/vibetrading.service",
+    "docker-compose.yml",
+    "docs/refactoring/vnext/01_current_state_delta.md",
+    "docs/refactoring/vnext/02_architecture_review.md",
+    "docs/refactoring/vnext/03_contract_delta.md",
+    "docs/refactoring/vnext/04_implementation_plan.md",
+    "docs/refactoring/vnext/05_validation_and_cutover.md",
+    "docs/refactoring/vnext/06_agent_handoff.md",
+    "docs/refactoring/vnext/07_production_readiness_gap.md",
+    "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+    "docs/refactoring/vnext/09_paper_trading_runtime_design.md",
+    "docs/refactoring/vnext/10_venue_capability_completion.md",
+    "docs/refactoring/vnext/11_integrated_vn_tx_plan.md",
+    "docs/refactoring/vnext/12_production_acceptance_matrix.md",
+    "docs/refactoring/vnext/13_strategy_deployment_lifecycle.md",
+    "docs/refactoring/vnext/14_agent_execution_handoff.md",
+    "docs/refactoring/vnext/15_stage_status_and_next_steps.md",
+    "docs/refactoring/vnext/VibeTrading_Architecture_Requirements_v3.md",
+    "docs/refactoring/vnext/VibeTrading_Developer_Ticket_Spec_v3.md",
+    "docs/refactoring/vnext/VibeTrading_Refactoring_Final_Plan_v3.md",
+    "docs/refactoring/vnext/commit_boundary.json",
+    "docs/refactoring/vnext/conflict_register.md",
+    "docs/refactoring/vnext/production_source_manifest.json",
+    "docs/refactoring/vnext/production_validation.json",
+    "docs/refactoring/vnext/repo_inventory.json",
+    "docs/refactoring/vnext/server_readonly_identity.json",
+    "docs/refactoring/vnext/source_comparison.json",
+    "docs/refactoring/vnext/stage_status.json",
+    "docs/refactoring/vnext/tickets.json",
+    "docs/refactoring/vnext/tickets_production.json",
+    "main.py",
+    "run_strategy.py",
+    "scripts/refactoring/build_release_manifest.py",
+    "scripts/refactoring/build_server_base.py",
+    "scripts/refactoring/build_server_candidate.py",
+    "scripts/refactoring/check_p02_server.py",
+    "scripts/refactoring/collect_korean_hotfix_metadata.py",
+    "scripts/refactoring/collect_release_metadata.py",
+    "scripts/refactoring/deploy_p02_schema.py",
+    "scripts/refactoring/encoding_probe.py",
+    "scripts/refactoring/measure_readonly.py",
+    "vibetrading/cli.py"
+  ],
+  "verified_candidate_source_map": {
+    "collector": "vibetrading/local_pipeline.py; vibetrading/local_runtime.py::run_collector",
+    "spool": "vibetrading/market_spool.py",
+    "transport": "vibetrading/local_transport.py",
+    "engine": "vibetrading/local_engine.py; vibetrading/hot_path.py",
+    "recovery_checkpoint": "vibetrading/feed_recovery.py; vibetrading/market_checkpoint.py; vibetrading/local_runtime.py::replay_checkpoint_startup",
+    "storage": "vibetrading/local_storage.py; vibetrading/local_events.py; vibetrading/local_snapshot.py",
+    "account_order_ledger": "vibetrading/portfolio_ledger.py; vibetrading/execution_owner.py; vibetrading/paper_execution.py (partial; separate from proven market-only recovery)",
+    "etf": "vibetrading/etf_trading.py; vibetrading/etf_journal.py",
+    "research": "strategy/; strategies/; services/signal_gen/; vibetrading/fv_mm/legacy/ (distinct research/runtime owners, not automatically interchangeable)"
+  },
+  "r00_inventory_fact": {
+    "python_paths_scanned": 504,
+    "dynamic_import_sites": 24,
+    "inventory_path": "docs/refactoring/vnext/repo_inventory.json",
+    "note": "Inventory exists and is accepted. Some dynamic resolution remains UNKNOWN; do not claim no inventory or no source map."
+  },
+  "preserve_paths": [
+    "runtime_data/ (operational data, never copied or opened)",
+    "docs/refactoring/runs/",
+    "docs/evidence/",
+    "scripts/refactoring/deploy_p02_schema.py",
+    "legacy NATS services and deployment artifacts"
+  ]
+}
