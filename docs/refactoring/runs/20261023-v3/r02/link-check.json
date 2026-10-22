@@ -1,0 +1,11 @@
+{
+  "local_links_checked": 110,
+  "missing": [],
+  "git_diff_check_exit": 0,
+  "changed_files": [
+    "README.md",
+    "docs/architecture.md",
+    "docs/archive/README.md"
+  ],
+  "worker_exit": 0
+}

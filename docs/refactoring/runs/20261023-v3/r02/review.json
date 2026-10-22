@@ -1,0 +1,18 @@
+{
+  "reviewer": "Codex gpt-6.1-sol",
+  "decision": "VERIFIED_PENDING_SOURCE_COMMIT",
+  "repair_delegations": 1,
+  "worker_changed_paths": [
+    "README.md",
+    "docs/architecture.md",
+    "docs/archive/README.md"
+  ],
+  "reviewer_small_edits": [
+    "Correct snapshot date from model-invented2026-10-21 to2026-10-23",
+    "Replace unclear Korean description of unopened segment replacement gap"
+  ],
+  "local_links_checked": 110,
+  "cli_help_commands_passed": 3,
+  "moves_deletions_product_edits": 0,
+  "server_contact": false
+}

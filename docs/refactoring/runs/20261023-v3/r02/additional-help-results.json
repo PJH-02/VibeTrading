@@ -1,0 +1,12 @@
+[
+  {
+    "command": "python3 scripts/run_backtest.py --help",
+    "exit_code": 0,
+    "filesystem_pid_network_namespace": true
+  },
+  {
+    "command": "python3 -m vibetrading.liquidity_mm --help",
+    "exit_code": 0,
+    "filesystem_pid_network_namespace": true
+  }
+]

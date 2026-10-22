@@ -1,0 +1,17 @@
+usage: __main__.py [-h] [--config CONFIG]
+                   {check,run,start,status,stop,replay} ...
+
+Residual-flow market making: Bybit testnet only
+
+positional arguments:
+  {check,run,start,status,stop,replay}
+    check               Read-only credentials, units, fees, balance, WebSocket
+                        preflight
+    run                 Run only for the explicitly supplied duration
+    start               Start an explicitly bounded background process
+    stop                Request cancellation, reduction and bounded cleanup
+    replay              Replay recorded receive-time events conservatively
+
+options:
+  -h, --help            show this help message and exit
+  --config CONFIG
