@@ -469,7 +469,14 @@
     "head": "90847f84243d01ec98c9815216c96c8f2749028b",
     "candidate": "completed-market-v1"
   },
-  "current_snapshot_validation": "docs/refactoring/runs/20261023-v3/baseline/result.json",
+  "current_snapshot_validation": {
+    "status": "FULL_LOCAL_REGRESSION_PASS",
+    "source_sha": "b778955d83aef5ac38aeef33d57233a39eab1783",
+    "receipt": "docs/refactoring/runs/20261023-v3/integrated-before-src/receipt.json",
+    "passed": 1711,
+    "additional_review_passed": 6,
+    "deselected": 2
+  },
   "execution_history": [
     {
       "recorded_kst": "2026-10-23T01:40:50.681101+09:00",
@@ -484,5 +491,8 @@
     }
   ],
   "historical_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
-  "updated_local": "2026-10-23"
+  "updated_local": "2026-10-23",
+  "snapshot_validation_history": [
+    "docs/refactoring/runs/20261023-v3/baseline/result.json"
+  ]
 }

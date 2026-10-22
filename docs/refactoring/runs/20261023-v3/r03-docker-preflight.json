@@ -1,0 +1,15 @@
+{
+  "status": "LOCAL_DOCKER_AVAILABLE",
+  "linux_wsl_integration_socket": "UNAVAILABLE",
+  "fallback": "Windows Docker CLI talking exclusively to verified local named-pipe desktop-linux context",
+  "docker_cli": "/mnt/c/Program Files/Docker/Docker/resources/bin/docker.exe",
+  "context": "desktop-linux",
+  "endpoint_kind": "npipe",
+  "server_version": "29.7.2",
+  "commands": [
+    "docker.exe context ls --format json",
+    "docker.exe --context desktop-linux info --format ServerVersion"
+  ],
+  "mutations": 0,
+  "remote_server_or_trading_account_contact": false
+}
