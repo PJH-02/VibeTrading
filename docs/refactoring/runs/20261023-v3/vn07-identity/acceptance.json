@@ -1,0 +1,13 @@
+{
+  "task_id": "VN07",
+  "subunit": "segment-identity",
+  "status": "ACCEPTED_SUBUNIT_ONLY",
+  "source_sha": "00b47bffc66691015be53c663258db0b52826790",
+  "independent_tests_passed": 183,
+  "reviewer": "Codex gpt-6.1-sol",
+  "repair_delegations": 2,
+  "independent_review": "opencode/nemotron-3-ultra-free",
+  "verdict": "NO_CRITICAL_FINDINGS within bounded scope",
+  "parent_complete": false,
+  "real_orders_server_data_mutation": false
+}

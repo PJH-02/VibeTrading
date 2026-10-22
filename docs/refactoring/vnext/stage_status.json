@@ -452,16 +452,15 @@
   "execution_control": {
     "status": "RUNNING_LOCAL_REFACTORING",
     "last_completed_ticket": "VN14B",
-    "last_completed_tooling_ticket": "R02",
-    "active_ticket": "VN07",
+    "last_completed_tooling_ticket": "O01",
+    "active_ticket": null,
     "start_next_ticket": true,
     "stop_after_ticket": null,
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
     "current_source_sha": "ac18621ea1b831d625d2187c11af4369b2232f34",
-    "active_tooling_tickets": [
-      "O01"
-    ]
+    "active_tooling_tickets": [],
+    "active_parallel_tickets": []
   },
   "current_wip": null,
   "last_completed_ticket": "VN14B",

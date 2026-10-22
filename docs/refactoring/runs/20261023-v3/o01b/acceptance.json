@@ -1,0 +1,18 @@
+{
+  "task_id": "O01B",
+  "parent": "O01",
+  "status": "ACCEPTED_SUBUNIT_ONLY",
+  "source_sha": "187271587f63a91f4adce7981e03a0941f1b8b42",
+  "source_hashes": {
+    "scripts/dev/agent_run.py": "caf09379aac6345d052b6ffc96c7556aeb4b5f1ed9503c7fe374005e293b4d11",
+    "tests/refactoring/test_agent_run.py": "94701990cd19a2a85e28241094ab6bbf5e91feec067f138d650ad9b6d3b40b02"
+  },
+  "independent_tests_passed": 143,
+  "worker_model": "opencode/deepseek-v4.1-flash-free",
+  "independent_review_model": "freellmapi/gemini-2.5-flash",
+  "independent_audit_disposition": "independent-audit-disposition.json",
+  "actual_two_model_patch_replay": "VERIFIED",
+  "repair_delegations": 2,
+  "reviewer": "Codex gpt-6.1-sol",
+  "scope": "Credential-free task adapter, no auto apply/acceptance; not hostile-host or general resource sandbox"
+}
