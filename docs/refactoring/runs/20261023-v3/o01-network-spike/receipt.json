@@ -7,5 +7,6 @@
   "tests": 9,
   "tool_shell_network_namespace": "different from API caller (kernel namespace inode compared by test)",
   "tool_shell_source_write": "read-only root enforced",
-  "prototype_base": "/tmp/vt-tool-netns-7zsuzk1l"
+  "prototype_base": "/tmp/vt-tool-netns-7zsuzk1l",
+  "raw_events_private": "/home/pjh/.local/state/codex-opencode/runs/v3-network-spike-raw/opencode.jsonl"
 }

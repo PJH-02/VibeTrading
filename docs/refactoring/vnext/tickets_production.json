@@ -1085,7 +1085,7 @@
     {
       "task_id": "VN07",
       "existing_phase": "P06",
-      "status": "RUNNING",
+      "status": "PARTIAL_MARKET_ORDER_AND_JOURNAL_LIFECYCLE_COMPLETE_STRATEGY_OPEN",
       "depends_on": [
         "VN06",
         "VN04B"
@@ -1434,15 +1434,14 @@
           "final_validation": "docs/refactoring/runs/20261020-production/vn07-lifecycle-validation.json"
         }
       ],
-      "active_subunit": {
-        "id": "segment-identity",
-        "status": "RUNNING",
-        "original_base_sha": "99f25957ca5ec1614b4e8ee550e16077b5fd8773",
-        "model": "opencode/deepseek-v4.1-flash-free",
-        "executor_repairs": 1,
-        "scope": "Two original VN07-allowed files only; parent remains INCOMPLETE",
-        "prior_status": "PARTIAL_MARKET_ORDER_AND_JOURNAL_LIFECYCLE_COMPLETE_STRATEGY_OPEN"
-      }
+      "completed_subunits": [
+        {
+          "id": "segment-identity",
+          "status": "ACCEPTED_SUBUNIT_ONLY",
+          "source_sha": "00b47bffc66691015be53c663258db0b52826790",
+          "receipt": "docs/refactoring/runs/20261023-v3/vn07-identity/acceptance.json"
+        }
+      ]
     },
     {
       "task_id": "VN08",
@@ -3298,7 +3297,7 @@
     },
     {
       "task_id": "TX00",
-      "status": "RUNNING",
+      "status": "IN_PROGRESS",
       "kind": "IMPLEMENTATION",
       "depends_on": [
         "VN00"
@@ -3388,22 +3387,14 @@
       "stage_classification": "INCOMPLETE",
       "stage_status_detail": "product/environment별 매핑 조사. 실제 계좌·margin·capability 확인 미완료",
       "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
-      "active_subunit": {
-        "id": "toss-data-only",
-        "status": "RUNNING_FINAL_REPAIR",
-        "prior_status": "IN_PROGRESS",
-        "models": [
-          "freellmapi/glm-4.5-flash",
-          "opencode/mimo-v2.6-flash-free",
-          "opencode/deepseek-v4.1-flash-free"
-        ],
-        "partial_tests": {
-          "passed": 41,
-          "failed": 1
-        },
-        "repair_delegations": 2,
-        "scope": "Close legacy TOSS mutations; venue/product/account capability audit remains open"
-      }
+      "completed_subunits": [
+        {
+          "id": "toss-data-only",
+          "status": "ACCEPTED_SUBUNIT_ONLY",
+          "source_sha": "1efd0f3664542ee795d8c89960951a24998ab223",
+          "receipt": "docs/refactoring/runs/20261023-v3/tx00-toss/acceptance.json"
+        }
+      ]
     },
     {
       "task_id": "TX01",
@@ -5749,19 +5740,15 @@
   "execution_control": {
     "status": "RUNNING_LOCAL_REFACTORING",
     "last_completed_ticket": "VN14B",
-    "last_completed_tooling_ticket": "R02",
-    "active_ticket": "VN07",
+    "last_completed_tooling_ticket": "O01",
+    "active_ticket": null,
     "start_next_ticket": true,
     "stop_after_ticket": null,
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
     "current_source_sha": "ac18621ea1b831d625d2187c11af4369b2232f34",
-    "active_tooling_tickets": [
-      "O01"
-    ],
-    "active_parallel_tickets": [
-      "TX00"
-    ]
+    "active_tooling_tickets": [],
+    "active_parallel_tickets": []
   },
   "git_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
   "git_snapshot_policy": "All current code including unfinished prototypes included; stage classifications unchanged; no deployment authorization",
@@ -5874,14 +5861,14 @@
     },
     {
       "task_id": "O01",
-      "status": "RUNNING",
+      "status": "ACCEPTED",
       "depends_on": [
         "R01",
         "O00"
       ],
       "scope": "LOCAL_ONLY",
       "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
-      "receipt": null,
+      "receipt": "docs/refactoring/runs/20261023-v3/o01b/acceptance.json",
       "edit_paths": [
         {
           "path": "scripts/dev/agent_task.py",
@@ -5912,14 +5899,14 @@
           "repair_delegations": 2
         },
         "O01B": {
-          "status": "RUNNING_FINAL_REPAIR",
-          "selected_model": "opencode/deepseek-v4.1-flash-free",
+          "status": "ACCEPTED_SUBUNIT_ONLY",
+          "source_sha": "187271587f63a91f4adce7981e03a0941f1b8b42",
+          "independent_tests_passed": 143,
           "repair_delegations": 2,
-          "initial_glm53": "EXECUTION_TIMEOUT exit124 no code",
-          "independent_baseline_tests": 130,
-          "reviewer_counterexamples": 6
+          "two_actual_models_patch_replayed": true
         }
-      }
+      },
+      "source_sha": "187271587f63a91f4adce7981e03a0941f1b8b42"
     }
   ],
   "legacy_task_objects_sha256": "224a13c77fcd505c85d461fa723be008824e6cf119a7ef825949a2aa18c57ce8",
