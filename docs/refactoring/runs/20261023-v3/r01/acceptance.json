@@ -1,6 +1,6 @@
 {
   "task_id": "R01",
-  "status": "VERIFIED",
+  "status": "ACCEPTED",
   "worker_models": [
     "opencode/glm-5.3-flash-free",
     "opencode/mimo-v2.6-flash-free",
@@ -46,5 +46,7 @@
     "scripts/dev/status.py": "bdc13799fb22fa5077e66f1a3aa4162d6bbd0bf75f5b71daa8846535896d05d4",
     "tests/refactoring/test_dev_status.py": "e80d828d9b51db567d7e04b00ce88e3ad8174d46e905a40ce4d1e5fc98a4a24e"
   },
-  "reviewer_small_tooling_fix": "IMPLEMENTED/VERIFIED wait for acceptance rather than re-dispatch; one independent regression added"
+  "reviewer_small_tooling_fix": "IMPLEMENTED/VERIFIED wait for acceptance rather than re-dispatch; one independent regression added",
+  "source_sha": "ac18621ea1b831d625d2187c11af4369b2232f34",
+  "accepted_source_sha": "ac18621ea1b831d625d2187c11af4369b2232f34"
 }

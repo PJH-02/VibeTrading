@@ -5705,13 +5705,13 @@
   "execution_control": {
     "status": "RUNNING_LOCAL_REFACTORING",
     "last_completed_ticket": "VN14B",
-    "last_completed_tooling_ticket": "R00",
+    "last_completed_tooling_ticket": "R01",
     "active_ticket": null,
     "start_next_ticket": true,
     "stop_after_ticket": null,
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
-    "current_source_sha": "440ef7e408be800d377f67373db2d3707d09de58",
+    "current_source_sha": "ac18621ea1b831d625d2187c11af4369b2232f34",
     "active_tooling_tickets": []
   },
   "git_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
@@ -5727,14 +5727,14 @@
     },
     {
       "task_id": "R01",
-      "status": "VERIFIED",
+      "status": "ACCEPTED",
       "depends_on": [
         "R00"
       ],
       "scope": "LOCAL_ONLY",
       "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
       "receipt": "docs/refactoring/runs/20261023-v3/r01/acceptance.json",
-      "source_sha": "440ef7e408be800d377f67373db2d3707d09de58"
+      "source_sha": "ac18621ea1b831d625d2187c11af4369b2232f34"
     },
     {
       "task_id": "R02",
