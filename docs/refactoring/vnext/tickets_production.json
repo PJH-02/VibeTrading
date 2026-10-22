@@ -1085,7 +1085,7 @@
     {
       "task_id": "VN07",
       "existing_phase": "P06",
-      "status": "PARTIAL_MARKET_ORDER_AND_JOURNAL_LIFECYCLE_COMPLETE_STRATEGY_OPEN",
+      "status": "RUNNING",
       "depends_on": [
         "VN06",
         "VN04B"
@@ -1440,7 +1440,8 @@
         "original_base_sha": "99f25957ca5ec1614b4e8ee550e16077b5fd8773",
         "model": "opencode/deepseek-v4.1-flash-free",
         "executor_repairs": 1,
-        "scope": "Two original VN07-allowed files only; parent remains INCOMPLETE"
+        "scope": "Two original VN07-allowed files only; parent remains INCOMPLETE",
+        "prior_status": "PARTIAL_MARKET_ORDER_AND_JOURNAL_LIFECYCLE_COMPLETE_STRATEGY_OPEN"
       }
     },
     {
