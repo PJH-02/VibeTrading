@@ -5701,14 +5701,231 @@
     "receipt": "docs/refactoring/runs/20261020-production/vn14b-control-validation.json",
     "production_ready": false
   },
-  "user_request_latest": "2026-10-21: clean or move unused artifacts to ignored trashbin, commit and push all changes, then read .freebuff/repo-analysis-review.md; no next product ticket requested",
+  "user_request_latest": "2026-10-23: execute R00/R01/O00/O01 then all DAG-ready v3 local implementation/verification; preserve legacy IDs/evidence; no production mutation/deploy/push/merge",
   "execution_control": {
-    "status": "STOPPED_AT_USER_REQUEST",
+    "status": "RUNNING_LOCAL_REFACTORING",
     "last_completed_ticket": "VN14B",
+    "last_completed_tooling_ticket": "R00",
     "active_ticket": null,
-    "start_next_ticket": false,
-    "stop_after_ticket": "VN14B"
+    "start_next_ticket": true,
+    "stop_after_ticket": null,
+    "server_deploy_authorized": false,
+    "live_mutation_authorized": false,
+    "current_source_sha": "440ef7e408be800d377f67373db2d3707d09de58",
+    "active_tooling_tickets": []
   },
   "git_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
-  "git_snapshot_policy": "All current code including unfinished prototypes included; stage classifications unchanged; no deployment authorization"
+  "git_snapshot_policy": "All current code including unfinished prototypes included; stage classifications unchanged; no deployment authorization",
+  "tooling_tasks": [
+    {
+      "task_id": "R00",
+      "status": "ACCEPTED",
+      "depends_on": [],
+      "scope": "LOCAL_ONLY",
+      "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
+      "receipt": "docs/refactoring/vnext/repo_inventory.json"
+    },
+    {
+      "task_id": "R01",
+      "status": "VERIFIED",
+      "depends_on": [
+        "R00"
+      ],
+      "scope": "LOCAL_ONLY",
+      "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
+      "receipt": "docs/refactoring/runs/20261023-v3/r01/acceptance.json",
+      "source_sha": "440ef7e408be800d377f67373db2d3707d09de58"
+    },
+    {
+      "task_id": "R02",
+      "status": "PLANNED",
+      "depends_on": [
+        "R00",
+        "R01"
+      ],
+      "scope": "LOCAL_ONLY",
+      "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
+      "receipt": null
+    },
+    {
+      "task_id": "R03",
+      "status": "PLANNED",
+      "depends_on": [
+        "R00",
+        "R01",
+        "R02"
+      ],
+      "scope": "LOCAL_ONLY",
+      "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
+      "receipt": null
+    },
+    {
+      "task_id": "R04",
+      "status": "PLANNED",
+      "depends_on": [
+        "R03"
+      ],
+      "scope": "LOCAL_ONLY",
+      "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
+      "receipt": null
+    },
+    {
+      "task_id": "R05",
+      "status": "PLANNED",
+      "depends_on": [
+        "R03",
+        "R04",
+        "VN10",
+        "VN11",
+        "VN12"
+      ],
+      "scope": "LOCAL_ONLY",
+      "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
+      "receipt": null
+    },
+    {
+      "task_id": "R06",
+      "status": "PLANNED",
+      "depends_on": [
+        "R04",
+        "R05"
+      ],
+      "scope": "LOCAL_ONLY",
+      "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
+      "receipt": null
+    },
+    {
+      "task_id": "O00",
+      "status": "VERIFIED",
+      "depends_on": [
+        "R00"
+      ],
+      "scope": "LOCAL_ONLY",
+      "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
+      "receipt": "docs/refactoring/runs/20261023-v3/o00/acceptance.json",
+      "source_sha": "440ef7e408be800d377f67373db2d3707d09de58"
+    },
+    {
+      "task_id": "O01",
+      "status": "PLANNED",
+      "depends_on": [
+        "R01",
+        "O00"
+      ],
+      "scope": "LOCAL_ONLY",
+      "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
+      "receipt": null
+    }
+  ],
+  "legacy_task_objects_sha256": "224a13c77fcd505c85d461fa723be008824e6cf119a7ef825949a2aa18c57ce8",
+  "model_routing_profiles": {
+    "repository": [
+      "opencode/glm-5.3-flash-free",
+      "opencode/mimo-v2.6-flash-free",
+      "freellmapi/gemini-2.5-flash"
+    ],
+    "implementation": [
+      "opencode/glm-5.3-flash-free",
+      "freellmapi/glm-4.5-flash",
+      "opencode/mimo-v2.6-flash-free"
+    ],
+    "testing": [
+      "opencode/mimo-v2.6-flash-free",
+      "opencode/glm-5.3-flash-free",
+      "freellmapi/gemini-2.5-flash"
+    ],
+    "debugging": [
+      "opencode/deepseek-v4.1-flash-free",
+      "opencode/glm-5.3-flash-free",
+      "opencode/nemotron-3-ultra-free"
+    ],
+    "refactoring": [
+      "opencode/deepseek-v4.1-flash-free",
+      "opencode/glm-5.3-flash-free",
+      "opencode/nemotron-3-ultra-free"
+    ],
+    "state_machine": [
+      "opencode/deepseek-v4.1-flash-free",
+      "opencode/glm-5.3-flash-free",
+      "opencode/nemotron-3-ultra-free"
+    ],
+    "audit": [
+      "opencode/nemotron-3-ultra-free",
+      "freellmapi/gemini-2.5-flash",
+      "opencode/deepseek-v4.1-flash-free"
+    ]
+  },
+  "model_readiness": [
+    {
+      "model_id": "opencode/glm-5.3-flash-free",
+      "status": "QUALIFIED_O00",
+      "provider_route": "opencode",
+      "quota_independence": "NOT_ASSUMED",
+      "receipt": "docs/refactoring/runs/20261023-v3/o00/vt-o00-f5ip9lxi/receipt.json"
+    },
+    {
+      "model_id": "opencode/mimo-v2.6-flash-free",
+      "status": "QUALIFIED_O00",
+      "provider_route": "opencode",
+      "quota_independence": "NOT_ASSUMED",
+      "receipt": "docs/refactoring/runs/20261023-v3/o00/vt-o00-cabws8_f/receipt.json"
+    },
+    {
+      "model_id": "freellmapi/gemini-2.5-flash",
+      "status": "QUALIFIED_O00",
+      "provider_route": "freellmapi",
+      "quota_independence": "NOT_ASSUMED",
+      "receipt": "docs/refactoring/runs/20261023-v3/o00/vt-o00-f6f_3b0x/receipt.json",
+      "observed_served_models": [
+        "gemini-2.5-flash"
+      ]
+    },
+    {
+      "model_id": "freellmapi/glm-4.5-flash",
+      "status": "QUALIFIED_O00",
+      "provider_route": "freellmapi",
+      "quota_independence": "NOT_ASSUMED",
+      "receipt": "docs/refactoring/runs/20261023-v3/o00/vt-o00-7nef2t3e/receipt.json",
+      "observed_served_models": [
+        "glm-4.5-flash"
+      ]
+    },
+    {
+      "model_id": "opencode/deepseek-v4.1-flash-free",
+      "status": "QUALIFIED_O00",
+      "provider_route": "opencode",
+      "quota_independence": "NOT_ASSUMED",
+      "receipt": "docs/refactoring/runs/20261023-v3/o00/vt-o00-qdyotdke/receipt.json"
+    },
+    {
+      "model_id": "opencode/nemotron-3-ultra-free",
+      "status": "QUALIFIED_O00",
+      "provider_route": "opencode",
+      "quota_independence": "NOT_ASSUMED",
+      "receipt": "docs/refactoring/runs/20261023-v3/o00/vt-o00-v703f9qo/receipt.json",
+      "observed_served_models": []
+    }
+  ],
+  "execution_history": [
+    {
+      "recorded_kst": "2026-10-23T01:40:50.681101+09:00",
+      "previous_execution_control": {
+        "status": "STOPPED_AT_USER_REQUEST",
+        "last_completed_ticket": "VN14B",
+        "active_ticket": null,
+        "start_next_ticket": false,
+        "stop_after_ticket": "VN14B"
+      },
+      "superseded_by": "2026-10-23 user VibeTrading v3 execution request; local-only work resumed"
+    }
+  ],
+  "current_local_baseline_validation": {
+    "receipt": "docs/refactoring/runs/20261023-v3/baseline/result.json",
+    "passed": 1531,
+    "failed": 1,
+    "deselected": 2,
+    "state": "BASELINE_FAILURE_CONFIRMED",
+    "failure_scope": "VN07 checkpoint unopened suffix identity replacement",
+    "reproduction": "docs/refactoring/runs/20261023-v3/baseline/checkpoint-order-stdout.txt"
+  }
 }

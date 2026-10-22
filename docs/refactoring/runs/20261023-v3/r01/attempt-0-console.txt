@@ -1,0 +1,8 @@
+ROLE=implement
+MODEL=opencode/glm-5.3-flash-free
+ARTIFACTS=/home/pjh/.local/state/codex-opencode/runs/implement.jhhZ45VT
+WORKER_EXIT=124
+BASELINE_DIFF_CHECK_EXIT=0
+DIFF_CHECK_EXIT=0
+ARTIFACTS=/home/pjh/.local/state/codex-opencode/runs/implement.jhhZ45VT
+Worker failed or timed out. Do NOT automatically retry after possible partial edits.

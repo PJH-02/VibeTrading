@@ -450,11 +450,16 @@
     "snapshot_head": "The Git commit containing this record; inspect git log -1"
   },
   "execution_control": {
-    "status": "STOPPED_AT_USER_REQUEST",
+    "status": "RUNNING_LOCAL_REFACTORING",
     "last_completed_ticket": "VN14B",
+    "last_completed_tooling_ticket": "R00",
     "active_ticket": null,
-    "start_next_ticket": false,
-    "stop_after_ticket": "VN14B"
+    "start_next_ticket": true,
+    "stop_after_ticket": null,
+    "server_deploy_authorized": false,
+    "live_mutation_authorized": false,
+    "current_source_sha": "440ef7e408be800d377f67373db2d3707d09de58",
+    "active_tooling_tickets": []
   },
   "current_wip": null,
   "last_completed_ticket": "VN14B",
@@ -463,5 +468,18 @@
     "head": "90847f84243d01ec98c9815216c96c8f2749028b",
     "candidate": "completed-market-v1"
   },
-  "current_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json"
+  "current_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
+  "execution_history": [
+    {
+      "recorded_kst": "2026-10-23T01:40:50.681101+09:00",
+      "previous_execution_control": {
+        "status": "STOPPED_AT_USER_REQUEST",
+        "last_completed_ticket": "VN14B",
+        "active_ticket": null,
+        "start_next_ticket": false,
+        "stop_after_ticket": "VN14B"
+      },
+      "superseded_by": "2026-10-23 user VibeTrading v3 execution request; local-only work resumed"
+    }
+  ]
 }
