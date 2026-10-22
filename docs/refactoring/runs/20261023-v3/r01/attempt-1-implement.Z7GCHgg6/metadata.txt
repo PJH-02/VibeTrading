@@ -1,0 +1,5 @@
+role=implement
+model=opencode/mimo-v2.6-flash-free
+agent=build
+repo=/work
+ticket=/work/docs/tickets/R01-authority-status.md
