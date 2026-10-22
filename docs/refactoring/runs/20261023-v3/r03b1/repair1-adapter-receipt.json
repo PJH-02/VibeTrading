@@ -1,0 +1,216 @@
+{
+  "status": "FAILURE",
+  "decision": null,
+  "failure_class": "SCOPE_VIOLATION",
+  "failure_message": "snapshot key references a blocked path component: '.env.example'",
+  "run_id": "20261022T234824722684Z-2431f355404f",
+  "task_id": "R03B1",
+  "packet_sha256": "d38283fea5345ac955a7ccf547f99fdb7b0bdb370f26f4defcd64e21a1ca30f2",
+  "nonce": "9c66bd62a5424077ab6a32037ef16d6c",
+  "created_utc": "2026-10-22T23:48:24.723546+00:00",
+  "deadline_utc": "2026-10-22T23:58:24.723546+00:00",
+  "model": "opencode/mimo-v2.6-flash-free",
+  "provider": "opencode",
+  "route": "opencode",
+  "host_execution_attested": false,
+  "workspace": "/home/pjh/.local/state/codex-opencode/runs/20261022T234824722684Z-2431f355404f/attempt/work",
+  "worker": {
+    "exit_code": 0,
+    "timed_out": false,
+    "cancelled": false,
+    "elapsed_seconds": 285.0506897710002,
+    "stdout_path": "/home/pjh/.local/state/codex-opencode/runs/20261022T234824722684Z-2431f355404f/worker.stdout.log",
+    "stderr_path": "/home/pjh/.local/state/codex-opencode/runs/20261022T234824722684Z-2431f355404f/worker.stderr.log",
+    "json_event_count": 0,
+    "token_usage": {
+      "total": 20271,
+      "input": 602,
+      "output": 841,
+      "reasoning": 140,
+      "cache": {
+        "write": 0,
+        "read": 18688
+      }
+    },
+    "effective_exit_code": 0,
+    "dispatcher_exit_code": 0,
+    "dispatcher_token_usage": null,
+    "selected_route": "opencode",
+    "observed_models": [],
+    "actual_weights": "UNKNOWN",
+    "actual_errors": [
+      "0"
+    ],
+    "tool_states": [
+      {
+        "tool": "read",
+        "status": "completed"
+      },
+      {
+        "tool": "read",
+        "status": "completed"
+      },
+      {
+        "tool": "read",
+        "status": "completed"
+      },
+      {
+        "tool": "read",
+        "status": "completed"
+      },
+      {
+        "tool": "read",
+        "status": "completed"
+      },
+      {
+        "tool": "read",
+        "status": "completed"
+      },
+      {
+        "tool": "bash",
+        "status": "error"
+      },
+      {
+        "tool": "bash",
+        "status": "error"
+      },
+      {
+        "tool": "edit",
+        "status": "completed"
+      },
+      {
+        "tool": "edit",
+        "status": "completed"
+      },
+      {
+        "tool": "write",
+        "status": "completed"
+      },
+      {
+        "tool": "write",
+        "status": "completed"
+      },
+      {
+        "tool": "bash",
+        "status": "completed"
+      }
+    ],
+    "opencode_logs": [
+      "/home/pjh/.local/state/codex-opencode/runs/20261022T234824722684Z-2431f355404f/attempt/home/.local/state/codex-opencode/runs/migrate.JIKtGKqO/opencode.log"
+    ],
+    "metadata_files": [],
+    "worker_exit_files": [
+      "/home/pjh/.local/state/codex-opencode/runs/20261022T234824722684Z-2431f355404f/attempt/home/.local/state/codex-opencode/runs/migrate.JIKtGKqO/worker-exit.txt"
+    ],
+    "raw_log_paths": [
+      "/home/pjh/.local/state/codex-opencode/runs/20261022T234824722684Z-2431f355404f/worker.stdout.log",
+      "/home/pjh/.local/state/codex-opencode/runs/20261022T234824722684Z-2431f355404f/worker.stderr.log",
+      "/home/pjh/.local/state/codex-opencode/runs/20261022T234824722684Z-2431f355404f/attempt/home/.local/state/codex-opencode/runs/migrate.JIKtGKqO/opencode.log",
+      "/home/pjh/.local/state/codex-opencode/runs/20261022T234824722684Z-2431f355404f/attempt/home/.local/state/codex-opencode/runs/migrate.JIKtGKqO/worker-exit.txt"
+    ]
+  },
+  "changed_paths": [],
+  "patch_path": "/home/pjh/.local/state/codex-opencode/runs/20261022T234824722684Z-2431f355404f/candidate.patch",
+  "modified_hashes": {},
+  "tests": {
+    "status": "NOT_RUN",
+    "results": []
+  },
+  "relay": {},
+  "safety_blocker": false,
+  "origin_baseline": {
+    "is_repo": true,
+    "diff_check": {
+      "exit_code": 0,
+      "output": ""
+    },
+    "status": {
+      "exit_code": 0,
+      "output": ""
+    }
+  },
+  "snapshot_baseline": {
+    "git_diff_check": {
+      "exit_code": 0,
+      "output": ""
+    },
+    "manifest_count": 1109,
+    "manifest_sha256": "2766f51b67045e3081ffe019aae918295384181c73d0e692b0ac282a6369d8c0"
+  },
+  "runtime": {
+    "launcher": "/home/pjh/.local/bin/opencode",
+    "dispatcher": "/home/pjh/.local/bin/delegate-opencode",
+    "native": "/home/pjh/.nvm/versions/node/v22.22.0/lib/node_modules/opencode-ai/bin/opencode.exe",
+    "native_exists": true,
+    "native_sha256": "179ca421d61eefeadfa0c50e084a6e79c1623734732f0f4593f81ccfd3ab7ee9",
+    "version": "1.19.3"
+  },
+  "observability": {
+    "selected_route": "opencode",
+    "observed_models": [],
+    "actual_weights": "UNKNOWN",
+    "actual_worker_exit": 0,
+    "dispatcher_exit": 0,
+    "raw_log_paths": [
+      "/home/pjh/.local/state/codex-opencode/runs/20261022T234824722684Z-2431f355404f/worker.stdout.log",
+      "/home/pjh/.local/state/codex-opencode/runs/20261022T234824722684Z-2431f355404f/worker.stderr.log",
+      "/home/pjh/.local/state/codex-opencode/runs/20261022T234824722684Z-2431f355404f/attempt/home/.local/state/codex-opencode/runs/migrate.JIKtGKqO/opencode.log",
+      "/home/pjh/.local/state/codex-opencode/runs/20261022T234824722684Z-2431f355404f/attempt/home/.local/state/codex-opencode/runs/migrate.JIKtGKqO/worker-exit.txt"
+    ],
+    "tool_states": [
+      {
+        "tool": "read",
+        "status": "completed"
+      },
+      {
+        "tool": "read",
+        "status": "completed"
+      },
+      {
+        "tool": "read",
+        "status": "completed"
+      },
+      {
+        "tool": "read",
+        "status": "completed"
+      },
+      {
+        "tool": "read",
+        "status": "completed"
+      },
+      {
+        "tool": "read",
+        "status": "completed"
+      },
+      {
+        "tool": "bash",
+        "status": "error"
+      },
+      {
+        "tool": "bash",
+        "status": "error"
+      },
+      {
+        "tool": "edit",
+        "status": "completed"
+      },
+      {
+        "tool": "edit",
+        "status": "completed"
+      },
+      {
+        "tool": "write",
+        "status": "completed"
+      },
+      {
+        "tool": "write",
+        "status": "completed"
+      },
+      {
+        "tool": "bash",
+        "status": "completed"
+      }
+    ]
+  },
+  "provenance": "UNTRUSTED_INPUT"
+}

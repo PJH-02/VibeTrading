@@ -1,0 +1,14 @@
+{
+  "changed_paths": [
+    "pytest.ini",
+    "Dockerfile.crypto",
+    "Dockerfile",
+    "tests/refactoring/test_src_packaging.py"
+  ],
+  "outside_scope": [],
+  "actual_worker_exit": 0,
+  "worker_pytest_exit": 0,
+  "worker_pytest_passed": 4,
+  "adapter_failure_preserved": "SCOPE_VIOLATION",
+  "blocker": "Unchanged .env.example is present in full snapshot baseline and rejected by the adapter scope-key validator; not a worker-created credential file. Adapter code is outside current ticket and is not modified."
+}
