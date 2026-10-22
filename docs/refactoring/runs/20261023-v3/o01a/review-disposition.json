@@ -1,0 +1,16 @@
+{
+  "reviewer": "Codex gpt-6.1-sol",
+  "status": "VERIFIED_SUBUNIT_ONLY",
+  "parent_O01_accepted": false,
+  "repair_delegations": 2,
+  "owner_small_fix": "5-line canonical generation hash fence plus one regression; reproduced false-ready when predecessor revoked between load_status and final canonical hash; tests in reviewer-canonical-race before failed, after passed",
+  "independent_review": "Nemotron source and delta audits completed; findings disposition evaluated against actual code, tests and threat boundary",
+  "audit_findings": {
+    "static_read_symlink_claim": "REJECTED: _existing_regular_file calls _check_no_symlink; actual static root/canonical/source symlink tests pass; delta excerpt omitted already reviewed helper and audit inferred its behavior incorrectly",
+    "read_hash_TOCTOU": "OUTSIDE_WORKER_BOUNDARY: APIs execute on trusted host, worker cannot race host source/roots; do not claim defense against same-UID host attacker. Execution adapter must verify copied bytes and recheck origin before/after tests.",
+    "leaf_fchmod_755_to_700": "REJECTED: tightening caller-selected private leaf to0700 is required; ancestors never chmod. Audit incorrectly calls this widening access.",
+    "malformed_pending_record": "NO_ACCEPTANCE_BYPASS: untrusted pending forensic inputs are never accepted/attested; host runner makes validated canonical packet",
+    "canonical_generation_drift": "CONFIRMED via deterministic counterexample and fixed by owner small hash fence",
+    "pending_record_provenance": "PENDING_CODEX_REVIEW and UNTRUSTED_INPUT remain immutable"
+  }
+}
