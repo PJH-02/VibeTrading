@@ -1,0 +1,5 @@
+{
+  "exit_code": 1,
+  "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/tmp/r03b1-flat-probe-735_d8_0/vibetrading/__init__.py\", line 1, in <module>\n    raise RuntimeError(\"STALE_FLAT_PACKAGE\")\nRuntimeError: STALE_FLAT_PACKAGE\n",
+  "meaning": "Existing base /app/vibetrading survives COPY . . and shadows /app/src for python main.py; main Dockerfile reuse branch needs same build-only stale-package cleanup as crypto."
+}
