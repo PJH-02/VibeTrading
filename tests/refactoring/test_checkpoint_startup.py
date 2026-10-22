@@ -1,6 +1,7 @@
 """Independent retained-spool oracles for market-only checkpoint startup."""
 import hashlib
 from dataclasses import replace
+import os
 import time
 from decimal import Decimal
 from types import SimpleNamespace
@@ -92,6 +93,12 @@ async def test_retained_c_verified_then_single_suffix_applies_once_without_deliv
         assert target.request_resume(EngineCursor('a','run',3)) is True
     finally:
         await target.close();await source.close()
+
+
+def checkpoint_codec(source):
+    return CheckpointCodec(max_bytes=262144,max_event_bytes=8192,max_producers=4,
+        config_sha256=hashlib.sha256(b'fixed-market-only-config').hexdigest(),
+        capacity=source.hot_path.checkpoint_capacity())
 
 
 def read_order(spool, *, max_bytes=65536):
@@ -350,8 +357,17 @@ async def test_normal_append_beyond_frozen_h_is_left_for_live_delivery(tmp_path,
         await target.close();await source.close()
 
 
+def replace_segment(root,number):
+    segment=root/f'{number:020d}.sealed'
+    replacement=segment.with_suffix('.replacement')
+    replacement.write_bytes(segment.read_bytes())
+    replacement.replace(segment)
+
+
 @pytest.mark.asyncio
-async def test_segment_replacement_after_c_proof_cannot_open_a_new_suffix_authority(tmp_path,monkeypatch):
+@pytest.mark.parametrize('segment_number',[1,2],ids=['oldest-c','newest-unopened-suffix'])
+async def test_segment_replacement_after_c_proof_cannot_open_a_new_suffix_authority(
+        tmp_path,monkeypatch,segment_number):
     item=producer(tmp_path)
     source,codec,payload=capture([item])
     append(item,[event('a',2)])
@@ -360,10 +376,7 @@ async def test_segment_replacement_after_c_proof_cannot_open_a_new_suffix_author
 
     def restore_then_replace(*args,**kwargs):
         result=restore(*args,**kwargs)
-        segment=next(path for path in item.spool_root.iterdir() if path.suffix in {'.active','.sealed'})
-        replacement=segment.with_suffix('.replacement')
-        replacement.write_bytes(segment.read_bytes())
-        replacement.replace(segment)
+        replace_segment(item.spool_root,segment_number)
         return result
 
     monkeypatch.setattr(target,'restore_virgin',restore_then_replace)
@@ -375,3 +388,184 @@ async def test_segment_replacement_after_c_proof_cannot_open_a_new_suffix_author
         assert target.stats['replayed']==0
     finally:
         await target.close();await source.close()
+
+
+@pytest.mark.asyncio
+async def test_c0_prefix_replacement_has_no_post_restore_reader_authority(tmp_path,monkeypatch):
+    item=producer(tmp_path)
+    source=engine([item],fresh=True)
+    target=None
+    try:
+        append(item,[event('a',1)])
+        append(item,[event('a',2)])
+        codec=checkpoint_codec(source)
+        payload=source.capture_checkpoint(codec)
+        target=engine([item])
+        restore=target.restore_virgin
+
+        def restore_then_replace(*args,**kwargs):
+            result=restore(*args,**kwargs)
+            replace_segment(item.spool_root,1)
+            return result
+
+        monkeypatch.setattr(target,'restore_virgin',restore_then_replace)
+        with pytest.raises(RuntimeError,match='identity changed'):
+            await replay_checkpoint_startup(target,[item],codec=codec,payload=payload,
+                expected_engine_incarnation=source.hot_path.engine_incarnation)
+        assert target.stats['closed'] is True
+        assert target.stats['replayed']==0 and target.hot_path.apply_seq==0
+    finally:
+        if target is not None:await target.close()
+        await source.close()
+
+
+@pytest.mark.asyncio
+async def test_later_segment_replacement_is_checked_at_its_descriptor_open(tmp_path,monkeypatch):
+    item=producer(tmp_path)
+    source,codec,payload=capture([item])
+    append(item,[event('a',2)])
+    append(item,[event('a',3)])
+    item.pipeline=replace(item.pipeline,batch_records=1)
+    target=engine([item])
+    apply=target.apply_replay
+
+    def apply_then_replace(frame):
+        result=apply(frame)
+        if frame.cursor.sequence==2:replace_segment(item.spool_root,3)
+        return result
+
+    monkeypatch.setattr(target,'apply_replay',apply_then_replace)
+    try:
+        with pytest.raises(RuntimeError,match='identity changed'):
+            await replay_checkpoint_startup(target,[item],codec=codec,payload=payload,
+                expected_engine_incarnation=source.hot_path.engine_incarnation)
+        assert target.stats['closed'] is True
+        assert target.stats['delivered']==target.stats['queued_records']==0
+        assert all(feed['mode']!='LIVE' for feed in target.stats['feeds'].values())
+    finally:
+        await target.close();await source.close()
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize('fault,segment_number,message',[
+    ('sealed-inplace',2,'sealed segment changed'),
+    ('missing-suffix',2,'missing'),
+    ('missing-prefix',1,'missing'),
+])
+async def test_sealed_inplace_or_missing_retained_segment_fails_closed(
+        tmp_path,monkeypatch,fault,segment_number,message):
+    item=producer(tmp_path)
+    source,codec,payload=capture([item])
+    append(item,[event('a',2)])
+    target=engine([item])
+    restore=target.restore_virgin
+
+    def restore_then_damage(*args,**kwargs):
+        result=restore(*args,**kwargs)
+        segment=item.spool_root/f'{segment_number:020d}.sealed'
+        if fault=='sealed-inplace':
+            data=segment.read_bytes()
+            segment.write_bytes(data)
+            stat=segment.stat()
+            os.utime(segment,ns=(stat.st_atime_ns,stat.st_mtime_ns+1_000_000))
+        else:
+            segment.unlink()
+        return result
+
+    monkeypatch.setattr(target,'restore_virgin',restore_then_damage)
+    try:
+        with pytest.raises(RuntimeError,match=message):
+            await replay_checkpoint_startup(target,[item],codec=codec,payload=payload,
+                expected_engine_incarnation=source.hot_path.engine_incarnation)
+        assert target.stats['closed'] is True
+        assert target.stats['replayed']==0
+    finally:
+        await target.close();await source.close()
+
+
+@pytest.mark.asyncio
+async def test_active_growth_then_same_inode_seal_after_freeze_leaves_later_record_live(
+        tmp_path,monkeypatch):
+    import vibetrading.local_runtime as runtime
+    item=producer(tmp_path)
+    source=engine([item],fresh=True)
+    writer=MarketSpool(item.spool_root,item.producer,item.incarnation,**LIMITS)
+    try:
+        first=event('a',1).model_dump_json().encode()
+        writer.append(first);writer.flush()
+        source.on_frame(RecoveryFrame(EngineCursor('a','run',1),first))
+        codec=checkpoint_codec(source)
+        payload=source.capture_checkpoint(codec)
+        writer.append(event('a',2).model_dump_json().encode());writer.flush()
+        frozen=runtime._scan(item)
+        assert frozen.active_segment_id==1
+        early_proofs=runtime._capture_segment_proofs(item.spool_root,frozen)
+        third=event('a',3).model_dump_json().encode()
+        writer.append(third);writer.flush();writer.seal()
+        later=RecoveryFrame(EngineCursor('a','run',3),third)
+    finally:
+        writer.close()
+    monkeypatch.setattr(runtime,'_scan',lambda selected:frozen)
+    monkeypatch.setattr(runtime,'_capture_segment_proofs',lambda root,report:early_proofs)
+    target=engine([item])
+    try:
+        handoffs=await replay_checkpoint_startup(target,[item],codec=codec,payload=payload,
+            expected_engine_incarnation=source.hot_path.engine_incarnation)
+        assert [(c.sequence,h.sequence) for c,h in handoffs]==[(1,2)]
+        assert target.hot_path.apply_seq==2 and target.stats['replayed']==1
+        assert target.complete_checkpoint_recovery(lambda *args:True) is True
+        target.on_frame(later)
+        assert target.hot_path.apply_seq==3
+    finally:
+        await target.close();await source.close()
+
+
+@pytest.mark.asyncio
+async def test_sealed_active_segment_cannot_regress_to_active_after_restore(tmp_path,monkeypatch):
+    import vibetrading.local_runtime as runtime
+    item=producer(tmp_path)
+    source=engine([item],fresh=True)
+    writer=MarketSpool(item.spool_root,item.producer,item.incarnation,**LIMITS)
+    target=None
+    try:
+        first=event('a',1).model_dump_json().encode()
+        writer.append(first);writer.flush()
+        source.on_frame(RecoveryFrame(EngineCursor('a','run',1),first))
+        codec=checkpoint_codec(source)
+        payload=source.capture_checkpoint(codec)
+        writer.append(event('a',2).model_dump_json().encode());writer.flush()
+        target=engine([item])
+        restored=False
+        restore=target.restore_virgin
+
+        def restore_then_seal(*args,**kwargs):
+            nonlocal restored
+            result=restore(*args,**kwargs)
+            writer.seal()
+            restored=True
+            return result
+
+        monkeypatch.setattr(target,'restore_virgin',restore_then_seal)
+        original_read_batch=runtime._CheckpointSpoolReader.read_batch
+        regressed=False
+
+        def read_batch_then_regress(reader,*args,**kwargs):
+            nonlocal regressed
+            if restored and not regressed:
+                regressed=True
+                segment=item.spool_root/f'{1:020d}.sealed'
+                segment.rename(segment.with_suffix('.active'))
+            return original_read_batch(reader,*args,**kwargs)
+
+        monkeypatch.setattr(runtime._CheckpointSpoolReader,'read_batch',read_batch_then_regress)
+        with pytest.raises(RuntimeError,match='sealed segment regressed'):
+            await replay_checkpoint_startup(target,[item],codec=codec,payload=payload,
+                expected_engine_incarnation=source.hot_path.engine_incarnation)
+        assert target.stats['closed'] is True
+        assert target.stats['replayed']==0
+        assert target.stats['delivered']==target.stats['queued_records']==0
+        assert all(feed['mode']!='LIVE' for feed in target.stats['feeds'].values())
+    finally:
+        writer.close()
+        if target is not None:await target.close()
+        await source.close()

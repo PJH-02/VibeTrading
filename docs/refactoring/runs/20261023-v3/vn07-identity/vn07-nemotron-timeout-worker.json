@@ -1,0 +1,20 @@
+{
+  "selected_model": "opencode/nemotron-3-ultra-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "audit",
+  "worker_process": {
+    "exit_code": 124,
+    "elapsed_seconds": 486.8873146110018,
+    "relay_http_statuses": [],
+    "served_models": [],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-vn07-nemotron-timeout-dc80f826",
+  "usage_reported": [],
+  "base_sha": "b2ec81ba4a1ee58a82e28326caf4f78f1a8e562d",
+  "scope": [],
+  "output_sha256": {},
+  "automatic_acceptance": false
+}

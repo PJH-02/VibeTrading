@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
-from dataclasses import asdict
+from dataclasses import asdict, dataclass
 import hashlib
 import inspect
 import json
@@ -27,7 +27,7 @@ from .local_pipeline import SpoolingMarketPublisher
 from .local_transport import AppliedReceipt, LocalTransportClient, LocalTransportServer
 from .market_apply_order import ApplyOrder
 from .checkpoint_journal import CheckpointJournal
-from .market_spool import MarketSpool, SpoolCursor, SpoolReader, scan_spool
+from .market_spool import MarketSpool, SpoolCorruption, SpoolCursor, SpoolReader, scan_spool
 from .settings import RuntimeSettings
 
 
@@ -81,6 +81,93 @@ def validate_runtime(plan,settings):
 def _scan(item):
     return scan_spool(item.spool_root,producer_id=item.producer,incarnation=item.incarnation,
                       **item.limits.reader_kwargs)
+
+
+@dataclass(frozen=True)
+class _SegmentProof:
+    dev: int
+    ino: int
+    size: int
+    mtime_ns: int | None
+    active: bool
+
+
+def _open_checkpoint_segment(root,number):
+    sealed=Path(root)/f"{number:020d}.sealed"
+    active=Path(root)/f"{number:020d}.active"
+    # Reuse the bounded active/sealed rename-open sequence. Descriptor
+    # metadata, not a path re-stat, authorizes the frozen segment.
+    for path,is_sealed in ((sealed,True),(active,False),(sealed,True)):
+        try:
+            return path,is_sealed,path.open("rb")
+        except FileNotFoundError:
+            continue
+    raise SpoolCorruption("checkpoint spool segment is missing")
+
+
+def _capture_segment_proofs(root,report):
+    """Pin only metadata for the frozen scan inventory; no payloads/index."""
+    proofs={}
+    for number in range(1,report.segment_count+1):
+        _,sealed,opened=_open_checkpoint_segment(root,number)
+        try:
+            stat=os.fstat(opened.fileno())
+            was_active=number==report.active_segment_id
+            if not was_active and not sealed:
+                raise SpoolCorruption("checkpoint spool sealed segment regressed")
+            proofs[number]=_SegmentProof(stat.st_dev,stat.st_ino,stat.st_size,
+                stat.st_mtime_ns if sealed else None,was_active)
+        finally:
+            opened.close()
+    return proofs
+
+
+class _CheckpointSpoolReader(SpoolReader):
+    def __init__(self,root,producer_id,incarnation,*,proofs,**kwargs):
+        # Proofs precede the superclass constructor, which may open segments
+        # while locating C.
+        self._proofs=dict(proofs)
+        self._sealed_observations={number:(proof.size,proof.mtime_ns)
+            for number,proof in self._proofs.items() if proof.mtime_ns is not None}
+        super().__init__(root,producer_id,incarnation,**kwargs)
+
+    def _open_segment(self,number):
+        proof=self._proofs.get(number)
+        if proof is None:
+            raise SpoolCorruption("checkpoint spool segment is not in frozen inventory")
+        path,sealed,opened=super()._open_segment(number)
+        try:
+            stat=os.fstat(opened.fileno())
+            if (stat.st_dev,stat.st_ino)!=(proof.dev,proof.ino):
+                raise SpoolCorruption("checkpoint spool segment identity changed")
+            if proof.active:
+                # The active prefix may legitimately grow and later be sealed
+                # under the same inode. Never require active size/mtime equality.
+                if stat.st_size<proof.size:
+                    raise SpoolCorruption("checkpoint spool active segment shrank")
+                if sealed:
+                    signature=(stat.st_size,stat.st_mtime_ns)
+                    observed=self._sealed_observations.get(number)
+                    if observed is None:
+                        self._sealed_observations[number]=signature
+                    elif signature!=observed:
+                        raise SpoolCorruption("checkpoint spool sealed segment changed")
+                elif number in self._sealed_observations:
+                    raise SpoolCorruption("checkpoint spool sealed segment regressed")
+            else:
+                if not sealed:
+                    raise SpoolCorruption("checkpoint spool sealed segment regressed")
+                if (stat.st_size,stat.st_mtime_ns)!=(proof.size,proof.mtime_ns):
+                    raise SpoolCorruption("checkpoint spool sealed segment changed")
+            return path,sealed,opened
+        except BaseException:
+            opened.close()
+            raise
+
+    def validate_inventory(self):
+        for number in sorted(self._proofs):
+            _,_,opened=self._open_segment(number)
+            opened.close()
 
 
 def create_spool(item):
@@ -196,18 +283,20 @@ async def replay_checkpoint_startup(engine,producers,*,codec,payload,expected_en
                 or point.cursor.sequence>report.durable_sequence):
             raise RuntimeError('checkpoint cursor exceeds matching durable producer prefix')
         highwaters[producer]=EngineCursor(producer,item.incarnation,report.durable_sequence)
+        proofs=await asyncio.to_thread(_capture_segment_proofs,item.spool_root,report)
+        after=(SpoolCursor(item.producer,item.incarnation,point.cursor.sequence-1)
+               if point.cursor.sequence else None)
+        reader=await asyncio.to_thread(lambda item=item,proofs=proofs,after=after:_CheckpointSpoolReader(
+            item.spool_root,item.producer,item.incarnation,proofs=proofs,after=after,
+            **item.limits.reader_kwargs))
+        readers[producer]=reader
         if point.cursor.sequence==0:
             digest=hashlib.sha256(b'').hexdigest()
         else:
-            reader=await asyncio.to_thread(lambda item=item,point=point:SpoolReader(
-                item.spool_root,item.producer,item.incarnation,
-                after=SpoolCursor(item.producer,item.incarnation,point.cursor.sequence-1),
-                **item.limits.reader_kwargs))
             rows=await asyncio.to_thread(reader.read_batch,max_records=1,max_bytes=item.pipeline.max_bytes)
             if len(rows)!=1 or rows[0].cursor.sequence!=point.cursor.sequence:
                 raise RuntimeError('checkpoint original cursor is not retained')
             digest=hashlib.sha256(rows[0].payload).hexdigest()
-            readers[producer]=reader
         if digest!=point.digest:
             raise RuntimeError('checkpoint original cursor digest mismatch')
         verified[producer]=AppliedReceipt(point.cursor,digest)
@@ -217,20 +306,24 @@ async def replay_checkpoint_startup(engine,producers,*,codec,payload,expected_en
         apply_order.validate(payload,[(point.cursor,highwaters[p]) for p,point in checkpoints.items()])
     elif sum(highwaters[p].sequence>checkpoints[p].cursor.sequence for p in items)>1:
         raise RuntimeError('multiple checkpoint suffixes require a verified global apply order')
+    # The frozen inventory is rechecked before installing target state. A
+    # pre-install failure leaves the still-virgin engine to its caller.
+    for reader in readers.values():
+        await asyncio.to_thread(reader.validate_inventory)
     handoffs=engine.restore_virgin(codec,payload,highwaters,
         verified_cursors=verified,expected_engine_incarnation=expected_engine_incarnation,apply_order=apply_order)
     try:
+        # A restore hook may have replaced C=0 or an unopened tail. Recheck
+        # before applying any frame; later opens still check their descriptor.
+        for reader in readers.values():
+            await asyncio.to_thread(reader.validate_inventory)
         if apply_order is not None:
             for receipt in apply_order.receipts:
                 c=receipt.cursor
                 item=items[c.producer]
                 reader=readers.get(c.producer)
                 if reader is None:
-                    initial=checkpoints[c.producer].cursor
-                    reader=await asyncio.to_thread(lambda:SpoolReader(item.spool_root,item.producer,item.incarnation,
-                        after=SpoolCursor(initial.producer,initial.incarnation,initial.sequence),
-                        **item.limits.reader_kwargs))
-                    readers[c.producer]=reader
+                    raise RuntimeError('checkpoint reader authority missing')
                 rows=await asyncio.to_thread(reader.read_batch,max_records=1,max_bytes=item.pipeline.max_bytes)
                 if len(rows)!=1:
                     raise RuntimeError('durable checkpoint suffix is incomplete')
@@ -245,9 +338,7 @@ async def replay_checkpoint_startup(engine,producers,*,codec,payload,expected_en
             item=items[initial.producer]
             reader=readers.get(initial.producer)
             if reader is None:
-                reader=await asyncio.to_thread(lambda:SpoolReader(item.spool_root,item.producer,item.incarnation,
-                    after=SpoolCursor(initial.producer,initial.incarnation,initial.sequence),
-                    **item.limits.reader_kwargs))
+                raise RuntimeError('checkpoint reader authority missing')
             while reader.cursor.sequence<high.sequence:
                 rows=await asyncio.to_thread(reader.read_batch,
                     max_records=min(item.pipeline.batch_records,high.sequence-reader.cursor.sequence),

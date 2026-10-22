@@ -1,0 +1,41 @@
+{
+  "selected_model": "freellmapi/gemini-2.5-flash",
+  "selected_provider": "freellmapi",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "audit",
+  "worker_process": {
+    "exit_code": 0,
+    "elapsed_seconds": 236.04148196800088,
+    "relay_http_statuses": [
+      200,
+      502,
+      429,
+      502,
+      429,
+      429,
+      200
+    ],
+    "served_models": [
+      "gemini-2.5-flash"
+    ],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-vn07-gemini-missed-counterexample-2f2b8d4f",
+  "usage_reported": [
+    {
+      "total": 11172,
+      "input": 9538,
+      "output": 1634,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 0
+      }
+    }
+  ],
+  "base_sha": "1d0b60da9ed4712613de4bdcfe770045eb44bab3",
+  "scope": [],
+  "output_sha256": {},
+  "automatic_acceptance": false
+}
