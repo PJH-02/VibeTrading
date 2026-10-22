@@ -5815,16 +5815,20 @@
       "receipt": null,
       "subunits": {
         "R03A": {
-          "status": "PREPARING",
-          "scope": "Pure 140-file package relocation; byte/AST identity required"
+          "status": "ACCEPTED_SUBUNIT_ONLY",
+          "receipt": "docs/refactoring/runs/20261023-v3/r03a/relocation.json"
         },
-        "R03B": {
+        "R03B1": {
           "status": "PLANNED",
-          "scope": "Packaging/default resource paths/Docker/CLI compatibility"
+          "scope": "Packaging and core Dockerfile layout"
+        },
+        "R03B2": {
+          "status": "PLANNED",
+          "scope": "Five existing filesystem-anchor compatibility sites"
         },
         "R03C": {
           "status": "PLANNED",
-          "scope": "Path map consumers and release/tooling compatibility"
+          "scope": "Pathmap/tooling/release/deploy path consumers; exact scope to register beforedispatch"
         }
       }
     },
@@ -5922,6 +5926,138 @@
         }
       },
       "source_sha": "187271587f63a91f4adce7981e03a0941f1b8b42"
+    },
+    {
+      "scope": "LOCAL_ONLY",
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "historical evidence/data/rollback modifications",
+        "server/live mutation"
+      ],
+      "contract_ids": [
+        "v3 R03"
+      ],
+      "receipt": "docs/refactoring/runs/20261023-v3/r03a/relocation.json",
+      "task_id": "R03A",
+      "status": "ACCEPTED",
+      "depends_on": [
+        "R00",
+        "R01",
+        "R02"
+      ]
+    },
+    {
+      "scope": "LOCAL_ONLY",
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "historical evidence/data/rollback modifications",
+        "server/live mutation"
+      ],
+      "contract_ids": [
+        "v3 R03"
+      ],
+      "receipt": null,
+      "task_id": "R03B1",
+      "status": "PLANNED",
+      "depends_on": [
+        "R03A"
+      ],
+      "edit_paths": [
+        {
+          "path": "pyproject.toml",
+          "action": "ADD"
+        },
+        {
+          "path": "pytest.ini",
+          "action": "MODIFY"
+        },
+        {
+          "path": "Dockerfile",
+          "action": "MODIFY"
+        },
+        {
+          "path": "Dockerfile.crypto",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_src_packaging.py",
+          "action": "ADD"
+        }
+      ]
+    },
+    {
+      "scope": "LOCAL_ONLY",
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "historical evidence/data/rollback modifications",
+        "server/live mutation"
+      ],
+      "contract_ids": [
+        "v3 R03"
+      ],
+      "receipt": null,
+      "task_id": "R03B2",
+      "status": "PLANNED",
+      "depends_on": [
+        "R03B1"
+      ],
+      "edit_paths": [
+        {
+          "path": "src/vibetrading/settings.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "src/vibetrading/health.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "src/vibetrading/liquidity_mm/cli.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "src/vibetrading/fv_mm/runner.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "src/vibetrading/fv_pilot/runner.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_src_resource_paths.py",
+          "action": "ADD"
+        }
+      ]
+    },
+    {
+      "scope": "LOCAL_ONLY",
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "historical evidence/data/rollback modifications",
+        "server/live mutation"
+      ],
+      "contract_ids": [
+        "v3 R03"
+      ],
+      "receipt": null,
+      "task_id": "R03C",
+      "status": "PLANNED",
+      "depends_on": [
+        "R03B1",
+        "R03B2"
+      ],
+      "edit_paths": []
     }
   ],
   "legacy_task_objects_sha256": "224a13c77fcd505c85d461fa723be008824e6cf119a7ef825949a2aa18c57ce8",
