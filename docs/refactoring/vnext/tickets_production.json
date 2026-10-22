@@ -5740,9 +5740,9 @@
     "status": "RUNNING_LOCAL_REFACTORING",
     "last_completed_ticket": "VN14B",
     "last_completed_tooling_ticket": "O01",
-    "active_ticket": null,
+    "active_ticket": "R03B1",
     "start_next_ticket": true,
-    "stop_after_ticket": null,
+    "stop_after_ticket": "R03B1",
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
     "current_source_sha": "ac18621ea1b831d625d2187c11af4369b2232f34",
@@ -6191,5 +6191,6 @@
       "failure_scope": "VN07 checkpoint unopened suffix identity replacement",
       "reproduction": "docs/refactoring/runs/20261023-v3/baseline/checkpoint-order-stdout.txt"
     }
-  ]
+  ],
+  "user_scope_latest": "Resume interrupted R03B1 only; do not start any other ticket or stage."
 }

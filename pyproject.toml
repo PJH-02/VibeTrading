@@ -1,0 +1,52 @@
+# Minimal packaging metadata for the canonical src/vibetrading source.
+# Runtime dependencies stay authoritative in requirements.txt and are only
+# referenced dynamically here (they must not be duplicated or changed).
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vibetrading"
+version = "0.0.0"
+requires-python = ">=3.12"
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+
+# The canonical import package vibetrading maps to src/vibetrading.
+[tool.setuptools.package-dir]
+vibetrading = "src/vibetrading"
+
+# Hybrid discovery: canonical package under src plus the preserved flat legacy
+# packages at the repository root. Explicit include prefixes keep the legacy
+# namespaces installable without moving or rewriting them.
+[tool.setuptools.packages.find]
+where = ["src", "."]
+include = [
+    "vibetrading",
+    "vibetrading.*",
+    "strategy",
+    "strategy.*",
+    "strategies",
+    "strategies.*",
+    "shared",
+    "shared.*",
+    "services",
+    "services.*",
+    "backtest",
+    "backtest.*",
+]
+exclude = [
+    "src",
+    "src.*",
+    "tests",
+    "tests.*",
+    "docs",
+    "docs.*",
+    "tmp",
+    "tmp.*",
+    "cache",
+    "cache.*",
+]
