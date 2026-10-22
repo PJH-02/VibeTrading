@@ -1,0 +1,7 @@
+{
+  "owner": "Codex gpt-6.1-sol",
+  "reason": "Both real two-model tasks stopped before API calls with actualexit3; runtime discovery selected stable launcher as native, recursively causing executable-not-found. Failed receipts preserved in /tmp/vt-o01-live-two-bu9o5dhn",
+  "small_fix": "Exclude resolved stable launcher itself and require executable target when discovering native; add one regression",
+  "worker_repairs": 2,
+  "parent_accepted": false
+}

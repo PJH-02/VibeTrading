@@ -1,0 +1,36 @@
+{
+  "status": "VERIFIED_TWO_MODEL_PATCH_REPLAY",
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-o01-e2e-ee8a0442",
+  "models": [
+    {
+      "task_id": "O90",
+      "model": "opencode/deepseek-v4.1-flash-free",
+      "worker_exit": 0,
+      "independent_test_exit": 0,
+      "reproduction_exit": 0,
+      "patch_reproduced": true,
+      "origin_unchanged": true,
+      "candidate_sha256": "86b9f434fb32bb10719a3fbc089656282c850bcd51a07c9bc6062812660d54fe",
+      "independent_stdout": "........                                                                 [100%]\n8 passed in 0.01s\n"
+    },
+    {
+      "task_id": "O91",
+      "model": "opencode/mimo-v2.6-flash-free",
+      "worker_exit": 0,
+      "independent_test_exit": 0,
+      "reproduction_exit": 0,
+      "patch_reproduced": true,
+      "origin_unchanged": true,
+      "candidate_sha256": "68feb82a03b81b7c1c43b35123b0bbc442e2f09542eabbb9d807f7e9e35a31d6",
+      "independent_stdout": "...................                                                      [100%]\n19 passed in 0.01s\n"
+    }
+  ],
+  "initial_failures_preserved": [
+    "native discovery selected launcher instead of ELF (both stopped before inference)",
+    "fixture missing pytest import and HOME dependency remount (tests failed; no success accepted)",
+    "reproduction-only missing HOME directory corrected without new inference or source changes"
+  ],
+  "exact_runner_sha256": "caf09379aac6345d052b6ffc96c7556aeb4b5f1ed9503c7fe374005e293b4d11",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED"
+}
