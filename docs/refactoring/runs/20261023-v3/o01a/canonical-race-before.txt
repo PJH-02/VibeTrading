@@ -1,0 +1,19 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______ test_canonical_generation_drift_cannot_admit_false_prerequisite ________
+
+tmp_path = PosixPath('/tmp/pytest-of-unknown/pytest-0/test_canonical_generation_drif0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x71de3ab1a0f0>
+
+    def test_canonical_generation_drift_cannot_admit_false_prerequisite(tmp_path,monkeypatch):
+     root=f._setup(tmp_path);original=d.status_mod.load_status
+     def read_then_revoke(root):
+      answer=original(root);p=root/d.status_mod.STAGE_CANONICAL;stage=json.loads(p.read_text());stage["tasks"][0]["category"]="NOT_STARTED";stage["counts"]={"NOT_STARTED":len(stage["tasks"])};p.write_text(json.dumps(stage));return answer
+     monkeypatch.setattr(d.status_mod,"load_status",read_then_revoke)
+>    with pytest.raises(ValueError,match="canonical|metadata|changed"):
+E    Failed: DID NOT RAISE <class 'ValueError'>
+
+/opt/reviewer_canonical_race.py:10: Failed
+=========================== short test summary info ============================
+FAILED ../opt/reviewer_canonical_race.py::test_canonical_generation_drift_cannot_admit_false_prerequisite
+1 failed in 0.04s

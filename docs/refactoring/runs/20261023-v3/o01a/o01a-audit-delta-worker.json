@@ -1,0 +1,43 @@
+{
+  "selected_model": "opencode/nemotron-3-ultra-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "audit",
+  "worker_process": {
+    "exit_code": 0,
+    "elapsed_seconds": 301.7072504709977,
+    "relay_http_statuses": [],
+    "served_models": [],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-o01a-audit-delta-97b857ce",
+  "usage_reported": [
+    {
+      "total": 11097,
+      "input": 10780,
+      "output": 61,
+      "reasoning": 256,
+      "cache": {
+        "write": 0,
+        "read": 0
+      }
+    },
+    {
+      "total": 24934,
+      "input": 18496,
+      "output": 2282,
+      "reasoning": 4156,
+      "cache": {
+        "write": 0,
+        "read": 0
+      }
+    }
+  ],
+  "base_sha": "1d0b60da9ed4712613de4bdcfe770045eb44bab3",
+  "scope": [],
+  "output_sha256": {},
+  "automatic_acceptance": false,
+  "ticket_sha256": "f7411d5a1e3b0219c9613dee25d438133b4f5f2278e587cfd9fcdca6fee6c79e",
+  "published_markdown": "Whitespace-normalized render; exact input/output remain private"
+}
