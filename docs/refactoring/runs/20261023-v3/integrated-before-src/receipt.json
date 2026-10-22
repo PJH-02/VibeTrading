@@ -1,0 +1,26 @@
+{
+  "status": "FULL_LOCAL_REGRESSION_PASS",
+  "source_sha": "b778955d83aef5ac38aeef33d57233a39eab1783",
+  "original_non_live_collection_passed": 1711,
+  "additional_tooling_review_probes_passed": 6,
+  "live_data_deselected": 2,
+  "profiles": {
+    "product_guarded_passed": 1574,
+    "tooling_os_plus_six_review_passed": 143
+  },
+  "source_files_modified_by_tests": 0,
+  "frozen_oracle_inputs": {
+    "docs/refactoring/runs/20261018-stage-assignment/schema_oracle.json": {
+      "checkout_sha256": "b31751c14369f01943c16a853ea683b4702fad91716efb5c36c2fc76d0237053",
+      "frozen_sha256": "028d9166533d077aacf03cd9c74adb563a2601e0aeb1333029c7fcb8a7e0625c",
+      "reconstruction": "Only LF/CRLF representation; exact original frozen SHA required, values and golden files untouched"
+    },
+    "docs/refactoring/runs/20261018-stage-assignment/encoding_oracle.json": {
+      "checkout_sha256": "cd8f5a8446bb4ed6095416a1c50d1d526db49ac17a8e98b1a57358b47554d733",
+      "frozen_sha256": "1bb9e0d00e2cbb1110e25cf85e5ac94fc97aeb42604c7ff658b2934f99bed513",
+      "reconstruction": "Only LF/CRLF representation; exact original frozen SHA required, values and golden files untouched"
+    }
+  },
+  "historical_oracle_files_changed": false,
+  "scope": "Current implemented source only; incomplete original tickets and operational gates remain open"
+}
