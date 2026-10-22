@@ -1,0 +1,55 @@
+{
+  "core_api": {
+    "make_packet": "make_packet(root:Path,task_id:str,spec:dict)->TaskPacket; validates canonical READY, edit scope, qualified route, source hashes; no writes",
+    "verify_source": "verify_source(root,packet)->True; exactHEAD, canonicalbytes, all pinnedread/editbytes match. Call before and after worker, BEFORE Codex manually applies patch.",
+    "check_scope": "check_scope(before:dict[str,str|None],after:dict[str,str|None],allowed:list[str])->sortedchangedpaths; raises onoutsidescope",
+    "check_tests": "check_tests(commands:list[str],results:list[dict(command,exit_code,stdout_sha256)])->VERIFIED_TESTS only; exit mustint0, exactnonemptyorderedcommands",
+    "classify_failure": "classify_failure(exit_code,text)->failureclass; no automaticretry",
+    "write_record": "write_record(state_dir,packet,results,decision=PENDING_CODEX_REVIEW) -> path; UNTRUSTED_INPUT until hostexecution receipt separate, neverautomaticallyACCEPTED"
+  },
+  "packet_fields": [
+    "schema_version",
+    "task_id",
+    "family",
+    "base_sha",
+    "prerequisites",
+    "objective",
+    "read_paths",
+    "edit_paths",
+    "forbidden_paths",
+    "contract_ids",
+    "implementation_steps",
+    "acceptance",
+    "test_commands",
+    "stop_conditions",
+    "review_severity",
+    "profile",
+    "model",
+    "provider",
+    "route",
+    "canonical_hashes",
+    "source_hashes"
+  ],
+  "core_pending_fixes": [],
+  "host_public_deps": [
+    "/home/pjh/.local/lib/python3.12/site-packages",
+    "/home/pjh/.cache/vt-refactor-deps"
+  ],
+  "native_binary": "/home/pjh/.nvm/versions/node/v22.22.0/bin/opencode resolves ELF under lib/node_modules/opencode-ai/bin/opencode.exe",
+  "global_launcher": "~/.local/bin/opencode copied unchanged into clean HOME; ro-bind native ELF as /home/pjh/.opencode/bin/opencode (supported launcher fallback), no NVM/real home bind",
+  "dispatcher": "~/.local/bin/delegate-opencode ROLE relative_ticket MODEL; auditplan vsotherbuild; takesOPENCODE_DELEGATE_TIMEOUT_SEC; usesgit/models/flock/timeout; worker exitstoredprivate metadata",
+  "network_primitive": "SHELL=/opt/bash -> nested bwrap user/pid/net rootRO tmpRW; outeronlyOpenCode API maynetwork. Actual9pytestprobePASS at o01-network-spike/receipt.json. Disable formatter andlsp, usepure launcheroption ifsupported.",
+  "core_now_fixed": [
+    "union canonical contractfields",
+    "complete pincoverage",
+    "dirfdnofollow private records",
+    "nosymlinkrepo/canonicalroots",
+    "canonicalproviderprefixmismatchreject"
+  ],
+  "test_fixture_api": {
+    "module": "tests/refactoring/test_agent_task.py readonly",
+    "_setup": "_setup(tmp_path)->root creates syntheticGit/canonical fixture",
+    "_default_spec": "_default_spec(**overrides)->spec defaultsstate_machine/model-a",
+    "edit_scope": "VN01 allows src/target.py modify, src/new.py ADD, src/gone.py modify; R/O O99 allows tools/ro.py. Modelprofile fixtures use opencode/model-a etc, QUALIFIED_O00 syntheticstatus; fake host process in unittests, never realmodels."
+  }
+}

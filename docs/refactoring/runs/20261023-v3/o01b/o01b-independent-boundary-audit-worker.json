@@ -1,0 +1,36 @@
+{
+  "selected_model": "freellmapi/gemini-2.5-flash",
+  "selected_provider": "freellmapi",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "audit",
+  "worker_process": {
+    "exit_code": 0,
+    "elapsed_seconds": 45.07899606900173,
+    "relay_http_statuses": [
+      200,
+      200
+    ],
+    "served_models": [
+      "gemini-2.5-flash"
+    ],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-o01b-independent-boundary-audit-ad41d5a9",
+  "usage_reported": [
+    {
+      "total": 14687,
+      "input": 14270,
+      "output": 417,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 0
+      }
+    }
+  ],
+  "base_sha": "1efd0f3664542ee795d8c89960951a24998ab223",
+  "scope": [],
+  "output_sha256": {},
+  "automatic_acceptance": false
+}
