@@ -1,0 +1,31 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "audit",
+  "worker_process": {
+    "exit_code": 0,
+    "elapsed_seconds": 65.84084899299705,
+    "relay_http_statuses": [],
+    "served_models": [],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-tx00-independent-source-audit-f26df0e2",
+  "usage_reported": [
+    {
+      "total": 15759,
+      "input": 5279,
+      "output": 469,
+      "reasoning": 10011,
+      "cache": {
+        "write": 0,
+        "read": 0
+      }
+    }
+  ],
+  "base_sha": "de2439d024cad97b7c284c1c56b1613a6c4832aa",
+  "scope": [],
+  "output_sha256": {},
+  "automatic_acceptance": false
+}

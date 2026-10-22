@@ -283,23 +283,7 @@ class TossBrokerAdapter:
         return await self.client.account_state_summary()
 
     async def submit_order(self, intent: OrderIntent) -> dict:
-        if intent.instrument.asset_class not in {AssetClass.EQUITY, AssetClass.ETF}:
-            raise RuntimeError(f"Toss adapter only supports domestic/US stock and ETF orders: {intent.instrument.asset_class}")
-        if intent.quantity is None:
-            raise RuntimeError("Toss quantity-based order requires quantity; amount-based US market orders are not wired to OrderIntent yet")
-        account_seq = self._account_seq or await self.client.selected_account_seq()
-        body: dict[str, Any] = {
-            "clientOrderId": intent.client_order_id[:36],
-            "symbol": intent.instrument.raw_symbol.removeprefix("A").upper(),
-            "side": "BUY" if intent.side is Side.BUY else "SELL",
-            "orderType": "LIMIT" if intent.limit_price is not None else "MARKET",
-            "quantity": format(intent.quantity, "f"),
-        }
-        if intent.limit_price is not None:
-            body["price"] = format(intent.limit_price, "f")
-        if intent.metadata.get("confirm_high_value_order") is True:
-            body["confirmHighValueOrder"] = True
-        return await self.client.request("POST", "/api/v1/orders", json_body=body, account_seq=account_seq)
+        raise RuntimeError("TOSS DATA_ONLY: submit_order rejected - mutations not permitted")
 
     async def order_status(self, client_order_id: str) -> dict:
         account_seq = self._account_seq or await self.client.selected_account_seq()

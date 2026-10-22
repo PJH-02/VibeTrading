@@ -1,0 +1,31 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________ test_data_only_dispatch_cannot_reinterpret_a_validated_method _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7b7e86808dd0>
+
+    def test_data_only_dispatch_cannot_reinterpret_a_validated_method(monkeypatch):
+     methods=[]
+     class Response:
+      status=200
+      async def __aenter__(self):return self
+      async def __aexit__(self,*a):pass
+      async def json(self,**kwargs):return {'result':'ok'}
+     class Session:
+      async def __aenter__(self):return self
+      async def __aexit__(self,*a):pass
+      def get(self,*a,**k):methods.append('GET');return Response()
+      def post(self,*a,**k):methods.append('POST');return Response()
+     monkeypatch.setattr('vibetrading.providers.toss.aiohttp.ClientSession',lambda **k:Session())
+     client=object.__new__(TossAuthClient);client.rest_url='http://synthetic.invalid'
+     asyncio.run(client._request_once(Flip('GET'),'/api/v1/orders',token='synthetic',params=None,json_body={},account_seq=None))
+>    assert methods==['GET']
+E    AssertionError: assert ['POST'] == ['GET']
+E
+E      At index 0 diff: 'POST' != 'GET'
+E      Use -v to get more diff
+
+/opt/method_review.py:23: AssertionError
+=========================== short test summary info ============================
+FAILED ../opt/method_review.py::test_data_only_dispatch_cannot_reinterpret_a_validated_method
+1 failed in 0.33s

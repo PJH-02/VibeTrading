@@ -53,7 +53,7 @@ def test_rejected_cache_refresh_is_serialized_and_keeps_newer_token(tmp_path, mo
     assert len(issued) == 1
 
 
-@pytest.mark.parametrize('method,errors,expected_calls', [('GET',1,2),('GET',2,2),('POST',1,1)])
+@pytest.mark.parametrize('method,errors,expected_calls', [('GET',1,2),('GET',2,2)])
 def test_rest_refresh_bounded_and_orders_not_replayed(tmp_path, monkeypatch, method, errors, expected_calls):
     client = client_for(tmp_path)
     calls = []
@@ -73,6 +73,26 @@ def test_rest_refresh_bounded_and_orders_not_replayed(tmp_path, monkeypatch, met
     else:
         with pytest.raises(TossUnauthorized): asyncio.run(client.request(method, '/api/v1/orders'))
     assert len(calls) == expected_calls
+
+
+def test_data_only_rejects_post_before_token_refresh_and_transport(tmp_path, monkeypatch):
+    client = client_for(tmp_path)
+    calls = {'access': 0, 'refresh': 0, 'request_once': 0}
+    async def access():
+        calls['access'] += 1
+        raise AssertionError('access_token must not be called')
+    async def refresh(token):
+        calls['refresh'] += 1
+        raise AssertionError('refresh_rejected_token must not be called')
+    async def request_once(*args, **kwargs):
+        calls['request_once'] += 1
+        raise AssertionError('_request_once must not be called')
+    monkeypatch.setattr(client, 'access_token', access)
+    monkeypatch.setattr(client, 'refresh_rejected_token', refresh)
+    monkeypatch.setattr(client, '_request_once', request_once)
+    with pytest.raises(RuntimeError, match='TOSS DATA_ONLY: request rejected'):
+        asyncio.run(client.request('POST', '/api/v1/orders'))
+    assert calls == {'access': 0, 'refresh': 0, 'request_once': 0}
 
 
 @pytest.mark.parametrize('status,fail_twice', [(401,False),(401,True),(403,False)])
