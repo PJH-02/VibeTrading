@@ -3298,7 +3298,7 @@
     },
     {
       "task_id": "TX00",
-      "status": "IN_PROGRESS",
+      "status": "RUNNING",
       "kind": "IMPLEMENTATION",
       "depends_on": [
         "VN00"
@@ -3316,7 +3316,24 @@
         "vibetrading/kis_execution.py",
         "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
       ],
-      "edit_paths": [],
+      "edit_paths": [
+        {
+          "path": "vibetrading/brokers.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/providers/toss.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/test_collector_recovery_20261007.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_tx00_toss_data_only.py",
+          "action": "ADD"
+        }
+      ],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -3370,7 +3387,23 @@
       "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
       "stage_classification": "INCOMPLETE",
       "stage_status_detail": "product/environment별 매핑 조사. 실제 계좌·margin·capability 확인 미완료",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "active_subunit": {
+        "id": "toss-data-only",
+        "status": "RUNNING_FINAL_REPAIR",
+        "prior_status": "IN_PROGRESS",
+        "models": [
+          "freellmapi/glm-4.5-flash",
+          "opencode/mimo-v2.6-flash-free",
+          "opencode/deepseek-v4.1-flash-free"
+        ],
+        "partial_tests": {
+          "passed": 41,
+          "failed": 1
+        },
+        "repair_delegations": 2,
+        "scope": "Close legacy TOSS mutations; venue/product/account capability audit remains open"
+      }
     },
     {
       "task_id": "TX01",
@@ -5725,6 +5758,9 @@
     "current_source_sha": "ac18621ea1b831d625d2187c11af4369b2232f34",
     "active_tooling_tickets": [
       "O01"
+    ],
+    "active_parallel_tickets": [
+      "TX00"
     ]
   },
   "git_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
@@ -5869,13 +5905,19 @@
       ],
       "subunits": {
         "O01A": {
-          "status": "VERIFIED_PENDING_INDEPENDENT_REVIEW",
-          "independent_tests_passed": 101,
-          "repair_delegations": 1
+          "status": "ACCEPTED_SUBUNIT_ONLY",
+          "source_sha": "b2ec81ba4a1ee58a82e28326caf4f78f1a8e562d",
+          "receipt": "docs/refactoring/runs/20261023-v3/o01a/acceptance.json",
+          "independent_tests_passed": 115,
+          "repair_delegations": 2
         },
         "O01B": {
-          "status": "RUNNING",
-          "selected_model": "opencode/glm-5.3-flash-free"
+          "status": "RUNNING_FINAL_REPAIR",
+          "selected_model": "opencode/deepseek-v4.1-flash-free",
+          "repair_delegations": 2,
+          "initial_glm53": "EXECUTION_TIMEOUT exit124 no code",
+          "independent_baseline_tests": 130,
+          "reviewer_counterexamples": 6
         }
       }
     }
