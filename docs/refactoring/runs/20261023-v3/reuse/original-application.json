@@ -1,0 +1,13 @@
+{
+  "decision": "PASS",
+  "applied_head": "fd68dc487fc8aac2f2c5a471aa4a3c69ba437727",
+  "branch": "codex/v3-local-candidate",
+  "original_workspace": "/mnt/c/Users/박제형/Desktop/VibeTrading",
+  "preserved_entries": 174,
+  "eol_only_carried": 153,
+  "canonical_source_and_adapter_files_verified": 9,
+  "private_backup": "/home/pjh/.local/state/codex-opencode/runs/reuse-original-preservation-4c3f4cab38f7",
+  "substantive_user_changes_preserved": true,
+  "deleted_documents_preserved": true,
+  "untracked_documents_preserved": true
+}

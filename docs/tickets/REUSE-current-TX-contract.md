@@ -1,3 +1,5 @@
+> FROZEN PRE-CORRECTION AUDIT INPUT — NON-BINDING. Source HEAD4977ab509490173e312183f32d47f862d94ee0bf. The historical instructions below were supplied only to detect duplication; they authorize no implementation. Current scope is docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md.
+
 ## D. TX 기존/신규 Trading Infrastructure 세부 명세
 
 > TX 상위 집계 단계(예: TX02, TX03, TX04, TX06–08)는 하위 티켓이 구현되었다고 `PASS`가 되지 않는다. **실제 같은 계좌·전략·Replay E2E**에서 수락해야 한다. 아래 테스트 파일은 기존 티켓에서 제안된 경로를 우선 사용하고, 없는 파일은 ADD로 명시한다. 기존 제품 코드에 없는 심볼은 `(ADD)`로 구분한다.
