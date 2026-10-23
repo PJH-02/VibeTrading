@@ -1,0 +1,2 @@
+/tmp/vt-r03b1-verify-ez3n5nob/source/src/vibetrading/__init__.py
+legacy package discovery PASS
