@@ -377,6 +377,44 @@ class RuntimeStore:
             ).fetchone() is not None
         return self._conn.execute("SELECT 1 FROM parquet_delivery WHERE stream_name=? AND stream_generation=? AND stream_sequence=?", (stream,generation,int(sequence))).fetchone() is not None
 
+    def delivery_manifest(self, stream: str, generation: str, sequence: int,
+                          event_id: str) -> dict[str, Any] | None:
+        """Resolve one exact delivery to its detached source manifest.
+
+        This is a read-only provenance lookup: both ledgers are joined by the
+        exact stream/generation/sequence identity and the exact event identity.
+        It never mutates the catalogue, opens a transaction or trusts an
+        independent event-ID existence check.
+        """
+        if (not isinstance(stream, str) or not stream or len(stream.encode("utf-8")) > 256
+                or not isinstance(generation, str) or not generation
+                or len(generation.encode("utf-8")) > 256
+                or type(sequence) is not int or sequence <= 0 or sequence > 2**63 - 1
+                or not isinstance(event_id, str) or not event_id
+                or len(event_id.encode("utf-8")) > 512):
+            raise ValueError("invalid exact delivery manifest scope")
+        with self._lock:
+            if self.compact_delivery_ledger:
+                row = self._conn.execute(
+                    """SELECT manifest.* FROM parquet_delivery_compact AS delivery
+                       JOIN delivery_stream AS stream ON stream.stream_id=delivery.stream_id
+                       JOIN parquet_manifest AS manifest ON manifest.rowid=delivery.file_rowid
+                       WHERE stream.stream_name=? AND stream.stream_generation=?
+                         AND delivery.stream_sequence=? AND delivery.event_key=?
+                       LIMIT 1""",
+                    (stream, generation, int(sequence), self._event_key(event_id)),
+                ).fetchone()
+            else:
+                row = self._conn.execute(
+                    """SELECT manifest.* FROM parquet_delivery AS delivery
+                       JOIN parquet_manifest AS manifest ON manifest.file_id=delivery.file_id
+                       WHERE delivery.stream_name=? AND delivery.stream_generation=?
+                         AND delivery.stream_sequence=? AND delivery.event_id=?
+                       LIMIT 1""",
+                    (stream, generation, int(sequence), event_id),
+                ).fetchone()
+        return dict(row) if row is not None else None
+
     def is_storage_committed(self, commit_id: str) -> bool:
         """Compatibility check for legacy STREAM:SEQUENCE identifiers."""
         stream, separator, raw_sequence = str(commit_id).rpartition(":")
