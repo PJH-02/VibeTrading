@@ -1,0 +1,207 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "refactor",
+  "worker_process": {
+    "exit_code": 0,
+    "elapsed_seconds": 310.3348171559919,
+    "relay_http_statuses": [],
+    "served_models": [],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-deepseek-implementation-861c6551",
+  "usage_reported": [
+    {
+      "total": 4730,
+      "input": 2446,
+      "output": 167,
+      "reasoning": 69,
+      "cache": {
+        "write": 0,
+        "read": 2048
+      }
+    },
+    {
+      "total": 32742,
+      "input": 27916,
+      "output": 149,
+      "reasoning": 197,
+      "cache": {
+        "write": 0,
+        "read": 4480
+      }
+    },
+    {
+      "total": 45463,
+      "input": 10745,
+      "output": 153,
+      "reasoning": 2181,
+      "cache": {
+        "write": 0,
+        "read": 32384
+      }
+    },
+    {
+      "total": 53836,
+      "input": 10438,
+      "output": 76,
+      "reasoning": 314,
+      "cache": {
+        "write": 0,
+        "read": 43008
+      }
+    },
+    {
+      "total": 54416,
+      "input": 765,
+      "output": 125,
+      "reasoning": 150,
+      "cache": {
+        "write": 0,
+        "read": 53376
+      }
+    },
+    {
+      "total": 57877,
+      "input": 473,
+      "output": 50,
+      "reasoning": 3338,
+      "cache": {
+        "write": 0,
+        "read": 54016
+      }
+    },
+    {
+      "total": 71257,
+      "input": 14505,
+      "output": 49,
+      "reasoning": 2303,
+      "cache": {
+        "write": 0,
+        "read": 54400
+      }
+    },
+    {
+      "total": 78794,
+      "input": 8478,
+      "output": 560,
+      "reasoning": 892,
+      "cache": {
+        "write": 0,
+        "read": 68864
+      }
+    },
+    {
+      "total": 83616,
+      "input": 1498,
+      "output": 64,
+      "reasoning": 4742,
+      "cache": {
+        "write": 0,
+        "read": 77312
+      }
+    },
+    {
+      "total": 86577,
+      "input": 7751,
+      "output": 80,
+      "reasoning": 26,
+      "cache": {
+        "write": 0,
+        "read": 78720
+      }
+    },
+    {
+      "total": 97240,
+      "input": 3154,
+      "output": 3344,
+      "reasoning": 4342,
+      "cache": {
+        "write": 0,
+        "read": 86400
+      }
+    },
+    {
+      "total": 97497,
+      "input": 7784,
+      "output": 182,
+      "reasoning": 59,
+      "cache": {
+        "write": 0,
+        "read": 89472
+      }
+    },
+    {
+      "total": 98051,
+      "input": 394,
+      "output": 82,
+      "reasoning": 423,
+      "cache": {
+        "write": 0,
+        "read": 97152
+      }
+    },
+    {
+      "total": 100870,
+      "input": 1360,
+      "output": 290,
+      "reasoning": 1684,
+      "cache": {
+        "write": 0,
+        "read": 97536
+      }
+    },
+    {
+      "total": 101119,
+      "input": 2069,
+      "output": 234,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 98816
+      }
+    },
+    {
+      "total": 101519,
+      "input": 271,
+      "output": 326,
+      "reasoning": 58,
+      "cache": {
+        "write": 0,
+        "read": 100864
+      }
+    },
+    {
+      "total": 101722,
+      "input": 414,
+      "output": 182,
+      "reasoning": 6,
+      "cache": {
+        "write": 0,
+        "read": 101120
+      }
+    },
+    {
+      "total": 104768,
+      "input": 266,
+      "output": 495,
+      "reasoning": 2503,
+      "cache": {
+        "write": 0,
+        "read": 101504
+      }
+    }
+  ],
+  "base_sha": "fad4e81bdabbc689a8757ccec43da81acf5300d4",
+  "scope": [
+    "src/vibetrading/strategy_runtime.py",
+    "tests/refactoring/test_tx01_signal_binding.py"
+  ],
+  "output_sha256": {
+    "src/vibetrading/strategy_runtime.py": "a86e3958785768797c367950d76952f82a15eeb2900e30b8b5bc1fff5ea61351",
+    "tests/refactoring/test_tx01_signal_binding.py": "17967810eebcdfb55c291fb3b5afddd4210bb00ebccf542dec055e7de8d65c20"
+  },
+  "automatic_acceptance": false
+}

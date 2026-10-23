@@ -233,9 +233,10 @@ DONE의 상태표가 서버 운영 수락을 의미하지는 않는다. **구현
 ### TX01 — 기존 Signal/OrderIntent·strategy contract 재사용
 
 - **소유:** `trading_contracts.py`, `strategy_contract.py`, `execution_owner.py`의 현재 seam; 기존 ledger tests.
-- **선행:** TX00. **현재:** PAPER_SCOPED.
+- **선행:** TX00. **현재:** 기존 Signal/OrderIntent/Paper 계약 로컬 완료(2026-10-24).
 - **구현(ADAPT):** 기존 immutable `OrderIntent`/`Signal`과 `ExecutionOwner`/`PaperExecution` 계약을 재사용한다. 필요한 경우에만 local Paper/strategy identity bridge를 최소 추가한다. **universal replacement action API나 새 order engine을 만들지 않는다.** 금액/수량 Decimal 원값, 동일 ID 다른 payload 거절, Spot≠Perp, TOSS mutation 거절을 유지한다.
 - **수락:** 기존 Signal fixture 호환, Paper 외부 mutation 0, invalid tick/lot/mode reject, 기존 ledger checksum 불변.
+- **현재 수락:** 새 API 없이 기존 `_validate`의 NEW 사전 검사17줄을 보완했다. 전체 InstrumentId/기준 feed/ID/생성시각을 검증하고 Kiwoom→KIS ETF Paper·wire·Decimal·기존 matcher/ledger를 보존했다. 독립287건, 전체2170건 PASS(외부 live-data2건 제외). [수락](../runs/20261024-v3/tx01/acceptance.json). TX02A 이후와 전략 plugin 완성을 뜻하지 않는다.
 
 ### TX02A — 기존 owner/lease 재사용, 단일 writer 증명
 
