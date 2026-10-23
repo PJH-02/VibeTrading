@@ -568,6 +568,7 @@
   "primary_workspace_application": {
     "root": "/mnt/c/Users/박제형/Desktop/VibeTrading",
     "branch": "codex/v3-local-candidate",
-    "receipt": "docs/refactoring/runs/20261023-v3/r03/original-application.json"
+    "receipt": "docs/refactoring/runs/20261023-v3/r04/original-application.json",
+    "accepted_source_sha": "c605c19e79fc635281c6d794dd8a0ba23cb86376"
   }
 }
