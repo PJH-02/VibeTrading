@@ -10,3 +10,5 @@ Accepted source `79501a9c1484daa6528e129bab20d570dc66fcf9`; VN07 is COMPLETE_LOC
 - Existing tests/Goldens, broker calculations, cloud uploader, protected data and historical guard unchanged. Original replay helper AST preserved; wallclock regression rejected without clamping. Final status metadata checked separately. Production gate BLOCKED; no deployment or live mutations.
 
 See acceptance.json, acceptance-matrix.json, verification-commands.json, full-regression.json, independent-final.json and worker-exits.json. Raw worker/test logs remain private.
+
+Original Windows checkout application verified42 changed paths, preserving174 preexisting dirty entries (including153 newline-only representations), substantive edits, deleted documents and untracked documents. See original-application.json. Candidate branch only; main is not merged.

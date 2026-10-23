@@ -609,13 +609,13 @@
   ],
   "primary_workspace_application": {
     "status": "PASS",
-    "receipt": "docs/refactoring/runs/20261023-v3/vn07a/original-application.json",
-    "applied_head": "ba481716d44df83ca3e90d72c7f816bd43f2e69f",
-    "accepted_source_sha": "60d763209134527e289d3760ec55be9ea9ec6b37",
+    "receipt": "docs/refactoring/runs/20261023-v3/vn07b/original-application.json",
+    "applied_head": "89b961140cd4e86bdd57c5982dc97e7832c227ca",
+    "accepted_source_sha": "79501a9c1484daa6528e129bab20d570dc66fcf9",
     "original_workspace": "/mnt/c/Users/박제형/Desktop/VibeTrading",
     "preexisting_dirty_entries_preserved": 174,
-    "scope": "VN07A product/evidence applied; parent VN07 remains incomplete",
-    "previous_application_receipt": "docs/refactoring/runs/20261023-v3/reuse/original-application.json"
+    "scope": "Whole VN07 local implementation and evidence applied; stop before VN08",
+    "previous_application_receipt": "docs/refactoring/runs/20261023-v3/vn07a/original-application.json"
   },
   "refactoring_scope_revision": {
     "authority": "Explicit user instruction, 2026-10-23",
