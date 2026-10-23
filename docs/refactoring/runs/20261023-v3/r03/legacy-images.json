@@ -1,0 +1,124 @@
+{
+  "status": "PASS",
+  "source_sha": "8f0726c6ce28ee83800bc904c9f9918f791b03ec",
+  "results": [
+    {
+      "label": "legacy-flat-build",
+      "args": [
+        "build",
+        "--network=none",
+        "--pull=false",
+        "-t",
+        "vt-r03-r03-59i7z2w4-app-flat-fixture",
+        "-f",
+        "C:\\Users\\박제형\\.codex\\tmp\\r03-59i7z2w4\\legacy-compat\\Dockerfile.flat",
+        "C:\\Users\\박제형\\.codex\\tmp\\r03-59i7z2w4\\legacy-compat"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "ledger-role-build",
+      "args": [
+        "build",
+        "--network=none",
+        "--pull=false",
+        "-t",
+        "vt-r03-r03-59i7z2w4-app-flat-fixture-ledger",
+        "-f",
+        "C:\\Users\\박제형\\.codex\\tmp\\r03-59i7z2w4\\legacy-compat\\Dockerfile.ledger",
+        "C:\\Users\\박제형\\.codex\\tmp\\r03-59i7z2w4\\legacy-compat"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "p02-overlay-build",
+      "args": [
+        "build",
+        "--network=none",
+        "--pull=false",
+        "-t",
+        "vt-r03-r03-59i7z2w4-app-flat-fixture-p02",
+        "-f",
+        "C:\\Users\\박제형\\.codex\\tmp\\r03-59i7z2w4\\legacy-compat\\Dockerfile.p02",
+        "C:\\Users\\박제형\\.codex\\tmp\\r03-59i7z2w4\\legacy-compat"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "ledger-import",
+      "args": [
+        "run",
+        "--rm",
+        "--network",
+        "none",
+        "--read-only",
+        "--cap-drop",
+        "ALL",
+        "--tmpfs",
+        "/tmp:rw,nosuid,nodev,size=128m",
+        "--cpus",
+        "2",
+        "--memory",
+        "3800m",
+        "--entrypoint",
+        "python",
+        "vt-r03-r03-59i7z2w4-app-flat-fixture-ledger",
+        "-c",
+        "import pathlib,vibetrading,os; assert os.getuid()==10001; assert pathlib.Path(vibetrading.__file__).resolve()==pathlib.Path(\"/app/vibetrading/__init__.py\"); print(\"legacy flat import PASS\")"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "ledger-help",
+      "args": [
+        "run",
+        "--rm",
+        "--network",
+        "none",
+        "--read-only",
+        "--cap-drop",
+        "ALL",
+        "--tmpfs",
+        "/tmp:rw,nosuid,nodev,size=128m",
+        "--cpus",
+        "2",
+        "--memory",
+        "3800m",
+        "--entrypoint",
+        "python",
+        "vt-r03-r03-59i7z2w4-app-flat-fixture-ledger",
+        "main.py",
+        "--help"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "p02-overlay-hash",
+      "args": [
+        "run",
+        "--rm",
+        "--network",
+        "none",
+        "--read-only",
+        "--cap-drop",
+        "ALL",
+        "--tmpfs",
+        "/tmp:rw,nosuid,nodev,size=128m",
+        "--cpus",
+        "2",
+        "--memory",
+        "3800m",
+        "--entrypoint",
+        "python",
+        "vt-r03-r03-59i7z2w4-app-flat-fixture-p02",
+        "-c",
+        "import ast,hashlib,pathlib; b=pathlib.Path(\"/app/vibetrading/parquet_store.py\").read_bytes(); ast.parse(b); assert hashlib.sha256(b).hexdigest()=='0abce23285632c4b1a1d42f54b314c9e0df868c1172b536f52d3c8af33faa69f'; print(\"immutable P02 overlay SHA and syntax PASS\")"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "p02_overlay_sha256": "0abce23285632c4b1a1d42f54b314c9e0df868c1172b536f52d3c8af33faa69f",
+  "ledger_recipe": "Original COPY instructions; FROM alone substituted with a controlled flat legacy fixture. Actual production-pinned base not accessed.",
+  "p02_recipe": "Original deployment overlay target and immutable archived source; controlled local base. No deployment/rollback modes invoked.",
+  "real_orders_or_accounts": false
+}

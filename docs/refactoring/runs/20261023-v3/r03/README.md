@@ -1,0 +1,11 @@
+# R03 local acceptance checkpoint
+
+R03 moves the existing package to src/vibetrading and connects physical path consumers. It does not create the final internal core/feeds/strategies domain architecture: R04/R05 and VN/TX own those later changes.
+
+Verified code source: `8f0726c6ce28ee83800bc904c9f9918f791b03ec`. Full isolated Linux checks: 1789 passed (including eight independent review probes), two live-data tests excluded. The first integrated run exposed five child-process import failures; only three explicit PYTHONPATH launch values were corrected, with crash assertions unchanged, then the whole suite passed. Historical golden/oracle values were preserved. The two existing immutable JSON oracles use only their independently hash-verified original line-ending representation inside disposable test snapshots.
+
+All 140 modules moved with zero byte/AST changes at the move boundary. After compatibility, 135 product ASTs remain exact; five contain reviewed filesystem-anchor/provenance/source-fingerprint changes only. Economic/order/strategy functions are unchanged. The active P02 rollback script and retained production package remain immutable. The retained P02 overlay is verified against its historical tested SHA, not reconstructed from the current package. Original production exports/preimages are not recreated from candidate source; actual deployment/rollback modes are not invoked.
+
+Wheel/editable installs and CLI imports, core Docker images, all-profile root/crypto Compose configs, real source-only release bundles, controlled flat legacy overlays and retained P02 overlay builds passed. Docker verification explicitly selects a fresh anonymous --config directory and the local named-pipe --host. Compose variables come from synthetic env files; no existing .env or trading account is loaded. Earlier harness-only setup failures remain in private artifacts, including missing fixture inputs and WSL variable forwarding; no product assertions were relaxed.
+
+O01's unrelated unchanged-.env.example baseline rejection remains open. R03 supplies its path-map and complete task header consumers only. R04 or domain feature work has not started. The original Windows project application and preservation proof will be added after applying this verified candidate.

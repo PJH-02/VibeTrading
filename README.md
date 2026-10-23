@@ -4,6 +4,19 @@
 실서버 배포 상태는 아래 "배포 이력과 로컬 후보"에서 확인하세요. 이 README는 2026-10 R02
 문서 티켓에서 대체되었고, 검증되지 않은 실행·배포·실거래 지시를 담지 않습니다.
 
+## 소스 구조와 로컬 설치
+
+정식 패키지는 `src/vibetrading/`에 있습니다. Python 3.12 이상과 기존 `requirements.txt` 의존성이
+준비된 개발 환경에서 editable 설치를 한 뒤 기존 진입점을 사용합니다.
+
+```bash
+python3 -m pip install --no-deps -e .
+python3 main.py --help
+```
+
+R03은 패키지 루트 이동과 경로 호환성 작업입니다. `core/feeds/strategies` 등 내부 도메인의
+최종 분리는 후속 R04/R05 및 해당 VN/TX 티켓에서 진행합니다.
+
 ## 현재 상태 (v3 리팩토링 기준)
 
 상태의 유일한 요약은 [v3 local execution status](docs/status.md)입니다. 유지보수용 계층 결과는

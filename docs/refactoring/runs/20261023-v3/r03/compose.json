@@ -1,0 +1,99 @@
+{
+  "status": "PASS",
+  "source_sha": "8f0726c6ce28ee83800bc904c9f9918f791b03ec",
+  "all_profiles_enabled": true,
+  "configurations": [
+    {
+      "label": "root-before",
+      "exit_code": 0,
+      "args": [
+        "compose",
+        "--profile",
+        "*",
+        "-p",
+        "r03-local-verification",
+        "--project-directory",
+        "C:\\Users\\박제형\\.codex\\tmp\\r03-59i7z2w4\\compose-context",
+        "--env-file",
+        "C:\\Users\\박제형\\.codex\\tmp\\r03-59i7z2w4\\compose-context\\compose.vars.env",
+        "-f",
+        "C:\\Users\\박제형\\.codex\\tmp\\r03-59i7z2w4\\compose-context\\docker-compose.before.yml",
+        "config",
+        "--format",
+        "json"
+      ],
+      "services": 10
+    },
+    {
+      "label": "root-after",
+      "exit_code": 0,
+      "args": [
+        "compose",
+        "--profile",
+        "*",
+        "-p",
+        "r03-local-verification",
+        "--project-directory",
+        "C:\\Users\\박제형\\.codex\\tmp\\r03-59i7z2w4\\compose-context",
+        "--env-file",
+        "C:\\Users\\박제형\\.codex\\tmp\\r03-59i7z2w4\\compose-context\\compose.vars.env",
+        "-f",
+        "C:\\Users\\박제형\\.codex\\tmp\\r03-59i7z2w4\\compose-context\\docker-compose.yml",
+        "config",
+        "--format",
+        "json"
+      ],
+      "services": 10
+    },
+    {
+      "label": "crypto-before",
+      "exit_code": 0,
+      "args": [
+        "compose",
+        "--profile",
+        "*",
+        "-p",
+        "r03-local-verification",
+        "--project-directory",
+        "C:\\Users\\박제형\\.codex\\tmp\\r03-59i7z2w4\\compose-context",
+        "--env-file",
+        "C:\\Users\\박제형\\.codex\\tmp\\r03-59i7z2w4\\compose-context\\compose.vars.env",
+        "-f",
+        "C:\\Users\\박제형\\.codex\\tmp\\r03-59i7z2w4\\compose-context\\docker-compose.before.yml",
+        "-f",
+        "C:\\Users\\박제형\\.codex\\tmp\\r03-59i7z2w4\\compose-context\\deploy\\crypto-profile.before.yml",
+        "config",
+        "--format",
+        "json"
+      ],
+      "services": 15
+    },
+    {
+      "label": "crypto-after",
+      "exit_code": 0,
+      "args": [
+        "compose",
+        "--profile",
+        "*",
+        "-p",
+        "r03-local-verification",
+        "--project-directory",
+        "C:\\Users\\박제형\\.codex\\tmp\\r03-59i7z2w4\\compose-context",
+        "--env-file",
+        "C:\\Users\\박제형\\.codex\\tmp\\r03-59i7z2w4\\compose-context\\compose.vars.env",
+        "-f",
+        "C:\\Users\\박제형\\.codex\\tmp\\r03-59i7z2w4\\compose-context\\docker-compose.yml",
+        "-f",
+        "C:\\Users\\박제형\\.codex\\tmp\\r03-59i7z2w4\\compose-context\\deploy\\crypto-profile.yml",
+        "config",
+        "--format",
+        "json"
+      ],
+      "services": 15
+    }
+  ],
+  "before_after_difference": "Only expected physical package bind source and target prefixes changed",
+  "credentials": "synthetic empty fixture file only; no actual .env or credentials read",
+  "services_started": false,
+  "production_mutation": false
+}

@@ -1,0 +1,54 @@
+{
+  "ticket_id": "R03",
+  "status": "VERIFIED_PENDING_PRIMARY_WORKSPACE_APPLY",
+  "source_sha": "8f0726c6ce28ee83800bc904c9f9918f791b03ec",
+  "local_implementation": "COMPLETE",
+  "local_verification": "PASS_IN_ISOLATED_CANDIDATE",
+  "primary_workspace": "PENDING_APPLY",
+  "modules_moved": 140,
+  "move_only_byte_ast_differences": 0,
+  "final_product_modules_ast_identical": 135,
+  "final_product_path_anchor_only_modules": [
+    "src/vibetrading/fv_mm/runner.py",
+    "src/vibetrading/fv_pilot/runner.py",
+    "src/vibetrading/health.py",
+    "src/vibetrading/liquidity_mm/cli.py",
+    "src/vibetrading/settings.py"
+  ],
+  "independent_full_linux": {
+    "passed": 1789,
+    "including_additional_review_probes": 8,
+    "deselected_live_data": 2,
+    "product_profile_passed": 1620,
+    "tooling_profile_passed": 169,
+    "exit_codes": [
+      0,
+      0
+    ]
+  },
+  "worker_routes": [
+    "opencode/deepseek-v4.1-flash-free"
+  ],
+  "bounded_repairs": {
+    "R03B2": 0,
+    "R03C1": 1,
+    "R03C2": 1
+  },
+  "independent_review": "Codex scope/AST review; independent source/hash/descriptor counterexamples; runtime/CLI/Compose/retained P02 evidence; no source aliases or economic changes",
+  "checks": {
+    "packaging": "wheel + editable install/import/help PASS",
+    "core_docker": "3 image variants; 9 isolated import/help commands PASS",
+    "compose": "all profiles enabled; root and crypto before/after differ only expected physical bind prefixes",
+    "release_bundles": "crypto and telegram contain all 140 source files under intentionally preserved flat logical names; ETF23 package files verified",
+    "server_export": "server-only bytes retained; src selected delta normalized; no server access",
+    "legacy_ledger": "Controlled legacy flat fixture COPY/import/help PASS; actual production-pinned image not accessed",
+    "p02": "Immutable retained package hashes + syntax + actual script help + controlled local overlay build/hash PASS. No production prepare/stage/apply/resume/rollback."
+  },
+  "protected_rollback_script_sha256": "41c0de8939767fa7c91d3ff556a61725f6798f15d3aa975d051e3e31e8d3804b",
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-r03-final-a1e6ca8f",
+  "external_operational_validation": "NOT_PERFORMED; actual production-pinned bases/accounts/deployments outside local R03 gate",
+  "unrelated_O01_baseline_bug": "Still REWORK_REQUIRED; R03 implements only path-map and header integration",
+  "subsequent_ticket_work": false,
+  "pushed": false,
+  "deployed": false
+}
