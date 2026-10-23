@@ -1,0 +1,20 @@
+{
+  "decision": "PASS",
+  "actual_original_sources_bound_readonly": true,
+  "original_workspace": "/mnt/c/Users/박제형/Desktop/VibeTrading",
+  "checks": [
+    {
+      "check": "aliases",
+      "exit_code": 0,
+      "stdout_tail": "Original canonical package and 12 historical aliases PASS\n",
+      "stderr_tail": ""
+    },
+    {
+      "check": "module-help",
+      "exit_code": 0,
+      "stdout_tail": "tch,market-source-status,nats-reset-storage-consumer,health-check,archive-check,status,config-check,telegram,run}\n                       ...\n\nVibeTrading operational runtime\n\npositional arguments:\n  {collector,record-once,storage-worker,compactor,strategy,timefolio-login,timefolio-strategy,real-exec,universe,provider-check,account-check,broker-check,nats-init,bybit-testnet-probe,bybit-kill-switch,market-source-status,nats-reset-storage-consumer,health-check,archive-check,status,config-check,telegram,run}\n    bybit-testnet-probe\n                        submit one bounded testnet order and require a\n                        private-stream fill\n    run                 run the long-lived Docker supervisor\n\noptions:\n  -h, --help            show this help message and exit\n  --log-level LOG_LEVEL\n",
+      "stderr_tail": ""
+    }
+  ],
+  "isolation": "fresh HOME, network/PID namespaces; only explicit public source/package files mounted; no .env/config/accounts/data mounted"
+}

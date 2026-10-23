@@ -35,10 +35,16 @@
   "packaging": "158 canonical Python modules; wheel/editable import/CLI plus all12 alias identities outside repository PASS",
   "math_risk_routing": "C3/KP/KD, Mock/Mock2, TOSS DATA_ONLY unchanged; full existing tests retained",
   "metadata_correction": "Owner corrected unsupported IN_PROGRESS status, then reran all169 tooling tests; initial failure retained",
-  "primary_workspace": "PENDING_APPLICATION",
+  "primary_workspace": "APPLIED_AND_VERIFIED",
   "subsequent_ticket_work": false,
   "server_deployed": false,
   "live_mutations": false,
   "accepted_kst": "2026-10-23T11:58:38.970705+09:00",
-  "publication": "Separate from local code acceptance; containing branch HEAD and remote ref are authoritative."
+  "publication": "Separate from local code acceptance; containing branch HEAD and remote ref are authoritative.",
+  "primary_application": {
+    "receipt": "original-application.json",
+    "runtime_receipt": "original-runtime.json",
+    "first_applied_head": "8cf657e8bdf81196a4dcb03f714ab583b85bc941",
+    "canonical_source_and_adapter_files_verified": 49
+  }
 }
