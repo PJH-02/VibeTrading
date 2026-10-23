@@ -611,13 +611,13 @@
   ],
   "primary_workspace_application": {
     "status": "PASS",
-    "receipt": "docs/refactoring/runs/20261023-v3/vn09/original-application.json",
-    "applied_head": "4469ab0bd124ba48ffbe1c0143ef1b251c2ddc81",
-    "accepted_source_sha": "ded3ac7f6c23ff6fb9d4194b6b9f55f2ef7da083",
+    "receipt": "docs/refactoring/runs/20261023-v3/tx00-current/original-application.json",
+    "applied_head": "18337aef5c9ae5b08ca6c97af8d705040f1fcd06",
+    "accepted_source_sha": "fa2478e5ca15b92d1db69d1cc7e0d8f7266b7146",
     "original_workspace": "/mnt/c/Users/박제형/Desktop/VibeTrading",
     "preexisting_dirty_entries_preserved": 174,
-    "scope": "VN09 local proof-only GC candidate planning and non-executable proposed intent applied; stop before any other ticket",
-    "previous_application_receipt": "docs/refactoring/runs/20261023-v3/vn08/original-application.json"
+    "scope": "TX00 local static reuse audit documents applied; product code unchanged; stop before TX01",
+    "previous_application_receipt": "docs/refactoring/runs/20261023-v3/vn09/original-application.json"
   },
   "refactoring_scope_revision": {
     "authority": "Explicit user instruction, 2026-10-23",
