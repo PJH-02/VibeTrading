@@ -1,0 +1,34 @@
+{
+  "label": "baseline",
+  "baseline": true,
+  "source": "/home/pjh/.codex/worktrees/v3-local-candidate/vibetrading",
+  "exit_code": 1,
+  "elapsed_seconds": 3.5074443299963605,
+  "base": "/tmp/vt-vn08-baseline-1f2au9ny",
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_spool_recovery.py",
+    "tests/refactoring/test_local_storage.py",
+    "tests/refactoring/test_checkpoint_startup.py",
+    "tests/refactoring/test_local_pipeline.py",
+    "tests/refactoring/test_local_engine.py"
+  ],
+  "tests": {
+    "passed": 186,
+    "failed": 53,
+    "skipped": 0
+  },
+  "source_changed": [],
+  "stdout_tail": "test_local_storage.py::test_fact_row_budget_rolls_back_entire_mixed_gap_progress_batch[legacy]\nFAILED tests/refactoring/test_local_storage.py::test_fact_row_budget_rolls_back_entire_mixed_gap_progress_batch[compact]\nFAILED tests/refactoring/test_local_storage.py::test_injected_sequence_gap_rolls_back_facts_and_never_advances_checkpoint[legacy]\nFAILED tests/refactoring/test_local_storage.py::test_injected_sequence_gap_rolls_back_facts_and_never_advances_checkpoint[compact]\nFAILED tests/refactoring/test_local_storage.py::test_missing_manifest_coverage_cannot_advance_local_checkpoint[legacy]\nFAILED tests/refactoring/test_local_storage.py::test_missing_manifest_coverage_cannot_advance_local_checkpoint[compact]\nFAILED tests/refactoring/test_local_storage.py::test_malformed_observation_is_fail_closed_without_fact_or_checkpoint[legacy]\nFAILED tests/refactoring/test_local_storage.py::test_malformed_observation_is_fail_closed_without_fact_or_checkpoint[compact]\nFAILED tests/refactoring/test_local_storage.py::test_second_storage_writer_cannot_claim_same_fact_database[legacy]\nFAILED tests/refactoring/test_local_storage.py::test_second_storage_writer_cannot_claim_same_fact_database[compact]\nFAILED tests/refactoring/test_local_storage.py::test_restart_rejects_missing_manifest_or_changed_progress_digest[legacy]\nFAILED tests/refactoring/test_local_storage.py::test_restart_rejects_missing_manifest_or_changed_progress_digest[compact]\nFAILED tests/refactoring/test_local_storage.py::test_same_event_id_with_changed_economic_content_is_rejected_before_any_batch_commit[legacy]\nFAILED tests/refactoring/test_local_storage.py::test_same_event_id_with_changed_economic_content_is_rejected_before_any_batch_commit[compact]\nFAILED tests/refactoring/test_local_storage.py::test_cross_batch_conflict_cannot_claim_existing_manifest_coverage[legacy]\nFAILED tests/refactoring/test_local_storage.py::test_cross_batch_conflict_cannot_claim_existing_manifest_coverage[compact]\nFAILED tests/refactoring/test_local_storage.py::test_restart_committed_id_new_cursor_is_unverifiable_without_attestation[legacy-False]\nFAILED tests/refactoring/test_local_storage.py::test_restart_committed_id_new_cursor_is_unverifiable_without_attestation[legacy-True]\nFAILED tests/refactoring/test_local_storage.py::test_restart_committed_id_new_cursor_is_unverifiable_without_attestation[compact-False]\nFAILED tests/refactoring/test_local_storage.py::test_restart_committed_id_new_cursor_is_unverifiable_without_attestation[compact-True]\nFAILED tests/refactoring/test_local_storage.py::test_attestation_cache_is_bounded_and_eviction_never_invents_alias_proof[legacy]\nFAILED tests/refactoring/test_local_storage.py::test_attestation_cache_is_bounded_and_eviction_never_invents_alias_proof[compact]\nFAILED tests/refactoring/test_local_storage.py::test_pinned_reader_cannot_grow_wal_through_repeated_storage_restart[legacy]\nFAILED tests/refactoring/test_local_storage.py::test_pinned_reader_cannot_grow_wal_through_repeated_storage_restart[compact]\nFAILED tests/refactoring/test_local_storage.py::test_wal_capacity_and_free_space_gate_precede_next_transaction[legacy]\nFAILED tests/refactoring/test_local_storage.py::test_wal_capacity_and_free_space_gate_precede_next_transaction[compact]\nFAILED tests/refactoring/test_local_storage.py::test_fact_wal_space_reservation_blocks_commit_before_disk_exhaustion[legacy]\nFAILED tests/refactoring/test_local_storage.py::test_fact_wal_space_reservation_blocks_commit_before_disk_exhaustion[compact]\nFAILED tests/refactoring/test_local_storage.py::test_malformed_source_batch_quarantines_before_shared_mutation_and_healthy_lane_progresses[legacy]\nFAILED tests/refactoring/test_local_storage.py::test_malformed_source_batch_quarantines_before_shared_mutation_and_healthy_lane_progresses[compact]\nFAILED tests/refactoring/test_local_storage.py::test_invalid_unicode_source_identity_does_not_stop_healthy_lane[legacy]\nFAILED tests/refactoring/test_local_storage.py::test_invalid_unicode_source_identity_does_not_stop_healthy_lane[compact]\nFAILED tests/refactoring/test_local_storage.py::test_spool_checksum_corruption_quarantines_only_its_lane[legacy-False]\nFAILED tests/refactoring/test_local_storage.py::test_spool_checksum_corruption_quarantines_only_its_lane[legacy-True]\nFAILED tests/refactoring/test_local_storage.py::test_spool_checksum_corruption_quarantines_only_its_lane[compact-False]\nFAILED tests/refactoring/test_local_storage.py::test_spool_checksum_corruption_quarantines_only_its_lane[compact-True]\nFAILED tests/refactoring/test_local_storage.py::test_bad_source_cannot_change_healthy_attestation_cache[legacy]\nFAILED tests/refactoring/test_local_storage.py::test_bad_source_cannot_change_healthy_attestation_cache[compact]\nFAILED tests/refactoring/test_local_storage.py::test_source_read_io_error_is_common_fatal_not_quarantined[legacy-False]\nFAILED tests/refactoring/test_local_storage.py::test_source_read_io_error_is_common_fatal_not_quarantined[legacy-True]\nFAILED tests/refactoring/test_local_storage.py::test_source_read_io_error_is_common_fatal_not_quarantined[compact-False]\nFAILED tests/refactoring/test_local_storage.py::test_source_read_io_error_is_common_fatal_not_quarantined[compact-True]\nFAILED tests/refactoring/test_local_storage.py::test_even_typed_source_error_after_writer_mutation_remains_global[legacy]\nFAILED tests/refactoring/test_local_storage.py::test_even_typed_source_error_after_writer_mutation_remains_global[compact]\n53 failed, 186 passed in 3.04s\n"
+}

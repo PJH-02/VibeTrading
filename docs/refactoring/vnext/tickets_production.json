@@ -1449,7 +1449,7 @@
     {
       "task_id": "VN08",
       "existing_phase": "P06/P07",
-      "status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
       "depends_on": [
         "VN07"
       ],
@@ -1479,7 +1479,13 @@
         "vibetrading/local_storage.py",
         "vibetrading/market_spool.py"
       ],
-      "edit_paths": [],
+      "edit_paths": [
+        "src/vibetrading/market_spool.py",
+        "src/vibetrading/local_storage.py",
+        "tests/refactoring/test_retained_spool.py",
+        "tests/refactoring/test_retained_storage.py",
+        "tests/refactoring/test_retained_review.py"
+      ],
       "forbidden_paths": [
         ".env*",
         "**/secrets/**",
@@ -1497,9 +1503,9 @@
       "target_symbols": {
         "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "ADD_PROPOSED": [],
-        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
+        "DISPATCH": "VN08_COMPLETE_LOCAL_IMPLEMENTATION"
       },
-      "goal_and_acceptance": "Retained-prefix reader only; preserve proven data identity/replay semantics. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
+      "goal_and_acceptance": "Retained-prefix reader and real storage restart progress proof completed under the reuse-first bounded ticket. Existing v1 writer/codec preserved; no automatic cutover or pruning.",
       "contracts": [
         "C01",
         "C02",
@@ -1530,12 +1536,12 @@
       "new_run_outputs": [
         "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
       ],
-      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "authorization": "Latest user request satisfied by bounded VN08. No active later ticket, GC, live or deployment authorization.",
       "source_ticket": "docs/refactoring/vnext/tickets.json#VN08",
       "capacity_impacts": "Measure relevant CPU/event, bounded bytes/records/age/inflight, aggregate RSS/PSS and disk/WAL on 2vCPU/3.8GiB; no inferred production values.",
-      "stage_classification": "NOT_STARTED",
-      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Retained-prefix reader only; preserve proven data identity/replay semantics.",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "stage_classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage_status_detail": "VN08 retained-prefix reader/storage local acceptance. Explicit pinned provenance, existing progress attestation, monotonicity and bounded reads; GC disabled.",
+      "commit_scope": "COMPLETED_TICKET",
       "scope_revision": {
         "authority": "2026-10-23 explicit user correction",
         "disposition": "COMPLETE_DATA_RECOVERY",
@@ -1545,7 +1551,11 @@
         "requires_function_gap_evidence_and_bounded_reticket": true,
         "historical_status_preserved": true,
         "supersedes_unselected_global_platform_gates": true
-      }
+      },
+      "bounded_ticket": "docs/tickets/VN08-retained-prefix-reader.md",
+      "production_ready": false,
+      "completion_receipt": "docs/refactoring/runs/20261023-v3/vn08/acceptance.json",
+      "next_action": "VN08 local implementation complete. VN09 remains unstarted; require its own bounded proof-only/no-delete dispatch."
     },
     {
       "task_id": "VN09",
@@ -5781,29 +5791,29 @@
       }
     }
   ],
-  "updated_local": "2026-10-23T20:08:39.840784+09:00",
+  "updated_local": "2026-10-23T20:43:45.298996+09:00",
   "current_validation": {
     "status": "FULL_LOCAL_REGRESSION_PASS",
-    "source_sha": "79501a9c1484daa6528e129bab20d570dc66fcf9",
-    "receipt": "docs/refactoring/runs/20261023-v3/vn07b/acceptance.json",
-    "passed": 2019,
+    "source_sha": "8f3e3b761be794f9636a81603b8073074c293b79",
+    "receipt": "docs/refactoring/runs/20261023-v3/vn08/acceptance.json",
+    "passed": 2055,
     "deselected_live_data": 2,
-    "parent_VN07_complete": true
+    "VN08_complete": true
   },
-  "user_request_latest": "다음 티켓 작업 수행하여 VN07 전체 완료하라; 남은 작업 이어서 진행. VN07 whole local implementation accepted; stop before VN08.",
+  "user_request_latest": "다음 단계 티켓 및 단계 개발에 착수하라. opencode와 frellmapi 사용 구조는 유지. VN08 locally accepted; stop before VN09.",
   "execution_control": {
     "status": "LOCAL_TICKET_ACCEPTED",
-    "last_completed_ticket": "VN07",
+    "last_completed_ticket": "VN08",
     "last_completed_tooling_ticket": "R05",
     "active_ticket": null,
     "start_next_ticket": false,
-    "stop_after_ticket": "VN07",
+    "stop_after_ticket": "VN08",
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
-    "current_source_sha": "79501a9c1484daa6528e129bab20d570dc66fcf9",
+    "current_source_sha": "8f3e3b761be794f9636a81603b8073074c293b79",
     "active_tooling_tickets": [],
     "active_parallel_tickets": [],
-    "last_completed_subunit": "VN07B"
+    "last_completed_subunit": "VN08"
   },
   "git_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
   "git_snapshot_policy": "All current code including unfinished prototypes included; stage classifications unchanged; no deployment authorization",
@@ -6504,6 +6514,14 @@
       "additional_review_cases": 4,
       "deselected_live_data": 2,
       "parent_VN07_complete": false
+    },
+    {
+      "status": "FULL_LOCAL_REGRESSION_PASS",
+      "source_sha": "79501a9c1484daa6528e129bab20d570dc66fcf9",
+      "receipt": "docs/refactoring/runs/20261023-v3/vn07b/acceptance.json",
+      "passed": 2019,
+      "deselected_live_data": 2,
+      "parent_VN07_complete": true
     }
   ],
   "user_scope_latest": "2026-10-23: preserve working exchange/order/cloud and strategy economics; NATS-free data/storage/recovery plus file-plugin Paper/multi-strategy reuse. This stage is audit and minimal-diff plan only; no exchange order code changes.",
@@ -6602,10 +6620,10 @@
       "R06"
     ],
     "R05_calculators_are_not_plugin_completion": true,
-    "authorized_bounded_ticket": "docs/tickets/VN07B-coupled-runtime-recovery.md",
+    "authorized_bounded_ticket": "docs/tickets/VN08-retained-prefix-reader.md",
     "unselected_implementation_dispatch_authorized": false,
-    "last_accepted_bounded_ticket": "docs/tickets/VN07B-coupled-runtime-recovery.md",
-    "last_accepted_receipt": "docs/refactoring/runs/20261023-v3/vn07b/acceptance.json"
+    "last_accepted_bounded_ticket": "docs/tickets/VN08-retained-prefix-reader.md",
+    "last_accepted_receipt": "docs/refactoring/runs/20261023-v3/vn08/acceptance.json"
   },
   "vn07a_validation": {
     "status": "ACCEPTED_LOCAL_SUBUNIT",
@@ -6626,5 +6644,16 @@
     "scoped_passed": 237,
     "live_data_deselected": 2,
     "production_ready": false
+  },
+  "vn08_validation": {
+    "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+    "source_sha": "8f3e3b761be794f9636a81603b8073074c293b79",
+    "receipt": "docs/refactoring/runs/20261023-v3/vn08/acceptance.json",
+    "full_regression_passed": 2055,
+    "scoped_passed": 275,
+    "reviewer_counterexamples": 15,
+    "live_data_deselected": 2,
+    "production_ready": false,
+    "extra_glm_tests": "BLOCKED; no new artifact; no model substitution"
   }
 }

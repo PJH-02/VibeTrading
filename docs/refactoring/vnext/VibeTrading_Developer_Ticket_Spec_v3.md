@@ -155,16 +155,18 @@ DONE의 상태표가 서버 운영 수락을 의미하지는 않는다. **구현
 - **테스트:** Market checkpoint 단독 복원 / 저널보다 앞·뒤인 input / partial write / invalid pending / double replay / newest checkpoint corruption / ETF·Paper 동시 재시작 / broad loss / source-missing fail-closed. 동일 원본에서 recovered booked balances·working orders·strategy claims 동등. 준비 불충분 시 신규 위험주문 0.
 - **Critical 리뷰:** Codex가 multi-ledger 원자성의 **실제** 보장 범위를 확인. SQLite 파일 두 개가 있을 때 원자적 Commit이라고 주장하지 않음. 필요한 경우 staged recovery/quarantine 방식 채택.
 
-- **최근 완료 하위 작업 VN07A:** 기존 Paper `strategy_event` 처리 기록으로 재시작한 전략의 상태 복원 미확인 시 신규 콜백·위험주문을 차단한다. 정상 동일 실행/REPLAY warmup과 명시적 pause/halt 취소는 보존한다. [수락 기록](../runs/20261023-v3/vn07a/acceptance.json). VN07A 당시 열려 있던 전략 내부 상태 checkpoint·검증 복원·시장/Paper 경계는 후속 VN07B에서 로컬 완료했다. VN08은 이번에 착수하지 않았다.
+- **최근 완료 하위 작업 VN07A:** 기존 Paper `strategy_event` 처리 기록으로 재시작한 전략의 상태 복원 미확인 시 신규 콜백·위험주문을 차단한다. 정상 동일 실행/REPLAY warmup과 명시적 pause/halt 취소는 보존한다. [수락 기록](../runs/20261023-v3/vn07a/acceptance.json). VN07A 당시 열려 있던 전략 내부 상태 checkpoint·검증 복원·시장/Paper 경계는 후속 VN07B에서 로컬 완료했다. VN07B 수락 당시 VN08은 미착수였으며, 후속 VN08 로컬 수락은 아래 기록을 따른다.
 
 - **VN07 전체 검증:** 제품 1,850 + tooling 169 = **2,019 PASS**, live-data 2건 제외. 기존 Golden/거래소 주문·cloud 동작 보존. 복수 실제 Paper 원장과 ETF/Paper 동시 복구, 상태 hook/준비 검사 중 저널 변조, 최신 파일 손상 및 출력 경로 충돌 반례 포함. Production gate는 BLOCKED이며 별도 서버 배포/wiring은 VN17 범위다.
 
-### VN08 — Retained-prefix aware Spool Reader
+### VN08 — Retained-prefix aware Spool Reader (로컬 완료)
 
 - **소유:** `vibetrading/market_spool.py::{SpoolReader,_inventory,scan_spool}` 및 `vibetrading/local_storage.py::{LocalSpoolStorage,_FactLedger}`, 관련 Reader Tests.
 - **선행:** VN07. **목적:** 원본 전체를 보존한 v1 Reader와 `base_cursor>0`의 새 Reader를 혼동하지 않음.
 - **구현:** checkpoint의 digest/gen/first-retained segment를 재생 시작 증거로 사용. 유실된 gap, chain mismatch, truncated header, CRC miss, fence mismatch 시 비정상 복구를 거부. 여러 reader가 서로 다른 Base를 가질 때 oldest needed range 보존.
 - **테스트:** v1 전체 Replay 동일, rotated segments, missing first/last segment, reader pin·crash·bad proof, 즉시 LIVE 거절. GC는 계속 비활성.
+
+- **로컬 수락:** 명시적으로 pin한 hash/generation·first-retained segment 증거와 실제 저장소 progress/manifest/fact 검증을 연결했다. 단조 durable watermark, record/segment/absolute cursor 한도와 consumer별 base 검증을 포함한다. 기존 v1 writer/frame/checkpoint AST 불변. 전체 **2,055 PASS**, live-data 2건 제외. [수락 기록](../runs/20261023-v3/vn08/acceptance.json). GC·생산 데이터 삭제·자동 cutover/LIVE 승격은 없고 VN09는 착수하지 않았다.
 
 ### VN09 — GC 증거 기반 회수 및 실패 시 보존
 

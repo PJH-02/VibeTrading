@@ -99,7 +99,9 @@
         "VN07"
       ],
       "historical_status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
-      "scope_disposition": "COMPLETE_DATA_RECOVERY"
+      "scope_disposition": "COMPLETE_DATA_RECOVERY",
+      "current_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "completion_receipt": "docs/refactoring/runs/20261023-v3/vn08/acceptance.json"
     },
     {
       "task_id": "VN09",
@@ -460,6 +462,12 @@
       "status": "COMPLETE_LOCAL_IMPLEMENTATION",
       "source_sha": "79501a9c1484daa6528e129bab20d570dc66fcf9",
       "receipt": "docs/refactoring/runs/20261023-v3/vn07b/acceptance.json"
+    },
+    {
+      "task_id": "VN08",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "source_sha": "8f3e3b761be794f9636a81603b8073074c293b79",
+      "receipt": "docs/refactoring/runs/20261023-v3/vn08/acceptance.json"
     }
   ]
 }

@@ -1,0 +1,6 @@
+{
+  "reason": "Independent review reproduced6 defects after worker selected260 PASS. Stop initial owned worker to dispatch bounded repairs; no owner implementation takeover.",
+  "signal": "SIGTERM",
+  "process_target": 160000,
+  "implementation_acceptance": "FAIL_PENDING_REPAIR"
+}

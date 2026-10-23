@@ -1,0 +1,205 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "refactor",
+  "worker_process": {
+    "exit_code": 0,
+    "elapsed_seconds": 192.4201491230051,
+    "relay_http_statuses": [],
+    "served_models": [],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-repair1-e30d30ad",
+  "usage_reported": [
+    {
+      "total": 3846,
+      "input": 1695,
+      "output": 89,
+      "reasoning": 14,
+      "cache": {
+        "write": 0,
+        "read": 2048
+      }
+    },
+    {
+      "total": 21127,
+      "input": 21045,
+      "output": 66,
+      "reasoning": 16,
+      "cache": {
+        "write": 0,
+        "read": 0
+      }
+    },
+    {
+      "total": 29147,
+      "input": 3820,
+      "output": 65,
+      "reasoning": 4270,
+      "cache": {
+        "write": 0,
+        "read": 20992
+      }
+    },
+    {
+      "total": 29402,
+      "input": 4542,
+      "output": 67,
+      "reasoning": 89,
+      "cache": {
+        "write": 0,
+        "read": 24704
+      }
+    },
+    {
+      "total": 32409,
+      "input": 1236,
+      "output": 385,
+      "reasoning": 1604,
+      "cache": {
+        "write": 0,
+        "read": 29184
+      }
+    },
+    {
+      "total": 32656,
+      "input": 7720,
+      "output": 220,
+      "reasoning": 12,
+      "cache": {
+        "write": 0,
+        "read": 24704
+      }
+    },
+    {
+      "total": 32884,
+      "input": 287,
+      "output": 213,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 32384
+      }
+    },
+    {
+      "total": 33115,
+      "input": 260,
+      "output": 197,
+      "reasoning": 18,
+      "cache": {
+        "write": 0,
+        "read": 32640
+      }
+    },
+    {
+      "total": 33303,
+      "input": 234,
+      "output": 173,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 32896
+      }
+    },
+    {
+      "total": 33518,
+      "input": 295,
+      "output": 158,
+      "reasoning": 41,
+      "cache": {
+        "write": 0,
+        "read": 33024
+      }
+    },
+    {
+      "total": 34321,
+      "input": 3197,
+      "output": 428,
+      "reasoning": 360,
+      "cache": {
+        "write": 0,
+        "read": 30336
+      }
+    },
+    {
+      "total": 34844,
+      "input": 928,
+      "output": 180,
+      "reasoning": 328,
+      "cache": {
+        "write": 0,
+        "read": 33408
+      }
+    },
+    {
+      "total": 35239,
+      "input": 840,
+      "output": 84,
+      "reasoning": 11,
+      "cache": {
+        "write": 0,
+        "read": 34304
+      }
+    },
+    {
+      "total": 36906,
+      "input": 919,
+      "output": 68,
+      "reasoning": 847,
+      "cache": {
+        "write": 0,
+        "read": 35072
+      }
+    },
+    {
+      "total": 40506,
+      "input": 2444,
+      "output": 256,
+      "reasoning": 1838,
+      "cache": {
+        "write": 0,
+        "read": 35968
+      }
+    },
+    {
+      "total": 40707,
+      "input": 2121,
+      "output": 180,
+      "reasoning": 6,
+      "cache": {
+        "write": 0,
+        "read": 38400
+      }
+    },
+    {
+      "total": 41317,
+      "input": 7476,
+      "output": 295,
+      "reasoning": 266,
+      "cache": {
+        "write": 0,
+        "read": 33280
+      }
+    },
+    {
+      "total": 44639,
+      "input": 3185,
+      "output": 298,
+      "reasoning": 452,
+      "cache": {
+        "write": 0,
+        "read": 40704
+      }
+    }
+  ],
+  "base_sha": "e934af784f5a1d65473dddb950ac9fc011d220ab",
+  "scope": [
+    "src/vibetrading/market_spool.py"
+  ],
+  "output_sha256": {
+    "src/vibetrading/market_spool.py": "a30b4e47a9d7d49e158a558dcb6594c2abf7884ea074076e519b18f7b910af93"
+  },
+  "automatic_acceptance": false
+}

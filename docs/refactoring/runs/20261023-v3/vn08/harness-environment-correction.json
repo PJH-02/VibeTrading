@@ -1,0 +1,9 @@
+{
+  "reason": "Copied previous scoped harness exported a shared DATA_ROOT; existing storage fixtures require separate env-file roots. Baseline failed53 due shared state. Removed only env override in shell sandbox and independent harness; source/test files unchanged.",
+  "active_shell_only_change": "bwrap --unsetenv VIBETRADING_DATA_ROOT",
+  "source_edits": 0,
+  "worker_repository_edits_by_orchestrator": 0,
+  "legacy_guard_edits": 0,
+  "prior_shell_sha256": "3643ef507e8b1bc170027daa6f42f269486b0f2876518fbdf7f2b127fa11b0b4",
+  "current_shell_sha256": "c2b4e923357129a9c94a302230b08456501ab8f8fe547578e0b68099b4ea750e"
+}
