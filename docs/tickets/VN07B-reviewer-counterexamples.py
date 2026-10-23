@@ -15,15 +15,25 @@ from vibetrading.runtime_checkpoint import RuntimeCheckpoint
 from vibetrading.etf_trading import EtfTradingLoop, EtfDispatchBlocked
 
 
-def fixture(root, *, fresh, now=None, corrupt_restore=None, no_callback=False):
+def fixture(root, *, fresh, now=None, corrupt_restore=None, no_callback=False, two_accounts=False):
     now = now or [T]
     ledger = ledger_at(root)
     if fresh:
         ledger.seed_balance("USDT", Decimal(100000), {"source": "synthetic"})
     matcher = matcher_for(ledger)
-    host = runtime(ledger, matcher, now)
+    additional = []
+    if two_accounts:
+        from test_strategy_restart_barrier import account_ledger, multi_runtime, multi_registration
+        additional = [account_ledger(root, "second-paper")]
+        if fresh:
+            additional[0].seed_balance("USDT", Decimal(200000), {"source": "synthetic"})
+        host = multi_runtime([ledger, *additional], now)
+        matcher = host.accounts[ledger.scope.key]
+    else:
+        host = runtime(ledger, matcher, now)
     observed = []
-    reg = registration(ledger, "one", observed)
+    reg = (multi_registration([ledger, *additional], "one", observed) if two_accounts
+           else registration(ledger, "one", observed))
     original = reg.module.module.create_strategy
 
     class Counter:
@@ -60,7 +70,7 @@ def fixture(root, *, fresh, now=None, corrupt_restore=None, no_callback=False):
     manager = RuntimeCheckpoint(root / "runtime.json", codec, max_bytes=4_000_000,
         max_journal_rows=10000, max_journal_bytes=8_000_000)
     return SimpleNamespace(ledger=ledger, matcher=matcher, host=host, engine=engine,
-                           item=item, manager=manager, now=now, observed=observed)
+                           item=item, manager=manager, now=now, observed=observed, additional=additional)
 
 
 def input_book(node, sequence):
@@ -73,6 +83,8 @@ def input_book(node, sequence):
 async def close(node):
     await node.engine.close()
     node.ledger.close()
+    for ledger in node.additional:
+        ledger.close()
 
 
 @pytest.mark.asyncio
@@ -467,3 +479,43 @@ async def test_checkpoint_output_cannot_replace_its_existing_economic_journal(tm
         assert source.ledger.report()["balances"] == {"USDT": "100000"}
     finally:
         await close(source)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("second_journal_ahead", [False, True])
+async def test_two_real_account_journals_restore_together_or_fence_together(tmp_path, second_journal_ahead):
+    source = fixture(tmp_path, fresh=True, two_accounts=True)
+    input_book(source, 1)
+    await source.manager.save(source.engine, paper_runtime=source.host)
+    await close(source)
+    target = fixture(tmp_path, fresh=False, two_accounts=True)
+    try:
+        if second_journal_ahead:
+            target.additional[0].claim_strategy_event(
+                "one", "config-1", "unproven-second-account", {"probe": "changed"})
+        journals = [target.ledger, *target.additional]
+        reports = [ledger.report() for ledger in journals]
+        if second_journal_ahead:
+            with pytest.raises((ValueError, RuntimeError)):
+                await target.manager.restore(target.engine, [target.item], paper_runtime=target.host,
+                                             readiness=lambda *args: True)
+            assert target.manager.state == "QUARANTINED"
+            from vibetrading.local_engine import EngineError
+            with pytest.raises(EngineError, match="engine_closed"):
+                input_book(target, 2)
+            target.host.advance(T+100)
+            assert not target.observed
+            assert [ledger.report() for ledger in journals] == reports
+            assert target.host._recovery_state == "QUARANTINED"
+        else:
+            await target.manager.restore(target.engine, [target.item], paper_runtime=target.host,
+                                         readiness=lambda *args: True)
+            assert target.manager.state == "READY"
+            assert [ledger.report() for ledger in journals] == reports
+            assert target.host._jobs["one"].instance.checkpoint_state() == {"count": 1}
+            input_book(target, 2)
+            assert target.host._jobs["one"].instance.checkpoint_state() == {"count": 2}
+            assert len(target.ledger.report()["orders"]) == 2
+            assert target.additional[0].has_strategy_dispatch("one")
+    finally:
+        await close(target)
