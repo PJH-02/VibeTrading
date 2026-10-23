@@ -246,6 +246,41 @@ class PortfolioLedger:
                                  {"strategy": strategy, "config_version": config_version,
                                   "event_id": event_id, "evidence": evidence})
 
+    def has_strategy_dispatch(self, strategy):
+        """Read-only evidence that a strategy dispatched beyond registration.
+
+        Streams only the existing bounded strategy_event receipts. Registration
+        alone is harmless; any action claim, including one written under a
+        different config version, fences a fresh instance. Unknown or malformed
+        receipt evidence fails closed instead of being ignored.
+        """
+        self._check()
+        if self.mode != TradingMode.PAPER:
+            raise ValueError("Strategy dispatch evidence requires paper mode")
+        bounded_identity(strategy, "strategy")
+        found = False
+        rows = self._db.execute(
+            "SELECT fingerprint,document FROM portfolio_receipts WHERE kind='strategy_event'")
+        for fingerprint, document in rows:
+            if not isinstance(fingerprint, str) or not isinstance(document, str):
+                raise ValueError("Malformed strategy event receipt")
+            try:
+                receipt = json.loads(document)
+                if not isinstance(receipt, dict) or set(receipt) != {
+                        "strategy", "config_version", "event_id", "evidence"}:
+                    raise ValueError("Strategy event receipt schema differs")
+                for name in ("strategy", "config_version", "event_id"):
+                    bounded_identity(receipt[name], "receipt " + name)
+                if not receipt["evidence"]:
+                    raise ValueError("Strategy event receipt lacks evidence")
+            except (TypeError, ValueError) as exc:
+                raise ValueError("Malformed strategy event receipt") from exc
+            if hashlib.sha256(document.encode("utf-8")).hexdigest() != fingerprint:
+                raise ValueError("Malformed strategy event receipt")
+            if receipt["strategy"] == strategy and receipt["event_id"] != "@registration":
+                found = True
+        return found
+
     def record_group_fact(self, group_id, kind, fact_id, document, *, max_groups, max_observations):
         """Append bounded observational group facts; never mutate child orders."""
         self._check()

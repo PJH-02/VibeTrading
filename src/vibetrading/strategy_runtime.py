@@ -97,6 +97,8 @@ class _Job:
     reason: str | None = None
     callbacks: int = 0
     actions: int = 0
+    restart_blocked: bool = False
+    permission_blocked: bool = False
 
 
 class PaperStrategyRuntime:
@@ -210,14 +212,29 @@ class PaperStrategyRuntime:
             research_receipt=_freeze(registration.research_receipt),
             risk=MappingProxyType(dict(registration.risk)),
             accounts=tuple(registration.accounts), required_feeds=tuple(registration.required_feeds))
+        restart_blocked = False
         if self.phase != "replay":
+            # Any prior dispatch evidence in any bound account means a fresh
+            # plugin instance cannot prove it restored that strategy's state.
+            # Read every account before writing registration claims.
+            for account in registration.accounts:
+                if self.accounts[account].ledger.has_strategy_dispatch(sid):
+                    restart_blocked = True
             for account in registration.accounts:
                 self.accounts[account].ledger.claim_strategy_event(sid, registration.config_version,
                     "@registration", {"registration": fingerprint})
         instance = registration.module.create()
         job = _Job(registration, instance, subscriptions, _freeze(registration.config), fingerprint)
-        if not registration.paper_permission:
+        # Durable dispatch evidence is a property of the ledger, not of the
+        # permission label displayed for this instance. Keep both fences
+        # independently sticky so neither a control operation nor replay can
+        # turn a permission-denied or state-unverified job back into dispatch.
+        job.restart_blocked = restart_blocked
+        job.permission_blocked = not registration.paper_permission
+        if job.permission_blocked:
             job.state, job.reason = "BLOCKED", "paper_permission_missing"
+        elif job.restart_blocked:
+            job.state, job.reason = "BLOCKED", "strategy_state_restore_unverified"
         self._jobs[sid] = job
 
     def prepare_history(self, instrument_key: str, rows):
@@ -370,7 +387,11 @@ class PaperStrategyRuntime:
             return ()
         event, generated = result.event, []
         for sid, job in self._jobs.items():
-            if job.state in {"PAUSED", "HALTED", "FAULTED", "BLOCKED"}:
+            # Replay may warm callbacks for inspection, but a restart-blocked
+            # job can never dispatch PAPER work or establish recovery proof.
+            if (job.permission_blocked or job.state in {"PAUSED", "HALTED", "FAULTED"}
+                    or (job.state == "BLOCKED" and not (job.restart_blocked and replay))
+                    or (job.restart_blocked and not replay)):
                 continue
             if (event.instrument.key not in job.registration.required_feeds or
                     not any(sub.matches(event) for sub in job.subscriptions)):
@@ -537,13 +558,29 @@ class PaperStrategyRuntime:
                 except Exception as exc:
                     self._account_faults[account] = type(exc).__name__
 
+    @staticmethod
+    def _hold_blocked(job):
+        """Restore a sticky fence; return whether the job remains blocked."""
+        if job.permission_blocked:
+            job.state, job.reason = "BLOCKED", "paper_permission_missing"
+        elif job.restart_blocked:
+            job.state, job.reason = "BLOCKED", "strategy_state_restore_unverified"
+        else:
+            return False
+        return True
+
     def pause(self, strategy_id: str, now_ns: int):
         job = self._jobs[strategy_id]
+        if self._hold_blocked(job):
+            self._cancel_owned(job, now_ns)
+            return
         job.state, job.reason = "PAUSED", "operator_pause"
         self._cancel_owned(job, now_ns)
 
     def resume(self, strategy_id: str):
         job = self._jobs[strategy_id]
+        if self._hold_blocked(job):
+            return
         if job.state != "PAUSED":
             raise ValueError("Only an explicitly paused strategy may resume")
         job.state, job.reason = "WARMING", None
@@ -552,6 +589,11 @@ class PaperStrategyRuntime:
         bounded_identity(reason, "halt reason")
         for sid, job in self._jobs.items():
             if strategy_id is None or sid == strategy_id:
+                if self._hold_blocked(job):
+                    # Operator stop remains risk-reducing even while the
+                    # no-new-risk fence stays in place.
+                    self._cancel_owned(job, now_ns)
+                    continue
                 job.state, job.reason = "HALTED", reason
                 self._cancel_owned(job, now_ns)
 
@@ -579,6 +621,9 @@ class PaperStrategyRuntime:
                 "replace": "unsupported_until_confirmed_remaining_handoff",
                 "reference_feeds": dict(self.reference_feeds),
                 "restart_evidence": {"matcher": "durable_ledger_state_checked",
+                    "strategy_state_recovery": "UNVERIFIED",
+                    "blocked_strategies": tuple(sorted(
+                        sid for sid, job in self._jobs.items() if job.restart_blocked)),
                     "continuous_input_cursor": "MISSING_EVIDENCE", "full_restart_gate": "BLOCKED"},
                 "pending_actions": self._pending, "seen_actions": len(self._seen_actions),
                 "account_faults": dict(self._account_faults),
