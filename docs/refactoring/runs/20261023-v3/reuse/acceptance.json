@@ -39,5 +39,11 @@
   "main_plan": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
   "matrix": "docs/refactoring/vnext/reuse_audit/execution_reuse_matrix.md",
   "canonical_plan": "docs/refactoring/vnext/11_integrated_vn_tx_plan.md",
-  "primary_workspace": "PENDING_APPLICATION"
+  "primary_workspace": "APPLIED_AND_VERIFIED",
+  "primary_application": {
+    "receipt": "original-application.json",
+    "first_applied_head": "fd68dc487fc8aac2f2c5a471aa4a3c69ba437727",
+    "public_plan_files_verified": 9,
+    "preexisting_user_entries_preserved": 174
+  }
 }
