@@ -1,0 +1,16 @@
+{
+  "decision": "PASS",
+  "audit_source_sha": "fa2478e5ca15b92d1db69d1cc7e0d8f7266b7146",
+  "historical_source_sha": "4977ab509490173e312183f32d47f862d94ee0bf",
+  "source_files": 47,
+  "definitions_compared_independently": 712,
+  "historical_definitions_retained_unchanged": 679,
+  "historical_definitions_changed": 13,
+  "definitions_added": 20,
+  "definitions_removed": 0,
+  "caller_inputs_hashed": 510,
+  "caller_references_grounded_in_current_ast": 459,
+  "same_line_distinct_calls_preserved": 2,
+  "call_grounding_limit": "AST syntax/line/count grounding; lexical resolver additionally exercised by 14 independent synthetic cases. Dynamic receivers/runtime remain UNKNOWN.",
+  "scope": "Static evidence, not runtime/live verification"
+}

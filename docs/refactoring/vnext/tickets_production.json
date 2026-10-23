@@ -3231,12 +3231,12 @@
     },
     {
       "task_id": "TX00",
-      "status": "IN_PROGRESS",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
       "kind": "IMPLEMENTATION",
       "depends_on": [
         "VN00"
       ],
-      "goal": "Inventory existing venue/product/environment execution paths and exact callers; preserve TOSS DATA_ONLY; no connector implementation. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
+      "goal": "Close current-source static execution reuse inventory and lexical callers; preserve existing route behavior; no product changes.",
       "owner": "production_venue_audit",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
@@ -3244,14 +3244,23 @@
         "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
         "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
         "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
-        "vibetrading/brokers.py",
-        "vibetrading/bybit_execution.py",
-        "vibetrading/extended_brokers.py",
-        "vibetrading/fv_mm/private.py",
-        "vibetrading/fv_mm/venues.py",
-        "vibetrading/kis_execution.py"
+        "src/vibetrading/brokers.py",
+        "src/vibetrading/bybit_execution.py",
+        "src/vibetrading/extended_brokers.py",
+        "src/vibetrading/fv_mm/private.py",
+        "src/vibetrading/fv_mm/venues.py",
+        "src/vibetrading/kis_execution.py",
+        "docs/tickets/TX00-current-audit-baseline.json",
+        "docs/refactoring/vnext/reuse_audit/execution_reuse_matrix.md"
       ],
-      "edit_paths": [],
+      "edit_paths": [
+        "docs/refactoring/vnext/reuse_audit/tx00_current/check.py",
+        "docs/refactoring/vnext/reuse_audit/tx00_current/inventory.json",
+        "docs/refactoring/vnext/reuse_audit/tx00_current/dispositions.json",
+        "docs/refactoring/vnext/reuse_audit/tx00_current/callers.json",
+        "docs/refactoring/vnext/reuse_audit/tx00_current/delta.json",
+        "docs/refactoring/vnext/reuse_audit/tx00_current/closure.md"
+      ],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -3264,9 +3273,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
-        "ADD_PROPOSED": [],
-        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/execution_reuse_matrix.md",
+        "DISPATCH": "docs/tickets/TX00-current-reuse-audit.md",
+        "ADD_PROPOSED": []
       },
       "source_hashes": {
         "vibetrading/brokers.py": "baf6cf4281eedad31ae8c53a282e879088ab4a42e26c9495448fc9400517b9d9",
@@ -3295,24 +3304,33 @@
         "path": null,
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN",
+        "status": "PASS_36_EXISTING_TOSS_CASES_STATIC_CHECKER_AND_14_BOUNDARIES",
         "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
-        "path_exists_at_audit": false
+        "path_exists_at_audit": false,
+        "receipt": "docs/refactoring/runs/20261023-v3/tx00-current/acceptance.json"
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
-      "gate_evidence": [],
-      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "gate_evidence": [
+        "docs/refactoring/runs/20261023-v3/tx00-current/acceptance.json"
+      ],
+      "authorization": "Current user request authorizes this bounded TX00 static reuse audit only; product changes and other ticket dispatch remain unauthorized by this ticket.",
       "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
-      "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Inventory existing venue/product/environment execution paths and exact callers; preserve TOSS DATA_ONLY; no connector implementation.",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "stage_classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage_status_detail": "Current-head static reuse audit accepted:47files/712definitions/459lexical call references; no product implementation or live readiness claim.",
+      "commit_scope": "STATIC_AUDIT_EVIDENCE_ONLY",
       "completed_subunits": [
         {
           "id": "toss-data-only",
           "status": "ACCEPTED_SUBUNIT_ONLY",
           "source_sha": "1efd0f3664542ee795d8c89960951a24998ab223",
           "receipt": "docs/refactoring/runs/20261023-v3/tx00-toss/acceptance.json"
+        },
+        {
+          "id": "current-source-static-audit",
+          "status": "ACCEPTED_LOCAL_STATIC_AUDIT_ONLY",
+          "source_sha": "fa2478e5ca15b92d1db69d1cc7e0d8f7266b7146",
+          "receipt": "docs/refactoring/runs/20261023-v3/tx00-current/acceptance.json"
         }
       ],
       "scope_revision": {
@@ -3324,7 +3342,9 @@
         "requires_function_gap_evidence_and_bounded_reticket": true,
         "historical_status_preserved": true,
         "supersedes_unselected_global_platform_gates": true
-      }
+      },
+      "completion_scope": "STATIC_REUSE_AUDIT_NO_PRODUCT_DIFF",
+      "production_ready": false
     },
     {
       "task_id": "TX01",
@@ -5815,17 +5835,17 @@
   "user_request_latest": "다음 단계 티켓 및 단계 개발에 착수하라. VN09 local proof-only GC planning accepted; no deletion or later ticket started.",
   "execution_control": {
     "status": "LOCAL_TICKET_ACCEPTED",
-    "last_completed_ticket": "VN09",
+    "last_completed_ticket": "TX00",
     "last_completed_tooling_ticket": "R05",
     "active_ticket": null,
     "start_next_ticket": false,
-    "stop_after_ticket": "VN09",
+    "stop_after_ticket": "TX00",
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
-    "current_source_sha": "ded3ac7f6c23ff6fb9d4194b6b9f55f2ef7da083",
+    "current_source_sha": "fa2478e5ca15b92d1db69d1cc7e0d8f7266b7146",
     "active_tooling_tickets": [],
     "active_parallel_tickets": [],
-    "last_completed_subunit": "VN09"
+    "last_completed_subunit": "TX00-current-static-audit"
   },
   "git_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
   "git_snapshot_policy": "All current code including unfinished prototypes included; stage classifications unchanged; no deployment authorization",
@@ -6640,10 +6660,10 @@
       "R06"
     ],
     "R05_calculators_are_not_plugin_completion": true,
-    "authorized_bounded_ticket": "docs/tickets/VN09-proof-only-spool-gc.md",
+    "authorized_bounded_ticket": "docs/tickets/TX00-current-reuse-audit.md",
     "unselected_implementation_dispatch_authorized": false,
-    "last_accepted_bounded_ticket": "docs/tickets/VN09-proof-only-spool-gc.md",
-    "last_accepted_receipt": "docs/refactoring/runs/20261023-v3/vn09/acceptance.json"
+    "last_accepted_bounded_ticket": "docs/tickets/TX00-current-reuse-audit.md",
+    "last_accepted_receipt": "docs/refactoring/runs/20261023-v3/tx00-current/acceptance.json"
   },
   "vn07a_validation": {
     "status": "ACCEPTED_LOCAL_SUBUNIT",
@@ -6688,5 +6708,16 @@
     "production_ready": false,
     "GC_enabled": false,
     "glm_verification": "BLOCKED_HTTP_429"
+  },
+  "tx00_validation": {
+    "completion_scope": "LOCAL_STATIC_REUSE_AUDIT_ONLY",
+    "source_sha": "fa2478e5ca15b92d1db69d1cc7e0d8f7266b7146",
+    "receipt": "docs/refactoring/runs/20261023-v3/tx00-current/acceptance.json",
+    "source_files": 47,
+    "definitions": 712,
+    "static_call_references": 459,
+    "boundary_cases_passed": 14,
+    "existing_toss_passed": 36,
+    "new_product_code": false
   }
 }

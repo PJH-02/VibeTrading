@@ -225,9 +225,10 @@ DONE의 상태표가 서버 운영 수락을 의미하지는 않는다. **구현
 ### TX00 — Reuse Audit (기존 경로 인벤토리)
 
 - **소유:** `docs/refactoring/vnext/reuse_audit/**`의 static evidence와 `execution_reuse_matrix.md`; 제품 코드 수정 0.
-- **선행:** VN00. **현재:** IN_PROGRESS(감사 evidence).
+- **선행:** VN00. **현재:** 로컬 정적 재사용 감사 완료(제품/실거래 지원 완료 의미 아님).
 - **구현:** `(venue, product, environment, account domain, position/margin mode)`별 **기존** 함수와 caller를 기록하고 `TOSS=DATA_ONLY`를 적용한다. `SUPPORTED_CODE/FIXTURE/SANDBOX_REQUIRED/LIVE_REQUIRED/UNSUPPORTED/UNKNOWN`은 honest label이며 빈 generic wrapper만으로 미지원을 선언하지 않는다. 새 connector/registry 구현 없음.
 - **수락:** 모든 발견 path와 `Class.method/path:line` 링크, UNKNOWN/N/A 명시, secret 없음, raw audit와 machine evidence의 한계 표기. 601-function/245-call evidence를 수기/live 검증으로 과장하지 않는다.
+- **현재 수락:** HEAD `fa2478e5` 기준 47파일·712정의·510입력·459정적 참조를 대조했다. 역사692정의 중679동일/13변경, 복구20추가/삭제0. [현재 감사](./reuse_audit/tx00_current/closure.md)·[수락](../runs/20261023-v3/tx00-current/acceptance.json). 기존 TOSS36건과 독립 경계14건 PASS. TX01 제품 변경은 이 감사에 포함하지 않는다.
 
 ### TX01 — 기존 Signal/OrderIntent·strategy contract 재사용
 

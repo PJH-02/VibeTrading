@@ -1,0 +1,86 @@
+{
+  "decision": "PASS",
+  "task_id": "TX00",
+  "completion_scope": "CURRENT_HEAD_STATIC_REUSE_AUDIT_ONLY",
+  "audit_source_sha": "fa2478e5ca15b92d1db69d1cc7e0d8f7266b7146",
+  "historical_source_sha": "4977ab509490173e312183f32d47f862d94ee0bf",
+  "selected_provider": "opencode",
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "upstream_weight_identity": "UNKNOWN",
+  "worker_role": "refactor",
+  "worker_actual_sandbox_exit": 0,
+  "worker_actual_delegate_exit": 0,
+  "initial_and_repair1_interrupted_exits": [
+    -15,
+    -15
+  ],
+  "repair_delegations": 2,
+  "initial_interruption_reason": "Owner ticket correction for property getter/setter identity",
+  "repair1_interruption_reason": "Nested shell mount prevented permitted evidence writes; static counterexamples and mirror workaround rejected",
+  "owner_product_or_checker_edits": 0,
+  "owner_documentation_corrections": "owner-document-review.json",
+  "artifact_sha256": {
+    "docs/refactoring/vnext/reuse_audit/tx00_current/check.py": "a757346febe397c661d2539e0f69abcefa3b951ded436f6cf8d36549b9b58f5e",
+    "docs/refactoring/vnext/reuse_audit/tx00_current/inventory.json": "f73f16fb01bf21906df820fcc61e2e36c4d80ecb817f2d8b24326ea2001beb6e",
+    "docs/refactoring/vnext/reuse_audit/tx00_current/dispositions.json": "cd4b44c12bb564877648a731374616c8de78485a2f87f506bbdc8420230852b6",
+    "docs/refactoring/vnext/reuse_audit/tx00_current/callers.json": "aa5a8dfb4d72a52fb967c35b6b85315e4142d5ff561aeb2a55a1a1d5d056264c",
+    "docs/refactoring/vnext/reuse_audit/tx00_current/delta.json": "f1831de8e27e1a5f9f92ff0af49aeb251a995d79066c54ad56d21d270501be4c",
+    "docs/refactoring/vnext/reuse_audit/tx00_current/closure.md": "9ae7f25f7427359da9a2d41bb9c502c0f56173d95966d47bab564d93e2107af0"
+  },
+  "source_files": 47,
+  "function_definitions": 712,
+  "historical_retained_unchanged": 679,
+  "historical_retained_changed": 13,
+  "added_recovery_definitions": 20,
+  "removed_definitions": 0,
+  "caller_input_files": 510,
+  "direct_static_references": 459,
+  "route_rows": 22,
+  "independent_boundaries": {
+    "passed": 14,
+    "failed": 0,
+    "exit_code": 0,
+    "receipt": "independent-boundaries.json"
+  },
+  "independent_checker": {
+    "exit_code": 0,
+    "receipt": "independent-checker.json",
+    "evidence_outputs_unchanged": true
+  },
+  "existing_toss_regression": {
+    "passed": 36,
+    "failed": 0,
+    "exit_code": 0,
+    "receipt": "existing-toss-tests.json"
+  },
+  "product_code_changes": 0,
+  "product_test_changes": 0,
+  "configuration_changes": 0,
+  "historical_evidence_rewrites": 0,
+  "code_deletions": 0,
+  "new_order_code": false,
+  "live_or_cloud_calls": false,
+  "production_data_deletion": false,
+  "other_ticket_started": false,
+  "toss_data_only_preserved": true,
+  "existing_cloud_and_exchange_paths_preserved": true,
+  "free_gateway_configuration_unchanged": true,
+  "free_gateway_invoked_this_ticket": false,
+  "model_fallback": false,
+  "production_gate": "NOT_CERTIFIED_BY_STATIC_AUDIT",
+  "primary_workspace_application": "PENDING",
+  "limits": [
+    "Static definitions/import-qualified references do not prove deployed execution or live/testnet capability.",
+    "Unresolved dynamic receivers stay UNKNOWN; no all-five adapter completion or runtime caller claim.",
+    "Raw hashes bind canonical LF checkout; original CRLF/user edits are separately preserved and normalized only for equivalence checks.",
+    "Checker requires Python3.12.3 AST serialization and valid tracked Git input enumeration.",
+    "Existing VN09 full2119 PASS is previous-source evidence, not rerun or claimed as current-ticket testing."
+  ],
+  "final_metadata_verification": {
+    "receipt": "docs/refactoring/runs/20261023-v3/tx00-current/final-scope-status-validation.json",
+    "passed": 20,
+    "exit_code": 0,
+    "canonical_cli_exit": 0,
+    "other_50_task_objects_preserved": true
+  }
+}

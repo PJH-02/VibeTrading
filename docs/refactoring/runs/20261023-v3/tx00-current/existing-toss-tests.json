@@ -1,0 +1,31 @@
+{
+  "label": "existing-toss-fixed-harness",
+  "baseline": false,
+  "source": "/home/pjh/.codex/worktrees/v3-local-candidate/vibetrading",
+  "exit_code": 0,
+  "elapsed_seconds": 4.612806994002312,
+  "base": "/tmp/vt-tx00-current-existing-toss-fixed-harness-yiz3avk7",
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_tx00_toss_data_only.py",
+    "tests/test_toss_daymarket.py"
+  ],
+  "tests": {
+    "passed": 36,
+    "failed": 0,
+    "skipped": 0
+  },
+  "source_changed": [],
+  "stdout_tail": "....................................                                     [100%]\n36 passed in 2.71s\n"
+}

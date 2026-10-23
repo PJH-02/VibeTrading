@@ -224,7 +224,9 @@
         "VN00"
       ],
       "historical_status": "IN_PROGRESS",
-      "scope_disposition": "REUSE_AUDIT"
+      "scope_disposition": "REUSE_AUDIT",
+      "current_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "completion_scope": "STATIC_REUSE_AUDIT_NO_PRODUCT_DIFF"
     },
     {
       "task_id": "TX01",
@@ -478,6 +480,13 @@
       "scope": "DRY_RUN_PROOF_ONLY",
       "source_sha": "ded3ac7f6c23ff6fb9d4194b6b9f55f2ef7da083",
       "receipt": "docs/refactoring/runs/20261023-v3/vn09/acceptance.json"
+    },
+    {
+      "task_id": "TX00",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "scope": "LOCAL_STATIC_REUSE_AUDIT_ONLY",
+      "source_sha": "fa2478e5ca15b92d1db69d1cc7e0d8f7266b7146",
+      "receipt": "docs/refactoring/runs/20261023-v3/tx00-current/acceptance.json"
     }
   ]
 }

@@ -1,0 +1,119 @@
+{
+  "decision": "FAIL",
+  "cases": 13,
+  "passed": 9,
+  "failed": 4,
+  "results": [
+    {
+      "case": "module_call",
+      "passed": true,
+      "expected": [
+        "vibetrading.brokers.broker_for_name"
+      ],
+      "actual": [
+        "vibetrading.brokers.broker_for_name"
+      ]
+    },
+    {
+      "case": "parameter_shadow",
+      "passed": true,
+      "expected": [],
+      "actual": []
+    },
+    {
+      "case": "local_import",
+      "passed": true,
+      "expected": [
+        "vibetrading.brokers.broker_for_name"
+      ],
+      "actual": [
+        "vibetrading.brokers.broker_for_name"
+      ]
+    },
+    {
+      "case": "reassigned",
+      "passed": true,
+      "expected": [],
+      "actual": []
+    },
+    {
+      "case": "nested_once",
+      "passed": true,
+      "expected": [
+        "vibetrading.brokers.broker_for_name"
+      ],
+      "actual": [
+        "vibetrading.brokers.broker_for_name"
+      ]
+    },
+    {
+      "case": "class_body",
+      "passed": true,
+      "expected": [
+        "vibetrading.brokers.broker_for_name"
+      ],
+      "actual": [
+        "vibetrading.brokers.broker_for_name"
+      ]
+    },
+    {
+      "case": "unknown_factory_receiver",
+      "passed": false,
+      "expected": [
+        "vibetrading.brokers.broker_for_name"
+      ],
+      "actual": [
+        "vibetrading.brokers.broker_for_name.submit_order",
+        "vibetrading.brokers.broker_for_name"
+      ]
+    },
+    {
+      "case": "ambiguous_import",
+      "passed": true,
+      "expected": [],
+      "actual": []
+    },
+    {
+      "case": "wildcard_shadow",
+      "passed": false,
+      "expected": [],
+      "actual": [
+        "vibetrading.brokers.broker_for_name"
+      ]
+    },
+    {
+      "case": "lambda_shadow",
+      "passed": true,
+      "expected": [],
+      "actual": []
+    },
+    {
+      "case": "relative_package_init",
+      "passed": true,
+      "expected": [
+        "vibetrading.brokers.broker_for_name"
+      ],
+      "actual": [
+        "vibetrading.brokers.broker_for_name"
+      ]
+    },
+    {
+      "case": "git_failure_must_not_scan_untracked",
+      "passed": false,
+      "actual_errors": [],
+      "actual_input_source": "filesystem fallback (git ls-files unavailable)"
+    },
+    {
+      "case": "missing_tracked_candidate_blocks_success",
+      "passed": false,
+      "actual_errors": [],
+      "actual_parse_errors": [
+        {
+          "path": "tests/probe_missing.py",
+          "error": "[Errno 2] No such file or directory: '/tmp/vt-bounded-xn4m9dmt/work/tests/probe_missing.py'"
+        }
+      ]
+    }
+  ],
+  "fault_scope": "Synthetic AST snippets and mocked git results only; no product source/account/network mutation"
+}
