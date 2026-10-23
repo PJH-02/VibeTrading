@@ -9,3 +9,5 @@ Before:236 existing tests passed.23 independent review cases on the old code pro
 Invalid NEW batches stop before action claims/order admission. Existing callback claims and fault/cancel policy remain unchanged; no whole-callback atomic rollback is claimed. Original Signal/OrderIntent wire, exact Decimal values, explicit Kiwoom reference→KIS ETF Paper mapping, TOSS DATA_ONLY, C3/KP/KD Golden and Mock/Mock2 are preserved. CANCEL/REPLACE, existing tick/lot/mode checks, dedup and risk math remain authoritative in existing code. No live readiness, deployment, actual GC/deletion or subsequent ticket work is claimed.
 
 See acceptance.json, scope-review.json, independent-final.json, original-counterexamples.json, full-regression.json and final metadata receipts. Next bounded node is TX02A; it was not started.
+
+Original Windows/WSL checkout application PASS: all174 preexisting dirty entries (153 EOL-only plus substantive edits/deleted/untracked documents) preserved. All24 scoped paths and3 accepted product/test hashes verified, allowing only existing CRLF representation. See original-application.json.

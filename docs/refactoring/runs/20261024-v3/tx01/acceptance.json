@@ -82,7 +82,13 @@
   "free_gateway_invoked_this_ticket": false,
   "model_fallback": false,
   "next_ticket_started": false,
-  "original_workspace_application": "PENDING",
+  "original_workspace_application": {
+    "decision": "PASS",
+    "receipt": "docs/refactoring/runs/20261024-v3/tx01/original-application.json",
+    "preexisting_dirty_entries_preserved": 174,
+    "canonical_paths_verified": 24,
+    "accepted_product_and_test_paths_verified": 3
+  },
   "final_metadata_verification": {
     "receipt": "docs/refactoring/runs/20261024-v3/tx01/final-scope-status-validation.json",
     "passed": 20,

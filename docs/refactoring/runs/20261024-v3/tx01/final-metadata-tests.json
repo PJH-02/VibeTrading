@@ -1,15 +1,15 @@
 {
-  "source_sha": "1d1c2c8f6f0a76745fce9c04208f4e031c444cdd",
-  "base": "/tmp/vt-tx01-final-metadata-x06uaifk",
+  "source_sha": "3cb68e394403b5548c6780c3462758a36a474839",
+  "base": "/tmp/vt-tx01-final-metadata-khwhlgdp",
   "status": "PASS",
   "profiles": [
     {
       "profile": "tooling-os",
-      "source_sha": "1d1c2c8f6f0a76745fce9c04208f4e031c444cdd",
+      "source_sha": "3cb68e394403b5548c6780c3462758a36a474839",
       "exit_code": 0,
-      "elapsed_seconds": 0.35681256499083247,
+      "elapsed_seconds": 0.3592805469961604,
       "source_files_changed": [],
-      "stdout_tail": "....................                                                     [100%]\n20 passed in 0.10s\n",
+      "stdout_tail": "....................                                                     [100%]\n20 passed in 0.11s\n",
       "status": "PASS"
     }
   ],
