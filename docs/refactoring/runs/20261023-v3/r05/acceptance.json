@@ -28,7 +28,13 @@
   "ast_review": "C3 final guard/sizing and shared KP/KD function unchanged; history alignment/readiness and all remaining runtime/account/order/side/quantity/price/timestamp/mode code AST-identical",
   "frozen_oracle": "docs/tickets/R05-before-oracle.py copied from base; existing test/golden assertions untouched",
   "independent_artifacts_private": "/home/pjh/.local/state/codex-opencode/runs/v3-r05-independent-0d77f23422",
-  "primary_workspace": "PENDING_APPLICATION",
+  "primary_workspace": "APPLIED_AND_VERIFIED",
   "other_tickets_started": false,
-  "deployment_or_live_order_calls": false
+  "deployment_or_live_order_calls": false,
+  "primary_application": {
+    "receipt": "original-application.json",
+    "runtime_receipt": "original-runtime.json",
+    "source_files_verified": 8,
+    "actual_original_etf_module_help_exit": 0
+  }
 }

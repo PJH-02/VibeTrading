@@ -1,0 +1,20 @@
+{
+  "decision": "PASS",
+  "actual_original_sources_bound_readonly": true,
+  "original_workspace": "/mnt/c/Users/박제형/Desktop/VibeTrading",
+  "checks": [
+    {
+      "check": "kr-imports",
+      "exit_code": 0,
+      "stdout_tail": "Original KR calculators and legacy API PASS\n",
+      "stderr_tail": ""
+    },
+    {
+      "check": "module-help",
+      "exit_code": 0,
+      "stdout_tail": "usage: vibetrading.etf_trading [-h] [--warmup] {check,run}\n\npositional arguments:\n  {check,run}\n\noptions:\n  -h, --help   show this help message and exit\n  --warmup\n",
+      "stderr_tail": ""
+    }
+  ],
+  "isolation": "fresh HOME, network/PID namespaces; only explicit public source/package files mounted; no .env/config/accounts/data mounted"
+}
