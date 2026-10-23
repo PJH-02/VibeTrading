@@ -13,6 +13,7 @@ import pandas as pd
 
 from .etf_reference import make_features, rolling_z1
 from .etf_csv_history import CsvStrategyHistory, ETF_HISTORY_ROLES
+from .strategies.kr.c3 import open_decision
 from .providers.kiwoom import KiwoomAuthClient, KST, _abs_decimal
 
 
@@ -142,6 +143,4 @@ class EtfHistory:
             raise RuntimeError('C3 discount history incomplete')
         mis = float(np.log(etf_open / index_open) - ratios.median())
         sigma = float(ix.close.pct_change(fill_method=None).tail(20).std(ddof=1) * np.sqrt(252))
-        if not np.isfinite([z, mis, sigma]).all() or sigma <= 0:
-            raise RuntimeError('C3 regression/volatility incomplete')
-        return (min(2., .30 / sigma) if z >= 1 and mis <= 0 else 0.), {'z':z, 'mis':mis, 'sigma':sigma}
+        return open_decision(z, mis, sigma)
