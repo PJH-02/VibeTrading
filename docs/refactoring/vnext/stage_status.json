@@ -611,13 +611,13 @@
   ],
   "primary_workspace_application": {
     "status": "PASS",
-    "receipt": "docs/refactoring/runs/20261023-v3/vn08/original-application.json",
-    "applied_head": "013224979acb790ceab49b9f13f65b797ee9399c",
-    "accepted_source_sha": "8f3e3b761be794f9636a81603b8073074c293b79",
+    "receipt": "docs/refactoring/runs/20261023-v3/vn09/original-application.json",
+    "applied_head": "4469ab0bd124ba48ffbe1c0143ef1b251c2ddc81",
+    "accepted_source_sha": "ded3ac7f6c23ff6fb9d4194b6b9f55f2ef7da083",
     "original_workspace": "/mnt/c/Users/박제형/Desktop/VibeTrading",
     "preexisting_dirty_entries_preserved": 174,
-    "scope": "VN08 local reader/storage recovery and evidence applied; stop before VN09",
-    "previous_application_receipt": "docs/refactoring/runs/20261023-v3/vn07b/original-application.json"
+    "scope": "VN09 local proof-only GC candidate planning and non-executable proposed intent applied; stop before any other ticket",
+    "previous_application_receipt": "docs/refactoring/runs/20261023-v3/vn08/original-application.json"
   },
   "refactoring_scope_revision": {
     "authority": "Explicit user instruction, 2026-10-23",
