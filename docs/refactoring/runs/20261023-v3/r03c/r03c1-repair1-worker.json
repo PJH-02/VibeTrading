@@ -1,0 +1,111 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "migrate",
+  "worker_process": {
+    "exit_code": 0,
+    "elapsed_seconds": 75.05857047299651,
+    "relay_http_statuses": [],
+    "served_models": [],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-r03c1-repair1-70ec176c",
+  "usage_reported": [
+    {
+      "total": 4813,
+      "input": 2572,
+      "output": 127,
+      "reasoning": 66,
+      "cache": {
+        "write": 0,
+        "read": 2048
+      }
+    },
+    {
+      "total": 40741,
+      "input": 36023,
+      "output": 96,
+      "reasoning": 14,
+      "cache": {
+        "write": 0,
+        "read": 4608
+      }
+    },
+    {
+      "total": 58972,
+      "input": 18231,
+      "output": 103,
+      "reasoning": 62,
+      "cache": {
+        "write": 0,
+        "read": 40576
+      }
+    },
+    {
+      "total": 77407,
+      "input": 16544,
+      "output": 50,
+      "reasoning": 2061,
+      "cache": {
+        "write": 0,
+        "read": 58752
+      }
+    },
+    {
+      "total": 90465,
+      "input": 10663,
+      "output": 666,
+      "reasoning": 3872,
+      "cache": {
+        "write": 0,
+        "read": 75264
+      }
+    },
+    {
+      "total": 90967,
+      "input": 4592,
+      "output": 460,
+      "reasoning": 27,
+      "cache": {
+        "write": 0,
+        "read": 85888
+      }
+    },
+    {
+      "total": 91119,
+      "input": 614,
+      "output": 99,
+      "reasoning": 38,
+      "cache": {
+        "write": 0,
+        "read": 90368
+      }
+    },
+    {
+      "total": 91855,
+      "input": 274,
+      "output": 272,
+      "reasoning": 429,
+      "cache": {
+        "write": 0,
+        "read": 90880
+      }
+    }
+  ],
+  "base_sha": "04e4d57ff8ad375c3f79ff3f05f644bd40de0569",
+  "scope": [
+    "scripts/dev/agent_task.py",
+    "scripts/dev/agent_run.py",
+    "tests/refactoring/test_agent_task.py",
+    "tests/refactoring/test_agent_run.py"
+  ],
+  "output_sha256": {
+    "scripts/dev/agent_task.py": "94b2901a2ba09d1ef2564516800051040bfd44055a098a955599f891c969427c",
+    "scripts/dev/agent_run.py": "09c37384d807f3766b827a9c76c6d4670a41b37f592e3a45cb36db2a55f231b0",
+    "tests/refactoring/test_agent_task.py": "f2e8f0bcec6c835e0292f149965aae61c9d03cc7541da25a2922668c58d72947",
+    "tests/refactoring/test_agent_run.py": "e1b567a584b35a60a612e98d194055f35bc229b9cc4dfba42f9bd00e095d9128"
+  },
+  "automatic_acceptance": false
+}

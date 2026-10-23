@@ -62,6 +62,8 @@ _GLOB_CHARS = set("*?[]{}!")
 _HEX64 = re.compile(r"^[0-9a-f]{64}$")
 _GIT_SHA = re.compile(r"^[0-9a-f]{40,64}$")
 
+PATH_MAP_CANONICAL = Path("docs") / "refactoring" / "vnext" / "path_map.json"
+
 _BLOCKED_COMPONENTS = {
     ".git",
     ".ssh",
@@ -243,6 +245,229 @@ def _existing_regular_file(root, rel, label):
     return target
 
 
+def _validate_prefix_string(value, label):
+    prefix = _require_nonempty_str(value, label)
+    if not prefix.endswith("/"):
+        raise ValueError(f"{label} must end with '/': {value!r}")
+    _validate_path_string(prefix[:-1], label)
+    return prefix
+
+
+def _apply_root_move(rel, move):
+    source, target = move
+    return target + rel[len(source):]
+
+
+def _validate_path_map(value):
+    """Validate an optional schema-1 path map without consulting the filesystem."""
+    value = _require_dict(value, "path_map.json")
+    schema = value.get("schema_version")
+    if type(schema) is not int or schema != 1:
+        raise ValueError("path_map.json schema_version must be 1")
+
+    raw_moves = value.get("root_moves")
+    if not isinstance(raw_moves, list):
+        raise ValueError("path_map.json root_moves must be a list")
+    moves = []
+    for index, raw in enumerate(raw_moves):
+        if not isinstance(raw, dict):
+            raise ValueError(f"path_map.json root_moves[{index}] must be an object")
+        source = _validate_prefix_string(
+            raw.get("from"), f"path_map.json root_moves[{index}].from"
+        )
+        target = _validate_prefix_string(
+            raw.get("to"), f"path_map.json root_moves[{index}].to"
+        )
+        applies_to = raw.get("applies_to")
+        if applies_to is not None and not isinstance(applies_to, str):
+            raise ValueError(
+                f"path_map.json root_moves[{index}].applies_to must be a string"
+            )
+        moves.append((source, target))
+
+    raw_files = value.get("files", [])
+    if not isinstance(raw_files, list):
+        raise ValueError("path_map.json files must be a list")
+    files = {}
+    for index, raw in enumerate(raw_files):
+        if not isinstance(raw, dict):
+            raise ValueError(f"path_map.json files[{index}] must be an object")
+        source = _validate_path_string(
+            _require_nonempty_str(
+                raw.get("from"), f"path_map.json files[{index}].from"
+            ),
+            f"path_map.json files[{index}].from",
+        )
+        target = _validate_path_string(
+            _require_nonempty_str(
+                raw.get("to"), f"path_map.json files[{index}].to"
+            ),
+            f"path_map.json files[{index}].to",
+        )
+        for hash_key in ("move_only_sha256", "move_only_ast_sha256"):
+            if hash_key in raw and not isinstance(raw[hash_key], str):
+                raise ValueError(
+                    f"path_map.json files[{index}].{hash_key} must be a string"
+                )
+        if source in files and files[source] != target:
+            raise ValueError(
+                f"path_map.json has conflicting files entries for {source!r}"
+            )
+        files[source] = target
+
+    ambiguous = value.get("ambiguous_targets", [])
+    if not isinstance(ambiguous, list):
+        raise ValueError("path_map.json ambiguous_targets must be a list")
+    if ambiguous:
+        raise ValueError("path_map.json ambiguous_targets must be empty")
+
+    for index, first in enumerate(moves):
+        for second in moves[index + 1:]:
+            first_source, first_target = first
+            second_source, second_target = second
+            if first_source == second_source:
+                if first_target != second_target:
+                    raise ValueError(
+                        "path_map.json has conflicting root_moves for "
+                        f"{first_source!r}"
+                    )
+                continue
+            if first_source.startswith(second_source):
+                probe = first_source + "probe"
+            elif second_source.startswith(first_source):
+                probe = second_source + "probe"
+            else:
+                continue
+            if _apply_root_move(probe, first) != _apply_root_move(probe, second):
+                raise ValueError(
+                    "path_map.json has conflicting overlapping root_moves for "
+                    f"{first_source!r} and {second_source!r}"
+                )
+
+    for source, target in files.items():
+        candidates = {
+            _apply_root_move(source, move)
+            for move in moves
+            if source.startswith(move[0])
+        }
+        if candidates and candidates != {target}:
+            raise ValueError(
+                f"path_map.json has conflicting target candidates for {source!r}"
+            )
+
+    return {"root_moves": moves, "files": files}
+
+
+def _load_path_map(root):
+    """Return (validated map or None, sha256 or None) from one file generation.
+
+    The digest and decoded value must come from the exact same bytes; reading or
+    hashing the file twice would let a concurrent replacement pin one generation
+    while translating paths from another. Symlinks are refused before opening and
+    O_NOFOLLOW closes the final-component substitution race.
+    """
+    rel = str(PATH_MAP_CANONICAL)
+    _check_no_symlink(root, rel, "path_map.json")
+    target = root / rel
+    if not target.exists():
+        return None, None
+    if not target.is_file():
+        raise ValueError(f"path_map.json must be a regular file: {rel!r}")
+    try:
+        fd = os.open(target, os.O_RDONLY | os.O_NOFOLLOW)
+    except FileNotFoundError:
+        return None, None
+    except OSError as exc:
+        if exc.errno == errno.ELOOP:
+            raise ValueError(
+                f"path_map.json traverses a symlink: {rel!r}"
+            ) from exc
+        raise ValueError(f"cannot read path_map.json: {exc}") from exc
+    try:
+        if not stat.S_ISREG(os.fstat(fd).st_mode):
+            raise ValueError(f"path_map.json must be a regular file: {rel!r}")
+        chunks = []
+        while True:
+            chunk = os.read(fd, 1024 * 1024)
+            if not chunk:
+                break
+            chunks.append(chunk)
+    except OSError as exc:
+        raise ValueError(f"cannot read path_map.json: {exc}") from exc
+    finally:
+        os.close(fd)
+    data = b"".join(chunks)
+    digest = hashlib.sha256(data).hexdigest()
+    try:
+        value = json.loads(data.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError(f"cannot parse path_map.json: {exc}") from exc
+    return _validate_path_map(value), digest
+
+
+def _is_current_map_path(rel, mapping):
+    if rel in mapping["files"].values():
+        return True
+    return any(rel.startswith(move[1]) for move in mapping["root_moves"])
+
+
+def _translate_path(rel, mapping):
+    if mapping is None:
+        return rel
+    if _is_current_map_path(rel, mapping):
+        return rel
+
+    candidates = set()
+    exact = mapping["files"].get(rel)
+    if exact is not None:
+        candidates.add(exact)
+    for move in mapping["root_moves"]:
+        if rel.startswith(move[0]):
+            candidates.add(_apply_root_move(rel, move))
+    if len(candidates) > 1:
+        raise ValueError(
+            f"path_map.json has multiple target candidates for {rel!r}"
+        )
+    if not candidates:
+        return rel
+    translated = candidates.pop()
+    _validate_path_string(translated, "path_map target")
+    return translated
+
+
+def _translate_paths(paths, mapping):
+    if mapping is None:
+        return list(paths)
+    translated = []
+    seen = set()
+    for rel in paths:
+        current = _translate_path(rel, mapping)
+        _validate_path_string(current, "translated path")
+        if current not in seen:
+            seen.add(current)
+            translated.append(current)
+    return translated
+
+
+def _translate_forbidden_pattern(pattern, mapping):
+    if mapping is None:
+        return pattern
+    if _is_current_map_path(pattern, mapping):
+        return pattern
+    candidates = set()
+    exact = mapping["files"].get(pattern)
+    if exact is not None:
+        candidates.add(exact)
+    for move in mapping["root_moves"]:
+        if pattern.startswith(move[0]):
+            candidates.add(_apply_root_move(pattern, move))
+    if len(candidates) > 1:
+        raise ValueError(
+            f"path_map.json has multiple target candidates for {pattern!r}"
+        )
+    return candidates.pop() if candidates else pattern
+
+
 def _validated_root(root):
     """Return an absolute root after rejecting symlinked root/ancestor components."""
     if isinstance(root, str) and not root.strip():
@@ -297,19 +522,38 @@ def _matches_forbidden(rel, patterns):
     return False
 
 
-def _validate_forbidden_patterns(caller, canonical):
+def _validate_forbidden_patterns(caller, canonical, mapping=None):
     caller_list = _require_str_list(caller, "forbidden_paths")
     canonical_list = _require_str_list(canonical, "canonical forbidden_paths")
-    missing = [pattern for pattern in canonical_list if pattern not in caller_list]
+    variants = []
+    for pattern in canonical_list:
+        translated = _translate_forbidden_pattern(pattern, mapping)
+        variants.append((pattern, translated))
+    missing = [
+        pattern
+        for pattern, translated in variants
+        if pattern not in caller_list and translated not in caller_list
+    ]
     if missing:
         raise ValueError(
             "forbidden_paths must retain canonical restrictions; missing="
             + json.dumps(missing, ensure_ascii=False)
         )
-    return caller_list
+
+    output = list(caller_list)
+    if mapping is not None:
+        for pattern in caller_list:
+            translated = _translate_forbidden_pattern(pattern, mapping)
+            if translated not in output:
+                output.append(translated)
+    for pattern, translated in variants:
+        for item in (pattern, translated):
+            if item not in output:
+                output.append(item)
+    return output
 
 
-def _canonical_edit_scope(raw_record, family):
+def _canonical_edit_scope(raw_record, family, mapping=None):
     raw = raw_record.get("edit_paths")
     if family == "R/O":
         if not isinstance(raw, list) or not raw:
@@ -320,7 +564,7 @@ def _canonical_edit_scope(raw_record, family):
         raise ValueError("canonical edit_paths must be a list")
 
     entries = []
-    seen = set()
+    seen = {}
     for item in raw:
         if isinstance(item, str):
             raw_path = item
@@ -339,11 +583,15 @@ def _canonical_edit_scope(raw_record, family):
         is_dir_scope = raw_path.endswith("/")
         concrete = raw_path[:-1] if is_dir_scope else raw_path
         _validate_path_string(concrete, "canonical edit_paths.path")
+        concrete = _translate_path(concrete, mapping)
+        _validate_path_string(concrete, "canonical edit_paths.path")
         if is_dir_scope and family == "R/O":
             raise ValueError("R/O canonical edit_paths must be concrete files")
         if concrete in seen:
+            if mapping is not None and seen[concrete] == (action, is_dir_scope):
+                continue
             raise ValueError(f"duplicate canonical edit path: {concrete}")
-        seen.add(concrete)
+        seen[concrete] = (action, is_dir_scope)
         entries.append({"path": concrete, "action": action, "directory": is_dir_scope})
     return entries
 
@@ -473,8 +721,11 @@ def make_packet(root, task_id, spec):
     spec = _validate_spec(spec)
     _require_canonical_files(root)
 
+    mapping, map_hash = _load_path_map(root)
     initial_canonical_hashes = {str(rel): _sha256_file(root / rel)
                                 for rel in (status_mod.TICKETS_CANONICAL, status_mod.STAGE_CANONICAL)}
+    if map_hash is not None:
+        initial_canonical_hashes[str(PATH_MAP_CANONICAL)] = map_hash
     status = status_mod.load_status(root)
     _check_ready(status, task_id)
 
@@ -487,7 +738,7 @@ def make_packet(root, task_id, spec):
 
     prerequisites = _require_str_list(record.get("depends_on"), f"{task_id}.depends_on")
     canonical_forbidden = _validate_forbidden_patterns(
-        spec["forbidden_paths"], record.get("forbidden_paths") or []
+        spec["forbidden_paths"], record.get("forbidden_paths") or [], mapping
     )
 
     canonical_contracts = []
@@ -509,15 +760,18 @@ def make_packet(root, task_id, spec):
 
     provider, route = _model_route(tickets, spec["profile"], spec["model"])
 
+    read_paths = _translate_paths(spec["read_paths"], mapping)
+    edit_paths = _translate_paths(spec["edit_paths"], mapping)
+
     source_hashes = {}
-    for rel in spec["read_paths"]:
+    for rel in read_paths:
         if _matches_forbidden(rel, canonical_forbidden):
             raise ValueError(f"read path matches a forbidden pattern: {rel!r}")
         target = _existing_regular_file(root, rel, "read_paths[]")
         source_hashes[rel] = _sha256_file(target)
 
-    edit_scope = _canonical_edit_scope(record, family)
-    for rel in spec["edit_paths"]:
+    edit_scope = _canonical_edit_scope(record, family, mapping)
+    for rel in edit_paths:
         if _matches_forbidden(rel, canonical_forbidden):
             raise ValueError(f"edit path matches a forbidden pattern: {rel!r}")
         _validate_path_string(rel, "edit_paths[]")
@@ -536,6 +790,7 @@ def make_packet(root, task_id, spec):
             _check_missing_ancestors(root, rel, "edit_paths[]")
             source_hashes[rel] = None
 
+    _final_mapping, final_map_hash = _load_path_map(root)
     canonical_hashes = {
         str(status_mod.TICKETS_CANONICAL): _sha256_file(
             root / status_mod.TICKETS_CANONICAL
@@ -544,6 +799,8 @@ def make_packet(root, task_id, spec):
             root / status_mod.STAGE_CANONICAL
         ),
     }
+    if final_map_hash is not None:
+        canonical_hashes[str(PATH_MAP_CANONICAL)] = final_map_hash
 
     if canonical_hashes != initial_canonical_hashes:
         raise ValueError("canonical metadata changed while building packet")
@@ -555,9 +812,9 @@ def make_packet(root, task_id, spec):
         "base_sha": head,
         "prerequisites": prerequisites,
         "objective": spec["objective"],
-        "read_paths": spec["read_paths"],
-        "edit_paths": spec["edit_paths"],
-        "forbidden_paths": spec["forbidden_paths"],
+        "read_paths": read_paths,
+        "edit_paths": edit_paths,
+        "forbidden_paths": canonical_forbidden,
         "contract_ids": spec["contract_ids"],
         "implementation_steps": spec["implementation_steps"],
         "acceptance": spec["acceptance"],
@@ -631,6 +888,14 @@ def verify_source(root, packet):
         target = _existing_regular_file(root, rel, "canonical_hashes")
         if _sha256_file(target) != expected:
             raise ValueError(f"canonical metadata changed: {rel}")
+
+    map_rel = str(PATH_MAP_CANONICAL)
+    if map_rel not in canonical_hashes:
+        _check_no_symlink(root, map_rel, "canonical metadata")
+        if (root / map_rel).exists():
+            raise ValueError(
+                "path_map.json was added after a packet was pinned without a map"
+            )
 
     read_paths = _require_str_list(packet.get("read_paths"), "packet.read_paths")
     edit_paths = _require_str_list(packet.get("edit_paths"), "packet.edit_paths")

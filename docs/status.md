@@ -8,3 +8,5 @@ Authority: [tickets](refactoring/vnext/tickets_production.json), [stages](refact
 - Original VN/TX: 14 local complete / 23 incomplete / 14 not started. VN20 actual cutover/deletion external.
 - R03 src migration now in progress: pure relocation, then path/packaging/Docker and release/tool compatibility. R04/R05 and remaining local VN/TX work still open.
 - Local Docker engine verified through Windows named pipe; current server untouched. Existing NATS/rollback/data retained. No deploy, real orders, push or merge.
+
+현재 후보의 정식 소스 경로는 `src/vibetrading/`입니다. 저장소 루트에서 `python3 -m pip install --no-deps -e .`로 설치한 후 기존 `python main.py` 또는 `python -m vibetrading.cli` 진입점을 사용합니다. 도메인별 최종 구조는 후속 R04/R05 및 VN/TX 티켓에서 분리합니다.

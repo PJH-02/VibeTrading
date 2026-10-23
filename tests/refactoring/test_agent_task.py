@@ -234,6 +234,37 @@ def _write_file(root: Path, rel: str, content: str = "sample\n") -> Path:
     return target
 
 
+PATH_MAP_REL = "docs/refactoring/vnext/path_map.json"
+
+
+def _path_map(**overrides):
+    value = {
+        "schema_version": 1,
+        "root_moves": [
+            {
+                "from": "vibetrading/",
+                "to": "src/vibetrading/",
+                "applies_to": "One-to-one namespace root move only",
+            }
+        ],
+        "files": [
+            {
+                "from": "vibetrading/target.py",
+                "to": "src/vibetrading/target.py",
+                "move_only_sha256": "a" * 64,
+                "move_only_ast_sha256": "b" * 64,
+            }
+        ],
+        "ambiguous_targets": [],
+    }
+    value.update(overrides)
+    return value
+
+
+def _write_path_map(root: Path, value=None) -> Path:
+    return _write_file(root, PATH_MAP_REL, json.dumps(value or _path_map()))
+
+
 def _git(root: Path, *args):
     return subprocess.run(
         ["git", *args], cwd=str(root), check=True, capture_output=True, text=True
@@ -327,6 +358,62 @@ def _ro_spec(**overrides):
     return spec
 
 
+def _mapped_tasks():
+    tasks = _default_tasks()
+    tasks[1]["read_paths"] = ["vibetrading/target.py", "vibetrading/pkg/mod.py"]
+    tasks[1]["edit_paths"] = [
+        {"path": "vibetrading/target.py", "action": "MODIFY"},
+        {"path": "vibetrading/new.py", "action": "ADD"},
+        {"path": "vibetrading/pkg/", "action": "MODIFY"},
+    ]
+    return tasks
+
+
+def _mapped_files(extra=None):
+    files = {
+        "src/vibetrading/target.py": "print('target')\n",
+        "src/vibetrading/pkg/mod.py": "print('mod')\n",
+    }
+    files.update(extra or {})
+    return files
+
+
+def _mapped_setup(tmp_path, *, tasks=None, files=None, map_value=None):
+    root = _setup(
+        tmp_path,
+        tasks=tasks or _mapped_tasks(),
+        files=_mapped_files(files),
+    )
+    _write_path_map(root, map_value)
+    return root
+
+
+def _mapped_spec(**overrides):
+    spec = _default_spec(
+        read_paths=["vibetrading/target.py", "vibetrading/pkg/mod.py"],
+        edit_paths=[
+            "vibetrading/target.py",
+            "vibetrading/new.py",
+            "vibetrading/pkg/mod.py",
+        ],
+    )
+    spec.update(overrides)
+    return spec
+
+
+def _mapped_current_spec(**overrides):
+    spec = _default_spec(
+        read_paths=["src/vibetrading/target.py", "src/vibetrading/pkg/mod.py"],
+        edit_paths=[
+            "src/vibetrading/target.py",
+            "src/vibetrading/new.py",
+            "src/vibetrading/pkg/mod.py",
+        ],
+    )
+    spec.update(overrides)
+    return spec
+
+
 def _results(commands):
     return [
         {
@@ -368,6 +455,260 @@ def test_make_packet_ready_with_exact_hashes(tmp_path):
     assert packet["canonical_hashes"]["docs/refactoring/vnext/stage_status.json"] == _sha(
         root / "docs/refactoring/vnext/stage_status.json"
     )
+
+
+def test_path_map_translates_exact_prefix_and_directory_scope(tmp_path):
+    root = _mapped_setup(tmp_path)
+    packet = dev.make_packet(root, "VN01", _mapped_spec())
+
+    assert packet["read_paths"] == [
+        "src/vibetrading/target.py",
+        "src/vibetrading/pkg/mod.py",
+    ]
+    assert packet["edit_paths"] == [
+        "src/vibetrading/target.py",
+        "src/vibetrading/new.py",
+        "src/vibetrading/pkg/mod.py",
+    ]
+    assert (
+        packet["source_hashes"]["src/vibetrading/target.py"]
+        == _sha(root / "src/vibetrading/target.py")
+    )
+    assert packet["source_hashes"]["src/vibetrading/new.py"] is None
+    assert (
+        packet["source_hashes"]["src/vibetrading/pkg/mod.py"]
+        == _sha(root / "src/vibetrading/pkg/mod.py")
+    )
+    assert PATH_MAP_REL in packet["canonical_hashes"]
+    assert packet["canonical_hashes"][PATH_MAP_REL] == _sha(root / PATH_MAP_REL)
+    assert dev.verify_source(root, packet) is True
+
+
+def test_path_map_old_and_current_specs_converge(tmp_path):
+    root = _mapped_setup(tmp_path)
+    old = dev.make_packet(root, "VN01", _mapped_spec())
+    current = dev.make_packet(root, "VN01", _mapped_current_spec())
+
+    assert old["read_paths"] == current["read_paths"]
+    assert old["edit_paths"] == current["edit_paths"]
+    assert old["source_hashes"] == current["source_hashes"]
+    assert old["contract_ids"] == current["contract_ids"]
+
+
+def test_path_map_does_not_expand_canonical_scope(tmp_path):
+    root = _mapped_setup(
+        tmp_path,
+        files={"src/vibetrading/other.py": "print('other')\n"},
+    )
+    with pytest.raises(ValueError, match="outside canonical scope"):
+        dev.make_packet(
+            root,
+            "VN01",
+            _mapped_spec(edit_paths=["vibetrading/other.py"]),
+        )
+
+
+def test_path_map_translates_canonical_forbidden_under_old_prefix(tmp_path):
+    forbidden = list(CANON_FORBIDDEN) + ["vibetrading/private/**"]
+    tasks = _mapped_tasks()
+    tasks[1]["forbidden_paths"] = forbidden
+    root = _mapped_setup(tmp_path, tasks=tasks)
+
+    with pytest.raises(ValueError, match="forbidden pattern"):
+        dev.make_packet(
+            root,
+            "VN01",
+            _mapped_spec(
+                read_paths=["vibetrading/private/secret.py"],
+                forbidden_paths=forbidden,
+            ),
+        )
+
+    packet = dev.make_packet(
+        root, "VN01", _mapped_spec(forbidden_paths=forbidden)
+    )
+    assert "vibetrading/private/**" in packet["forbidden_paths"]
+    assert "src/vibetrading/private/**" in packet["forbidden_paths"]
+
+    translated = [
+        "src/vibetrading/private/**" if item == "vibetrading/private/**" else item
+        for item in forbidden
+    ]
+    translated_packet = dev.make_packet(
+        root, "VN01", _mapped_spec(forbidden_paths=translated)
+    )
+    assert "vibetrading/private/**" in translated_packet["forbidden_paths"]
+    assert "src/vibetrading/private/**" in translated_packet["forbidden_paths"]
+
+
+@pytest.mark.parametrize(
+    "map_value,match",
+    [
+        (
+            _path_map(ambiguous_targets=["vibetrading/target.py"]),
+            "ambiguous_targets",
+        ),
+        (
+            _path_map(
+                files=[
+                    {"from": "vibetrading/x.py", "to": "src/a.py"},
+                    {"from": "vibetrading/x.py", "to": "src/b.py"},
+                ]
+            ),
+            "conflicting files entries",
+        ),
+        (
+            _path_map(
+                files=[
+                    {"from": "vibetrading/target.py", "to": "src/other/target.py"}
+                ]
+            ),
+            "conflicting target candidates",
+        ),
+        (
+            _path_map(
+                root_moves=[
+                    {"from": "vibetrading/", "to": "src/vibetrading/"},
+                    {"from": "vibetrading/pkg/", "to": "lib/pkg/"},
+                ]
+            ),
+            "conflicting overlapping root_moves",
+        ),
+        (_path_map(root_moves="vibetrading/"), "root_moves must be a list"),
+        (
+            _path_map(files=[{"from": "vibetrading/x.py"}]),
+            "files\\[0\\]\\.to",
+        ),
+        (
+            _path_map(files=[{"from": "../escape.py", "to": "src/x.py"}]),
+            "traversal",
+        ),
+        (
+            _path_map(
+                root_moves=[{"from": "/absolute/", "to": "src/absolute/"}]
+            ),
+            "relative",
+        ),
+        (
+            _path_map(files=[{"from": "vibetrading/x.py", "to": ".env"}]),
+            "blocked",
+        ),
+        (_path_map(schema_version=2), "schema_version"),
+    ],
+)
+def test_invalid_path_map_fails_closed(tmp_path, map_value, match):
+    root = _setup(tmp_path)
+    _write_path_map(root, map_value)
+    with pytest.raises(ValueError, match=match):
+        dev.make_packet(root, "VN01", _default_spec())
+
+
+def test_path_map_symlink_is_rejected_before_reading(tmp_path):
+    root = _setup(tmp_path)
+    outside = tmp_path / "outside-map.json"
+    outside.write_text(json.dumps(_path_map()), encoding="utf-8")
+    target = root / PATH_MAP_REL
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.symlink_to(outside)
+
+    with pytest.raises(ValueError, match="symlink"):
+        dev.make_packet(root, "VN01", _default_spec())
+
+
+def test_verify_source_rejects_path_map_change_and_removal(tmp_path):
+    root = _mapped_setup(tmp_path)
+    packet = dev.make_packet(root, "VN01", _mapped_spec())
+    map_path = root / PATH_MAP_REL
+    original = map_path.read_text(encoding="utf-8")
+
+    map_path.write_text(original + "\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="path_map"):
+        dev.verify_source(root, packet)
+
+    map_path.write_text(original, encoding="utf-8")
+    assert dev.verify_source(root, packet) is True
+
+    map_path.unlink()
+    with pytest.raises(ValueError, match="path_map"):
+        dev.verify_source(root, packet)
+
+
+def test_verify_source_rejects_path_map_added_after_pin(tmp_path):
+    root = _setup(tmp_path)
+    packet = dev.make_packet(root, "VN01", _default_spec())
+    assert PATH_MAP_REL not in packet["canonical_hashes"]
+
+    _write_path_map(root, _path_map())
+    with pytest.raises(ValueError, match="path_map"):
+        dev.verify_source(root, packet)
+
+
+def test_path_map_digest_comes_from_decoded_generation(tmp_path, monkeypatch):
+    root = _mapped_setup(tmp_path)
+    map_path = root / PATH_MAP_REL
+    replacement = map_path.read_text(encoding="utf-8").replace(
+        "src/vibetrading/", "other/vibetrading/"
+    )
+    real_validate = dev._validate_path_map
+
+    def validate_then_replace(value):
+        validated = real_validate(value)
+        map_path.write_text(replacement, encoding="utf-8")
+        return validated
+
+    monkeypatch.setattr(dev, "_validate_path_map", validate_then_replace)
+    mapping, digest = dev._load_path_map(root)
+
+    assert mapping["root_moves"] == [("vibetrading/", "src/vibetrading/")]
+    assert digest != _sha(map_path)
+
+
+@pytest.mark.parametrize("action", ["add", "change", "remove"])
+def test_make_packet_fences_path_map_generation(tmp_path, monkeypatch, action):
+    root = _setup(tmp_path)
+    map_path = root / PATH_MAP_REL
+    if action != "add":
+        _write_path_map(root, _path_map())
+    original_load = dev.status_mod.load_status
+
+    def mutate_then_return(current_root):
+        result = original_load(current_root)
+        if action == "add":
+            _write_path_map(current_root, _path_map())
+        elif action == "change":
+            map_path.write_text(
+                json.dumps(_path_map(root_moves=[])), encoding="utf-8"
+            )
+        else:
+            map_path.unlink()
+        return result
+
+    monkeypatch.setattr(dev.status_mod, "load_status", mutate_then_return)
+    with pytest.raises(ValueError, match="canonical metadata changed"):
+        dev.make_packet(root, "VN01", _default_spec())
+
+
+def test_no_path_map_preserves_legacy_old_paths(tmp_path):
+    tasks = _default_tasks()
+    tasks[1]["read_paths"] = ["vibetrading/target.py"]
+    tasks[1]["edit_paths"] = [{"path": "vibetrading/target.py", "action": "MODIFY"}]
+    root = _setup(
+        tmp_path,
+        tasks=tasks,
+        files={"vibetrading/target.py": "print('legacy')\n"},
+    )
+
+    packet = dev.make_packet(
+        root,
+        "VN01",
+        _default_spec(
+            read_paths=["vibetrading/target.py"],
+            edit_paths=["vibetrading/target.py"],
+        ),
+    )
+    assert packet["read_paths"] == ["vibetrading/target.py"]
+    assert packet["edit_paths"] == ["vibetrading/target.py"]
+    assert PATH_MAP_REL not in packet["canonical_hashes"]
 
 
 def test_ro_ready_packet_uses_registered_scope(tmp_path):

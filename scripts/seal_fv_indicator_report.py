@@ -47,10 +47,10 @@ with (root/'valid_segments.csv').open('w',encoding='utf-8-sig',newline='') as f:
     w=csv.DictWriter(f,fieldnames=list(segments[0]));w.writeheader();w.writerows(segments)
 
 frozen=hashlib.sha256()
-for folder in (Path('strategy'),Path('vibetrading/fv_pilot')):
+for folder in (Path('strategy'),Path('src/vibetrading/fv_pilot')):
     for p in sorted(folder.glob('*.py')):frozen.update(p.name.encode());frozen.update(p.read_bytes())
 for name in ('types.py','market.py','journal.py','calibration.py'):
-    p=Path('vibetrading/fv_mm')/name;frozen.update(name.encode());frozen.update(p.read_bytes())
+    p=Path('src/vibetrading/fv_mm')/name;frozen.update(name.encode());frozen.update(p.read_bytes())
 expected='ed4a84fb46d1f5dc6c24c57033d87037cc59eb322991bc74b85716d17b3d0cbb'
 if frozen.hexdigest()!=expected:raise ValueError('Frozen pilot source changed')
 testroot=ET.parse(root/'tests.xml').getroot();suites=testroot.findall('testsuite')

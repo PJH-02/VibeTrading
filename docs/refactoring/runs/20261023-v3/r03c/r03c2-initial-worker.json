@@ -1,0 +1,245 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "migrate",
+  "worker_process": {
+    "exit_code": 0,
+    "elapsed_seconds": 257.82014782300394,
+    "relay_http_statuses": [],
+    "served_models": [],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-r03c2-initial-35a74673",
+  "usage_reported": [
+    {
+      "total": 4516,
+      "input": 1075,
+      "output": 209,
+      "reasoning": 32,
+      "cache": {
+        "write": 0,
+        "read": 3200
+      }
+    },
+    {
+      "total": 12420,
+      "input": 8050,
+      "output": 125,
+      "reasoning": 21,
+      "cache": {
+        "write": 0,
+        "read": 4224
+      }
+    },
+    {
+      "total": 13454,
+      "input": 1094,
+      "output": 104,
+      "reasoning": 96,
+      "cache": {
+        "write": 0,
+        "read": 12160
+      }
+    },
+    {
+      "total": 13798,
+      "input": 379,
+      "output": 153,
+      "reasoning": 82,
+      "cache": {
+        "write": 0,
+        "read": 13184
+      }
+    },
+    {
+      "total": 14093,
+      "input": 544,
+      "output": 69,
+      "reasoning": 40,
+      "cache": {
+        "write": 0,
+        "read": 13440
+      }
+    },
+    {
+      "total": 14343,
+      "input": 224,
+      "output": 72,
+      "reasoning": 95,
+      "cache": {
+        "write": 0,
+        "read": 13952
+      }
+    },
+    {
+      "total": 27137,
+      "input": 347,
+      "output": 167,
+      "reasoning": 12543,
+      "cache": {
+        "write": 0,
+        "read": 14080
+      }
+    },
+    {
+      "total": 27650,
+      "input": 12816,
+      "output": 498,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 14336
+      }
+    },
+    {
+      "total": 27800,
+      "input": 530,
+      "output": 134,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 27136
+      }
+    },
+    {
+      "total": 28758,
+      "input": 168,
+      "output": 928,
+      "reasoning": 14,
+      "cache": {
+        "write": 0,
+        "read": 27648
+      }
+    },
+    {
+      "total": 29557,
+      "input": 998,
+      "output": 780,
+      "reasoning": 3,
+      "cache": {
+        "write": 0,
+        "read": 27776
+      }
+    },
+    {
+      "total": 30114,
+      "input": 901,
+      "output": 418,
+      "reasoning": 123,
+      "cache": {
+        "write": 0,
+        "read": 28672
+      }
+    },
+    {
+      "total": 32200,
+      "input": 561,
+      "output": 2056,
+      "reasoning": 15,
+      "cache": {
+        "write": 0,
+        "read": 29568
+      }
+    },
+    {
+      "total": 32594,
+      "input": 2136,
+      "output": 160,
+      "reasoning": 218,
+      "cache": {
+        "write": 0,
+        "read": 30080
+      }
+    },
+    {
+      "total": 32827,
+      "input": 481,
+      "output": 218,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 32128
+      }
+    },
+    {
+      "total": 39073,
+      "input": 331,
+      "output": 3443,
+      "reasoning": 2787,
+      "cache": {
+        "write": 0,
+        "read": 32512
+      }
+    },
+    {
+      "total": 39193,
+      "input": 6321,
+      "output": 87,
+      "reasoning": 17,
+      "cache": {
+        "write": 0,
+        "read": 32768
+      }
+    },
+    {
+      "total": 41867,
+      "input": 2374,
+      "output": 175,
+      "reasoning": 278,
+      "cache": {
+        "write": 0,
+        "read": 39040
+      }
+    },
+    {
+      "total": 42096,
+      "input": 538,
+      "output": 214,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 41344
+      }
+    },
+    {
+      "total": 42199,
+      "input": 256,
+      "output": 87,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 41856
+      }
+    },
+    {
+      "total": 43776,
+      "input": 116,
+      "output": 286,
+      "reasoning": 1262,
+      "cache": {
+        "write": 0,
+        "read": 42112
+      }
+    }
+  ],
+  "base_sha": "04e4d57ff8ad375c3f79ff3f05f644bd40de0569",
+  "scope": [
+    "scripts/build_crypto_release.py",
+    "scripts/build_etf_scope_release.py",
+    "scripts/build_telegram_restore_release.py",
+    "scripts/refactoring/build_release_manifest.py",
+    "scripts/refactoring/build_server_candidate.py",
+    "tests/refactoring/test_src_release_paths.py"
+  ],
+  "output_sha256": {
+    "scripts/build_crypto_release.py": "3d06ffeff7e888c8994f3bcae1e40319546a56b8f00f9a811574061fc00a1e7a",
+    "scripts/build_etf_scope_release.py": "bde6a435338e38d12469df69fbdb3d78376b70fab1c352b1f0dd7069c043b98d",
+    "scripts/build_telegram_restore_release.py": "a908d33817edb9cbd0de653f7b4cfd5140ba2a9fb5f4bfef898c2f8119dbba01",
+    "scripts/refactoring/build_release_manifest.py": "9fa5c36efef5a2b860efeb58fe5f5befeda61f75734f0011c5903f8a0120e7f4",
+    "scripts/refactoring/build_server_candidate.py": "26d409dbae53660046a08e4d08303b03735f4acd0d451601eb1cf11bcf7dd7ad",
+    "tests/refactoring/test_src_release_paths.py": "8ce286bf1501abdd74c9e8a0a6107927524b81b74e1db7197f9d9e43388b27d1"
+  },
+  "automatic_acceptance": false
+}

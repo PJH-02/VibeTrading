@@ -1,0 +1,20 @@
+# R03C2 — source layout compatibility for local release builders
+objective: Ensure existing release/export tools consume canonical src sources without changing frozen server/bundle layout or server ownership/merge rules.
+
+base_sha: 04e4d57ff8ad375c3f79ff3f05f644bd40de0569
+prerequisites: R03A/B1/B2 accepted; R03 only authorized.
+model_profile: refactoring; exact model opencode/deepseek-v4.1-flash-free; role migrate.
+forbidden_paths: any file outside explicit edit_paths; .env/credentials, data/DBs, product economics/order/strategy logic, historical receipts/goldens, active P02 rollback edits. No installs, Docker, server/account calls, recursive delegation, model substitution, commits or acceptance claims.
+review_severity: bounded path compatibility reviewed independently by Codex.
+stop_conditions: scope collision, missing dependency, ambiguous source path.
+
+read_paths: scripts/build_crypto_release.py, scripts/build_etf_scope_release.py, scripts/build_telegram_restore_release.py, scripts/refactoring/build_release_manifest.py, scripts/refactoring/build_server_candidate.py. Existing crypto release tests are read-only behavioral context.
+edit_paths: the five source files above; tests/refactoring/test_src_release_paths.py (ADD).
+implementation_steps:
+1. Current source layout is ROOT/src/vibetrading; older frozen source exports can still be ROOT/vibetrading. Resolve physical source root deterministically, reject simultaneous ambiguous roots rather than silently choosing. Do not add an alias, touch P02 script, or change its frozen export paths.
+2. Crypto/ETF/Telegram bundles must contain actual package files (all relevant .py) from canonical src. Preserve their legacy logical tar names vibetrading/... and existing generated Docker COPY targets /app/vibetrading for pinned flat legacy base overlays; these legacy layout contracts must not be blindly converted to src. Keep archive excludes, checksums, service/env/volume safety and non-product entries unchanged. Pure helper/main guard can be added only if needed to test top-level historical writers safely, preserving direct invocation behavior. Never execute them against actual .server_patch, runtime data or remote hosts; use pytest synthetic temporary roots.
+3. build_release_manifest scans actual src files but compares baseline/server hash keys using original logical vibetrading/... names, so relocation alone is not reported as all-new code. Preserve current changed-source/role blockers and not-built status.
+4. build_server_candidate accepts canonical src local exports and old flat baseline/server exports. Normalize ONLY package logical names for matching/selected delta paths, preserve server-only files, same-file baseline merge rules, conflicts and output's flat legacy layout. Do not copy src product tree as unrelated non-product leftovers. Validate no ambiguity or path traversal. Existing flat-only behavior retained; no server access.
+5. New fixtures test flat + src sources, tar payload names/bytes, nonempty complete package selection, manifest logical key comparison, server-only content preservation and local delta matching in both layouts. Contract tests for generated compose remain unchanged. Avoid catch-all exceptions/skips. Independent Codex verification will run actual builder preparation with disposable source snapshots, never actual server source.
+acceptance: only listed files change; pure path/layout behavior, zero product/economic changes; generated overlays remain flat intentionally; no production mutation; exact tests exit0.
+test_commands: python3 -m pytest -q -p no:cacheprovider tests/refactoring/test_src_release_paths.py tests/test_crypto_release.py

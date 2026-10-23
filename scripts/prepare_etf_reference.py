@@ -6,7 +6,7 @@ from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
 repo = root.parent / 'Future_Trading'
-out = root / 'vibetrading' / 'etf_reference.py'
+out = root / 'src' / 'vibetrading' / 'etf_reference.py'
 selected = {
     'jehyeong/intraday/code/collect_intraday_data.py': ['validate', 'unique_bars', 'aggregate_30m'],
     'jehyeong/intraday/code/backtest_intraday_momentum.py': ['make_features', 'weights'],

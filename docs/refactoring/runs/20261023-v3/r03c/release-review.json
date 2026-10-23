@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "independent_tests_passed": 31,
+  "repair_delegations": 1,
+  "scope": [
+    "scripts/build_crypto_release.py",
+    "scripts/build_etf_scope_release.py",
+    "scripts/build_telegram_restore_release.py",
+    "scripts/refactoring/build_release_manifest.py",
+    "scripts/refactoring/build_server_candidate.py",
+    "tests/refactoring/test_src_release_paths.py"
+  ],
+  "legacy_flat_tar_and_server_logical_names_preserved": true,
+  "source_package_missing_ambiguity_symlink_checks": true,
+  "remote_server_contact": false
+}

@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "independent_tests_passed": 143,
+  "repair_delegations": 1,
+  "reviewer_added_descriptor_boundary_oracle": true,
+  "agent_run_changed_symbols": [
+    "_ticket_text"
+  ],
+  "original_canonical_ID_dependency_scope_edits": false,
+  "O01_unrelated_snapshot_baseline_repaired": false
+}

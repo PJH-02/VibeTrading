@@ -6077,7 +6077,98 @@
         "R03B1",
         "R03B2"
       ],
-      "edit_paths": []
+      "edit_paths": [
+        {
+          "path": "scripts/dev/agent_task.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "scripts/dev/agent_run.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_agent_task.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_agent_run.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "scripts/build_crypto_release.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "scripts/build_etf_scope_release.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "scripts/build_telegram_restore_release.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "scripts/refactoring/build_release_manifest.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "scripts/refactoring/build_server_candidate.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_src_release_paths.py",
+          "action": "ADD"
+        },
+        {
+          "path": "docker-compose.yml",
+          "action": "MODIFY"
+        },
+        {
+          "path": "deploy/crypto-profile.yml",
+          "action": "MODIFY"
+        },
+        {
+          "path": "deploy/Dockerfile.crypto-ledger",
+          "action": "MODIFY"
+        },
+        {
+          "path": "scripts/prepare_etf_reference.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "scripts/report_mm_state_revision.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "scripts/seal_fv_indicator_report.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "scripts/build_all_strategy_report.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "README.md",
+          "action": "MODIFY"
+        },
+        {
+          "path": "docs/architecture.md",
+          "action": "MODIFY"
+        },
+        {
+          "path": "docs/status.md",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_src_deploy_paths.py",
+          "action": "ADD"
+        }
+      ],
+      "subunits": {
+        "path_map": "BOUNDED_WORKER_C1",
+        "release_builders": "BOUNDED_WORKER_C2",
+        "literal_path_updates": "DETERMINISTIC_CODEMOD",
+        "acceptance": "FULL_LINUX_CLI_DOCKER_COMPOSE_AND_ROLLBACK"
+      }
     }
   ],
   "legacy_task_objects_sha256": "224a13c77fcd505c85d461fa723be008824e6cf119a7ef825949a2aa18c57ce8",

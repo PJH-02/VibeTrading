@@ -495,6 +495,47 @@ def test_worker_env_disables_project_plugins_and_skills(tmp_path):
     assert "--auto" not in command
 
 
+def test_ticket_text_has_full_header_and_bounded_read_paths(tmp_path):
+    root = harness._setup(tmp_path)
+    packet = harness.dev.make_packet(
+        root, "VN01", harness._default_spec()
+    )
+    packet["prerequisites"] = ["R03A", "R03B1", "R03B2"]
+    packet["read_paths"] = [f"src/dependency_{index}.py" for index in range(8)]
+    source_hashes = json.loads(json.dumps(packet["source_hashes"]))
+
+    text = runner._ticket_text(packet)
+
+    assert f"Base SHA: {packet['base_sha']}" in text
+    assert "Prerequisites: R03A, R03B1, R03B2" in text
+    assert "Model: opencode/model-a" in text
+    assert "Provider: opencode" in text
+    assert "Profile: state_machine" in text
+    assert "Review severity: critical" in text
+    assert "Contracts:" in text and "C01" in text and "C02" in text
+    assert "Forbidden paths:" in text
+    assert ".env*" in text and "server writes" in text
+    for index in range(5):
+        assert f"src/dependency_{index}.py" in text
+    for index in range(5, 8):
+        assert f"src/dependency_{index}.py" not in text
+    assert "3 additional read-only dependency files" in text
+    assert packet["source_hashes"] == source_hashes
+
+
+def test_ticket_text_has_no_remainder_line_with_five_or_fewer_reads(tmp_path):
+    root = harness._setup(tmp_path)
+    packet = harness.dev.make_packet(
+        root, "VN01", harness._default_spec()
+    )
+    packet["read_paths"] = ["src/target.py"]
+
+    text = runner._ticket_text(packet)
+
+    assert "additional read-only dependency files" not in text
+    assert "- src/target.py" in text
+
+
 def _upstream_server():
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, *unused):
