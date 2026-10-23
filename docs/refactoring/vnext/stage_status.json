@@ -517,5 +517,14 @@
     "source_sha": "bf75b1c5d259433fc0aa2d9b43764855837b3f68",
     "status": "R03B1_ONLY_PASS",
     "receipt": "docs/refactoring/runs/20261023-v3/r03b1/acceptance.json"
-  }
+  },
+  "progress_report": "docs/refactoring/runs/20261023-v3/progress-vs-v3-spec.md",
+  "open_tooling_findings": [
+    {
+      "task_id": "O01",
+      "status": "REWORK_REQUIRED",
+      "evidence": "docs/refactoring/runs/20261023-v3/r03b1/repair1-adapter-receipt.json",
+      "code_repair_started": false
+    }
+  ]
 }

@@ -5881,7 +5881,7 @@
     },
     {
       "task_id": "O01",
-      "status": "ACCEPTED",
+      "status": "REWORK_REQUIRED",
       "depends_on": [
         "R01",
         "O00"
@@ -5926,7 +5926,23 @@
           "two_actual_models_patch_replayed": true
         }
       },
-      "source_sha": "187271587f63a91f4adce7981e03a0941f1b8b42"
+      "source_sha": "187271587f63a91f4adce7981e03a0941f1b8b42",
+      "previous_acceptance": {
+        "status": "ACCEPTED",
+        "source_sha": "187271587f63a91f4adce7981e03a0941f1b8b42",
+        "receipt": "docs/refactoring/runs/20261023-v3/o01b/acceptance.json",
+        "note": "Historical bounded/synthetic acceptance retained. Later actual-repository failure requires rework."
+      },
+      "rework_findings": [
+        {
+          "id": "O01_BASELINE_BLOCKED_KEY",
+          "observed_in": "R03B1 repair1",
+          "evidence": "docs/refactoring/runs/20261023-v3/r03b1/repair1-adapter-receipt.json",
+          "failure_class": "SCOPE_VIOLATION",
+          "detail": "Unchanged baseline .env.example is rejected by scope-key validator after worker exit0. Actual worker modifications were independently within allowlist. No adapter repair performed in status/publish request."
+        }
+      ],
+      "pending_path_map_integration": "R03C; not implemented or accepted by the original O01 bounded tests"
     },
     {
       "scope": "LOCAL_ONLY",
@@ -6218,5 +6234,6 @@
     "source_sha": "bf75b1c5d259433fc0aa2d9b43764855837b3f68",
     "status": "R03B1_ONLY_PASS",
     "receipt": "docs/refactoring/runs/20261023-v3/r03b1/acceptance.json"
-  }
+  },
+  "progress_report": "docs/refactoring/runs/20261023-v3/progress-vs-v3-spec.md"
 }
