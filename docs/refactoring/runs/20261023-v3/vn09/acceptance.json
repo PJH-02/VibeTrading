@@ -80,5 +80,11 @@
     "exit_code": 0,
     "canonical_cli_exit": 0,
     "other_50_task_objects_preserved": true
+  },
+  "original_workspace_application": {
+    "decision": "PASS",
+    "receipt": "docs/refactoring/runs/20261023-v3/vn09/original-application.json",
+    "preexisting_dirty_entries_preserved": 174,
+    "canonical_source_and_adapter_files_verified": 41
   }
 }

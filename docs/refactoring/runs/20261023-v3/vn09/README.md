@@ -11,3 +11,4 @@ Accepted source `ded3ac7f6c23ff6fb9d4194b6b9f55f2ef7da083`. VN09 local dry-run/p
 - No production data/order/account/network/deployment actions. Tests use synthetic local copies/backends only; deliberate fault callbacks are confined to those copies. Existing uploader/maintenance methods are unchanged. Production gate remains BLOCKED.
 
 See acceptance.json, acceptance-matrix.json, independent-final.json, full-regression.json, legacy-ast-preservation.json, worker-exits.json and glm-verification-result.json. Raw artifacts remain private.
+Original Windows/WSL checkout application passed with all 174 preexisting dirty entries preserved, including 153 line-ending-only changes, substantive user edits, deleted documents and untracked documents. All 41 changed source, adapter and evidence paths matched the accepted checkout. See original-application.json.
