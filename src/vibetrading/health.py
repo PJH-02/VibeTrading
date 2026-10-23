@@ -24,7 +24,13 @@ def _build_provenance() -> dict[str, str]:
     }
     config_root = Path("/app/config")
     if not config_root.is_dir():
-        config_root = Path(__file__).resolve().parent.parent / "config"
+        package_root = Path(__file__).resolve().parent
+        project_root = (
+            package_root.parent.parent
+            if package_root.parent.name == "src" and (package_root.parent.parent / "pyproject.toml").is_file()
+            else package_root.parent
+        )
+        config_root = project_root / "config"
     config_files = {}
     if config_root.is_dir():
         for path in sorted(config_root.rglob("*")):

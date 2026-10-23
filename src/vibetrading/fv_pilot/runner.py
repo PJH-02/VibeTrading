@@ -183,11 +183,13 @@ class PilotRunner:
 
     @staticmethod
     def source_hash():
-        root=Path(__file__).resolve().parents[2];digest=hashlib.sha256()
-        for folder in (root/"strategy",root/"vibetrading"/"fv_pilot",root/"vibetrading"/"mm_state"):
+        package=Path(__file__).resolve().parents[1]
+        root=package.parent.parent if package.parent.name=="src" and (package.parent.parent/"pyproject.toml").is_file() else package.parent
+        digest=hashlib.sha256()
+        for folder in (root/"strategy",package/"fv_pilot",package/"mm_state"):
             for path in sorted(folder.glob("*.py")):digest.update(path.name.encode());digest.update(path.read_bytes())
         for name in ("types.py","market.py","journal.py","calibration.py"):
-            path=root/"vibetrading"/"fv_mm"/name;digest.update(name.encode());digest.update(path.read_bytes())
+            path=package/"fv_mm"/name;digest.update(name.encode());digest.update(path.read_bytes())
         return digest.hexdigest()
 
     async def run(self):

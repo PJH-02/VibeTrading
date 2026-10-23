@@ -8,7 +8,12 @@ from typing import Iterable
 from dotenv import dotenv_values
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+_PACKAGE_ROOT = Path(__file__).resolve().parent
+PROJECT_ROOT = (
+    _PACKAGE_ROOT.parent.parent
+    if _PACKAGE_ROOT.parent.name == "src" and (_PACKAGE_ROOT.parent.parent / "pyproject.toml").is_file()
+    else _PACKAGE_ROOT.parent
+)
 DEFAULT_DATA_ROOT = PROJECT_ROOT / "runtime_data"
 SECRET_WORDS = ("KEY", "SECRET", "TOKEN", "PASSWORD", "PRIVATE", "ACCOUNT", "PW")
 
