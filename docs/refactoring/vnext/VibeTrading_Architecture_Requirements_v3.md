@@ -3,23 +3,26 @@
 > **문서 유형:** 규범적 제품/비기능 요구사항 (SHALL/MUST/SHOULD/MAY). 이 문서는 새 계획을 구두로 다시 설명하는 문서가 아니라 Codex가 개발자(GLM·DeepSeek)의 패치를 판정하는 데 사용하는 **검증 가능 계약**이다.
 > **기준:** `PJH-02/VibeTrading` 기본 브랜치 SHA `a9a83af43897fdf8badc303aaf3b6ebf2eda87c5` (2026-10-21). 배포된 서버는 이 커밋과 다를 수 있다. 제품 코드는 이 파일을 작성하는 동안 수정하지 않았다.
 > **관계:** 실행 순서 `VibeTrading_Refactoring_Final_Plan_v3.md`, 티켓별 정확한 작업·테스트 `VibeTrading_Developer_Ticket_Spec_v3.md`, 기존 C01–C09/P00–P12/VN/TX 계약·영수증. 이 문서가 원본 Ledger·Strategy Economics의 기존 안전 계약을 약화할 권한을 부여하지 않는다.
+>
+> **2026-10-23 binding scope correction (이 문서의 우선 권위; 문서 기준 SHA `4977ab509490173e312183f32d47f862d94ee0bf`, 위 2026-10-21 관측선은 역사 기록):** [tech_lead_scope_decisions.json](./reuse_audit/tech_lead_scope_decisions.json)·[revised_dag.json](./reuse_audit/revised_dag.json)·[VibeTrading_Minimal_Reuse_Plan_20261023.md](./VibeTrading_Minimal_Reuse_Plan_20261023.md)·[execution_reuse_matrix.md](./reuse_audit/execution_reuse_matrix.md)가 아래의 broad universal-platform 요구를 대체한다. 현재 동작하는 ETF/venue/cloud/strategy 경로를 보존하고, "모든 connector/모든 venue Private Stream/universal real margin/lifecycle/cross-venue atomic group/새 cloud uploader"를 **현재 필수 조건으로 요구하지 않는다.** 적용 대상은 선택된 local data/strategy-file/Paper/same-account/recovery/projection scope이며, 기존 안전 불변조건(cancel ACK≠terminal fill, UNKNOWN reservation 유지, TOSS DATA_ONLY, monotonic fill identity, per-mode one writer)은 그대로 유지한다. 정적 감사는 live 검증이 아니다. 제품 변경은 Tech Lead의 bounded gap ticket 이후에만 가능하다.
 
 ## 0. Scope와 비목표
 
 ### 0.1 목표
 
-- 단일 제품 패키지 `src/vibetrading`에 책임별 도메인 모듈을 배치하여 통합 개발·배포가 가능하다.
+- 기존 `src/vibetrading` 패키지·런타임 경계를 재사용하고, 선택된 local scope만 최소 변경한다.
 - KIS 기존 C3/KP/KD와 Mock/Mock2, 기존 증권사·TOSS 데이터 소스를 **손실 없이 유지**한다.
-- Crypto 대상은 Binance, Arcus, GRVT, Bybit, Hyperliquid **Perpetual**, 명확한 상품·환경 지원 범위별 Adapter가 있다.
-- 실시간 Market Data를 읽은 여러 독립 전략이 하나의 Shared MarketState를 사용하고, **전략별 논리 상태는 격리**, **같은 계좌의 주문·자금·포지션은 단일 권위**를 유지한다.
-- Paper Trade는 거래소 API Secret 없이 동작한다. 실제 주문 Mutation 0건을 구조적으로 보장한다.
-- 시장 데이터 내구성/복구/Parquet/Cloud는 기존 구조를 재사용하고 NATS 없는 신규 Runtime의 로컬 통합·부하·Crash 테스트를 완료한다.
-- 운영 서버에 배포/계좌 접근해야만 검사 가능한 사항을 별도 External Gate로 남기고 코드 구현 자체를 미완료로 남기지 않는다.
+- Crypto는 **기존** Binance spot, Arcus/GRVT/Bybit/Hyperliquid 경로와 perp mapping/signing composition을 보존한다. all-five connector rebuild는 목표가 아니며, selected route만 함수·caller·환경 증거로 다룬다.
+- 실시간 Market Data를 읽은 여러 독립 전략이 **기존** Shared MarketState/Paper runtime을 사용하고, **새 multi-strategy 연결에서** 전략별 논리 상태 격리와 같은 계좌 단일 writer를 입증한다.
+- Paper Trade는 거래소 API Secret 없이 동작하며 실제 주문 Mutation 0건을 유지한다.
+- 시장 데이터 내구성/복구/Parquet/Cloud는 **기존 구조를 재사용**하고, 누락된 local recovery/reader/strategy-file/Paper 연결만 완성한다.
+- 운영 서버/실계좌/장중 검증은 별도 External Gate로 남기며, 이 문서는 live 검증 완료를 주장하지 않는다.
 
 ### 0.2 비목표 및 금지
 
 - 새로운 전략 알파 연구/최적화, 운영 서버 내부의 대규모 Backtest, 실거래 자동 전략 승격, 자동 계좌 활성화.
 - TOSS Trade API를 새로 구현하거나 TOSS Venue 실행을 라우팅하는 것.
+- 검증된 기존 경로를 대체하는 새 exchange/client/signer/Private Stream/cloud uploader, all-five connector rebuild, universal real margin/lifecycle engine, cross-venue atomic execution group.
 - NATS 외에 새 범용 Broker, Redis/PostgreSQL/QuestDB 서버, 새 총괄 Coordinator 서비스, 불필요한 RPC framework 생성.
 - 시장 호가 데이터 전체를 매 주문 시마다 fsync하는 Policy B로 임의 전환.
 - 기존 서버의 NATS service 종료, 원본 로컬 로그/계좌 DB 삭제, 운영 계좌 주문·취소·메시지 전송.
@@ -169,7 +172,7 @@ Canonical Event는 Venue Native API와 분리. `ACK-after-FILL`에도 terminal �
 
 ## 6. Perpetual Product/Risk/Position
 
-- **Venue Product Catalog:** `(Venue, MarketSegment, Linear/Inverse, ContractSize, Tick/Lot, NotionalMin, MarginMode, PositionMode, Collateral, Funding, Settlement, FeeSchedule, API version)`. 기존 Binance Spot 주문 API는 Perp 지원이 아니다.
+- **Venue Product Catalog:** `(Venue, MarketSegment, Linear/Inverse, ContractSize, Tick/Lot, NotionalMin, MarginMode, PositionMode, Collateral, Funding, Settlement, FeeSchedule, API version)`. 기존 Binance Spot 주문 API는 Perp 지원이 아니다. **현재 binding 범위는 선택된 기존 product/mode뿐**이며, inverse/cross/hedge/portfolio margin은 명시 전략 수요 전까지 `UNSUPPORTED`/DEFER다. 이 절의 표는 selected product 검증 기준이지 all-product 완성 요구가 아니다.
 - 모든 Quantity/Notional/Price를 `Decimal` 또는 정확 표현으로 다룬다. 수량/가격 값은 공급자 Native Tick·Lot/Contract Multiplier로 rounding rule을 표시한다. 금액 0·음수·NaN/Infinity/True-as-number는 입력에서 거절.
 - `PositionNotional`, `InitialMargin`, `MaintenanceMargin`, `Funding`, `Realized/Unrealized`, `AvailableCollateral`, `WorstCaseNewOrderExposure`는 상품/마진 모드별 계산 정책. Linear isolated Sim 한정이면 정확한 모드로 표기한다.
 - MarkPrice/Index/Collateral-Price/FX Evidence의 시각이 오래되었거나 누락되면 신규 레버리지 증액을 차단하고 평가 정보 `UNAVAILABLE` 출력.
@@ -187,9 +190,11 @@ Canonical Event는 Venue Native API와 분리. `ACK-after-FILL`에도 terminal �
 - `GTC/IOC/FOK/Post-only`의 실제 지원은 Venue/Simulation Policy별로 분리. 모의 정책이 없는 주문은 거절, 임의 Fake fill 생성 금지.
 - Paper 재시작 시 원장을 살려 초기 Balance/Position/Warmup을 복구하며 **과거 원장 Replay로 새로운 외부 주문 0건**. Live API mutation은 Dependency Injection 수준에서 접근 불가하도록 검증.
 
-## 8. Venue Adapter 및 Reconciliation
+## 8. Venue Adapter 및 Reconciliation (selected existing route only)
 
-지원 대상으로 선언한 상품/환경별 필수 Capability:
+**이 절의 capability 표는 HISTORICAL/REFERENCE이며, 모든 venue에 대한 현재 필수 구현 목록이 아니다.** 현재 binding 요구는 선택된 기존 runtime route의 보존과 입증된 gap에만 적용한다. 새 connector/transport/signer를 만들지 않는다.
+
+지원 대상으로 선언한 상품/환경별 참조 Capability:
 
 | API/기능 | 필수 구현 계약 |
 |---|---|
@@ -207,7 +212,9 @@ Venue-특수 규칙(예: Binance Futures 구분, Bybit positionIdx, GRVT typed s
 
 **외부 환경 제한:** 공식 문서/Fixture를 근거로 정상 파서·서명·모델·상태 전이를 구현하더라도, credential-less 로컬 Test로 실제 Live 가능을 입증할 수 없다. `CONNECTOR_CODE_COMPLETE`와 `SANDBOX_VERIFIED`/`LIVE_VERIFIED`를 분리. 아직 공식 명세를 검증하지 못한 Adapter의 지원 수준은 `BLOCKED_UNVERIFIED`, 설명뿐인 Stub는 `IMPLEMENTATION_INCOMPLETE`.
 
-## 9. Cross-venue Execution Group
+## 9. Cross-venue Execution Group (DEFERRED / NON-BINDING)
+
+**이 절은 기존 prototype 설명이며 현재 필수 core가 아니다.** cross-exchange atomic execution group은 명시 전략 수요와 별도 Tech Lead ticket 전까지 구현·수락 요구가 아니다. 기존 `execution_groups.py` observational facts는 보존한다.
 
 - Group Coordinator는 `group_id`, hedge ratio, Target delta, child Owner scopes, event IDs, TTL, residual exposure, decision evidence만 관리하며 계좌 원장을 직접 대체하지 않는다.
 - Cross-venue 거래는 **분산 원자 트랜잭션이 아니다**. 한 Venue 주문이 체결되고 다른 쪽이 UNKNOWN이면 최악 잔여 포지션·Margin Buffer를 기준으로 해당 Group에 새 위험을 차단.
@@ -251,7 +258,7 @@ Venue-특수 규칙(예: Binance Futures 구분, Bybit positionIdx, GRVT typed s
 
 **참고 운영 목표(아직 PASS가 아님):** Host peak Python/Docker RSS/PSS 합과 OS Page Cache·Swap를 구별하여 실측; 메모리 서비스 합계를 과대 또는 과소 계상하지 않는다. 평균 CPU 70% 부근의 운영 여유를 초기 희망치로 사용하되 실제 합격 임계값은 입력 event-rate·strategy count·order-rate·p99 결과를 포함한 명시적인 `CapacityProfile`로 Codex가 승인한다. 근거 없이 전체 메모리 3GiB 이하라고 주장하지 않는다.
 
-테스트 매트릭스에 최소 `3 KIS strategies + GRVT market maker dummy + GRVT/Binance arb dummy + Other Perp strategy`를 넣는다. 신규 5 Venue의 private stream을 모두 구독하는 것은 이전 3 Venue market-only 수집과 총 데이터량이 같지 않으므로 추가 데이터/CPU를 따로 계산한다.
+테스트 매트릭스의 **필수 core**는 `기존 Golden + NATS-free data/recovery + strategy file plugin + existing Paper + same-account safety`다. `3 KIS + GRVT MM + GRVT/Binance arb + other perp`는 **legacy/reference 선택 시나리오**이며 필수 완료 조건이 아니다. all-five private stream을 동시에 구독하는 구성은 이 계획의 요구가 아니며, 선택할 경우에만 데이터/CPU를 별도 계산한다.
 
 ## 13. Quality, Testing & Acceptance Oracle
 
@@ -265,10 +272,10 @@ Venue-특수 규칙(예: Binance Futures 구분, Bybit positionIdx, GRVT typed s
 | TRANSPORT | engine disconnect 중 spool, queue full/ENOSPC/ACK gap, bounded reconnect, duplicate accept |
 | CHECKPOINT | crash every stage, corrupted/foreign checkpoint, Delta handoff, zero replay orders |
 | GC | retained-base Reader v1/v2 호환, remote proof loss, unique-copy deletion 0 |
-| PAPER | no broker mutate, maker/taker causal receipts, late-cancel/fill, fee/funding, restart same ledger |
-| ACCOUNT | duplicate Owner rejection, strategy virtual vs physical, margin reservations, unknown/no blind retry |
-| PERP VENUE | 각 Official Fixture API signature/submit/cancel/status/fills/pos/rate-limit/private-gap, unsupported fail-closed |
-| ARBITRAGE | group partial fill + second leg unknown, unrelated strategy unaffected, residual risk conservatively bounded |
+| PAPER (core) | no broker mutate, maker/taker causal receipts, late-cancel/fill, fee/funding, restart same ledger, cancel ACK≠terminal |
+| ACCOUNT (core) | duplicate Owner rejection for new multi-strategy connection, strategy virtual vs physical, margin reservations, unknown/no blind retry, one writer |
+| PERP VENUE (optional selected route) | 선택된 기존 route의 함수/fixture만; all-five Official Fixture gate는 현재 필수 아님, unsupported fail-closed |
+| ARBITRAGE (DEFERRED) | 기존 group prototype 보존; cross-venue core acceptance 아님 |
 | OPS | Telegram dedup/allowlist/TTL/halt/resume cold read, HTTP429, stale report |
 | LOAD | 2vCPU·~3.8GiB synthetic representative concurrency, CPU/event, p99/p99.9, memory and disk |
 | RELEASE | 정확 source SHA, test result, account data migration compatibility, rollforward/backout proof |
@@ -368,11 +375,11 @@ opencode run --model '<configured-provider>/<verified-model-id>' \
 ### 사용자가 명시적으로 정한 불변조건
 
 - TOSS는 데이터 소스로만 사용.
-- 5개 코인 거래소 모두 Perpetual; 실제 상품/모드별 API Capability는 별도 검증.
+- 기존 Crypto spot/perp 경로와 testnet/prototype evidence를 보존한다. **all-five connector rebuild는 사용자 최신 교정으로 필수 범위에서 제외**하며, 실제 상품/모드 지원은 선택된 route별로만 검증한다.
 - 전략은 별도 개발·서버 외부 Backtest 후 Paper 일정기간 운영, 사용자 수동 Live 승격.
-- KIS C3/KP/KD 및 GRVT MM + Cross-exchange와 같은 여러 전략의 동시 계좌 사용은 필수.
+- **새 multi-strategy 동일계좌 연결의 safety**는 필수다. 기존 KIS ETF runtime과 GRVT MM/arb prototype은 보존하며 cross-venue atomic execution은 deferred다.
 - Codex는 Tech Lead/PM·Critical Reviewer; OpenCode+FreeLLMAPI GLM/DeepSeek는 구현/테스트/런타임 관리/검증 담당.
-- 리팩토링 종료 시 실제 서버/실계좌가 있어야만 입증 가능한 Gate를 제외한 **로컬 구현 전부** 완료해야 한다.
+- 리팩토링 종료 시 실제 서버/실계좌가 있어야만 입증 가능한 Gate를 제외한 **선택된 local core**를 완료해야 한다. 범용 Trading Platform 완성은 종료 조건이 아니다.
 
 ### 출시 전 외부에서 추가로 증명해야 하는 것(현재 구현 완료로 오인 금지)
 
@@ -385,7 +392,7 @@ opencode run --model '<configured-provider>/<verified-model-id>' \
 
 ### 최종 반증 가능 완료 판정
 
-`Local 완료`는 다음이 모두 True인 상태: `source/packaging PASS`, `Market/Storage/Recovery PASS`, `Paper E2E PASS`, `Multi-Strategy/Account PASS`, `Perp Adapter 코드/Fixture PASS(선언한 지원 범위)`, `C3/KP/KD golden PASS`, `Security/Secrets PASS`, `Synthetic Capacity PASS`, `Full Linux regression PASS`, `Deployment package generated`, `remaining items exclusively external-dependent`.
+`Local 완료`는 다음이 모두 True인 상태: `source/packaging PASS`, `Market/Storage/Recovery PASS`, `strategy-file→existing Paper E2E PASS`, `selected same-account safety PASS`, `선택된 기존 route 보존 PASS`, `C3/KP/KD golden PASS`, `Security/Secrets PASS`, `Synthetic Capacity PASS`, `scoped/full regression PASS`, `Deployment package generated`, `remaining items exclusively external-dependent`. all-five/cross-venue/extra margin/new uploader는 이 조건에 포함하지 않는다.
 
 **마지막 주의:** 개발 중 새로운 서명·마진·계좌 API가 공식 문서로 확인되지 않으면 이를 추측해 '완료'하지 않는다. 미확정 지원 범위를 막으면서 **검증 가능한 기본 범위부터 끝내고**, 범위 확대가 필요하면 Codex가 정확한 계약과 테스트를 추가하도록 승인한다.
 

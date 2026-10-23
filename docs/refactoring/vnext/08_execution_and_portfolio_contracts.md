@@ -1,17 +1,19 @@
 # Production 08 — 공통 실행·포트폴리오 계약
 
-기존 C01~C09 유지 + 다음 **C10~C17 추가**. 이번 요청이 로컬 구현 권한이다. 실제 계좌 mutation/승격 권한은 포함하지 않는다.
+기존 C01~C09 유지 + 다음 **C10~C17 추가**. 이 계약은 선택된 local 구현의 기준이며, **2026-10-23 문서 단계는 제품 코드를 변경하지 않는다.** 실제 계좌 mutation/승격 권한은 포함하지 않는다.
+
+> **2026-10-23 binding scope correction:** [tech_lead_scope_decisions.json](./reuse_audit/tech_lead_scope_decisions.json)·[revised_dag.json](./reuse_audit/revised_dag.json)·[VibeTrading_Minimal_Reuse_Plan_20261023.md](./VibeTrading_Minimal_Reuse_Plan_20261023.md)가 이 계약의 적용 범위를 정한다. 현재 동작하는 ETF/venue/Paper/cloud 경로를 보존하고, 새 connector/universal real margin/lifecycle/cross-venue atomic group/새 uploader를 요구하지 않는다. 계약은 **선택된 기존 mode/route**에 적용하며, 아래 C16은 DEFERRED, C13/C17의 broad product/promotion 완성은 NON-BINDING이다. 안전 불변조건(cancel ACK≠terminal fill, UNKNOWN reservation 유지, TOSS DATA_ONLY, monotonic fill identity, per-mode one writer)은 그대로 유지한다.
 
 | ID | 계약 | 불변조건·검증 |
 |---|---|---|
 | C10 Strategy/Mode | 기존 on_event→list[Signal] 유지. 주문·취소·정정은 bounded action ID와 strategy/config/version/account/mode에 연결 | strategy 활성≠live permission. PAPER에서 venue client 생성·외부 mutation0. TOSS account 거절 |
 | C11 Account authority | venue/account/subaccount/environment/product-margin domain별 한 owner. 같은 계좌가 다른 DB path를 써도 같은 protected lease key | 협조 lease는 타 host/legacy를 fence하지 못함. 실제 cutover stop/restart 차단 별도 |
 | C12 Attribution | fill은 account/strategy/intent/order/fill/instrument/side/position-side/group·fee currency에 귀속 | fill fingerprint 충돌 거절. virtual 합계와 physical 차이를 external/imported/inflight/funding/correction/gap으로 구분 |
-| C13 Product economics | cash reservation과 linear/inverse Perp margin 별도. multiplier/quote/settlement/collateral/position·margin mode 명시 | 미확인 margin/equity를0으로 쓰지 않음. 통화 FX 없는 합산 금지. 실제 venue margin 공식을 일반 leverage로 대체0 |
+| C13 Product economics (selected mode) | 선택된 **기존** cash/linear Paper product의 reservation/margin만 재사용. inverse/cross/hedge/portfolio margin은 명시 수요까지 DEFER | 미확인 margin/equity를0으로 쓰지 않음. 통화 FX 없는 합산 금지. 실제 venue margin 공식을 일반 leverage로 대체0. universal real margin engine 요구0 |
 | C14 Lifecycle | new/cancel/replace/partial/full/reject/expire/UNKNOWN 별도 사실. Client ID는 namespace·mapping 고정 | timeout/부분조회는 미제출 증거 아님; cancel ACK만으로 reserve 해제0; fill-first/late fill 단조 반영 |
 | C15 Local Paper | receipt/order-arrival/cancel-effective 순서, depth·trade-volume 소비, 보수적 maker queue | touch-only maker fill0, 미래book 사용0, 유동성 중복사용0, restart replay duplicate fill0 |
-| C16 Cross-venue group | group은 child owner에게 intent를 전달하고 결과/잔여 delta를 기록하는 좁은 조합 계층 | 분산 원자성 주장0, UNKNOWN leg 재제출0, 승인되지 않은 자동 hedge/unwind0 |
-| C17 Lifecycle/export | strategy/version/config/data manifest/research summary 등록→사용자 평가→live-market Paper→별도 live 승인 | 운영 백테스트/탐색/학습0. Paper 자산/포지션을 live로 복사0 |
+| C16 Cross-venue group (DEFERRED) | 기존 observational child/group fact만 보존. cross-exchange atomic execution은 core 아님 | 분산 원자성 주장0, UNKNOWN leg 재제출0, 승인되지 않은 자동 hedge/unwind0. TX08B 선행·완료 요구0 |
+| C17 Lifecycle/export (selected) | 기존 strategy/version/config/manifest 등록과 Paper→사용자 승인 경계를 재사용; plugin metadata linkage만 보완 | 운영 백테스트/탐색/학습0. Paper 자산/포지션을 live로 복사0. universal lifecycle engine 요구0 |
 
 ## 정책 경계
 

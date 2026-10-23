@@ -73,23 +73,26 @@
       "task_id": "VN07",
       "category": "INCOMPLETE",
       "existing_phase": "P06",
-      "detail": "완료: market 다중 producer 내구 순서 증명, 세대별 checkpoint/journal 생성·교체·복원·종료 및 runtime 통합. 미완료: ETF/Paper account/strategy/pending-action 원자 복구와 운영 검증",
+      "detail": "[Reuse-first scope; prior completion category preserved] Reuse existing market recovery and per-runtime journals; connect only missing strategy/Paper checkpoint continuity, no universal account-state replacement.",
       "production_ready": false,
-      "order_subtask_validation": "docs/refactoring/runs/20261020-production/vn07-order-validation.json"
+      "order_subtask_validation": "docs/refactoring/runs/20261020-production/vn07-order-validation.json",
+      "scope_disposition": "COMPLETE_EXISTING_RECOVERY"
     },
     {
       "task_id": "VN08",
       "category": "NOT_STARTED",
       "existing_phase": "P06/P07",
-      "detail": "New reader validates a retained prefix base and v1 data; corrupt/missing segments never become a valid start; GC still disabled.",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Retained-prefix reader only; preserve proven data identity/replay semantics.",
+      "production_ready": false,
+      "scope_disposition": "COMPLETE_DATA_RECOVERY"
     },
     {
       "task_id": "VN09",
       "category": "NOT_STARTED",
       "existing_phase": "P07",
-      "detail": "Only checkpoint+consumer+manifest/facts+remote/lease/retention proven segments eligible; unique copy deletion count=0 under injected crashes.",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Reuse existing archive/cloud integrity; GC enabled only after coverage/reader proof. Never rebuild working uploader or delete before verification.",
+      "production_ready": false,
+      "scope_disposition": "SAFE_STORAGE_GAP_ONLY"
     },
     {
       "task_id": "VN10",
@@ -116,8 +119,9 @@
       "task_id": "VN13",
       "category": "INCOMPLETE",
       "existing_phase": "P03/P05",
-      "detail": "단일 apply/shared snapshot Paper fixture 연결만 구현. lifecycle·강한 격리·실제 지속 운용 미완료",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] One Python file per strategy, existing STRATEGY_ID/SUBSCRIPTIONS/WARMUP/create_strategy/on_event contract, explicit configuration links to shared data pipeline and existing Paper. C3/KP/KD calculators alone do not complete this.",
+      "production_ready": false,
+      "scope_disposition": "STRATEGY_FILE_PLUGIN_PAPER"
     },
     {
       "task_id": "VN14A",
@@ -137,8 +141,9 @@
       "task_id": "VN15",
       "category": "NOT_STARTED",
       "existing_phase": "P08/P09",
-      "detail": "Actual/assumed/recovery separated; missing valuation/currency/cashflow evidence shown unavailable; no reporting IO on submit path.",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] One actual/assumed/Paper/recovery projection workstream, no reporting IO in submit path or redundant dashboard platform.",
+      "production_ready": false,
+      "scope_disposition": "MERGE_WITH_TX09"
     },
     {
       "task_id": "VN16",
@@ -151,225 +156,257 @@
       "task_id": "VN17",
       "category": "NOT_STARTED",
       "existing_phase": "P09",
-      "detail": "Per-role exact digest/mount/config contract with finite combined CPU/RAM/physical-volume budgets, no secret render and no activation.",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Reuse existing runtimes; local process wiring/bounded resources only, no new universal execution deployment topology.",
+      "production_ready": false,
+      "scope_disposition": "MINIMAL_RUNTIME_WIRING"
     },
     {
       "task_id": "VN18",
       "category": "NOT_STARTED",
       "existing_phase": "P10",
-      "detail": "Execute validation matrix with raw sample counts and source hashes; 30m wall clock/24h cloud/15m Parquet/72h representative coverage never substituted by fixtures.",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Existing Golden + data recovery and selected plugin/Paper/same-account faults; compare existing runtime behavior, no venue reconnect implementation.",
+      "production_ready": false,
+      "scope_disposition": "CORE_REGRESSION_FAULT_GATE"
     },
     {
       "task_id": "VN19",
       "category": "NOT_STARTED",
       "existing_phase": "P11",
-      "detail": "Reviewable per-role cutover/rollback package with exact commands/digests/accounts/current-ledger compatibility; separate execution authorization.",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Reuse existing packaging/export/rollback; prepare only selected local data-path transition.",
+      "production_ready": false,
+      "scope_disposition": "KEEP_RELEASE_ROLLBACK"
     },
     {
       "task_id": "VN20",
       "category": "NOT_STARTED",
       "existing_phase": "P12",
-      "detail": "After actual cutover stabilization, archived legacy backlog and rollback proof, pin remaining callers and split exact retire paths before dispatch; no automatic deletion.",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Existing NATS execution path retained until verified local migration/operational acceptance; code deletion requires per-path caller/rollback proof and later explicit authorization.",
+      "production_ready": false,
+      "scope_disposition": "EXTERNAL_AFTER_PROOF"
     },
     {
       "task_id": "TX00",
       "category": "INCOMPLETE",
       "existing_phase": null,
-      "detail": "product/environment별 매핑 조사. 실제 계좌·margin·capability 확인 미완료",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Inventory existing venue/product/environment execution paths and exact callers; preserve TOSS DATA_ONLY; no connector implementation.",
+      "production_ready": false,
+      "scope_disposition": "REUSE_AUDIT"
     },
     {
       "task_id": "TX01",
       "category": "INCOMPLETE",
       "existing_phase": null,
-      "detail": "공통 mode/action/product 초안과 Paper 범위. 미완성 TX 구현과 함께 커밋 제외",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Reuse existing Signal/OrderIntent and strategy contract; add only necessary local Paper/strategy identity bridge. No universal replacement action API.",
+      "production_ready": false,
+      "scope_disposition": "ADAPT_EXISTING_CONTRACT"
     },
     {
       "task_id": "TX02A",
       "category": "INCOMPLETE",
       "existing_phase": null,
-      "detail": "Paper scope owner lease만 구현. 기존 ETF journal/전체 계좌 fencing 미완료",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Reuse ETF process lease/journal and existing Paper ExecutionOwner; prove one physical account writer in selected mode, no second real-account authority.",
+      "production_ready": false,
+      "scope_disposition": "ADAPT_EXISTING_OWNER"
     },
     {
       "task_id": "TX02B",
       "category": "INCOMPLETE",
       "existing_phase": null,
-      "detail": "Paper virtual/physical 귀속 fixture만 구현",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Reuse EtfJournal per-strategy books and PortfolioLedger Paper books; complete only demonstrated same-account attribution/reservation/restart gaps.",
+      "production_ready": false,
+      "scope_disposition": "COMPLETE_MISSING_ATTRIBUTION"
     },
     {
       "task_id": "TX02",
       "category": "INCOMPLETE",
       "existing_phase": null,
-      "detail": "하위 작업이 진행 중인 집계 단계; 별도 완료로 계산하지 않음",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Joint acceptance of selected existing account owner/books; do not build new generic account engine.",
+      "production_ready": false,
+      "scope_disposition": "REUSE_AGGREGATE"
     },
     {
       "task_id": "TX03A",
       "category": "INCOMPLETE",
       "existing_phase": null,
-      "detail": "cash/isolated-linear Paper만 구현. inverse/hedge/cross-currency/실제 margin 미지원",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Reuse existing product metadata and supported Paper specs; extra cross/portfolio/unified margin types require explicit strategy need, not mandatory baseline.",
+      "production_ready": false,
+      "scope_disposition": "DEFER_UNREQUESTED_PRODUCT_GENERALIZATION"
     },
     {
       "task_id": "TX03B",
       "category": "INCOMPLETE",
       "existing_phase": null,
-      "detail": "Paper fee/rebate/funding 회계. 실제 margin/equity 대조 미완료",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Reuse existing runtime/journal fee/funding/account facts; complete only selected Paper product missing accounting. No universal live margin ledger rewrite.",
+      "production_ready": false,
+      "scope_disposition": "REUSE_SCOPE_LIMITED_ACCOUNTING"
     },
     {
       "task_id": "TX03",
       "category": "INCOMPLETE",
       "existing_phase": null,
-      "detail": "하위 작업이 진행 중인 집계 단계; 별도 완료로 계산하지 않음",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Accept only explicitly selected existing products; broad perpetual platform completion is not a core NATS-free/Paper gate.",
+      "production_ready": false,
+      "scope_disposition": "OPTIONAL_PRODUCT_GATE"
     },
     {
       "task_id": "TX04A",
       "category": "INCOMPLETE",
       "existing_phase": null,
-      "detail": "matcher durable state/fill dedup 구현. 전체 입력 C/H 연속 복구 미완료",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Reuse existing PaperExecution/PortfolioLedger atomic persistence; finish demonstrated Paper restart/dedup gaps, retain conservative fill semantics.",
+      "production_ready": false,
+      "scope_disposition": "COMPLETE_MISSING_PAPER_DURABILITY"
     },
     {
       "task_id": "TX04B",
       "category": "INCOMPLETE",
       "existing_phase": null,
-      "detail": "인과적 matcher fixture. 실제 live-input Paper/continuous input 복구 미완료",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Connect existing matcher to continuous NATS-free live/replay input with causal timestamps/gaps, no new exchange simulator or venue client.",
+      "production_ready": false,
+      "scope_disposition": "ADAPT_LOCAL_MARKET_INPUT"
     },
     {
       "task_id": "TX04",
       "category": "INCOMPLETE",
       "existing_phase": null,
-      "detail": "하위 작업이 진행 중인 집계 단계; 별도 완료로 계산하지 않음",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Selected Paper event-to-fill-to-ledger/restart acceptance using existing matcher/ledger.",
+      "production_ready": false,
+      "scope_disposition": "REUSE_PAPER_GATE"
     },
     {
       "task_id": "TX05",
       "category": "INCOMPLETE",
       "existing_phase": null,
-      "detail": "공유 state Paper runtime fixture. callback hard isolation/전체 lifecycle 미완료",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] One implementation workstream with VN13: file-based strategy plugin -> existing local strategy runtime -> existing Paper matcher. No parallel new runtime or mandatory replacement of live execution.",
+      "production_ready": false,
+      "scope_disposition": "MERGE_WITH_VN13"
     },
     {
       "task_id": "TX07A",
       "category": "NOT_STARTED",
       "existing_phase": null,
-      "detail": "Canonical acceptance/fill/cancel/funding/account facts and UNKNOWN/reconciliation contract",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Small normalized local identity/event mapping over existing order/fill/journal semantics; no second universal order lifecycle state machine.",
+      "production_ready": false,
+      "scope_disposition": "ADAPT_EXISTING_FACTS"
     },
     {
       "task_id": "TX06A",
       "category": "INCOMPLETE",
       "existing_phase": null,
-      "detail": "Binance Perp request/sign/query 매핑만 구현. transport/private lifecycle/실계좌 미완료",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Binance: retain existing connectors and compare futures vs spot/environment; map existing methods only if selected path needs local bridge. No new HTTP/signer/private wrapper by default.",
+      "production_ready": false,
+      "scope_disposition": "EXCLUDE_NEW_CONNECTOR_BUILD"
     },
     {
       "task_id": "TX06B",
       "category": "INCOMPLETE",
       "existing_phase": null,
-      "detail": "Arcus Perp request/sign/query 매핑만 구현. transport/private lifecycle/실계좌 미완료",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Arcus: retain existing WebSocket/signing path and scope differences; any missing capability needs function-level evidence and explicit selected use.",
+      "production_ready": false,
+      "scope_disposition": "EXCLUDE_NEW_CONNECTOR_BUILD"
     },
     {
       "task_id": "TX06C",
       "category": "INCOMPLETE",
       "existing_phase": null,
-      "detail": "GRVT Perp request/sign/query 매핑만 구현. transport/private lifecycle/실계좌 미완료",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] GRVT: reuse fv_mm venue/private/reconcile and existing broker composition; do not treat incomplete generic adapter as missing working exchange connection.",
+      "production_ready": false,
+      "scope_disposition": "EXCLUDE_NEW_CONNECTOR_BUILD"
     },
     {
       "task_id": "TX06D",
       "category": "INCOMPLETE",
       "existing_phase": null,
-      "detail": "Bybit Perp request/sign/query 매핑만 구현. transport/private lifecycle/실계좌 미완료",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Bybit: reuse fv_mm and liquidity_mm paths; keep execution probe testnet-only unless its own environment evidence says otherwise. No duplicate order/private client.",
+      "production_ready": false,
+      "scope_disposition": "EXCLUDE_NEW_CONNECTOR_BUILD"
     },
     {
       "task_id": "TX06E",
       "category": "INCOMPLETE",
       "existing_phase": null,
-      "detail": "Hyperliquid request/sign/query 매핑만 구현. 독립 signer nonce 저장소만 완료·선별 커밋",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Hyperliquid: preserve existing SDK/broker integration; generic transport implementation is not automatically required for NATS-free/Paper scope.",
+      "production_ready": false,
+      "scope_disposition": "EXCLUDE_NEW_CONNECTOR_BUILD"
     },
     {
       "task_id": "TX06",
       "category": "INCOMPLETE",
       "existing_phase": null,
-      "detail": "하위 작업이 진행 중인 집계 단계; 별도 완료로 계산하지 않음",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Remove mandatory all-five-venue rebuild gate; function/caller/environment verification for selected existing route only. Do not erase completed adapter prototype evidence.",
+      "production_ready": false,
+      "scope_disposition": "OPTIONAL_SELECTED_VENUE_AUDIT"
     },
     {
       "task_id": "TX07B",
       "category": "NOT_STARTED",
       "existing_phase": null,
-      "detail": "Per-venue paginated query/private gap/timeout/cancel reconciliation with UNKNOWN reservations; no absence inference",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Preserve existing per-runtime private/REST reconciliation; complete only demonstrated selected path gaps, no mandatory new Private Stream for every venue.",
+      "production_ready": false,
+      "scope_disposition": "REUSE_EXISTING_RECONCILIATION"
     },
     {
       "task_id": "TX07",
       "category": "NOT_STARTED",
       "existing_phase": null,
-      "detail": "Order lifecycle/reconciliation acceptance aggregate",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Selected current runtime equivalence/reconcile gate; not a mandatory new universal lifecycle engine.",
+      "production_ready": false,
+      "scope_disposition": "OPTIONAL_SELECTED_EXECUTION_GATE"
     },
     {
       "task_id": "TX08A",
       "category": "INCOMPLETE",
       "existing_phase": null,
-      "detail": "Paper shared-account fixture만 구현. 실제 canonical owner/권위 통합 미완료",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Priority: existing owner/ledger safe simultaneous strategy reservations, attribution, cancel ownership and restart under one account; Paper first, no live account rewrite.",
+      "production_ready": false,
+      "scope_disposition": "COMPLETE_MISSING_SAME_ACCOUNT_SAFETY"
     },
     {
       "task_id": "TX08B",
       "category": "INCOMPLETE",
       "existing_phase": null,
-      "detail": "Paper 관측 group facts만 구현. 선행 owner/lifecycle 통합 미완료",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Cross-exchange execution group is deferred until an explicitly chosen strategy needs it; preserve existing prototype, remove from core multi-strategy acceptance.",
+      "production_ready": false,
+      "scope_disposition": "DEFER_EXPLICIT_CROSS_VENUE_NEED"
     },
     {
       "task_id": "TX08",
       "category": "INCOMPLETE",
       "existing_phase": null,
-      "detail": "하위 작업이 진행 중인 집계 단계; 별도 완료로 계산하지 않음",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Require TX08A selected same-account evidence; cross-venue atomic execution is not mandatory core scope.",
+      "production_ready": false,
+      "scope_disposition": "SAME_ACCOUNT_GATE_ONLY"
     },
     {
       "task_id": "TX09",
       "category": "NOT_STARTED",
       "existing_phase": null,
-      "detail": "Single actual/Paper PnL-position projection, owner-scoped control and promotion permissions",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] One read-only projection/control workstream with VN15. Preserve existing Telegram/trade/reporting; only missing Paper/actual/strategy labels and safe existing command bridges.",
+      "production_ready": false,
+      "scope_disposition": "MERGE_WITH_VN15"
     },
     {
       "task_id": "TX10",
       "category": "NOT_STARTED",
       "existing_phase": null,
-      "detail": "Off-server backtest export manifest/metadata and strategy registration/promotion gate; no server research",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Keep current Ncloud/S3 upload/download/verify and export path unchanged; add only missing data-manifest-to-strategy-file/Paper registration linkage. No new uploader/backtest platform.",
+      "production_ready": false,
+      "scope_disposition": "KEEP_CLOUD_ADAPT_PLUGIN_METADATA"
     },
     {
       "task_id": "TX11",
       "category": "NOT_STARTED",
       "existing_phase": null,
-      "detail": "Scenarios A-F, exact candidate regression, live-market Paper mutation0, 2vCPU resources and >30m/72h/outage evidence",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] One NATS-free data -> strategy-file -> Paper -> same-account attribution -> report/restart workflow, plus preserved legacy Golden behavior. Mandatory five-venue/arb platform scenario removed.",
+      "production_ready": false,
+      "scope_disposition": "NARROW_CORE_E2E"
     },
     {
       "task_id": "TX12",
       "category": "NOT_STARTED",
       "existing_phase": null,
-      "detail": "Separate readiness states and reviewable local release/cutover/promotion package; no server deployment or LIVE_ACTIVE",
-      "production_ready": false
+      "detail": "[Reuse-first scope; prior completion category preserved] Accept minimal local scope (data/storage/recovery/plugins/Paper/same-account safety) and unchanged legacy runtimes; no generic Trading Platform completion badge.",
+      "production_ready": false,
+      "scope_disposition": "NARROW_LOCAL_ACCEPTANCE"
     }
   ],
   "excluded_work_in_progress": [
@@ -455,10 +492,10 @@
     "last_completed_tooling_ticket": "R05",
     "active_ticket": null,
     "start_next_ticket": false,
-    "stop_after_ticket": "R05",
+    "stop_after_ticket": "REUSE_SCOPE_PLAN",
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
-    "current_source_sha": "2b85c95a4e7951ac2a7590db24416e5b5f76d958",
+    "current_source_sha": "4977ab509490173e312183f32d47f862d94ee0bf",
     "active_tooling_tickets": [],
     "active_parallel_tickets": []
   },
@@ -560,7 +597,7 @@
       "canonical_strategy_ownership": true
     }
   ],
-  "user_scope_latest": "Exactly one selected ticket R05 completed; stop. Other tooling/VN/TX work unchanged.",
+  "user_scope_latest": "2026-10-23: preserve working exchange/order/cloud and strategy economics; NATS-free data/storage/recovery plus file-plugin Paper/multi-strategy reuse. This stage is audit and minimal-diff plan only; no exchange order code changes.",
   "packaging_validation": {
     "source_sha": "bf75b1c5d259433fc0aa2d9b43764855837b3f68",
     "status": "R03B1_ONLY_PASS",
@@ -580,5 +617,56 @@
     "branch": "codex/v3-local-candidate",
     "receipt": "docs/refactoring/runs/20261023-v3/r05/original-application.json",
     "accepted_source_sha": "2b85c95a4e7951ac2a7590db24416e5b5f76d958"
+  },
+  "refactoring_scope_revision": {
+    "authority": "Explicit user instruction, 2026-10-23",
+    "plan": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+    "source_sha": "4977ab509490173e312183f32d47f862d94ee0bf",
+    "implementation_dispatch_authorized": false,
+    "completed_evidence_preserved": true,
+    "affected_future_scope_ids": [
+      "VN07",
+      "VN08",
+      "VN09",
+      "VN13",
+      "VN15",
+      "VN17",
+      "VN18",
+      "VN19",
+      "VN20",
+      "TX00",
+      "TX01",
+      "TX02A",
+      "TX02B",
+      "TX02",
+      "TX03A",
+      "TX03B",
+      "TX03",
+      "TX04A",
+      "TX04B",
+      "TX04",
+      "TX05",
+      "TX07A",
+      "TX06A",
+      "TX06B",
+      "TX06C",
+      "TX06D",
+      "TX06E",
+      "TX06",
+      "TX07B",
+      "TX07",
+      "TX08A",
+      "TX08B",
+      "TX08",
+      "TX09",
+      "TX10",
+      "TX11",
+      "TX12"
+    ],
+    "optional_tooling_not_core": [
+      "O01",
+      "R06"
+    ],
+    "R05_calculators_are_not_plugin_completion": true
   }
 }

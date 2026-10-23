@@ -1,11 +1,13 @@
 # Production 13 — 전략 개발·Paper·Live 승격
 
+> **2026-10-23 binding scope correction:** [tech_lead_scope_decisions.json](./reuse_audit/tech_lead_scope_decisions.json)·[revised_dag.json](./reuse_audit/revised_dag.json)·[VibeTrading_Minimal_Reuse_Plan_20261023.md](./VibeTrading_Minimal_Reuse_Plan_20261023.md)가 우선한다. 현재 승격 경로·ETF runtime·기존 Paper/cloud 동작은 보존한다. 필수 범위는 **별도 Python strategy file + 기존 `STRATEGY_ID/SUBSCRIPTIONS/WARMUP/create_strategy/on_event` contract + shared data/Signals + 기존 Paper**이며, C3/KP/KD 수학 함수는 calculator일 뿐 plugin 완료가 아니다. all-five venue/universal margin/cross-venue/new uploader는 이 lifecycle의 필수 조건이 아니다. 이 문서는 제품 코드를 변경하지 않는다.
+
 1. **Research(외부):** 사용자가 알파/FV/신호/파라미터 연구. 서버는 연구/탐색/학습을 실행하지 않는다.
-2. **Implementation:** 기존 StrategyModule의 on_event/Signal을 보존하고 필요한 Action 확장만 사용한다. 직접 broker/DB/network 호출 대신 공유 MarketView/History/Feature·공통 owner를 이용한다.
-3. **Off-server Backtest:** 검증된 Parquet/History를 reproducible manifest로 export/download. 범위·결손/수정·timestamp/available-at·contract/source/schema/checksum·snapshot selection을 포함한다. 대규모 계산은 외부다.
-4. **Registration:** strategy/version/config hash, subscribed instruments/feeds, feature/history/warmup, account/environment/product, capital/risk/queue/runtime budget, 연구 data manifest ID와 요약만 등록한다. TOSS trading account와 metadata 불명 product는 거절한다.
-5. **Live-market Paper:** 실제 MarketState와 같은 판단/risk/portfolio 경로, 별도 Paper DB·adapter, 외부 mutation0. 평가기간·수익성 판단은 사용자 책임이며 고정기간 자동 승격 없음.
-6. **User-approved Live:** 정확 strategy/config/version/venue/account/subaccount/product/environment·capital/risk·working/UNKNOWN/external position·margin/position mode·fee/funding·reconcile/freshness·adapter·owner·kill/rollback를 재검증한다. Paper cash/position은 실제 계좌로 복사하지 않는다.
+2. **Implementation:** 전략별 importable Python file에서 기존 `STRATEGY_ID/SUBSCRIPTIONS/WARMUP/create_strategy/on_event` contract를 구현한다. 직접 broker/DB/network 호출 대신 기존 Shared MarketView/History/Feature·공통 owner를 이용한다. C3/KP/KD calculator는 내부 helper로 재사용하되 plugin으로 표기하지 않는다.
+3. **Off-server Backtest:** 검증된 Parquet/History를 기존 reproducible manifest로 export/download. 범위·결손/수정·timestamp/available-at·contract/source/schema/checksum·snapshot selection을 포함한다. 대규모 계산은 외부다.
+4. **Registration:** strategy/version/config hash, subscribed instruments/feeds, feature/history/warmup, account/environment/product, capital/risk/queue/runtime budget, 연구 data manifest ID와 요약만 등록한다. TOSS trading account와 metadata 불명 product는 거절한다. explicit registration/config만 허용하며 hardcoded strategy-ID branching을 새 runtime에 넣지 않는다.
+5. **Live-market Paper:** 기존 MarketState/판단/risk/portfolio 경로와 기존 Paper matcher/ledger/DB를 재사용하고 외부 mutation0을 유지한다. 평가기간·수익성 판단은 사용자 책임이며 고정기간 자동 승격 없음.
+6. **User-approved Live:** 정확 strategy/config/version/venue/account/subaccount/product/environment·capital/risk·working/UNKNOWN/external position·margin/position mode·fee/funding·reconcile/freshness·adapter·owner·kill/rollback를 재검증한다. Paper cash/position은 실제 계좌로 복사하지 않는다. 기존 ETF/venue runtime을 새 lifecycle로 강제 이관하지 않는다.
 
 예시 lifecycle: REGISTERED→WARMING→PAPER_READY→PAPER_RUNNING→PAUSED/HALTED. Live는 별도 permission이며 strategy 활성 상태와 다르다. 기존 C3/KP/KD의 현재 활성/Mock/Mock2는 임의 변경하지 않는다.
 

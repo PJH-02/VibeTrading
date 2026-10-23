@@ -6,20 +6,22 @@
 > **참조 권위:** `docs/refactoring/vnext/tickets_production.json`, `stage_status.json`, `15_stage_status_and_next_steps.md`, 기존 P00–P12/VN/TX 계약과 과거 검증·배포 영수증. 기준선 변경 시 새 Manifest/Diff를 생성하고 과거 기록을 덮어쓰지 않는다.
 > **반드시 병행:** `VibeTrading_Developer_Ticket_Spec_v3.md` 및 `VibeTrading_Architecture_Requirements_v3.md`.
 
-## 1. 사업적 목적과 완료의 정의
+> **2026-10-23 binding scope correction (사용자 최신 교정, 이 문서의 우선 권위):** 문서 기준 SHA는 `4977ab509490173e312183f32d47f862d94ee0bf`이며 위 2026-10-21 관측선은 역사 기록으로만 보존한다. 이 프로젝트는 **reuse-first 최소 변경**으로 전환한다. [tech_lead_scope_decisions.json](./reuse_audit/tech_lead_scope_decisions.json)·[revised_dag.json](./reuse_audit/revised_dag.json)·[VibeTrading_Minimal_Reuse_Plan_20261023.md](./VibeTrading_Minimal_Reuse_Plan_20261023.md)·[execution_reuse_matrix.md](./reuse_audit/execution_reuse_matrix.md)가 이 문서의 광범위한 "5 Venue 범용 플랫폼 완성" 문구를 대체한다. 현재 동작하는 ETF/venue 주문·취소·체결·포지션/reconcile과 Ncloud archive/upload/download를 보존하고, 신규 exchange/client/signer/Private Stream은 기본 금지한다. **이번 단계 제품 코드 변경 0, 코드 삭제 0.** TX06 all-five connector rebuild, TX03 extra margin 일반화, TX08B cross-venue atomic group, 새 cloud uploader는 필수 core가 아니다. 정적 감사는 live 검증이 아니며 Codex만 결정·수락한다.
 
-프로젝트의 목표는 **수집 데이터의 정밀도·순서·인과성 및 기존 C3/KP/KD 주문 동작을 유지하면서, NATS-free 경량 구조를 기반으로 복수의 주식/ETF·Crypto Perp 전략을 동시에 Paper Trade할 수 있는 범용 실거래 준비 인프라**를 완성하는 것이다. 사용자 전략의 알파·진입 신호·백테스트·실계좌 승격 판단은 본 개발 범위 밖이다. 서버는 검증된 데이터를 외부 연구 환경으로 내려받을 수 있도록 해야 한다.
+## 1. 사업적 목적과 완료의 정의 (2026-10-23 교정)
 
-**이번 작업의 종료 조건:** 서버에 실제 배포하거나 외부 거래소 실계좌를 연결해야만 확인 가능한 항목 **외에는 모든 구현·로컬 통합·패키징·정적 검증·재현 가능한 결함 주입 테스트를 완료한다**. 외부에 의존하는 검증을 이유로 코드 자체의 미구현을 `PASS` 처리하지 않는다. 로컬에서 실제로 재현 가능한 장기 실행 시험은 실행한다. 서버/클라우드 특유의 성능, 실거래 계정 검증, 장중 연속 운용, 실제 Cutover/롤백, 운영 로그 보존/삭제는 별도 External Gate로 남긴다.
+이 프로젝트의 현재 목표는 **기존에 동작하는 ETF/venue/cloud/strategy 경로를 보존하면서, NATS-free 데이터 전달·저장·복구와 별도 Python 전략 FILE module을 기존 strategy Contract·shared data·Signals·기존 Paper matcher/ledger/runtime에 연결하고, 입증된 동일계좌 전략 안전성 gap만 완성하는 것**이다. 사용자 전략 알파·백테스트·실계좌 승격 판단은 범위 밖이다.
 
-### 1.1 거래 및 데이터 범위
+**이번 작업의 종료 조건:** 선택된 local gap(데이터/복구, 파일 plugin, Paper, 동일계좌 safety, projection/E2E)에 대해 기존 Golden과 최소 기존 runtime fixture로 증거를 확보한다. 서버/실계좌/장중/운영 검증은 별도 External Gate다. 외부 의존을 이유로 코드 미구현을 PASS 처리하지 않는다. **어떤 작업도 이 계획 문서만으로 시작되지 않는다.**
 
-- **KIS:** 기존 C3/KP/KD 국내 주식·ETF의 모의/기존 지원 실행. `Mock`/`Mock2`·상품 매핑·경제적 의사결정 및 기존 원장 복원 규칙 보존.
-- **Kiwoom:** 기존 수집 기능 유지; 실제 주문 Adapter는 현재 제품별 지원 근거·자격증명 없는 계약시험 가능 범위에서 구현. 지원할 수 없는 상품은 명시적으로 차단.
-- **TOSS:** **DATA_ONLY**. 새 주문/취소/체결/잔고 Adapter 개발 금지. Reference Price 및 분봉 수집 활용 가능.
-- **Crypto:** Binance, Arcus, GRVT, Bybit, Hyperliquid의 **Perpetual** 계약을 대상으로 한다. 기존 Binance Spot Adapter를 Perp Adapter라고 선언 금지. Linear/inverse, 계약 승수, 마진 모드 및 Position Mode는 실제 지원 범위를 분리한다.
-- 여러 전략이 동일 계좌에서 동시에 작동할 수 있으며, GRVT MM + GRVT–Binance Cross-exchange arbitrage 등의 상충 주문·부분체결·UNKNOWN을 지원한다. **실제 계좌 권위는 계좌별 단일 Owner**, 전략별 포지션/PnL은 가상 귀속 장부로 분리한다.
-- 전략 승격: **연구 → 계약에 맞춰 전략 구현 → 운영 서버 외부 백테스트 → 실시간 Paper → 사용자 수동 Live 승인**. Testnet/Mock는 전략 승격의 의무 단계가 아니라 주문·취소·응답·지연을 검증하는 도구다.
+### 1.1 거래·데이터 범위 (reuse-first)
+
+- **KIS:** 기존 C3/KP/KD ETF `mock`/`mock2` 실행과 원장 복원 규칙을 보존한다. legacy `BrokerStub` 부재를 ETF venue 미지원으로 해석하지 않는다.
+- **Kiwoom:** Windows COM execution legacy와 REST data-only를 분리해 보존한다. 새 주문 wrapper를 만들지 않는다.
+- **TOSS:** **DATA_ONLY**. 새 주문/취소/체결/잔고 Adapter 개발 금지.
+- **Crypto:** 기존 Binance spot, Arcus/GRVT/Bybit/Hyperliquid 기존 경로와 test-visible perp mapping/signing composition을 보존한다. **all-five connector rebuild는 필수 core가 아니다.** Spot ≠ perp, mock ≠ testnet ≠ live.
+- **동일계좌:** 기존 account Owner/ledger를 재사용하고, 새 multi-strategy 연결에서 입증된 reservation/attribution/cancel ownership/restart safety gap만 다룬다. Cross-venue atomic group은 명시 수요까지 deferred.
+- **전략:** 별도 importable Python file + 기존 `STRATEGY_ID/SUBSCRIPTIONS/WARMUP/create_strategy/on_event` contract. C3/KP/KD 수학 함수는 **calculator**이며 plugin 완료가 아니다. 기존 전략 economics·Golden을 보존한다.
 
 ## 2. 현재 확인된 사실 및 병목
 
@@ -30,9 +32,9 @@
 | 문서의 복수 권위 | 루트 구형 README·계획, 과거 P/VN/TX 문서·수백 기록 | 현재 README/AGENTS/architecture/status는 짧게, 상세 근거는 보존·archive | P0 |
 | 패키지 경로 복잡성 | 최상위 `vibetrading`와 루트 `services` 동시 존재 | `src/vibetrading` 표준 패키징; import/Compose/rollback 경로 동등성 | P0 |
 | C3/KP/KD의 전략/실행 혼재 | `vibetrading/etf_trading.py`와 `etf_journal.py`에 실제 전략 존재 | 순수 신호 계산을 안정된 테스트와 함께 분리; 경제적 계산 동일 | P1 |
-| 핵심 기능 WIP | `paper_execution.py`, `portfolio_ledger.py`, `strategy_runtime.py`, `perp_execution.py`, `execution_groups.py` | 추가 추상화 대신 E2E 연결과 계약을 완성 | P0 |
-| 복구/저장 미완성 | VN07 account/strategy 연속 복구, VN08 retained-base, VN09 proof GC 남음 | checkpoint+reader+GC 증명 완성. 실제 운영 데이터 삭제는 제외 | P0 |
-| Runtime/실거래 실행 갭 | Paper fixture 중심, Generic Owner offline-only, Perp venue adapter request mapping 중심 | 공통 권위·데이터 계좌 상태·Perp 주문/취소/체결 조회 정합성 구현; Live 권한 기본 DISARMED | P0 |
+| 재사용 가능한 핵심 기능 | `paper_execution.py`, `portfolio_ledger.py`, `strategy_runtime.py`는 실제 matcher/ledger/runtime; `perp_execution.py` mapping/signing은 prototype; `execution_groups.py`는 observational | 새 엔진 대신 기존 기능 REUSE/ADAPT; cross-venue group은 deferred | P0 |
+| 복구/저장 미완성 | VN07 strategy/Paper checkpoint continuity, VN08 retained-base reader, VN09 proof GC 남음 | 기존 recovery/reader/archive 재사용; 실제 운영 데이터 삭제 제외 | P0 |
+| Runtime/실거래 실행 | 기존 ETF/Bybit/GRVT/KIS/cloud 경로 동작; Generic Owner는 offline-only; 정규화 Perp는 injected transport | 기존 경로 보존; 새 connector/Private Stream/universal live engine 금지. Live 권한 DISARMED | P0 |
 | 다중 전략 자원 압박 | 2vCPU/약 3.8GiB; 이전 서버 표본에서 swap·CPU PSI 상승 | bounded queue, O(affected orders), 부하/피크·실측. 비용 큰 신규 서비스 금지 | P0 |
 | 토큰 소모 과다 | 전체 문서 반복 재독, 별도 agent 상태·중복 테스트/receipt, 폭넓은 WIP | Codex는 명세/검토/통합 승인, OpenCode+FreeLLMAPI는 구현, deterministic scripts는 기계적 수정 | P0 |
 
@@ -100,14 +102,14 @@ VibeTrading/
 | **G1 에이전트 배선** | O00·O01: FreeLLMAPI/OpenCode 설치, pinned-model smoke, 안전 워크트리, task packet/검사기 | 사용자 1회 설정 + GLM | secret-free sandbox, 도구 호출 PASS, 토큰/지연 상한, 무허가 파일 쓰기 차단 |
 | **G2 문서/패키징** | R02·R03: README/status/AGENTS, `src/vibetrading` 기계적 이동, build/CLI/Compose 테스트 | GLM+codemod | 이동 전후 Golden·전체 pytest·Docker build 설정 동등, rollback 스크립트 보존 |
 | **G3 경계 통합** | R04·R05: legacy/caller 분류, 기존 전략 분리와 중복 해소, module ownership | GLM/DeepSeek; 고위험 Codex 리뷰 | 명백한 무참조 코드만 Archive; C3/KP/KD economics 불변. **기능 변경과 이동은 별도 Commit** |
-| **G4 복구/상태** | VN07(잔여), VN08, VN09, VN15 | DeepSeek/GLM; Codex Critical review | account/strategy/pending-action 연속 복구·Reader prefix·GC dry-run, PnL quality; crash/rollback proof |
-| **G5 Paper E2E** | TX00→TX01→TX02(A/B)→TX03(A/B)→TX04(A/B)→TX07A→VN13/TX05 및 TX08(A/B) | GLM/DeepSeek; Codex 계약 결정 | live-input fixture를 이용한 매매 Runtime→Risk→Paper Fill→Durable Portfolio→Restart, 다중 전략·동일 계좌 isolation |
-| **G6 Venue Perp E2E** | TX06A–E, TX07B, TX07; 지원 Venue×Product×Mode 명확화 | GLM/DeepSeek; Codex Critical review | 주문/취소/조회/체결/펀딩·재접속·UNKNOWN 정규화 코드는 완성. 실 API credential 실행은 별도 External Gate |
-| **G7 연계/확장** | TX09, TX10, TX11의 로컬 항목, VN17, VN18의 로컬 항목 | GLM/DeepSeek + pytest | 데이터 Export 계약, 텔레그램, cross venue partial fill, burst·성능·복구 로컬 검증 |
-| **G8 Release Candidate** | TX12, VN19의 패키지 생성·전체 회귀·정적/라이선스/비밀 검사·문서 정리 | 스크립트 + Codex 최종 감사 | 정확 HEAD + test/gate receipts + Docker package + `EXTERNAL_ONLY_GATES.md` 보완표. 실제 서버 배포 없음 |
-| **G9 실서버 이후** | P11 전환, 관측/안정화, VN20 레거시 서비스/원본 삭제 | **이번 범위 제외** | 승인 없이는 실행하지 않음. 롤백 경계와 NATS 백로그 보존 |
+| **G4 복구/상태** | VN07(잔여), VN08, VN09 | DeepSeek/GLM; Codex Critical review | 기존 market recovery/journal/reader/archive 재사용; strategy/Paper checkpoint continuity, Reader prefix, GC dry-run. 실제 삭제 0 |
+| **G5 파일 plugin + 기존 Paper** | TX00→TX01→TX02A/B→TX04A/B→VN13/TX05; TX08A는 마지막 | GLM/DeepSeek; Codex 계약 결정 | 실제 시장 입력→기존 Runtime→기존 Paper matcher/ledger→restart; 전략별 file module, 동일계좌 safety. TX03 extra margin은 선택 |
+| **G6 선택 기존 venue 감사** | TX06A–E/TX06, TX07A/B 중 선택된 route만 | GLM/DeepSeek; Codex review | **신규 connector build 없음.** 기존 testnet/prototype 경로의 함수·caller·environment를 감사하고, 입증된 선택 gap만 별도 티켓. all-five gate 아님 |
+| **G7 Projection/E2E** | VN15/TX09, TX10, VN17, VN18, TX11 | GLM/DeepSeek + pytest | actual/assumed/PAPER/recovery projection, 기존 cloud export, local wiring, narrow NATS-free E2E. cross-venue partial fill은 제외 |
+| **G8 최소 local acceptance** | TX12, VN19 | 스크립트 + Codex 최종 감사 | 정확 HEAD + scoped receipts + 기존 package/rollback. 범용 Trading Platform 완성 badge 없음, 실제 서버 배포 없음 |
+| **G9 실서버 이후** | P11 전환, 관측/안정화, VN20 레거시 서비스/원본 삭제 | **이번 범위 제외** | 승인 없이는 실행하지 않음. 롤백 경계와 NATS 백로그 보존, 삭제 0 |
 
-**DAG 세부:** 기존 `tickets_production.json`의 depends_on 및 read/edit/forbidden paths가 기본 권위다. 위 Wave는 **우선순위/분업 분류**이지 선행조건을 무시하는 직렬 스크립트가 아니다. 이동 이후 경로는 R03이 생성한 매핑에서 동적으로 변환한다. 이미 완료된 VN00–06, VN10–12, VN14A/B, VN16은 무의미하게 다시 구현하지 않는다.
+**DAG 세부:** `reuse_audit/revised_dag.json`이 현재 canonical DAG다. 기존 `tickets_production.json`의 ID/read/edit/forbidden path·완료 evidence는 보존하되, 완료 14개를 재개발하지 않는다. 위 Wave는 우선순위/분업 분류이며 선행조건을 무시하지 않는다. TX05는 VN13, TX09는 VN15, TX08 aggregate는 TX08A만 의존하고, TX11 core는 all-five/cross-venue group을 선행으로 갖지 않는다.
 
 ### 5.1 작업 중 반드시 적용할 2가지 수정
 
@@ -118,7 +120,7 @@ VibeTrading/
 
 1. 한 작업은 `task_id/base_sha/read_paths/edit_paths/forbidden_paths/contract/acceptance/test_command`가 포함된 **2~5KB 수준 Task Packet**으로 전달한다. 복잡한 원장 티켓은 해당 계약 부분만 추가한다.
 2. 결정론적 인덱스·AST/Import Graph·경로 이동·해시·테스트 실행은 LLM 없이 수행한다. 대량 JSON/테스트 로그를 모델 컨텍스트에 다시 출력하지 않는다.
-3. GLM은 R0/R1/R2, 일반 기능/테스트/문서 정리 담당, DeepSeek는 인과적 상태기계·주문 생명주기·Perp Adapter 구현 담당 **후보**로 둔다. 실제 성능이 반대이면 제한된 시험으로 역할을 바꾼다. 모델 이름만으로 품질 보증하지 않는다.
+3. GLM은 R0/R1/R2, 일반 기능/테스트/문서 정리 담당, DeepSeek는 인과적 상태기계·기존 원장/Paper/복구 gap 담당 **후보**로 둔다. Perp Adapter 신규 구현은 기본 업무가 아니다. 실제 성능이 반대이면 제한된 시험으로 역할을 바꾼다. 모델 이름만으로 품질 보증하지 않는다.
 4. 고위험 티켓은 저비용 모델 구현 + 다른 모델의 반례 검토 + Codex 최종 **diff 중심** 승인. 일반 티켓은 `pytest`/Lint/Contract checks가 기본이며 Codex는 예외·Gate만 검토한다.
 5. 총 사용량은 `request_count, input_tokens, output_tokens, retries, fallback_provider, model_id, effective_cost, time, test_failures`를 로컬에 집계한다. FreeLLMAPI의 모델 자동 교체는 **수정 티켓에서 기본 비활성 또는 모델 변경 기록 필수**, 품질 확인되지 않은 provider fallback은 자동 수정 금지.
 6. `OPEN_CODE_WRITE_SCOPE`: 작업 전용 Worktree·allowlisted paths; `.env`, DB, 운영 자격증명, 키, 서버 SSH·Compose 운영 엔드포인트 접근 불허. OpenCode 외부 모델에 비공개 소스가 전송됨을 이해하고, 사용자가 provider 약관·데이터 보존/학습 정책을 검토한 공급자만 활성화한다.

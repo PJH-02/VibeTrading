@@ -1,0 +1,263 @@
+{
+  "source_sha": "4977ab509490173e312183f32d47f862d94ee0bf",
+  "authority": "Latest explicit user scope correction; Codex Tech Lead scope decision; static audit is not live verification",
+  "product_code_changes_authorized_this_stage": false,
+  "new_venue_connector_work_authorized": false,
+  "default_existing_function_classification": "KEEP",
+  "preserve_completed_acceptance_and_original_statuses": true,
+  "mandatory_core": [
+    "VN07",
+    "VN08",
+    "VN09",
+    "VN13",
+    "TX01",
+    "TX02A",
+    "TX02B",
+    "TX04A",
+    "TX04B",
+    "TX05",
+    "TX07A",
+    "TX08A",
+    "VN15",
+    "TX09",
+    "TX10",
+    "VN17",
+    "VN18",
+    "VN19"
+  ],
+  "optional_not_core": [
+    "TX03A",
+    "TX03B",
+    "TX03",
+    "TX06A",
+    "TX06B",
+    "TX06C",
+    "TX06D",
+    "TX06E",
+    "TX06",
+    "TX07B",
+    "TX07",
+    "TX08B"
+  ],
+  "task_scope": {
+    "TX00": {
+      "disposition": "REUSE_AUDIT",
+      "goal": "Inventory existing venue/product/environment execution paths and exact callers; preserve TOSS DATA_ONLY; no connector implementation."
+    },
+    "TX01": {
+      "disposition": "ADAPT_EXISTING_CONTRACT",
+      "goal": "Reuse existing Signal/OrderIntent and strategy contract; add only necessary local Paper/strategy identity bridge. No universal replacement action API."
+    },
+    "TX02A": {
+      "disposition": "ADAPT_EXISTING_OWNER",
+      "goal": "Reuse ETF process lease/journal and existing Paper ExecutionOwner; prove one physical account writer in selected mode, no second real-account authority."
+    },
+    "TX02B": {
+      "disposition": "COMPLETE_MISSING_ATTRIBUTION",
+      "goal": "Reuse EtfJournal per-strategy books and PortfolioLedger Paper books; complete only demonstrated same-account attribution/reservation/restart gaps."
+    },
+    "TX02": {
+      "disposition": "REUSE_AGGREGATE",
+      "goal": "Joint acceptance of selected existing account owner/books; do not build new generic account engine."
+    },
+    "TX03A": {
+      "disposition": "DEFER_UNREQUESTED_PRODUCT_GENERALIZATION",
+      "goal": "Reuse existing product metadata and supported Paper specs; extra cross/portfolio/unified margin types require explicit strategy need, not mandatory baseline."
+    },
+    "TX03B": {
+      "disposition": "REUSE_SCOPE_LIMITED_ACCOUNTING",
+      "goal": "Reuse existing runtime/journal fee/funding/account facts; complete only selected Paper product missing accounting. No universal live margin ledger rewrite."
+    },
+    "TX03": {
+      "disposition": "OPTIONAL_PRODUCT_GATE",
+      "goal": "Accept only explicitly selected existing products; broad perpetual platform completion is not a core NATS-free/Paper gate."
+    },
+    "TX04A": {
+      "disposition": "COMPLETE_MISSING_PAPER_DURABILITY",
+      "goal": "Reuse existing PaperExecution/PortfolioLedger atomic persistence; finish demonstrated Paper restart/dedup gaps, retain conservative fill semantics."
+    },
+    "TX04B": {
+      "disposition": "ADAPT_LOCAL_MARKET_INPUT",
+      "goal": "Connect existing matcher to continuous NATS-free live/replay input with causal timestamps/gaps, no new exchange simulator or venue client."
+    },
+    "TX04": {
+      "disposition": "REUSE_PAPER_GATE",
+      "goal": "Selected Paper event-to-fill-to-ledger/restart acceptance using existing matcher/ledger."
+    },
+    "TX05": {
+      "disposition": "MERGE_WITH_VN13",
+      "goal": "One implementation workstream with VN13: file-based strategy plugin -> existing local strategy runtime -> existing Paper matcher. No parallel new runtime or mandatory replacement of live execution."
+    },
+    "TX06A": {
+      "disposition": "EXCLUDE_NEW_CONNECTOR_BUILD",
+      "goal": "Binance: retain existing connectors and compare futures vs spot/environment; map existing methods only if selected path needs local bridge. No new HTTP/signer/private wrapper by default."
+    },
+    "TX06B": {
+      "disposition": "EXCLUDE_NEW_CONNECTOR_BUILD",
+      "goal": "Arcus: retain existing WebSocket/signing path and scope differences; any missing capability needs function-level evidence and explicit selected use."
+    },
+    "TX06C": {
+      "disposition": "EXCLUDE_NEW_CONNECTOR_BUILD",
+      "goal": "GRVT: reuse fv_mm venue/private/reconcile and existing broker composition; do not treat incomplete generic adapter as missing working exchange connection."
+    },
+    "TX06D": {
+      "disposition": "EXCLUDE_NEW_CONNECTOR_BUILD",
+      "goal": "Bybit: reuse fv_mm and liquidity_mm paths; keep execution probe testnet-only unless its own environment evidence says otherwise. No duplicate order/private client."
+    },
+    "TX06E": {
+      "disposition": "EXCLUDE_NEW_CONNECTOR_BUILD",
+      "goal": "Hyperliquid: preserve existing SDK/broker integration; generic transport implementation is not automatically required for NATS-free/Paper scope."
+    },
+    "TX06": {
+      "disposition": "OPTIONAL_SELECTED_VENUE_AUDIT",
+      "goal": "Remove mandatory all-five-venue rebuild gate; function/caller/environment verification for selected existing route only. Do not erase completed adapter prototype evidence."
+    },
+    "TX07A": {
+      "disposition": "ADAPT_EXISTING_FACTS",
+      "goal": "Small normalized local identity/event mapping over existing order/fill/journal semantics; no second universal order lifecycle state machine."
+    },
+    "TX07B": {
+      "disposition": "REUSE_EXISTING_RECONCILIATION",
+      "goal": "Preserve existing per-runtime private/REST reconciliation; complete only demonstrated selected path gaps, no mandatory new Private Stream for every venue."
+    },
+    "TX07": {
+      "disposition": "OPTIONAL_SELECTED_EXECUTION_GATE",
+      "goal": "Selected current runtime equivalence/reconcile gate; not a mandatory new universal lifecycle engine."
+    },
+    "TX08A": {
+      "disposition": "COMPLETE_MISSING_SAME_ACCOUNT_SAFETY",
+      "goal": "Priority: existing owner/ledger safe simultaneous strategy reservations, attribution, cancel ownership and restart under one account; Paper first, no live account rewrite."
+    },
+    "TX08B": {
+      "disposition": "DEFER_EXPLICIT_CROSS_VENUE_NEED",
+      "goal": "Cross-exchange execution group is deferred until an explicitly chosen strategy needs it; preserve existing prototype, remove from core multi-strategy acceptance."
+    },
+    "TX08": {
+      "disposition": "SAME_ACCOUNT_GATE_ONLY",
+      "goal": "Require TX08A selected same-account evidence; cross-venue atomic execution is not mandatory core scope."
+    },
+    "TX09": {
+      "disposition": "MERGE_WITH_VN15",
+      "goal": "One read-only projection/control workstream with VN15. Preserve existing Telegram/trade/reporting; only missing Paper/actual/strategy labels and safe existing command bridges."
+    },
+    "TX10": {
+      "disposition": "KEEP_CLOUD_ADAPT_PLUGIN_METADATA",
+      "goal": "Keep current Ncloud/S3 upload/download/verify and export path unchanged; add only missing data-manifest-to-strategy-file/Paper registration linkage. No new uploader/backtest platform."
+    },
+    "TX11": {
+      "disposition": "NARROW_CORE_E2E",
+      "goal": "One NATS-free data -> strategy-file -> Paper -> same-account attribution -> report/restart workflow, plus preserved legacy Golden behavior. Mandatory five-venue/arb platform scenario removed."
+    },
+    "TX12": {
+      "disposition": "NARROW_LOCAL_ACCEPTANCE",
+      "goal": "Accept minimal local scope (data/storage/recovery/plugins/Paper/same-account safety) and unchanged legacy runtimes; no generic Trading Platform completion badge."
+    },
+    "VN07": {
+      "disposition": "COMPLETE_EXISTING_RECOVERY",
+      "goal": "Reuse existing market recovery and per-runtime journals; connect only missing strategy/Paper checkpoint continuity, no universal account-state replacement."
+    },
+    "VN08": {
+      "disposition": "COMPLETE_DATA_RECOVERY",
+      "goal": "Retained-prefix reader only; preserve proven data identity/replay semantics."
+    },
+    "VN09": {
+      "disposition": "SAFE_STORAGE_GAP_ONLY",
+      "goal": "Reuse existing archive/cloud integrity; GC enabled only after coverage/reader proof. Never rebuild working uploader or delete before verification."
+    },
+    "VN13": {
+      "disposition": "STRATEGY_FILE_PLUGIN_PAPER",
+      "goal": "One Python file per strategy, existing STRATEGY_ID/SUBSCRIPTIONS/WARMUP/create_strategy/on_event contract, explicit configuration links to shared data pipeline and existing Paper. C3/KP/KD calculators alone do not complete this."
+    },
+    "VN15": {
+      "disposition": "MERGE_WITH_TX09",
+      "goal": "One actual/assumed/Paper/recovery projection workstream, no reporting IO in submit path or redundant dashboard platform."
+    },
+    "VN17": {
+      "disposition": "MINIMAL_RUNTIME_WIRING",
+      "goal": "Reuse existing runtimes; local process wiring/bounded resources only, no new universal execution deployment topology."
+    },
+    "VN18": {
+      "disposition": "CORE_REGRESSION_FAULT_GATE",
+      "goal": "Existing Golden + data recovery and selected plugin/Paper/same-account faults; compare existing runtime behavior, no venue reconnect implementation."
+    },
+    "VN19": {
+      "disposition": "KEEP_RELEASE_ROLLBACK",
+      "goal": "Reuse existing packaging/export/rollback; prepare only selected local data-path transition."
+    },
+    "VN20": {
+      "disposition": "EXTERNAL_AFTER_PROOF",
+      "goal": "Existing NATS execution path retained until verified local migration/operational acceptance; code deletion requires per-path caller/rollback proof and later explicit authorization."
+    }
+  },
+  "dependency_revisions": {
+    "TX04A": [
+      "TX02B"
+    ],
+    "TX04B": [
+      "TX04A",
+      "VN03"
+    ],
+    "TX05": [
+      "VN13"
+    ],
+    "TX06": [
+      "TX00"
+    ],
+    "TX07B": [
+      "TX00",
+      "TX07A"
+    ],
+    "TX08A": [
+      "TX02",
+      "TX05",
+      "TX07A"
+    ],
+    "TX08": [
+      "TX08A"
+    ],
+    "TX09": [
+      "VN15"
+    ],
+    "TX11": [
+      "TX05",
+      "TX08A",
+      "TX10",
+      "VN15",
+      "VN18"
+    ],
+    "TX12": [
+      "TX11",
+      "VN19"
+    ],
+    "VN13": [
+      "VN03",
+      "TX01",
+      "TX04B"
+    ],
+    "TX06A": [
+      "TX00"
+    ],
+    "TX06B": [
+      "TX00"
+    ],
+    "TX06C": [
+      "TX00"
+    ],
+    "TX06D": [
+      "TX00"
+    ],
+    "TX06E": [
+      "TX00"
+    ]
+  },
+  "new_work_gap_gate": [
+    "selected strategy/product/environment requirement",
+    "search all existing runtime functions/callers, not only generic wrapper",
+    "explain smallest adaptation and Golden invariants",
+    "COMPLETE_MISSING needs demonstrated gap; REPLACE_PROVEN_DEFECT needs reproducer",
+    "Tech Lead bounded reticket before any product change"
+  ],
+  "strategy_file_contract": "Separate importable Python module per strategy; existing modern contract, explicit config/subscriptions/warmup, local data pipeline generates Signals; calculators are reusable internals only, never treated as plugin completion",
+  "cloud": "KEEP existing NcloudStorageBackend put_file/put_bytes/verify/download_file; source/user evidence of working upload preserved, no replacement SDK/client",
+  "deletion": "Plan only; preserve current code and rollback until proven unused and verified replacement"
+}

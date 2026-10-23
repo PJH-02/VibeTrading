@@ -1,0 +1,455 @@
+{
+  "authority": "DERIVED_FROM_CANONICAL_TICKETS_NOT_NEW_STATUS_DATABASE",
+  "source_sha": "4977ab509490173e312183f32d47f862d94ee0bf",
+  "cycle_free": true,
+  "completed_task_ids_preserved": [
+    "VN00",
+    "VN01",
+    "VN02",
+    "VN03",
+    "VN04A",
+    "VN04B",
+    "VN05",
+    "VN06",
+    "VN10",
+    "VN11",
+    "VN12",
+    "VN14A",
+    "VN14B",
+    "VN16"
+  ],
+  "current_rows": [
+    {
+      "task_id": "VN00",
+      "depends_on": [],
+      "historical_status": "COMPLETE_CURRENT_READ_ONLY_BASELINE",
+      "scope_disposition": "KEEP_COMPLETED_OR_UNCHANGED"
+    },
+    {
+      "task_id": "VN01",
+      "depends_on": [
+        "VN00"
+      ],
+      "historical_status": "LOCAL_IMPLEMENTATION_COMPLETE_OPERATIONAL_GATES_OPEN",
+      "scope_disposition": "KEEP_COMPLETED_OR_UNCHANGED"
+    },
+    {
+      "task_id": "VN02",
+      "depends_on": [
+        "VN01"
+      ],
+      "historical_status": "LOCAL_IMPLEMENTATION_COMPLETE_OPERATIONAL_GATES_OPEN",
+      "scope_disposition": "KEEP_COMPLETED_OR_UNCHANGED"
+    },
+    {
+      "task_id": "VN03",
+      "depends_on": [
+        "VN02"
+      ],
+      "historical_status": "LOCAL_IMPLEMENTATION_COMPLETE_OPERATIONAL_GATES_OPEN",
+      "scope_disposition": "KEEP_COMPLETED_OR_UNCHANGED"
+    },
+    {
+      "task_id": "VN04A",
+      "depends_on": [
+        "VN03"
+      ],
+      "historical_status": "LOCAL_IMPLEMENTATION_COMPLETE_OPERATIONAL_GATES_OPEN",
+      "scope_disposition": "KEEP_COMPLETED_OR_UNCHANGED"
+    },
+    {
+      "task_id": "VN04B",
+      "depends_on": [
+        "VN04A"
+      ],
+      "historical_status": "LOCAL_IMPLEMENTATION_COMPLETE_OPERATIONAL_GATES_OPEN",
+      "scope_disposition": "KEEP_COMPLETED_OR_UNCHANGED"
+    },
+    {
+      "task_id": "VN05",
+      "depends_on": [
+        "VN01",
+        "VN04B"
+      ],
+      "historical_status": "LOCAL_IMPLEMENTATION_COMPLETE_OPERATIONAL_GATES_OPEN",
+      "scope_disposition": "KEEP_COMPLETED_OR_UNCHANGED"
+    },
+    {
+      "task_id": "VN06",
+      "depends_on": [
+        "VN03"
+      ],
+      "historical_status": "LOCAL_IMPLEMENTATION_COMPLETE_OPERATIONAL_GATES_OPEN",
+      "scope_disposition": "KEEP_COMPLETED_OR_UNCHANGED"
+    },
+    {
+      "task_id": "VN07",
+      "depends_on": [
+        "VN06",
+        "VN04B"
+      ],
+      "historical_status": "PARTIAL_MARKET_ORDER_AND_JOURNAL_LIFECYCLE_COMPLETE_STRATEGY_OPEN",
+      "scope_disposition": "COMPLETE_EXISTING_RECOVERY"
+    },
+    {
+      "task_id": "VN08",
+      "depends_on": [
+        "VN07"
+      ],
+      "historical_status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
+      "scope_disposition": "COMPLETE_DATA_RECOVERY"
+    },
+    {
+      "task_id": "VN09",
+      "depends_on": [
+        "VN08",
+        "VN16"
+      ],
+      "historical_status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
+      "scope_disposition": "SAFE_STORAGE_GAP_ONLY"
+    },
+    {
+      "task_id": "VN10",
+      "depends_on": [
+        "VN00"
+      ],
+      "historical_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "scope_disposition": "KEEP_COMPLETED_OR_UNCHANGED"
+    },
+    {
+      "task_id": "VN11",
+      "depends_on": [
+        "VN10"
+      ],
+      "historical_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "scope_disposition": "KEEP_COMPLETED_OR_UNCHANGED"
+    },
+    {
+      "task_id": "VN12",
+      "depends_on": [
+        "VN11"
+      ],
+      "historical_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "scope_disposition": "KEEP_COMPLETED_OR_UNCHANGED"
+    },
+    {
+      "task_id": "VN13",
+      "depends_on": [
+        "VN03",
+        "TX01",
+        "TX04B"
+      ],
+      "historical_status": "PAPER_FIXTURE_INTEGRATION_IMPLEMENTED_PRODUCTION_BLOCKED",
+      "scope_disposition": "STRATEGY_FILE_PLUGIN_PAPER"
+    },
+    {
+      "task_id": "VN14A",
+      "depends_on": [
+        "VN12"
+      ],
+      "historical_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "scope_disposition": "KEEP_COMPLETED_OR_UNCHANGED"
+    },
+    {
+      "task_id": "VN14B",
+      "depends_on": [
+        "VN14A",
+        "VN04B"
+      ],
+      "historical_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "scope_disposition": "KEEP_COMPLETED_OR_UNCHANGED"
+    },
+    {
+      "task_id": "VN15",
+      "depends_on": [
+        "VN14B"
+      ],
+      "historical_status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
+      "scope_disposition": "MERGE_WITH_TX09"
+    },
+    {
+      "task_id": "VN16",
+      "depends_on": [
+        "VN00"
+      ],
+      "historical_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "scope_disposition": "KEEP_COMPLETED_OR_UNCHANGED"
+    },
+    {
+      "task_id": "VN17",
+      "depends_on": [
+        "VN09",
+        "VN15",
+        "VN16",
+        "VN13"
+      ],
+      "historical_status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
+      "scope_disposition": "MINIMAL_RUNTIME_WIRING"
+    },
+    {
+      "task_id": "VN18",
+      "depends_on": [
+        "VN17",
+        "VN05"
+      ],
+      "historical_status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
+      "scope_disposition": "CORE_REGRESSION_FAULT_GATE"
+    },
+    {
+      "task_id": "VN19",
+      "depends_on": [
+        "VN18"
+      ],
+      "historical_status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
+      "scope_disposition": "KEEP_RELEASE_ROLLBACK"
+    },
+    {
+      "task_id": "VN20",
+      "depends_on": [
+        "VN19"
+      ],
+      "historical_status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
+      "scope_disposition": "EXTERNAL_AFTER_PROOF"
+    },
+    {
+      "task_id": "TX00",
+      "depends_on": [
+        "VN00"
+      ],
+      "historical_status": "IN_PROGRESS",
+      "scope_disposition": "REUSE_AUDIT"
+    },
+    {
+      "task_id": "TX01",
+      "depends_on": [
+        "TX00"
+      ],
+      "historical_status": "PAPER_SCOPED_IMPLEMENTATION",
+      "scope_disposition": "ADAPT_EXISTING_CONTRACT"
+    },
+    {
+      "task_id": "TX02A",
+      "depends_on": [
+        "TX01",
+        "VN10"
+      ],
+      "historical_status": "PAPER_SCOPED_IMPLEMENTATION_LEGACY_FENCING_OPEN",
+      "scope_disposition": "ADAPT_EXISTING_OWNER"
+    },
+    {
+      "task_id": "TX02B",
+      "depends_on": [
+        "TX02A"
+      ],
+      "historical_status": "PAPER_SCOPED_IMPLEMENTATION",
+      "scope_disposition": "COMPLETE_MISSING_ATTRIBUTION"
+    },
+    {
+      "task_id": "TX02",
+      "depends_on": [
+        "TX02A",
+        "TX02B"
+      ],
+      "historical_status": "PLANNED",
+      "scope_disposition": "REUSE_AGGREGATE"
+    },
+    {
+      "task_id": "TX03A",
+      "depends_on": [
+        "TX01"
+      ],
+      "historical_status": "ISOLATED_LINEAR_PAPER_ONLY",
+      "scope_disposition": "DEFER_UNREQUESTED_PRODUCT_GENERALIZATION"
+    },
+    {
+      "task_id": "TX03B",
+      "depends_on": [
+        "TX02B",
+        "TX03A"
+      ],
+      "historical_status": "PAPER_CASHFLOW_IMPLEMENTATION_ACTUAL_MARGIN_OPEN",
+      "scope_disposition": "REUSE_SCOPE_LIMITED_ACCOUNTING"
+    },
+    {
+      "task_id": "TX03",
+      "depends_on": [
+        "TX03A",
+        "TX03B"
+      ],
+      "historical_status": "PLANNED",
+      "scope_disposition": "OPTIONAL_PRODUCT_GATE"
+    },
+    {
+      "task_id": "TX04A",
+      "depends_on": [
+        "TX02B"
+      ],
+      "historical_status": "LOCAL_IMPLEMENTED_INTEGRATED_OFFLINE_TEST_PASS_PRODUCTION_OPEN",
+      "scope_disposition": "COMPLETE_MISSING_PAPER_DURABILITY"
+    },
+    {
+      "task_id": "TX04B",
+      "depends_on": [
+        "TX04A",
+        "VN03"
+      ],
+      "historical_status": "MATCHER_DURABLE_CONTINUOUS_INPUT_RECOVERY_OPEN",
+      "scope_disposition": "ADAPT_LOCAL_MARKET_INPUT"
+    },
+    {
+      "task_id": "TX04",
+      "depends_on": [
+        "TX04A",
+        "TX04B"
+      ],
+      "historical_status": "PLANNED",
+      "scope_disposition": "REUSE_PAPER_GATE"
+    },
+    {
+      "task_id": "TX05",
+      "depends_on": [
+        "VN13"
+      ],
+      "historical_status": "PAPER_FIXTURE_INTEGRATION_IMPLEMENTED_PRODUCTION_BLOCKED",
+      "scope_disposition": "MERGE_WITH_VN13"
+    },
+    {
+      "task_id": "TX07A",
+      "depends_on": [
+        "TX01"
+      ],
+      "historical_status": "PLANNED",
+      "scope_disposition": "ADAPT_EXISTING_FACTS"
+    },
+    {
+      "task_id": "TX06A",
+      "depends_on": [
+        "TX00"
+      ],
+      "historical_status": "REQUEST_MAPPING_ONLY_FULL_CODE_COMPLETION_BLOCKED",
+      "scope_disposition": "EXCLUDE_NEW_CONNECTOR_BUILD"
+    },
+    {
+      "task_id": "TX06B",
+      "depends_on": [
+        "TX00"
+      ],
+      "historical_status": "REQUEST_MAPPING_ONLY_FULL_CODE_COMPLETION_BLOCKED",
+      "scope_disposition": "EXCLUDE_NEW_CONNECTOR_BUILD"
+    },
+    {
+      "task_id": "TX06C",
+      "depends_on": [
+        "TX00"
+      ],
+      "historical_status": "REQUEST_MAPPING_ONLY_FULL_CODE_COMPLETION_BLOCKED",
+      "scope_disposition": "EXCLUDE_NEW_CONNECTOR_BUILD"
+    },
+    {
+      "task_id": "TX06D",
+      "depends_on": [
+        "TX00"
+      ],
+      "historical_status": "REQUEST_MAPPING_ONLY_FULL_CODE_COMPLETION_BLOCKED",
+      "scope_disposition": "EXCLUDE_NEW_CONNECTOR_BUILD"
+    },
+    {
+      "task_id": "TX06E",
+      "depends_on": [
+        "TX00"
+      ],
+      "historical_status": "REQUEST_MAPPING_ONLY_FULL_CODE_COMPLETION_BLOCKED",
+      "scope_disposition": "EXCLUDE_NEW_CONNECTOR_BUILD"
+    },
+    {
+      "task_id": "TX06",
+      "depends_on": [
+        "TX00"
+      ],
+      "historical_status": "PLANNED",
+      "scope_disposition": "OPTIONAL_SELECTED_VENUE_AUDIT"
+    },
+    {
+      "task_id": "TX07B",
+      "depends_on": [
+        "TX00",
+        "TX07A"
+      ],
+      "historical_status": "PLANNED",
+      "scope_disposition": "REUSE_EXISTING_RECONCILIATION"
+    },
+    {
+      "task_id": "TX07",
+      "depends_on": [
+        "TX07A",
+        "TX07B"
+      ],
+      "historical_status": "PLANNED",
+      "scope_disposition": "OPTIONAL_SELECTED_EXECUTION_GATE"
+    },
+    {
+      "task_id": "TX08A",
+      "depends_on": [
+        "TX02",
+        "TX05",
+        "TX07A"
+      ],
+      "historical_status": "PAPER_SHARED_ACCOUNT_FIXTURE_IMPLEMENTATION",
+      "scope_disposition": "COMPLETE_MISSING_SAME_ACCOUNT_SAFETY"
+    },
+    {
+      "task_id": "TX08B",
+      "depends_on": [
+        "TX08A",
+        "TX07A"
+      ],
+      "historical_status": "PAPER_OBSERVATIONAL_COORDINATOR_IMPLEMENTED",
+      "scope_disposition": "DEFER_EXPLICIT_CROSS_VENUE_NEED"
+    },
+    {
+      "task_id": "TX08",
+      "depends_on": [
+        "TX08A"
+      ],
+      "historical_status": "PLANNED",
+      "scope_disposition": "SAME_ACCOUNT_GATE_ONLY"
+    },
+    {
+      "task_id": "TX09",
+      "depends_on": [
+        "VN15"
+      ],
+      "historical_status": "PLANNED",
+      "scope_disposition": "MERGE_WITH_VN15"
+    },
+    {
+      "task_id": "TX10",
+      "depends_on": [
+        "TX01"
+      ],
+      "historical_status": "PLANNED",
+      "scope_disposition": "KEEP_CLOUD_ADAPT_PLUGIN_METADATA"
+    },
+    {
+      "task_id": "TX11",
+      "depends_on": [
+        "TX05",
+        "TX08A",
+        "TX10",
+        "VN15",
+        "VN18"
+      ],
+      "historical_status": "PLANNED",
+      "scope_disposition": "NARROW_CORE_E2E"
+    },
+    {
+      "task_id": "TX12",
+      "depends_on": [
+        "TX11",
+        "VN19"
+      ],
+      "historical_status": "PLANNED",
+      "scope_disposition": "NARROW_LOCAL_ACCEPTANCE"
+    }
+  ]
+}

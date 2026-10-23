@@ -22,6 +22,8 @@ R05에서 선택된 C3/KP/KD 순수 판단 계산을 `strategies/kr/`로 분리�
 
 ## 현재 상태 (v3 리팩토링 기준)
 
+2026-10-23 범위 수정: 기존 거래소 실행·주문·계좌·클라우드 전송을 보존하면서 NATS-free 데이터/저장/복구와 전략 파일별 Signal·기존 Paper·동일 계좌 안전성만 보완합니다. [최소 재사용 계획](docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md)이 기존 범용 Trading Platform 확대 요구보다 우선합니다. 이 단계는 제품 변경 없이 조사·계획만 수행했습니다.
+
 상태의 유일한 요약은 [v3 local execution status](docs/status.md)입니다. 유지보수용 계층 결과는
 아래 명령으로 다시 만듭니다.
 
