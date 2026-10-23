@@ -778,6 +778,9 @@ class PaperStrategyRuntime:
         if (action.mode != TradingMode.PAPER or action.strategy_id != registration.module.strategy_id or
                 action.config_version != registration.config_version or action.scope.key not in registration.accounts):
             raise ValueError("Action mode/strategy/config/account permission mismatch")
+        if (action.action == ActionKind.NEW
+                and (isinstance(now, bool) or not isinstance(now, int) or now < 0)):
+            raise ValueError("NEW validation requires a nonnegative integer nanosecond boundary")
         if not now < action.expiry_ns <= signal.valid_until_ts_ns:
             raise ValueError("Action expiry exceeds its causal signal lifetime")
         if action.action == ActionKind.REPLACE:
@@ -788,6 +791,20 @@ class PaperStrategyRuntime:
                     self.reference_feeds.get(action.intent.instrument.key, action.intent.instrument.key)
                     not in registration.required_feeds):
                 raise ValueError("Intent job/signal/product/feed binding differs from registration")
+            intent = action.intent
+            reference_key = self.reference_feeds.get(intent.instrument.key, intent.instrument.key)
+            if intent.instrument != self.products[intent.instrument.key].instrument:
+                raise ValueError("Intent instrument differs from its declared execution product")
+            if signal.instrument != self.known[reference_key]:
+                raise ValueError("Signal instrument differs from its declared reference feed")
+            for value, name in ((intent.intent_id, "intent_id"),
+                    (intent.client_order_id, "client_order_id"), (intent.job_id, "job_id"),
+                    (intent.signal_id, "signal_id"), (signal.signal_id, "signal.signal_id")):
+                bounded_identity(value, name)
+            created = intent.created_ts_ns
+            if (isinstance(created, bool) or not isinstance(created, int) or created < 0
+                    or not signal.event_ts_ns <= created <= now):
+                raise ValueError("Intent creation time is not a causally bounded nanosecond timestamp")
         document = {"action_id": action.action_id, "action": action.action.value,
                     "scope": action.scope.key, "strategy": action.strategy_id,
                     "config_version": action.config_version, "expiry_ns": action.expiry_ns,
