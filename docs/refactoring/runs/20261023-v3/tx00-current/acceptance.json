@@ -40,7 +40,8 @@
     "passed": 14,
     "failed": 0,
     "exit_code": 0,
-    "receipt": "independent-boundaries.json"
+    "receipt": "independent-boundaries.json",
+    "reviewer_probe_source": "reviewer_boundary_probes.py"
   },
   "independent_checker": {
     "exit_code": 0,
@@ -68,7 +69,13 @@
   "free_gateway_invoked_this_ticket": false,
   "model_fallback": false,
   "production_gate": "NOT_CERTIFIED_BY_STATIC_AUDIT",
-  "primary_workspace_application": "PENDING",
+  "primary_workspace_application": {
+    "decision": "PASS",
+    "receipt": "docs/refactoring/runs/20261023-v3/tx00-current/original-application.json",
+    "preexisting_dirty_entries_preserved": 174,
+    "canonical_document_paths_verified": 36,
+    "python_inputs_eol_normalized_equivalence_verified": 510
+  },
   "limits": [
     "Static definitions/import-qualified references do not prove deployed execution or live/testnet capability.",
     "Unresolved dynamic receivers stay UNKNOWN; no all-five adapter completion or runtime caller claim.",
