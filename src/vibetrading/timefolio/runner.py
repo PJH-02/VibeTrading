@@ -23,7 +23,7 @@ from vibetrading.models import (
 from vibetrading.parquet_store import ParquetHistoryReader
 from vibetrading.settings import get_settings
 from vibetrading.sqlite_store import RuntimeStore
-from vibetrading.strategy_contract import load_strategy
+from vibetrading.strategies import load_strategy
 from vibetrading.timefolio.client import (
     AsyncTimefolioBrowserManager,
     TimefolioCredentials,

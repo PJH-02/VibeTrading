@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import importlib
+import re
 from dataclasses import dataclass
 from types import ModuleType
 from typing import Any, Protocol
 
-from .hot_path import StrategyDataView
-from .models import BaseMarketEvent, EventType, InstrumentId, Signal, Venue
+from vibetrading.hot_path import StrategyDataView
+from vibetrading.models import BaseMarketEvent, EventType, InstrumentId, Signal, Venue
+
+_MODERN_STRATEGY_NAME = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 
 
 class StrategyInstance(Protocol):
@@ -74,11 +77,40 @@ class StrategyModule:
         return strategy
 
 
+def _canonical_module_name(module_name: str) -> str:
+    """Map supported spellings to the sole modern event-strategy namespace."""
+    if not isinstance(module_name, str):
+        raise TypeError("Strategy module name must be a string")
+    name = module_name.strip()
+    if not name or "\x00" in name:
+        raise ValueError("Strategy module name must be nonempty")
+    if name.startswith(("/", "\\")) or re.match(r"^[A-Za-z]:[\\/]", name):
+        raise ValueError(f"Absolute strategy module paths are not allowed: {module_name!r}")
+    normalized = name.replace("\\", "/")
+    if normalized.endswith(".py"):
+        normalized = normalized[:-3]
+    parts = [part for part in normalized.split("/") if part not in ("", ".")]
+    if not parts or any(part == ".." for part in parts):
+        raise ValueError(f"Strategy module path traversal is not allowed: {module_name!r}")
+    dotted = ".".join(parts)
+    if dotted.startswith("vibetrading.strategies."):
+        relative = dotted[len("vibetrading.strategies."):]
+    elif dotted.startswith("strategies."):
+        relative = dotted[len("strategies."):]
+    elif "." not in dotted:
+        relative = dotted
+    else:
+        raise ValueError(f"Strategy module namespace is not allowed: {module_name!r}")
+    components = relative.split(".")
+    if not components or any(not _MODERN_STRATEGY_NAME.fullmatch(part) for part in components):
+        raise ValueError(f"Invalid modern strategy module name: {module_name!r}")
+    if components[0] in {"legacy", "research"}:
+        raise ValueError("Legacy candle and research modules are not modern event strategies")
+    return f"vibetrading.strategies.{relative}"
+
+
 def load_strategy(module_name: str) -> StrategyModule:
-    if module_name.endswith(".py"):
-        module_name = module_name[:-3].replace("/", ".").replace("\\", ".")
-    if not module_name.startswith("strategies."):
-        module_name = f"strategies.{module_name}"
+    module_name = _canonical_module_name(module_name)
     module = importlib.import_module(module_name)
     missing = [name for name in ("STRATEGY_ID", "SUBSCRIPTIONS", "WARMUP", "create_strategy") if not hasattr(module, name)]
     if missing:

@@ -23,7 +23,7 @@ from .hot_path import ApplyResult, DecisionSnapshot, HotPathStore, StrategyDataV
 from .models import (AssetClass, BaseMarketEvent, EventType, OrderBookEvent, Signal, TradeEvent, Venue,
                      event_from_dict, stable_hash)
 from .paper_execution import PaperExecution
-from .strategy_contract import StrategyModule, compile_subscriptions, compile_warmup
+from .strategies import StrategyModule, compile_subscriptions, compile_warmup
 from .trading_contracts import (ActionKind, ExecutionAction, ProductSpec, TradingMode,
                                 bounded_identity)
 

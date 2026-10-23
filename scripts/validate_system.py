@@ -23,7 +23,7 @@ from shared.models import (
 )
 
 from services.execution.broker_stub import BrokerStub
-from services.signal_gen.strategy_loader import get_strategy, clear_strategy_cache
+from vibetrading.strategies.legacy.candle_loader import get_strategy, clear_strategy_cache
 from backtest.engine import BacktestConfig, BacktestEngine
 
 logging.basicConfig(

@@ -185,8 +185,15 @@ class PilotRunner:
     def source_hash():
         package=Path(__file__).resolve().parents[1]
         root=package.parent.parent if package.parent.name=="src" and (package.parent.parent/"pyproject.toml").is_file() else package.parent
+        canonical_state=package/"strategies"/"research"/"state"
+        canonical_fair_value=package/"strategies"/"legacy"/"fair_value"
+        if canonical_state.is_dir() or canonical_fair_value.is_dir():
+            strategy_folders=tuple(folder for folder in (canonical_state,canonical_fair_value) if folder.is_dir())
+        else:
+            # Frozen flat exports predate the canonical package layout.
+            strategy_folders=(root/"strategy",)
         digest=hashlib.sha256()
-        for folder in (root/"strategy",package/"fv_pilot",package/"mm_state"):
+        for folder in (*strategy_folders,package/"fv_pilot",package/"mm_state"):
             for path in sorted(folder.glob("*.py")):digest.update(path.name.encode());digest.update(path.read_bytes())
         for name in ("types.py","market.py","journal.py","calibration.py"):
             path=package/"fv_mm"/name;digest.update(name.encode());digest.update(path.read_bytes())
