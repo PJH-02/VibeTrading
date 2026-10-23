@@ -1,0 +1,34 @@
+{
+  "ticket_id": "R05",
+  "decision": "PASS",
+  "status": "ACCEPTED",
+  "scope": "R05 only; selected pure C3/KP/KD calculations",
+  "source_sha": "2b85c95a4e7951ac2a7590db24416e5b5f76d958",
+  "base_sha": "d006791e25a5fda11f9dc7ad90dac3e34e214bac",
+  "worker_route": "opencode/deepseek-v4.1-flash-free",
+  "worker_process_exit": 0,
+  "worker_pytest_exit": 1,
+  "worker_tests_passed": 247,
+  "worker_tests_infrastructure_blocked": 2,
+  "worker_test_blocker": "Original private worker source is read-only; two existing collector tests tried to create /work/runtime_data. No product repairs; independent full test uses writable credential-free disposable source with unchanged guard.",
+  "worker_repairs": 0,
+  "independent_full_linux": {
+    "passed": 1961,
+    "profiles": {
+      "product-guarded": 1792,
+      "tooling-os": 169
+    },
+    "exits": [
+      0,
+      0
+    ],
+    "live_data_deselected": 2
+  },
+  "parity_cases_added": 139,
+  "ast_review": "C3 final guard/sizing and shared KP/KD function unchanged; history alignment/readiness and all remaining runtime/account/order/side/quantity/price/timestamp/mode code AST-identical",
+  "frozen_oracle": "docs/tickets/R05-before-oracle.py copied from base; existing test/golden assertions untouched",
+  "independent_artifacts_private": "/home/pjh/.local/state/codex-opencode/runs/v3-r05-independent-0d77f23422",
+  "primary_workspace": "PENDING_APPLICATION",
+  "other_tickets_started": false,
+  "deployment_or_live_order_calls": false
+}

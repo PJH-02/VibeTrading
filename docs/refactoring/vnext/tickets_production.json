@@ -5729,25 +5729,25 @@
   "updated_local": "2026-10-23",
   "current_validation": {
     "status": "FULL_LOCAL_REGRESSION_PASS",
-    "source_sha": "c605c19e79fc635281c6d794dd8a0ba23cb86376",
-    "receipt": "docs/refactoring/runs/20261023-v3/r04/acceptance.json",
-    "passed": 1822,
+    "source_sha": "2b85c95a4e7951ac2a7590db24416e5b5f76d958",
+    "receipt": "docs/refactoring/runs/20261023-v3/r05/acceptance.json",
+    "passed": 1961,
     "additional_review_included": 8,
     "deselected_live_data": 2,
     "canonical_src_layout": true,
-    "canonical_strategy_ownership": true
+    "kr_pure_decision_extraction": true
   },
   "user_request_latest": "2026-10-23: implement next ticket R04, delegate implementation/tests through qualified OpenCode/free worker routes.",
   "execution_control": {
     "status": "STOPPED_AT_USER_REQUEST",
     "last_completed_ticket": "VN14B",
-    "last_completed_tooling_ticket": "R04",
+    "last_completed_tooling_ticket": "R05",
     "active_ticket": null,
     "start_next_ticket": false,
-    "stop_after_ticket": "R04",
+    "stop_after_ticket": "R05",
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
-    "current_source_sha": "c605c19e79fc635281c6d794dd8a0ba23cb86376",
+    "current_source_sha": "2b85c95a4e7951ac2a7590db24416e5b5f76d958",
     "active_tooling_tickets": [],
     "active_parallel_tickets": []
   },
@@ -5913,7 +5913,7 @@
     },
     {
       "task_id": "R05",
-      "status": "PLANNED",
+      "status": "ACCEPTED",
       "depends_on": [
         "R03",
         "R04",
@@ -5922,8 +5922,22 @@
         "VN12"
       ],
       "scope": "LOCAL_ONLY",
-      "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
-      "receipt": null
+      "base_sha": "d006791e25a5fda11f9dc7ad90dac3e34e214bac",
+      "receipt": "docs/refactoring/runs/20261023-v3/r05/acceptance.json",
+      "edit_paths": [
+        "src/vibetrading/etf_trading.py",
+        "src/vibetrading/etf_history.py",
+        "src/vibetrading/strategies/kr/__init__.py",
+        "src/vibetrading/strategies/kr/_intraday.py",
+        "src/vibetrading/strategies/kr/c3.py",
+        "src/vibetrading/strategies/kr/kp.py",
+        "src/vibetrading/strategies/kr/kd.py",
+        "tests/refactoring/test_kr_strategy_extraction.py"
+      ],
+      "code_sha": "2b85c95a4e7951ac2a7590db24416e5b5f76d958",
+      "worker_models": [
+        "opencode/deepseek-v4.1-flash-free"
+      ]
     },
     {
       "task_id": "R06",
@@ -6419,13 +6433,13 @@
       "reproduction": "docs/refactoring/runs/20261023-v3/baseline/checkpoint-order-stdout.txt"
     }
   ],
-  "user_scope_latest": "R04 completed locally; stop before R05. No other ticket or stage implementation.",
+  "user_scope_latest": "Exactly one selected ticket R05 completed; stop. Other tooling/VN/TX work unchanged.",
   "packaging_validation": {
     "source_sha": "bf75b1c5d259433fc0aa2d9b43764855837b3f68",
     "status": "R03B1_ONLY_PASS",
     "receipt": "docs/refactoring/runs/20261023-v3/r03b1/acceptance.json"
   },
-  "progress_report": "docs/refactoring/runs/20261023-v3/r04/README.md",
+  "progress_report": "docs/refactoring/runs/20261023-v3/r05/README.md",
   "primary_workspace_application": {
     "root": "/mnt/c/Users/박제형/Desktop/VibeTrading",
     "branch": "codex/v3-local-candidate",
@@ -6449,6 +6463,16 @@
       "additional_review_included": 8,
       "deselected_live_data": 2,
       "canonical_src_layout": true
+    },
+    {
+      "status": "FULL_LOCAL_REGRESSION_PASS",
+      "source_sha": "c605c19e79fc635281c6d794dd8a0ba23cb86376",
+      "receipt": "docs/refactoring/runs/20261023-v3/r04/acceptance.json",
+      "passed": 1822,
+      "additional_review_included": 8,
+      "deselected_live_data": 2,
+      "canonical_src_layout": true,
+      "canonical_strategy_ownership": true
     }
   ]
 }
