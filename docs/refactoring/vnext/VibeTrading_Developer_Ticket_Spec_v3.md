@@ -166,13 +166,15 @@ DONE의 상태표가 서버 운영 수락을 의미하지는 않는다. **구현
 - **구현:** checkpoint의 digest/gen/first-retained segment를 재생 시작 증거로 사용. 유실된 gap, chain mismatch, truncated header, CRC miss, fence mismatch 시 비정상 복구를 거부. 여러 reader가 서로 다른 Base를 가질 때 oldest needed range 보존.
 - **테스트:** v1 전체 Replay 동일, rotated segments, missing first/last segment, reader pin·crash·bad proof, 즉시 LIVE 거절. GC는 계속 비활성.
 
-- **로컬 수락:** 명시적으로 pin한 hash/generation·first-retained segment 증거와 실제 저장소 progress/manifest/fact 검증을 연결했다. 단조 durable watermark, record/segment/absolute cursor 한도와 consumer별 base 검증을 포함한다. 기존 v1 writer/frame/checkpoint AST 불변. 전체 **2,055 PASS**, live-data 2건 제외. [수락 기록](../runs/20261023-v3/vn08/acceptance.json). GC·생산 데이터 삭제·자동 cutover/LIVE 승격은 없고 VN09는 착수하지 않았다.
+- **로컬 수락:** 명시적으로 pin한 hash/generation·first-retained segment 증거와 실제 저장소 progress/manifest/fact 검증을 연결했다. 단조 durable watermark, record/segment/absolute cursor 한도와 consumer별 base 검증을 포함한다. 기존 v1 writer/frame/checkpoint AST 불변. 전체 **2,055 PASS**, live-data 2건 제외. [수락 기록](../runs/20261023-v3/vn08/acceptance.json). GC·생산 데이터 삭제·자동 cutover/LIVE 승격은 없었다. VN08 수락 당시 VN09는 미착수였으며 후속 dry-run 수락은 아래 기록을 따른다.
 
-### VN09 — GC 증거 기반 회수 및 실패 시 보존
+### VN09 — GC 증거 기반 후보 계획 및 실패 시 보존 (로컬 완료, dry-run)
 
 - **소유:** `market_spool.py`, `local_storage.py`, `archive.py`의 실제 증거 함수; 새 별도 GC framework 금지.
 - **선행:** VN08, VN16. **구현:** Segment별 `checkpoint_coverage ∧ reader_progress ∧ parquet_commit/provenance ∧ remote_integrity/readback ∧ retention_elapsed ∧ lease_free`를 만족한 경우에만 회수 **후보**. Atomic planner는 `dry_run=True` 기본. S3/객체 저장소가 막히거나 incomplete progress면 보존. Checkpoint rollover/crash와 GC 경쟁 중 delete 의도를 durable record로 분리.
 - **테스트:** 오류 주입을 포함한 사본에서 eligible/forbidden segment 목록 일치, **유일본 삭제 0건**, remote hash mismatch 0 삭제, data-root mount 잘못 지정 0 삭제. **운영 원본의 실제 삭제 실행은 별도 승인**.
+
+- **로컬 수락:** 기존 checkpoint/reader/storage/manifest·compaction·원격 Parquet/sidecar/원본 spool readback 증거의 교집합으로 후보를 계산하고, 경로 경합에도 기존 파일을 덮어쓰지 않는 비실행 제안서를 남긴다. 전체 **2,119 PASS**, live-data 2건 제외. 기존 함수 110개 AST·Golden·uploader 유지. [수락 기록](../runs/20261023-v3/vn09/acceptance.json). 원본 prefix·원격 spool 사본·owner 확인 reader/lease 입력이 없으면 전체 보존한다. 실제 GC/삭제·자동 운영 연결은 포함하지 않으며 production gate는 BLOCKED다.
 
 ### VN13 — 전략 FILE plugin → 기존 Paper (TX05와 한 workstream)
 

@@ -1,0 +1,37 @@
+{
+  "label": "repair1-review",
+  "baseline": false,
+  "source": "/tmp/vt-bounded-fnh_yy22/work",
+  "exit_code": 1,
+  "elapsed_seconds": 3.13652790299966,
+  "base": "/tmp/vt-vn09-repair1-review-88w846am",
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_spool_recovery.py",
+    "tests/refactoring/test_local_storage.py",
+    "tests/refactoring/test_archive_integrity.py",
+    "tests/refactoring/test_retained_spool.py",
+    "tests/refactoring/test_retained_storage.py",
+    "tests/refactoring/test_spool_gc.py",
+    "tests/refactoring/test_spool_gc_storage.py",
+    "docs/tickets/VN09-reviewer-counterexamples.py"
+  ],
+  "tests": {
+    "passed": 211,
+    "failed": 4,
+    "skipped": 0
+  },
+  "source_changed": [],
+  "stdout_tail": "eneration\": \"ab12418c3a3e44f187541528a5ff2da6\", \"checkpoint\": {\"durable_sequence\": 3, \"sh...oot\": {\"device\": 157, \"inode\": 4844, \"path\": \"/tmp/pytest/test_independent_plan_records_0/market/data/spools/source\"}}'\n\ndocs/tickets/VN09-reviewer-counterexamples.py:218: AssertionError\n_ test_independent_plan_records_exact_raw_archive_recovery_locations[compact] __\n\nsetup = <function setup.<locals>.create at 0x7a69047b5a80>\n\n    def test_independent_plan_records_exact_raw_archive_recovery_locations(setup):\n        s=setup();result=accepted(s);serialized=json.dumps(result,sort_keys=True)\n        for key in s.options[\"remote_keys\"].values():\n>           assert key in serialized,\"audit plan omitted verified raw spool archive location\"\nE           AssertionError: audit plan omitted verified raw spool archive location\nE           assert 'vibetrading/generations/7c5ec7d4214b41c7a2e03accecda32de/spool/collector/1-4d585c4ff2d158c917c3a69af006bbd8ed0a02cc5c856133af81a00a10da70dd.sealed' in '{\"blocked\": [], \"catalogue_generation\": \"7c5ec7d4214b41c7a2e03accecda32de\", \"checkpoint\": {\"durable_sequence\": 3, \"sh...oot\": {\"device\": 157, \"inode\": 4884, \"path\": \"/tmp/pytest/test_independent_plan_records_1/market/data/spools/source\"}}'\n\ndocs/tickets/VN09-reviewer-counterexamples.py:218: AssertionError\n_ test_independent_raw_remote_mapping_change_during_verify_invalidates_plan[legacy] _\n\nsetup = <function setup.<locals>.create at 0x7a69047b6c00>\n\n    def test_independent_raw_remote_mapping_change_during_verify_invalidates_plan(setup):\n        s=setup();accepted(s)\n        def remap():s.options[\"remote_keys\"][2] += \".changed\"\n>       invoked=changing_verify(s,remap);result=call(s);assert invoked;blocked(s,result)\n                                                                       ^^^^^^^^^^^^^^^^^\n\ndocs/tickets/VN09-reviewer-counterexamples.py:224: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ns = namespace(folder=PosixPath('/tmp/pytest/test_independent_raw_remote_ma0/market'), settings=RuntimeSettings(env={'VIBET...ence\":3,\"price\":\"100.123456789012345678\",\"quantity\":\"1E-18\",\"aggressor_side\":\"unknown\",\"trade_id\":null}'], facts=False)\nresult = {'blocked': [], 'catalogue_generation': '38ff8710ad5644ee83f9979a7352be01', 'checkpoint': {'durable_sequence': 3, 'sha256': '58a7ebb2a89a668e0288b0fd0efef6baec32018526d8d81c73b87bcbf0d717b2'}, 'deleted': 0, ...}\n\n    def blocked(s,result):\n>       assert result[\"eligible\"]==[] and result[\"deleted\"]==0 and result[\"executable\"] is False,result\nE       AssertionError: {'blocked': [], 'catalogue_generation': '38ff8710ad5644ee83f9979a7352be01', 'checkpoint': {'durable_sequence': 3, 'sha256': '58a7ebb2a89a668e0288b0fd0efef6baec32018526d8d81c73b87bcbf0d717b2'}, 'deleted': 0, ...}\nE       assert ([{'bytes': 99...0000000, ...}] == []\nE         \nE         Left contains 2 more items, first extra item: {'bytes': 990, 'device': 157, 'inode': 4926, 'mtime_ns': 1999999990000000000, ...}\nE         Use -v to get more diff)\n\ndocs/tickets/VN09-reviewer-counterexamples.py:82: AssertionError\n_ test_independent_raw_remote_mapping_change_during_verify_invalidates_plan[compact] _\n\nsetup = <function setup.<locals>.create at 0x7a69047b6de0>\n\n    def test_independent_raw_remote_mapping_change_during_verify_invalidates_plan(setup):\n        s=setup();accepted(s)\n        def remap():s.options[\"remote_keys\"][2] += \".changed\"\n>       invoked=changing_verify(s,remap);result=call(s);assert invoked;blocked(s,result)\n                                                                       ^^^^^^^^^^^^^^^^^\n\ndocs/tickets/VN09-reviewer-counterexamples.py:224: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ns = namespace(folder=PosixPath('/tmp/pytest/test_independent_raw_remote_ma1/market'), settings=RuntimeSettings(env={'VIBET...ence\":3,\"price\":\"100.123456789012345678\",\"quantity\":\"1E-18\",\"aggressor_side\":\"unknown\",\"trade_id\":null}'], facts=False)\nresult = {'blocked': [], 'catalogue_generation': 'cd32ac91b2fd4c0eb5cf95a61809fc94', 'checkpoint': {'durable_sequence': 3, 'sha256': '58a7ebb2a89a668e0288b0fd0efef6baec32018526d8d81c73b87bcbf0d717b2'}, 'deleted': 0, ...}\n\n    def blocked(s,result):\n>       assert result[\"eligible\"]==[] and result[\"deleted\"]==0 and result[\"executable\"] is False,result\nE       AssertionError: {'blocked': [], 'catalogue_generation': 'cd32ac91b2fd4c0eb5cf95a61809fc94', 'checkpoint': {'durable_sequence': 3, 'sha256': '58a7ebb2a89a668e0288b0fd0efef6baec32018526d8d81c73b87bcbf0d717b2'}, 'deleted': 0, ...}\nE       assert ([{'bytes': 99...0000000, ...}] == []\nE         \nE         Left contains 2 more items, first extra item: {'bytes': 990, 'device': 157, 'inode': 4966, 'mtime_ns': 1999999990000000000, ...}\nE         Use -v to get more diff)\n\ndocs/tickets/VN09-reviewer-counterexamples.py:82: AssertionError\n=========================== short test summary info ============================\nFAILED docs/tickets/VN09-reviewer-counterexamples.py::test_independent_plan_records_exact_raw_archive_recovery_locations[legacy]\nFAILED docs/tickets/VN09-reviewer-counterexamples.py::test_independent_plan_records_exact_raw_archive_recovery_locations[compact]\nFAILED docs/tickets/VN09-reviewer-counterexamples.py::test_independent_raw_remote_mapping_change_during_verify_invalidates_plan[legacy]\nFAILED docs/tickets/VN09-reviewer-counterexamples.py::test_independent_raw_remote_mapping_change_during_verify_invalidates_plan[compact]\n4 failed, 211 passed in 2.75s\n"
+}

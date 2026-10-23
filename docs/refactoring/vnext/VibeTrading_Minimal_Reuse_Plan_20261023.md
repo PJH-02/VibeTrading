@@ -73,7 +73,7 @@
 | cloud/manifest | `storage_backend.py` seam, registry metadata | manifest→strategy file/Paper 등록 연결 | 기존 uploader/verify/download 변경 없음 |
 | runtime wiring | `local_runtime.py`, `local_config.py`, release manifest | local process/bounded resource wiring | 기존 runtime·배포 topology 보존 |
 
-## 6. 범위 교정 당시 37개 — VN07·VN08 로컬 완료, 현재 35개 잔여
+## 6. 범위 교정 당시 37개 — VN07·VN08·VN09 로컬 완료, 현재 34개 잔여
 
 `핵심`은 `tech_lead_scope_decisions.json`의 `mandatory_core` 18개다. `기반`은 TX00 감사, `집계`는 별도 신규 제품이 아닌 gate다. 역사 상태는 재설정·자동 승격하지 않는다.
 
@@ -81,7 +81,7 @@
 |---|---|---|---|---|
 | VN07 | 로컬 완료 | COMPLETE_LOCAL_IMPLEMENTATION (이전 partial 증거 보존) | VN06, VN04B | exact-cut 단계적 복구·전체 격리; VN07B 수락 |
 | VN08 | 로컬 완료 | COMPLETE_LOCAL_IMPLEMENTATION (이전 상태 보존) | VN07 | retained-prefix proof·실제 storage restart 검증 |
-| VN09 | 핵심 | PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES | VN08, VN16 | coverage/reader/archive proof 후 GC 후보만; uploader 재작성 금지 |
+| VN09 | 로컬 완료 | COMPLETE_LOCAL_IMPLEMENTATION (dry-run only) | VN08, VN16 | 실제 증거 교집합·비실행 제안서; 삭제/자동 전환 없음 |
 | VN13 | 핵심 | PAPER_FIXTURE_INTEGRATION_IMPLEMENTED_PRODUCTION_BLOCKED | VN03, TX01, TX04B | 전략별 Python file + 기존 contract + shared data/Paper |
 | VN15 | 핵심 | PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES | VN14B | TX09와 한 projection workstream |
 | VN17 | 핵심 | PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES | VN09, VN15, VN16, VN13 | 기존 runtime local wiring/bounded resources |
@@ -149,4 +149,8 @@ VN07B 수락 당시 상태는 **15 완료 / 22 미완료 / 14 미착수**였다.
 
 ## VN08 후속 구현 완료 (2026-10-23)
 
-현재 상태는 **16 완료 / 22 미완료 / 13 미착수**다. 원본 prefix가 있을 때만 read-only 증거를 생성하고, 독립적으로 pin한 hash/generation과 실제 retained anchor를 검증한다. 저장소는 기존 progress와 manifest/fact를 재검증하며 새 progress를 만들거나 되감지 않는다. 전체 **2,055 PASS**, live-data 2건 제외. 기존 writer/codec·Golden·거래소/cloud 동작 보존. VN09와 실제 GC/삭제/cutover는 미착수다. 위 VN07 당시 수치는 역사 기록으로 보존한다. [수락 기록](../runs/20261023-v3/vn08/acceptance.json).
+VN08 수락 당시 상태는 **16 완료 / 22 미완료 / 13 미착수**였다. 원본 prefix가 있을 때만 read-only 증거를 생성하고, 독립적으로 pin한 hash/generation과 실제 retained anchor를 검증한다. 저장소는 기존 progress와 manifest/fact를 재검증하며 새 progress를 만들거나 되감지 않는다. 전체 **2,055 PASS**, live-data 2건 제외. 기존 writer/codec·Golden·거래소/cloud 동작 보존. 당시 VN09는 미착수였으며 실제 GC/삭제/cutover는 계속 별도 gate다. 위 VN07 당시 수치는 역사 기록으로 보존한다. [수락 기록](../runs/20261023-v3/vn08/acceptance.json).
+
+## VN09 후속 구현 완료 (2026-10-23, dry-run only)
+
+현재는 **17 완료 / 22 미완료 / 12 미착수**다. 기존 증거로 GC 후보만 계산하며 원본·consumer·저널·manifest·archive·retention·lease 증거가 부족하거나 검사 중 바뀌면 요청 cut 전체를 보존한다. 제안서는 비실행 상태로 원자적·비덮어쓰기 발행한다. 기존 uploader·trading·Golden은 유지했다. 전체 **2,119 PASS**, live-data 2건 제외. FreeLLMAPI GLM 검증은429로 실행되지 않았고 대체 모델은 사용하지 않았다. 실제 GC/삭제·자동 cutover와 다른 티켓은 착수하지 않았다. [수락 기록](../runs/20261023-v3/vn09/acceptance.json).

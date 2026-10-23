@@ -1,0 +1,84 @@
+{
+  "decision": "PASS",
+  "ticket": "VN09",
+  "completion_class": "COMPLETE_LOCAL_IMPLEMENTATION",
+  "completion_scope": "Proof-only dry-run GC candidate planning and durable non-executable proposed intent; NOT deletion/cutover execution",
+  "base_sha": "593b40b8e293f736509f4c1705bb3fa23d3ca362",
+  "source_sha": "ded3ac7f6c23ff6fb9d4194b6b9f55f2ef7da083",
+  "product_paths": [
+    "src/vibetrading/archive.py",
+    "src/vibetrading/local_storage.py",
+    "src/vibetrading/sqlite_store.py"
+  ],
+  "product_and_new_test_sha256": {
+    "src/vibetrading/archive.py": "59db89964910d5c2662e1af330ee22e0461aff228eaf314b11a66f9639012a43",
+    "src/vibetrading/local_storage.py": "0eea36703d0cdd1b2fdaea0330c96dad2a1396fa221bb02de0e23b3653e918b5",
+    "src/vibetrading/sqlite_store.py": "a1ac09c265c2ffb3de4da3aba9cb532d20774dec3c3ae96ac9374820308d83cd",
+    "tests/refactoring/test_spool_gc.py": "d1e78bb71cccde19faaeee99aa7970d11af8b64b1ebf60ebad238f49ac795f14",
+    "tests/refactoring/test_spool_gc_storage.py": "25d728b3f665b75638d07dd4fb8ede038c1ca38ed042337926c18658eb6c939f",
+    "tests/refactoring/test_spool_gc_review.py": "395c261ed1ac1caa5c01ab8217dc952429aa8e8b2fdd4316d7f94b939a84e01b"
+  },
+  "selected_implementation": "opencode/deepseek-v4.1-flash-free",
+  "selected_extra_verification": "freellmapi/glm-4.5-flash",
+  "extra_verification_status": "BLOCKED_HTTP_429_NO_TEST_EXECUTION",
+  "upstream_weight_identity": "UNKNOWN",
+  "worker_process_exits": {
+    "initial": 0,
+    "repair1": 0,
+    "repair2": 0,
+    "glm-verification": 1
+  },
+  "repair_delegations": 2,
+  "owner_product_edits": 0,
+  "baseline": {
+    "passed": 151,
+    "exit_code": 0
+  },
+  "independent_scoped": {
+    "passed": 215,
+    "exit_code": 0,
+    "reviewer_counterexamples": 32,
+    "note": "Overlaps full suite; not additive"
+  },
+  "full_regression": {
+    "passed": 2119,
+    "product_passed": 1950,
+    "tooling_passed": 169,
+    "live_data_deselected": 2,
+    "product_exit": 0,
+    "tooling_exit": 0,
+    "source_mutations": []
+  },
+  "intersection": "Full-prefix RetainedPrefix/checkpoint; explicit confirmed reader inventory including actual storage progress; exact legacy/compact event-to-delivery manifest or real raw fact; compaction provenance; terminal Parquet + exact original sidecar full readback; exact original sealed spool archive readback; retention; owner lease snapshot + manifest leases; before/after value revalidation. Any failed conjunct blocks the whole cut.",
+  "intent_safety": "PROPOSED_DRY_RUN, executable=False, requires_revalidation=True. Pin external evidence directory; O_NOFOLLOW/dir_fd and existing checkpoint writer on owned staging; atomic non-clobber hardlink, fsync and readback. Only owned staging cleanup is allowed. No source unlink/claim/reclaim/GC executor.",
+  "fixed_independent_defects": [
+    "Output destination appearing during readback was overwritten",
+    "Evidence-parent rebind could overwrite owned fixture producer checkpoint",
+    "Unbounded evidence iterable materialized before limit",
+    "Durable plan omitted exact raw archive recovery locations",
+    "Raw archive mapping mutation during verify was not revalidated"
+  ],
+  "fault_scope": "Red tests mutate only disposable synthetic copies. Accepted happy/fault paths preserve original source and existing store state except deliberately injected callback mutations. No production data accessed.",
+  "limits": "Caller-supplied confirmed-reader/lease registry is trusted owner input, not independent live lease authority. Full original prefix and preexisting exact raw spool archives are required; absence blocks. Existing upload/download methods are unchanged; no raw uploader or automatic retention/cutover added. Safe intent publication requires supported POSIX dir_fd/link/O_NOFOLLOW and /proc/self/fd; unsupported environments fail closed.",
+  "resource_bounds": "<=128 segments, <=10000 candidate records, <=64MiB configured planning/readback budget, <=1MiB intent, <=501 items consumed to reject >500 evidence records; streaming hashing and existing source scan budgets. Repeated integrity scans/readback are maintenance work; no production CPU/RSS/PSS or all-process IO sizing claim.",
+  "existing_functions_and_methods_ast_preserved": 110,
+  "existing_tests_and_goldens_changed": false,
+  "exchange_order_and_cloud_existing_implementation_changed": false,
+  "market_spool_and_storage_backend_changed": false,
+  "GC_enabled": false,
+  "production_data_deletions": 0,
+  "original_spool_deletions": 0,
+  "live_mutations": 0,
+  "other_ticket_implementation": false,
+  "production_gate": "BLOCKED",
+  "baseline_diff_check_exit": 0,
+  "new_diff_diagnostics": 0,
+  "original_preservation_manifest": "/tmp/vt-vn09-original-preservation.json",
+  "final_metadata_verification": {
+    "receipt": "docs/refactoring/runs/20261023-v3/vn09/final-scope-status-validation.json",
+    "passed": 20,
+    "exit_code": 0,
+    "canonical_cli_exit": 0,
+    "other_50_task_objects_preserved": true
+  }
+}

@@ -110,7 +110,10 @@
         "VN16"
       ],
       "historical_status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
-      "scope_disposition": "SAFE_STORAGE_GAP_ONLY"
+      "scope_disposition": "SAFE_STORAGE_GAP_ONLY",
+      "current_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "completion_receipt": "docs/refactoring/runs/20261023-v3/vn09/acceptance.json",
+      "completion_scope": "DRY_RUN_PROOF_ONLY"
     },
     {
       "task_id": "VN10",
@@ -468,6 +471,13 @@
       "status": "COMPLETE_LOCAL_IMPLEMENTATION",
       "source_sha": "8f3e3b761be794f9636a81603b8073074c293b79",
       "receipt": "docs/refactoring/runs/20261023-v3/vn08/acceptance.json"
+    },
+    {
+      "task_id": "VN09",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "scope": "DRY_RUN_PROOF_ONLY",
+      "source_sha": "ded3ac7f6c23ff6fb9d4194b6b9f55f2ef7da083",
+      "receipt": "docs/refactoring/runs/20261023-v3/vn09/acceptance.json"
     }
   ]
 }

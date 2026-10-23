@@ -8,9 +8,9 @@
   ],
   "definition": "완성은 로컬 기능 수락 범위. 운영/배포/장기 성능 완료와 별개. 부분 단계의 닫힌 하위 기능만 선별 커밋 가능",
   "counts": {
-    "COMPLETE_LOCAL_IMPLEMENTATION": 16,
-    "NOT_STARTED": 13,
-    "INCOMPLETE": 22
+    "COMPLETE_LOCAL_IMPLEMENTATION": 17,
+    "INCOMPLETE": 22,
+    "NOT_STARTED": 12
   },
   "tasks": [
     {
@@ -91,11 +91,12 @@
     },
     {
       "task_id": "VN09",
-      "category": "NOT_STARTED",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
       "existing_phase": "P07",
-      "detail": "[Reuse-first scope; prior completion category preserved] Reuse existing archive/cloud integrity; GC enabled only after coverage/reader proof. Never rebuild working uploader or delete before verification.",
+      "detail": "Local dry-run GC proof intersection and non-clobber durable proposed intent. Entire cut retained on uncertainty; existing uploader unchanged, no actual deletion or runtime activation.",
       "production_ready": false,
-      "scope_disposition": "SAFE_STORAGE_GAP_ONLY"
+      "scope_disposition": "SAFE_STORAGE_GAP_ONLY",
+      "vn09_receipt": "docs/refactoring/runs/20261023-v3/vn09/acceptance.json"
     },
     {
       "task_id": "VN10",
@@ -435,9 +436,9 @@
   "next_steps": [
     {
       "order": 1,
-      "stage": "VN09",
-      "work": "Proof-based GC candidate planning/dry-run using existing archive evidence; no actual deletion",
-      "gate": "VN08 local prerequisite satisfied; not started by this request. Bounded dispatch and original proof gates required."
+      "stage": "TX00 / revised ready DAG",
+      "work": "Select next bounded core contract/Paper/file-plugin gap from revised DAG; preserve current trading and cloud paths",
+      "gate": "Not started in VN09; user scope and each prerequisite gate retained"
     },
     {
       "order": 3,
@@ -483,20 +484,20 @@
   },
   "execution_control": {
     "status": "LOCAL_TICKET_ACCEPTED",
-    "last_completed_ticket": "VN08",
+    "last_completed_ticket": "VN09",
     "last_completed_tooling_ticket": "R05",
     "active_ticket": null,
     "start_next_ticket": false,
-    "stop_after_ticket": "VN08",
+    "stop_after_ticket": "VN09",
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
-    "current_source_sha": "8f3e3b761be794f9636a81603b8073074c293b79",
+    "current_source_sha": "ded3ac7f6c23ff6fb9d4194b6b9f55f2ef7da083",
     "active_tooling_tickets": [],
     "active_parallel_tickets": [],
-    "last_completed_subunit": "VN08"
+    "last_completed_subunit": "VN09"
   },
   "current_wip": null,
-  "last_completed_ticket": "VN08",
+  "last_completed_ticket": "VN09",
   "work_in_progress_commit_policy": "All 11 former excluded source/test files included as unfinished snapshot; exclusions apply only to older completed-feature validation",
   "legacy_completed_commit": {
     "head": "90847f84243d01ec98c9815216c96c8f2749028b",
@@ -562,7 +563,7 @@
     }
   ],
   "historical_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
-  "updated_local": "2026-10-23T20:43:45.298996+09:00",
+  "updated_local": "2026-10-23T22:21:47.960180+09:00",
   "snapshot_validation_history": [
     "docs/refactoring/runs/20261023-v3/baseline/result.json",
     {
@@ -668,12 +669,12 @@
       "R06"
     ],
     "R05_calculators_are_not_plugin_completion": true,
-    "authorized_bounded_ticket": "docs/tickets/VN08-retained-prefix-reader.md",
+    "authorized_bounded_ticket": "docs/tickets/VN09-proof-only-spool-gc.md",
     "unselected_implementation_dispatch_authorized": false,
-    "last_accepted_bounded_ticket": "docs/tickets/VN08-retained-prefix-reader.md",
-    "last_accepted_receipt": "docs/refactoring/runs/20261023-v3/vn08/acceptance.json"
+    "last_accepted_bounded_ticket": "docs/tickets/VN09-proof-only-spool-gc.md",
+    "last_accepted_receipt": "docs/refactoring/runs/20261023-v3/vn09/acceptance.json"
   },
-  "user_request_latest": "다음 단계 티켓 및 단계 개발에 착수하라. opencode와 frellmapi 사용 구조는 유지. VN08 locally accepted; stop before VN09.",
+  "user_request_latest": "다음 단계 티켓 및 단계 개발에 착수하라. VN09 local proof-only GC planning accepted; no deletion or later ticket started.",
   "vn07a_validation": {
     "status": "ACCEPTED_LOCAL_SUBUNIT",
     "source_sha": "60d763209134527e289d3760ec55be9ea9ec6b37",
@@ -711,5 +712,18 @@
     "live_data_deselected": 2,
     "production_ready": false,
     "extra_glm_tests": "BLOCKED; no new artifact; no model substitution"
+  },
+  "vn09_validation": {
+    "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+    "scope": "DRY_RUN_PROOF_AND_PROPOSED_INTENT_ONLY",
+    "source_sha": "ded3ac7f6c23ff6fb9d4194b6b9f55f2ef7da083",
+    "receipt": "docs/refactoring/runs/20261023-v3/vn09/acceptance.json",
+    "full_regression_passed": 2119,
+    "scoped_passed": 215,
+    "critical_cases": 32,
+    "live_data_deselected": 2,
+    "production_ready": false,
+    "GC_enabled": false,
+    "glm_verification": "BLOCKED_HTTP_429"
   }
 }
