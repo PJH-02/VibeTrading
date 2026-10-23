@@ -1106,6 +1106,8 @@
       "read_paths": [
         "docs/refactoring/vnext/03_contract_delta.md",
         "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "tests/refactoring/test_local_runtime.py",
         "tests/refactoring/test_replay_handoff.py",
         "tests/test_etf_outage_recovery.py",
@@ -1117,40 +1119,7 @@
         "vibetrading/local_storage.py",
         "vibetrading/market_spool.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/local_runtime.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "vibetrading/local_engine.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_local_runtime.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_replay_handoff.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_vnext_vn07.py",
-          "action": "ADD"
-        },
-        {
-          "path": "vibetrading/market_checkpoint.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_checkpoint_runtime.py",
-          "action": "ADD"
-        },
-        {
-          "path": "tests/refactoring/test_checkpoint_startup.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "**/secrets/**",
@@ -1166,15 +1135,11 @@
         "any product/config file outside edit_paths"
       ],
       "target_symbols": {
-        "EXISTING": [
-          "vibetrading/local_runtime.py::replay_startup",
-          "vibetrading/local_runtime.py::restore_etf_startup",
-          "vibetrading/local_engine.py::LocalMarketEngine.begin_recovery",
-          "vibetrading/local_engine.py::LocalMarketEngine.handoff"
-        ],
-        "ADD_PROPOSED": []
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
-      "goal_and_acceptance": "Checkpoint+delta+live handoff validates native state; stale timestamps remain stale; bad checkpoint fails closed or restores a proven retained prefix; zero replay orders.",
+      "goal_and_acceptance": "Reuse existing market recovery and per-runtime journals; connect only missing strategy/Paper checkpoint continuity, no universal account-state replacement. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "contracts": [
         "C01",
         "C02",
@@ -1187,8 +1152,7 @@
         "C09_PROPOSED"
       ],
       "predecessor_gates": [
-        "VN-G0 source/contract/fixture pin",
-        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+        "Use revised DAG + selected existing-function gap evidence; former universal platform gates superseded by scope revision."
       ],
       "tests": {
         "existing_regression_paths": [
@@ -1207,7 +1171,7 @@
       "new_run_outputs": [
         "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
       ],
-      "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
       "source_ticket": "docs/refactoring/vnext/tickets.json#VN07",
       "capacity_impacts": "Measure relevant CPU/event, bounded bytes/records/age/inflight, aggregate RSS/PSS and disk/WAL on 2vCPU/3.8GiB; no inferred production values.",
       "next_action": "Single next VN07 ticket: caller/runtime journal creation, flush/close and new-checkpoint lifecycle; retain missing-order fail-closed. Account/strategy atomic recovery remains behind TX02/TX04; no VN08 gate waiver.",
@@ -1274,10 +1238,12 @@
           "passed": 1213,
           "skipped": 0
         },
-        "supported_scope": "Market-only explicit whole-vector recovery; no multi-source order or ETF/Paper owner/strategy restore"
+        "supported_scope": "Market-only explicit whole-vector recovery; no multi-source order or ETF/Paper owner/strategy restore",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": false
       },
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "완료: market 다중 producer 내구 순서 증명, 세대별 checkpoint/journal 생성·교체·복원·종료 및 runtime 통합. 미완료: ETF/Paper account/strategy/pending-action 원자 복구와 운영 검증",
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Reuse existing market recovery and per-runtime journals; connect only missing strategy/Paper checkpoint continuity, no universal account-state replacement.",
       "commit_scope": "COMPLETED_SUBUNIT_ONLY",
       "order_subtask": {
         "status": "COMPLETE_LOCAL_SUBUNIT_ONLY",
@@ -1441,7 +1407,17 @@
           "source_sha": "00b47bffc66691015be53c663258db0b52826790",
           "receipt": "docs/refactoring/runs/20261023-v3/vn07-identity/acceptance.json"
         }
-      ]
+      ],
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "COMPLETE_EXISTING_RECOVERY",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "VN08",
@@ -1466,6 +1442,8 @@
       "read_paths": [
         "docs/refactoring/vnext/03_contract_delta.md",
         "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "tests/refactoring/test_local_storage.py",
         "tests/refactoring/test_spool_recovery.py",
         "vibetrading/feed_recovery.py",
@@ -1474,28 +1452,7 @@
         "vibetrading/local_storage.py",
         "vibetrading/market_spool.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/market_spool.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "vibetrading/local_storage.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_spool_recovery.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_local_storage.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_vnext_vn08.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "**/secrets/**",
@@ -1511,17 +1468,11 @@
         "any product/config file outside edit_paths"
       ],
       "target_symbols": {
-        "EXISTING": [
-          "vibetrading/market_spool.py::_inventory",
-          "vibetrading/market_spool.py::scan_spool",
-          "vibetrading/market_spool.py::SpoolReader._locate_start",
-          "vibetrading/local_storage.py::LocalSpoolStorage.__init__"
-        ],
-        "ADD_PROPOSED": [
-          "retained-base cursor/first-segment format and validation"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
-      "goal_and_acceptance": "New reader validates a retained prefix base and v1 data; corrupt/missing segments never become a valid start; GC still disabled.",
+      "goal_and_acceptance": "Retained-prefix reader only; preserve proven data identity/replay semantics. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "contracts": [
         "C01",
         "C02",
@@ -1534,8 +1485,7 @@
         "C09_PROPOSED"
       ],
       "predecessor_gates": [
-        "VN-G0 source/contract/fixture pin",
-        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+        "Use revised DAG + selected existing-function gap evidence; former universal platform gates superseded by scope revision."
       ],
       "tests": {
         "existing_regression_paths": [
@@ -1553,12 +1503,22 @@
       "new_run_outputs": [
         "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
       ],
-      "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
       "source_ticket": "docs/refactoring/vnext/tickets.json#VN08",
       "capacity_impacts": "Measure relevant CPU/event, bounded bytes/records/age/inflight, aggregate RSS/PSS and disk/WAL on 2vCPU/3.8GiB; no inferred production values.",
       "stage_classification": "NOT_STARTED",
-      "stage_status_detail": "New reader validates a retained prefix base and v1 data; corrupt/missing segments never become a valid start; GC still disabled.",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Retained-prefix reader only; preserve proven data identity/replay semantics.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "COMPLETE_DATA_RECOVERY",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "VN09",
@@ -1585,6 +1545,8 @@
       "read_paths": [
         "docs/refactoring/vnext/03_contract_delta.md",
         "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "tests/refactoring/test_archive_integrity.py",
         "tests/refactoring/test_local_storage.py",
         "tests/refactoring/test_spool_recovery.py",
@@ -1595,32 +1557,7 @@
         "vibetrading/local_storage.py",
         "vibetrading/market_spool.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/market_spool.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "vibetrading/local_storage.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "vibetrading/archive.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_spool_recovery.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_archive_integrity.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_vnext_vn09.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "**/secrets/**",
@@ -1636,16 +1573,11 @@
         "any product/config file outside edit_paths"
       ],
       "target_symbols": {
-        "EXISTING": [
-          "vibetrading/market_spool.py::MarketSpool.gc_disabled",
-          "vibetrading/local_storage.py::_FactLedger.commit_batch",
-          "vibetrading/archive.py::ArchiveMaintenance.run_once"
-        ],
-        "ADD_PROPOSED": [
-          "proof-only segment GC planner and fixture executor; production default remains no deletion"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
-      "goal_and_acceptance": "Only checkpoint+consumer+manifest/facts+remote/lease/retention proven segments eligible; unique copy deletion count=0 under injected crashes.",
+      "goal_and_acceptance": "Reuse existing archive/cloud integrity; GC enabled only after coverage/reader proof. Never rebuild working uploader or delete before verification. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "contracts": [
         "C01",
         "C02",
@@ -1658,8 +1590,7 @@
         "C09_PROPOSED"
       ],
       "predecessor_gates": [
-        "VN-G0 source/contract/fixture pin",
-        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+        "Use revised DAG + selected existing-function gap evidence; former universal platform gates superseded by scope revision."
       ],
       "tests": {
         "existing_regression_paths": [
@@ -1678,12 +1609,22 @@
       "new_run_outputs": [
         "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
       ],
-      "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
       "source_ticket": "docs/refactoring/vnext/tickets.json#VN09",
       "capacity_impacts": "Measure relevant CPU/event, bounded bytes/records/age/inflight, aggregate RSS/PSS and disk/WAL on 2vCPU/3.8GiB; no inferred production values.",
       "stage_classification": "NOT_STARTED",
-      "stage_status_detail": "Only checkpoint+consumer+manifest/facts+remote/lease/retention proven segments eligible; unique copy deletion count=0 under injected crashes.",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Reuse existing archive/cloud integrity; GC enabled only after coverage/reader proof. Never rebuild working uploader or delete before verification.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "SAFE_STORAGE_GAP_ONLY",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "VN10",
@@ -2179,6 +2120,8 @@
       "read_paths": [
         "docs/refactoring/vnext/03_contract_delta.md",
         "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "tests/refactoring/test_local_runtime.py",
         "tests/refactoring/test_shared_runtime_wiring.py",
         "tests/refactoring/test_strategy_dispatch.py",
@@ -2186,32 +2129,7 @@
         "vibetrading/strategy_contract.py",
         "vibetrading/strategy_runner.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/strategy_runner.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "vibetrading/strategy_contract.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "vibetrading/local_runtime.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_strategy_dispatch.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_shared_runtime_wiring.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_vnext_vn13.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "**/secrets/**",
@@ -2227,17 +2145,11 @@
         "any product/config file outside edit_paths"
       ],
       "target_symbols": {
-        "EXISTING": [
-          "vibetrading/strategy_runner.py::SharedStrategyRunner.prepare",
-          "vibetrading/strategy_runner.py::SharedStrategyRunner.process_event",
-          "vibetrading/strategy_runner.py::SharedStrategyRunner.run",
-          "vibetrading/local_runtime.py::run_engine"
-        ],
-        "ADD_PROPOSED": [
-          "already-applied immutable snapshot consumption (shadow only)"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
-      "goal_and_acceptance": "Single state apply, shared feature input, isolated callback faults, no NATS construction and no live order activation.",
+      "goal_and_acceptance": "One Python file per strategy, existing STRATEGY_ID/SUBSCRIPTIONS/WARMUP/create_strategy/on_event contract, explicit configuration links to shared data pipeline and existing Paper. C3/KP/KD calculators alone do not complete this. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "contracts": [
         "C01",
         "C02",
@@ -2250,8 +2162,7 @@
         "C09_PROPOSED"
       ],
       "predecessor_gates": [
-        "VN-G0 source/contract/fixture pin",
-        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+        "Use revised DAG + selected existing-function gap evidence; former universal platform gates superseded by scope revision."
       ],
       "tests": {
         "existing_regression_paths": [
@@ -2270,7 +2181,7 @@
       "new_run_outputs": [
         "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
       ],
-      "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
       "source_ticket": "docs/refactoring/vnext/tickets.json#VN13",
       "capacity_impacts": "Measure relevant CPU/event, bounded bytes/records/age/inflight, aggregate RSS/PSS and disk/WAL on 2vCPU/3.8GiB; no inferred production values.",
       "supersedes_scope": "Extend shadow composition to registered Production Strategy Runtime and PAPER dispatch; old Signal contract retained, LIVE permission remains separate.",
@@ -2297,8 +2208,18 @@
         "scope": "Local Paper/isolated request mapping only; full predecessor/external gates are not waived"
       },
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "단일 apply/shared snapshot Paper fixture 연결만 구현. lifecycle·강한 격리·실제 지속 운용 미완료",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. One Python file per strategy, existing STRATEGY_ID/SUBSCRIPTIONS/WARMUP/create_strategy/on_event contract, explicit configuration links to shared data pipeline and existing Paper. C3/KP/KD calculators alone do not complete this.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "STRATEGY_FILE_PLUGIN_PAPER",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "VN14A",
@@ -2684,6 +2605,8 @@
       "read_paths": [
         "docs/refactoring/vnext/03_contract_delta.md",
         "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "tests/test_dashboard.py",
         "tests/test_dual_mock_and_assumed.py",
         "tests/test_telegram_status.py",
@@ -2692,28 +2615,7 @@
         "vibetrading/telegram.py",
         "vibetrading/telegram_trade.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/telegram_trade.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "vibetrading/telegram.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "vibetrading/dashboard/bridge.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/test_trade_exclusions.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/test_dual_mock_and_assumed.py",
-          "action": "MODIFY"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "**/secrets/**",
@@ -2729,17 +2631,11 @@
         "any product/config file outside edit_paths"
       ],
       "target_symbols": {
-        "EXISTING": [
-          "vibetrading/telegram_trade.py::trade_report",
-          "vibetrading/telegram_trade.py::summary",
-          "vibetrading/telegram.py::TelegramController._compact_status",
-          "vibetrading/dashboard/bridge.py::run"
-        ],
-        "ADD_PROPOSED": [
-          "read-only per-strategy PnL/Return projection and UI bindings"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
-      "goal_and_acceptance": "Actual/assumed/recovery separated; missing valuation/currency/cashflow evidence shown unavailable; no reporting IO on submit path.",
+      "goal_and_acceptance": "One actual/assumed/Paper/recovery projection workstream, no reporting IO in submit path or redundant dashboard platform. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "contracts": [
         "C01",
         "C02",
@@ -2752,8 +2648,7 @@
         "C09_PROPOSED"
       ],
       "predecessor_gates": [
-        "VN-G0 source/contract/fixture pin",
-        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+        "Use revised DAG + selected existing-function gap evidence; former universal platform gates superseded by scope revision."
       ],
       "tests": {
         "existing_regression_paths": [
@@ -2773,13 +2668,23 @@
       "new_run_outputs": [
         "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
       ],
-      "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
       "source_ticket": "docs/refactoring/vnext/tickets.json#VN15",
       "capacity_impacts": "Measure relevant CPU/event, bounded bytes/records/age/inflight, aggregate RSS/PSS and disk/WAL on 2vCPU/3.8GiB; no inferred production values.",
       "supersedes_scope": "Reuse one report projection for real/Paper strategy virtual and account physical PnL/positions; no duplicate TX09 implementation.",
       "stage_classification": "NOT_STARTED",
-      "stage_status_detail": "Actual/assumed/recovery separated; missing valuation/currency/cashflow evidence shown unavailable; no reporting IO on submit path.",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. One actual/assumed/Paper/recovery projection workstream, no reporting IO in submit path or redundant dashboard platform.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "MERGE_WITH_TX09",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "VN16",
@@ -2921,34 +2826,15 @@
       "read_paths": [
         "docs/refactoring/vnext/03_contract_delta.md",
         "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "scripts/refactoring/build_release_manifest.py",
         "tests/refactoring/test_local_runtime.py",
         "tests/refactoring/test_runtime_mounts.py",
         "tests/test_crypto_release.py",
         "vibetrading/local_config.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/local_config.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "scripts/refactoring/build_release_manifest.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "deploy/local-runtime.yml",
-          "action": "ADD"
-        },
-        {
-          "path": "tests/refactoring/test_local_runtime.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_runtime_mounts.py",
-          "action": "MODIFY"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "**/secrets/**",
@@ -2964,16 +2850,11 @@
         "any product/config file outside edit_paths"
       ],
       "target_symbols": {
-        "EXISTING": [
-          "vibetrading/local_config.py::CapacityContract.required",
-          "vibetrading/local_config.py::CapacityContract.verify_evidence",
-          "scripts/refactoring/build_release_manifest.py::build"
-        ],
-        "ADD_PROPOSED": [
-          "deploy/local-runtime.yml candidate overlay"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
-      "goal_and_acceptance": "Per-role exact digest/mount/config contract with finite combined CPU/RAM/physical-volume budgets, no secret render and no activation.",
+      "goal_and_acceptance": "Reuse existing runtimes; local process wiring/bounded resources only, no new universal execution deployment topology. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "contracts": [
         "C01",
         "C02",
@@ -2986,8 +2867,7 @@
         "C09_PROPOSED"
       ],
       "predecessor_gates": [
-        "VN-G0 source/contract/fixture pin",
-        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+        "Use revised DAG + selected existing-function gap evidence; former universal platform gates superseded by scope revision."
       ],
       "tests": {
         "existing_regression_paths": [
@@ -3006,12 +2886,22 @@
       "new_run_outputs": [
         "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
       ],
-      "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
       "source_ticket": "docs/refactoring/vnext/tickets.json#VN17",
       "capacity_impacts": "Measure relevant CPU/event, bounded bytes/records/age/inflight, aggregate RSS/PSS and disk/WAL on 2vCPU/3.8GiB; no inferred production values.",
       "stage_classification": "NOT_STARTED",
-      "stage_status_detail": "Per-role exact digest/mount/config contract with finite combined CPU/RAM/physical-volume budgets, no secret render and no activation.",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Reuse existing runtimes; local process wiring/bounded resources only, no new universal execution deployment topology.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "MINIMAL_RUNTIME_WIRING",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "VN18",
@@ -3035,23 +2925,12 @@
       "read_paths": [
         "docs/refactoring/vnext/03_contract_delta.md",
         "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "tests/refactoring/test_local_runtime.py",
         "tests/test_crypto_replay_integrity.py"
       ],
-      "edit_paths": [
-        {
-          "path": "scripts/refactoring/benchmark_vnext.py",
-          "action": "ADD"
-        },
-        {
-          "path": "tests/refactoring/test_local_runtime.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/test_crypto_replay_integrity.py",
-          "action": "MODIFY"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "**/secrets/**",
@@ -3067,12 +2946,11 @@
         "any product/config file outside edit_paths"
       ],
       "target_symbols": {
-        "EXISTING": [],
-        "ADD_PROPOSED": [
-          "small pinned trace A/B driver; CLI fixed and tested in this ticket"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
-      "goal_and_acceptance": "Execute validation matrix with raw sample counts and source hashes; 30m wall clock/24h cloud/15m Parquet/72h representative coverage never substituted by fixtures.",
+      "goal_and_acceptance": "Existing Golden + data recovery and selected plugin/Paper/same-account faults; compare existing runtime behavior, no venue reconnect implementation. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "contracts": [
         "C01",
         "C02",
@@ -3085,8 +2963,7 @@
         "C09_PROPOSED"
       ],
       "predecessor_gates": [
-        "VN-G0 source/contract/fixture pin",
-        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+        "Use revised DAG + selected existing-function gap evidence; former universal platform gates superseded by scope revision."
       ],
       "tests": {
         "existing_regression_paths": [
@@ -3104,12 +2981,22 @@
       "new_run_outputs": [
         "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
       ],
-      "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
       "source_ticket": "docs/refactoring/vnext/tickets.json#VN18",
       "capacity_impacts": "Measure relevant CPU/event, bounded bytes/records/age/inflight, aggregate RSS/PSS and disk/WAL on 2vCPU/3.8GiB; no inferred production values.",
       "stage_classification": "NOT_STARTED",
-      "stage_status_detail": "Execute validation matrix with raw sample counts and source hashes; 30m wall clock/24h cloud/15m Parquet/72h representative coverage never substituted by fixtures.",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Existing Golden + data recovery and selected plugin/Paper/same-account faults; compare existing runtime behavior, no venue reconnect implementation.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "CORE_REGRESSION_FAULT_GATE",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "VN19",
@@ -3129,14 +3016,11 @@
       "read_paths": [
         "docs/refactoring/vnext/03_contract_delta.md",
         "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "scripts/refactoring/build_release_manifest.py"
       ],
-      "edit_paths": [
-        {
-          "path": "docs/refactoring/runs/20261020-vnext/vn19-package/",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "**/secrets/**",
@@ -3152,12 +3036,11 @@
         "any product/config file outside edit_paths"
       ],
       "target_symbols": {
-        "EXISTING": [
-          "scripts/refactoring/build_release_manifest.py::build"
-        ],
-        "ADD_PROPOSED": []
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
-      "goal_and_acceptance": "Reviewable per-role cutover/rollback package with exact commands/digests/accounts/current-ledger compatibility; separate execution authorization.",
+      "goal_and_acceptance": "Reuse existing packaging/export/rollback; prepare only selected local data-path transition. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "contracts": [
         "C01",
         "C02",
@@ -3170,8 +3053,7 @@
         "C09_PROPOSED"
       ],
       "predecessor_gates": [
-        "VN-G0 source/contract/fixture pin",
-        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+        "Use revised DAG + selected existing-function gap evidence; former universal platform gates superseded by scope revision."
       ],
       "tests": {
         "existing_regression_paths": [],
@@ -3186,13 +3068,23 @@
       "new_run_outputs": [
         "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
       ],
-      "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
       "source_ticket": "docs/refactoring/vnext/tickets.json#VN19",
       "capacity_impacts": "Measure relevant CPU/event, bounded bytes/records/age/inflight, aggregate RSS/PSS and disk/WAL on 2vCPU/3.8GiB; no inferred production values.",
       "supersedes_scope": "PAPER_READY and per-connector readiness shown separately; LIVE_ACTIVE false unless separately authorized.",
       "stage_classification": "NOT_STARTED",
-      "stage_status_detail": "Reviewable per-role cutover/rollback package with exact commands/digests/accounts/current-ledger compatibility; separate execution authorization.",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Reuse existing packaging/export/rollback; prepare only selected local data-path transition.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "KEEP_RELEASE_ROLLBACK",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "VN20",
@@ -3217,29 +3109,14 @@
       "read_paths": [
         "docs/refactoring/vnext/03_contract_delta.md",
         "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "requirements.txt",
         "vibetrading/bus.py",
         "vibetrading/market_fanout.py",
         "vibetrading/runtime.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/bus.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "vibetrading/runtime.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "vibetrading/market_fanout.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "requirements.txt",
-          "action": "MODIFY"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "**/secrets/**",
@@ -3255,10 +3132,11 @@
         "any product/config file outside edit_paths"
       ],
       "target_symbols": {
-        "EXISTING": [],
-        "ADD_PROPOSED": []
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
-      "goal_and_acceptance": "After actual cutover stabilization, archived legacy backlog and rollback proof, pin remaining callers and split exact retire paths before dispatch; no automatic deletion.",
+      "goal_and_acceptance": "Existing NATS execution path retained until verified local migration/operational acceptance; code deletion requires per-path caller/rollback proof and later explicit authorization. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "contracts": [
         "C01",
         "C02",
@@ -3271,9 +3149,7 @@
         "C09_PROPOSED"
       ],
       "predecessor_gates": [
-        "VN-G0 source/contract/fixture pin",
-        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived",
-        "Actual G11 cutover stabilization plus backlog/rollback/retention proof; split exact retire child tickets before editing"
+        "Use revised DAG + selected existing-function gap evidence; former universal platform gates superseded by scope revision."
       ],
       "tests": {
         "existing_regression_paths": [],
@@ -3288,12 +3164,22 @@
       "new_run_outputs": [
         "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
       ],
-      "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
       "source_ticket": "docs/refactoring/vnext/tickets.json#VN20",
       "capacity_impacts": "Measure relevant CPU/event, bounded bytes/records/age/inflight, aggregate RSS/PSS and disk/WAL on 2vCPU/3.8GiB; no inferred production values.",
       "stage_classification": "NOT_STARTED",
-      "stage_status_detail": "After actual cutover stabilization, archived legacy backlog and rollback proof, pin remaining callers and split exact retire paths before dispatch; no automatic deletion.",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Existing NATS execution path retained until verified local migration/operational acceptance; code deletion requires per-path caller/rollback proof and later explicit authorization.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "EXTERNAL_AFTER_PROOF",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX00",
@@ -3302,37 +3188,22 @@
       "depends_on": [
         "VN00"
       ],
-      "goal": "Venue/product/environment/account audit, TOSS DATA_ONLY, collection universe not trading capability",
+      "goal": "Inventory existing venue/product/environment execution paths and exact callers; preserve TOSS DATA_ONLY; no connector implementation. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "production_venue_audit",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "vibetrading/brokers.py",
-        "vibetrading/extended_brokers.py",
-        "vibetrading/fv_mm/venues.py",
-        "vibetrading/fv_mm/private.py",
         "vibetrading/bybit_execution.py",
-        "vibetrading/kis_execution.py",
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "vibetrading/extended_brokers.py",
+        "vibetrading/fv_mm/private.py",
+        "vibetrading/fv_mm/venues.py",
+        "vibetrading/kis_execution.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/brokers.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "vibetrading/providers/toss.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/test_collector_recovery_20261007.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_tx00_toss_data_only.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -3345,10 +3216,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {
         "vibetrading/brokers.py": "baf6cf4281eedad31ae8c53a282e879088ab4a42e26c9495448fc9400517b9d9",
@@ -3377,15 +3247,17 @@
         "path": null,
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": false
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "product/environment별 매핑 조사. 실제 계좌·margin·capability 확인 미완료",
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Inventory existing venue/product/environment execution paths and exact callers; preserve TOSS DATA_ONLY; no connector implementation.",
       "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
       "completed_subunits": [
         {
@@ -3394,7 +3266,17 @@
           "source_sha": "1efd0f3664542ee795d8c89960951a24998ab223",
           "receipt": "docs/refactoring/runs/20261023-v3/tx00-toss/acceptance.json"
         }
-      ]
+      ],
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "REUSE_AUDIT",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX01",
@@ -3403,26 +3285,19 @@
       "depends_on": [
         "TX00"
       ],
-      "goal": "Explicit mode/action/product contracts; preserve Signal/OrderIntent wire; reject TOSS execution scopes",
+      "goal": "Reuse existing Signal/OrderIntent and strategy contract; add only necessary local Paper/strategy identity bridge. No universal replacement action API. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "production_portfolio",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
-        "vibetrading/models.py",
-        "vibetrading/strategy_contract.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "vibetrading/execution_ledger.py",
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "vibetrading/models.py",
+        "vibetrading/strategy_contract.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/trading_contracts.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_portfolio_ledger.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -3435,10 +3310,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {
         "vibetrading/models.py": "aabd0b3a45184b5d733a2120c21a1a07c1b74698b5fd24c12cd78389e188fb9d",
@@ -3464,13 +3338,15 @@
         "path": "tests/refactoring/test_portfolio_ledger.py",
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": true
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "implementation_evidence": {
         "paths": [
           "vibetrading/trading_contracts.py"
@@ -3493,8 +3369,18 @@
         "scope": "Local Paper/isolated request mapping only; full predecessor/external gates are not waived"
       },
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "공통 mode/action/product 초안과 Paper 범위. 미완성 TX 구현과 함께 커밋 제외",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Reuse existing Signal/OrderIntent and strategy contract; add only necessary local Paper/strategy identity bridge. No universal replacement action API.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "ADAPT_EXISTING_CONTRACT",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX02A",
@@ -3504,25 +3390,18 @@
         "TX01",
         "VN10"
       ],
-      "goal": "Canonical account authority/lease and physically separated PAPER ledger; alternate DBpath cannot duplicate owner",
+      "goal": "Reuse ETF process lease/journal and existing Paper ExecutionOwner; prove one physical account writer in selected mode, no second real-account authority. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "production_portfolio",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
-        "vibetrading/process_lease.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "vibetrading/execution_ledger.py",
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "vibetrading/process_lease.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/portfolio_ledger.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_portfolio_ledger.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -3535,10 +3414,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {
         "vibetrading/process_lease.py": "064decebc0d4f2a7ddb6b76188720418afd2022b379f675b7d61e385b52882eb",
@@ -3563,13 +3441,15 @@
         "path": "tests/refactoring/test_portfolio_ledger.py",
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": true
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "implementation_evidence": {
         "paths": [
           "vibetrading/portfolio_ledger.py"
@@ -3590,8 +3470,18 @@
         "scope": "Local Paper/isolated request mapping only; full predecessor/external gates are not waived"
       },
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "Paper scope owner lease만 구현. 기존 ETF journal/전체 계좌 fencing 미완료",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Reuse ETF process lease/journal and existing Paper ExecutionOwner; prove one physical account writer in selected mode, no second real-account authority.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "ADAPT_EXISTING_OWNER",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX02B",
@@ -3600,24 +3490,17 @@
       "depends_on": [
         "TX02A"
       ],
-      "goal": "Virtual strategy attribution and physical account positions with exact-once fill identity and external-gap classification",
+      "goal": "Reuse EtfJournal per-strategy books and PortfolioLedger Paper books; complete only demonstrated same-account attribution/reservation/restart gaps. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "production_portfolio",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
-        "vibetrading/etf_journal.py",
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "vibetrading/etf_journal.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/portfolio_ledger.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_portfolio_ledger.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -3630,10 +3513,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {
         "vibetrading/etf_journal.py": "cd81396df9174c73fcaa80f479fe8c06a11a37e99f16daa269eb75a84644d79d"
@@ -3657,13 +3539,15 @@
         "path": "tests/refactoring/test_portfolio_ledger.py",
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": true
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "implementation_evidence": {
         "paths": [
           "vibetrading/portfolio_ledger.py"
@@ -3685,8 +3569,18 @@
         "scope": "Local Paper/isolated request mapping only; full predecessor/external gates are not waived"
       },
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "Paper virtual/physical 귀속 fixture만 구현",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Reuse EtfJournal per-strategy books and PortfolioLedger Paper books; complete only demonstrated same-account attribution/reservation/restart gaps.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "COMPLETE_MISSING_ATTRIBUTION",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX02",
@@ -3696,12 +3590,14 @@
         "TX02A",
         "TX02B"
       ],
-      "goal": "Account owner/attribution acceptance aggregate, not repeated implementation",
+      "goal": "Joint acceptance of selected existing account owner/books; do not build new generic account engine. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "root",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json"
       ],
       "edit_paths": [],
       "forbidden_paths": [
@@ -3716,10 +3612,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {},
       "contract_ids": [
@@ -3741,16 +3636,28 @@
         "path": null,
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": false
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "하위 작업이 진행 중인 집계 단계; 별도 완료로 계산하지 않음",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Joint acceptance of selected existing account owner/books; do not build new generic account engine.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "REUSE_AGGREGATE",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX03A",
@@ -3759,24 +3666,17 @@
       "depends_on": [
         "TX01"
       ],
-      "goal": "Contract multiplier/currency/position-mode and cash vs Perp economics; unknown/inverse unsupported explicit",
+      "goal": "Reuse existing product metadata and supported Paper specs; extra cross/portfolio/unified margin types require explicit strategy need, not mandatory baseline. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "production_portfolio",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
-        "vibetrading/models.py",
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "vibetrading/models.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/trading_contracts.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_portfolio_ledger.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -3789,10 +3689,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {
         "vibetrading/models.py": "aabd0b3a45184b5d733a2120c21a1a07c1b74698b5fd24c12cd78389e188fb9d"
@@ -3816,13 +3715,15 @@
         "path": "tests/refactoring/test_portfolio_ledger.py",
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": true
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "implementation_evidence": {
         "paths": [
           "vibetrading/portfolio_ledger.py",
@@ -3846,8 +3747,18 @@
         "scope": "Local Paper/isolated request mapping only; full predecessor/external gates are not waived"
       },
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "cash/isolated-linear Paper만 구현. inverse/hedge/cross-currency/실제 margin 미지원",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Reuse existing product metadata and supported Paper specs; extra cross/portfolio/unified margin types require explicit strategy need, not mandatory baseline.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "DEFER_UNREQUESTED_PRODUCT_GENERALIZATION",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX03B",
@@ -3857,24 +3768,17 @@
         "TX02B",
         "TX03A"
       ],
-      "goal": "Transactional margin/reservations, fee/rebate/funding and equity; authoritative live margin unavailable blocks live",
+      "goal": "Reuse existing runtime/journal fee/funding/account facts; complete only selected Paper product missing accounting. No universal live margin ledger rewrite. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "production_portfolio",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
-        "vibetrading/execution_ledger.py",
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "vibetrading/execution_ledger.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/portfolio_ledger.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_portfolio_ledger.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -3887,10 +3791,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {
         "vibetrading/execution_ledger.py": "657366cf0eb15c898786feb7704363043bb52674b507804d7a9b9d0ef350d70e"
@@ -3914,13 +3817,15 @@
         "path": "tests/refactoring/test_portfolio_ledger.py",
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": true
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "implementation_evidence": {
         "paths": [
           "vibetrading/portfolio_ledger.py"
@@ -3941,8 +3846,18 @@
         "scope": "Local Paper/isolated request mapping only; full predecessor/external gates are not waived"
       },
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "Paper fee/rebate/funding 회계. 실제 margin/equity 대조 미완료",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Reuse existing runtime/journal fee/funding/account facts; complete only selected Paper product missing accounting. No universal live margin ledger rewrite.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "REUSE_SCOPE_LIMITED_ACCOUNTING",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX03",
@@ -3952,12 +3867,14 @@
         "TX03A",
         "TX03B"
       ],
-      "goal": "Perp portfolio acceptance aggregate",
+      "goal": "Accept only explicitly selected existing products; broad perpetual platform completion is not a core NATS-free/Paper gate. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "root",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json"
       ],
       "edit_paths": [],
       "forbidden_paths": [
@@ -3972,10 +3889,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {},
       "contract_ids": [
@@ -3997,43 +3913,47 @@
         "path": null,
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": false
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "하위 작업이 진행 중인 집계 단계; 별도 완료로 계산하지 않음",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Accept only explicitly selected existing products; broad perpetual platform completion is not a core NATS-free/Paper gate.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "OPTIONAL_PRODUCT_GATE",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX04A",
       "status": "LOCAL_IMPLEMENTED_INTEGRATED_OFFLINE_TEST_PASS_PRODUCTION_OPEN",
       "kind": "IMPLEMENTATION",
       "depends_on": [
-        "TX02B",
-        "TX03B"
+        "TX02B"
       ],
-      "goal": "Durable Paper order/matching checkpoint/input/fill dedup in one transaction; restart/capacity limits",
+      "goal": "Reuse existing PaperExecution/PortfolioLedger atomic persistence; finish demonstrated Paper restart/dedup gaps, retain conservative fill semantics. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "production_portfolio",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
-        "vibetrading/local_events.py",
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "vibetrading/local_events.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/portfolio_ledger.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_portfolio_ledger.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -4046,10 +3966,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {
         "vibetrading/local_events.py": "fc62edd3becaf19d80007f70d0000e8c9984abc56556814a0c8160716f4ab362"
@@ -4073,13 +3992,15 @@
         "path": "tests/refactoring/test_portfolio_ledger.py",
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": true
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "implementation_evidence": {
         "paths": [
           "vibetrading/paper_execution.py"
@@ -4100,35 +4021,39 @@
         "scope": "Local Paper/isolated request mapping only; full predecessor/external gates are not waived"
       },
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "matcher durable state/fill dedup 구현. 전체 입력 C/H 연속 복구 미완료",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Reuse existing PaperExecution/PortfolioLedger atomic persistence; finish demonstrated Paper restart/dedup gaps, retain conservative fill semantics.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "COMPLETE_MISSING_PAPER_DURABILITY",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX04B",
       "status": "MATCHER_DURABLE_CONTINUOUS_INPUT_RECOVERY_OPEN",
       "kind": "IMPLEMENTATION",
       "depends_on": [
-        "TX04A"
+        "TX04A",
+        "VN03"
       ],
-      "goal": "Causal arrival/cancel/queue/depth matching with bounded active orders and zero venue mutation",
+      "goal": "Connect existing matcher to continuous NATS-free live/replay input with causal timestamps/gaps, no new exchange simulator or venue client. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "production_paper_audit",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
-        "vibetrading/fv_pilot/simulation.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "vibetrading/fv_mm/legacy/paper_simulation.py",
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "vibetrading/fv_pilot/simulation.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/paper_execution.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_paper_execution.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -4141,10 +4066,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {
         "vibetrading/fv_pilot/simulation.py": "ae949752722d7ca4afab4092617c088f748b4df3ffea5a06a74f2ae7d031916d",
@@ -4169,13 +4093,15 @@
         "path": "tests/refactoring/test_paper_execution.py",
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": true
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "implementation_evidence": {
         "paths": [
           "vibetrading/paper_execution.py",
@@ -4200,8 +4126,18 @@
         "scope": "Local Paper/isolated request mapping only; full predecessor/external gates are not waived"
       },
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "인과적 matcher fixture. 실제 live-input Paper/continuous input 복구 미완료",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Connect existing matcher to continuous NATS-free live/replay input with causal timestamps/gaps, no new exchange simulator or venue client.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "ADAPT_LOCAL_MARKET_INPUT",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX04",
@@ -4211,12 +4147,14 @@
         "TX04A",
         "TX04B"
       ],
-      "goal": "Paper lifecycle/accounting acceptance aggregate",
+      "goal": "Selected Paper event-to-fill-to-ledger/restart acceptance using existing matcher/ledger. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "root",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json"
       ],
       "edit_paths": [],
       "forbidden_paths": [
@@ -4231,10 +4169,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {},
       "contract_ids": [
@@ -4256,49 +4193,48 @@
         "path": null,
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": false
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "하위 작업이 진행 중인 집계 단계; 별도 완료로 계산하지 않음",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Selected Paper event-to-fill-to-ledger/restart acceptance using existing matcher/ledger.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "REUSE_PAPER_GATE",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX05",
       "status": "PAPER_FIXTURE_INTEGRATION_IMPLEMENTED_PRODUCTION_BLOCKED",
       "kind": "IMPLEMENTATION",
       "depends_on": [
-        "TX04B",
-        "TX07A",
         "VN13"
       ],
-      "goal": "Register old-contract DummyStrategy; single MarketState apply to common owner/Paper/portfolio with lifecycle/fairness",
+      "goal": "One implementation workstream with VN13: file-based strategy plugin -> existing local strategy runtime -> existing Paper matcher. No parallel new runtime or mandatory replacement of live execution. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "root",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
-        "vibetrading/strategy_runner.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "vibetrading/hot_path.py",
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "vibetrading/strategy_runner.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/strategy_runtime.py",
-          "action": "ADD"
-        },
-        {
-          "path": "vibetrading/strategy_contract.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_strategy_runtime.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -4311,10 +4247,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {
         "vibetrading/strategy_contract.py": "90c13b60901be209984e66f8910e31a19423ad59704e4bc6b3e64aeb6d85f0e6",
@@ -4340,13 +4275,15 @@
         "path": "tests/refactoring/test_strategy_runtime.py",
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": true
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "implementation_evidence": {
         "paths": [
           "vibetrading/strategy_runtime.py",
@@ -4370,8 +4307,18 @@
         "scope": "Local Paper/isolated request mapping only; full predecessor/external gates are not waived"
       },
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "공유 state Paper runtime fixture. callback hard isolation/전체 lifecycle 미완료",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. One implementation workstream with VN13: file-based strategy plugin -> existing local strategy runtime -> existing Paper matcher. No parallel new runtime or mandatory replacement of live execution.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "MERGE_WITH_VN13",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX07A",
@@ -4380,25 +4327,18 @@
       "depends_on": [
         "TX01"
       ],
-      "goal": "Canonical acceptance/fill/cancel/funding/account facts and UNKNOWN/reconciliation contract",
+      "goal": "Small normalized local identity/event mapping over existing order/fill/journal semantics; no second universal order lifecycle state machine. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "root",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
-        "vibetrading/execution_ledger.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "vibetrading/etf_journal.py",
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "vibetrading/execution_ledger.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/trading_contracts.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_tx07a.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -4411,10 +4351,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {
         "vibetrading/execution_ledger.py": "657366cf0eb15c898786feb7704363043bb52674b507804d7a9b9d0ef350d70e",
@@ -4439,45 +4378,48 @@
         "path": "tests/refactoring/test_tx07a.py",
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": false
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "stage_classification": "NOT_STARTED",
-      "stage_status_detail": "Canonical acceptance/fill/cancel/funding/account facts and UNKNOWN/reconciliation contract",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Small normalized local identity/event mapping over existing order/fill/journal semantics; no second universal order lifecycle state machine.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "ADAPT_EXISTING_FACTS",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX06A",
       "status": "REQUEST_MAPPING_ONLY_FULL_CODE_COMPLETION_BLOCKED",
       "kind": "IMPLEMENTATION",
       "depends_on": [
-        "TX01",
-        "TX03B",
-        "TX07A"
+        "TX00"
       ],
-      "goal": "Binance explicit USDⓈM Perp signed submit/cancel/status/private/history/margin/funding; Spot cannot route",
+      "goal": "Binance: retain existing connectors and compare futures vs spot/environment; map existing methods only if selected path needs local bridge. No new HTTP/signer/private wrapper by default. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "production_venue_audit",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "vibetrading/brokers.py",
-        "vibetrading/providers/crypto_perp.py",
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "vibetrading/providers/crypto_perp.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/perp_execution.py",
-          "action": "ADD"
-        },
-        {
-          "path": "tests/refactoring/test_perp_execution.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -4490,10 +4432,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {
         "vibetrading/brokers.py": "baf6cf4281eedad31ae8c53a282e879088ab4a42e26c9495448fc9400517b9d9",
@@ -4518,13 +4459,15 @@
         "path": "tests/refactoring/test_perp_execution.py",
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": true
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "implementation_evidence": {
         "paths": [
           "vibetrading/perp_execution.py"
@@ -4546,37 +4489,38 @@
         "scope": "Local Paper/isolated request mapping only; full predecessor/external gates are not waived"
       },
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "Binance Perp request/sign/query 매핑만 구현. transport/private lifecycle/실계좌 미완료",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Binance: retain existing connectors and compare futures vs spot/environment; map existing methods only if selected path needs local bridge. No new HTTP/signer/private wrapper by default.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "EXCLUDE_NEW_CONNECTOR_BUILD",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX06B",
       "status": "REQUEST_MAPPING_ONLY_FULL_CODE_COMPLETION_BLOCKED",
       "kind": "IMPLEMENTATION",
       "depends_on": [
-        "TX01",
-        "TX03B",
-        "TX07A"
+        "TX00"
       ],
-      "goal": "Arcus Perp exact Ed25519 ct/goodTilTime/clientcase and cancel/fills/margin/funding recovery",
+      "goal": "Arcus: retain existing WebSocket/signing path and scope differences; any missing capability needs function-level evidence and explicit selected use. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "production_venue_audit",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "vibetrading/extended_brokers.py",
-        "vibetrading/providers/extended_perp.py",
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "vibetrading/providers/extended_perp.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/perp_execution.py",
-          "action": "ADD"
-        },
-        {
-          "path": "tests/refactoring/test_perp_execution.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -4589,10 +4533,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {
         "vibetrading/extended_brokers.py": "19dd83ff62a498fecf6f9e05a58f57bc92c2a9d64ef59a7108cea06cb293d77b",
@@ -4617,13 +4560,15 @@
         "path": "tests/refactoring/test_perp_execution.py",
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": true
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "implementation_evidence": {
         "paths": [
           "vibetrading/perp_execution.py"
@@ -4645,38 +4590,39 @@
         "scope": "Local Paper/isolated request mapping only; full predecessor/external gates are not waived"
       },
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "Arcus Perp request/sign/query 매핑만 구현. transport/private lifecycle/실계좌 미완료",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Arcus: retain existing WebSocket/signing path and scope differences; any missing capability needs function-level evidence and explicit selected use.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "EXCLUDE_NEW_CONNECTOR_BUILD",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX06C",
       "status": "REQUEST_MAPPING_ONLY_FULL_CODE_COMPLETION_BLOCKED",
       "kind": "IMPLEMENTATION",
       "depends_on": [
-        "TX01",
-        "TX03B",
-        "TX07A"
+        "TX00"
       ],
-      "goal": "GRVT explicit environment/domain native clientID/nonce, lifecycle/account/private/funding and paging",
+      "goal": "GRVT: reuse fv_mm venue/private/reconcile and existing broker composition; do not treat incomplete generic adapter as missing working exchange connection. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "production_venue_audit",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "vibetrading/extended_brokers.py",
-        "vibetrading/fv_mm/venues.py",
         "vibetrading/fv_mm/private.py",
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "vibetrading/fv_mm/venues.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/perp_execution.py",
-          "action": "ADD"
-        },
-        {
-          "path": "tests/refactoring/test_perp_execution.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -4689,10 +4635,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {
         "vibetrading/extended_brokers.py": "19dd83ff62a498fecf6f9e05a58f57bc92c2a9d64ef59a7108cea06cb293d77b",
@@ -4718,13 +4663,15 @@
         "path": "tests/refactoring/test_perp_execution.py",
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": true
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "implementation_evidence": {
         "paths": [
           "vibetrading/perp_execution.py"
@@ -4746,38 +4693,39 @@
         "scope": "Local Paper/isolated request mapping only; full predecessor/external gates are not waived"
       },
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "GRVT Perp request/sign/query 매핑만 구현. transport/private lifecycle/실계좌 미완료",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. GRVT: reuse fv_mm venue/private/reconcile and existing broker composition; do not treat incomplete generic adapter as missing working exchange connection.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "EXCLUDE_NEW_CONNECTOR_BUILD",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX06D",
       "status": "REQUEST_MAPPING_ONLY_FULL_CODE_COMPLETION_BLOCKED",
       "kind": "IMPLEMENTATION",
       "depends_on": [
-        "TX01",
-        "TX03B",
-        "TX07A"
+        "TX00"
       ],
-      "goal": "Bybit explicit linear-perpetual/category/positionIdx, V5 lifecycle/account/fills/funding; old testnet guards unchanged",
+      "goal": "Bybit: reuse fv_mm and liquidity_mm paths; keep execution probe testnet-only unless its own environment evidence says otherwise. No duplicate order/private client. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "production_venue_audit",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "vibetrading/bybit_execution.py",
         "vibetrading/fv_mm/venues.py",
-        "vibetrading/liquidity_mm/exchange.py",
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "vibetrading/liquidity_mm/exchange.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/perp_execution.py",
-          "action": "ADD"
-        },
-        {
-          "path": "tests/refactoring/test_perp_execution.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -4790,10 +4738,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {
         "vibetrading/bybit_execution.py": "a40f95107bf262ca283fd8d852fee3e5d198bbdec3ec2d1c44e6f05c238ab12a",
@@ -4819,13 +4766,15 @@
         "path": "tests/refactoring/test_perp_execution.py",
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": true
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "implementation_evidence": {
         "paths": [
           "vibetrading/perp_execution.py"
@@ -4847,37 +4796,38 @@
         "scope": "Local Paper/isolated request mapping only; full predecessor/external gates are not waived"
       },
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "Bybit Perp request/sign/query 매핑만 구현. transport/private lifecycle/실계좌 미완료",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Bybit: reuse fv_mm and liquidity_mm paths; keep execution probe testnet-only unless its own environment evidence says otherwise. No duplicate order/private client.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "EXCLUDE_NEW_CONNECTOR_BUILD",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX06E",
       "status": "REQUEST_MAPPING_ONLY_FULL_CODE_COMPLETION_BLOCKED",
       "kind": "IMPLEMENTATION",
       "depends_on": [
-        "TX01",
-        "TX03B",
-        "TX07A"
+        "TX00"
       ],
-      "goal": "Hyperliquid official SDK signing, signer nonce vs actualaccount, assetID/cloid, lifecycle/funding/private recovery",
+      "goal": "Hyperliquid: preserve existing SDK/broker integration; generic transport implementation is not automatically required for NATS-free/Paper scope. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "production_venue_audit",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "vibetrading/brokers.py",
-        "vibetrading/providers/hyperliquid.py",
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "vibetrading/providers/hyperliquid.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/perp_execution.py",
-          "action": "ADD"
-        },
-        {
-          "path": "tests/refactoring/test_perp_execution.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -4890,10 +4840,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {
         "vibetrading/brokers.py": "baf6cf4281eedad31ae8c53a282e879088ab4a42e26c9495448fc9400517b9d9",
@@ -4918,13 +4867,15 @@
         "path": "tests/refactoring/test_perp_execution.py",
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": true
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "implementation_evidence": {
         "paths": [
           "vibetrading/perp_execution.py",
@@ -4949,26 +4900,34 @@
         "scope": "Local Paper/isolated request mapping only; full predecessor/external gates are not waived"
       },
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "Hyperliquid request/sign/query 매핑만 구현. 독립 signer nonce 저장소만 완료·선별 커밋",
-      "commit_scope": "COMPLETED_SUBUNIT_ONLY"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Hyperliquid: preserve existing SDK/broker integration; generic transport implementation is not automatically required for NATS-free/Paper scope.",
+      "commit_scope": "COMPLETED_SUBUNIT_ONLY",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "EXCLUDE_NEW_CONNECTOR_BUILD",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX06",
       "status": "PLANNED",
       "kind": "ACCEPTANCE_AGGREGATE",
       "depends_on": [
-        "TX06A",
-        "TX06B",
-        "TX06C",
-        "TX06D",
-        "TX06E"
+        "TX00"
       ],
-      "goal": "Five separate connector code capabilities, sandbox/live verification independent",
+      "goal": "Remove mandatory all-five-venue rebuild gate; function/caller/environment verification for selected existing route only. Do not erase completed adapter prototype evidence. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "root",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json"
       ],
       "edit_paths": [],
       "forbidden_paths": [
@@ -4983,10 +4942,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {},
       "contract_ids": [
@@ -5008,43 +4966,48 @@
         "path": null,
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": false
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "하위 작업이 진행 중인 집계 단계; 별도 완료로 계산하지 않음",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Remove mandatory all-five-venue rebuild gate; function/caller/environment verification for selected existing route only. Do not erase completed adapter prototype evidence.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "OPTIONAL_SELECTED_VENUE_AUDIT",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX07B",
       "status": "PLANNED",
       "kind": "IMPLEMENTATION",
       "depends_on": [
-        "TX06",
+        "TX00",
         "TX07A"
       ],
-      "goal": "Per-venue paginated query/private gap/timeout/cancel reconciliation with UNKNOWN reservations; no absence inference",
+      "goal": "Preserve existing per-runtime private/REST reconciliation; complete only demonstrated selected path gaps, no mandatory new Private Stream for every venue. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "root",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
-        "vibetrading/execution_owner.py",
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "vibetrading/execution_owner.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/perp_execution.py",
-          "action": "ADD"
-        },
-        {
-          "path": "tests/refactoring/test_tx07b.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -5057,10 +5020,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {
         "vibetrading/execution_owner.py": "3a14368e015d88e8a8170fb7c7e3693da5a57ec933c66ccfa6ed5d57facc319b"
@@ -5084,16 +5046,28 @@
         "path": "tests/refactoring/test_tx07b.py",
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": false
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "stage_classification": "NOT_STARTED",
-      "stage_status_detail": "Per-venue paginated query/private gap/timeout/cancel reconciliation with UNKNOWN reservations; no absence inference",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Preserve existing per-runtime private/REST reconciliation; complete only demonstrated selected path gaps, no mandatory new Private Stream for every venue.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "REUSE_EXISTING_RECONCILIATION",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX07",
@@ -5103,12 +5077,14 @@
         "TX07A",
         "TX07B"
       ],
-      "goal": "Order lifecycle/reconciliation acceptance aggregate",
+      "goal": "Selected current runtime equivalence/reconcile gate; not a mandatory new universal lifecycle engine. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "root",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json"
       ],
       "edit_paths": [],
       "forbidden_paths": [
@@ -5123,10 +5099,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {},
       "contract_ids": [
@@ -5148,16 +5123,28 @@
         "path": null,
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": false
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "stage_classification": "NOT_STARTED",
-      "stage_status_detail": "Order lifecycle/reconciliation acceptance aggregate",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Selected current runtime equivalence/reconcile gate; not a mandatory new universal lifecycle engine.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "OPTIONAL_SELECTED_EXECUTION_GATE",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX08A",
@@ -5165,28 +5152,20 @@
       "kind": "IMPLEMENTATION",
       "depends_on": [
         "TX02",
-        "TX03",
-        "TX07A",
-        "TX05"
+        "TX05",
+        "TX07A"
       ],
-      "goal": "Shared account opposite strategy intents, atomic reservation/risk/virtual and physical reconciliation, no optimistic netting",
+      "goal": "Priority: existing owner/ledger safe simultaneous strategy reservations, attribution, cancel ownership and restart under one account; Paper first, no live account rewrite. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "root",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
-        "vibetrading/execution_owner.py",
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "vibetrading/execution_owner.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/portfolio_ledger.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_tx08a.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -5199,10 +5178,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {
         "vibetrading/execution_owner.py": "3a14368e015d88e8a8170fb7c7e3693da5a57ec933c66ccfa6ed5d57facc319b"
@@ -5226,13 +5204,15 @@
         "path": "tests/refactoring/test_tx08a.py",
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": false
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "implementation_evidence": {
         "paths": [
           "vibetrading/strategy_runtime.py",
@@ -5256,8 +5236,18 @@
         "scope": "Local Paper/isolated request mapping only; full predecessor/external gates are not waived"
       },
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "Paper shared-account fixture만 구현. 실제 canonical owner/권위 통합 미완료",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Priority: existing owner/ledger safe simultaneous strategy reservations, attribution, cancel ownership and restart under one account; Paper first, no live account rewrite.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "COMPLETE_MISSING_SAME_ACCOUNT_SAFETY",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX08B",
@@ -5267,24 +5257,17 @@
         "TX08A",
         "TX07A"
       ],
-      "goal": "Narrow cross-venue child group/deadline/residual exposure tracking; no distributed transaction or automatic retry/unwind",
+      "goal": "Cross-exchange execution group is deferred until an explicitly chosen strategy needs it; preserve existing prototype, remove from core multi-strategy acceptance. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "root",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
-        "vibetrading/portfolio_ledger.py",
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "vibetrading/portfolio_ledger.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/execution_groups.py",
-          "action": "ADD"
-        },
-        {
-          "path": "tests/refactoring/test_tx08b.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -5297,10 +5280,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {},
       "contract_ids": [
@@ -5322,13 +5304,15 @@
         "path": "tests/refactoring/test_tx08b.py",
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": false
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "implementation_evidence": {
         "paths": [
           "vibetrading/execution_groups.py",
@@ -5355,23 +5339,34 @@
         "scope": "Local Paper/isolated request mapping only; full predecessor/external gates are not waived"
       },
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "Paper 관측 group facts만 구현. 선행 owner/lifecycle 통합 미완료",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Cross-exchange execution group is deferred until an explicitly chosen strategy needs it; preserve existing prototype, remove from core multi-strategy acceptance.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "DEFER_EXPLICIT_CROSS_VENUE_NEED",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX08",
       "status": "PLANNED",
       "kind": "ACCEPTANCE_AGGREGATE",
       "depends_on": [
-        "TX08A",
-        "TX08B"
+        "TX08A"
       ],
-      "goal": "Multi-strategy/cross-exchange aggregate",
+      "goal": "Require TX08A selected same-account evidence; cross-venue atomic execution is not mandatory core scope. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "root",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json"
       ],
       "edit_paths": [],
       "forbidden_paths": [
@@ -5386,10 +5381,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {},
       "contract_ids": [
@@ -5411,53 +5405,48 @@
         "path": null,
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": false
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "하위 작업이 진행 중인 집계 단계; 별도 완료로 계산하지 않음",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Require TX08A selected same-account evidence; cross-venue atomic execution is not mandatory core scope.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "SAME_ACCOUNT_GATE_ONLY",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX09",
       "status": "PLANNED",
       "kind": "IMPLEMENTATION",
       "depends_on": [
-        "TX08",
-        "VN14B",
         "VN15"
       ],
-      "goal": "Single actual/Paper PnL-position projection, owner-scoped control and promotion permissions",
+      "goal": "One read-only projection/control workstream with VN15. Preserve existing Telegram/trade/reporting; only missing Paper/actual/strategy labels and safe existing command bridges. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "root",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "vibetrading/local_events.py",
-        "vibetrading/runtime_control.py",
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "vibetrading/runtime_control.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/telegram.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "vibetrading/telegram_trade.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "vibetrading/dashboard/bridge.py",
-          "action": "MODIFY"
-        },
-        {
-          "path": "tests/refactoring/test_tx09.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -5470,10 +5459,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {
         "vibetrading/telegram.py": "c8dd9e179e01f05ffe0d777d4bd11dbd04175aae8f651c4c8b5425afdca14cd8",
@@ -5501,16 +5489,28 @@
         "path": "tests/refactoring/test_tx09.py",
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": false
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "stage_classification": "NOT_STARTED",
-      "stage_status_detail": "Single actual/Paper PnL-position projection, owner-scoped control and promotion permissions",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. One read-only projection/control workstream with VN15. Preserve existing Telegram/trade/reporting; only missing Paper/actual/strategy labels and safe existing command bridges.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "MERGE_WITH_VN15",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX10",
@@ -5519,25 +5519,18 @@
       "depends_on": [
         "TX01"
       ],
-      "goal": "Off-server backtest export manifest/metadata and strategy registration/promotion gate; no server research",
+      "goal": "Keep current Ncloud/S3 upload/download/verify and export path unchanged; add only missing data-manifest-to-strategy-file/Paper registration linkage. No new uploader/backtest platform. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "root",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "scripts/export_market_snapshot.py",
-        "vibetrading/parquet_store.py",
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "vibetrading/parquet_store.py"
       ],
-      "edit_paths": [
-        {
-          "path": "vibetrading/strategy_registry.py",
-          "action": "ADD"
-        },
-        {
-          "path": "tests/refactoring/test_tx10.py",
-          "action": "ADD"
-        }
-      ],
+      "edit_paths": [],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -5550,10 +5543,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {
         "scripts/export_market_snapshot.py": "c10634c1a4d96610bc9c8225c765cb99219e0f77baf62d1099bc1d3e7d453b11",
@@ -5578,16 +5570,28 @@
         "path": "tests/refactoring/test_tx10.py",
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": false
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "stage_classification": "NOT_STARTED",
-      "stage_status_detail": "Off-server backtest export manifest/metadata and strategy registration/promotion gate; no server research",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Keep current Ncloud/S3 upload/download/verify and export path unchanged; add only missing data-manifest-to-strategy-file/Paper registration linkage. No new uploader/backtest platform.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "KEEP_CLOUD_ADAPT_PLUGIN_METADATA",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX11",
@@ -5595,20 +5599,20 @@
       "kind": "IMPLEMENTATION",
       "depends_on": [
         "TX05",
-        "TX06",
-        "TX07",
-        "TX08",
-        "TX09",
+        "TX08A",
         "TX10",
+        "VN15",
         "VN18"
       ],
-      "goal": "Scenarios A-F, exact candidate regression, live-market Paper mutation0, 2vCPU resources and >30m/72h/outage evidence",
+      "goal": "One NATS-free data -> strategy-file -> Paper -> same-account attribution -> report/restart workflow, plus preserved legacy Golden behavior. Mandatory five-venue/arb platform scenario removed. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "root",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
         "docs/refactoring/vnext/12_production_acceptance_matrix.md",
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json"
       ],
       "edit_paths": [],
       "forbidden_paths": [
@@ -5623,10 +5627,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {},
       "contract_ids": [
@@ -5648,16 +5651,28 @@
         "path": null,
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": false
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "stage_classification": "NOT_STARTED",
-      "stage_status_detail": "Scenarios A-F, exact candidate regression, live-market Paper mutation0, 2vCPU resources and >30m/72h/outage evidence",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. One NATS-free data -> strategy-file -> Paper -> same-account attribution -> report/restart workflow, plus preserved legacy Golden behavior. Mandatory five-venue/arb platform scenario removed.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "NARROW_CORE_E2E",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     },
     {
       "task_id": "TX12",
@@ -5667,14 +5682,16 @@
         "TX11",
         "VN19"
       ],
-      "goal": "Separate readiness states and reviewable local release/cutover/promotion package; no server deployment or LIVE_ACTIVE",
+      "goal": "Accept minimal local scope (data/storage/recovery/plugins/Paper/same-account safety) and unchanged legacy runtimes; no generic Trading Platform completion badge. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
       "owner": "root",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
         "docs/refactoring/vnext/12_production_acceptance_matrix.md",
         "docs/refactoring/vnext/13_strategy_deployment_lifecycle.md",
-        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+        "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json"
       ],
       "edit_paths": [],
       "forbidden_paths": [
@@ -5689,10 +5706,9 @@
         "other edit owners paths"
       ],
       "target_symbols": {
-        "VERIFIED_CURRENT": [],
-        "PROPOSED_ADD_OR_MODIFY": [
-          "See bounded goal and implementation API receipt; never describe planned symbol as present"
-        ]
+        "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "ADD_PROPOSED": [],
+        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
       },
       "source_hashes": {},
       "contract_ids": [
@@ -5714,16 +5730,28 @@
         "path": null,
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN"
+        "status": "NOT_RUN",
+        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
+        "path_exists_at_audit": false
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
       "gate_evidence": [],
-      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
-      "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
+      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "stage_classification": "NOT_STARTED",
-      "stage_status_detail": "Separate readiness states and reviewable local release/cutover/promotion package; no server deployment or LIVE_ACTIVE",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Accept minimal local scope (data/storage/recovery/plugins/Paper/same-account safety) and unchanged legacy runtimes; no generic Trading Platform completion badge.",
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "scope_revision": {
+        "authority": "2026-10-23 explicit user correction",
+        "disposition": "NARROW_LOCAL_ACCEPTANCE",
+        "document": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+        "preserve_existing_runtime": true,
+        "new_venue_client_default": false,
+        "requires_function_gap_evidence_and_bounded_reticket": true,
+        "historical_status_preserved": true,
+        "supersedes_unselected_global_platform_gates": true
+      }
     }
   ],
   "updated_local": "2026-10-23",
@@ -5737,17 +5765,17 @@
     "canonical_src_layout": true,
     "kr_pure_decision_extraction": true
   },
-  "user_request_latest": "2026-10-23: implement next ticket R04, delegate implementation/tests through qualified OpenCode/free worker routes.",
+  "user_request_latest": "2026-10-23: preserve working exchange/order/cloud and strategy economics; NATS-free data/storage/recovery plus file-plugin Paper/multi-strategy reuse. This stage is audit and minimal-diff plan only; no exchange order code changes.",
   "execution_control": {
     "status": "STOPPED_AT_USER_REQUEST",
     "last_completed_ticket": "VN14B",
     "last_completed_tooling_ticket": "R05",
     "active_ticket": null,
     "start_next_ticket": false,
-    "stop_after_ticket": "R05",
+    "stop_after_ticket": "REUSE_SCOPE_PLAN",
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
-    "current_source_sha": "2b85c95a4e7951ac2a7590db24416e5b5f76d958",
+    "current_source_sha": "4977ab509490173e312183f32d47f862d94ee0bf",
     "active_tooling_tickets": [],
     "active_parallel_tickets": []
   },
@@ -6433,13 +6461,13 @@
       "reproduction": "docs/refactoring/runs/20261023-v3/baseline/checkpoint-order-stdout.txt"
     }
   ],
-  "user_scope_latest": "Exactly one selected ticket R05 completed; stop. Other tooling/VN/TX work unchanged.",
+  "user_scope_latest": "2026-10-23: preserve working exchange/order/cloud and strategy economics; NATS-free data/storage/recovery plus file-plugin Paper/multi-strategy reuse. This stage is audit and minimal-diff plan only; no exchange order code changes.",
   "packaging_validation": {
     "source_sha": "bf75b1c5d259433fc0aa2d9b43764855837b3f68",
     "status": "R03B1_ONLY_PASS",
     "receipt": "docs/refactoring/runs/20261023-v3/r03b1/acceptance.json"
   },
-  "progress_report": "docs/refactoring/runs/20261023-v3/r05/README.md",
+  "progress_report": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
   "primary_workspace_application": {
     "root": "/mnt/c/Users/박제형/Desktop/VibeTrading",
     "branch": "codex/v3-local-candidate",
@@ -6474,5 +6502,56 @@
       "canonical_src_layout": true,
       "canonical_strategy_ownership": true
     }
-  ]
+  ],
+  "refactoring_scope_revision": {
+    "authority": "Explicit user instruction, 2026-10-23",
+    "plan": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+    "source_sha": "4977ab509490173e312183f32d47f862d94ee0bf",
+    "implementation_dispatch_authorized": false,
+    "completed_evidence_preserved": true,
+    "affected_future_scope_ids": [
+      "VN07",
+      "VN08",
+      "VN09",
+      "VN13",
+      "VN15",
+      "VN17",
+      "VN18",
+      "VN19",
+      "VN20",
+      "TX00",
+      "TX01",
+      "TX02A",
+      "TX02B",
+      "TX02",
+      "TX03A",
+      "TX03B",
+      "TX03",
+      "TX04A",
+      "TX04B",
+      "TX04",
+      "TX05",
+      "TX07A",
+      "TX06A",
+      "TX06B",
+      "TX06C",
+      "TX06D",
+      "TX06E",
+      "TX06",
+      "TX07B",
+      "TX07",
+      "TX08A",
+      "TX08B",
+      "TX08",
+      "TX09",
+      "TX10",
+      "TX11",
+      "TX12"
+    ],
+    "optional_tooling_not_core": [
+      "O01",
+      "R06"
+    ],
+    "R05_calculators_are_not_plugin_completion": true
+  }
 }

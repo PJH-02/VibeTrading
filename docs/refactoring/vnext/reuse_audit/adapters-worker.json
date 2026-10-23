@@ -1,0 +1,71 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "audit",
+  "worker_process": {
+    "exit_code": 0,
+    "elapsed_seconds": 197.2752720780045,
+    "relay_http_statuses": [],
+    "served_models": [],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-adapters-008c111b",
+  "usage_reported": [
+    {
+      "total": 4709,
+      "input": 4173,
+      "output": 100,
+      "reasoning": 436,
+      "cache": {
+        "write": 0,
+        "read": 0
+      }
+    },
+    {
+      "total": 13275,
+      "input": 9826,
+      "output": 126,
+      "reasoning": 507,
+      "cache": {
+        "write": 0,
+        "read": 2816
+      }
+    },
+    {
+      "total": 24394,
+      "input": 11745,
+      "output": 91,
+      "reasoning": 14,
+      "cache": {
+        "write": 0,
+        "read": 12544
+      }
+    },
+    {
+      "total": 42089,
+      "input": 17810,
+      "output": 65,
+      "reasoning": 22,
+      "cache": {
+        "write": 0,
+        "read": 24192
+      }
+    },
+    {
+      "total": 81993,
+      "input": 8009,
+      "output": 4011,
+      "reasoning": 27989,
+      "cache": {
+        "write": 0,
+        "read": 41984
+      }
+    }
+  ],
+  "base_sha": "4977ab509490173e312183f32d47f862d94ee0bf",
+  "scope": [],
+  "output_sha256": {},
+  "automatic_acceptance": false
+}

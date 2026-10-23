@@ -1,0 +1,211 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "audit",
+  "worker_process": {
+    "exit_code": 0,
+    "elapsed_seconds": 243.007765139002,
+    "relay_http_statuses": [],
+    "served_models": [],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-crypto_runtime-e7fb8204",
+  "usage_reported": [
+    {
+      "total": 4343,
+      "input": 4223,
+      "output": 120,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 0
+      }
+    },
+    {
+      "total": 12494,
+      "input": 8172,
+      "output": 124,
+      "reasoning": 102,
+      "cache": {
+        "write": 0,
+        "read": 4096
+      }
+    },
+    {
+      "total": 12903,
+      "input": 9777,
+      "output": 92,
+      "reasoning": 218,
+      "cache": {
+        "write": 0,
+        "read": 2816
+      }
+    },
+    {
+      "total": 17667,
+      "input": 5391,
+      "output": 93,
+      "reasoning": 23,
+      "cache": {
+        "write": 0,
+        "read": 12160
+      }
+    },
+    {
+      "total": 37860,
+      "input": 20090,
+      "output": 91,
+      "reasoning": 143,
+      "cache": {
+        "write": 0,
+        "read": 17536
+      }
+    },
+    {
+      "total": 49954,
+      "input": 12283,
+      "output": 91,
+      "reasoning": 76,
+      "cache": {
+        "write": 0,
+        "read": 37504
+      }
+    },
+    {
+      "total": 52523,
+      "input": 2725,
+      "output": 87,
+      "reasoning": 47,
+      "cache": {
+        "write": 0,
+        "read": 49664
+      }
+    },
+    {
+      "total": 52839,
+      "input": 327,
+      "output": 139,
+      "reasoning": 21,
+      "cache": {
+        "write": 0,
+        "read": 52352
+      }
+    },
+    {
+      "total": 55133,
+      "input": 2091,
+      "output": 75,
+      "reasoning": 359,
+      "cache": {
+        "write": 0,
+        "read": 52608
+      }
+    },
+    {
+      "total": 57462,
+      "input": 2562,
+      "output": 162,
+      "reasoning": 82,
+      "cache": {
+        "write": 0,
+        "read": 54656
+      }
+    },
+    {
+      "total": 59435,
+      "input": 2023,
+      "output": 76,
+      "reasoning": 120,
+      "cache": {
+        "write": 0,
+        "read": 57216
+      }
+    },
+    {
+      "total": 60306,
+      "input": 1001,
+      "output": 120,
+      "reasoning": 49,
+      "cache": {
+        "write": 0,
+        "read": 59136
+      }
+    },
+    {
+      "total": 73392,
+      "input": 13136,
+      "output": 95,
+      "reasoning": 129,
+      "cache": {
+        "write": 0,
+        "read": 60032
+      }
+    },
+    {
+      "total": 90068,
+      "input": 16872,
+      "output": 49,
+      "reasoning": 59,
+      "cache": {
+        "write": 0,
+        "read": 73088
+      }
+    },
+    {
+      "total": 92269,
+      "input": 79549,
+      "output": 129,
+      "reasoning": 47,
+      "cache": {
+        "write": 0,
+        "read": 12544
+      }
+    },
+    {
+      "total": 98505,
+      "input": 7121,
+      "output": 107,
+      "reasoning": 1421,
+      "cache": {
+        "write": 0,
+        "read": 89856
+      }
+    },
+    {
+      "total": 106913,
+      "input": 4337,
+      "output": 47,
+      "reasoning": 5633,
+      "cache": {
+        "write": 0,
+        "read": 96896
+      }
+    },
+    {
+      "total": 107025,
+      "input": 5855,
+      "output": 50,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 101120
+      }
+    },
+    {
+      "total": 129486,
+      "input": 1827,
+      "output": 11972,
+      "reasoning": 8807,
+      "cache": {
+        "write": 0,
+        "read": 106880
+      }
+    }
+  ],
+  "base_sha": "4977ab509490173e312183f32d47f862d94ee0bf",
+  "scope": [],
+  "output_sha256": {},
+  "automatic_acceptance": false
+}
