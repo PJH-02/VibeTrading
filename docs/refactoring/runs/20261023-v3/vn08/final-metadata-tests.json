@@ -1,13 +1,13 @@
 {
-  "source_sha": "8f3e3b761be794f9636a81603b8073074c293b79",
-  "base": "/tmp/vt-vn08-final-metadata-sj5dqtde",
+  "source_sha": "013224979acb790ceab49b9f13f65b797ee9399c",
+  "base": "/tmp/vt-vn08-final-metadata-97r3kzg5",
   "status": "PASS",
   "profiles": [
     {
       "profile": "tooling-os",
-      "source_sha": "8f3e3b761be794f9636a81603b8073074c293b79",
+      "source_sha": "013224979acb790ceab49b9f13f65b797ee9399c",
       "exit_code": 0,
-      "elapsed_seconds": 0.3469518740021158,
+      "elapsed_seconds": 0.35828129200672265,
       "source_files_changed": [],
       "stdout_tail": "....................                                                     [100%]\n20 passed in 0.10s\n",
       "status": "PASS"
