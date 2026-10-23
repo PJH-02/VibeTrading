@@ -44,7 +44,7 @@ with s.transaction() as db:
     db.execute("INSERT INTO runtime_metadata VALUES('crash-probe','committed',1)")
 os._exit(0)
 '''
-    subprocess.run([sys.executable,'-c',code,str(tmp_path/'.env')],check=True,env=dict(os.environ,PYTHONPATH=os.getcwd()))
+    subprocess.run([sys.executable,'-c',code,str(tmp_path/'.env')],check=True,env=dict(os.environ,PYTHONPATH=os.pathsep.join((os.getcwd(), os.path.join(os.getcwd(), "src")))))
     reopened=RuntimeStore(configuration)
     assert reopened._conn.execute("SELECT value FROM runtime_metadata WHERE key='crash-probe'").fetchone()[0]=='committed'
     assert reopened._conn.execute('PRAGMA integrity_check').fetchone()[0]=='ok'

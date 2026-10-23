@@ -6161,6 +6161,18 @@
         {
           "path": "tests/refactoring/test_src_deploy_paths.py",
           "action": "ADD"
+        },
+        {
+          "path": "tests/test_crypto_event_retirement.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/test_event_index_runs_storage.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/test_sqlite_io_budget.py",
+          "action": "MODIFY"
         }
       ],
       "subunits": {
