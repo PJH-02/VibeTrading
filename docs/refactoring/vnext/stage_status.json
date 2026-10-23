@@ -450,18 +450,16 @@
     "snapshot_head": "The Git commit containing this record; inspect git log -1"
   },
   "execution_control": {
-    "status": "RUNNING_LOCAL_REFACTORING",
+    "status": "STOPPED_AT_USER_REQUEST",
     "last_completed_ticket": "VN14B",
-    "last_completed_tooling_ticket": "R03B1",
-    "active_ticket": "R03C",
-    "start_next_ticket": true,
+    "last_completed_tooling_ticket": "R03",
+    "active_ticket": null,
+    "start_next_ticket": false,
     "stop_after_ticket": "R03",
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
-    "current_source_sha": "bf75b1c5d259433fc0aa2d9b43764855837b3f68",
-    "active_tooling_tickets": [
-      "R03"
-    ],
+    "current_source_sha": "8f0726c6ce28ee83800bc904c9f9918f791b03ec",
+    "active_tooling_tickets": [],
     "active_parallel_tickets": []
   },
   "current_wip": null,
@@ -473,11 +471,12 @@
   },
   "current_snapshot_validation": {
     "status": "FULL_LOCAL_REGRESSION_PASS",
-    "source_sha": "b778955d83aef5ac38aeef33d57233a39eab1783",
-    "receipt": "docs/refactoring/runs/20261023-v3/integrated-before-src/receipt.json",
-    "passed": 1711,
-    "additional_review_passed": 6,
-    "deselected": 2
+    "source_sha": "8f0726c6ce28ee83800bc904c9f9918f791b03ec",
+    "receipt": "docs/refactoring/runs/20261023-v3/r03/acceptance.json",
+    "passed": 1789,
+    "additional_review_included": 8,
+    "deselected_live_data": 2,
+    "canonical_src_layout": true
   },
   "execution_history": [
     {
@@ -507,20 +506,47 @@
         "active_parallel_tickets": []
       },
       "superseded_by": "Latest user instruction: finish interrupted R03B1 only, then stop."
+    },
+    {
+      "recorded_kst": "2026-10-23T11:26:11.989628+09:00",
+      "previous_execution_control": {
+        "status": "RUNNING_LOCAL_REFACTORING",
+        "last_completed_ticket": "VN14B",
+        "last_completed_tooling_ticket": "R03B1",
+        "active_ticket": "R03C",
+        "start_next_ticket": true,
+        "stop_after_ticket": "R03",
+        "server_deploy_authorized": false,
+        "live_mutation_authorized": false,
+        "current_source_sha": "bf75b1c5d259433fc0aa2d9b43764855837b3f68",
+        "active_tooling_tickets": [
+          "R03"
+        ],
+        "active_parallel_tickets": []
+      },
+      "superseded_by": "R03 local scope accepted and reflected in original workspace; stop before R04."
     }
   ],
   "historical_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
   "updated_local": "2026-10-23",
   "snapshot_validation_history": [
-    "docs/refactoring/runs/20261023-v3/baseline/result.json"
+    "docs/refactoring/runs/20261023-v3/baseline/result.json",
+    {
+      "status": "FULL_LOCAL_REGRESSION_PASS",
+      "source_sha": "b778955d83aef5ac38aeef33d57233a39eab1783",
+      "receipt": "docs/refactoring/runs/20261023-v3/integrated-before-src/receipt.json",
+      "passed": 1711,
+      "additional_review_passed": 6,
+      "deselected": 2
+    }
   ],
-  "user_scope_latest": "Complete R03 only, including remaining layout compatibility and verification; reflect accepted candidate in original local project while preserving preexisting changes.",
+  "user_scope_latest": "R03 complete, applied to original local codebase, stop before R04; no additional feature work.",
   "packaging_validation": {
     "source_sha": "bf75b1c5d259433fc0aa2d9b43764855837b3f68",
     "status": "R03B1_ONLY_PASS",
     "receipt": "docs/refactoring/runs/20261023-v3/r03b1/acceptance.json"
   },
-  "progress_report": "docs/refactoring/runs/20261023-v3/progress-vs-v3-spec.md",
+  "progress_report": "docs/refactoring/runs/20261023-v3/r03/README.md",
   "open_tooling_findings": [
     {
       "task_id": "O01",
@@ -528,5 +554,10 @@
       "evidence": "docs/refactoring/runs/20261023-v3/r03b1/repair1-adapter-receipt.json",
       "code_repair_started": false
     }
-  ]
+  ],
+  "primary_workspace_application": {
+    "root": "/mnt/c/Users/박제형/Desktop/VibeTrading",
+    "branch": "codex/v3-local-candidate",
+    "receipt": "docs/refactoring/runs/20261023-v3/r03/original-application.json"
+  }
 }
