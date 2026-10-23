@@ -1,0 +1,23 @@
+{
+  "decision": "PASS",
+  "independent_scoped_passed": 237,
+  "worker_process_exits": {
+    "initial": 124,
+    "repair1": 0,
+    "repair2": 124
+  },
+  "acceptance_basis": "Independent exact source tests, not worker completion claims",
+  "owner_guard_added_lines": 12,
+  "source_clock_contract": "Original replay_checkpoint_startup AST preserved; no saved-time clamping",
+  "reviewer_fixture_corrections": [
+    "Second generation current clock T+1 instead of resetting to T",
+    "Check original wrapped CheckpointError cause for actual clock regression, not wrapper message wording"
+  ],
+  "default_regression_copy": "tests/refactoring/test_runtime_checkpoint_acceptance.py",
+  "frozen_review_artifact": "docs/tickets/VN07B-reviewer-counterexamples.py",
+  "same_content_sha256": "d2c1b535a714ade98b7c0d04b17029b273f679171d331b942df40177117040a3",
+  "worker_uds_baseline_fixed_in_independent_harness": true,
+  "independent_critical_cases": 22,
+  "two_real_paper_journals": "Exact cut restores both; second-account unproven event quarantines both without ledger rewinds",
+  "two_account_probe_initial_failure": "New assertion initially expected on_frame to return after quarantine; actual engine correctly closed. Probe now asserts EngineError(engine_closed); product unchanged."
+}

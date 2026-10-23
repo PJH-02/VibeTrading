@@ -73,13 +73,13 @@
 | cloud/manifest | `storage_backend.py` seam, registry metadata | manifest→strategy file/Paper 등록 연결 | 기존 uploader/verify/download 변경 없음 |
 | runtime wiring | `local_runtime.py`, `local_config.py`, release manifest | local process/bounded resource wiring | 기존 runtime·배포 topology 보존 |
 
-## 6. 실제 잔여 작업 — 37개 (revised_dag.json과 동일)
+## 6. 범위 교정 당시 37개 — VN07 로컬 완료, 현재 36개 잔여
 
 `핵심`은 `tech_lead_scope_decisions.json`의 `mandatory_core` 18개다. `기반`은 TX00 감사, `집계`는 별도 신규 제품이 아닌 gate다. 역사 상태는 재설정·자동 승격하지 않는다.
 
 | ID | 구분 | 역사 상태(보존) | 선행(revised_dag) | 남은 일 |
 |---|---|---|---|---|
-| VN07 | 핵심 | PARTIAL_MARKET_ORDER_AND_JOURNAL_LIFECYCLE_COMPLETE_STRATEGY_OPEN | VN06, VN04B | strategy/Paper checkpoint 연속성만 완성 |
+| VN07 | 로컬 완료 | COMPLETE_LOCAL_IMPLEMENTATION (이전 partial 증거 보존) | VN06, VN04B | exact-cut 단계적 복구·전체 격리; VN07B 수락 |
 | VN08 | 핵심 | PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES | VN07 | retained-prefix reader; identity/replay 보존 |
 | VN09 | 핵심 | PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES | VN08, VN16 | coverage/reader/archive proof 후 GC 후보만; uploader 재작성 금지 |
 | VN13 | 핵심 | PAPER_FIXTURE_INTEGRATION_IMPLEMENTED_PRODUCTION_BLOCKED | VN03, TX01, TX04B | 전략별 Python file + 기존 contract + shared data/Paper |
@@ -140,3 +140,9 @@
 - O01 실행기 보완과 R06의 입증된 미사용 파일 정리는 이 최소 전환의 필수 선행이 아니다. R06도 실제 import/dynamic/deploy/rollback/Golden 근거와 검증 없이 삭제하지 않는다.
 - 위37개는 역사적 VN/TX 상태를 보존한 범위표다. 모든 항목을 새로 구현하라는 목록이 아니며 조건부 venue/product/cross-venue 항목은 필수 core에서 제외한다.
 - [Tech Lead 검토](./reuse_audit/tech_lead_review.md)와 [검증 기록](./reuse_audit/plan_validation.json)은 raw worker 제안을 재사용/보존 기준으로 제한한다. 새 제품 구현을 시작하려면 선택 함수의 실제 gap과 최소 변경을 명시한 별도 bounded ticket이 필요하다.
+
+## VN07 후속 구현 완료 (2026-10-23)
+
+기존 market checkpoint·Paper/ETF 원장과 전략 인스턴스를 재사용한 bounded checkpoint 및 검증 복원을 완료했다. 저널·입력 경계가 일치하면 복구하고 불일치·미확인 suffix·손상 시 선택된 전체 runtime을 격리한다. 독립 DB의 동시 commit이나 원장 rewind는 하지 않는다. 이전 VN07A는 안전 차단 하위 작업이었으며 VN07B가 남은 로컬 구현을 완성했다.
+
+현재 canonical 상태는 **15 완료 / 22 미완료 / 14 미착수**다. 제품 1,850 + tooling 169 = **2,019 PASS**, live-data 2건 제외. 기존 14개 완료 항목·Golden·거래소·cloud 동작을 보존했다. VN08 등 다른 티켓은 착수하지 않았고 production gate는 BLOCKED다. [수락 기록](../runs/20261023-v3/vn07b/acceptance.json). 위 정적 감사 당시 수치는 역사 기록이다.

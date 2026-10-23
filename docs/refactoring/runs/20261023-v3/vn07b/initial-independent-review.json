@@ -1,0 +1,39 @@
+{
+  "decision": "FAIL",
+  "worker_exit": 124,
+  "independent_passed": 178,
+  "independent_failed": 8,
+  "result": {
+    "label": "initial",
+    "baseline": false,
+    "exit_code": 1,
+    "elapsed_seconds": 2.702333149005426,
+    "base": "/tmp/vt-vn07b-initial-mvlem_df",
+    "argv": [
+      "python3",
+      "-m",
+      "pytest",
+      "-p",
+      "pytest_asyncio.plugin",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--basetemp",
+      "/tmp/pytest",
+      "--junitxml",
+      "/tmp/junit.xml",
+      "tests/refactoring/test_runtime_checkpoint.py",
+      "tests/refactoring/test_runtime_checkpoint_integration.py",
+      "tests/refactoring/test_strategy_restart_barrier.py",
+      "tests/refactoring/test_strategy_runtime.py",
+      "tests/refactoring/test_portfolio_ledger.py",
+      "tests/refactoring/test_paper_execution.py",
+      "tests/refactoring/test_checkpoint_startup.py",
+      "tests/refactoring/test_checkpoint_runtime.py",
+      "tests/refactoring/test_checkpoint_journal.py",
+      "tests/refactoring/test_vnext_vn07.py",
+      "docs/tickets/VN07B-reviewer-counterexamples.py"
+    ],
+    "stdout_tail": " source = fixture(tmp_path, fresh=True)\n        etf_source = legacy_etf(tmp_path, [])\n        input_book(source, 1)\n        engine_budgets = asdict(source.engine.budgets)\n>       await source.manager.save(source.engine, paper_runtime=source.host, etf=etf_source)\n\ndocs/tickets/VN07B-reviewer-counterexamples.py:346: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nsrc/vibetrading/runtime_checkpoint.py:391: in save\n    payload = self._capture_sync(engine, paper_runtime, etf)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nsrc/vibetrading/runtime_checkpoint.py:359: in _capture_sync\n    journals[\"etf\"] = _etf_evidence(etf, self.max_journal_rows, self.max_journal_bytes)\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nsrc/vibetrading/runtime_checkpoint.py:271: in _etf_evidence\n    _require(type(accounts) is dict and accounts, \"ETF account identities are unavailable\")\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ncondition = {}, reason = 'ETF account identities are unavailable'\n\n    def _require(condition, reason):\n        if not condition:\n>           raise RuntimeCheckpointError(reason)\nE           vibetrading.runtime_checkpoint.RuntimeCheckpointError: ETF account identities are unavailable\n\nsrc/vibetrading/runtime_checkpoint.py:38: RuntimeCheckpointError\n____ test_real_driver_starts_transport_and_etf_only_after_group_ready[True] ____\n\ntmp_path = PosixPath('/tmp/pytest/test_real_driver_starts_transp1')\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x75df3e2fcda0>\ncorrupt = True\n\n    @pytest.mark.asyncio\n    @pytest.mark.parametrize(\"corrupt\", [False, True])\n    async def test_real_driver_starts_transport_and_etf_only_after_group_ready(tmp_path, monkeypatch, corrupt):\n        from dataclasses import asdict\n        import vibetrading.local_runtime as driver\n        import vibetrading.local_observation as observations\n        import vibetrading.local_snapshot as snapshots\n        source = fixture(tmp_path, fresh=True)\n        etf_source = legacy_etf(tmp_path, [])\n        input_book(source, 1)\n        engine_budgets = asdict(source.engine.budgets)\n>       await source.manager.save(source.engine, paper_runtime=source.host, etf=etf_source)\n\ndocs/tickets/VN07B-reviewer-counterexamples.py:346: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nsrc/vibetrading/runtime_checkpoint.py:391: in save\n    payload = self._capture_sync(engine, paper_runtime, etf)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nsrc/vibetrading/runtime_checkpoint.py:359: in _capture_sync\n    journals[\"etf\"] = _etf_evidence(etf, self.max_journal_rows, self.max_journal_bytes)\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nsrc/vibetrading/runtime_checkpoint.py:271: in _etf_evidence\n    _require(type(accounts) is dict and accounts, \"ETF account identities are unavailable\")\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ncondition = {}, reason = 'ETF account identities are unavailable'\n\n    def _require(condition, reason):\n        if not condition:\n>           raise RuntimeCheckpointError(reason)\nE           vibetrading.runtime_checkpoint.RuntimeCheckpointError: ETF account identities are unavailable\n\nsrc/vibetrading/runtime_checkpoint.py:38: RuntimeCheckpointError\n=========================== short test summary info ============================\nFAILED docs/tickets/VN07B-reviewer-counterexamples.py::test_exact_cut_restores_real_plugin_and_waits_for_fresh_matching_input\nFAILED docs/tickets/VN07B-reviewer-counterexamples.py::test_recovered_runtime_can_save_its_next_verified_cut\nFAILED docs/tickets/VN07B-reviewer-counterexamples.py::test_product_economics_change_with_same_instrument_key_is_rejected\nFAILED docs/tickets/VN07B-reviewer-counterexamples.py::test_readiness_cannot_mutate_restored_plugin_behind_cached_proof\nFAILED docs/tickets/VN07B-reviewer-counterexamples.py::test_real_legacy_etf_journal_and_paper_share_recovery_boundary\nFAILED docs/tickets/VN07B-reviewer-counterexamples.py::test_real_driver_requires_explicit_readiness_before_setup\nFAILED docs/tickets/VN07B-reviewer-counterexamples.py::test_real_driver_starts_transport_and_etf_only_after_group_ready[False]\nFAILED docs/tickets/VN07B-reviewer-counterexamples.py::test_real_driver_starts_transport_and_etf_only_after_group_ready[True]\n8 failed, 178 passed in 2.31s\n"
+  }
+}

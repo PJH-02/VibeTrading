@@ -27,13 +27,13 @@
 
 | 현재 상태 | 근거·결함 | 처리 | 우선순위 |
 |---|---|---|---|
-| 51개 VN/TX 단계 | `stage_status.json`: 로컬 완료 14, 부분/미완료 23, 미착수 14. 별도 최신 전체 Linux 검증 1532 PASS/2 제외 기록 | 완료된 구현 재개발 금지, 최근 HEAD에서 결과 재검증 | P0 |
+| 51개 VN/TX 단계 | `stage_status.json`: 로컬 완료 15, 부분/미완료 22, 미착수 14. VN07B 현재 전체 검증 2019 PASS/2 제외; 과거 1532 기록 보존 | 완료된 구현 재개발 금지, 최근 HEAD에서 결과 재검증 | P0 |
 | 제품 코드의 세대 혼재 | `vibetrading/`, `services/`, `shared/`, `strategy/`, `strategies/`, `fv_mm/legacy/` | 활성 진입점·동적 import·테스트 소비자 분류 후 단일 권위로 통합 | P0 |
 | 문서의 복수 권위 | 루트 구형 README·계획, 과거 P/VN/TX 문서·수백 기록 | 현재 README/AGENTS/architecture/status는 짧게, 상세 근거는 보존·archive | P0 |
 | 패키지 경로 복잡성 | 최상위 `vibetrading`와 루트 `services` 동시 존재 | `src/vibetrading` 표준 패키징; import/Compose/rollback 경로 동등성 | P0 |
 | C3/KP/KD의 전략/실행 혼재 | `vibetrading/etf_trading.py`와 `etf_journal.py`에 실제 전략 존재 | 순수 신호 계산을 안정된 테스트와 함께 분리; 경제적 계산 동일 | P1 |
 | 재사용 가능한 핵심 기능 | `paper_execution.py`, `portfolio_ledger.py`, `strategy_runtime.py`는 실제 matcher/ledger/runtime; `perp_execution.py` mapping/signing은 prototype; `execution_groups.py`는 observational | 새 엔진 대신 기존 기능 REUSE/ADAPT; cross-venue group은 deferred | P0 |
-| 복구/저장 미완성 | VN07 strategy/Paper checkpoint continuity, VN08 retained-base reader, VN09 proof GC 남음 | 기존 recovery/reader/archive 재사용; 실제 운영 데이터 삭제 제외 | P0 |
+| 복구/저장 미완성 | VN07 strategy/Paper exact-cut 단계적 복구 로컬 완료; VN08 retained-base reader, VN09 proof GC 남음 | 기존 recovery/reader/archive 재사용; 실제 운영 데이터 삭제 제외 | P0 |
 | Runtime/실거래 실행 | 기존 ETF/Bybit/GRVT/KIS/cloud 경로 동작; Generic Owner는 offline-only; 정규화 Perp는 injected transport | 기존 경로 보존; 새 connector/Private Stream/universal live engine 금지. Live 권한 DISARMED | P0 |
 | 다중 전략 자원 압박 | 2vCPU/약 3.8GiB; 이전 서버 표본에서 swap·CPU PSI 상승 | bounded queue, O(affected orders), 부하/피크·실측. 비용 큰 신규 서비스 금지 | P0 |
 | 토큰 소모 과다 | 전체 문서 반복 재독, 별도 agent 상태·중복 테스트/receipt, 폭넓은 WIP | Codex는 명세/검토/통합 승인, OpenCode+FreeLLMAPI는 구현, deterministic scripts는 기계적 수정 | P0 |
@@ -102,14 +102,14 @@ VibeTrading/
 | **G1 에이전트 배선** | O00·O01: FreeLLMAPI/OpenCode 설치, pinned-model smoke, 안전 워크트리, task packet/검사기 | 사용자 1회 설정 + GLM | secret-free sandbox, 도구 호출 PASS, 토큰/지연 상한, 무허가 파일 쓰기 차단 |
 | **G2 문서/패키징** | R02·R03: README/status/AGENTS, `src/vibetrading` 기계적 이동, build/CLI/Compose 테스트 | GLM+codemod | 이동 전후 Golden·전체 pytest·Docker build 설정 동등, rollback 스크립트 보존 |
 | **G3 경계 통합** | R04·R05: legacy/caller 분류, 기존 전략 분리와 중복 해소, module ownership | GLM/DeepSeek; 고위험 Codex 리뷰 | 명백한 무참조 코드만 Archive; C3/KP/KD economics 불변. **기능 변경과 이동은 별도 Commit** |
-| **G4 복구/상태** | VN07(잔여), VN08, VN09 | DeepSeek/GLM; Codex Critical review | 기존 market recovery/journal/reader/archive 재사용; strategy/Paper checkpoint continuity, Reader prefix, GC dry-run. 실제 삭제 0 |
+| **G4 복구/상태** | VN07(로컬 완료), VN08, VN09 | DeepSeek/GLM; Codex Critical review | 기존 market recovery/journal/reader/archive 재사용; strategy/Paper checkpoint continuity, Reader prefix, GC dry-run. 실제 삭제 0 |
 | **G5 파일 plugin + 기존 Paper** | TX00→TX01→TX02A/B→TX04A/B→VN13/TX05; TX08A는 마지막 | GLM/DeepSeek; Codex 계약 결정 | 실제 시장 입력→기존 Runtime→기존 Paper matcher/ledger→restart; 전략별 file module, 동일계좌 safety. TX03 extra margin은 선택 |
 | **G6 선택 기존 venue 감사** | TX06A–E/TX06, TX07A/B 중 선택된 route만 | GLM/DeepSeek; Codex review | **신규 connector build 없음.** 기존 testnet/prototype 경로의 함수·caller·environment를 감사하고, 입증된 선택 gap만 별도 티켓. all-five gate 아님 |
 | **G7 Projection/E2E** | VN15/TX09, TX10, VN17, VN18, TX11 | GLM/DeepSeek + pytest | actual/assumed/PAPER/recovery projection, 기존 cloud export, local wiring, narrow NATS-free E2E. cross-venue partial fill은 제외 |
 | **G8 최소 local acceptance** | TX12, VN19 | 스크립트 + Codex 최종 감사 | 정확 HEAD + scoped receipts + 기존 package/rollback. 범용 Trading Platform 완성 badge 없음, 실제 서버 배포 없음 |
 | **G9 실서버 이후** | P11 전환, 관측/안정화, VN20 레거시 서비스/원본 삭제 | **이번 범위 제외** | 승인 없이는 실행하지 않음. 롤백 경계와 NATS 백로그 보존, 삭제 0 |
 
-**DAG 세부:** `reuse_audit/revised_dag.json`이 현재 canonical DAG다. 기존 `tickets_production.json`의 ID/read/edit/forbidden path·완료 evidence는 보존하되, 완료 14개를 재개발하지 않는다. 위 Wave는 우선순위/분업 분류이며 선행조건을 무시하지 않는다. TX05는 VN13, TX09는 VN15, TX08 aggregate는 TX08A만 의존하고, TX11 core는 all-five/cross-venue group을 선행으로 갖지 않는다.
+**DAG 세부:** `reuse_audit/revised_dag.json`이 현재 canonical DAG다. 기존 `tickets_production.json`의 ID/read/edit/forbidden path·완료 evidence는 보존하되, 기존 완료 14개와 추가 로컬 완료 VN07을 재개발하지 않는다. 위 Wave는 우선순위/분업 분류이며 선행조건을 무시하지 않는다. TX05는 VN13, TX09는 VN15, TX08 aggregate는 TX08A만 의존하고, TX11 core는 all-five/cross-venue group을 선행으로 갖지 않는다.
 
 ### 5.1 작업 중 반드시 적용할 2가지 수정
 

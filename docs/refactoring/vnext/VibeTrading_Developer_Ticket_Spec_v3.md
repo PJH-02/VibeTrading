@@ -147,15 +147,17 @@ stop_conditions: [scope_drift, safety_failure, missing_capability]
 
 DONE의 상태표가 서버 운영 수락을 의미하지는 않는다. **구현이 끝났다는 사실과 신규 릴리스 후보에서 그 기능을 재검증해야 한다는 사실을 분리**한다.
 
-### VN07 — Market Checkpoint + ETF/Paper/Strategy 원자적 복구 잔여
+### VN07 — Market Checkpoint + ETF/Paper/Strategy 단계적 복구 (로컬 완료)
 
 - **소유 파일:** `vibetrading/local_runtime.py::replay_startup`, `vibetrading/local_engine.py::{begin_recovery,apply_replay,handoff}`, `vibetrading/market_checkpoint.py`, `vibetrading/etf_trading.py`의 startup seam, `vibetrading/portfolio_ledger.py`, `vibetrading/paper_execution.py`, `vibetrading/strategy_runtime.py`; 적용 시 R03 path map 사용.
-- **현재 상태:** Market checkpoint, producer durable order, journal lifecycle **구현 완료**. ETF/Paper account·전략·pending action의 동일 복구 경계 **미완료**.
+- **현재 상태:** Market checkpoint, producer durable order, journal lifecycle **구현 완료**. VN07B에서 ETF/Paper·전략 상태의 동일 경계 검증과 단계적 복구를 **로컬 완료**했다. 정확히 일치하는 cut만 복구하고, 앞·뒤 저널/미확인 suffix/불명확 handoff는 전체 격리한다. 독립 SQLite 간 atomic commit이나 연속 Paper suffix 처리는 주장하지 않는다. [수락 기록](../runs/20261023-v3/vn07b/acceptance.json).
 - **구현(REUSE 우선):** 기존 market checkpoint/journal, `PaperExecution`/`PortfolioLedger`, ETF journal 위에서 `strategy claim cursor / paper order+fill journal version / ETF journal pending handoff`의 복구 순서만 연결한다. Universal account-state replacement는 금지. Startup `RECOVERING`에서 전략 Callback warmup 허용 여부와 **신규 intent 전송 0** 계약. `History.available_at`과 feed generation 보존. Crash 지점마다 recover/reconcile→Ready 판정; replay output은 원장을 재전송하지 않는다.
 - **테스트:** Market checkpoint 단독 복원 / 저널보다 앞·뒤인 input / partial write / invalid pending / double replay / newest checkpoint corruption / ETF·Paper 동시 재시작 / broad loss / source-missing fail-closed. 동일 원본에서 recovered booked balances·working orders·strategy claims 동등. 준비 불충분 시 신규 위험주문 0.
 - **Critical 리뷰:** Codex가 multi-ledger 원자성의 **실제** 보장 범위를 확인. SQLite 파일 두 개가 있을 때 원자적 Commit이라고 주장하지 않음. 필요한 경우 staged recovery/quarantine 방식 채택.
 
-- **최근 완료 하위 작업 VN07A:** 기존 Paper `strategy_event` 처리 기록으로 재시작한 전략의 상태 복원 미확인 시 신규 콜백·위험주문을 차단한다. 정상 동일 실행/REPLAY warmup과 명시적 pause/halt 취소는 보존한다. [수락 기록](../runs/20261023-v3/vn07a/acceptance.json). 전략 내부 상태 checkpoint·검증 복원·시장/Paper 저널 경계는 여전히 미완료이며 **VN07 완료 또는 VN08 착수 조건 충족을 뜻하지 않는다**.
+- **최근 완료 하위 작업 VN07A:** 기존 Paper `strategy_event` 처리 기록으로 재시작한 전략의 상태 복원 미확인 시 신규 콜백·위험주문을 차단한다. 정상 동일 실행/REPLAY warmup과 명시적 pause/halt 취소는 보존한다. [수락 기록](../runs/20261023-v3/vn07a/acceptance.json). VN07A 당시 열려 있던 전략 내부 상태 checkpoint·검증 복원·시장/Paper 경계는 후속 VN07B에서 로컬 완료했다. VN08은 이번에 착수하지 않았다.
+
+- **VN07 전체 검증:** 제품 1,850 + tooling 169 = **2,019 PASS**, live-data 2건 제외. 기존 Golden/거래소 주문·cloud 동작 보존. 복수 실제 Paper 원장과 ETF/Paper 동시 복구, 상태 hook/준비 검사 중 저널 변조, 최신 파일 손상 및 출력 경로 충돌 반례 포함. Production gate는 BLOCKED이며 별도 서버 배포/wiring은 VN17 범위다.
 
 ### VN08 — Retained-prefix aware Spool Reader
 

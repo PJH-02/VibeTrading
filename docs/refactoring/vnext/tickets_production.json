@@ -1085,7 +1085,7 @@
     {
       "task_id": "VN07",
       "existing_phase": "P06",
-      "status": "PARTIAL_MARKET_ORDER_AND_JOURNAL_LIFECYCLE_COMPLETE_STRATEGY_OPEN",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
       "depends_on": [
         "VN06",
         "VN04B"
@@ -1120,9 +1120,13 @@
         "vibetrading/market_spool.py"
       ],
       "edit_paths": [
-        "src/vibetrading/portfolio_ledger.py",
+        "src/vibetrading/runtime_checkpoint.py",
         "src/vibetrading/strategy_runtime.py",
-        "tests/refactoring/test_strategy_restart_barrier.py"
+        "src/vibetrading/local_runtime.py",
+        "src/vibetrading/etf_trading.py",
+        "tests/refactoring/test_runtime_checkpoint.py",
+        "tests/refactoring/test_runtime_checkpoint_integration.py",
+        "tests/refactoring/test_runtime_checkpoint_acceptance.py"
       ],
       "forbidden_paths": [
         ".env*",
@@ -1141,9 +1145,9 @@
       "target_symbols": {
         "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "ADD_PROPOSED": [],
-        "DISPATCH": "VN07A_ACCEPTED; parent recovery still incomplete"
+        "DISPATCH": "VN07_COMPLETE_LOCAL_IMPLEMENTATION"
       },
-      "goal_and_acceptance": "Reuse existing market recovery and per-runtime journals; connect only missing strategy/Paper checkpoint continuity, no universal account-state replacement. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
+      "goal_and_acceptance": "Existing market checkpoint plus opt-in strategy state and read-only existing Paper/ETF journal proofs recover at exact cut; inconsistent cuts quarantine all. Local completion accepted in VN07B receipt; production gate remains BLOCKED.",
       "contracts": [
         "C01",
         "C02",
@@ -1175,10 +1179,10 @@
       "new_run_outputs": [
         "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
       ],
-      "authorization": "VN07A local implementation accepted; no further bounded dispatch active. No live/deploy/data mutation.",
+      "authorization": "Explicit user request: entire VN07 locally completed; no next-ticket dispatch or live/deploy/data mutation.",
       "source_ticket": "docs/refactoring/vnext/tickets.json#VN07",
       "capacity_impacts": "Measure relevant CPU/event, bounded bytes/records/age/inflight, aggregate RSS/PSS and disk/WAL on 2vCPU/3.8GiB; no inferred production values.",
-      "next_action": "Continue VN07 with bounded verified strategy-state checkpoint/restore and market/Paper recovery-boundary evidence; no universal account replacement. VN08 stays gated.",
+      "next_action": "VN07 local implementation complete. VN08 remains unstarted; any later ticket requires its own bounded dispatch.",
       "dispatch_baseline": {
         "candidate": "production-v9",
         "source_set_sha256": "8f29817700632248741789f1cf703b18e9aff50ec3c59e2c5f5437bffff8bebf",
@@ -1246,9 +1250,9 @@
         "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
         "path_exists_at_audit": false
       },
-      "stage_classification": "INCOMPLETE",
+      "stage_classification": "COMPLETE_LOCAL_IMPLEMENTATION",
       "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Reuse existing market recovery and per-runtime journals; connect only missing strategy/Paper checkpoint continuity, no universal account-state replacement.",
-      "commit_scope": "COMPLETED_SUBUNIT_ONLY",
+      "commit_scope": "COMPLETED_TICKET",
       "order_subtask": {
         "status": "COMPLETE_LOCAL_SUBUNIT_ONLY",
         "date_kst": "2026-10-21",
@@ -1422,16 +1426,25 @@
         "historical_status_preserved": true,
         "supersedes_unselected_global_platform_gates": true
       },
-      "bounded_ticket": "docs/tickets/VN07A-paper-strategy-restart-barrier.md",
+      "bounded_ticket": "docs/tickets/VN07B-coupled-runtime-recovery.md",
       "bounded_subunits": {
         "VN07A": {
           "status": "ACCEPTED",
           "source_sha": "60d763209134527e289d3760ec55be9ea9ec6b37",
           "receipt": "docs/refactoring/runs/20261023-v3/vn07a/acceptance.json",
           "ticket": "docs/tickets/VN07A-paper-strategy-restart-barrier.md",
-          "remaining_parent_gate": "Strategy-state checkpoint/verified restore and combined recovery readiness"
+          "remaining_parent_gate": "Historical open gate resolved locally by VN07B staged exact-cut recovery"
+        },
+        "VN07B": {
+          "status": "ACCEPTED",
+          "source_sha": "79501a9c1484daa6528e129bab20d570dc66fcf9",
+          "receipt": "docs/refactoring/runs/20261023-v3/vn07b/acceptance.json",
+          "ticket": "docs/tickets/VN07B-coupled-runtime-recovery.md",
+          "parent_complete": true
         }
-      }
+      },
+      "production_ready": false,
+      "completion_receipt": "docs/refactoring/runs/20261023-v3/vn07b/acceptance.json"
     },
     {
       "task_id": "VN08",
@@ -5768,30 +5781,29 @@
       }
     }
   ],
-  "updated_local": "2026-10-23T14:49:31.679055+09:00",
+  "updated_local": "2026-10-23T20:08:39.840784+09:00",
   "current_validation": {
     "status": "FULL_LOCAL_REGRESSION_PASS",
-    "source_sha": "60d763209134527e289d3760ec55be9ea9ec6b37",
-    "receipt": "docs/refactoring/runs/20261023-v3/vn07a/acceptance.json",
-    "passed": 1972,
-    "additional_review_cases": 4,
+    "source_sha": "79501a9c1484daa6528e129bab20d570dc66fcf9",
+    "receipt": "docs/refactoring/runs/20261023-v3/vn07b/acceptance.json",
+    "passed": 2019,
     "deselected_live_data": 2,
-    "parent_VN07_complete": false
+    "parent_VN07_complete": true
   },
-  "user_request_latest": "이제 다음 티켓부터 구현 시작하라. Applied only bounded VN07A; VN07 remains incomplete.",
+  "user_request_latest": "다음 티켓 작업 수행하여 VN07 전체 완료하라; 남은 작업 이어서 진행. VN07 whole local implementation accepted; stop before VN08.",
   "execution_control": {
-    "status": "LOCAL_BOUNDED_TICKET_ACCEPTED",
-    "last_completed_ticket": "VN14B",
+    "status": "LOCAL_TICKET_ACCEPTED",
+    "last_completed_ticket": "VN07",
     "last_completed_tooling_ticket": "R05",
     "active_ticket": null,
     "start_next_ticket": false,
-    "stop_after_ticket": "VN07A",
+    "stop_after_ticket": "VN07",
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
-    "current_source_sha": "60d763209134527e289d3760ec55be9ea9ec6b37",
+    "current_source_sha": "79501a9c1484daa6528e129bab20d570dc66fcf9",
     "active_tooling_tickets": [],
     "active_parallel_tickets": [],
-    "last_completed_subunit": "VN07A"
+    "last_completed_subunit": "VN07B"
   },
   "git_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
   "git_snapshot_policy": "All current code including unfinished prototypes included; stage classifications unchanged; no deployment authorization",
@@ -6483,6 +6495,15 @@
       "deselected_live_data": 2,
       "canonical_src_layout": true,
       "kr_pure_decision_extraction": true
+    },
+    {
+      "status": "FULL_LOCAL_REGRESSION_PASS",
+      "source_sha": "60d763209134527e289d3760ec55be9ea9ec6b37",
+      "receipt": "docs/refactoring/runs/20261023-v3/vn07a/acceptance.json",
+      "passed": 1972,
+      "additional_review_cases": 4,
+      "deselected_live_data": 2,
+      "parent_VN07_complete": false
     }
   ],
   "user_scope_latest": "2026-10-23: preserve working exchange/order/cloud and strategy economics; NATS-free data/storage/recovery plus file-plugin Paper/multi-strategy reuse. This stage is audit and minimal-diff plan only; no exchange order code changes.",
@@ -6581,10 +6602,10 @@
       "R06"
     ],
     "R05_calculators_are_not_plugin_completion": true,
-    "authorized_bounded_ticket": "docs/tickets/VN07A-paper-strategy-restart-barrier.md",
+    "authorized_bounded_ticket": "docs/tickets/VN07B-coupled-runtime-recovery.md",
     "unselected_implementation_dispatch_authorized": false,
-    "last_accepted_bounded_ticket": "docs/tickets/VN07A-paper-strategy-restart-barrier.md",
-    "last_accepted_receipt": "docs/refactoring/runs/20261023-v3/vn07a/acceptance.json"
+    "last_accepted_bounded_ticket": "docs/tickets/VN07B-coupled-runtime-recovery.md",
+    "last_accepted_receipt": "docs/refactoring/runs/20261023-v3/vn07b/acceptance.json"
   },
   "vn07a_validation": {
     "status": "ACCEPTED_LOCAL_SUBUNIT",
@@ -6594,5 +6615,16 @@
     "full_regression_passed": 1972,
     "additional_reviewer_cases": 4,
     "live_data_deselected": 2
+  },
+  "vn07b_validation": {
+    "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+    "source_sha": "79501a9c1484daa6528e129bab20d570dc66fcf9",
+    "receipt": "docs/refactoring/runs/20261023-v3/vn07b/acceptance.json",
+    "parent_complete": true,
+    "full_regression_passed": 2019,
+    "critical_review_cases": 22,
+    "scoped_passed": 237,
+    "live_data_deselected": 2,
+    "production_ready": false
   }
 }

@@ -89,7 +89,9 @@
         "VN04B"
       ],
       "historical_status": "PARTIAL_MARKET_ORDER_AND_JOURNAL_LIFECYCLE_COMPLETE_STRATEGY_OPEN",
-      "scope_disposition": "COMPLETE_EXISTING_RECOVERY"
+      "scope_disposition": "COMPLETE_EXISTING_RECOVERY",
+      "current_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "completion_receipt": "docs/refactoring/runs/20261023-v3/vn07b/acceptance.json"
     },
     {
       "task_id": "VN08",
@@ -450,6 +452,14 @@
       ],
       "historical_status": "PLANNED",
       "scope_disposition": "NARROW_LOCAL_ACCEPTANCE"
+    }
+  ],
+  "completed_since_scope_revision": [
+    {
+      "task_id": "VN07",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "source_sha": "79501a9c1484daa6528e129bab20d570dc66fcf9",
+      "receipt": "docs/refactoring/runs/20261023-v3/vn07b/acceptance.json"
     }
   ]
 }
