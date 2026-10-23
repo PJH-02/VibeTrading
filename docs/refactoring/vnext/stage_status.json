@@ -452,13 +452,13 @@
   "execution_control": {
     "status": "STOPPED_AT_USER_REQUEST",
     "last_completed_ticket": "VN14B",
-    "last_completed_tooling_ticket": "R04",
+    "last_completed_tooling_ticket": "R05",
     "active_ticket": null,
     "start_next_ticket": false,
-    "stop_after_ticket": "R04",
+    "stop_after_ticket": "R05",
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
-    "current_source_sha": "c605c19e79fc635281c6d794dd8a0ba23cb86376",
+    "current_source_sha": "2b85c95a4e7951ac2a7590db24416e5b5f76d958",
     "active_tooling_tickets": [],
     "active_parallel_tickets": []
   },
@@ -471,13 +471,13 @@
   },
   "current_snapshot_validation": {
     "status": "FULL_LOCAL_REGRESSION_PASS",
-    "source_sha": "c605c19e79fc635281c6d794dd8a0ba23cb86376",
-    "receipt": "docs/refactoring/runs/20261023-v3/r04/acceptance.json",
-    "passed": 1822,
+    "source_sha": "2b85c95a4e7951ac2a7590db24416e5b5f76d958",
+    "receipt": "docs/refactoring/runs/20261023-v3/r05/acceptance.json",
+    "passed": 1961,
     "additional_review_included": 8,
     "deselected_live_data": 2,
     "canonical_src_layout": true,
-    "canonical_strategy_ownership": true
+    "kr_pure_decision_extraction": true
   },
   "execution_history": [
     {
@@ -548,9 +548,19 @@
       "additional_review_included": 8,
       "deselected_live_data": 2,
       "canonical_src_layout": true
+    },
+    {
+      "status": "FULL_LOCAL_REGRESSION_PASS",
+      "source_sha": "c605c19e79fc635281c6d794dd8a0ba23cb86376",
+      "receipt": "docs/refactoring/runs/20261023-v3/r04/acceptance.json",
+      "passed": 1822,
+      "additional_review_included": 8,
+      "deselected_live_data": 2,
+      "canonical_src_layout": true,
+      "canonical_strategy_ownership": true
     }
   ],
-  "user_scope_latest": "R04 completed locally; stop before R05. No other ticket or stage implementation.",
+  "user_scope_latest": "Exactly one selected ticket R05 completed; stop. Other tooling/VN/TX work unchanged.",
   "packaging_validation": {
     "source_sha": "bf75b1c5d259433fc0aa2d9b43764855837b3f68",
     "status": "R03B1_ONLY_PASS",

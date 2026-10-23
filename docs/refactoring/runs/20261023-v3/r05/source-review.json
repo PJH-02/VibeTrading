@@ -1,0 +1,10 @@
+{
+  "decision": "PASS",
+  "baseline": "d006791e25a5fda11f9dc7ad90dac3e34e214bac",
+  "frozen_intraday_math_ast_identical": true,
+  "frozen_c3_decision_ast_identical": true,
+  "historical_calendar_alignment_and_readiness_ast_identical": true,
+  "all_other_runtime_account_order_timestamp_routing_ast_identical": true,
+  "existing_test_assertions_unchanged": true,
+  "only_ticket": "R05"
+}
