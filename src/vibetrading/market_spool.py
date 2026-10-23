@@ -24,6 +24,12 @@ _PREFIX = struct.Struct(">8sII32s")
 _SEGMENT = re.compile(r"([0-9]{20})\.(sealed|active)\Z")
 _CHECKPOINT = "checkpoint.json"
 _CHECKPOINT_TEMP = "checkpoint.json.tmp"
+_PROOF_VERSION = 2
+_MAX_PROOF_BYTES = 8192
+_MAX_CONSUMERS = 17
+_MAX_ABSOLUTE = 2**63 - 1
+_HEX = re.compile(r"[0-9a-f]{64}\Z")
+_FACTORY = object()
 
 
 @dataclass(frozen=True)
@@ -35,6 +41,260 @@ class SpoolCursor:
     @property
     def producer_id(self) -> str:
         return self.producer
+
+
+def _bounded_absolute(value, name: str) -> int:
+    if (isinstance(value, bool) or not isinstance(value, int)
+            or value <= 0 or value > _MAX_ABSOLUTE):
+        raise ValueError(f"{name} must be a positive integer <= 2**63-1")
+    return value
+
+
+def _digest(value, name: str) -> str:
+    if not isinstance(value, str) or _HEX.fullmatch(value) is None:
+        raise ValueError(f"{name} must be a lowercase SHA256 hex digest")
+    return value
+
+
+def _hash_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        while True:
+            chunk = handle.read(1024 * 1024)
+            if not chunk:
+                break
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+class RetainedPrefix:
+    """Immutable factory-issued provenance for a physically retained spool cut.
+
+    The proof is only a trusted-owner record captured while the complete prefix
+    still existed. It is not remote/archive approval, GC authority or
+    cryptographic protection against a malicious directory owner.
+    """
+
+    __slots__ = (
+        "producer_id", "incarnation", "generation", "base_sequence",
+        "base_payload_sha256", "first_retained_segment",
+        "first_retained_segment_sha256", "prefix_chain_sha256",
+        "checkpoint_sha256", "durable_sequence", "consumer_cursors",
+        "max_disk_bytes", "max_records", "max_frame_bytes", "max_header_bytes",
+        "_payload", "_sha256", "_frozen",
+    )
+
+    def __init__(self, _factory, *, producer_id, incarnation, generation,
+                 base_sequence, base_payload_sha256, first_retained_segment,
+                 first_retained_segment_sha256, prefix_chain_sha256,
+                 checkpoint_sha256, durable_sequence, consumer_cursors,
+                 max_disk_bytes, max_records, max_frame_bytes, max_header_bytes):
+        if _factory is not _FACTORY:
+            raise TypeError("RetainedPrefix must be issued by capture_retained_prefix or from_bytes")
+        _identity(producer_id, "producer_id")
+        _identity(incarnation, "incarnation")
+        _identity(generation, "generation")
+        base = _bounded_absolute(base_sequence, "base_sequence")
+        first = _bounded_absolute(first_retained_segment, "first_retained_segment")
+        if first <= 1:
+            raise ValueError("retained prefix must have a nonzero removed prefix")
+        durable = _bounded_absolute(durable_sequence, "durable_sequence")
+        if durable < base:
+            raise ValueError("captured durable sequence must cover the base")
+        _digest(base_payload_sha256, "base_payload_sha256")
+        _digest(first_retained_segment_sha256, "first_retained_segment_sha256")
+        _digest(prefix_chain_sha256, "prefix_chain_sha256")
+        _digest(checkpoint_sha256, "checkpoint_sha256")
+        for name, value in (("max_disk_bytes", max_disk_bytes),
+                            ("max_records", max_records),
+                            ("max_frame_bytes", max_frame_bytes),
+                            ("max_header_bytes", max_header_bytes)):
+            if (isinstance(value, bool) or not isinstance(value, int)
+                    or value <= 0 or value > _MAX_ABSOLUTE):
+                raise ValueError(f"{name} must be a positive bounded integer")
+        if not isinstance(consumer_cursors, tuple) or not 1 <= len(consumer_cursors) <= _MAX_CONSUMERS:
+            raise ValueError(f"consumer_cursors must be a nonempty tuple of at most {_MAX_CONSUMERS}")
+        cursors = []
+        for cursor in consumer_cursors:
+            if not isinstance(cursor, SpoolCursor):
+                raise ValueError("consumer_cursors must contain only SpoolCursor values")
+            if cursor.producer != producer_id or cursor.incarnation != incarnation:
+                raise ValueError("consumer cursor identity does not match the retained producer")
+            sequence = _bounded_absolute(cursor.sequence, "consumer sequence")
+            if sequence < base:
+                raise ValueError("consumer cursor precedes the retained base")
+            if sequence > durable:
+                raise ValueError("consumer cursor exceeds the captured durable sequence")
+            cursors.append(SpoolCursor(cursor.producer, cursor.incarnation, sequence))
+        document = {
+            "version": _PROOF_VERSION,
+            "producer_id": producer_id,
+            "incarnation": incarnation,
+            "generation": generation,
+            "base_sequence": base,
+            "base_payload_sha256": base_payload_sha256,
+            "first_retained_segment": first,
+            "first_retained_segment_sha256": first_retained_segment_sha256,
+            "prefix_chain_sha256": prefix_chain_sha256,
+            "checkpoint_sha256": checkpoint_sha256,
+            "durable_sequence": durable,
+            "consumer_cursors": [[c.producer, c.incarnation, c.sequence] for c in cursors],
+            "max_disk_bytes": max_disk_bytes,
+            "max_records": max_records,
+            "max_frame_bytes": max_frame_bytes,
+            "max_header_bytes": max_header_bytes,
+        }
+        payload = _json(document)
+        if len(payload) > _MAX_PROOF_BYTES:
+            raise ValueError("retained prefix proof exceeds its byte bound")
+        object.__setattr__(self, "producer_id", producer_id)
+        object.__setattr__(self, "incarnation", incarnation)
+        object.__setattr__(self, "generation", generation)
+        object.__setattr__(self, "base_sequence", base)
+        object.__setattr__(self, "base_payload_sha256", base_payload_sha256)
+        object.__setattr__(self, "first_retained_segment", first)
+        object.__setattr__(self, "first_retained_segment_sha256", first_retained_segment_sha256)
+        object.__setattr__(self, "prefix_chain_sha256", prefix_chain_sha256)
+        object.__setattr__(self, "checkpoint_sha256", checkpoint_sha256)
+        object.__setattr__(self, "durable_sequence", durable)
+        object.__setattr__(self, "consumer_cursors", tuple(cursors))
+        object.__setattr__(self, "max_disk_bytes", max_disk_bytes)
+        object.__setattr__(self, "max_records", max_records)
+        object.__setattr__(self, "max_frame_bytes", max_frame_bytes)
+        object.__setattr__(self, "max_header_bytes", max_header_bytes)
+        object.__setattr__(self, "_payload", payload)
+        object.__setattr__(self, "_sha256", hashlib.sha256(payload).hexdigest())
+        object.__setattr__(self, "_frozen", True)
+
+    def __setattr__(self, name, value):
+        if getattr(self, "_frozen", False):
+            raise AttributeError("retained prefix proof is immutable")
+        object.__setattr__(self, name, value)
+
+    @property
+    def producer(self) -> str:
+        return self.producer_id
+
+    @property
+    def sha256(self) -> str:
+        return self._sha256
+
+    @property
+    def proof_sha256(self) -> str:
+        return self._sha256
+
+    @property
+    def digest(self) -> str:
+        return self._sha256
+
+    @property
+    def base_segment_id(self) -> int:
+        return self.first_retained_segment - 1
+
+    @property
+    def first_retained_segment_id(self) -> int:
+        return self.first_retained_segment
+
+    @property
+    def first_retained_sha256(self) -> str:
+        return self.first_retained_segment_sha256
+
+    @property
+    def prefix_sha256(self) -> str:
+        return self.prefix_chain_sha256
+
+    @property
+    def captured_durable_sequence(self) -> int:
+        return self.durable_sequence
+
+    def to_bytes(self) -> bytes:
+        return self._payload
+
+    def __eq__(self, other):
+        return isinstance(other, RetainedPrefix) and self._payload == other._payload
+
+    def __hash__(self):
+        return hash(self._payload)
+
+    def __repr__(self):
+        return (f"RetainedPrefix({self.producer_id!r}, {self.incarnation!r}, "
+                f"generation={self.generation!r}, base={self.base_sequence}, "
+                f"first_segment={self.first_retained_segment}, sha256={self._sha256})")
+
+    @classmethod
+    def from_bytes(cls, payload: bytes, *, expected_sha256, expected_generation):
+        if not isinstance(payload, bytes) or not payload or len(payload) > _MAX_PROOF_BYTES:
+            raise ValueError("retained prefix proof byte bound exceeded")
+        if not isinstance(expected_sha256, str) or _HEX.fullmatch(expected_sha256) is None:
+            raise ValueError("expected_sha256 must be a lowercase SHA256 hex digest")
+        _identity(expected_generation, "expected_generation")
+        if hashlib.sha256(payload).hexdigest() != expected_sha256:
+            raise ValueError("retained prefix proof hash mismatch")
+
+        def unique(pairs):
+            result = {}
+            for key, value in pairs:
+                if key in result:
+                    raise ValueError("duplicate retained prefix JSON key")
+                result[key] = value
+            return result
+
+        def finite(_value):
+            raise ValueError("nonfinite retained prefix JSON number")
+
+        try:
+            document = json.loads(payload, object_pairs_hook=unique,
+                                  parse_constant=finite)
+        except (ValueError, TypeError, RecursionError) as exc:
+            raise ValueError("invalid retained prefix document") from exc
+        keys = {
+            "version", "producer_id", "incarnation", "generation", "base_sequence",
+            "base_payload_sha256", "first_retained_segment",
+            "first_retained_segment_sha256", "prefix_chain_sha256",
+            "checkpoint_sha256", "durable_sequence", "consumer_cursors",
+            "max_disk_bytes", "max_records", "max_frame_bytes", "max_header_bytes",
+        }
+        if not isinstance(document, dict) or set(document) != keys:
+            raise ValueError("retained prefix schema mismatch")
+        if type(document["version"]) is not int or document["version"] != _PROOF_VERSION:
+            raise ValueError("unsupported retained prefix version")
+        generation = document["generation"]
+        _identity(generation, "generation")
+        if generation != expected_generation:
+            raise ValueError("retained prefix generation mismatch")
+        raw_cursors = document["consumer_cursors"]
+        if not isinstance(raw_cursors, list) or not 1 <= len(raw_cursors) <= _MAX_CONSUMERS:
+            raise ValueError("retained prefix consumer cursor schema mismatch")
+        cursors = []
+        for item in raw_cursors:
+            if not isinstance(item, list) or len(item) != 3:
+                raise ValueError("retained prefix consumer cursor schema mismatch")
+            producer, incarnation, sequence = item
+            if not isinstance(producer, str) or not isinstance(incarnation, str):
+                raise ValueError("retained prefix consumer identity schema mismatch")
+            _bounded_absolute(sequence, "consumer sequence")
+            cursors.append(SpoolCursor(producer, incarnation, sequence))
+        candidate = cls(
+            _FACTORY,
+            producer_id=document["producer_id"],
+            incarnation=document["incarnation"],
+            generation=generation,
+            base_sequence=document["base_sequence"],
+            base_payload_sha256=document["base_payload_sha256"],
+            first_retained_segment=document["first_retained_segment"],
+            first_retained_segment_sha256=document["first_retained_segment_sha256"],
+            prefix_chain_sha256=document["prefix_chain_sha256"],
+            checkpoint_sha256=document["checkpoint_sha256"],
+            durable_sequence=document["durable_sequence"],
+            consumer_cursors=tuple(cursors),
+            max_disk_bytes=document["max_disk_bytes"],
+            max_records=document["max_records"],
+            max_frame_bytes=document["max_frame_bytes"],
+            max_header_bytes=document["max_header_bytes"],
+        )
+        if candidate.to_bytes() != payload:
+            raise ValueError("retained prefix proof is not canonical")
+        return candidate
 
 
 @dataclass(frozen=True)
@@ -72,6 +332,9 @@ class SpoolScan:
     uncertain_to_sequence: int | None
     uncertainty_reason: str | None
     directory_fsync_supported: bool
+    base_sequence: int = 0
+    first_segment_id: int = 1
+    last_segment_id: int = 0
 
     @property
     def uncertain(self) -> bool:
@@ -157,6 +420,63 @@ def _inventory(root: Path, max_disk_bytes: int, max_records: int) -> tuple[int, 
     return total, largest, active, checkpoint_temp
 
 
+def _inventory_retained(root: Path, max_disk_bytes: int, first_retained_segment: int,
+                        max_records: int) -> tuple[int, int, int | None, bool, list[int]]:
+    """Bounded O(segment-count) metadata inventory for a trimmed v2 spool.
+
+    Segment IDs are absolute; ``max_records`` bounds both the retained record
+    count and the segment metadata accumulated here. The first actual ID must
+    exactly match the proof, and every following ID must be contiguous with
+    only a final active.
+    """
+    total = checkpoint_temp = 0
+    entries: dict[int, str] = {}
+    if not root.exists():
+        raise SpoolCorruption("retained spool directory is missing")
+    with os.scandir(root) as scan:
+        for entry in scan:
+            if not entry.is_file(follow_symlinks=False):
+                raise SpoolCorruption(f"unexpected spool entry: {entry.name}")
+            total += entry.stat(follow_symlinks=False).st_size
+            if total > max_disk_bytes:
+                raise SpoolError("spool disk byte limit exceeded")
+            if entry.name in {"writer.lock", _CHECKPOINT, _CHECKPOINT_TEMP}:
+                checkpoint_temp |= entry.name == _CHECKPOINT_TEMP
+                continue
+            match = _SEGMENT.fullmatch(entry.name)
+            if match is None:
+                raise SpoolCorruption(f"unknown spool file: {entry.name}")
+            number = int(match[1])
+            _bounded_absolute(number, "segment id")
+            if len(entries) >= max_records + 1:
+                raise SpoolCorruption("retained segment count exceeds the record limit")
+            if number in entries:
+                raise SpoolCorruption("duplicate spool segment number")
+            entries[number] = match[2]
+    if not entries:
+        raise SpoolCorruption("retained spool has no segment files")
+    numbers = sorted(entries)
+    if numbers[0] != first_retained_segment:
+        raise SpoolCorruption("actual first segment differs from the retained proof")
+    if numbers[-1] - numbers[0] + 1 != len(numbers):
+        raise SpoolCorruption("missing, duplicate or non-contiguous retained segment")
+    if len(numbers) > max_records + 1:
+        raise SpoolCorruption("retained segment count exceeds the record limit")
+    active = None
+    for number in numbers:
+        kind = entries[number]
+        path = root / f"{number:020d}.{kind}"
+        if kind == "active":
+            if active is not None or number != numbers[-1]:
+                raise SpoolCorruption("multiple or non-final active segments")
+            active = number
+        elif path.stat().st_size == 0:
+            raise SpoolCorruption("empty sealed spool segment")
+    if entries[first_retained_segment] != "sealed":
+        raise SpoolCorruption("first retained segment must be sealed")
+    return total, numbers[-1], active, checkpoint_temp, numbers
+
+
 def _checkpoint(root: Path, producer_id: str, incarnation: str, max_header_bytes: int) -> int:
     path = root / _CHECKPOINT
     if not path.exists():
@@ -174,6 +494,24 @@ def _checkpoint(root: Path, producer_id: str, incarnation: str, max_header_bytes
         return document["durable_sequence"]
     except (ValueError, TypeError, KeyError) as exc:
         raise SpoolCorruption("invalid checkpoint or unknown producer incarnation") from exc
+
+
+def _checkpoint_with_bytes(root: Path, producer_id: str, incarnation: str,
+                           max_header_bytes: int) -> tuple[int, bytes | None]:
+    path = root / _CHECKPOINT
+    if not path.exists():
+        return 0, None
+    if path.stat().st_size > max_header_bytes + 512:
+        raise SpoolCorruption("checkpoint too large")
+    raw = path.read_bytes()
+    return _checkpoint(root, producer_id, incarnation, max_header_bytes), raw
+
+
+def _segment_path(root: Path, number: int, active: int | None) -> Path:
+    sealed = root / f"{number:020d}.sealed"
+    if sealed.exists():
+        return sealed
+    return root / f"{number:020d}.active"
 
 
 def _frames(path: Path, segment_id: int, producer_id: str, incarnation: str,
@@ -218,17 +556,94 @@ def _frames(path: Path, segment_id: int, producer_id: str, incarnation: str,
 
 
 def scan_spool(root: Path, *, producer_id: str, incarnation: str, max_disk_bytes: int,
-               max_records: int, max_frame_bytes: int, max_header_bytes: int) -> SpoolScan:
+               max_records: int, max_frame_bytes: int, max_header_bytes: int,
+               retained_prefix: RetainedPrefix | None = None) -> SpoolScan:
     """Validate records sequentially, retaining only one bounded frame in RAM.
 
     An active final partial tail is reported and preserved. It is never
     truncated or mistaken for a complete frame. Checksum corruption is fatal.
+    With an explicit retained proof the inventory begins at its absolute first
+    segment; ``max_records`` then bounds retained records, not absolute IDs.
     """
     root = Path(root)
     _identity(producer_id, "producer_id"); _identity(incarnation, "incarnation")
     for name, value in (("max_disk_bytes", max_disk_bytes), ("max_records", max_records),
                         ("max_frame_bytes", max_frame_bytes), ("max_header_bytes", max_header_bytes)):
         _positive(value, name)
+    if retained_prefix is not None:
+        if not isinstance(retained_prefix, RetainedPrefix):
+            raise ValueError("retained_prefix must be an issued RetainedPrefix proof")
+        if (retained_prefix.producer_id != producer_id
+                or retained_prefix.incarnation != incarnation):
+            raise SpoolCorruption("retained proof identity does not match the reader")
+        first = retained_prefix.first_retained_segment
+        base = retained_prefix.base_sequence
+        disk, last, active, checkpoint_temp, numbers = _inventory_retained(
+            root, max_disk_bytes, first, max_records)
+        if checkpoint_temp:
+            raise SpoolCorruption("unfinished checkpoint at retained startup")
+        first_path = root / f"{first:020d}.sealed"
+        if not first_path.exists() or first_path.stat().st_size == 0:
+            raise SpoolCorruption("first retained segment is missing or empty")
+        if _hash_file(first_path) != retained_prefix.first_retained_segment_sha256:
+            raise SpoolCorruption("first retained segment hash differs from the proof")
+        durable, checkpoint_bytes = _checkpoint_with_bytes(
+            root, producer_id, incarnation, max_header_bytes)
+        if checkpoint_bytes is None:
+            raise SpoolCorruption("retained startup requires a durable checkpoint")
+        if durable > _MAX_ABSOLUTE:
+            raise SpoolCorruption("durable checkpoint exceeds its absolute bound")
+        if durable < base:
+            raise SpoolCorruption("durable checkpoint does not cover the retained base")
+        if durable < retained_prefix.durable_sequence:
+            raise SpoolCorruption("durable checkpoint regressed below the retained proof")
+        if (durable == retained_prefix.durable_sequence
+                and hashlib.sha256(checkpoint_bytes).hexdigest() != retained_prefix.checkpoint_sha256):
+            raise SpoolCorruption("retained checkpoint file hash differs from the proof")
+        expected = base + 1
+        count = active_count = active_size = 0
+        first_seen = False
+        for number in numbers:
+            is_active = number == active
+            path = _segment_path(root, number, active)
+            if not path.exists():
+                raise SpoolCorruption("missing spool segment")
+            if not is_active and path.stat().st_size == 0:
+                raise SpoolCorruption("empty sealed spool segment")
+            if is_active:
+                active_size = path.stat().st_size
+            for record in _frames(path, number, producer_id, incarnation,
+                                  max_frame_bytes, max_header_bytes,
+                                  allow_partial=is_active):
+                if isinstance(record, tuple):
+                    raise SpoolCorruption("partial active tail at retained startup")
+                if record.cursor.sequence > _MAX_ABSOLUTE:
+                    raise SpoolCorruption("retained sequence exceeds its absolute bound")
+                if record.cursor.sequence != expected:
+                    raise SpoolCorruption(f"non-contiguous retained sequence at {path.name}:{record.offset}")
+                if not first_seen:
+                    if record.cursor.sequence != base + 1:
+                        raise SpoolCorruption("first retained frame is not base+1")
+                    first_seen = True
+                expected += 1
+                count += 1
+                active_count += int(is_active)
+                if count > max_records:
+                    raise SpoolError("spool retained record limit exceeded")
+        if not first_seen:
+            raise SpoolCorruption("first retained segment has no records")
+        last_sequence = expected - 1
+        if durable > last_sequence:
+            raise SpoolCorruption("durable checkpoint exceeds verified complete records")
+        reasons = []
+        if count > durable - base:
+            reasons.append("complete_records_beyond_durable_checkpoint")
+        uncertain_from = durable + 1 if reasons else None
+        return SpoolScan(producer_id, incarnation, last_sequence, durable, count, disk,
+                         len(numbers), active, active_count, active_size, 0, None,
+                         uncertain_from, last_sequence if reasons else None,
+                         ",".join(reasons) or None, os.name != "nt",
+                         base, first, last)
     disk, segments, active, checkpoint_temp = _inventory(root, max_disk_bytes, max_records)
     durable = _checkpoint(root, producer_id, incarnation, max_header_bytes)
     count = active_count = active_size = partial = 0
@@ -270,32 +685,150 @@ def scan_spool(root: Path, *, producer_id: str, incarnation: str, max_disk_bytes
     return SpoolScan(producer_id, incarnation, count, durable, count, disk, segments,
                      active, active_count, active_size, partial, partial_offset,
                      uncertain_from, count if count > durable else None,
-                     ",".join(reasons) or None, os.name != "nt")
+                     ",".join(reasons) or None, os.name != "nt",
+                     0, 1, segments)
+
+
+def capture_retained_prefix(root: Path, producer_id: str, incarnation: str, *,
+                            first_retained_segment: int, generation: str,
+                            consumer_cursors, max_disk_bytes: int, max_records: int,
+                            max_frame_bytes: int, max_header_bytes: int) -> RetainedPrefix:
+    """READ-ONLY capture of provenance while the full original prefix exists.
+
+    No pruning, checkpoint write or spool mutation is performed. All files are
+    hashed in bounded chunks and only one frame is held in memory at a time.
+    """
+    root = Path(root)
+    _identity(producer_id, "producer_id"); _identity(incarnation, "incarnation")
+    _identity(generation, "generation")
+    first = _bounded_absolute(first_retained_segment, "first_retained_segment")
+    if first <= 1:
+        raise ValueError("retained prefix must remove at least one segment")
+    for name, value in (("max_disk_bytes", max_disk_bytes), ("max_records", max_records),
+                        ("max_frame_bytes", max_frame_bytes), ("max_header_bytes", max_header_bytes)):
+        _positive(value, name)
+    if isinstance(max_records, bool) or max_records > _MAX_ABSOLUTE:
+        raise ValueError("max_records must be a bounded integer")
+    disk, last, active, checkpoint_temp, numbers = _inventory_retained(
+        root, max_disk_bytes, 1, max_records)
+    if checkpoint_temp:
+        raise SpoolCorruption("retained prefix capture requires no unfinished checkpoint")
+    if first not in numbers:
+        raise SpoolCorruption("first retained segment is missing")
+    if last < first:
+        raise SpoolCorruption("first retained segment is beyond the spool")
+    first_sealed = root / f"{first:020d}.sealed"
+    if not first_sealed.exists() or first_sealed.stat().st_size == 0:
+        raise SpoolCorruption("first retained segment must be sealed and nonempty")
+    durable, checkpoint_bytes = _checkpoint_with_bytes(
+        root, producer_id, incarnation, max_header_bytes)
+    if checkpoint_bytes is None:
+        raise SpoolCorruption("retained prefix capture requires a durable checkpoint")
+    expected = 1
+    base = None
+    base_payload_sha256 = None
+    previous_payload_sha256 = None
+    first_seen = False
+    records = 0
+    for number in numbers:
+        is_active = number == active
+        path = _segment_path(root, number, active)
+        if not path.exists():
+            raise SpoolCorruption("missing spool segment")
+        if not is_active and path.stat().st_size == 0:
+            raise SpoolCorruption("empty sealed spool segment")
+        for record in _frames(path, number, producer_id, incarnation,
+                              max_frame_bytes, max_header_bytes, allow_partial=False):
+            if isinstance(record, tuple):
+                raise SpoolCorruption("partial active tail during retained capture")
+            if record.cursor.sequence != expected:
+                raise SpoolCorruption(f"non-contiguous ingress sequence at {path.name}:{record.offset}")
+            if number == first and not first_seen:
+                if base is None or record.cursor.sequence != base + 1:
+                    raise SpoolCorruption("first retained frame is not base+1")
+                first_seen = True
+            expected += 1
+            records += 1
+            if records > max_records:
+                raise SpoolError("spool record limit exceeded")
+            if number < first:
+                base = record.cursor.sequence
+                base_payload_sha256 = hashlib.sha256(record.payload).hexdigest()
+            previous_payload_sha256 = hashlib.sha256(record.payload).hexdigest()
+    if not first_seen or base is None or base_payload_sha256 is None:
+        raise SpoolCorruption("retained prefix has no removed segment boundary")
+    if previous_payload_sha256 is None:
+        raise SpoolCorruption("retained prefix has no verified records")
+    if durable != records:
+        raise SpoolCorruption("retained prefix capture requires a complete durable checkpoint")
+    if durable < base:
+        raise SpoolCorruption("durable checkpoint does not cover the retained base")
+    if records > max_records:
+        raise SpoolError("spool record limit exceeded")
+    first_sha = _hash_file(root / f"{first:020d}.sealed")
+    chain = hashlib.sha256()
+    for number in range(1, first + 1):
+        segment = root / f"{number:020d}.sealed"
+        if not segment.exists():
+            raise SpoolCorruption("removed prefix is not entirely sealed")
+        chain.update(f"{number:020d}:{_hash_file(segment)}\n".encode("ascii"))
+    return RetainedPrefix(
+        _FACTORY,
+        producer_id=producer_id,
+        incarnation=incarnation,
+        generation=generation,
+        base_sequence=base,
+        base_payload_sha256=base_payload_sha256,
+        first_retained_segment=first,
+        first_retained_segment_sha256=first_sha,
+        prefix_chain_sha256=chain.hexdigest(),
+        checkpoint_sha256=hashlib.sha256(checkpoint_bytes).hexdigest(),
+        durable_sequence=durable,
+        consumer_cursors=consumer_cursors,
+        max_disk_bytes=max_disk_bytes,
+        max_records=max_records,
+        max_frame_bytes=max_frame_bytes,
+        max_header_bytes=max_header_bytes,
+    )
 
 
 def read_spool_records(root: Path, *, producer_id: str, incarnation: str, max_disk_bytes: int,
                        max_records: int, max_frame_bytes: int, max_header_bytes: int,
                        after: SpoolCursor | None = None, through: SpoolCursor | None = None,
-                       durable_only: bool = True) -> Iterator[SpoolRecord]:
+                       durable_only: bool = True,
+                       retained_prefix: RetainedPrefix | None = None) -> Iterator[SpoolRecord]:
     # A fresh validated boundary is fixed for this iterator. Concurrent appends
     # are excluded by that upper cursor even if the file grows while reading.
     report = scan_spool(root, producer_id=producer_id, incarnation=incarnation,
                         max_disk_bytes=max_disk_bytes, max_records=max_records,
-                        max_frame_bytes=max_frame_bytes, max_header_bytes=max_header_bytes)
+                        max_frame_bytes=max_frame_bytes, max_header_bytes=max_header_bytes,
+                        retained_prefix=retained_prefix)
     for cursor in (after, through):
         if cursor is not None and (cursor.producer_id != producer_id or cursor.incarnation != incarnation
                                    or isinstance(cursor.sequence, bool) or not isinstance(cursor.sequence, int)
                                    or cursor.sequence < 0):
             raise SpoolCorruption("reader cursor has unknown incarnation or invalid sequence")
-    start = after.sequence if after is not None else 0
+    if retained_prefix is not None:
+        if after is None:
+            raise SpoolCorruption("retained prefix requires an explicit after cursor")
+        if after.sequence < retained_prefix.base_sequence:
+            raise SpoolCorruption("reader start cursor precedes the retained base")
+        start = after.sequence
+        expected = retained_prefix.base_sequence + 1
+        first_number = report.first_segment_id
+        last_number = report.last_segment_id
+    else:
+        start = after.sequence if after is not None else 0
+        expected = 1
+        first_number = 1
+        last_number = report.segment_count
     limit = report.durable_sequence if durable_only else report.last_sequence
     if start > limit or (through is not None and through.sequence > limit):
         raise SpoolCorruption("requested cursor exceeds verified reader boundary")
     end = through.sequence if through is not None else limit
     if end < start:
         raise ValueError("through cursor precedes after cursor")
-    expected = 1
-    for number in range(1, report.segment_count + 1):
+    for number in range(first_number, last_number + 1):
         # A writer may have sealed the final segment since the scan.
         sealed = Path(root) / f"{number:020d}.sealed"
         path = sealed if sealed.exists() else Path(root) / f"{number:020d}.active"
@@ -303,6 +836,8 @@ def read_spool_records(root: Path, *, producer_id: str, incarnation: str, max_di
                               allow_partial=number == report.active_segment_id):
             if isinstance(record, tuple):
                 return
+            if retained_prefix is not None and record.cursor.sequence > _MAX_ABSOLUTE:
+                raise SpoolCorruption("reader observed a sequence beyond the absolute bound")
             if record.cursor.sequence != expected:
                 raise SpoolCorruption("reader observed a sequence gap")
             expected += 1
@@ -325,30 +860,63 @@ class SpoolReader:
 
     def __init__(self, root: Path, producer_id: str, incarnation: str, *, max_disk_bytes: int,
                  max_records: int, max_frame_bytes: int, max_header_bytes: int,
-                 after: SpoolCursor | None = None) -> None:
+                 after: SpoolCursor | None = None,
+                 retained_prefix: RetainedPrefix | None = None) -> None:
         self.root = Path(root)
         self._producer_id = _identity(producer_id, "producer_id")
         self._incarnation = _identity(incarnation, "incarnation")
         for name, value in (("max_disk_bytes", max_disk_bytes), ("max_records", max_records),
                             ("max_frame_bytes", max_frame_bytes), ("max_header_bytes", max_header_bytes)):
             setattr(self, name, _positive(value, name))
+        self._retained_prefix = retained_prefix
         report = scan_spool(self.root, producer_id=producer_id, incarnation=incarnation,
                             max_disk_bytes=max_disk_bytes, max_records=max_records,
-                            max_frame_bytes=max_frame_bytes, max_header_bytes=max_header_bytes)
-        if after is not None and (after.producer_id != producer_id or after.incarnation != incarnation
-                or isinstance(after.sequence, bool) or not isinstance(after.sequence, int)
-                or not 0 <= after.sequence <= report.durable_sequence):
-            raise SpoolCorruption("reader start cursor exceeds durable prefix or has unknown incarnation")
-        self._sequence = after.sequence if after is not None else 0
+                            max_frame_bytes=max_frame_bytes, max_header_bytes=max_header_bytes,
+                            retained_prefix=retained_prefix)
+        if retained_prefix is not None:
+            if (after is None or after.producer_id != producer_id
+                    or after.incarnation != incarnation
+                    or isinstance(after.sequence, bool) or not isinstance(after.sequence, int)
+                    or not retained_prefix.base_sequence <= after.sequence <= report.durable_sequence):
+                raise SpoolCorruption("retained reader requires an explicit start at/above the base")
+            self._sequence = after.sequence
+            self._segment_id = report.first_segment_id
+            anchor = self._anchor_path(report.first_segment_id).stat()
+            self._anchor_identity = (anchor.st_dev, anchor.st_ino)
+        else:
+            if after is not None and (after.producer_id != producer_id or after.incarnation != incarnation
+                    or isinstance(after.sequence, bool) or not isinstance(after.sequence, int)
+                    or not 0 <= after.sequence <= report.durable_sequence):
+                raise SpoolCorruption("reader start cursor exceeds durable prefix or has unknown incarnation")
+            self._sequence = after.sequence if after is not None else 0
+            self._segment_id = 1
+            self._anchor_identity = None
         self._durable_sequence = report.durable_sequence
-        self._segment_id = 1
         self._offset = 0
         self._identity: tuple[int, int] | None = None
         self._seen_size = 0
         self._sealed_signature: tuple[int, int] | None = None
         self._error: SpoolError | None = None
-        if self._sequence:
+        if self._sequence and (retained_prefix is None
+                               or self._sequence > retained_prefix.base_sequence):
             self._locate_start(report)
+
+    def _anchor_path(self, number: int) -> Path:
+        sealed = self.root / f"{number:020d}.sealed"
+        if not sealed.exists():
+            raise SpoolCorruption("retained first segment anchor is missing")
+        return sealed
+
+    def _verify_anchor(self) -> None:
+        if self._retained_prefix is None:
+            return
+        number = self._retained_prefix.first_retained_segment
+        path = self._anchor_path(number)
+        stat = path.stat()
+        if (stat.st_dev, stat.st_ino) != self._anchor_identity:
+            raise SpoolCorruption("retained first segment anchor identity changed")
+        if _hash_file(path) != self._retained_prefix.first_retained_segment_sha256:
+            raise SpoolCorruption("retained first segment anchor hash changed")
 
     def _path(self, number: int) -> tuple[Path, bool]:
         sealed = self.root / f"{number:020d}.sealed"
@@ -371,7 +939,9 @@ class SpoolReader:
     def _locate_start(self, report: SpoolScan) -> None:
         # One startup-only streaming location pass. No per-record index or
         # historical payload list is retained for later polling.
-        for number in range(1, report.segment_count + 1):
+        first = report.first_segment_id if self._retained_prefix is not None else 1
+        last = report.last_segment_id if self._retained_prefix is not None else report.segment_count
+        for number in range(first, last + 1):
             path, sealed, opened = self._open_segment(number)
             iterator = _frames(path, number, self.producer_id, self.incarnation,
                                self.max_frame_bytes, self.max_header_bytes,
@@ -402,6 +972,18 @@ class SpoolReader:
         return self._incarnation
 
     @property
+    def retained_prefix(self) -> RetainedPrefix | None:
+        return self._retained_prefix
+
+    @property
+    def generation(self) -> str | None:
+        return None if self._retained_prefix is None else self._retained_prefix.generation
+
+    @property
+    def base_sequence(self) -> int:
+        return 0 if self._retained_prefix is None else self._retained_prefix.base_sequence
+
+    @property
     def cursor(self) -> SpoolCursor:
         return SpoolCursor(self.producer_id, self.incarnation, self._sequence)
 
@@ -420,14 +1002,33 @@ class SpoolReader:
         records: list[SpoolRecord] = []
         retained_bytes = 0
         try:
-            durable = _checkpoint(self.root, self.producer_id, self.incarnation, self.max_header_bytes)
-            if durable < self._durable_sequence or durable < sequence:
-                raise SpoolCorruption("durable checkpoint regressed")
-            _, segments, _, _ = _inventory(self.root, self.max_disk_bytes, self.max_records)
-            # A concurrent writer may be preparing the next checkpoint. Its
-            # old published checkpoint remains the only authorization boundary.
-            if durable > self.max_records:
-                raise SpoolCorruption("durable checkpoint exceeds record limit")
+            proof = self._retained_prefix
+            if proof is None:
+                durable = _checkpoint(self.root, self.producer_id, self.incarnation, self.max_header_bytes)
+                if durable < self._durable_sequence or durable < sequence:
+                    raise SpoolCorruption("durable checkpoint regressed")
+                _, segments, _, _ = _inventory(self.root, self.max_disk_bytes, self.max_records)
+                # A concurrent writer may be preparing the next checkpoint. Its
+                # old published checkpoint remains the only authorization boundary.
+                if durable > self.max_records:
+                    raise SpoolCorruption("durable checkpoint exceeds record limit")
+            else:
+                durable, checkpoint_bytes = _checkpoint_with_bytes(
+                    self.root, self.producer_id, self.incarnation, self.max_header_bytes)
+                if checkpoint_bytes is None:
+                    raise SpoolCorruption("retained reader checkpoint is missing")
+                if (durable < proof.durable_sequence or durable < proof.base_sequence
+                        or durable < self._durable_sequence or durable < sequence):
+                    raise SpoolCorruption("retained durable checkpoint regressed")
+                if (durable == proof.durable_sequence
+                        and hashlib.sha256(checkpoint_bytes).hexdigest() != proof.checkpoint_sha256):
+                    raise SpoolCorruption("retained checkpoint file hash changed")
+                if durable > _MAX_ABSOLUTE:
+                    raise SpoolCorruption("retained durable checkpoint exceeds its bound")
+                if durable - proof.base_sequence > self.max_records:
+                    raise SpoolCorruption("retained durable sequence exceeds the record limit")
+                _, segments, _, _, _ = _inventory_retained(
+                    self.root, self.max_disk_bytes, proof.first_retained_segment, self.max_records)
             self._durable_sequence = durable
             while sequence < durable and len(records) < max_records:
                 if number > segments:
@@ -480,6 +1081,11 @@ class SpoolReader:
                     identity = None; seen_size = 0; sealed_signature = None
                     continue
                 break
+            if proof is not None and records:
+                # Bounded chunked anchor verification precedes publication of
+                # every nonempty retained batch. This detects in-place edits and
+                # replacement even when the frames themselves still checksum.
+                self._verify_anchor()
         except SpoolRotateRequired:
             raise
         except SpoolError as exc:
