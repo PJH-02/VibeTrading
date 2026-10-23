@@ -311,7 +311,8 @@ async def replay_checkpoint_startup(engine,producers,*,codec,payload,expected_en
     for reader in readers.values():
         await asyncio.to_thread(reader.validate_inventory)
     handoffs=engine.restore_virgin(codec,payload,highwaters,
-        verified_cursors=verified,expected_engine_incarnation=expected_engine_incarnation,apply_order=apply_order)
+        verified_cursors=verified,expected_engine_incarnation=expected_engine_incarnation,
+        apply_order=apply_order)
     try:
         # A restore hook may have replaced C=0 or an unopened tail. Recheck
         # before applying any frame; later opens still check their descriptor.
@@ -411,10 +412,27 @@ def etf_feed_dependencies(plan, producer):
 async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_feed_dependencies=None,
                      recovery_readiness=None,checkpoint_path=None,checkpoint_codec=None,
                      checkpoint_engine_incarnation=None,checkpoint_readiness=None,checkpoint_apply_order=None,
-                     checkpoint_journal=None,on_command=None):
+                     checkpoint_journal=None,runtime_checkpoint=None,on_command=None):
     checkpoint_enabled=any(value is not None for value in (
         checkpoint_path,checkpoint_codec,checkpoint_engine_incarnation,checkpoint_apply_order)) or (
             checkpoint_readiness is not None and checkpoint_journal is None)
+    if runtime_checkpoint is not None:
+        from .runtime_checkpoint import RuntimeCheckpoint
+        if type(runtime_checkpoint) is not RuntimeCheckpoint:
+            raise ValueError('runtime_checkpoint requires the exact coupled checkpoint owner')
+        if checkpoint_enabled or checkpoint_journal is not None:
+            raise ValueError('Coupled runtime checkpoint is mutually exclusive with market/journal startup options')
+        # No automatic readiness authority. Require the explicit synchronous
+        # callback before inspecting any Paper/setup/factory/transport field.
+        if recovery_readiness is None:
+            raise ValueError('Coupled runtime checkpoint requires an explicit synchronous readiness callback')
+        if (not callable(recovery_readiness)
+                or inspect.iscoroutinefunction(recovery_readiness)):
+            raise TypeError('Recovery readiness must be an explicit synchronous state validator')
+        if paper_runtime is None and not plan.etf_enabled:
+            raise ValueError('Coupled runtime checkpoint requires a selected Paper/ETF consumer')
+        if paper_runtime is not None and paper_runtime.hot_path.apply_seq != 0:
+            raise ValueError('Coupled runtime restore requires a virgin Paper hot path')
     if checkpoint_journal is not None:
         if (type(checkpoint_journal) is not CheckpointJournal or checkpoint_enabled
                 or not callable(checkpoint_readiness) or inspect.iscoroutinefunction(checkpoint_readiness)):
@@ -461,7 +479,10 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
     engine=LocalMarketEngine(producer_providers={p.producer:p.provider for p in plan.producers},
         budgets=EngineBudgets(**plan.engine),on_invalidate=invalid,
         hot_path=paper_runtime.hot_path if paper_runtime is not None else HotPathStore(),
-        post_apply_callbacks=(paper_runtime.process_applied,) if paper_runtime is not None else (),
+        # Coupled restore installs market/plugin state with no callback attached.
+        # The selected Paper callback is published only after every proof.
+        post_apply_callbacks=(() if runtime_checkpoint is not None else
+            ((paper_runtime.process_applied,) if paper_runtime is not None else ())),
         snapshot_clock=time.time_ns,
         trading_filter=(lambda event:event.provider=='kiwoom' and event.instrument.asset_class==AssetClass.ETF)
             if plan.etf_enabled else lambda event:False)
@@ -489,7 +510,24 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
     snapshot_writer=None
     task=None
     try:
-        if checkpoint_journal is not None:
+        if runtime_checkpoint is not None:
+            if plan.etf_enabled:
+                from .local_observation import LocalObservationBus
+                item=plan.observation
+                observation=LocalObservationBus(producer=item.producer,incarnation=item.incarnation,
+                    spool_factory=lambda:create_spool(item),
+                    budgets=item.pipeline,on_invalid=lambda reason:invalid(item.producer,reason))
+                await observation.connect()
+                if etf_factory is None:
+                    from .etf_trading import EtfTradingLoop
+                    etf_factory=EtfTradingLoop
+                etf=etf_factory(settings=settings,bus=observation,
+                    event_source=engine.event_source(required_producers=()))
+            handoffs=await runtime_checkpoint.restore(engine,plan.producers,
+                paper_runtime=paper_runtime,etf=etf,readiness=recovery_readiness)
+            if paper_runtime is not None:
+                engine.post_apply_callbacks=(paper_runtime.process_applied,)
+        elif checkpoint_journal is not None:
             journal_restored=await checkpoint_journal.restore(engine,plan.producers,checkpoint_readiness)
             handoffs=() if journal_restored else await replay_startup(engine,plan.producers,promote=False)
         elif checkpoint_enabled:
@@ -499,7 +537,7 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
                 payload=payload,expected_engine_incarnation=checkpoint_engine_incarnation,apply_order=checkpoint_apply_order)
         else:
             handoffs=await replay_startup(engine,plan.producers,promote=False)
-        if plan.etf_enabled:
+        if plan.etf_enabled and etf is None:
             from .local_observation import LocalObservationBus
             item=plan.observation
             observation=LocalObservationBus(producer=item.producer,incarnation=item.incarnation,
@@ -520,7 +558,7 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
         if checkpoint_enabled:
             if engine.complete_checkpoint_recovery(checkpoint_readiness) is not True:
                 raise RuntimeError('checkpoint readiness validation did not permit startup')
-        elif not journal_restored:
+        elif runtime_checkpoint is None and not journal_restored:
             for initial,high in handoffs:
                 engine.arm_initial_resume(initial,high)
         if checkpoint_journal is not None:await checkpoint_journal.rotate(engine)
