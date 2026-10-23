@@ -1,0 +1,31 @@
+{
+  "runs": [
+    {
+      "run": "initial",
+      "provider": "opencode",
+      "model": "opencode/deepseek-v4.1-flash-free",
+      "role": "refactor",
+      "exit_code": 124,
+      "elapsed_seconds": 1201.8886416690075
+    },
+    {
+      "run": "repair1",
+      "provider": "opencode",
+      "model": "opencode/deepseek-v4.1-flash-free",
+      "role": "refactor",
+      "exit_code": 0,
+      "elapsed_seconds": 924.6494507000025
+    },
+    {
+      "run": "repair2",
+      "provider": "opencode",
+      "model": "opencode/deepseek-v4.1-flash-free",
+      "role": "refactor",
+      "exit_code": 124,
+      "elapsed_seconds": 601.7205210840038
+    }
+  ],
+  "repair_delegations": 2,
+  "acceptance_by_worker": false,
+  "interpretation": "Initial and final repair timed out after scoped edits; repair1 process succeeded but independent review rejected two defects. Final acceptance derives from independently tested integrated bytes. No model substitution."
+}

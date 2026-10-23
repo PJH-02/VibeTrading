@@ -8,9 +8,9 @@
   ],
   "definition": "완성은 로컬 기능 수락 범위. 운영/배포/장기 성능 완료와 별개. 부분 단계의 닫힌 하위 기능만 선별 커밋 가능",
   "counts": {
-    "COMPLETE_LOCAL_IMPLEMENTATION": 14,
-    "INCOMPLETE": 23,
-    "NOT_STARTED": 14
+    "COMPLETE_LOCAL_IMPLEMENTATION": 15,
+    "NOT_STARTED": 14,
+    "INCOMPLETE": 22
   },
   "tasks": [
     {
@@ -71,13 +71,14 @@
     },
     {
       "task_id": "VN07",
-      "category": "INCOMPLETE",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
       "existing_phase": "P06",
-      "detail": "VN07A accepted: durable receipt-based strategy restart barrier, sticky no-new-risk fence with operator cancellation preserved. Strategy-state checkpoint/verified restore and coupled recovery remain incomplete.",
+      "detail": "VN07 whole local recovery accepted: opt-in plugin state, shared market cursor, exact Paper/ETF journal seals, staged combined readiness. Ahead/behind/unproven suffix or corrupt newest quarantines all; no economic journal rewind or production readiness.",
       "production_ready": false,
       "order_subtask_validation": "docs/refactoring/runs/20261020-production/vn07-order-validation.json",
       "scope_disposition": "COMPLETE_EXISTING_RECOVERY",
-      "vn07a_receipt": "docs/refactoring/runs/20261023-v3/vn07a/acceptance.json"
+      "vn07a_receipt": "docs/refactoring/runs/20261023-v3/vn07a/acceptance.json",
+      "vn07b_receipt": "docs/refactoring/runs/20261023-v3/vn07b/acceptance.json"
     },
     {
       "task_id": "VN08",
@@ -424,9 +425,7 @@
     "tests/refactoring/test_execution_groups.py"
   ],
   "completed_subunits_in_partial_stages": [
-    "VN07 callback-free market checkpoint startup and explicit whole-vector recovery (multi-suffix unsupported)",
-    "TX06E SignerNonceStore standalone durability/ownership/bounds only",
-    "VN07A receipt-based Paper strategy restart barrier only; parent VN07 remains incomplete"
+    "TX06E SignerNonceStore standalone durability/ownership/bounds only"
   ],
   "commit_candidate": "worktree-snapshot-20261021",
   "commit_state": "RECORDED_IN_CONTAINING_COMMIT",
@@ -435,15 +434,9 @@
   "next_steps": [
     {
       "order": 1,
-      "stage": "VN07",
-      "work": "Verified strategy-state checkpoint/restore and selected market/Paper journal recovery boundary; reuse existing stores",
-      "gate": "VN07A is accepted safety fence only; no automatic readiness or universal account replacement"
-    },
-    {
-      "order": 2,
       "stage": "VN08 → VN09",
       "work": "Retained-prefix reader then proof-based storage recovery/GC candidates; preserve existing uploader",
-      "gate": "VN07 parent and original reader/archive proof gates remain open; no data deletion"
+      "gate": "VN07 local prerequisite satisfied; not started by this request; original proof gates and no-delete policy retained"
     },
     {
       "order": 3,
@@ -488,21 +481,21 @@
     "snapshot_head": "The Git commit containing this record; inspect git log -1"
   },
   "execution_control": {
-    "status": "LOCAL_BOUNDED_TICKET_ACCEPTED",
-    "last_completed_ticket": "VN14B",
+    "status": "LOCAL_TICKET_ACCEPTED",
+    "last_completed_ticket": "VN07",
     "last_completed_tooling_ticket": "R05",
     "active_ticket": null,
     "start_next_ticket": false,
-    "stop_after_ticket": "VN07A",
+    "stop_after_ticket": "VN07",
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
-    "current_source_sha": "60d763209134527e289d3760ec55be9ea9ec6b37",
+    "current_source_sha": "79501a9c1484daa6528e129bab20d570dc66fcf9",
     "active_tooling_tickets": [],
     "active_parallel_tickets": [],
-    "last_completed_subunit": "VN07A"
+    "last_completed_subunit": "VN07B"
   },
   "current_wip": null,
-  "last_completed_ticket": "VN14B",
+  "last_completed_ticket": "VN07",
   "work_in_progress_commit_policy": "All 11 former excluded source/test files included as unfinished snapshot; exclusions apply only to older completed-feature validation",
   "legacy_completed_commit": {
     "head": "90847f84243d01ec98c9815216c96c8f2749028b",
@@ -568,7 +561,7 @@
     }
   ],
   "historical_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
-  "updated_local": "2026-10-23T14:49:31.679055+09:00",
+  "updated_local": "2026-10-23T20:08:39.840784+09:00",
   "snapshot_validation_history": [
     "docs/refactoring/runs/20261023-v3/baseline/result.json",
     {
@@ -605,7 +598,7 @@
     "status": "R03B1_ONLY_PASS",
     "receipt": "docs/refactoring/runs/20261023-v3/r03b1/acceptance.json"
   },
-  "progress_report": "docs/refactoring/runs/20261023-v3/r03/README.md",
+  "progress_report": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
   "open_tooling_findings": [
     {
       "task_id": "O01",
@@ -674,12 +667,12 @@
       "R06"
     ],
     "R05_calculators_are_not_plugin_completion": true,
-    "authorized_bounded_ticket": "docs/tickets/VN07A-paper-strategy-restart-barrier.md",
+    "authorized_bounded_ticket": "docs/tickets/VN07B-coupled-runtime-recovery.md",
     "unselected_implementation_dispatch_authorized": false,
-    "last_accepted_bounded_ticket": "docs/tickets/VN07A-paper-strategy-restart-barrier.md",
-    "last_accepted_receipt": "docs/refactoring/runs/20261023-v3/vn07a/acceptance.json"
+    "last_accepted_bounded_ticket": "docs/tickets/VN07B-coupled-runtime-recovery.md",
+    "last_accepted_receipt": "docs/refactoring/runs/20261023-v3/vn07b/acceptance.json"
   },
-  "user_request_latest": "이제 다음 티켓부터 구현 시작하라. Applied only bounded VN07A; VN07 remains incomplete.",
+  "user_request_latest": "다음 티켓 작업 수행하여 VN07 전체 완료하라; 남은 작업 이어서 진행. VN07 whole local implementation accepted; stop before VN08.",
   "vn07a_validation": {
     "status": "ACCEPTED_LOCAL_SUBUNIT",
     "source_sha": "60d763209134527e289d3760ec55be9ea9ec6b37",
@@ -688,5 +681,23 @@
     "full_regression_passed": 1972,
     "additional_reviewer_cases": 4,
     "live_data_deselected": 2
+  },
+  "vn07b_validation": {
+    "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+    "source_sha": "79501a9c1484daa6528e129bab20d570dc66fcf9",
+    "receipt": "docs/refactoring/runs/20261023-v3/vn07b/acceptance.json",
+    "parent_complete": true,
+    "full_regression_passed": 2019,
+    "critical_review_cases": 22,
+    "scoped_passed": 237,
+    "live_data_deselected": 2,
+    "production_ready": false
+  },
+  "vn07_completed_subunits_history": {
+    "historical_entries": [
+      "VN07 callback-free market checkpoint startup and explicit whole-vector recovery (multi-suffix unsupported)",
+      "VN07A receipt-based Paper strategy restart barrier only; parent VN07 remains incomplete"
+    ],
+    "resolved_by": "docs/refactoring/runs/20261023-v3/vn07b/acceptance.json"
   }
 }
