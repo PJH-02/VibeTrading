@@ -11,9 +11,13 @@ unsent action; it cannot automatically replay a claimed callback into new risk.
 """
 from __future__ import annotations
 
+from copy import deepcopy
 from dataclasses import dataclass, replace
 from decimal import Decimal
+import hashlib
+import inspect
 import json
+import math
 import time
 from types import MappingProxyType
 from typing import Any, Callable, Mapping
@@ -163,6 +167,15 @@ class PaperStrategyRuntime:
         # causally applied LIVE/PAPER input reaches this seam.
         self._input_phase = "UNVERIFIED"
         self.view: StrategyDataView | None = None
+        # A coupled checkpoint gate starts IDLE for the existing runtime.  Only
+        # an explicit verified RuntimeCheckpoint restore opens it to READY.
+        self._recovery_state, self._recovery_reason = "IDLE", None
+        self._recovery_evidence = None
+        self._last_process_cursor = None
+        self._last_process_clock = None
+        self._checkpoint_captured_cursor = None
+        self._checkpoint_expected_state = self._checkpoint_restore_proof_value = None
+        self._staged_instances = None
 
     @staticmethod
     def _document(value):
@@ -276,6 +289,314 @@ class PaperStrategyRuntime:
         snapshot = self.hot_path.snapshot(self.now_ns(), self.phase.upper())
         return self.process_applied(result, snapshot)
 
+    @property
+    def recovery_state(self):
+        return self._recovery_state
+
+    def _recovery_gate(self):
+        return self._recovery_state in {"RECOVERING", "QUARANTINED"}
+
+    def begin_checkpoint_recovery(self):
+        if self._processing or self._pending:
+            raise RuntimeError("Paper checkpoint recovery requires a quiescent runtime")
+        if self._recovery_state == "QUARANTINED":
+            raise RuntimeError("Paper runtime is permanently quarantined")
+        if self._recovery_state == "RECOVERING":
+            raise RuntimeError("Paper checkpoint recovery is already in progress")
+        self._recovery_state, self._recovery_reason = "RECOVERING", "checkpoint_restore_started"
+
+    def quarantine_checkpoint_recovery(self, reason):
+        self._recovery_state = "QUARANTINED"
+        self._recovery_reason = str(reason)[:256] or "checkpoint_restore_failed"
+
+    def _checkpoint_capture_guard(self, engine):
+        if self._processing or self._pending:
+            raise ValueError("Paper checkpoint capture requires no callback/pending action")
+        if self._recovery_state in {"RECOVERING", "QUARANTINED"}:
+            raise ValueError("Paper checkpoint capture requires an idle/ready recovery gate")
+        hot = engine.hot_path
+        cursor = (hot.engine_incarnation, hot.apply_seq, hot.clock_version)
+        if hot.apply_seq:
+            if (self._last_process_cursor != (hot.engine_incarnation, hot.apply_seq)
+                    or self._last_process_clock != hot.clock_version):
+                raise ValueError("Paper runtime process_applied cursor is stale or not attached")
+        elif self._last_process_cursor is not None and self._last_process_cursor[1] != 0:
+            raise ValueError("Paper runtime holds a nonvirgin cursor")
+        self._checkpoint_captured_cursor = cursor
+
+    @staticmethod
+    def _json_state(value, limit, depth=0):
+        if depth > 64:
+            raise ValueError("plugin checkpoint state nesting exceeds bound")
+        if value is None or type(value) in {bool, int, str}:
+            if type(value) is str and len(value.encode("utf-8")) > limit:
+                raise ValueError("plugin checkpoint state string exceeds bound")
+            return value
+        if type(value) is float:
+            if not math.isfinite(value):
+                raise ValueError("plugin checkpoint state contains a nonfinite number")
+            return value
+        if type(value) is list:
+            if len(value) > limit:
+                raise ValueError("plugin checkpoint state list exceeds capacity")
+            return [PaperStrategyRuntime._json_state(item, limit, depth + 1) for item in value]
+        if type(value) is dict:
+            if len(value) > limit:
+                raise ValueError("plugin checkpoint state mapping exceeds capacity")
+            result = {}
+            for key, item in value.items():
+                if type(key) is not str or not key:
+                    raise ValueError("plugin checkpoint state keys must be explicit strings")
+                result[key] = PaperStrategyRuntime._json_state(item, limit, depth + 1)
+            return result
+        raise ValueError("plugin checkpoint state must contain only dict/list/scalars")
+
+    def _plugin_state(self, instance, limit):
+        hook = getattr(instance, "checkpoint_state", None)
+        if not callable(hook) or inspect.iscoroutinefunction(hook):
+            raise ValueError("strategy plugin requires a synchronous checkpoint_state hook")
+        value = hook()
+        if inspect.isawaitable(value):
+            if inspect.iscoroutine(value):
+                value.close()
+            raise ValueError("strategy checkpoint_state must be synchronous")
+        detached = self._json_state(value, limit)
+        encoded = self._document(detached).encode()
+        if len(encoded) > limit:
+            raise ValueError("plugin checkpoint state byte bound exceeded")
+        return detached, hashlib.sha256(encoded).hexdigest()
+
+    def _runtime_identity(self):
+        accounts = {key: {"scope": matcher.ledger.scope.key, "mode": matcher.ledger.mode.value,
+                          "path": str(matcher.ledger.path)}
+                    for key, matcher in sorted(self.accounts.items())}
+        # Bind complete economics and instrument identities, not only their
+        # keys. A fee/lot/multiplier/currency change at the same key must reject.
+        products = {key: spec.to_document() for key, spec in sorted(self.products.items())}
+        known = {key: (instrument.model_dump(mode="json")
+                       if callable(getattr(instrument, "model_dump", None)) else str(instrument))
+                 for key, instrument in sorted(self.known.items())}
+        jobs = {}
+        for sid, job in sorted(self._jobs.items()):
+            registration = job.registration
+            module = registration.module.module
+            jobs[sid] = {
+                "job_id": registration.job_id,
+                "strategy_id": registration.module.strategy_id,
+                "module_name": getattr(module, "__name__", None),
+                "declared_version": getattr(module, "STRATEGY_VERSION",
+                                            getattr(module, "VERSION", None)),
+                "strategy_version": registration.strategy_version,
+                "config_version": registration.config_version,
+                "config": dict(registration.config),
+                "fingerprint": job.fingerprint,
+            }
+        proof = {"phase": self.phase, "budgets": vars(self.budgets),
+                 "settings": self._document(dict(self.settings)),
+                 "products": products, "known": known,
+                 "jobs": jobs,
+                 "reference_feeds": dict(self.reference_feeds),
+                 "accounts": accounts,
+                 "matchers": {key: dict(matcher.config)
+                              for key, matcher in sorted(self.accounts.items())}}
+        return proof, hashlib.sha256(self._document(proof).encode()).hexdigest()
+
+    def _job_state_document(self, sid, job, max_bytes):
+        plugin_state, plugin_sha = self._plugin_state(job.instance, max_bytes)
+        return {"strategy_id": sid, "job_id": job.registration.job_id,
+            "plugin_class": type(job.instance).__module__ + "." + type(job.instance).__qualname__,
+            "strategy_version": job.registration.strategy_version,
+            "config_version": job.registration.config_version,
+            "fingerprint": job.fingerprint, "plugin_sha256": plugin_sha,
+            "plugin_state": plugin_state,
+            "lifecycle": {"state": job.state, "reason": job.reason,
+                "callbacks": job.callbacks, "actions": job.actions,
+                "permission_blocked": job.permission_blocked,
+                "restart_blocked": job.restart_blocked}}
+
+    def _current_runtime_state(self, max_bytes):
+        identity, identity_sha = self._runtime_identity()
+        jobs = [self._job_state_document(sid, job, max_bytes)
+                for sid, job in sorted(self._jobs.items())]
+        return {"version": 1, "identity": identity, "identity_sha256": identity_sha,
+                "jobs": jobs, "seen_actions": dict(self._seen_actions),
+                "account_faults": dict(self._account_faults),
+                "invalid_inputs": dict(self._invalid_inputs),
+                "deferred_input_gaps": dict(self._deferred_input_gaps)}
+
+    def capture_runtime_state(self, *, max_bytes):
+        if self._processing or self._pending:
+            raise ValueError("Paper checkpoint capture requires no callback/pending action")
+        if self._recovery_state in {"RECOVERING", "QUARANTINED"}:
+            raise ValueError("Paper checkpoint capture requires an idle/ready recovery gate")
+        hot_before = self._checkpoint_captured_cursor
+        state = self._current_runtime_state(max_bytes)
+        self._json_state(state, max_bytes)
+        if hot_before is not None and self._checkpoint_captured_cursor != hot_before:
+            raise ValueError("market cursor changed during strategy checkpoint capture")
+        if self._checkpoint_captured_cursor is None:
+            if self.hot_path.apply_seq:
+                raise ValueError("Paper checkpoint capture lacks a market cursor guard")
+            self._checkpoint_captured_cursor = (self.hot_path.engine_incarnation,
+                self.hot_path.apply_seq, self.hot_path.clock_version)
+        return deepcopy(state)
+
+    def restore_runtime_state(self, state, *, verify=None, max_bytes):
+        if self._processing or self._pending:
+            raise ValueError("Paper checkpoint restore requires no callback/pending action")
+        if self._recovery_state != "RECOVERING":
+            raise ValueError("Paper checkpoint restore requires the recovery gate")
+        if type(state) is not dict or set(state) != {
+                "version", "identity", "identity_sha256", "jobs", "seen_actions",
+                "account_faults", "invalid_inputs", "deferred_input_gaps"}:
+            raise ValueError("Paper checkpoint state schema mismatch")
+        if state["version"] != 1:
+            raise ValueError("unsupported Paper checkpoint version")
+        identity, identity_sha = self._runtime_identity()
+        if state["identity"] != identity or state["identity_sha256"] != identity_sha:
+            raise ValueError("Paper runtime settings/inventory/account identity mismatch")
+        snapshots = {}
+        for item in state["jobs"]:
+            if type(item) is not dict or item.get("strategy_id") in snapshots:
+                raise ValueError("Paper checkpoint job inventory is invalid")
+            snapshots[item["strategy_id"]] = item
+        if set(snapshots) != set(self._jobs):
+            raise ValueError("Paper checkpoint job inventory differs from registration")
+        staged = {}
+        restored_jobs = {}
+        for sid, job in self._jobs.items():
+            snap = snapshots[sid]
+            if (snap.get("job_id") != job.registration.job_id
+                    or snap.get("strategy_version") != job.registration.strategy_version
+                    or snap.get("config_version") != job.registration.config_version
+                    or snap.get("fingerprint") != job.fingerprint):
+                raise ValueError("Paper checkpoint job/config identity differs from registration")
+            plugin_state, plugin_sha = self._json_state(snap.get("plugin_state"), max_bytes), snap.get("plugin_sha256")
+            if hashlib.sha256(self._document(plugin_state).encode()).hexdigest() != plugin_sha:
+                raise ValueError("Paper checkpoint plugin checksum mismatch")
+            instance = job.registration.module.create()
+            if (type(instance).__module__ + "." + type(instance).__qualname__) != snap.get("plugin_class"):
+                raise ValueError("Paper checkpoint plugin module/class identity differs")
+            hook = getattr(instance, "restore_state", None)
+            if not callable(hook) or inspect.iscoroutinefunction(hook):
+                raise ValueError("strategy plugin requires a synchronous restore_state hook")
+            result = hook(deepcopy(plugin_state))
+            if inspect.isawaitable(result):
+                if inspect.iscoroutine(result):
+                    result.close()
+                raise ValueError("strategy restore_state must be synchronous")
+            check, check_sha = self._plugin_state(instance, max_bytes)
+            if check != plugin_state or check_sha != plugin_sha:
+                raise ValueError("strategy restore_state roundtrip differs from checkpoint")
+            lifecycle = snap.get("lifecycle")
+            if (type(lifecycle) is not dict or set(lifecycle) != {
+                    "state", "reason", "callbacks", "actions", "permission_blocked",
+                    "restart_blocked"}):
+                raise ValueError("Paper checkpoint lifecycle schema mismatch")
+            saved = lifecycle.get("state")
+            if saved not in {"PAPER", "REPLAY", "WARMING", "PAUSED", "HALTED", "FAULTED", "BLOCKED"}:
+                raise ValueError("Paper checkpoint lifecycle state is invalid")
+            reason_saved = lifecycle.get("reason")
+            if reason_saved is not None and type(reason_saved) is not str:
+                raise ValueError("Paper checkpoint lifecycle reason is invalid")
+            callbacks, actions = lifecycle.get("callbacks"), lifecycle.get("actions")
+            for value, name in ((callbacks, "callbacks"), (actions, "actions")):
+                if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+                    raise ValueError("Paper checkpoint lifecycle " + name + " is invalid")
+            if (type(lifecycle.get("permission_blocked")) is not bool
+                    or type(lifecycle.get("restart_blocked")) is not bool):
+                raise ValueError("Paper checkpoint lifecycle fence schema mismatch")
+            if job.permission_blocked or lifecycle.get("permission_blocked"):
+                final_state, reason = "BLOCKED", "paper_permission_missing"
+            elif saved in {"PAUSED", "HALTED", "FAULTED"}:
+                final_state, reason = saved, reason_saved
+            elif saved == "BLOCKED":
+                if reason_saved == "strategy_state_restore_unverified":
+                    final_state, reason = "WARMING", None
+                else:
+                    final_state, reason = "BLOCKED", reason_saved
+            else:
+                final_state, reason = "WARMING", None
+            restored_jobs[sid] = {"instance": instance, "state": final_state,
+                "reason": reason, "callbacks": callbacks, "actions": actions,
+                "permission_blocked": bool(job.permission_blocked
+                    or lifecycle.get("permission_blocked")),
+                "restart_blocked": final_state == "BLOCKED" and reason not in {
+                    "strategy_state_restore_unverified", "paper_permission_missing"}}
+            staged[sid] = instance
+        seen = state.get("seen_actions")
+        if (type(seen) is not dict or len(seen) > self.budgets.max_seen_actions
+                or any(type(k) is not str or type(v) is not str for k, v in seen.items())):
+            raise ValueError("Paper checkpoint seen-action dedup schema mismatch")
+        for name in ("account_faults", "invalid_inputs", "deferred_input_gaps"):
+            value = state.get(name)
+            if type(value) is not dict or any(type(k) is not str or type(v) is not str
+                                              for k, v in value.items()):
+                raise ValueError("Paper checkpoint " + name + " schema mismatch")
+        if verify is not None and verify() is not True:
+            raise ValueError("Paper journal evidence changed during staged restore")
+        # Publish only after every hook and external journal proof succeeded.
+        for sid, values in restored_jobs.items():
+            job = self._jobs[sid]
+            job.instance = values["instance"]
+            job.state, job.reason = values["state"], values["reason"]
+            job.callbacks, job.actions = values["callbacks"], values["actions"]
+            job.permission_blocked = values["permission_blocked"]
+        # The VN07A restart barrier is cleared only when the complete
+        # market/plugin/journal proof is published, not merely when hooks return.
+        self._staged_restart_blocked = {
+            sid: values["restart_blocked"] for sid, values in restored_jobs.items()}
+        self._seen_actions = dict(seen)
+        self._account_faults = dict(state["account_faults"])
+        self._invalid_inputs = dict(state["invalid_inputs"])
+        self._deferred_input_gaps = dict(state["deferred_input_gaps"])
+        # A digest of the saved document alone cannot detect a readiness hook
+        # mutating a staged instance or any restored map. Capture the actual
+        # normalized post-hook state and revalidate that before publication.
+        current = self._current_runtime_state(max_bytes)
+        self._checkpoint_source_state = deepcopy(state)
+        self._checkpoint_expected_state = deepcopy(current)
+        self._checkpoint_max_bytes = max_bytes
+        self._checkpoint_restore_proof_value = hashlib.sha256(
+            self._document(current).encode()).hexdigest()
+        self._staged_instances = staged
+        self._input_phase = "UNVERIFIED"
+        self.view = None
+        return self._checkpoint_restore_proof_value
+
+    def checkpoint_restore_proof(self, state=None):
+        if self._checkpoint_expected_state is None:
+            return None
+        source = getattr(self, "_checkpoint_source_state", None)
+        if (state is not None and source is not None
+                and self._document(state) != self._document(source)):
+            return None
+        current = self._current_runtime_state(self._checkpoint_max_bytes)
+        if self._document(current) != self._document(self._checkpoint_expected_state):
+            return None
+        return self._checkpoint_restore_proof_value
+
+    def publish_checkpoint_restore(self, hot_path, proof):
+        if self._recovery_state != "RECOVERING":
+            return False
+        if not hot_path or proof != self.checkpoint_restore_proof():
+            return False
+        for sid, blocked in getattr(self, "_staged_restart_blocked", {}).items():
+            if sid in self._jobs:
+                self._jobs[sid].restart_blocked = blocked
+        self.hot_path = hot_path
+        self._recovery_state, self._recovery_reason = "READY", None
+        self._recovery_evidence = {"proof": proof,
+            "cursor": (hot_path.engine_incarnation, hot_path.apply_seq, hot_path.clock_version)}
+        # The staged restore is the chain of custody for this cursor.  Recording
+        # it makes a later quiescent save causally aligned without pretending an
+        # event callback ran.
+        self._last_process_cursor = (hot_path.engine_incarnation, hot_path.apply_seq)
+        self._last_process_clock = hot_path.clock_version
+        self._input_phase = "UNVERIFIED"
+        self.view = None
+        return True
+
     def process_applied(self, result: ApplyResult, snapshot: DecisionSnapshot):
         """Consume the shared engine's exact post-apply result and snapshot.
 
@@ -285,6 +606,10 @@ class PaperStrategyRuntime:
         """
         if self._processing:
             raise RuntimeError("Strategy runtime dispatch is not reentrant")
+        if self._recovery_gate():
+            return ()
+        self._last_process_cursor = snapshot.cursor
+        self._last_process_clock = snapshot.clock_version
         self._input_phase = "INVALID"
         if (snapshot.cursor != (result.engine_incarnation, result.apply_seq) or
                 snapshot.cursor != (self.hot_path.engine_incarnation, self.hot_path.apply_seq) or
@@ -598,6 +923,8 @@ class PaperStrategyRuntime:
                 self._cancel_owned(job, now_ns)
 
     def advance(self, now_ns: int):
+        if self._recovery_gate():
+            return
         snapshot = self.hot_path.snapshot(now_ns, self.phase.upper())
         if (self.phase == "paper" and self._input_phase in {"LIVE", "PAPER"}
                 and not self._deferred_input_gaps):
@@ -621,10 +948,15 @@ class PaperStrategyRuntime:
                 "replace": "unsupported_until_confirmed_remaining_handoff",
                 "reference_feeds": dict(self.reference_feeds),
                 "restart_evidence": {"matcher": "durable_ledger_state_checked",
-                    "strategy_state_recovery": "UNVERIFIED",
+                    "strategy_state_recovery": ("VERIFIED_LOCAL_EXACT_CUT" if self._recovery_state == "READY"
+                                                else "UNVERIFIED"),
                     "blocked_strategies": tuple(sorted(
                         sid for sid, job in self._jobs.items() if job.restart_blocked)),
-                    "continuous_input_cursor": "MISSING_EVIDENCE", "full_restart_gate": "BLOCKED"},
+                    "continuous_input_cursor": ("VERIFIED_LOCAL_EXACT_CUT" if self._recovery_state == "READY"
+                                                else "MISSING_EVIDENCE"),
+                    "full_restart_gate": "BLOCKED",
+                    "runtime_recovery": self._recovery_state,
+                    "runtime_recovery_reason": self._recovery_reason},
                 "pending_actions": self._pending, "seen_actions": len(self._seen_actions),
                 "account_faults": dict(self._account_faults),
                 "invalid_inputs": dict(self._invalid_inputs),
