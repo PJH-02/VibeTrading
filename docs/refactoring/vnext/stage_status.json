@@ -73,10 +73,11 @@
       "task_id": "VN07",
       "category": "INCOMPLETE",
       "existing_phase": "P06",
-      "detail": "[Reuse-first scope; prior completion category preserved] Reuse existing market recovery and per-runtime journals; connect only missing strategy/Paper checkpoint continuity, no universal account-state replacement.",
+      "detail": "VN07A accepted: durable receipt-based strategy restart barrier, sticky no-new-risk fence with operator cancellation preserved. Strategy-state checkpoint/verified restore and coupled recovery remain incomplete.",
       "production_ready": false,
       "order_subtask_validation": "docs/refactoring/runs/20261020-production/vn07-order-validation.json",
-      "scope_disposition": "COMPLETE_EXISTING_RECOVERY"
+      "scope_disposition": "COMPLETE_EXISTING_RECOVERY",
+      "vn07a_receipt": "docs/refactoring/runs/20261023-v3/vn07a/acceptance.json"
     },
     {
       "task_id": "VN08",
@@ -424,7 +425,8 @@
   ],
   "completed_subunits_in_partial_stages": [
     "VN07 callback-free market checkpoint startup and explicit whole-vector recovery (multi-suffix unsupported)",
-    "TX06E SignerNonceStore standalone durability/ownership/bounds only"
+    "TX06E SignerNonceStore standalone durability/ownership/bounds only",
+    "VN07A receipt-based Paper strategy restart barrier only; parent VN07 remains incomplete"
   ],
   "commit_candidate": "worktree-snapshot-20261021",
   "commit_state": "RECORDED_IN_CONTAINING_COMMIT",
@@ -433,22 +435,21 @@
   "next_steps": [
     {
       "order": 1,
-      "stage": "VN15",
-      "status": "NOT_STARTED",
-      "work": "Read-only actual/assumed/recovery reporting; unavailable valuation/currency/cashflow explicit",
-      "gate": "사용자 재개 지시 전 착수 금지; reporting IO on submit path forbidden"
+      "stage": "VN07",
+      "work": "Verified strategy-state checkpoint/restore and selected market/Paper journal recovery boundary; reuse existing stores",
+      "gate": "VN07A is accepted safety fence only; no automatic readiness or universal account replacement"
     },
     {
       "order": 2,
-      "stage": "TX01/TX02/TX04 → VN07/VN08",
-      "work": "Common owner/account/strategy recovery before retained-base reader; GC disabled",
-      "gate": "Prototype and recovery gates remain open"
+      "stage": "VN08 → VN09",
+      "work": "Retained-prefix reader then proof-based storage recovery/GC candidates; preserve existing uploader",
+      "gate": "VN07 parent and original reader/archive proof gates remain open; no data deletion"
     },
     {
       "order": 3,
-      "stage": "VN09/VN17/VN18/VN19/VN20 + TX05-TX12",
-      "work": "GC proof, combined role budgets, actual operational evidence and reviewable cutover",
-      "gate": "No automatic deletion/deployment/real activation; 30m/24h/72h/account evidence not replaced by fixtures"
+      "stage": "TX01/TX02/TX04 → VN13/TX05",
+      "work": "Minimal file-strategy plugin/Signals/existing Paper and same-account integration per revised DAG",
+      "gate": "Issue bounded function-gap tickets; existing venue clients/runtime/cloud remain reusable"
     }
   ],
   "commit_candidate_source_set_sha256": "1ab8d78dc9a968f1febf7c877177b6007cf6155a1af72c6bf8a4ff8652d31b64",
@@ -487,17 +488,18 @@
     "snapshot_head": "The Git commit containing this record; inspect git log -1"
   },
   "execution_control": {
-    "status": "STOPPED_AT_USER_REQUEST",
+    "status": "LOCAL_BOUNDED_TICKET_ACCEPTED",
     "last_completed_ticket": "VN14B",
     "last_completed_tooling_ticket": "R05",
     "active_ticket": null,
     "start_next_ticket": false,
-    "stop_after_ticket": "REUSE_SCOPE_PLAN",
+    "stop_after_ticket": "VN07A",
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
-    "current_source_sha": "4977ab509490173e312183f32d47f862d94ee0bf",
+    "current_source_sha": "60d763209134527e289d3760ec55be9ea9ec6b37",
     "active_tooling_tickets": [],
-    "active_parallel_tickets": []
+    "active_parallel_tickets": [],
+    "last_completed_subunit": "VN07A"
   },
   "current_wip": null,
   "last_completed_ticket": "VN14B",
@@ -566,7 +568,7 @@
     }
   ],
   "historical_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
-  "updated_local": "2026-10-23",
+  "updated_local": "2026-10-23T14:49:31.679055+09:00",
   "snapshot_validation_history": [
     "docs/refactoring/runs/20261023-v3/baseline/result.json",
     {
@@ -668,6 +670,20 @@
       "O01",
       "R06"
     ],
-    "R05_calculators_are_not_plugin_completion": true
+    "R05_calculators_are_not_plugin_completion": true,
+    "authorized_bounded_ticket": "docs/tickets/VN07A-paper-strategy-restart-barrier.md",
+    "unselected_implementation_dispatch_authorized": false,
+    "last_accepted_bounded_ticket": "docs/tickets/VN07A-paper-strategy-restart-barrier.md",
+    "last_accepted_receipt": "docs/refactoring/runs/20261023-v3/vn07a/acceptance.json"
+  },
+  "user_request_latest": "이제 다음 티켓부터 구현 시작하라. Applied only bounded VN07A; VN07 remains incomplete.",
+  "vn07a_validation": {
+    "status": "ACCEPTED_LOCAL_SUBUNIT",
+    "source_sha": "60d763209134527e289d3760ec55be9ea9ec6b37",
+    "receipt": "docs/refactoring/runs/20261023-v3/vn07a/acceptance.json",
+    "parent_complete": false,
+    "full_regression_passed": 1972,
+    "additional_reviewer_cases": 4,
+    "live_data_deselected": 2
   }
 }

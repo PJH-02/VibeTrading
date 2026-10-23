@@ -1,0 +1,56 @@
+[
+  {
+    "run": "initial",
+    "model": "opencode/deepseek-v4.1-flash-free",
+    "process_exit": 0,
+    "tests": [
+      {
+        "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_strategy_restart_barrier.py",
+        "exit": 1,
+        "result_tail": "er\nFAILED tests/refactoring/test_strategy_restart_barrier.py::test_pause_resume_and_halt_cannot_clear_the_restart_barrier\nFAILED tests/refactoring/test_strategy_restart_barrier.py::test_predicate_requires_an_open_owned_paper_ledger\n9 failed, 2 passed in 0.33s\n"
+      },
+      {
+        "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_strategy_restart_barrier.py",
+        "exit": 1,
+        "result_tail": "_restart_barrier.py::test_registration_only_reopen_and_a_different_strategy_are_not_fenced\nFAILED tests/refactoring/test_strategy_restart_barrier.py::test_action_only_evidence_fences_all_config_versions_and_new_config_cannot_bypass\n2 failed, 9 passed in 0.33s\n"
+      },
+      {
+        "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_strategy_restart_barrier.py",
+        "exit": 0,
+        "result_tail": "...........                                                              [100%]\n11 passed in 0.28s\n"
+      },
+      {
+        "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_strategy_restart_barrier.py tests/refactoring/test_strategy_runtime.py tests/refactoring/test_portfolio_ledger.py tests/refactoring/test_paper_execution.py",
+        "exit": 1,
+        "result_tail": "actoring/test_strategy_runtime.py::test_shared_engine_replay_phase_and_backfill_never_match_claim_or_build_actions\nFAILED tests/refactoring/test_strategy_runtime.py::test_replay_callback_fault_does_not_cancel_existing_paper_orders\n2 failed, 61 passed in 0.55s\n"
+      },
+      {
+        "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_strategy_restart_barrier.py tests/refactoring/test_strategy_runtime.py tests/refactoring/test_portfolio_ledger.py tests/refactoring/test_paper_execution.py",
+        "exit": 1,
+        "result_tail": "actoring/test_strategy_runtime.py::test_shared_engine_replay_phase_and_backfill_never_match_claim_or_build_actions\nFAILED tests/refactoring/test_strategy_runtime.py::test_replay_callback_fault_does_not_cancel_existing_paper_orders\n2 failed, 61 passed in 0.62s\n"
+      },
+      {
+        "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_strategy_restart_barrier.py tests/refactoring/test_strategy_runtime.py tests/refactoring/test_portfolio_ledger.py tests/refactoring/test_paper_execution.py",
+        "exit": 0,
+        "result_tail": "...............................................................          [100%]\n63 passed in 0.53s\n"
+      },
+      {
+        "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_strategy_restart_barrier.py tests/refactoring/test_strategy_runtime.py tests/refactoring/test_portfolio_ledger.py tests/refactoring/test_paper_execution.py",
+        "exit": 0,
+        "result_tail": "...............................................................          [100%]\n63 passed in 0.54s\n"
+      }
+    ]
+  },
+  {
+    "run": "repair1",
+    "model": "opencode/deepseek-v4.1-flash-free",
+    "process_exit": 0,
+    "tests": [
+      {
+        "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_strategy_restart_barrier.py tests/refactoring/test_strategy_runtime.py tests/refactoring/test_portfolio_ledger.py tests/refactoring/test_paper_execution.py docs/tickets/VN07A-reviewer-counterexamples.py",
+        "exit": 0,
+        "result_tail": "...................................................................      [100%]\n67 passed in 0.67s\n"
+      }
+    ]
+  }
+]

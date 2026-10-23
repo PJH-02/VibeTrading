@@ -1,0 +1,51 @@
+{
+  "decision": "PASS",
+  "ticket": "VN07A",
+  "parent": "VN07",
+  "parent_complete": false,
+  "source_sha": "60d763209134527e289d3760ec55be9ea9ec6b37",
+  "base_sha": "a67c591eb93e564a116b03d3bcf3e3fba00c2d57",
+  "product_paths": [
+    "src/vibetrading/portfolio_ledger.py",
+    "src/vibetrading/strategy_runtime.py"
+  ],
+  "product_sha256": {
+    "src/vibetrading/portfolio_ledger.py": "e6ad1974ebba8d7b9cf9a0bcaa5c57fe220cdcbe8ed678629751759e5767fbb3",
+    "src/vibetrading/strategy_runtime.py": "39582c8d43a0e3ef6f645d7d3e82913d61d56bb61c0b0bc0b6f2b9c4333dcdf1"
+  },
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "repair_delegations": 1,
+  "independent_scoped": {
+    "passed": 67,
+    "exit": 0,
+    "includes_independent_counterexamples": 4
+  },
+  "full_regression": {
+    "passed": 1972,
+    "product_passed": 1803,
+    "tooling_passed": 169,
+    "live_data_deselected": 2,
+    "product_exit": 0,
+    "tooling_exit": 0,
+    "source_mutations_during_tests": []
+  },
+  "test_provenance": "Tracked working-file manifest pinned for both profiles; product files match source_sha. Canonical metadata was the in-flight VN07A dispatch version and receives a separate final validation. Scoped tests overlap full suite; four reviewer counterexamples are additional.",
+  "scope": "Read-only existing receipt evidence + sticky Paper restart barrier; operator cancel and replay warmup preserved. No new strategy-state store or exchange implementation.",
+  "remaining": [
+    "Strategy/plugin internal-state checkpoint and verified restore",
+    "Binding restored strategy state to market input/Paper journal recovery boundary",
+    "Proven selected-runtime staged recovery/readiness; no multi-SQLite atomicity claim"
+  ],
+  "parent_status": "PARTIAL_MARKET_ORDER_AND_JOURNAL_LIFECYCLE_COMPLETE_STRATEGY_OPEN",
+  "production_gate": "BLOCKED",
+  "baseline_diff_check_exit": 0,
+  "new_diff_diagnostics": 0,
+  "existing_tests_and_goldens_changed": false,
+  "exchange_and_cloud_implementation_changed": false,
+  "live_mutations": 0,
+  "data_deletions": 0,
+  "initial_worker_acceptance": "FAIL: independent65 PASS/2 FAIL; repaired before acceptance",
+  "original_preservation_manifest": "/tmp/vt-vn07a-original-preservation.json"
+}

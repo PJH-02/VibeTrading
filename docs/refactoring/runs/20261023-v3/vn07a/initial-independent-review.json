@@ -1,0 +1,31 @@
+{
+  "decision": "FAIL",
+  "reason": "Permission-label restart bypass and operator halt cancellation regression",
+  "test_result": {
+    "label": "initial",
+    "baseline": false,
+    "exit_code": 1,
+    "elapsed_seconds": 0.742018097997061,
+    "base": "/tmp/vt-vn07a-initial-czp5cshk",
+    "argv": [
+      "python3",
+      "-m",
+      "pytest",
+      "-p",
+      "pytest_asyncio.plugin",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--basetemp",
+      "/tmp/pytest",
+      "--junitxml",
+      "/tmp/junit.xml",
+      "tests/refactoring/test_strategy_restart_barrier.py",
+      "tests/refactoring/test_strategy_runtime.py",
+      "tests/refactoring/test_portfolio_ledger.py",
+      "tests/refactoring/test_paper_execution.py",
+      "docs/tickets/VN07A-reviewer-counterexamples.py"
+    ],
+    "stdout_tail": ".................................................................FF      [100%]\n=================================== FAILURES ===================================\n___________ test_permission_block_must_not_mask_sticky_restart_fence ___________\n\ntmp_path = PosixPath('/tmp/pytest/test_permission_block_must_not0')\n\n    def test_permission_block_must_not_mask_sticky_restart_fence(tmp_path):\n        now, observed = [T], []\n        ledger = ledger_at(tmp_path)\n        try:\n            ledger.seed_balance(\"USDT\", Decimal(100000), {\"source\": \"synthetic\"})\n            ledger.claim_strategy_event(\"one\", \"config-1\", \"before-crash\", {\"proof\": \"callback-started\"})\n            blocked = runtime(ledger, matcher_for(ledger), now)\n            blocked.register(registration(ledger, \"one\", observed, builder=lambda *args: [], permission=False))\n            for _ in range(2):\n                blocked.pause(\"one\", T+1)\n                try:\n                    blocked.resume(\"one\")\n                except ValueError:\n                    pass\n                blocked.halt(\"operator-stop\", T+1, \"one\")\n            blocked.pause(\"one\", T+1)\n            try:\n                blocked.resume(\"one\")\n            except ValueError:\n                pass\n            deliver(blocked, now, book(T+2, sequence=2))\n>           assert len(observed) == 0, \"permission label hid the required restart fence\"\nE           AssertionError: permission label hid the required restart fence\nE           assert 1 == 0\nE            +  where 1 = len([('one', DecisionSnapshot(engine_incarnation='4b0c36fb0a794d19bfd78b42c8f7930a', apply_seq=1, now_ns=18000000000000000...st=None, raw_payload=None)}), index_quotes=mappingproxy({}), bars=mappingproxy({}), history_quality=mappingproxy({})))])\n\ndocs/tickets/VN07A-reviewer-counterexamples.py:68: AssertionError\n______ test_operator_halt_still_requests_cancel_for_restored_owned_order _______\n\ntmp_path = PosixPath('/tmp/pytest/test_operator_halt_still_reque0')\n\n    def test_operator_halt_still_requests_cancel_for_restored_owned_order(tmp_path):\n        now, observed = [T], []\n        ledger = ledger_at(tmp_path)\n        try:\n            ledger.seed_balance(\"USDT\", Decimal(100000), {\"source\": \"synthetic\"})\n            original = runtime(ledger, matcher_for(ledger), now)\n            original.register(registration(ledger, \"one\", observed))\n            deliver(original, now, book())\n            matcher = matcher_for(ledger)\n            blocked = runtime(ledger, matcher, now)\n            blocked.register(registration(ledger, \"one\", observed))\n            identity = next(iter(matcher.report()[\"open_orders\"]))\n            assert matcher.report()[\"open_orders\"][identity][\"cancel_ns\"] is None\n            blocked.halt(\"operator-stop\", T+1, \"one\")\n>           assert matcher.report()[\"open_orders\"][identity][\"cancel_ns\"] is not None\nE           assert None is not None\n\ndocs/tickets/VN07A-reviewer-counterexamples.py:87: AssertionError\n=========================== short test summary info ============================\nFAILED docs/tickets/VN07A-reviewer-counterexamples.py::test_permission_block_must_not_mask_sticky_restart_fence\nFAILED docs/tickets/VN07A-reviewer-counterexamples.py::test_operator_halt_still_requests_cancel_for_restored_owned_order\n2 failed, 65 passed in 0.53s\n"
+  }
+}
