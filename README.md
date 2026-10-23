@@ -117,6 +117,6 @@ python scripts/run_backtest.py --help
 python -m vibetrading.liquidity_mm --help
 ```
 
-CLI 모듈은 [vibetrading/cli.py](vibetrading/cli.py)입니다. 백테스트·MM 실행 절차는
+CLI 모듈은 [src/vibetrading/cli.py](src/vibetrading/cli.py)입니다. 백테스트·MM 실행 절차는
 각각 [재현·실행 절차](docs/mm_state/BACKTEST_PROTOCOL.md)와
 [MM 구현·운영 명세](docs/LIQUIDITY_MM_BYBIT_TESTNET.md) 문서의 조건부 절차를 따릅니다.

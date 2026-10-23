@@ -64,15 +64,15 @@ R00 저장소 인벤토리는 이미 존재하고 수락되었습니다: [repo_i
 
 | 소유 그룹 | 실제 소스 경로 |
 | --- | --- |
-| collector | `vibetrading/local_pipeline.py`, `vibetrading/local_runtime.py`의 `run_collector` |
-| spool | `vibetrading/market_spool.py` |
-| transport | `vibetrading/local_transport.py` |
-| engine | `vibetrading/local_engine.py`, `vibetrading/hot_path.py` |
-| recovery_checkpoint | `vibetrading/feed_recovery.py`, `vibetrading/market_checkpoint.py`, `vibetrading/local_runtime.py`의 `replay_checkpoint_startup` |
-| storage | `vibetrading/local_storage.py`, `vibetrading/local_events.py`, `vibetrading/local_snapshot.py` |
-| account_order_ledger | `vibetrading/portfolio_ledger.py`, `vibetrading/execution_owner.py`, `vibetrading/paper_execution.py` (**부분 구현**; 입증된 시장 데이터 전용(market-only) 복구와 별개 트랙입니다) |
-| etf | `vibetrading/etf_trading.py`, `vibetrading/etf_journal.py` |
-| research | `strategy/`, `strategies/`, `services/signal_gen/`, `vibetrading/fv_mm/legacy/` |
+| collector | `src/vibetrading/local_pipeline.py`, `src/vibetrading/local_runtime.py`의 `run_collector` |
+| spool | `src/vibetrading/market_spool.py` |
+| transport | `src/vibetrading/local_transport.py` |
+| engine | `src/vibetrading/local_engine.py`, `src/vibetrading/hot_path.py` |
+| recovery_checkpoint | `src/vibetrading/feed_recovery.py`, `src/vibetrading/market_checkpoint.py`, `src/vibetrading/local_runtime.py`의 `replay_checkpoint_startup` |
+| storage | `src/vibetrading/local_storage.py`, `src/vibetrading/local_events.py`, `src/vibetrading/local_snapshot.py` |
+| account_order_ledger | `src/vibetrading/portfolio_ledger.py`, `src/vibetrading/execution_owner.py`, `src/vibetrading/paper_execution.py` (**부분 구현**; 입증된 시장 데이터 전용(market-only) 복구와 별개 트랙입니다) |
+| etf | `src/vibetrading/etf_trading.py`, `src/vibetrading/etf_journal.py` |
+| research | `strategy/`, `strategies/`, `services/signal_gen/`, `src/vibetrading/fv_mm/legacy/` |
 
 경계 표기: market-only 복구는 입증되었으나 계정·전략 복구(account_order_ledger 등)는 **불완전**하며,
 여기서 전체 Paper/Live 준비를 추론할 수 없습니다. research 그룹 내 소유자들은 서로 다른 트랙이고

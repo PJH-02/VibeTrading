@@ -475,13 +475,40 @@ def _verify_snapshot_pins(work, packet):
 
 
 def _ticket_text(packet):
+    read_paths = list(packet["read_paths"])
+    prioritized_reads = read_paths[:5]
+    remaining_reads = max(0, len(read_paths) - len(prioritized_reads))
+    prerequisites = list(packet["prerequisites"])
+    contracts = list(packet["contract_ids"])
+    forbidden_paths = list(packet["forbidden_paths"])
+
     lines = [
         f"# Bounded task {packet['task_id']}",
         "",
         packet["objective"],
         "",
-        "Read paths:",
-        *[f"- {item}" for item in packet["read_paths"]],
+        f"Base SHA: {packet['base_sha']}",
+        "Prerequisites: " + (", ".join(prerequisites) or "(none)"),
+        f"Model: {packet['model']}",
+        f"Provider: {packet['provider']}",
+        f"Profile: {packet['profile']}",
+        f"Review severity: {packet['review_severity']}",
+        "",
+        "Contracts:",
+        *[f"- {item}" for item in contracts],
+        "",
+        "Forbidden paths:",
+        *[f"- {item}" for item in forbidden_paths],
+        "",
+        "Read paths (first five prioritized; later entries are read-only dependency files):",
+        *[f"- {item}" for item in prioritized_reads],
+    ]
+    if remaining_reads:
+        lines.append(
+            f"- ... {remaining_reads} additional read-only dependency files not "
+            "listed in this bounded header"
+        )
+    lines += [
         "",
         "Edit paths:",
         *[f"- {item}" for item in packet["edit_paths"]],

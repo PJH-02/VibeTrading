@@ -143,7 +143,7 @@ services:
     env_file: ["${VIBETRADING_APP_ENV_FILE:-.env}", "${VIBETRADING_APP_RELEASE_ENV_FILE:-deploy/app-release.env}"]
     command: ["python", "main.py", "telegram"]
     environment: {NATS_URL: "nats://nats:4222", VIBETRADING_DATA_ROOT: /data, VIBETRADING_LOG_DIR: /tmp/logs, ARCHIVE_WORKER_ENABLED: "true"}
-    volumes: ["${VIBETRADING_HOST_DATA_ROOT:?set in compose.env}:/data", "./vibetrading/telegram.py:/app/vibetrading/telegram.py:ro"]
+    volumes: ["${VIBETRADING_HOST_DATA_ROOT:?set in compose.env}:/data", "./src/vibetrading/telegram.py:/app/src/vibetrading/telegram.py:ro"]
     depends_on: {}
     mem_limit: 256m
     restart: unless-stopped

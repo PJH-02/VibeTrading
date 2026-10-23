@@ -1,0 +1,321 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "migrate",
+  "worker_process": {
+    "exit_code": 0,
+    "elapsed_seconds": 396.61109013599344,
+    "relay_http_statuses": [],
+    "served_models": [],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-r03c1-initial-93549081",
+  "usage_reported": [
+    {
+      "total": 4436,
+      "input": 2297,
+      "output": 82,
+      "reasoning": 9,
+      "cache": {
+        "write": 0,
+        "read": 2048
+      }
+    },
+    {
+      "total": 33005,
+      "input": 28611,
+      "output": 138,
+      "reasoning": 32,
+      "cache": {
+        "write": 0,
+        "read": 4224
+      }
+    },
+    {
+      "total": 53820,
+      "input": 20910,
+      "output": 90,
+      "reasoning": 52,
+      "cache": {
+        "write": 0,
+        "read": 32768
+      }
+    },
+    {
+      "total": 76070,
+      "input": 22361,
+      "output": 45,
+      "reasoning": 32,
+      "cache": {
+        "write": 0,
+        "read": 53632
+      }
+    },
+    {
+      "total": 100923,
+      "input": 5269,
+      "output": 213,
+      "reasoning": 19537,
+      "cache": {
+        "write": 0,
+        "read": 75904
+      }
+    },
+    {
+      "total": 102724,
+      "input": 19786,
+      "output": 1729,
+      "reasoning": 57,
+      "cache": {
+        "write": 0,
+        "read": 81152
+      }
+    },
+    {
+      "total": 103166,
+      "input": 1875,
+      "output": 418,
+      "reasoning": 9,
+      "cache": {
+        "write": 0,
+        "read": 100864
+      }
+    },
+    {
+      "total": 104090,
+      "input": 525,
+      "output": 898,
+      "reasoning": 11,
+      "cache": {
+        "write": 0,
+        "read": 102656
+      }
+    },
+    {
+      "total": 104189,
+      "input": 937,
+      "output": 55,
+      "reasoning": 29,
+      "cache": {
+        "write": 0,
+        "read": 103168
+      }
+    },
+    {
+      "total": 104370,
+      "input": 224,
+      "output": 78,
+      "reasoning": 4,
+      "cache": {
+        "write": 0,
+        "read": 104064
+      }
+    },
+    {
+      "total": 106850,
+      "input": 2382,
+      "output": 268,
+      "reasoning": 8,
+      "cache": {
+        "write": 0,
+        "read": 104192
+      }
+    },
+    {
+      "total": 107057,
+      "input": 369,
+      "output": 192,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 106496
+      }
+    },
+    {
+      "total": 107443,
+      "input": 321,
+      "output": 370,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 106752
+      }
+    },
+    {
+      "total": 107822,
+      "input": 451,
+      "output": 325,
+      "reasoning": 38,
+      "cache": {
+        "write": 0,
+        "read": 107008
+      }
+    },
+    {
+      "total": 108000,
+      "input": 445,
+      "output": 163,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 107392
+      }
+    },
+    {
+      "total": 108104,
+      "input": 240,
+      "output": 78,
+      "reasoning": 10,
+      "cache": {
+        "write": 0,
+        "read": 107776
+      }
+    },
+    {
+      "total": 109484,
+      "input": 1223,
+      "output": 293,
+      "reasoning": 64,
+      "cache": {
+        "write": 0,
+        "read": 107904
+      }
+    },
+    {
+      "total": 110568,
+      "input": 443,
+      "output": 807,
+      "reasoning": 262,
+      "cache": {
+        "write": 0,
+        "read": 109056
+      }
+    },
+    {
+      "total": 111085,
+      "input": 1143,
+      "output": 442,
+      "reasoning": 60,
+      "cache": {
+        "write": 0,
+        "read": 109440
+      }
+    },
+    {
+      "total": 111751,
+      "input": 636,
+      "output": 640,
+      "reasoning": 11,
+      "cache": {
+        "write": 0,
+        "read": 110464
+      }
+    },
+    {
+      "total": 114207,
+      "input": 790,
+      "output": 2246,
+      "reasoning": 195,
+      "cache": {
+        "write": 0,
+        "read": 110976
+      }
+    },
+    {
+      "total": 115765,
+      "input": 2478,
+      "output": 548,
+      "reasoning": 995,
+      "cache": {
+        "write": 0,
+        "read": 111744
+      }
+    },
+    {
+      "total": 115909,
+      "input": 1604,
+      "output": 105,
+      "reasoning": 24,
+      "cache": {
+        "write": 0,
+        "read": 114176
+      }
+    },
+    {
+      "total": 117058,
+      "input": 1120,
+      "output": 167,
+      "reasoning": 59,
+      "cache": {
+        "write": 0,
+        "read": 115712
+      }
+    },
+    {
+      "total": 117181,
+      "input": 337,
+      "output": 105,
+      "reasoning": 3,
+      "cache": {
+        "write": 0,
+        "read": 116736
+      }
+    },
+    {
+      "total": 119728,
+      "input": 224,
+      "output": 195,
+      "reasoning": 2317,
+      "cache": {
+        "write": 0,
+        "read": 116992
+      }
+    },
+    {
+      "total": 119843,
+      "input": 2623,
+      "output": 78,
+      "reasoning": 22,
+      "cache": {
+        "write": 0,
+        "read": 117120
+      }
+    },
+    {
+      "total": 122802,
+      "input": 2378,
+      "output": 105,
+      "reasoning": 639,
+      "cache": {
+        "write": 0,
+        "read": 119680
+      }
+    },
+    {
+      "total": 125000,
+      "input": 853,
+      "output": 375,
+      "reasoning": 1788,
+      "cache": {
+        "write": 0,
+        "read": 121984
+      }
+    }
+  ],
+  "base_sha": "04e4d57ff8ad375c3f79ff3f05f644bd40de0569",
+  "scope": [
+    "scripts/dev/agent_task.py",
+    "scripts/dev/agent_run.py",
+    "tests/refactoring/test_agent_task.py",
+    "tests/refactoring/test_agent_run.py"
+  ],
+  "output_sha256": {
+    "scripts/dev/agent_task.py": "1fd36cb6abf4a790d2ad1195a6b24aa74b7c4e35aea670c4966969cfffce674c",
+    "scripts/dev/agent_run.py": "09c37384d807f3766b827a9c76c6d4670a41b37f592e3a45cb36db2a55f231b0",
+    "tests/refactoring/test_agent_task.py": "203668825347ecb7f8fac1b5c37871f2f858c82f5694b55cd5856956052529e0",
+    "tests/refactoring/test_agent_run.py": "e1b567a584b35a60a612e98d194055f35bc229b9cc4dfba42f9bd00e095d9128"
+  },
+  "automatic_acceptance": false
+}

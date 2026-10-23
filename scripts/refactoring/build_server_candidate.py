@@ -16,13 +16,45 @@ import subprocess
 
 
 ROOT=Path(__file__).resolve().parents[2]
+PACKAGE='vibetrading'
 
 
-def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
+def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest() if path is not None and path.is_file() else None
 
 
 def product(relative):
-    return relative.as_posix()=='main.py' or relative.parts[0] in {'vibetrading','strategies'}
+    parts = relative.parts
+    return relative.as_posix()=='main.py' or (bool(parts) and parts[0] in {'vibetrading','strategies'})
+
+
+def package_layout(base):
+    flat_root, src_root = base/PACKAGE, base/'src'/PACKAGE
+    if flat_root.is_symlink() or src_root.is_symlink() or (base/'src').is_symlink():
+        raise ValueError('package source root symlink rejected')
+    flat, src = flat_root.is_dir(), src_root.is_dir()
+    if flat and src:
+        raise ValueError('ambiguous source roots: both vibetrading and src/vibetrading exist')
+    if not flat and not src:
+        raise ValueError('package source root missing')
+    return 'src' if src else 'flat'
+
+
+def logical(relative, layout):
+    parts = relative.parts
+    if layout=='src' and len(parts) >= 3 and parts[0]=='src' and parts[1]==PACKAGE:
+        return Path(PACKAGE,*parts[2:])
+    return relative
+
+
+def product_entries(base, layout):
+    entries = {}
+    for path in base.rglob('*.py'):
+        relative = path.relative_to(base)
+        if '__pycache__' in relative.parts:continue
+        name = logical(relative,layout)
+        if not product(name):continue
+        entries[name.as_posix()] = path
+    return entries
 
 
 def copy_file(source,target):
@@ -31,34 +63,59 @@ def copy_file(source,target):
     shutil.copy2(source,target)
 
 
+def unsafe_delta(name):
+    relative = Path(name)
+    return (relative.is_absolute() or '..' in relative.parts
+            or not product(relative) or relative.suffix != '.py')
+
+
+def normalize_delta(name):
+    relative = Path(name)
+    parts = relative.parts
+    if len(parts) >= 3 and parts[0] == 'src' and parts[1] == PACKAGE:
+        relative = Path(PACKAGE, *parts[2:])
+    if unsafe_delta(relative):
+        raise ValueError('unsafe or non-product delta path')
+    return relative.as_posix()
+
+
+def normalize_deltas(delta_paths):
+    if delta_paths is None:
+        return None
+    return {normalize_delta(name) for name in delta_paths}
+
+
 def build(server,local,output,delta_paths=None,*,baseline):
     for path in (server,local,baseline):
         if not path.is_relative_to(ROOT/'tmp/refactoring') or not path.is_dir() or (path/'.env').exists():
             raise ValueError('use a credential-free source export under tmp/refactoring')
     if not output.is_relative_to(ROOT/'tmp/refactoring') or output.exists():
         raise ValueError('output must be a new candidate under tmp/refactoring')
+    delta_paths = normalize_deltas(delta_paths)
+    server_layout,local_layout,baseline_layout=(package_layout(path) for path in (server,local,baseline))
     output.mkdir(parents=True)
     for path in local.rglob('*'):
         if not path.is_file():continue
         relative=path.relative_to(local)
-        if (product(relative) or '__pycache__' in relative.parts or path.name=='sitecustomize.py'
+        if (product(logical(relative,local_layout)) or '__pycache__' in relative.parts or path.name=='sitecustomize.py'
                 or path.name.startswith('.env')):continue
         copy_file(path,output/relative)
+    server_entries=product_entries(server,server_layout)
+    if not server_entries:raise ValueError('server product export is empty')
     server_paths={}
-    for path in server.rglob('*.py'):
-        relative=path.relative_to(server)
-        if not product(relative) or '__pycache__' in relative.parts:continue
-        copy_file(path,output/relative)
-        server_paths[relative.as_posix()]=digest(path)
-    if not server_paths:raise ValueError('server product export is empty')
+    for name,path in server_entries.items():
+        copy_file(path,output/name)
+        server_paths[name]=digest(path)
+    baseline_entries=product_entries(baseline,baseline_layout)
+    local_entries=product_entries(local,local_layout)
     changes={}
-    for path in local.rglob('*.py'):
-        relative=path.relative_to(local)
-        if not product(relative) or '__pycache__' in relative.parts:continue
-        if delta_paths is not None and relative.as_posix() not in delta_paths:continue
-        before=baseline/relative
-        observed=server/relative
-        target=output/relative
+    for name in sorted(local_entries):
+        if delta_paths is not None and name not in delta_paths:continue
+        path=local_entries[name]
+        relative=Path(name)
+        before=baseline_entries.get(name)
+        observed=server_entries.get(name)
+        target=output/name
         base_sha,server_sha,local_sha=digest(before),digest(observed),digest(path)
         if base_sha==local_sha:continue # The server version wins unchanged.
         entry={'baseline_sha256':base_sha,'server_preimage_sha256':server_sha,'local_delta_sha256':local_sha}
@@ -110,13 +167,12 @@ def main():
     args=parser.parse_args()
     report=args.report.resolve()
     if not report.is_relative_to(ROOT/'docs/refactoring'):raise ValueError('report must stay under docs/refactoring')
-    selected=set(args.delta_path) if args.delta_path is not None else None
+    selected=normalize_deltas(args.delta_path)
     if selected is not None:
+        local=args.local_source.resolve()
+        entries=product_entries(local,package_layout(local))
         for name in selected:
-            relative=Path(name)
-            if relative.is_absolute() or '..' in relative.parts or not product(relative) or relative.suffix!='.py':
-                raise ValueError('unsafe or non-product delta path')
-            if not (args.local_source/relative).is_file():raise ValueError('selected delta is absent')
+            if name not in entries:raise ValueError('selected delta is absent')
     result=build(args.server_source.resolve(),args.local_source.resolve(),args.output.resolve(),selected,
                  baseline=args.baseline_source.resolve())
     report.parent.mkdir(parents=True,exist_ok=True)

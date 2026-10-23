@@ -8,15 +8,32 @@ import json
 from pathlib import Path
 
 
+PACKAGE = "vibetrading"
+
+
+def source_package(root: Path) -> Path:
+    flat, src = root/PACKAGE, root/"src"/PACKAGE
+    if flat.is_symlink() or src.is_symlink() or (root/"src").is_symlink():
+        raise ValueError("package source root symlink rejected")
+    if flat.is_dir() and src.is_dir():
+        raise ValueError("ambiguous package source roots: vibetrading and src/vibetrading both exist")
+    if src.is_dir():
+        return src
+    if flat.is_dir():
+        return flat
+    raise FileNotFoundError("package source root missing")
+
+
 def build(root: Path, snapshot: dict) -> dict:
     baseline = json.loads((root/"docs/refactoring/baseline_manifest.json").read_text(encoding="utf-8"))
     before = baseline["files"]
+    package = source_package(root)
     sources = {}
     changed = {}
-    for path in sorted((root/"vibetrading").rglob("*.py")):
+    for path in sorted(package.rglob("*.py")):
         if "__pycache__" in path.parts:
             continue
-        name = path.relative_to(root).as_posix()
+        name = (Path(PACKAGE)/path.relative_to(package)).as_posix()
         digest = hashlib.sha256(path.read_bytes()).hexdigest()
         sources[name] = digest
         old = before.get(name)

@@ -208,7 +208,7 @@ JSON parsing,50level L2,16route 공유 feature+4모듈,10Hz quote policy, lifecy
         return h.hexdigest()
     raw={p:dict(expected=exp,actual=digest(src/p)) for p,exp in raw_expected.items()}
     if any(x['actual']!=x['expected'] for x in raw.values()):raise ValueError('Raw input integrity mismatch')
-    source_files=sorted((ROOT/'strategy').glob('*.py'))+sorted((ROOT/'vibetrading/mm_state').glob('*.py'))+sorted((ROOT/'vibetrading/fv_mm').glob('*.py'))+sorted((ROOT/'vibetrading/fv_pilot').glob('*.py'))+sorted((ROOT/'vibetrading/fv_mm/legacy').glob('*.py'))
+    source_files=sorted((ROOT/'strategy').glob('*.py'))+sorted((ROOT/'src/vibetrading/mm_state').glob('*.py'))+sorted((ROOT/'src/vibetrading/fv_mm').glob('*.py'))+sorted((ROOT/'src/vibetrading/fv_pilot').glob('*.py'))+sorted((ROOT/'src/vibetrading/fv_mm/legacy').glob('*.py'))
     source_files += [ROOT/'scripts'/x for x in ('replay_mm_state_revision.py','benchmark_mm_state.py','collect_fv_public.py','collect_fv_mainnet.py','run_fv_pilot.py','run_fv_testnets.py','report_mm_state_revision.py','complete_mm_state_server_review.py','diagnose_mm_state_no_intents.py')]
     source_files += [ROOT/'README.md',ROOT/'config/fv_mm_testnets.json',ROOT/'config/mm_state_latency_scenarios.json',ROOT/'requirements-mm-state-research.txt']
     hashes={p.relative_to(ROOT).as_posix():digest(p) for p in source_files}
