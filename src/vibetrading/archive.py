@@ -1,7 +1,12 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
+from dataclasses import dataclass
+import hashlib
+import inspect
 import json
 import os
+import stat
 import time
 import uuid
 from pathlib import Path
@@ -15,6 +20,279 @@ from .sqlite_store import MaintenanceDeferred, RuntimeStore
 from .maintenance_gate import claim_backup_slot_locked, maintenance_lock
 from .parquet_store import _catalogued_file_sha256
 from .storage_guard import StorageGuard
+
+
+_GC_MAX_ABS = 2**63 - 1
+_GC_MAX_SEGMENTS = 128
+_GC_MAX_RECORDS = 10_000
+_GC_MAX_BYTES = 64 * 1024 * 1024
+_GC_PLAN_MAX_BYTES = 1024 * 1024
+_GC_MAX_COMPACTION_LINKS = 32
+_GC_MAX_EVIDENCE_RECORDS = 500
+_GC_MAX_REMOTE_KEY_BYTES = 4096
+
+
+def _gc_positive(value: Any, name: str, maximum: int = _GC_MAX_ABS) -> int:
+    if type(value) is not int or value <= 0 or value > maximum:
+        raise ValueError(f"{name} must be an explicit positive integer <= {maximum}")
+    return value
+
+
+def _gc_canonical(value: Any) -> bytes:
+    return json.dumps(value, ensure_ascii=False, sort_keys=True,
+                      separators=(",", ":")).encode("utf-8")
+
+
+def _gc_finalize(body: dict[str, Any]) -> dict[str, Any]:
+    """Return a bounded JSON-compatible plan carrying its own SHA-256."""
+    body = dict(body)
+    body.pop("plan_sha256", None)
+    payload = _gc_canonical(body)
+    if len(payload) > _GC_PLAN_MAX_BYTES:
+        body = {
+            "dry_run": True, "deleted": 0, "executable": False,
+            "producer": body.get("producer"),
+            "incarnation": body.get("incarnation"),
+            "eligible": [],
+            "blocked": [{"reason": "plan_document_budget_exceeded"}],
+        }
+        payload = _gc_canonical(body)
+    body["plan_sha256"] = hashlib.sha256(payload).hexdigest()
+    return body
+
+
+def _gc_blocked(producer: Any, proof: Any, reason: str,
+                detail: str | None = None, **extra: Any) -> dict[str, Any]:
+    blocked = {"reason": reason}
+    if detail:
+        blocked["detail"] = str(detail)[:240]
+    body = {
+        "dry_run": True, "deleted": 0, "executable": False,
+        "producer": producer if isinstance(producer, str) else None,
+        "incarnation": getattr(proof, "incarnation", None),
+        "eligible": [], "blocked": [blocked],
+    }
+    body.update(extra)
+    return _gc_finalize(body)
+
+
+def _gc_raw_key_snapshot(remote_keys: Mapping[Any, Any]
+                         ) -> tuple[dict[int, str] | None, str | None, Any]:
+    """Capture bounded string values from a supplied segment-key mapping.
+
+    The item count is limited both by the declared size and by the number of
+    entries actually yielded, so an inconsistent Mapping cannot force an
+    unbounded materialization.
+    """
+    try:
+        declared = len(remote_keys)
+    except Exception:
+        return None, "raw_segment_mapping_invalid", None
+    if type(declared) is not int or declared > _GC_MAX_SEGMENTS:
+        return None, "raw_segment_mapping_too_large", None
+    snapshot: dict[int, str] = {}
+    count = 0
+    try:
+        for segment_id, key in remote_keys.items():
+            count += 1
+            if count > _GC_MAX_SEGMENTS:
+                return None, "raw_segment_mapping_too_large", None
+            if type(segment_id) is not int or not 0 < segment_id <= _GC_MAX_ABS:
+                return None, "raw_segment_id_invalid", segment_id
+            if (not isinstance(key, str) or not key
+                    or len(key) > _GC_MAX_REMOTE_KEY_BYTES):
+                return None, "raw_segment_key_invalid", segment_id
+            snapshot[segment_id] = key
+    except Exception:
+        return None, "raw_segment_mapping_invalid", None
+    return snapshot, None, None
+
+
+def _gc_under(path: Path, root: Path) -> bool:
+    try:
+        path.relative_to(root)
+        return True
+    except ValueError:
+        return False
+
+
+def _gc_non_symlink(path: Path) -> bool:
+    try:
+        return not path.is_symlink()
+    except OSError:
+        return False
+
+
+def _gc_validate_intent_path(intent_path: Any, data_root: Path,
+                             spool_roots: tuple[Path, ...]) -> Path | None:
+    if intent_path is None:
+        return None
+    try:
+        path = Path(intent_path)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("intent_path must be an absolute .json path") from exc
+    if not path.is_absolute() or path.suffix.lower() != ".json":
+        raise ValueError("intent_path must be an absolute .json path")
+    # Reject the final path, its parent and every ancestor if any is a symlink.
+    for candidate in (path, *path.parents):
+        if candidate.is_symlink():
+            raise ValueError("intent_path and its ancestors must not be symlinks")
+    if path.exists():
+        raise ValueError("intent_path already exists; refusing to overwrite evidence")
+    parent = path.parent
+    if not parent.exists() or not parent.is_dir():
+        raise ValueError("intent_path parent directory must already exist")
+    resolved_parent = parent.resolve()
+    for root in (data_root, *spool_roots):
+        if _gc_under(resolved_parent, Path(root).resolve()):
+            raise ValueError("intent_path must be outside data_root and all spools")
+    return path
+
+
+@dataclass(frozen=True)
+class _GcIntentTarget:
+    path: Path
+    parent_device: int
+    parent_inode: int
+    roots: tuple[Path, ...]
+
+
+def _gc_pin_intent_path(intent_path: Any, data_root: Path,
+                        spool_roots: tuple[Path, ...]) -> _GcIntentTarget | None:
+    """Validate the destination and pin its existing evidence-directory identity."""
+    path = _gc_validate_intent_path(intent_path, data_root, spool_roots)
+    if path is None:
+        return None
+    parent = path.parent
+    try:
+        parent_stat = os.stat(parent, follow_symlinks=False)
+    except OSError as exc:
+        raise ValueError("intent_path parent directory changed") from exc
+    if not stat.S_ISDIR(parent_stat.st_mode):
+        raise ValueError("intent_path parent directory must already exist")
+    roots = tuple(Path(root) for root in (data_root, *spool_roots))
+    return _GcIntentTarget(path, parent_stat.st_dev, parent_stat.st_ino, roots)
+
+
+def _gc_publish_intent(target: _GcIntentTarget, payload: bytes,
+                       max_bytes: int) -> None:
+    """Publish a bounded intent without pathname-reuse or overwrite authority.
+
+    The evidence directory is revalidated after all callbacks, then opened once
+    with O_DIRECTORY/O_NOFOLLOW. The existing checkpoint writer only receives a
+    unique owned staging name through the verified directory FD. The final
+    name is created with linkat (no replace), so a competing target wins.
+    """
+    supported = (hasattr(os, "O_DIRECTORY") and hasattr(os, "O_NOFOLLOW")
+                 and hasattr(os, "link") and hasattr(os, "unlink")
+                 and os.open in os.supports_dir_fd
+                 and os.link in os.supports_dir_fd
+                 and os.link in os.supports_follow_symlinks
+                 and os.unlink in os.supports_dir_fd
+                 and Path("/proc/self/fd").is_dir())
+    if not supported:
+        raise RuntimeError("secure intent publication primitives are unavailable")
+
+    path = target.path
+    parent = path.parent
+    for candidate in (path, *path.parents):
+        try:
+            if candidate.is_symlink():
+                raise RuntimeError("intent path ancestry became a symlink")
+        except OSError as exc:
+            raise RuntimeError("intent path ancestry is unreadable") from exc
+    try:
+        parent_stat = os.stat(parent, follow_symlinks=False)
+    except OSError as exc:
+        raise RuntimeError("intent evidence parent changed") from exc
+    if not stat.S_ISDIR(parent_stat.st_mode):
+        raise RuntimeError("intent evidence parent is not a directory")
+    if (parent_stat.st_dev, parent_stat.st_ino) != (target.parent_device,
+                                                    target.parent_inode):
+        raise RuntimeError("intent evidence parent identity changed")
+    resolved_parent = parent.resolve()
+    for root in target.roots:
+        if _gc_under(resolved_parent, Path(root).resolve()):
+            raise RuntimeError("intent path is now inside a protected root")
+    try:
+        os.stat(path, follow_symlinks=False)
+    except FileNotFoundError:
+        pass
+    except OSError as exc:
+        raise RuntimeError("intent destination is unreadable") from exc
+    else:
+        raise RuntimeError("intent destination appeared before publication")
+
+    directory = os.open(parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    staging_name = ".vibetrading-intent-" + uuid.uuid4().hex + ".tmp"
+    try:
+        opened = os.fstat(directory)
+        if not stat.S_ISDIR(opened.st_mode):
+            raise RuntimeError("intent evidence FD is not a directory")
+        if (opened.st_dev, opened.st_ino) != (target.parent_device,
+                                              target.parent_inode):
+            raise RuntimeError("intent evidence FD identity changed")
+        staging_path = Path("/proc/self/fd") / str(directory) / staging_name
+        try:
+            from .market_checkpoint import _write_checkpoint_file
+            _write_checkpoint_file(staging_path, payload, max_bytes)
+            try:
+                os.link(staging_name, path.name, src_dir_fd=directory,
+                        dst_dir_fd=directory, follow_symlinks=False)
+            except FileExistsError as exc:
+                raise RuntimeError(
+                    "intent destination appeared before atomic publication") from exc
+            os.fsync(directory)
+            descriptor = os.open(path.name, os.O_RDONLY | os.O_NOFOLLOW,
+                                 dir_fd=directory)
+            try:
+                actual = bytearray()
+                remaining = max_bytes + 1
+                while remaining > 0:
+                    chunk = os.read(descriptor, min(1024 * 1024, remaining))
+                    if not chunk:
+                        break
+                    actual.extend(chunk)
+                    remaining -= len(chunk)
+            finally:
+                os.close(descriptor)
+            if bytes(actual) != payload:
+                raise RuntimeError("published intent readback mismatch")
+        finally:
+            try:
+                os.unlink(staging_name, dir_fd=directory)
+            except FileNotFoundError:
+                pass
+            os.fsync(directory)
+    finally:
+        os.close(directory)
+
+
+def _gc_manifest_lease_ok(row: Mapping[str, Any], now_ns: int) -> bool:
+    until = row.get("lease_until_ts_ns")
+    owner = row.get("lease_owner")
+    if until is not None:
+        if type(until) is not int:
+            return False
+        if until > now_ns:
+            return False
+    elif owner:
+        # A lease owner without an expiry is uncertain, not expired.
+        return False
+    return True
+
+
+def _gc_hash_file(path: Path) -> tuple[str, int]:
+    digest = hashlib.sha256()
+    size = 0
+    with path.open("rb") as handle:
+        while True:
+            chunk = handle.read(1024 * 1024)
+            if not chunk:
+                break
+            size += len(chunk)
+            digest.update(chunk)
+    return digest.hexdigest(), size
 
 
 class ArchiveMaintenance:
@@ -407,6 +685,595 @@ class ArchiveMaintenance:
             self.store.mark_remote_verified(row['file_id'],key,side,path.stat().st_size,sha)
         except Exception as exc:self.store.mark_upload_error(row['file_id'],str(exc));raise
         finally:self.store.release_lease(row['file_id'],self.owner)
+
+    def plan_spool_gc(self, storage, *, producer, retained_prefix, reader_progress,
+                      required_readers, lease_snapshot, remote_keys, expected_root,
+                      expected_device, now_ns, retention_ns, max_segments, max_records,
+                      max_bytes, dry_run=True, intent_path=None):
+        """Read-only VN09 dry-run plan; never deletes, claims or uploads.
+
+        The method requires the already-open LocalSpoolStorage owner and its
+        exact RuntimeStore. It performs only bounded readback/verification and
+        returns a JSON-compatible proposal whose candidates are empty whenever
+        any proof conjunct is missing or changes.
+        """
+        if type(dry_run) is not bool or dry_run is not True:
+            raise ValueError("spool GC plan requires dry_run exactly True")
+        from .local_storage import LocalSpoolStorage
+        from .market_spool import (RetainedPrefix, SpoolCursor, capture_retained_prefix,
+                                   read_spool_records)
+        if not isinstance(storage, LocalSpoolStorage):
+            raise ValueError("storage must be the open LocalSpoolStorage owner")
+        if not isinstance(retained_prefix, RetainedPrefix):
+            raise ValueError("retained_prefix must be a factory-issued RetainedPrefix")
+        if not isinstance(producer, str) or not producer:
+            raise ValueError("producer identity is required")
+        now_ns = _gc_positive(now_ns, "now_ns")
+        retention_ns = _gc_positive(retention_ns, "retention_ns")
+        max_segments = _gc_positive(max_segments, "max_segments", _GC_MAX_SEGMENTS)
+        max_records = _gc_positive(max_records, "max_records", _GC_MAX_RECORDS)
+        max_bytes = _gc_positive(max_bytes, "max_bytes", _GC_MAX_BYTES)
+        expected_device = _gc_positive(expected_device, "expected_device")
+        if self._store is None or self._store is not storage.store:
+            raise ValueError("planner requires the same existing RuntimeStore as storage")
+        if Path(self.settings.data_root).resolve() != Path(storage.settings.data_root).resolve():
+            raise ValueError("planner and storage data_root differ")
+        try:
+            storage._check()
+        except Exception as exc:
+            return _gc_blocked(producer, retained_prefix, "storage_not_healthy",
+                               type(exc).__name__)
+        items = list(storage.plan.producers)
+        if storage.plan.observation is not None:
+            items.append(storage.plan.observation)
+        matches = [item for item in items if item.producer == producer]
+        if len(matches) != 1:
+            raise ValueError("producer must exactly match one selected source")
+        item = matches[0]
+        if item.incarnation != retained_prefix.incarnation:
+            raise ValueError("selected source incarnation differs from the proof")
+        limits = dict(item.limits.reader_kwargs)
+        for name in ("max_disk_bytes", "max_records", "max_frame_bytes", "max_header_bytes"):
+            _gc_positive(limits.get(name), name)
+        if producer in storage.source_failures:
+            return _gc_blocked(producer, retained_prefix, "selected_source_quarantined")
+
+        data_root = Path(storage.settings.data_root)
+        root = Path(expected_root)
+        if not root.is_absolute():
+            raise ValueError("expected_root must be absolute")
+        for candidate in (root, *root.parents):
+            if not _gc_non_symlink(candidate):
+                raise ValueError("expected_root and its ancestors must not be symlinks")
+        if not _gc_under(Path(os.path.abspath(root)), Path(os.path.abspath(data_root))):
+            raise ValueError("expected_root must be below settings.data_root")
+        if Path(os.path.abspath(root)) != Path(os.path.abspath(item.spool_root)):
+            raise ValueError("expected_root is not the selected spool root")
+        try:
+            root_stat = root.stat()
+        except OSError as exc:
+            return _gc_blocked(producer, retained_prefix, "root_stat_failed",
+                               type(exc).__name__)
+        if not root.is_dir():
+            raise ValueError("expected_root must be a directory")
+        if root_stat.st_dev != expected_device:
+            raise ValueError("expected_device does not match the selected spool root")
+        if type(root_stat.st_ino) is not int or root_stat.st_ino <= 0:
+            return _gc_blocked(producer, retained_prefix, "root_identity_invalid")
+        all_spool_roots = tuple(Path(source.spool_root) for source in items)
+        intent_target = _gc_pin_intent_path(intent_path, data_root,
+                                            all_spool_roots)
+
+        if not isinstance(required_readers, tuple) or not 1 <= len(required_readers) <= 17:
+            raise ValueError("required_readers must be a nonempty bounded tuple")
+        if any(not isinstance(name, str) or not name for name in required_readers):
+            raise ValueError("reader names must be nonempty strings")
+        if len(set(required_readers)) != len(required_readers) or "storage" not in required_readers:
+            raise ValueError("required_readers must be unique and include storage")
+        if not isinstance(reader_progress, Mapping):
+            raise ValueError("reader_progress must be an explicit mapping")
+        if set(reader_progress) != set(required_readers):
+            return _gc_blocked(producer, retained_prefix, "reader_inventory_mismatch")
+        frozen_readers = {}
+        for name in required_readers:
+            cursor = reader_progress.get(name)
+            if (not isinstance(cursor, SpoolCursor)
+                    or cursor.producer != producer
+                    or cursor.incarnation != retained_prefix.incarnation
+                    or type(cursor.sequence) is not int
+                    or not retained_prefix.base_sequence <= cursor.sequence
+                    <= retained_prefix.durable_sequence):
+                return _gc_blocked(producer, retained_prefix, "reader_progress_invalid",
+                                   name)
+            frozen_readers[name] = (cursor.producer, cursor.incarnation, cursor.sequence)
+        try:
+            actual_progress = storage._ledger.progress(producer, retained_prefix.incarnation)
+        except Exception as exc:
+            return _gc_blocked(producer, retained_prefix, "storage_progress_unavailable",
+                               type(exc).__name__)
+        if (actual_progress is None
+                or int(actual_progress["sequence"]) != frozen_readers["storage"][2]
+                or str(actual_progress["incarnation"]) != retained_prefix.incarnation):
+            return _gc_blocked(producer, retained_prefix, "storage_progress_mismatch")
+
+        def call_lease():
+            if lease_snapshot is None or not callable(lease_snapshot):
+                return None, "lease_snapshot_missing"
+            if inspect.iscoroutinefunction(lease_snapshot):
+                return None, "lease_snapshot_async"
+            try:
+                value = lease_snapshot()
+            except Exception as exc:
+                return None, "lease_snapshot_failed:" + type(exc).__name__
+            if inspect.isawaitable(value):
+                close = getattr(value, "close", None)
+                if close is not None:
+                    close()
+                return None, "lease_snapshot_async"
+            if not isinstance(value, (tuple, list)) or len(value) != 2:
+                return None, "lease_snapshot_malformed"
+            generation, leased = value
+            if generation != retained_prefix.generation:
+                return None, "lease_snapshot_generation_mismatch"
+            if not isinstance(leased, (tuple, list)):
+                return None, "lease_snapshot_malformed"
+            normalized = []
+            for segment_id in leased:
+                if type(segment_id) is not int or not 0 < segment_id <= _GC_MAX_ABS:
+                    return None, "lease_snapshot_malformed"
+                normalized.append(segment_id)
+            if len(set(normalized)) != len(normalized):
+                return None, "lease_snapshot_malformed"
+            return tuple(normalized), None
+
+        first_lease, reason = call_lease()
+        if reason is not None:
+            return _gc_blocked(producer, retained_prefix, reason)
+        if set(first_lease).intersection(range(1, retained_prefix.first_retained_segment)):
+            return _gc_blocked(producer, retained_prefix, "candidate_segment_leased")
+
+        try:
+            captured = capture_retained_prefix(
+                root, producer, retained_prefix.incarnation,
+                first_retained_segment=retained_prefix.first_retained_segment,
+                generation=retained_prefix.generation,
+                consumer_cursors=retained_prefix.consumer_cursors,
+                max_disk_bytes=limits["max_disk_bytes"],
+                max_records=limits["max_records"],
+                max_frame_bytes=limits["max_frame_bytes"],
+                max_header_bytes=limits["max_header_bytes"])
+        except Exception as exc:
+            return _gc_blocked(producer, retained_prefix,
+                               "retained_prefix_revalidation_failed",
+                               type(exc).__name__ + ":" + str(exc))
+        if captured.to_bytes() != retained_prefix.to_bytes():
+            return _gc_blocked(producer, retained_prefix, "retained_prefix_changed")
+
+        candidate_ids = list(range(1, retained_prefix.first_retained_segment))
+        if len(candidate_ids) > max_segments:
+            return _gc_blocked(producer, retained_prefix, "segment_budget_exceeded")
+        if retained_prefix.base_sequence > max_records:
+            return _gc_blocked(producer, retained_prefix, "record_budget_exceeded")
+        plan_reserve = min(_GC_PLAN_MAX_BYTES, 16 * 1024 + max_segments * 1024)
+        segments = []
+        local_total = 0
+        for segment_id in candidate_ids:
+            path = root / f"{segment_id:020d}.sealed"
+            if path.is_symlink() or not path.is_file():
+                return _gc_blocked(producer, retained_prefix,
+                                   "prefix_segment_missing", segment_id=segment_id)
+            try:
+                stat = path.stat()
+            except OSError as exc:
+                return _gc_blocked(producer, retained_prefix, "prefix_segment_stat_failed",
+                                   type(exc).__name__, segment_id=segment_id)
+            if stat.st_size <= 0:
+                return _gc_blocked(producer, retained_prefix, "prefix_segment_empty",
+                                   segment_id=segment_id)
+            if stat.st_mtime_ns > now_ns:
+                return _gc_blocked(producer, retained_prefix,
+                                   "segment_timestamp_in_future", segment_id=segment_id)
+            if now_ns - stat.st_mtime_ns < retention_ns:
+                return _gc_blocked(producer, retained_prefix, "retention_not_met",
+                                   segment_id=segment_id)
+            local_total += stat.st_size
+            if local_total + plan_reserve > max_bytes:
+                return _gc_blocked(producer, retained_prefix,
+                                   "read_budget_exceeded_before_hashing",
+                                   segment_id=segment_id)
+            segments.append({
+                "segment_id": segment_id, "path": str(path),
+                "bytes": stat.st_size, "inode": stat.st_ino,
+                "device": stat.st_dev, "mtime_ns": stat.st_mtime_ns,
+            })
+        for segment in segments:
+            try:
+                digest, size = _gc_hash_file(Path(segment["path"]))
+            except OSError as exc:
+                return _gc_blocked(producer, retained_prefix, "prefix_segment_read_failed",
+                                   type(exc).__name__, segment_id=segment["segment_id"])
+            if size != segment["bytes"]:
+                return _gc_blocked(producer, retained_prefix,
+                                   "prefix_segment_changed_during_hash",
+                                   segment_id=segment["segment_id"])
+            segment["sha256"] = digest
+
+        if self._store._conn.in_transaction:
+            return _gc_blocked(producer, retained_prefix, "catalogue_pending_transaction")
+        generation_row = self._store._conn.execute(
+            "SELECT value FROM runtime_metadata WHERE key='collection_generation'").fetchone()
+        if generation_row is None or not str(generation_row[0]):
+            return _gc_blocked(producer, retained_prefix, "collection_generation_missing")
+        catalogue_generation = str(generation_row[0])
+        namespace = f"{self.settings.archive.prefix}/generations/{catalogue_generation}/"
+        if not isinstance(remote_keys, Mapping):
+            raise ValueError("remote_keys must be an explicit segment mapping")
+        raw_snapshot, raw_reason, raw_segment = _gc_raw_key_snapshot(remote_keys)
+        if raw_reason is not None:
+            extra = {} if raw_segment is None else {"segment_id": raw_segment}
+            return _gc_blocked(producer, retained_prefix, raw_reason, **extra)
+        raw_keys = {}
+        for segment_id in candidate_ids:
+            if segment_id not in raw_snapshot:
+                return _gc_blocked(producer, retained_prefix,
+                                   "raw_segment_archive_missing", segment_id=segment_id)
+            key = raw_snapshot[segment_id]
+            if not key.startswith(namespace):
+                return _gc_blocked(producer, retained_prefix,
+                                   "raw_segment_key_namespace", segment_id=segment_id)
+            raw_keys[segment_id] = key
+
+        try:
+            records = []
+            through = SpoolCursor(producer, retained_prefix.incarnation,
+                                  retained_prefix.base_sequence)
+            for record in read_spool_records(
+                    root, producer_id=producer, incarnation=retained_prefix.incarnation,
+                    after=None, through=through, durable_only=True, **limits):
+                if len(records) >= max_records:
+                    return _gc_blocked(producer, retained_prefix, "record_budget_exceeded")
+                records.append(record)
+        except Exception as exc:
+            return _gc_blocked(producer, retained_prefix, "prefix_read_failed",
+                               type(exc).__name__ + ":" + str(exc))
+        if len(records) != retained_prefix.base_sequence:
+            return _gc_blocked(producer, retained_prefix, "prefix_record_count_mismatch")
+        if records and (records[0].cursor.sequence != 1
+                        or records[-1].cursor.sequence != retained_prefix.base_sequence):
+            return _gc_blocked(producer, retained_prefix, "prefix_sequence_mismatch")
+        if any(record.segment_id not in candidate_ids for record in records):
+            return _gc_blocked(producer, retained_prefix, "prefix_record_outside_cut")
+        if sum(record.frame_bytes for record in records) > max_bytes:
+            return _gc_blocked(producer, retained_prefix, "record_byte_budget_exceeded")
+
+        chunks = []
+        chunk, chunk_bytes = [], 0
+        for record in records:
+            if chunk and (len(chunk) >= _GC_MAX_EVIDENCE_RECORDS
+                          or chunk_bytes + len(record.payload) > storage.budgets.batch_bytes):
+                chunks.append(tuple(chunk))
+                chunk, chunk_bytes = [], 0
+            chunk.append(record)
+            chunk_bytes += len(record.payload)
+        if chunk:
+            chunks.append(tuple(chunk))
+        if not chunks:
+            chunks.append(())
+        evidences = []
+        try:
+            for chunk in chunks:
+                evidences.append(storage.spool_gc_evidence(producer, chunk))
+        except Exception as exc:
+            return _gc_blocked(producer, retained_prefix, "storage_evidence_failed",
+                               type(exc).__name__ + ":" + str(exc))
+
+        generations = {(evidence["facts_generation"], evidence["catalogue_generation"])
+                       for evidence in evidences}
+        if len(generations) != 1:
+            return _gc_blocked(producer, retained_prefix, "generation_changed")
+        facts_generation, evidence_catalogue = next(iter(generations))
+        if evidence_catalogue != catalogue_generation:
+            return _gc_blocked(producer, retained_prefix, "catalogue_generation_changed")
+        evidence_progress = evidences[0]["progress"]
+        evidence_count = 0
+        record_hasher = hashlib.sha256()
+        manifest_snapshots = {}
+        for evidence in evidences:
+            if evidence["progress"] != evidence_progress:
+                return _gc_blocked(producer, retained_prefix, "progress_changed")
+            evidence_count += len(evidence["records"])
+            for row in evidence["records"]:
+                record_hasher.update(_gc_canonical(row))
+                record_hasher.update(b"\n")
+                if row["manifest"] is not None:
+                    manifest_snapshots.setdefault(row["manifest"]["file_id"],
+                                                  row["manifest"])
+        if evidence_count != len(records):
+            return _gc_blocked(producer, retained_prefix, "evidence_count_mismatch")
+        record_chain_sha256 = record_hasher.hexdigest()
+
+        def load_manifest(file_id):
+            row = self._store._conn.execute(
+                "SELECT * FROM parquet_manifest WHERE file_id=?", (file_id,)).fetchone()
+            return dict(row) if row is not None else None
+
+        terminals = {}
+        visited_rows = {}
+        for file_id, snapshot in manifest_snapshots.items():
+            fresh = load_manifest(file_id)
+            if fresh is None:
+                return _gc_blocked(producer, retained_prefix, "manifest_missing",
+                                   file_id=file_id)
+            if fresh != snapshot:
+                return _gc_blocked(producer, retained_prefix, "manifest_changed",
+                                   file_id=file_id)
+            current = fresh
+            seen_links = set()
+            links = 0
+            while True:
+                current_id = current.get("file_id")
+                if not isinstance(current_id, str) or not current_id:
+                    return _gc_blocked(producer, retained_prefix, "manifest_identity_invalid")
+                if current_id in seen_links:
+                    return _gc_blocked(producer, retained_prefix, "compaction_cycle")
+                seen_links.add(current_id)
+                visited_rows[current_id] = current
+                if not _gc_manifest_lease_ok(current, now_ns):
+                    return _gc_blocked(producer, retained_prefix,
+                                       "unexpired_or_uncertain_lease", file_id=current_id)
+                successor = current.get("superseded_by")
+                if successor:
+                    if links >= _GC_MAX_COMPACTION_LINKS:
+                        return _gc_blocked(producer, retained_prefix,
+                                           "compaction_chain_too_long")
+                    links += 1
+                    next_row = load_manifest(successor)
+                    if next_row is None:
+                        return _gc_blocked(producer, retained_prefix,
+                                           "compaction_link_missing", file_id=current_id)
+                    try:
+                        compacted_from = json.loads(next_row.get("compacted_from") or "[]")
+                    except (TypeError, ValueError):
+                        compacted_from = None
+                    if (not isinstance(compacted_from, list)
+                            or current_id not in compacted_from):
+                        return _gc_blocked(producer, retained_prefix,
+                                           "compaction_membership_mismatch",
+                                           file_id=current_id)
+                    current = next_row
+                    continue
+                if current.get("lifecycle_state") != "active":
+                    return _gc_blocked(producer, retained_prefix,
+                                       "terminal_manifest_not_active", file_id=current_id)
+                terminals[current_id] = current
+                break
+
+        terminal_sidecars = {}
+        for file_id, terminal in terminals.items():
+            digest = terminal.get("file_sha256")
+            if (not isinstance(digest, str) or len(digest) != 64
+                    or any(char not in "0123456789abcdef" for char in digest)):
+                return _gc_blocked(producer, retained_prefix,
+                                   "terminal_manifest_digest", file_id=file_id)
+            size = terminal.get("byte_size")
+            if type(size) is not int or size <= 0 or size > _GC_MAX_ABS:
+                return _gc_blocked(producer, retained_prefix,
+                                   "terminal_manifest_size", file_id=file_id)
+            rows = terminal.get("rows")
+            if type(rows) is not int or rows < 0:
+                return _gc_blocked(producer, retained_prefix,
+                                   "terminal_manifest_rows", file_id=file_id)
+            if terminal.get("upload_status") != "remote_verified":
+                return _gc_blocked(producer, retained_prefix,
+                                   "terminal_manifest_not_remote_verified", file_id=file_id)
+            remote_key = terminal.get("remote_key")
+            remote_sidecar = terminal.get("remote_manifest_key")
+            if (not isinstance(remote_key, str) or not remote_key
+                    or not isinstance(remote_sidecar, str) or not remote_sidecar):
+                return _gc_blocked(producer, retained_prefix,
+                                   "terminal_remote_key_missing", file_id=file_id)
+            if (not remote_key.startswith(namespace)
+                    or not remote_sidecar.startswith(namespace)):
+                return _gc_blocked(producer, retained_prefix,
+                                   "terminal_remote_key_namespace", file_id=file_id)
+            expected_sidecar = (f"{self.settings.archive.prefix}/generations/"
+                                f"{catalogue_generation}/manifests/{file_id}.json")
+            if remote_sidecar != expected_sidecar:
+                return _gc_blocked(producer, retained_prefix,
+                                   "terminal_sidecar_key_mismatch", file_id=file_id)
+            sidecar = json.dumps({
+                "file_id": terminal["file_id"], "key": remote_key,
+                "bytes": size, "sha256": digest, "rows": rows,
+                "partition": {name: terminal[name] for name in
+                              ("event_type", "trading_date", "provider", "venue")},
+            }, sort_keys=True).encode()
+            terminal_sidecars[file_id] = (
+                sidecar, hashlib.sha256(sidecar).hexdigest())
+
+        remote_bytes = local_total
+        for file_id, terminal in terminals.items():
+            remote_bytes += terminal["byte_size"] + len(terminal_sidecars[file_id][0])
+        if 2 * local_total + remote_bytes + plan_reserve > max_bytes:
+            return _gc_blocked(producer, retained_prefix, "read_budget_exceeded")
+
+        try:
+            backend = self.backend
+            for segment in segments:
+                backend.verify(raw_keys[segment["segment_id"]],
+                               size_bytes=segment["bytes"],
+                               sha256=segment["sha256"])
+            for file_id, terminal in terminals.items():
+                sidecar, sidecar_sha256 = terminal_sidecars[file_id]
+                backend.verify(terminal["remote_key"],
+                               size_bytes=terminal["byte_size"],
+                               sha256=terminal["file_sha256"])
+                backend.verify(terminal["remote_manifest_key"],
+                               size_bytes=len(sidecar), sha256=sidecar_sha256)
+        except Exception as exc:
+            return _gc_blocked(producer, retained_prefix, "remote_verification_failed",
+                               type(exc).__name__ + ":" + str(exc))
+
+        # Final value revalidation after all callbacks/readbacks.
+        if set(reader_progress) != set(required_readers):
+            return _gc_blocked(producer, retained_prefix, "reader_inventory_changed")
+        for name in required_readers:
+            cursor = reader_progress.get(name)
+            if (not isinstance(cursor, SpoolCursor)
+                    or (cursor.producer, cursor.incarnation, cursor.sequence)
+                    != frozen_readers[name]):
+                return _gc_blocked(producer, retained_prefix, "reader_progress_changed",
+                                   name)
+        final_lease, reason = call_lease()
+        if reason is not None:
+            return _gc_blocked(producer, retained_prefix, reason)
+        if final_lease != first_lease:
+            return _gc_blocked(producer, retained_prefix, "lease_snapshot_changed")
+        if set(final_lease).intersection(candidate_ids):
+            return _gc_blocked(producer, retained_prefix, "candidate_segment_leased")
+        try:
+            final_root_stat = root.stat()
+        except OSError as exc:
+            return _gc_blocked(producer, retained_prefix, "root_stat_changed",
+                               type(exc).__name__)
+        if ((final_root_stat.st_dev, final_root_stat.st_ino, final_root_stat.st_mtime_ns)
+                != (root_stat.st_dev, root_stat.st_ino, root_stat.st_mtime_ns)):
+            return _gc_blocked(producer, retained_prefix, "root_identity_changed")
+        try:
+            final_captured = capture_retained_prefix(
+                root, producer, retained_prefix.incarnation,
+                first_retained_segment=retained_prefix.first_retained_segment,
+                generation=retained_prefix.generation,
+                consumer_cursors=retained_prefix.consumer_cursors,
+                max_disk_bytes=limits["max_disk_bytes"],
+                max_records=limits["max_records"],
+                max_frame_bytes=limits["max_frame_bytes"],
+                max_header_bytes=limits["max_header_bytes"])
+        except Exception as exc:
+            return _gc_blocked(producer, retained_prefix, "source_changed",
+                               type(exc).__name__ + ":" + str(exc))
+        if final_captured.to_bytes() != retained_prefix.to_bytes():
+            return _gc_blocked(producer, retained_prefix, "retained_prefix_changed")
+        for segment in segments:
+            path = Path(segment["path"])
+            try:
+                stat = path.stat()
+                digest, size = _gc_hash_file(path)
+            except OSError as exc:
+                return _gc_blocked(producer, retained_prefix, "source_changed",
+                                   type(exc).__name__, segment_id=segment["segment_id"])
+            if ((stat.st_size, stat.st_ino, stat.st_dev, stat.st_mtime_ns, size, digest)
+                    != (segment["bytes"], segment["inode"], segment["device"],
+                        segment["mtime_ns"], segment["bytes"], segment["sha256"])):
+                return _gc_blocked(producer, retained_prefix, "segment_changed",
+                                   segment_id=segment["segment_id"])
+        try:
+            final_evidences = [storage.spool_gc_evidence(producer, chunk)
+                               for chunk in chunks]
+        except Exception as exc:
+            return _gc_blocked(producer, retained_prefix, "storage_evidence_changed",
+                               type(exc).__name__ + ":" + str(exc))
+        for before, after in zip(evidences, final_evidences):
+            if _gc_canonical(before) != _gc_canonical(after):
+                return _gc_blocked(producer, retained_prefix,
+                                   "storage_evidence_changed")
+        for file_id, snapshot in visited_rows.items():
+            if load_manifest(file_id) != snapshot:
+                return _gc_blocked(producer, retained_prefix, "manifest_changed",
+                                   file_id=file_id)
+        if not isinstance(remote_keys, Mapping):
+            return _gc_blocked(producer, retained_prefix,
+                               "raw_segment_mapping_changed")
+        final_raw_snapshot, final_raw_reason, _ = _gc_raw_key_snapshot(remote_keys)
+        if (final_raw_reason is not None
+                or final_raw_snapshot != raw_snapshot):
+            return _gc_blocked(producer, retained_prefix,
+                               "raw_segment_mapping_changed")
+
+        eligible = [{
+            "segment_id": segment["segment_id"], "path": segment["path"],
+            "bytes": segment["bytes"], "sha256": segment["sha256"],
+            "inode": segment["inode"], "device": segment["device"],
+            "mtime_ns": segment["mtime_ns"],
+        } for segment in segments]
+        body = {
+            "dry_run": True, "deleted": 0, "executable": False,
+            "producer": producer,
+            "incarnation": retained_prefix.incarnation,
+            "generation": retained_prefix.generation,
+            "root": {"path": str(root), "device": root_stat.st_dev,
+                     "inode": root_stat.st_ino},
+            "proof": {
+                "sha256": retained_prefix.sha256,
+                "generation": retained_prefix.generation,
+                "checkpoint_sha256": retained_prefix.checkpoint_sha256,
+                "prefix_chain_sha256": retained_prefix.prefix_chain_sha256,
+                "first_retained_segment": retained_prefix.first_retained_segment,
+                "base_sequence": retained_prefix.base_sequence,
+                "durable_sequence": retained_prefix.durable_sequence,
+            },
+            "checkpoint": {"sha256": retained_prefix.checkpoint_sha256,
+                           "durable_sequence": retained_prefix.durable_sequence},
+            "catalogue_generation": catalogue_generation,
+            "facts_generation": facts_generation,
+            "readers": {name: {"producer": frozen_readers[name][0],
+                               "incarnation": frozen_readers[name][1],
+                               "sequence": frozen_readers[name][2]}
+                        for name in required_readers},
+            "evidence": {
+                "record_count": len(records),
+                "record_bytes": sum(record.frame_bytes for record in records),
+                "record_chain_sha256": record_chain_sha256,
+                "segments": [{name: segment[name] for name in
+                              ("segment_id", "path", "bytes", "sha256",
+                               "inode", "device", "mtime_ns")}
+                             for segment in segments],
+                "manifests": [{
+                    "file_id": terminal["file_id"],
+                    "remote_key": terminal["remote_key"],
+                    "remote_manifest_key": terminal["remote_manifest_key"],
+                    "file_sha256": terminal["file_sha256"],
+                    "byte_size": terminal["byte_size"],
+                    "rows": terminal["rows"],
+                } for terminal in terminals.values()],
+            },
+            "raw_archive": {
+                "catalogue_generation": catalogue_generation,
+                "full_readback_verified": True,
+                "segments": [{
+                    "segment_id": segment["segment_id"],
+                    "remote_key": raw_keys[segment["segment_id"]],
+                    "bytes": segment["bytes"],
+                    "sha256": segment["sha256"],
+                } for segment in segments],
+            },
+            "eligible": eligible,
+            "blocked": [],
+        }
+        final_plan = _gc_finalize(body)
+        if intent_target is not None:
+            try:
+                intent_body = dict(body)
+                intent_body.update({
+                    "status": "PROPOSED_DRY_RUN",
+                    "executable": False,
+                    "requires_revalidation": True,
+                    "plan_sha256": final_plan["plan_sha256"],
+                })
+                intent_document = {
+                    "format": "vibetrading-spool-gc-intent",
+                    "version": 1,
+                    "sha256": hashlib.sha256(_gc_canonical(intent_body)).hexdigest(),
+                    "body": intent_body,
+                }
+                payload = _gc_canonical(intent_document)
+                _gc_publish_intent(intent_target, payload, _GC_PLAN_MAX_BYTES)
+            except Exception as exc:
+                return _gc_blocked(producer, retained_prefix,
+                                   "intent_publication_failed",
+                                   type(exc).__name__ + ":" + str(exc),
+                                   catalogue_generation=catalogue_generation,
+                                   facts_generation=facts_generation)
+        return final_plan
 
 
 def archive_check(settings:RuntimeSettings|None=None)->dict[str,Any]:return ArchiveMaintenance(settings).check()
