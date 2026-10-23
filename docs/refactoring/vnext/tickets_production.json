@@ -6070,9 +6070,9 @@
       "contract_ids": [
         "v3 R03"
       ],
-      "receipt": null,
+      "receipt": "docs/refactoring/runs/20261023-v3/r03/acceptance.json",
       "task_id": "R03C",
-      "status": "PLANNED",
+      "status": "VERIFIED",
       "depends_on": [
         "R03B1",
         "R03B2"
@@ -6159,10 +6159,6 @@
           "action": "MODIFY"
         },
         {
-          "path": "tests/refactoring/test_src_deploy_paths.py",
-          "action": "ADD"
-        },
-        {
           "path": "tests/test_crypto_event_retirement.py",
           "action": "MODIFY"
         },
@@ -6180,7 +6176,8 @@
         "release_builders": "BOUNDED_WORKER_C2",
         "literal_path_updates": "DETERMINISTIC_CODEMOD",
         "acceptance": "FULL_LINUX_CLI_DOCKER_COMPOSE_AND_ROLLBACK"
-      }
+      },
+      "source_sha": "8f0726c6ce28ee83800bc904c9f9918f791b03ec"
     }
   ],
   "legacy_task_objects_sha256": "224a13c77fcd505c85d461fa723be008824e6cf119a7ef825949a2aa18c57ce8",

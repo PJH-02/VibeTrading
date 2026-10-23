@@ -1,0 +1,7 @@
+usage: deploy_p02_schema.py [-h] {prepare,stage,apply,resume,rollback}
+
+positional arguments:
+  {prepare,stage,apply,resume,rollback}
+
+options:
+  -h, --help            show this help message and exit

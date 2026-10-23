@@ -1,0 +1,9 @@
+{
+  "archive_sha256": "2069aec14770a9c3bc85c95bfd0a5a559fa1f70ccb8f71ccb42c69b32818832d",
+  "overlay_sha256": "0abce23285632c4b1a1d42f54b314c9e0df868c1172b536f52d3c8af33faa69f",
+  "member_hashes_verified": 139,
+  "review_inputs_retained_in_archive": true,
+  "all_python_members_compile": true,
+  "reprepare_production_release": "NOT_RUN; historical exports/preimage are outside current source and are not reconstructed from candidate",
+  "live_deploy_or_rollback": "NOT_RUN"
+}
