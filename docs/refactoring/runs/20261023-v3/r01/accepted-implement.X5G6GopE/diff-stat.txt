@@ -1,0 +1,6 @@
+ AGENTS.md                            |  22 ++
+ docs/status.md                       |  25 ++
+ docs/tickets/R01-authority-status.md |  41 +---
+ scripts/dev/status.py                | 400 ++++++++++++++++++++++++++++++
+ tests/refactoring/test_dev_status.py | 457 +++++++++++++++++++++++++++++++++++
+ 5 files changed, 917 insertions(+), 28 deletions(-)

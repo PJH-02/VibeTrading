@@ -1,0 +1,94 @@
+{
+  "ticket_id": "R03B1",
+  "status": "ACCEPTED",
+  "decision": "PASS",
+  "accepted_utc": "2026-10-23T00:00:31.082132+00:00",
+  "source_sha": "bf75b1c5d259433fc0aa2d9b43764855837b3f68",
+  "scope": "Only packaging and core Docker src-layout compatibility; parent R03 remains incomplete",
+  "changed_files": [
+    "pyproject.toml",
+    "pytest.ini",
+    "Dockerfile",
+    "Dockerfile.crypto",
+    "tests/refactoring/test_src_packaging.py"
+  ],
+  "source_hashes": {
+    "pyproject.toml": "a29692b6db088dc7858ce45e0f255818c8e466f2e1c32a32fb0ff07de3e6248a",
+    "pytest.ini": "bf14f2d5c5b3a750853a50366a8db1f6a8dcc1ff7daa1d6b6d461b63c29a960d",
+    "Dockerfile": "e84f546de2b16680845ffb7fc476d60e72e6cf8dcdfbcff70b221de10caa8851",
+    "Dockerfile.crypto": "ed4ef4cdb7089a651ff267577c601d9acacc7f3640027785bd669242c13295fa",
+    "tests/refactoring/test_src_packaging.py": "b3f8e6efa91593b35b6369102a64de3c266a4ce10915db9633e2feaab2a70ca3"
+  },
+  "models": [
+    {
+      "provider": "opencode",
+      "model": "opencode/glm-5.3-flash-free",
+      "result": "EXECUTION_TIMEOUT; retained pyproject partial only; actual effective exit124"
+    },
+    {
+      "provider": "opencode",
+      "model": "opencode/mimo-v2.6-flash-free",
+      "result": "Worker exit0 / pytest4 passed; adapter subsequently failed on unchanged .env.example baseline. All actual changed files manually checked against allowlist."
+    },
+    {
+      "provider": "opencode",
+      "model": "opencode/deepseek-v4.1-flash-free",
+      "result": "Second and final repair; debug worker exit0 / final pytest4 passed; copied after scope review through existing isolated bounded coordinator."
+    }
+  ],
+  "repair_delegations": 2,
+  "independent_review": {
+    "owner": "Codex",
+    "severity": "normal packaging",
+    "result": "PASS after stale-flat counterexample repair and removal of silently skipped metadata validation",
+    "extra_critical_model_review": "Not required for this non-product bounded packaging ticket"
+  },
+  "independent_checks": {
+    "focused_pytest": {
+      "passed": 4,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "wheel_build_and_install": "PASS",
+    "editable_install": "PASS",
+    "wheel_contains_all_140_canonical_modules": true,
+    "legacy_namespaces_preserved": [
+      "strategy",
+      "strategies",
+      "shared",
+      "services",
+      "backtest"
+    ],
+    "outside_repository_imports_and_main_module_help": "6 checks PASS in filesystem/PID/network isolated environments using unchanged runtime requirements",
+    "docker_candidate_images_verified": 3,
+    "docker_builds_including_poisoned_legacy_fixture": 4,
+    "docker_runtime_import_and_help_checks": 9,
+    "all_docker_exits": 0,
+    "docker_runtime_uid": 10001,
+    "whole_product_regression": "Not asserted by this subunit; before-src evidence remains historical and parent R03 follow-up gates remain open"
+  },
+  "scope_contract": {
+    "moved_product_modules_byte_changed": [],
+    "requirements_unchanged": true,
+    "rollback_sha256": "41c0de8939767fa7c91d3ff556a61725f6798f15d3aa975d051e3e31e8d3804b",
+    "root_alias_added": false,
+    "product_logic_changes": false,
+    "preexisting_diff_check": "clean",
+    "new_diff_check": "clean",
+    "historical_goldens_edited": false
+  },
+  "remaining_limitations": [
+    "Parent R03 incomplete: R03B2 filesystem anchors and R03C path consumers remain PLANNED, unstarted in this resumed session.",
+    "Existing public adapter baseline-key failure on unchanged .env.example recorded; agent_run/agent_task code not modified by this ticket. Worker exit0 alone was not accepted.",
+    "No operational readiness, real account, performance soak, full-layout regression or production equivalence claim."
+  ],
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-r03b1-final-e7331fb7",
+  "user_scope_control": {
+    "stop_after_ticket": "R03B1",
+    "start_next_ticket": false,
+    "no_other_ticket_started": true
+  },
+  "pushed": false,
+  "deployed": false,
+  "live_mutation": false
+}

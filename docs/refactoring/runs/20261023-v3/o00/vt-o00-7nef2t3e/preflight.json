@@ -1,0 +1,5 @@
+{
+  "exit": 0,
+  "stdout": "{\"/home/pjh/.ssh/id_rsa\": \"FileNotFoundError\", \"/mnt/c/Users/\\ubc15\\uc81c\\ud615/Desktop/VibeTrading/.env\": \"FileNotFoundError\", \"/protected/forbidden.txt\": \"PermissionError\", \"protected_test_write\": \"OSError\"}\n",
+  "stderr": ""
+}

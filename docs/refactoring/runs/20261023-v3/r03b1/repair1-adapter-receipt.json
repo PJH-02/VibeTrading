@@ -1,0 +1,20 @@
+{
+  "status": "FAILURE",
+  "failure_class": "SCOPE_VIOLATION",
+  "failure_message": "snapshot key references a blocked path component: '.env.example'",
+  "run_id": "20261022T234824722684Z-2431f355404f",
+  "task_id": "R03B1",
+  "model": "opencode/mimo-v2.6-flash-free",
+  "provider": "opencode",
+  "route": "opencode",
+  "host_execution_attested": false,
+  "tests": {
+    "status": "NOT_RUN",
+    "results": []
+  },
+  "provenance": "UNTRUSTED_INPUT",
+  "actual_worker_exit": 0,
+  "effective_worker_exit": 0,
+  "private_receipt": "/home/pjh/.local/state/codex-opencode/runs/v3-r03b1-final-e7331fb7/repair1-adapter-receipt.json",
+  "raw_receipt_sha256": "74bf2a76909d51836366f591b8b0e9361186ae89541bc49666c0034045e35eea"
+}

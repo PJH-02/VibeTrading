@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /usr/bin/bwrap --unshare-user --unshare-pid --unshare-net --die-with-parent --new-session --cap-drop ALL --ro-bind / / --proc /proc --dev /dev --bind /tmp /tmp -- /bin/bash "$@"

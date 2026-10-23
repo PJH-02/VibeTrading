@@ -1,0 +1,14 @@
+{
+  "source_sha": "c605c19e79fc635281c6d794dd8a0ba23cb86376",
+  "exit_code": 0,
+  "script_sha256": "4136f1a853544485c9d7f28107717ee1d0336c82b2d319a10f774615f0cbd794",
+  "probe": {
+    "decision": "PASS",
+    "mutation_checks": 28,
+    "canonical_state_and_fair_value_coverage": true,
+    "adapter_only_changes_do_not_replace_implementation_provenance": true,
+    "prior_non_strategy_inputs_preserved": true,
+    "frozen_flat_fallback": true
+  },
+  "isolation": "fresh HOME, source RO, PID/network namespace, only synthetic temporary files"
+}

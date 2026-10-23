@@ -1,0 +1,71 @@
+{
+  "decision": "PASS",
+  "baseline": "124aef4fd1ea55cec9f3e8d2953250786131c9bf",
+  "pure_move_commit": "b3409b17f9cfe863528a6a9cecde7a4aa9aaab4b",
+  "immutable_modules": [
+    {
+      "old": "strategies/example_signal.py",
+      "canonical": "src/vibetrading/strategies/example_signal.py",
+      "byte_identical": true,
+      "sha256": "cfb19db36ed7bd65b3b228548b5c905e43947b340149ba21513a281a1b0fb3da"
+    },
+    {
+      "old": "strategies/turtle_breakout.py",
+      "canonical": "src/vibetrading/strategies/legacy/candle/turtle_breakout.py",
+      "byte_identical": true,
+      "sha256": "0a1afea026d0d732ef58e7820c89ac019c7edaf7fa0d8fe524daae823d361c2c"
+    },
+    {
+      "old": "strategy/s1_net_liquidity.py",
+      "canonical": "src/vibetrading/strategies/research/state/s1_net_liquidity.py",
+      "byte_identical": true,
+      "sha256": "5e1a58de6e03799f780a300c890a64860ca944fb94be85115e99215db8a55b73"
+    },
+    {
+      "old": "src/vibetrading/fv_mm/legacy/s1_net_liquidity.py",
+      "canonical": "src/vibetrading/strategies/legacy/fair_value/s1_net_liquidity.py",
+      "byte_identical": true,
+      "sha256": "e59ec1ec844de3b1ba32652af93846e3c47a6f61607d81c26d46a6be991fda5c"
+    },
+    {
+      "old": "strategy/s2_external_anchor.py",
+      "canonical": "src/vibetrading/strategies/research/state/s2_external_anchor.py",
+      "byte_identical": true,
+      "sha256": "338a28e47f7150a5f60f39e6ac657ff37a4179f363a6e5327bc49712dcd98665"
+    },
+    {
+      "old": "src/vibetrading/fv_mm/legacy/s2_external_anchor.py",
+      "canonical": "src/vibetrading/strategies/legacy/fair_value/s2_external_anchor.py",
+      "byte_identical": true,
+      "sha256": "1222758b1ec9eddd444193eeda365c0238d8d71a0fcb17c029a3d09c12046a4d"
+    },
+    {
+      "old": "strategy/s3_aggressive_flow.py",
+      "canonical": "src/vibetrading/strategies/research/state/s3_aggressive_flow.py",
+      "byte_identical": true,
+      "sha256": "df17df812282194968c9b7363fabcb91a1e888c46a428b54c62174d8deea9695"
+    },
+    {
+      "old": "src/vibetrading/fv_mm/legacy/s3_aggressive_flow.py",
+      "canonical": "src/vibetrading/strategies/legacy/fair_value/s3_aggressive_flow.py",
+      "byte_identical": true,
+      "sha256": "618dd3e316f03c3ba3625e59334fe55e0b5e89a524abb16d9d38e35e832030d9"
+    },
+    {
+      "old": "strategy/s4_obi.py",
+      "canonical": "src/vibetrading/strategies/research/state/s4_obi.py",
+      "byte_identical": true,
+      "sha256": "241bae2c27c71941552eaf9989e1e82af60d29d2956c29562a35a3f0f3121e05"
+    },
+    {
+      "old": "src/vibetrading/fv_mm/legacy/s4_obi.py",
+      "canonical": "src/vibetrading/strategies/legacy/fair_value/s4_obi.py",
+      "byte_identical": true,
+      "sha256": "4cc047191c6de3157cceb2a8079e84c2a0e6ca650f6f281f3f40054933fad294"
+    }
+  ],
+  "retired_adapters": 12,
+  "active_retired_imports": [],
+  "errors": [],
+  "scope": "R04 only; legacy/runtime contract ownership checked separately from unchanged production deployment topology"
+}

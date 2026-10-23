@@ -1,0 +1,17 @@
+[
+  {
+    "counterexample": "missing package source root",
+    "actual": "returned missing path /tmp/r03c2-review-y5klgvry/vibetrading",
+    "expected": "reject incomplete bundle input before generating artifact"
+  },
+  {
+    "counterexample": "safe canonical selected delta rejected",
+    "actual": "unsafe_delta(src/vibetrading/pkg.py) is True",
+    "expected": "normalize to logical vibetrading/pkg.py and accept bounded existing file"
+  },
+  {
+    "counterexample": "symlink package root followed",
+    "actual": "source_package accepted symlink root",
+    "expected": "reject symlink source roots before reading members"
+  }
+]

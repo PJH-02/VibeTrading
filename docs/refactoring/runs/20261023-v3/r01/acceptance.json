@@ -1,0 +1,52 @@
+{
+  "task_id": "R01",
+  "status": "ACCEPTED",
+  "worker_models": [
+    "opencode/glm-5.3-flash-free",
+    "opencode/mimo-v2.6-flash-free",
+    "opencode/deepseek-v4.1-flash-free"
+  ],
+  "provider": "opencode",
+  "repair_count": 2,
+  "failed_attempts": [
+    {
+      "model": "opencode/glm-5.3-flash-free",
+      "exit": 124
+    },
+    {
+      "model": "opencode/mimo-v2.6-flash-free",
+      "exit": 124
+    }
+  ],
+  "final_worker_exit": 0,
+  "independent_tests": {
+    "command": "python3 -m pytest -q -p no:cacheprovider tests/refactoring/test_dev_status.py",
+    "passed": 20,
+    "exit": 0
+  },
+  "scope": "Four new tooling/docs files only; packet revisions were coordinator inputs, not worker edits; canonical worker inputs remained unchanged",
+  "legacy_vn_tx_objects_preserved": true,
+  "reviewer_owned_doc_fixes": [
+    "Name the actual three v3 authority documents",
+    "Correct installed delegate-opencode command and permit targeted rg/AST inspection"
+  ],
+  "product_changes": 0,
+  "remaining_baseline_failure": "VN07 confirmed identity proof gap; no full-regression claim",
+  "next_ready": [
+    "O01",
+    "R02",
+    "VN07",
+    "VN15",
+    "TX00"
+  ],
+  "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
+  "source_file_hashes": {
+    "AGENTS.md": "d11f52854126fa28ed5bd2dedd23881ab03b1cf0876bb694e1717c10ab7ab7c4",
+    "docs/status.md": "e09b9cbe01c8261842078275870ca74e26874c7c055cb13df4cd6bf08112f481",
+    "scripts/dev/status.py": "bdc13799fb22fa5077e66f1a3aa4162d6bbd0bf75f5b71daa8846535896d05d4",
+    "tests/refactoring/test_dev_status.py": "e80d828d9b51db567d7e04b00ce88e3ad8174d46e905a40ce4d1e5fc98a4a24e"
+  },
+  "reviewer_small_tooling_fix": "IMPLEMENTED/VERIFIED wait for acceptance rather than re-dispatch; one independent regression added",
+  "source_sha": "ac18621ea1b831d625d2187c11af4369b2232f34",
+  "accepted_source_sha": "ac18621ea1b831d625d2187c11af4369b2232f34"
+}

@@ -1,0 +1,53 @@
+........................................................................ [  4%]
+..........................F............................................. [  9%]
+........................................................................ [ 14%]
+........................................................................ [ 18%]
+........................................................................ [ 23%]
+........................................................................ [ 28%]
+........................................................................ [ 32%]
+........................................................................ [ 37%]
+........................................................................ [ 42%]
+........................................................................ [ 46%]
+........................................................................ [ 51%]
+........................................................................ [ 56%]
+........................................................................ [ 61%]
+........................................................................ [ 65%]
+........................................................................ [ 70%]
+........................................................................ [ 75%]
+........................................................................ [ 79%]
+........................................................................ [ 84%]
+........................................................................ [ 89%]
+........................................................................ [ 93%]
+........................................................................ [ 98%]
+....................                                                     [100%]
+=================================== FAILURES ===================================
+__ test_segment_replacement_after_c_proof_cannot_open_a_new_suffix_authority ___
+
+tmp_path = PosixPath('/tmp/pytest/test_segment_replacement_after0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7841cdefa480>
+
+    @pytest.mark.asyncio
+    async def test_segment_replacement_after_c_proof_cannot_open_a_new_suffix_authority(tmp_path,monkeypatch):
+        item=producer(tmp_path)
+        source,codec,payload=capture([item])
+        append(item,[event('a',2)])
+        target=engine([item])
+        restore=target.restore_virgin
+    
+        def restore_then_replace(*args,**kwargs):
+            result=restore(*args,**kwargs)
+            segment=next(path for path in item.spool_root.iterdir() if path.suffix in {'.active','.sealed'})
+            replacement=segment.with_suffix('.replacement')
+            replacement.write_bytes(segment.read_bytes())
+            replacement.replace(segment)
+            return result
+    
+        monkeypatch.setattr(target,'restore_virgin',restore_then_replace)
+        try:
+>           with pytest.raises(RuntimeError,match='identity changed'):
+E           Failed: DID NOT RAISE <class 'RuntimeError'>
+
+tests/refactoring/test_checkpoint_startup.py:371: Failed
+=========================== short test summary info ============================
+FAILED tests/refactoring/test_checkpoint_startup.py::test_segment_replacement_after_c_proof_cannot_open_a_new_suffix_authority
+1 failed, 1531 passed, 2 deselected in 22.80s

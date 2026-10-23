@@ -1,0 +1,12 @@
+{
+  "status": "ACCEPTED_SUBUNIT_ONLY",
+  "parent_R03_complete": false,
+  "base_sha": "ff31bbbd8d6c8c15ee47fc63d08b1d26d54d7d43",
+  "moved_files": 140,
+  "byte_differences": 0,
+  "ast_differences": 0,
+  "old_alias_exists": false,
+  "rollback_script_sha256": "41c0de8939767fa7c91d3ff556a61725f6798f15d3aa975d051e3e31e8d3804b",
+  "economic_logic_modified": false,
+  "runtime_packaging_gate": "PENDING_R03B1_R03B2_R03C"
+}

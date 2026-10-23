@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "canonical_package_files_in_crypto_and_telegram": 140,
+  "etf_package_files": 23,
+  "logical_manifest_files": 140,
+  "server_only_preserved": true,
+  "src_delta_normalized": true,
+  "p02_script_sha256": "41c0de8939767fa7c91d3ff556a61725f6798f15d3aa975d051e3e31e8d3804b",
+  "p02_retained_package_checksum_and_compile": "PASS",
+  "p02_actual_help_exit": 0,
+  "p02_live_deploy_or_rollback_executed": false,
+  "actual_legacy_ticket_packet_mapping": "PASS; validation only, no dispatch",
+  "network": "OS namespace unavailable; no accounts or remote calls",
+  "scope": "R03 compatibility; no R04+ work"
+}

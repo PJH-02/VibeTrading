@@ -1,0 +1,19 @@
+{
+  "task_id": "O01A",
+  "parent": "O01",
+  "status": "ACCEPTED_SUBUNIT_ONLY",
+  "source_sha": "b2ec81ba4a1ee58a82e28326caf4f78f1a8e562d",
+  "source_hashes": {
+    "scripts/dev/agent_task.py": "ee0e8f8142ffbcfffbb3ba8ebdc0314821bccc5c41fc6af68f1b81a5242f31d8",
+    "tests/refactoring/test_agent_task.py": "3cc869b60a8703793e4e8a2b6d617e8a12d8add146d66e583de45c4a7075eb91"
+  },
+  "worker_model": "opencode/deepseek-v4.1-flash-free",
+  "independent_review_model": "opencode/nemotron-3-ultra-free",
+  "reviewer": "Codex gpt-6.1-sol",
+  "independent_tests_passed": 115,
+  "repair_delegations": 2,
+  "reviewer_small_fix": "Canonical generation hash fence+regression after independently reproducing false-ready on prerequisite revocation",
+  "independent_audit_disposition": "review-disposition.json",
+  "hostile_same_uid_host_attacker_defence": "NOT_CLAIMED",
+  "parent_accepted": false
+}

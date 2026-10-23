@@ -1,6 +1,6 @@
 """
-VibeTrading Strategy Runner
-strategies/ 폴더의 전략을 선택하여 전체 파이프라인을 실행합니다.
+VibeTrading Historical Candle Strategy Runner
+vibetrading/strategies/legacy/candle/ 패키지의 전략을 선택하여 전체 파이프라인을 실행합니다.
 Usage:
     python run_strategy.py                     # 대화형 메뉴
     python run_strategy.py --strategy turtle_breakout   # 바로 실행
@@ -19,10 +19,12 @@ from pathlib import Path
 from types import ModuleType
 from typing import Optional
 
-# ── 프로젝트 루트 ──
+# ── 프로젝트 루트 및 src 레이아웃 ──
 PROJECT_ROOT = Path(__file__).resolve().parent
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+PACKAGE_ROOT = PROJECT_ROOT / "src"
+for anchor in (PACKAGE_ROOT, PROJECT_ROOT):
+    if anchor.is_dir() and str(anchor) not in sys.path:
+        sys.path.insert(0, str(anchor))
 
 # standalone 모드 (NATS/DB 없이 동작)
 os.environ["STANDALONE_MODE"] = "true"
@@ -47,19 +49,20 @@ logger = logging.getLogger("run_strategy")
 
 def scan_strategies() -> dict[str, dict]:
     """
-    strategies/ 폴더를 스캔하여 STRATEGY_CONFIG가 있는 모듈을 찾습니다.
+    canonical legacy candle 패키지를 스캔하여 STRATEGY_CONFIG가 있는 모듈을 찾습니다.
 
     Returns:
         {전략이름: STRATEGY_CONFIG dict} 매핑
     """
-    strategies_dir = PROJECT_ROOT / "strategies"
+    candle_package = importlib.import_module("vibetrading.strategies.legacy.candle")
+    strategies_dir = Path(candle_package.__file__).resolve().parent
     found: dict[str, dict] = {}
 
     for py_file in sorted(strategies_dir.glob("*.py")):
         if py_file.name.startswith("_"):
             continue
 
-        module_name = f"strategies.{py_file.stem}"
+        module_name = f"vibetrading.strategies.legacy.candle.{py_file.stem}"
         try:
             mod: ModuleType = importlib.import_module(module_name)
             config = getattr(mod, "STRATEGY_CONFIG", None)
@@ -269,7 +272,7 @@ def main() -> int:
     # 전략 스캔
     strategies = scan_strategies()
     if not strategies:
-        print("strategies/ 폴더에 STRATEGY_CONFIG가 있는 전략이 없습니다.")
+        print("vibetrading/strategies/legacy/candle/ 패키지에 STRATEGY_CONFIG가 있는 전략이 없습니다.")
         return 1
 
     # --list: 목록만 출력

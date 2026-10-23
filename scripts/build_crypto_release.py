@@ -16,6 +16,7 @@ import tarfile
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
+PACKAGE = 'vibetrading'
 SERVICES = ('crypto-storage', 'crypto-maintenance', 'crypto-collector-binance',
             'crypto-collector-bitget', 'crypto-collector-bybit', 'crypto-collector-arcus', 'crypto-collector-grvt')
 DOCKERFILE = '''ARG CRYPTO_BASE
@@ -38,11 +39,34 @@ def sha(content: bytes) -> str:
     return hashlib.sha256(content).hexdigest()
 
 
-def files():
-    paths = [ROOT / 'main.py', ROOT / 'requirements.txt',
-             ROOT / 'scripts/build_crypto_release.py']
-    for name in ('vibetrading', 'config', 'strategies'):
-        paths.extend(p for p in (ROOT / name).rglob('*') if p.is_file()
+def source_package(root=None):
+    root = ROOT if root is None else root
+    flat, src = root / PACKAGE, root / 'src' / PACKAGE
+    if flat.is_symlink() or src.is_symlink() or (root / 'src').is_symlink():
+        raise RuntimeError('release package source symlink rejected')
+    if flat.is_dir() and src.is_dir():
+        raise RuntimeError('ambiguous package source roots: vibetrading and src/vibetrading both exist')
+    if src.is_dir():
+        return src
+    if flat.is_dir():
+        return flat
+    raise RuntimeError('package source root missing')
+
+
+def logical_name(path, package, root):
+    try:
+        relative = path.relative_to(package)
+    except ValueError:
+        return path.relative_to(root).as_posix()
+    return (Path(PACKAGE) / relative).as_posix()
+
+
+def files(root=None):
+    root = ROOT if root is None else root
+    paths = [root / 'main.py', root / 'requirements.txt',
+             root / 'scripts/build_crypto_release.py']
+    for base in (source_package(root), root / 'config', root / 'strategies'):
+        paths.extend(p for p in base.rglob('*') if p.is_file()
                      and '__pycache__' not in p.parts and p.suffix in {'.py', '.yaml', '.yml', '.json'})
     if any(p.is_symlink() for p in paths):
         raise RuntimeError('release source symlink rejected')
@@ -106,7 +130,8 @@ def compose():
 def prepare(destination: Path):
     if destination.exists():
         raise RuntimeError('bundle destination already exists')
-    payload = {p.relative_to(ROOT).as_posix(): p.read_bytes() for p in files()}
+    package = source_package()
+    payload = {logical_name(p, package, ROOT): p.read_bytes() for p in files()}
     payload['Dockerfile.r2'] = DOCKERFILE.encode()
     payload['deploy/crypto-r2.yml'] = (json.dumps(compose(), indent=2) + '\n').encode()
     manifest = {name: sha(content) for name, content in sorted(payload.items())}

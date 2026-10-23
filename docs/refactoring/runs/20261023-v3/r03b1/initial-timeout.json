@@ -1,0 +1,20 @@
+{
+  "status": "FAILURE",
+  "failure_class": "EXECUTION_TIMEOUT",
+  "failure_message": "worker deadline exceeded; partial workspace preserved",
+  "run_id": "20261022T192122239839Z-9051ef49442b",
+  "task_id": "R03B1",
+  "model": "opencode/glm-5.3-flash-free",
+  "provider": "opencode",
+  "route": "opencode",
+  "host_execution_attested": false,
+  "tests": {
+    "status": "NOT_RUN",
+    "results": []
+  },
+  "provenance": "UNTRUSTED_INPUT",
+  "actual_worker_exit": -15,
+  "effective_worker_exit": 124,
+  "private_receipt": "/home/pjh/.local/state/codex-opencode/runs/v3-r03b1-final-e7331fb7/initial-timeout.json",
+  "raw_receipt_sha256": "78a82eeeda3f9e139f7616500d421d0961389371fcac3bdbb1cbbeac5e34a87d"
+}

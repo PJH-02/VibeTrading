@@ -20,7 +20,7 @@ def rebuild(directory,output):
     if db.execute("SELECT count(*) FROM events WHERE venue='bitget' AND kind='feed_gap'").fetchone()[0]:raise ValueError('Replay requires a gap-free Bitget training interval')
     audit={}
     for sid in ('S1','S3'):
-        module,asset=ROUTES[sid];model=importlib.import_module('strategy.'+module).Strategy()
+        module,asset=ROUTES[sid];model=importlib.import_module('vibetrading.strategies.research.state.'+module).Strategy()
         rows=[dict(r) for r in db.execute("SELECT * FROM samples WHERE venue='bitget' AND strategy=? ORDER BY t",(sid,))]
         events=[(r['t'],0,dict(r)) for r in db.execute("SELECT * FROM quotes WHERE venue='bitget' AND asset=? ORDER BY t",(asset,))]
         events.extend((r['t'],1,dict(r)) for r in db.execute("SELECT * FROM public_trades WHERE venue='bitget' AND asset=? ORDER BY t",(asset,)))

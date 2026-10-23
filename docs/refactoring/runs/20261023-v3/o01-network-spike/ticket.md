@@ -1,0 +1,1 @@
+Run exactly `python3 -m pytest -q -p no:cacheprovider test_labels.py test_tool_network.py` using the bash tool, then return O01_TOOL_NETWORK_ISOLATED_OK only if exit0. Do not edit or read anything, explore, or launch agents. This proves the actual shell tool is network-isolated while the model HTTP client still works.

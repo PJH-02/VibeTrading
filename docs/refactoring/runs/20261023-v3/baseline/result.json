@@ -1,0 +1,15 @@
+{
+  "exit_code": 1,
+  "elapsed_seconds": 23.692133493001165,
+  "source_sha": "440ef7e408be800d377f67373db2d3707d09de58",
+  "source_set_sha256": "d144e353697453314e155378155030531f3f58132b601651061fee32075d0ed4",
+  "scope": "Current baseline code in credential-free OS filesystem/PID/network namespaces; no current server or live accounts",
+  "test_summary": {
+    "passed": 1531,
+    "failed": 1,
+    "deselected": 2
+  },
+  "failure": "tests/refactoring/test_checkpoint_startup.py::test_segment_replacement_after_c_proof_cannot_open_a_new_suffix_authority",
+  "classification": "BASELINE_FAILURE_REQUIRES_REPRODUCTION",
+  "product_changes": 0
+}

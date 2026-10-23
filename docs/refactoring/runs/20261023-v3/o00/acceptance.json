@@ -1,0 +1,65 @@
+{
+  "task_id": "O00",
+  "status": "ACCEPTED",
+  "qualified_models": [
+    {
+      "model_id": "opencode/glm-5.3-flash-free",
+      "status": "QUALIFIED_O00",
+      "provider_route": "opencode",
+      "quota_independence": "NOT_ASSUMED",
+      "receipt": "docs/refactoring/runs/20261023-v3/o00/vt-o00-f5ip9lxi/receipt.json"
+    },
+    {
+      "model_id": "opencode/mimo-v2.6-flash-free",
+      "status": "QUALIFIED_O00",
+      "provider_route": "opencode",
+      "quota_independence": "NOT_ASSUMED",
+      "receipt": "docs/refactoring/runs/20261023-v3/o00/vt-o00-cabws8_f/receipt.json"
+    },
+    {
+      "model_id": "freellmapi/gemini-2.5-flash",
+      "status": "QUALIFIED_O00",
+      "provider_route": "freellmapi",
+      "quota_independence": "NOT_ASSUMED",
+      "receipt": "docs/refactoring/runs/20261023-v3/o00/vt-o00-f6f_3b0x/receipt.json",
+      "observed_served_models": [
+        "gemini-2.5-flash"
+      ]
+    },
+    {
+      "model_id": "freellmapi/glm-4.5-flash",
+      "status": "QUALIFIED_O00",
+      "provider_route": "freellmapi",
+      "quota_independence": "NOT_ASSUMED",
+      "receipt": "docs/refactoring/runs/20261023-v3/o00/vt-o00-7nef2t3e/receipt.json",
+      "observed_served_models": [
+        "glm-4.5-flash"
+      ]
+    },
+    {
+      "model_id": "opencode/deepseek-v4.1-flash-free",
+      "status": "QUALIFIED_O00",
+      "provider_route": "opencode",
+      "quota_independence": "NOT_ASSUMED",
+      "receipt": "docs/refactoring/runs/20261023-v3/o00/vt-o00-qdyotdke/receipt.json"
+    },
+    {
+      "model_id": "opencode/nemotron-3-ultra-free",
+      "status": "QUALIFIED_O00",
+      "provider_route": "opencode",
+      "quota_independence": "NOT_ASSUMED",
+      "receipt": "docs/refactoring/runs/20261023-v3/o00/vt-o00-v703f9qo/receipt.json",
+      "observed_served_models": []
+    }
+  ],
+  "evidence_scope": "Each of six exact routes completed real WRITE,7pytest,independent7pytest,expected read/write denials; all protected files unchanged; OS mount/PID isolation verified; FreeLLMAPI keys held outside namespace in ephemeral auth relay",
+  "api_key_redactions": 0,
+  "raw_gateway_key_found_in_logs": false,
+  "actual_model_change_recovery": "R01: GLM timeout -> inspected preserved partial -> MiMo timeout -> inspected partial -> DeepSeek completed; no reset or duplicate live worker; two repair cap respected",
+  "provider_quota_independence_assumed": false,
+  "production_changes": 0,
+  "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
+  "probe_sha256": "7b565518bd0e763a4310e21d21aa44c55050930cec60c977fd46b787c172f207",
+  "source_sha": "66758cb1f49d6a90e42238066b1edf9a2e4e8a1c",
+  "accepted_source_sha": "66758cb1f49d6a90e42238066b1edf9a2e4e8a1c"
+}

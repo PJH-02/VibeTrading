@@ -1,0 +1,145 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "migrate",
+  "worker_process": {
+    "exit_code": 0,
+    "elapsed_seconds": 152.30695336200006,
+    "relay_http_statuses": [],
+    "served_models": [],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-r03c2-repair1-7214fc9f",
+  "usage_reported": [
+    {
+      "total": 4667,
+      "input": 1272,
+      "output": 156,
+      "reasoning": 39,
+      "cache": {
+        "write": 0,
+        "read": 3200
+      }
+    },
+    {
+      "total": 5168,
+      "input": 509,
+      "output": 252,
+      "reasoning": 55,
+      "cache": {
+        "write": 0,
+        "read": 4352
+      }
+    },
+    {
+      "total": 19262,
+      "input": 13498,
+      "output": 47,
+      "reasoning": 981,
+      "cache": {
+        "write": 0,
+        "read": 4736
+      }
+    },
+    {
+      "total": 20214,
+      "input": 1825,
+      "output": 142,
+      "reasoning": 71,
+      "cache": {
+        "write": 0,
+        "read": 18176
+      }
+    },
+    {
+      "total": 25237,
+      "input": 379,
+      "output": 869,
+      "reasoning": 4021,
+      "cache": {
+        "write": 0,
+        "read": 19968
+      }
+    },
+    {
+      "total": 27174,
+      "input": 5061,
+      "output": 1079,
+      "reasoning": 810,
+      "cache": {
+        "write": 0,
+        "read": 20224
+      }
+    },
+    {
+      "total": 30102,
+      "input": 2006,
+      "output": 1404,
+      "reasoning": 1476,
+      "cache": {
+        "write": 0,
+        "read": 25216
+      }
+    },
+    {
+      "total": 30232,
+      "input": 3003,
+      "output": 87,
+      "reasoning": 6,
+      "cache": {
+        "write": 0,
+        "read": 27136
+      }
+    },
+    {
+      "total": 30371,
+      "input": 180,
+      "output": 66,
+      "reasoning": 45,
+      "cache": {
+        "write": 0,
+        "read": 30080
+      }
+    },
+    {
+      "total": 35130,
+      "input": 2716,
+      "output": 372,
+      "reasoning": 1834,
+      "cache": {
+        "write": 0,
+        "read": 30208
+      }
+    },
+    {
+      "total": 39263,
+      "input": 4706,
+      "output": 364,
+      "reasoning": 1297,
+      "cache": {
+        "write": 0,
+        "read": 32896
+      }
+    }
+  ],
+  "base_sha": "04e4d57ff8ad375c3f79ff3f05f644bd40de0569",
+  "scope": [
+    "scripts/build_crypto_release.py",
+    "scripts/build_etf_scope_release.py",
+    "scripts/build_telegram_restore_release.py",
+    "scripts/refactoring/build_release_manifest.py",
+    "scripts/refactoring/build_server_candidate.py",
+    "tests/refactoring/test_src_release_paths.py"
+  ],
+  "output_sha256": {
+    "scripts/build_crypto_release.py": "a83745238fac9e00597999a79725dbac3cbc2fe2bd68eb181ce1f1de37c7914a",
+    "scripts/build_etf_scope_release.py": "2e0e9f4c9cef24d627ef2af413ffc28bbce1cb89b7d78f5a75d09e191bf936b8",
+    "scripts/build_telegram_restore_release.py": "0e468a3e0f1ae8c599d8faec3890a5be59423715c90f8982d3808c9234ceede4",
+    "scripts/refactoring/build_release_manifest.py": "6559c9c1513da7e626cc74eb524f7ae4fd3adb41d84dd4de0e5a68298675eee1",
+    "scripts/refactoring/build_server_candidate.py": "de262e6d3e657f7684ae746cf9b94e551e8e71b37c92c4ddea23a30b8e87cee1",
+    "tests/refactoring/test_src_release_paths.py": "5e2e588c48270365a9a50d046e8b94ca3ec6e53e763dab8d06f846ed56f201b2"
+  },
+  "automatic_acceptance": false
+}

@@ -1,0 +1,31 @@
+{
+  "selected_model": "opencode/nemotron-3-ultra-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "audit",
+  "worker_process": {
+    "exit_code": 0,
+    "elapsed_seconds": 294.60870998300015,
+    "relay_http_statuses": [],
+    "served_models": [],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-vn07-nemotron-final-guard-0ca2cb79",
+  "usage_reported": [
+    {
+      "total": 11458,
+      "input": 5475,
+      "output": 539,
+      "reasoning": 5444,
+      "cache": {
+        "write": 0,
+        "read": 0
+      }
+    }
+  ],
+  "base_sha": "de2439d024cad97b7c284c1c56b1613a6c4832aa",
+  "scope": [],
+  "output_sha256": {},
+  "automatic_acceptance": false
+}

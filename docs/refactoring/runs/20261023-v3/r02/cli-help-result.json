@@ -1,0 +1,7 @@
+{
+  "source_sha": "99f25957ca5ec1614b4e8ee550e16077b5fd8773",
+  "command": "python3 -m vibetrading.cli --help",
+  "exit_code": 0,
+  "filesystem_pid_network_namespace": true,
+  "product_source_identical_to_candidate": true
+}

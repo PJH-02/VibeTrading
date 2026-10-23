@@ -7,8 +7,8 @@ services:
     volumes:
       - "${VIBETRADING_HOST_DATA_ROOT:?set in compose.env}:/data"
       - "${VIBETRADING_HOST_CRYPTO_STATE_ROOT:?set in compose.env}:/data/crypto_state:ro"
-      - "./vibetrading/telegram.py:/app/vibetrading/telegram.py:ro"
-      - "./vibetrading/health.py:/app/vibetrading/health.py:ro"
+      - "./src/vibetrading/telegram.py:/app/src/vibetrading/telegram.py:ro"
+      - "./src/vibetrading/health.py:/app/src/vibetrading/health.py:ro"
 
   crypto-storage:
     image: ${VIBETRADING_CRYPTO_IMAGE:?run scripts/build_release_images.py first}

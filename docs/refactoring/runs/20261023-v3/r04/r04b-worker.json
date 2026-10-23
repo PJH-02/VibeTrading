@@ -1,0 +1,721 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "refactor",
+  "worker_process": {
+    "exit_code": 0,
+    "elapsed_seconds": 629.7793851120005,
+    "relay_http_statuses": [],
+    "served_models": [],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-r04b-8f8ee22d",
+  "usage_reported": [
+    {
+      "total": 4987,
+      "input": 4769,
+      "output": 205,
+      "reasoning": 13,
+      "cache": {
+        "write": 0,
+        "read": 0
+      }
+    },
+    {
+      "total": 16936,
+      "input": 11821,
+      "output": 295,
+      "reasoning": 84,
+      "cache": {
+        "write": 0,
+        "read": 4736
+      }
+    },
+    {
+      "total": 17722,
+      "input": 762,
+      "output": 430,
+      "reasoning": 18,
+      "cache": {
+        "write": 0,
+        "read": 16512
+      }
+    },
+    {
+      "total": 22549,
+      "input": 4985,
+      "output": 382,
+      "reasoning": 30,
+      "cache": {
+        "write": 0,
+        "read": 17152
+      }
+    },
+    {
+      "total": 39787,
+      "input": 17561,
+      "output": 132,
+      "reasoning": 78,
+      "cache": {
+        "write": 0,
+        "read": 22016
+      }
+    },
+    {
+      "total": 39948,
+      "input": 334,
+      "output": 43,
+      "reasoning": 19,
+      "cache": {
+        "write": 0,
+        "read": 39552
+      }
+    },
+    {
+      "total": 40052,
+      "input": 161,
+      "output": 68,
+      "reasoning": 15,
+      "cache": {
+        "write": 0,
+        "read": 39808
+      }
+    },
+    {
+      "total": 40164,
+      "input": 137,
+      "output": 50,
+      "reasoning": 41,
+      "cache": {
+        "write": 0,
+        "read": 39936
+      }
+    },
+    {
+      "total": 40319,
+      "input": 199,
+      "output": 37,
+      "reasoning": 19,
+      "cache": {
+        "write": 0,
+        "read": 40064
+      }
+    },
+    {
+      "total": 40466,
+      "input": 226,
+      "output": 40,
+      "reasoning": 8,
+      "cache": {
+        "write": 0,
+        "read": 40192
+      }
+    },
+    {
+      "total": 40951,
+      "input": 245,
+      "output": 289,
+      "reasoning": 97,
+      "cache": {
+        "write": 0,
+        "read": 40320
+      }
+    },
+    {
+      "total": 64303,
+      "input": 23565,
+      "output": 280,
+      "reasoning": 10,
+      "cache": {
+        "write": 0,
+        "read": 40448
+      }
+    },
+    {
+      "total": 101051,
+      "input": 36840,
+      "output": 63,
+      "reasoning": 148,
+      "cache": {
+        "write": 0,
+        "read": 64000
+      }
+    },
+    {
+      "total": 117259,
+      "input": 15875,
+      "output": 195,
+      "reasoning": 453,
+      "cache": {
+        "write": 0,
+        "read": 100736
+      }
+    },
+    {
+      "total": 129203,
+      "input": 12455,
+      "output": 126,
+      "reasoning": 14,
+      "cache": {
+        "write": 0,
+        "read": 116608
+      }
+    },
+    {
+      "total": 141948,
+      "input": 9951,
+      "output": 205,
+      "reasoning": 2768,
+      "cache": {
+        "write": 0,
+        "read": 129024
+      }
+    },
+    {
+      "total": 142882,
+      "input": 3786,
+      "output": 191,
+      "reasoning": 25,
+      "cache": {
+        "write": 0,
+        "read": 138880
+      }
+    },
+    {
+      "total": 149292,
+      "input": 1824,
+      "output": 167,
+      "reasoning": 4709,
+      "cache": {
+        "write": 0,
+        "read": 142592
+      }
+    },
+    {
+      "total": 154799,
+      "input": 5205,
+      "output": 228,
+      "reasoning": 4982,
+      "cache": {
+        "write": 0,
+        "read": 144384
+      }
+    },
+    {
+      "total": 155414,
+      "input": 5310,
+      "output": 594,
+      "reasoning": 6,
+      "cache": {
+        "write": 0,
+        "read": 149504
+      }
+    },
+    {
+      "total": 155632,
+      "input": 677,
+      "output": 195,
+      "reasoning": 8,
+      "cache": {
+        "write": 0,
+        "read": 154752
+      }
+    },
+    {
+      "total": 157052,
+      "input": 256,
+      "output": 1393,
+      "reasoning": 11,
+      "cache": {
+        "write": 0,
+        "read": 155392
+      }
+    },
+    {
+      "total": 157757,
+      "input": 1552,
+      "output": 499,
+      "reasoning": 58,
+      "cache": {
+        "write": 0,
+        "read": 155648
+      }
+    },
+    {
+      "total": 158178,
+      "input": 588,
+      "output": 376,
+      "reasoning": 30,
+      "cache": {
+        "write": 0,
+        "read": 157184
+      }
+    },
+    {
+      "total": 158651,
+      "input": 519,
+      "output": 431,
+      "reasoning": 5,
+      "cache": {
+        "write": 0,
+        "read": 157696
+      }
+    },
+    {
+      "total": 159762,
+      "input": 507,
+      "output": 1037,
+      "reasoning": 10,
+      "cache": {
+        "write": 0,
+        "read": 158208
+      }
+    },
+    {
+      "total": 160534,
+      "input": 1262,
+      "output": 676,
+      "reasoning": 4,
+      "cache": {
+        "write": 0,
+        "read": 158592
+      }
+    },
+    {
+      "total": 161771,
+      "input": 849,
+      "output": 959,
+      "reasoning": 219,
+      "cache": {
+        "write": 0,
+        "read": 159744
+      }
+    },
+    {
+      "total": 162808,
+      "input": 1307,
+      "output": 936,
+      "reasoning": 53,
+      "cache": {
+        "write": 0,
+        "read": 160512
+      }
+    },
+    {
+      "total": 163639,
+      "input": 2322,
+      "output": 786,
+      "reasoning": 19,
+      "cache": {
+        "write": 0,
+        "read": 160512
+      }
+    },
+    {
+      "total": 164495,
+      "input": 838,
+      "output": 813,
+      "reasoning": 28,
+      "cache": {
+        "write": 0,
+        "read": 162816
+      }
+    },
+    {
+      "total": 171394,
+      "input": 948,
+      "output": 2167,
+      "reasoning": 4695,
+      "cache": {
+        "write": 0,
+        "read": 163584
+      }
+    },
+    {
+      "total": 48684,
+      "input": 45154,
+      "output": 2502,
+      "reasoning": 900,
+      "cache": {
+        "write": 0,
+        "read": 128
+      }
+    },
+    {
+      "total": 20780,
+      "input": 17671,
+      "output": 159,
+      "reasoning": 134,
+      "cache": {
+        "write": 0,
+        "read": 2816
+      }
+    },
+    {
+      "total": 24579,
+      "input": 3666,
+      "output": 165,
+      "reasoning": 268,
+      "cache": {
+        "write": 0,
+        "read": 20480
+      }
+    },
+    {
+      "total": 38107,
+      "input": 13613,
+      "output": 232,
+      "reasoning": 198,
+      "cache": {
+        "write": 0,
+        "read": 24064
+      }
+    },
+    {
+      "total": 40672,
+      "input": 2768,
+      "output": 239,
+      "reasoning": 33,
+      "cache": {
+        "write": 0,
+        "read": 37632
+      }
+    },
+    {
+      "total": 43186,
+      "input": 2433,
+      "output": 254,
+      "reasoning": 179,
+      "cache": {
+        "write": 0,
+        "read": 40320
+      }
+    },
+    {
+      "total": 45320,
+      "input": 1838,
+      "output": 167,
+      "reasoning": 563,
+      "cache": {
+        "write": 0,
+        "read": 42752
+      }
+    },
+    {
+      "total": 45756,
+      "input": 1089,
+      "output": 51,
+      "reasoning": 72,
+      "cache": {
+        "write": 0,
+        "read": 44544
+      }
+    },
+    {
+      "total": 48924,
+      "input": 1970,
+      "output": 428,
+      "reasoning": 958,
+      "cache": {
+        "write": 0,
+        "read": 45568
+      }
+    },
+    {
+      "total": 50094,
+      "input": 1451,
+      "output": 110,
+      "reasoning": 1045,
+      "cache": {
+        "write": 0,
+        "read": 47488
+      }
+    },
+    {
+      "total": 52849,
+      "input": 2501,
+      "output": 199,
+      "reasoning": 1253,
+      "cache": {
+        "write": 0,
+        "read": 48896
+      }
+    },
+    {
+      "total": 52972,
+      "input": 1542,
+      "output": 92,
+      "reasoning": 10,
+      "cache": {
+        "write": 0,
+        "read": 51328
+      }
+    },
+    {
+      "total": 53458,
+      "input": 280,
+      "output": 215,
+      "reasoning": 99,
+      "cache": {
+        "write": 0,
+        "read": 52864
+      }
+    },
+    {
+      "total": 57191,
+      "input": 3502,
+      "output": 209,
+      "reasoning": 360,
+      "cache": {
+        "write": 0,
+        "read": 53120
+      }
+    },
+    {
+      "total": 58130,
+      "input": 1377,
+      "output": 105,
+      "reasoning": 72,
+      "cache": {
+        "write": 0,
+        "read": 56576
+      }
+    },
+    {
+      "total": 58400,
+      "input": 430,
+      "output": 85,
+      "reasoning": 29,
+      "cache": {
+        "write": 0,
+        "read": 57856
+      }
+    },
+    {
+      "total": 58748,
+      "input": 280,
+      "output": 164,
+      "reasoning": 64,
+      "cache": {
+        "write": 0,
+        "read": 58240
+      }
+    },
+    {
+      "total": 60970,
+      "input": 1493,
+      "output": 87,
+      "reasoning": 894,
+      "cache": {
+        "write": 0,
+        "read": 58496
+      }
+    },
+    {
+      "total": 62161,
+      "input": 1908,
+      "output": 117,
+      "reasoning": 232,
+      "cache": {
+        "write": 0,
+        "read": 59904
+      }
+    },
+    {
+      "total": 70041,
+      "input": 7693,
+      "output": 76,
+      "reasoning": 576,
+      "cache": {
+        "write": 0,
+        "read": 61696
+      }
+    },
+    {
+      "total": 72278,
+      "input": 2559,
+      "output": 297,
+      "reasoning": 46,
+      "cache": {
+        "write": 0,
+        "read": 69376
+      }
+    },
+    {
+      "total": 79361,
+      "input": 4599,
+      "output": 113,
+      "reasoning": 2841,
+      "cache": {
+        "write": 0,
+        "read": 71808
+      }
+    },
+    {
+      "total": 79860,
+      "input": 3094,
+      "output": 219,
+      "reasoning": 259,
+      "cache": {
+        "write": 0,
+        "read": 76288
+      }
+    },
+    {
+      "total": 82593,
+      "input": 2369,
+      "output": 81,
+      "reasoning": 783,
+      "cache": {
+        "write": 0,
+        "read": 79360
+      }
+    },
+    {
+      "total": 87524,
+      "input": 4735,
+      "output": 88,
+      "reasoning": 1037,
+      "cache": {
+        "write": 0,
+        "read": 81664
+      }
+    },
+    {
+      "total": 88717,
+      "input": 1882,
+      "output": 81,
+      "reasoning": 482,
+      "cache": {
+        "write": 0,
+        "read": 86272
+      }
+    },
+    {
+      "total": 89837,
+      "input": 7627,
+      "output": 147,
+      "reasoning": 399,
+      "cache": {
+        "write": 0,
+        "read": 81664
+      }
+    },
+    {
+      "total": 92325,
+      "input": 1711,
+      "output": 84,
+      "reasoning": 1314,
+      "cache": {
+        "write": 0,
+        "read": 89216
+      }
+    },
+    {
+      "total": 92830,
+      "input": 1533,
+      "output": 78,
+      "reasoning": 339,
+      "cache": {
+        "write": 0,
+        "read": 90880
+      }
+    },
+    {
+      "total": 94050,
+      "input": 908,
+      "output": 344,
+      "reasoning": 510,
+      "cache": {
+        "write": 0,
+        "read": 92288
+      }
+    }
+  ],
+  "base_sha": "b3409b17f9cfe863528a6a9cecde7a4aa9aaab4b",
+  "scope": [
+    "src/vibetrading/strategy_contract.py",
+    "services/signal_gen/strategy_loader.py",
+    "strategies/example_signal.py",
+    "strategies/turtle_breakout.py",
+    "strategy/s1_net_liquidity.py",
+    "src/vibetrading/fv_mm/legacy/s1_net_liquidity.py",
+    "strategy/s2_external_anchor.py",
+    "src/vibetrading/fv_mm/legacy/s2_external_anchor.py",
+    "strategy/s3_aggressive_flow.py",
+    "src/vibetrading/fv_mm/legacy/s3_aggressive_flow.py",
+    "strategy/s4_obi.py",
+    "src/vibetrading/fv_mm/legacy/s4_obi.py",
+    "src/vibetrading/strategies/contract.py",
+    "src/vibetrading/strategies/legacy/candle_loader.py",
+    "src/vibetrading/strategy_runner.py",
+    "src/vibetrading/strategy_runtime.py",
+    "src/vibetrading/timefolio/runner.py",
+    "src/vibetrading/fv_mm/market.py",
+    "src/vibetrading/fv_pilot/market.py",
+    "src/vibetrading/mm_state/coordinator.py",
+    "src/vibetrading/mm_state/features.py",
+    "src/vibetrading/fv_mm/runner.py",
+    "src/vibetrading/fv_pilot/runner.py",
+    "services/signal_gen/engine.py",
+    "scripts/rebuild_fv_pilot_calibration.py",
+    "scripts/diagnose_mm_state_no_intents.py",
+    "scripts/replay_mm_state_revision.py",
+    "scripts/build_all_strategy_report.py",
+    "scripts/report_mm_state_revision.py",
+    "scripts/run_backtest.py",
+    "scripts/validate_system.py",
+    "run_strategy.py",
+    "src/vibetrading/strategies/__init__.py",
+    "src/vibetrading/strategies/legacy/__init__.py",
+    "src/vibetrading/strategies/legacy/candle/__init__.py",
+    "src/vibetrading/strategies/legacy/fair_value/__init__.py",
+    "src/vibetrading/strategies/research/__init__.py",
+    "src/vibetrading/strategies/research/state/__init__.py",
+    "tests/refactoring/test_strategy_ownership.py"
+  ],
+  "output_sha256": {
+    "src/vibetrading/strategy_contract.py": "970e186a3717dcb5d5ac8a758d455c4fb8610b94b72ba432378596232577ee56",
+    "services/signal_gen/strategy_loader.py": "1b98eeeb0755060de186af2589576aac773f2f75bf658ed4618480209944cfe0",
+    "strategies/example_signal.py": "eb3bc4d6c0247e736478f51adf32356ac08a7909508c3b3d1e591bc4fa60eacb",
+    "strategies/turtle_breakout.py": "2d0ad9a281b7397ac8a58c0493d0055cf9a262c2f274ebbcbe4d274d0f005d46",
+    "strategy/s1_net_liquidity.py": "97be69930d060f69c7db964cee8c2b3d59ddaa567dae7d4327abef4f13c8b698",
+    "src/vibetrading/fv_mm/legacy/s1_net_liquidity.py": "75d2648bd49c9e310d355219ceb0e931b9ec65dd4b081cf5c388b531f1930e3d",
+    "strategy/s2_external_anchor.py": "04ed35f92d0410dfd2122629f1a49dc99705c8d0eef9cba5cdb099b794c6e7cb",
+    "src/vibetrading/fv_mm/legacy/s2_external_anchor.py": "b05daf8fde75a3376853fdc61c5972e946f70b200d84ddf904b04ce6cc417dc8",
+    "strategy/s3_aggressive_flow.py": "6da92e7b326af405415fb53c5f42e3ff961f6f2c9dda835bc61c05516772f487",
+    "src/vibetrading/fv_mm/legacy/s3_aggressive_flow.py": "8b3e010a7f381e6216b327f208bcd35503b07ebf5c863846022fe754bc1be84c",
+    "strategy/s4_obi.py": "6d1a2a7af285b8a7d1e0254c36af81fd7444c40f282c2eec7fdc913a77cf3ca8",
+    "src/vibetrading/fv_mm/legacy/s4_obi.py": "e8921352a503d2a8ae234b70702a159b55b9fd80564db8ca09c0811f432510a8",
+    "src/vibetrading/strategies/contract.py": "67d36bc50d7caca912e1435d8650db99714b023af3fc2607e9aad9847e65eb4a",
+    "src/vibetrading/strategies/legacy/candle_loader.py": "a0c82915b6d61279ce6b0b978b92d0820a8124a6f77ab3a6d003ddbec19004f0",
+    "src/vibetrading/strategy_runner.py": "e52543c07d0c2f7d8f63367b9ded7933add112b16b2a7ef7fd8568cd924bec81",
+    "src/vibetrading/strategy_runtime.py": "15d7f02d8946918b15a86371326c8bbec38843e222fd3640ce9752fc7e5fbb58",
+    "src/vibetrading/timefolio/runner.py": "00b8c9351cec894b1b7b8c016c397fdfc56dd65557ca1b844f3169ae875aa83e",
+    "src/vibetrading/fv_mm/market.py": "04f4bedfae4edf187d511128c4f2bfc4717d5528564360039e74fecafc171107",
+    "src/vibetrading/fv_pilot/market.py": "00f0f59e0bade38d86d7a6adc12d8f33ec5ce3e45ba582e2f7525a3f7a7f97f6",
+    "src/vibetrading/mm_state/coordinator.py": "0f6652c87f0491c5dbf82a46311894e14c84d8000c9f99d1a172490542873f74",
+    "src/vibetrading/mm_state/features.py": "55ad3d84db57e01e5f4eaa8114a045905edcabeb34ec76142a2984a2fc39a950",
+    "src/vibetrading/fv_mm/runner.py": "8d13b4972301cb50925988e6ef975230b8f0c665d3c8e51a7ee65fe58f2ba606",
+    "src/vibetrading/fv_pilot/runner.py": "66ff551b80ab18a04266412bed3a2d86c9bc85c97ebcd6d02191669e12a67cef",
+    "services/signal_gen/engine.py": "b43fcce88a1dd3280a4b4939dc2475389d67a87e1fd1bfef9c3982633eb8b862",
+    "scripts/rebuild_fv_pilot_calibration.py": "577220dac0868746e1d9f0a59cb0bb722a14497325d0be0f7fe0e93aa9ba9868",
+    "scripts/diagnose_mm_state_no_intents.py": "35e15b05b2cc4e9dffb3189d0091cdc7b6993e7885cd48f6320d8b9c026e93f1",
+    "scripts/replay_mm_state_revision.py": "0985514c03b3a947ee92f18200ad3d760ec41b08e997fc7cfad1cf5ed2b4beae",
+    "scripts/build_all_strategy_report.py": "b5399931b235eead340b04fead6a0e7a362eb7d872a3d2d7893be72abe07b7e5",
+    "scripts/report_mm_state_revision.py": "e860047061b9830189b729d116e23341e9b8d0a3e18e8e77f062943fe4d10919",
+    "scripts/run_backtest.py": "4410c88d1e2e71501f8c22f08c54df20174519219cd9ac3c287c80b61e044701",
+    "scripts/validate_system.py": "d173dfdb1219cdb55c0987f7cc798aefc2b56fddda559f761a1c4742b4a7195f",
+    "run_strategy.py": "9b145fa048d438b50058d7de66bd4a21ec6d4286c7c150d049b9e5c193d63518",
+    "src/vibetrading/strategies/__init__.py": "288547be1f5a80c3d3f90dac3bed2469046703654573660192912dbba5367eb5",
+    "src/vibetrading/strategies/legacy/__init__.py": "4ff2f75e68704b997d9c0decf0276e34fe379d53231ccb7d38b9722969cf2212",
+    "src/vibetrading/strategies/legacy/candle/__init__.py": "4c549777fb71242a60eca5366bcd46a7a844b8a5ebb23ce3d4ec4922d4eb8069",
+    "src/vibetrading/strategies/legacy/fair_value/__init__.py": "5a4c8b846117cbc3a96ecae938782ee0f447898104981e87ada0eb9e7a5f5a53",
+    "src/vibetrading/strategies/research/__init__.py": "16b75c45dbb6d52eeaaffa9f68d545c94a69e8c4fe5d47aa6b9850cbea1baf38",
+    "src/vibetrading/strategies/research/state/__init__.py": "8d1e49b5f8dfee30df2437f6584f2078d1d09c77d8abac8ab89a32b2b843f7bf",
+    "tests/refactoring/test_strategy_ownership.py": "683bd60b6953fcf323a7cf022e807520562eaa0f400d407a1ecba88bd543912c"
+  },
+  "automatic_acceptance": false
+}

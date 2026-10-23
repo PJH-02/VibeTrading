@@ -1,0 +1,43 @@
+{
+  "method": "Deterministic literal physical source path changes only; frozen server/export names intentionally retained",
+  "changes": {
+    "docker-compose.yml": {
+      "before_sha256": "00694830230f188383135a4deea3f5b216398322e76330f147a8ab4b6eec8baa",
+      "after_sha256": "f86b17ca0c8de63c36e35d23a59c8b3afc191d0b1ac860163ec19d57ee769e22"
+    },
+    "deploy/crypto-profile.yml": {
+      "before_sha256": "2343b00164f8ecacbf59325310f18e69e8338865ab92cc854155f4d775a86c60",
+      "after_sha256": "8e0839b368cebcf5e8b2db06627a029429dabf15665ce515b13d5634fcf8bd63"
+    },
+    "deploy/Dockerfile.crypto-ledger": {
+      "before_sha256": "d72e97769d6b3901a99dea3169a822f0f155b58e82b7e51ff7c9c78a61aacf03",
+      "after_sha256": "0b076c9ef655c5caca6a83830fdf030c78ad0d46220fdbee2a6b41e91560ada2"
+    },
+    "scripts/prepare_etf_reference.py": {
+      "before_sha256": "7a821bcc2dd3bac104550b8db548644c0a74ce80b45cb8918e1e02a2c2e8e821",
+      "after_sha256": "d463d67400205b0c0fde8c7036ed9d77e37180bbb41fb29543471235442132f4"
+    },
+    "scripts/report_mm_state_revision.py": {
+      "before_sha256": "d1ccdbbc7cce46a180c25ed8aa69703d86042a1fc10f55a7a64979fac27da018",
+      "after_sha256": "c936ae8a8b900ad69a6d76fc8713f0dcf50240e52ab9c52db25b6c524716e14c"
+    },
+    "scripts/seal_fv_indicator_report.py": {
+      "before_sha256": "8b5984f5537a12b61a94accd5af1a783b90d86dd06c6a0c0e3056d5dd6c6c93d",
+      "after_sha256": "571b898e1419aed86eb6c7c7e74e66b4987df62cab79b12c9e74757a530e97e7"
+    },
+    "scripts/build_all_strategy_report.py": {
+      "before_sha256": "36bd6eff106a4b98b2664087d9df51f6d00cbc4902905f8971ede603b831e29a",
+      "after_sha256": "0c8d5c69ee030a5759e65e6667350a847a0be6efc2849005849e67e381acd9c2"
+    },
+    "README.md": {
+      "before_sha256": "ec184aebf7132783aa6c53d71a3bcea41ea0c95c5b688e4b2fdd15f0a7294f66",
+      "after_sha256": "adf8fecaa6e6431388c635483b932b1c4e575c5d1250b79a35b3024441a491d7"
+    },
+    "docs/architecture.md": {
+      "before_sha256": "aa40ab7e8e56207514a9ab39d7a0111d83ac24b72badb1a89e451bad9da54ee3",
+      "after_sha256": "1bb58fa7703f3342d0c5a3692516d5f8c2e3cb49ab003806f393d0e15d148123"
+    }
+  },
+  "protected_p02_script_modified": false,
+  "whole_domain_structure_completed": false
+}

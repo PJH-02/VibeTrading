@@ -1,0 +1,120 @@
+{
+  "selected_model": "opencode/nemotron-3-ultra-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "audit",
+  "worker_process": {
+    "exit_code": 0,
+    "elapsed_seconds": 474.0103650919991
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-o01a-audit-initial-7ac557a0",
+  "usage_reported": [
+    {
+      "total": 5797,
+      "input": 5662,
+      "output": 38,
+      "reasoning": 97,
+      "cache": {
+        "write": 0,
+        "read": 0
+      }
+    },
+    {
+      "total": 18799,
+      "input": 18747,
+      "output": 41,
+      "reasoning": 11,
+      "cache": {
+        "write": 0,
+        "read": 0
+      }
+    },
+    {
+      "total": 18952,
+      "input": 18899,
+      "output": 26,
+      "reasoning": 27,
+      "cache": {
+        "write": 0,
+        "read": 0
+      }
+    },
+    {
+      "total": 19048,
+      "input": 18988,
+      "output": 26,
+      "reasoning": 34,
+      "cache": {
+        "write": 0,
+        "read": 0
+      }
+    },
+    {
+      "total": 25037,
+      "input": 24813,
+      "output": 66,
+      "reasoning": 158,
+      "cache": {
+        "write": 0,
+        "read": 0
+      }
+    },
+    {
+      "total": 25158,
+      "input": 12132,
+      "output": 48,
+      "reasoning": 18,
+      "cache": {
+        "write": 0,
+        "read": 12960
+      }
+    },
+    {
+      "total": 25332,
+      "input": 25258,
+      "output": 55,
+      "reasoning": 19,
+      "cache": {
+        "write": 0,
+        "read": 0
+      }
+    },
+    {
+      "total": 25621,
+      "input": 8112,
+      "output": 46,
+      "reasoning": 183,
+      "cache": {
+        "write": 0,
+        "read": 17280
+      }
+    },
+    {
+      "total": 31856,
+      "input": 8441,
+      "output": 233,
+      "reasoning": 5902,
+      "cache": {
+        "write": 0,
+        "read": 17280
+      }
+    },
+    {
+      "total": 33942,
+      "input": 5996,
+      "output": 1339,
+      "reasoning": 687,
+      "cache": {
+        "write": 0,
+        "read": 25920
+      }
+    }
+  ],
+  "base_sha": "99f25957ca5ec1614b4e8ee550e16077b5fd8773",
+  "scope": [],
+  "output_sha256": {},
+  "automatic_acceptance": false,
+  "ticket_sha256": "ab6b51fd312d2837f5230223d17f9be8b5c843c7ee08ebe85ed2094e58010313",
+  "published_markdown": "Whitespace-normalized render; exact input/output remain private"
+}

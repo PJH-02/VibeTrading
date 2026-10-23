@@ -37,18 +37,18 @@ SOURCES={
  'M05':('상태 전략 및 공통 feature 명세','docs/mm_state/STRATEGY_SPEC.md'),
  'M06':('서버 격리 검증','docs/evidence/mm_state_revision_20261007/server_final/server_verification.json'),
  'M07':('운영 위험·수신 지연 제한','docs/mm_state/RISK_CONTROLS.md'),
- 'C01':('원형 OFI 전략 코드','vibetrading/fv_mm/legacy/s1_net_liquidity.py'),
- 'C02':('v1 flow 모델 코드','vibetrading/liquidity_mm/strategy.py'),
- 'C03':('상태 기반 OFI 코드','strategy/s1_net_liquidity.py'),
- 'C04':('상태 기반 basis 코드','strategy/s2_external_anchor.py'),
- 'C05':('상태 기반 flow 코드','strategy/s3_aggressive_flow.py'),
- 'C06':('상태 기반 OBI 코드','strategy/s4_obi.py'),
- 'C07':('7개 통합 비교 정책','vibetrading/mm_state/coordinator.py'),
- 'C08':('Turtle 프로토타입','strategies/turtle_breakout.py'),
- 'C09':('단일 캔들 돌파 예제','strategies/example_signal.py')}
-SOURCES.update({'C10':('원형 anchor 코드','vibetrading/fv_mm/legacy/s2_external_anchor.py'),
-                'C11':('원형 공격체결 코드','vibetrading/fv_mm/legacy/s3_aggressive_flow.py'),
-                'C12':('원형 OBI 코드','vibetrading/fv_mm/legacy/s4_obi.py')})
+ 'C01':('원형 OFI 전략 코드','src/vibetrading/strategies/legacy/fair_value/s1_net_liquidity.py'),
+ 'C02':('v1 flow 모델 코드','src/vibetrading/liquidity_mm/strategy.py'),
+ 'C03':('상태 기반 OFI 코드','src/vibetrading/strategies/research/state/s1_net_liquidity.py'),
+ 'C04':('상태 기반 basis 코드','src/vibetrading/strategies/research/state/s2_external_anchor.py'),
+ 'C05':('상태 기반 flow 코드','src/vibetrading/strategies/research/state/s3_aggressive_flow.py'),
+ 'C06':('상태 기반 OBI 코드','src/vibetrading/strategies/research/state/s4_obi.py'),
+ 'C07':('7개 통합 비교 정책','src/vibetrading/mm_state/coordinator.py'),
+ 'C08':('Turtle 프로토타입','src/vibetrading/strategies/legacy/candle/turtle_breakout.py'),
+ 'C09':('단일 캔들 돌파 예제','src/vibetrading/strategies/example_signal.py')}
+SOURCES.update({'C10':('원형 anchor 코드','src/vibetrading/strategies/legacy/fair_value/s2_external_anchor.py'),
+                'C11':('원형 공격체결 코드','src/vibetrading/strategies/legacy/fair_value/s3_aggressive_flow.py'),
+                'C12':('원형 OBI 코드','src/vibetrading/strategies/legacy/fair_value/s4_obi.py')})
 SOURCES.update({
  'I01':('상태 개정 초기 소스 스냅샷','docs/evidence/mm_state_revision_20261007/server_review/084ae2bf7e402373.tar.gz'),
  'I02':('통합 생성자 수정 전 소스 스냅샷','docs/evidence/mm_state_revision_20261007/server_review/646c9f6a48f4a3bf.tar.gz'),

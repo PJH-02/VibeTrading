@@ -1,0 +1,127 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "debug",
+  "worker_process": {
+    "exit_code": 0,
+    "elapsed_seconds": 88.1286522549999,
+    "relay_http_statuses": [],
+    "served_models": [],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-r03b1-repair2-271edea3",
+  "usage_reported": [
+    {
+      "total": 4351,
+      "input": 4158,
+      "output": 186,
+      "reasoning": 7,
+      "cache": {
+        "write": 0,
+        "read": 0
+      }
+    },
+    {
+      "total": 13329,
+      "input": 3719,
+      "output": 91,
+      "reasoning": 5423,
+      "cache": {
+        "write": 0,
+        "read": 4096
+      }
+    },
+    {
+      "total": 14061,
+      "input": 6027,
+      "output": 141,
+      "reasoning": 85,
+      "cache": {
+        "write": 0,
+        "read": 7808
+      }
+    },
+    {
+      "total": 14294,
+      "input": 252,
+      "output": 175,
+      "reasoning": 43,
+      "cache": {
+        "write": 0,
+        "read": 13824
+      }
+    },
+    {
+      "total": 14877,
+      "input": 357,
+      "output": 568,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 13952
+      }
+    },
+    {
+      "total": 15335,
+      "input": 685,
+      "output": 253,
+      "reasoning": 189,
+      "cache": {
+        "write": 0,
+        "read": 14208
+      }
+    },
+    {
+      "total": 15435,
+      "input": 502,
+      "output": 79,
+      "reasoning": 6,
+      "cache": {
+        "write": 0,
+        "read": 14848
+      }
+    },
+    {
+      "total": 16472,
+      "input": 987,
+      "output": 110,
+      "reasoning": 143,
+      "cache": {
+        "write": 0,
+        "read": 15232
+      }
+    },
+    {
+      "total": 16566,
+      "input": 359,
+      "output": 79,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 16128
+      }
+    },
+    {
+      "total": 17754,
+      "input": 689,
+      "output": 335,
+      "reasoning": 346,
+      "cache": {
+        "write": 0,
+        "read": 16384
+      }
+    }
+  ],
+  "base_sha": "33f0e33c277a022dea5ad8bba6d9088e0421a561",
+  "scope": [
+    "Dockerfile",
+    "tests/refactoring/test_src_packaging.py"
+  ],
+  "output_sha256": {
+    "Dockerfile": "e84f546de2b16680845ffb7fc476d60e72e6cf8dcdfbcff70b221de10caa8851",
+    "tests/refactoring/test_src_packaging.py": "b3f8e6efa91593b35b6369102a64de3c266a4ce10915db9633e2feaab2a70ca3"
+  },
+  "automatic_acceptance": false
+}

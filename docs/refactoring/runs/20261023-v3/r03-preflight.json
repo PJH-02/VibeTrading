@@ -1,0 +1,43 @@
+{
+  "source_sha": "99f25957ca5ec1614b4e8ee550e16077b5fd8773",
+  "phase": "R03_PREFLIGHT_ONLY",
+  "moves": 140,
+  "python_modules": 140,
+  "source_path_sensitive": [
+    {
+      "path": "vibetrading/fv_mm/runner.py",
+      "file_relative_lines": [
+        432
+      ]
+    },
+    {
+      "path": "vibetrading/fv_pilot/runner.py",
+      "file_relative_lines": [
+        186
+      ]
+    },
+    {
+      "path": "vibetrading/health.py",
+      "file_relative_lines": [
+        27
+      ]
+    },
+    {
+      "path": "vibetrading/liquidity_mm/cli.py",
+      "file_relative_lines": [
+        19
+      ]
+    },
+    {
+      "path": "vibetrading/settings.py",
+      "file_relative_lines": [
+        11
+      ]
+    }
+  ],
+  "scope_decision": "Pure relocation and packaging compatibility must be separate reviewable units; preserve AST in pure move; independently compare resource defaults and source fingerprint coverage. No broad path substitution in historical deployment tools.",
+  "protected_rollback": {
+    "path": "scripts/refactoring/deploy_p02_schema.py",
+    "action": "PRESERVE historical deployed-layout tool; never execute import/help directly because top-level code can touch server. Static parse/extract pure builder tests only."
+  }
+}

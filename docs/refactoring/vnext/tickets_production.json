@@ -1433,6 +1433,14 @@
           "next": "VN00 current identity refresh",
           "final_validation": "docs/refactoring/runs/20261020-production/vn07-lifecycle-validation.json"
         }
+      ],
+      "completed_subunits": [
+        {
+          "id": "segment-identity",
+          "status": "ACCEPTED_SUBUNIT_ONLY",
+          "source_sha": "00b47bffc66691015be53c663258db0b52826790",
+          "receipt": "docs/refactoring/runs/20261023-v3/vn07-identity/acceptance.json"
+        }
       ]
     },
     {
@@ -3307,7 +3315,24 @@
         "vibetrading/kis_execution.py",
         "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
       ],
-      "edit_paths": [],
+      "edit_paths": [
+        {
+          "path": "vibetrading/brokers.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/providers/toss.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/test_collector_recovery_20261007.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_tx00_toss_data_only.py",
+          "action": "ADD"
+        }
+      ],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -3361,7 +3386,15 @@
       "external_verification": "BLOCKED_UNVERIFIED until exact product/environment actual account evidence; no mutation authorized",
       "stage_classification": "INCOMPLETE",
       "stage_status_detail": "product/environment별 매핑 조사. 실제 계좌·margin·capability 확인 미완료",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
+      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "completed_subunits": [
+        {
+          "id": "toss-data-only",
+          "status": "ACCEPTED_SUBUNIT_ONLY",
+          "source_sha": "1efd0f3664542ee795d8c89960951a24998ab223",
+          "receipt": "docs/refactoring/runs/20261023-v3/tx00-toss/acceptance.json"
+        }
+      ]
     },
     {
       "task_id": "TX01",
@@ -5693,22 +5726,729 @@
       "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE"
     }
   ],
-  "updated_local": "2026-10-21",
+  "updated_local": "2026-10-23",
   "current_validation": {
-    "candidate": "vn14b-control-v3",
-    "scope": "Exact selected-source full Linux regression after all safety fixes",
-    "linux": "1419 PASS / 2 DESELECTED",
-    "receipt": "docs/refactoring/runs/20261020-production/vn14b-control-validation.json",
-    "production_ready": false
+    "status": "FULL_LOCAL_REGRESSION_PASS",
+    "source_sha": "c605c19e79fc635281c6d794dd8a0ba23cb86376",
+    "receipt": "docs/refactoring/runs/20261023-v3/r04/acceptance.json",
+    "passed": 1822,
+    "additional_review_included": 8,
+    "deselected_live_data": 2,
+    "canonical_src_layout": true,
+    "canonical_strategy_ownership": true
   },
-  "user_request_latest": "2026-10-21: clean or move unused artifacts to ignored trashbin, commit and push all changes, then read .freebuff/repo-analysis-review.md; no next product ticket requested",
+  "user_request_latest": "2026-10-23: implement next ticket R04, delegate implementation/tests through qualified OpenCode/free worker routes.",
   "execution_control": {
     "status": "STOPPED_AT_USER_REQUEST",
     "last_completed_ticket": "VN14B",
+    "last_completed_tooling_ticket": "R04",
     "active_ticket": null,
     "start_next_ticket": false,
-    "stop_after_ticket": "VN14B"
+    "stop_after_ticket": "R04",
+    "server_deploy_authorized": false,
+    "live_mutation_authorized": false,
+    "current_source_sha": "c605c19e79fc635281c6d794dd8a0ba23cb86376",
+    "active_tooling_tickets": [],
+    "active_parallel_tickets": []
   },
   "git_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
-  "git_snapshot_policy": "All current code including unfinished prototypes included; stage classifications unchanged; no deployment authorization"
+  "git_snapshot_policy": "All current code including unfinished prototypes included; stage classifications unchanged; no deployment authorization",
+  "tooling_tasks": [
+    {
+      "task_id": "R00",
+      "status": "ACCEPTED",
+      "depends_on": [],
+      "scope": "LOCAL_ONLY",
+      "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
+      "receipt": "docs/refactoring/vnext/repo_inventory.json"
+    },
+    {
+      "task_id": "R01",
+      "status": "ACCEPTED",
+      "depends_on": [
+        "R00"
+      ],
+      "scope": "LOCAL_ONLY",
+      "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
+      "receipt": "docs/refactoring/runs/20261023-v3/r01/acceptance.json",
+      "source_sha": "ac18621ea1b831d625d2187c11af4369b2232f34"
+    },
+    {
+      "task_id": "R02",
+      "status": "ACCEPTED",
+      "depends_on": [
+        "R00",
+        "R01"
+      ],
+      "scope": "LOCAL_ONLY",
+      "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
+      "receipt": "docs/refactoring/runs/20261023-v3/r02/acceptance.json",
+      "source_sha": "62c3e534e6785785006904e396c2c97622c8346d",
+      "edit_paths": [
+        {
+          "path": "README.md",
+          "action": "MODIFY"
+        },
+        {
+          "path": "docs/architecture.md",
+          "action": "ADD"
+        },
+        {
+          "path": "docs/archive/README.md",
+          "action": "ADD"
+        }
+      ],
+      "contract_ids": [
+        "v3 R02"
+      ]
+    },
+    {
+      "task_id": "R03",
+      "status": "ACCEPTED",
+      "depends_on": [
+        "R00",
+        "R01",
+        "R02"
+      ],
+      "scope": "LOCAL_ONLY",
+      "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
+      "receipt": "docs/refactoring/runs/20261023-v3/r03/acceptance.json",
+      "subunits": {
+        "R03A": {
+          "status": "ACCEPTED_SUBUNIT_ONLY",
+          "receipt": "docs/refactoring/runs/20261023-v3/r03a/relocation.json"
+        },
+        "R03B1": {
+          "status": "ACCEPTED_SUBUNIT_ONLY",
+          "scope": "Packaging and core Dockerfile layout",
+          "source_sha": "bf75b1c5d259433fc0aa2d9b43764855837b3f68",
+          "receipt": "docs/refactoring/runs/20261023-v3/r03b1/acceptance.json"
+        },
+        "R03B2": {
+          "status": "ACCEPTED_SUBUNIT_ONLY",
+          "scope": "Five existing filesystem-anchor compatibility sites",
+          "receipt": "docs/refactoring/runs/20261023-v3/r03b2/review.json",
+          "source_sha": "8f0726c6ce28ee83800bc904c9f9918f791b03ec"
+        },
+        "R03C": {
+          "status": "ACCEPTED_SUBUNIT_ONLY",
+          "scope": "Pathmap/tooling/release/deploy path consumers; exact scope to register beforedispatch",
+          "source_sha": "8f0726c6ce28ee83800bc904c9f9918f791b03ec",
+          "receipt": "docs/refactoring/runs/20261023-v3/r03/acceptance.json"
+        }
+      },
+      "source_sha": "8f0726c6ce28ee83800bc904c9f9918f791b03ec"
+    },
+    {
+      "task_id": "R04",
+      "status": "ACCEPTED",
+      "depends_on": [
+        "R03"
+      ],
+      "scope": "LOCAL_ONLY",
+      "base_sha": "124aef4fd1ea55cec9f3e8d2953250786131c9bf",
+      "receipt": "docs/refactoring/runs/20261023-v3/r04/acceptance.json",
+      "edit_paths": [
+        "src/vibetrading/strategy_contract.py",
+        "services/signal_gen/strategy_loader.py",
+        "strategies/example_signal.py",
+        "strategies/turtle_breakout.py",
+        "strategy/s1_net_liquidity.py",
+        "src/vibetrading/fv_mm/legacy/s1_net_liquidity.py",
+        "strategy/s2_external_anchor.py",
+        "src/vibetrading/fv_mm/legacy/s2_external_anchor.py",
+        "strategy/s3_aggressive_flow.py",
+        "src/vibetrading/fv_mm/legacy/s3_aggressive_flow.py",
+        "strategy/s4_obi.py",
+        "src/vibetrading/fv_mm/legacy/s4_obi.py",
+        "src/vibetrading/strategies/contract.py",
+        "src/vibetrading/strategies/legacy/candle_loader.py",
+        "src/vibetrading/strategies/example_signal.py",
+        "src/vibetrading/strategies/legacy/candle/turtle_breakout.py",
+        "src/vibetrading/strategies/research/state/s1_net_liquidity.py",
+        "src/vibetrading/strategies/legacy/fair_value/s1_net_liquidity.py",
+        "src/vibetrading/strategies/research/state/s2_external_anchor.py",
+        "src/vibetrading/strategies/legacy/fair_value/s2_external_anchor.py",
+        "src/vibetrading/strategies/research/state/s3_aggressive_flow.py",
+        "src/vibetrading/strategies/legacy/fair_value/s3_aggressive_flow.py",
+        "src/vibetrading/strategies/research/state/s4_obi.py",
+        "src/vibetrading/strategies/legacy/fair_value/s4_obi.py",
+        "src/vibetrading/strategy_runner.py",
+        "src/vibetrading/strategy_runtime.py",
+        "src/vibetrading/timefolio/runner.py",
+        "src/vibetrading/fv_mm/market.py",
+        "src/vibetrading/fv_pilot/market.py",
+        "src/vibetrading/mm_state/coordinator.py",
+        "src/vibetrading/mm_state/features.py",
+        "src/vibetrading/fv_mm/runner.py",
+        "src/vibetrading/fv_pilot/runner.py",
+        "services/signal_gen/engine.py",
+        "scripts/rebuild_fv_pilot_calibration.py",
+        "scripts/diagnose_mm_state_no_intents.py",
+        "scripts/replay_mm_state_revision.py",
+        "scripts/build_all_strategy_report.py",
+        "scripts/report_mm_state_revision.py",
+        "scripts/run_backtest.py",
+        "scripts/validate_system.py",
+        "run_strategy.py",
+        "src/vibetrading/strategies/__init__.py",
+        "src/vibetrading/strategies/legacy/__init__.py",
+        "src/vibetrading/strategies/legacy/candle/__init__.py",
+        "src/vibetrading/strategies/legacy/fair_value/__init__.py",
+        "src/vibetrading/strategies/research/__init__.py",
+        "src/vibetrading/strategies/research/state/__init__.py",
+        "tests/refactoring/test_strategy_ownership.py"
+      ],
+      "code_sha": "c605c19e79fc635281c6d794dd8a0ba23cb86376",
+      "pure_move_sha": "b3409b17f9cfe863528a6a9cecde7a4aa9aaab4b",
+      "worker_models": [
+        "opencode/deepseek-v4.1-flash-free",
+        "freellmapi/glm-4.5-flash"
+      ],
+      "worker_repairs": {
+        "R04B": 1,
+        "optional_independent_tests": 1
+      },
+      "acceptance": "PASS; optional GLM test-code attempt rejected, not adopted"
+    },
+    {
+      "task_id": "R05",
+      "status": "PLANNED",
+      "depends_on": [
+        "R03",
+        "R04",
+        "VN10",
+        "VN11",
+        "VN12"
+      ],
+      "scope": "LOCAL_ONLY",
+      "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
+      "receipt": null
+    },
+    {
+      "task_id": "R06",
+      "status": "PLANNED",
+      "depends_on": [
+        "R04",
+        "R05"
+      ],
+      "scope": "LOCAL_ONLY",
+      "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
+      "receipt": null
+    },
+    {
+      "task_id": "O00",
+      "status": "ACCEPTED",
+      "depends_on": [
+        "R00"
+      ],
+      "scope": "LOCAL_ONLY",
+      "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
+      "receipt": "docs/refactoring/runs/20261023-v3/o00/acceptance.json",
+      "source_sha": "66758cb1f49d6a90e42238066b1edf9a2e4e8a1c"
+    },
+    {
+      "task_id": "O01",
+      "status": "REWORK_REQUIRED",
+      "depends_on": [
+        "R01",
+        "O00"
+      ],
+      "scope": "LOCAL_ONLY",
+      "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
+      "receipt": "docs/refactoring/runs/20261023-v3/o01b/acceptance.json",
+      "edit_paths": [
+        {
+          "path": "scripts/dev/agent_task.py",
+          "action": "ADD"
+        },
+        {
+          "path": "scripts/dev/agent_run.py",
+          "action": "ADD"
+        },
+        {
+          "path": "tests/refactoring/test_agent_task.py",
+          "action": "ADD"
+        },
+        {
+          "path": "tests/refactoring/test_agent_run.py",
+          "action": "ADD"
+        }
+      ],
+      "contract_ids": [
+        "v3 O01"
+      ],
+      "subunits": {
+        "O01A": {
+          "status": "ACCEPTED_SUBUNIT_ONLY",
+          "source_sha": "b2ec81ba4a1ee58a82e28326caf4f78f1a8e562d",
+          "receipt": "docs/refactoring/runs/20261023-v3/o01a/acceptance.json",
+          "independent_tests_passed": 115,
+          "repair_delegations": 2
+        },
+        "O01B": {
+          "status": "ACCEPTED_SUBUNIT_ONLY",
+          "source_sha": "187271587f63a91f4adce7981e03a0941f1b8b42",
+          "independent_tests_passed": 143,
+          "repair_delegations": 2,
+          "two_actual_models_patch_replayed": true
+        }
+      },
+      "source_sha": "187271587f63a91f4adce7981e03a0941f1b8b42",
+      "previous_acceptance": {
+        "status": "ACCEPTED",
+        "source_sha": "187271587f63a91f4adce7981e03a0941f1b8b42",
+        "receipt": "docs/refactoring/runs/20261023-v3/o01b/acceptance.json",
+        "note": "Historical bounded/synthetic acceptance retained. Later actual-repository failure requires rework."
+      },
+      "rework_findings": [
+        {
+          "id": "O01_BASELINE_BLOCKED_KEY",
+          "observed_in": "R03B1 repair1",
+          "evidence": "docs/refactoring/runs/20261023-v3/r03b1/repair1-adapter-receipt.json",
+          "failure_class": "SCOPE_VIOLATION",
+          "detail": "Unchanged baseline .env.example is rejected by scope-key validator after worker exit0. Actual worker modifications were independently within allowlist. No adapter repair performed in status/publish request."
+        }
+      ],
+      "pending_path_map_integration": "RESOLVED_BY_R03C",
+      "path_map_integration_receipt": "docs/refactoring/runs/20261023-v3/r03/acceptance.json"
+    },
+    {
+      "scope": "LOCAL_ONLY",
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "historical evidence/data/rollback modifications",
+        "server/live mutation"
+      ],
+      "contract_ids": [
+        "v3 R03"
+      ],
+      "receipt": "docs/refactoring/runs/20261023-v3/r03a/relocation.json",
+      "task_id": "R03A",
+      "status": "ACCEPTED",
+      "depends_on": [
+        "R00",
+        "R01",
+        "R02"
+      ]
+    },
+    {
+      "scope": "LOCAL_ONLY",
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "historical evidence/data/rollback modifications",
+        "server/live mutation"
+      ],
+      "contract_ids": [
+        "v3 R03"
+      ],
+      "receipt": "docs/refactoring/runs/20261023-v3/r03b1/acceptance.json",
+      "task_id": "R03B1",
+      "status": "ACCEPTED",
+      "depends_on": [
+        "R03A"
+      ],
+      "edit_paths": [
+        {
+          "path": "pyproject.toml",
+          "action": "ADD"
+        },
+        {
+          "path": "pytest.ini",
+          "action": "MODIFY"
+        },
+        {
+          "path": "Dockerfile",
+          "action": "MODIFY"
+        },
+        {
+          "path": "Dockerfile.crypto",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_src_packaging.py",
+          "action": "ADD"
+        }
+      ],
+      "source_sha": "bf75b1c5d259433fc0aa2d9b43764855837b3f68"
+    },
+    {
+      "scope": "LOCAL_ONLY",
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "historical evidence/data/rollback modifications",
+        "server/live mutation"
+      ],
+      "contract_ids": [
+        "v3 R03"
+      ],
+      "receipt": "docs/refactoring/runs/20261023-v3/r03b2/review.json",
+      "task_id": "R03B2",
+      "status": "ACCEPTED",
+      "depends_on": [
+        "R03B1"
+      ],
+      "edit_paths": [
+        {
+          "path": "src/vibetrading/settings.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "src/vibetrading/health.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "src/vibetrading/liquidity_mm/cli.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "src/vibetrading/fv_mm/runner.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "src/vibetrading/fv_pilot/runner.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_src_resource_paths.py",
+          "action": "ADD"
+        }
+      ],
+      "source_sha": "8f0726c6ce28ee83800bc904c9f9918f791b03ec",
+      "integrated_verification": "docs/refactoring/runs/20261023-v3/r03/acceptance.json"
+    },
+    {
+      "scope": "LOCAL_ONLY",
+      "forbidden_paths": [
+        ".env*",
+        "**/secrets/**",
+        "runtime_data/**",
+        ".git/**",
+        "historical evidence/data/rollback modifications",
+        "server/live mutation"
+      ],
+      "contract_ids": [
+        "v3 R03"
+      ],
+      "receipt": "docs/refactoring/runs/20261023-v3/r03/acceptance.json",
+      "task_id": "R03C",
+      "status": "ACCEPTED",
+      "depends_on": [
+        "R03B1",
+        "R03B2"
+      ],
+      "edit_paths": [
+        {
+          "path": "scripts/dev/agent_task.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "scripts/dev/agent_run.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_agent_task.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_agent_run.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "scripts/build_crypto_release.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "scripts/build_etf_scope_release.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "scripts/build_telegram_restore_release.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "scripts/refactoring/build_release_manifest.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "scripts/refactoring/build_server_candidate.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_src_release_paths.py",
+          "action": "ADD"
+        },
+        {
+          "path": "docker-compose.yml",
+          "action": "MODIFY"
+        },
+        {
+          "path": "deploy/crypto-profile.yml",
+          "action": "MODIFY"
+        },
+        {
+          "path": "deploy/Dockerfile.crypto-ledger",
+          "action": "MODIFY"
+        },
+        {
+          "path": "scripts/prepare_etf_reference.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "scripts/report_mm_state_revision.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "scripts/seal_fv_indicator_report.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "scripts/build_all_strategy_report.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "README.md",
+          "action": "MODIFY"
+        },
+        {
+          "path": "docs/architecture.md",
+          "action": "MODIFY"
+        },
+        {
+          "path": "docs/status.md",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/test_crypto_event_retirement.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/test_event_index_runs_storage.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/test_sqlite_io_budget.py",
+          "action": "MODIFY"
+        }
+      ],
+      "subunits": {
+        "path_map": "BOUNDED_WORKER_C1",
+        "release_builders": "BOUNDED_WORKER_C2",
+        "literal_path_updates": "DETERMINISTIC_CODEMOD",
+        "acceptance": "FULL_LINUX_CLI_DOCKER_COMPOSE_AND_ROLLBACK"
+      },
+      "source_sha": "8f0726c6ce28ee83800bc904c9f9918f791b03ec"
+    }
+  ],
+  "legacy_task_objects_sha256": "224a13c77fcd505c85d461fa723be008824e6cf119a7ef825949a2aa18c57ce8",
+  "model_routing_profiles": {
+    "repository": [
+      "opencode/glm-5.3-flash-free",
+      "opencode/mimo-v2.6-flash-free",
+      "freellmapi/gemini-2.5-flash"
+    ],
+    "implementation": [
+      "opencode/glm-5.3-flash-free",
+      "freellmapi/glm-4.5-flash",
+      "opencode/mimo-v2.6-flash-free"
+    ],
+    "testing": [
+      "opencode/mimo-v2.6-flash-free",
+      "opencode/glm-5.3-flash-free",
+      "freellmapi/gemini-2.5-flash"
+    ],
+    "debugging": [
+      "opencode/deepseek-v4.1-flash-free",
+      "opencode/glm-5.3-flash-free",
+      "opencode/nemotron-3-ultra-free"
+    ],
+    "refactoring": [
+      "opencode/deepseek-v4.1-flash-free",
+      "opencode/glm-5.3-flash-free",
+      "opencode/nemotron-3-ultra-free"
+    ],
+    "state_machine": [
+      "opencode/deepseek-v4.1-flash-free",
+      "opencode/glm-5.3-flash-free",
+      "opencode/nemotron-3-ultra-free"
+    ],
+    "audit": [
+      "opencode/nemotron-3-ultra-free",
+      "freellmapi/gemini-2.5-flash",
+      "opencode/deepseek-v4.1-flash-free"
+    ]
+  },
+  "model_readiness": [
+    {
+      "model_id": "opencode/glm-5.3-flash-free",
+      "status": "QUALIFIED_O00",
+      "provider_route": "opencode",
+      "quota_independence": "NOT_ASSUMED",
+      "receipt": "docs/refactoring/runs/20261023-v3/o00/vt-o00-f5ip9lxi/receipt.json"
+    },
+    {
+      "model_id": "opencode/mimo-v2.6-flash-free",
+      "status": "QUALIFIED_O00",
+      "provider_route": "opencode",
+      "quota_independence": "NOT_ASSUMED",
+      "receipt": "docs/refactoring/runs/20261023-v3/o00/vt-o00-cabws8_f/receipt.json"
+    },
+    {
+      "model_id": "freellmapi/gemini-2.5-flash",
+      "status": "QUALIFIED_O00",
+      "provider_route": "freellmapi",
+      "quota_independence": "NOT_ASSUMED",
+      "receipt": "docs/refactoring/runs/20261023-v3/o00/vt-o00-f6f_3b0x/receipt.json",
+      "observed_served_models": [
+        "gemini-2.5-flash"
+      ]
+    },
+    {
+      "model_id": "freellmapi/glm-4.5-flash",
+      "status": "QUALIFIED_O00",
+      "provider_route": "freellmapi",
+      "quota_independence": "NOT_ASSUMED",
+      "receipt": "docs/refactoring/runs/20261023-v3/o00/vt-o00-7nef2t3e/receipt.json",
+      "observed_served_models": [
+        "glm-4.5-flash"
+      ]
+    },
+    {
+      "model_id": "opencode/deepseek-v4.1-flash-free",
+      "status": "QUALIFIED_O00",
+      "provider_route": "opencode",
+      "quota_independence": "NOT_ASSUMED",
+      "receipt": "docs/refactoring/runs/20261023-v3/o00/vt-o00-qdyotdke/receipt.json"
+    },
+    {
+      "model_id": "opencode/nemotron-3-ultra-free",
+      "status": "QUALIFIED_O00",
+      "provider_route": "opencode",
+      "quota_independence": "NOT_ASSUMED",
+      "receipt": "docs/refactoring/runs/20261023-v3/o00/vt-o00-v703f9qo/receipt.json",
+      "observed_served_models": []
+    }
+  ],
+  "execution_history": [
+    {
+      "recorded_kst": "2026-10-23T01:40:50.681101+09:00",
+      "previous_execution_control": {
+        "status": "STOPPED_AT_USER_REQUEST",
+        "last_completed_ticket": "VN14B",
+        "active_ticket": null,
+        "start_next_ticket": false,
+        "stop_after_ticket": "VN14B"
+      },
+      "superseded_by": "2026-10-23 user VibeTrading v3 execution request; local-only work resumed"
+    },
+    {
+      "recorded_utc": "2026-10-23T00:00:31.082132+00:00",
+      "previous_execution_control": {
+        "status": "RUNNING_LOCAL_REFACTORING",
+        "last_completed_ticket": "VN14B",
+        "last_completed_tooling_ticket": "O01",
+        "active_ticket": "R03B1",
+        "start_next_ticket": true,
+        "stop_after_ticket": "R03B1",
+        "server_deploy_authorized": false,
+        "live_mutation_authorized": false,
+        "current_source_sha": "ac18621ea1b831d625d2187c11af4369b2232f34",
+        "active_tooling_tickets": [
+          "R03"
+        ],
+        "active_parallel_tickets": []
+      },
+      "superseded_by": "Latest user instruction: finish interrupted R03B1 only, then stop."
+    },
+    {
+      "recorded_kst": "2026-10-23T11:26:11.989628+09:00",
+      "previous_execution_control": {
+        "status": "RUNNING_LOCAL_REFACTORING",
+        "last_completed_ticket": "VN14B",
+        "last_completed_tooling_ticket": "R03B1",
+        "active_ticket": "R03C",
+        "start_next_ticket": true,
+        "stop_after_ticket": "R03",
+        "server_deploy_authorized": false,
+        "live_mutation_authorized": false,
+        "current_source_sha": "bf75b1c5d259433fc0aa2d9b43764855837b3f68",
+        "active_tooling_tickets": [
+          "R03"
+        ],
+        "active_parallel_tickets": []
+      },
+      "superseded_by": "R03 local scope accepted and reflected in original workspace; stop before R04."
+    }
+  ],
+  "current_local_baseline_validation": {
+    "receipt": "docs/refactoring/runs/20261023-v3/baseline/result.json",
+    "passed": 1531,
+    "failed": 1,
+    "deselected": 2,
+    "state": "BASELINE_FAILURE_CONFIRMED",
+    "failure_scope": "VN07 checkpoint unopened suffix identity replacement",
+    "reproduction": "docs/refactoring/runs/20261023-v3/baseline/checkpoint-order-stdout.txt"
+  },
+  "validation_history": [
+    {
+      "reason": "Historical pre-v3 validation preserved; current fresh baseline includes one confirmed failure",
+      "value": {
+        "candidate": "vn14b-control-v3",
+        "scope": "Exact selected-source full Linux regression after all safety fixes",
+        "linux": "1419 PASS / 2 DESELECTED",
+        "receipt": "docs/refactoring/runs/20261020-production/vn14b-control-validation.json",
+        "production_ready": false
+      }
+    },
+    {
+      "receipt": "docs/refactoring/runs/20261023-v3/baseline/result.json",
+      "passed": 1531,
+      "failed": 1,
+      "deselected": 2,
+      "state": "BASELINE_FAILURE_CONFIRMED",
+      "failure_scope": "VN07 checkpoint unopened suffix identity replacement",
+      "reproduction": "docs/refactoring/runs/20261023-v3/baseline/checkpoint-order-stdout.txt"
+    }
+  ],
+  "user_scope_latest": "R04 completed locally; stop before R05. No other ticket or stage implementation.",
+  "packaging_validation": {
+    "source_sha": "bf75b1c5d259433fc0aa2d9b43764855837b3f68",
+    "status": "R03B1_ONLY_PASS",
+    "receipt": "docs/refactoring/runs/20261023-v3/r03b1/acceptance.json"
+  },
+  "progress_report": "docs/refactoring/runs/20261023-v3/r04/README.md",
+  "primary_workspace_application": {
+    "root": "/mnt/c/Users/박제형/Desktop/VibeTrading",
+    "branch": "codex/v3-local-candidate",
+    "receipt": "docs/refactoring/runs/20261023-v3/r04/original-application.json",
+    "accepted_source_sha": "c605c19e79fc635281c6d794dd8a0ba23cb86376"
+  },
+  "current_validation_history": [
+    {
+      "status": "FULL_LOCAL_REGRESSION_PASS",
+      "source_sha": "b778955d83aef5ac38aeef33d57233a39eab1783",
+      "receipt": "docs/refactoring/runs/20261023-v3/integrated-before-src/receipt.json",
+      "passed": 1711,
+      "additional_review_passed": 6,
+      "deselected": 2
+    },
+    {
+      "status": "FULL_LOCAL_REGRESSION_PASS",
+      "source_sha": "8f0726c6ce28ee83800bc904c9f9918f791b03ec",
+      "receipt": "docs/refactoring/runs/20261023-v3/r03/acceptance.json",
+      "passed": 1789,
+      "additional_review_included": 8,
+      "deselected_live_data": 2,
+      "canonical_src_layout": true
+    }
+  ]
 }

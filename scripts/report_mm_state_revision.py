@@ -7,6 +7,19 @@ from xml.etree import ElementTree as ET
 ROOT=Path(__file__).resolve().parents[1]
 
 
+def strategy_source_files():
+    state=ROOT/'src/vibetrading/strategies/research/state'
+    fair_value=ROOT/'src/vibetrading/strategies/legacy/fair_value'
+    legacy=ROOT/'src/vibetrading/fv_mm/legacy'
+    if state.is_dir() and fair_value.is_dir():
+        adapters={'s1_net_liquidity.py','s2_external_anchor.py','s3_aggressive_flow.py','s4_obi.py'}
+        # Keep non-strategy legacy inputs after replacing the adapter bodies.
+        return sorted(state.glob('*.py'))+sorted(fair_value.glob('*.py'))+[
+            path for path in sorted(legacy.glob('*.py')) if path.name not in adapters]
+    # Frozen flat exports predate the canonical package layout.
+    return sorted((ROOT/'strategy').glob('*.py'))+sorted(legacy.glob('*.py'))
+
+
 def table(headers,rows):
     return '| '+' | '.join(headers)+' |\n| '+' | '.join(['---']*len(headers))+' |\n'+''.join('| '+' | '.join(str(x) for x in row)+' |\n' for row in rows)
 
@@ -177,7 +190,7 @@ JSON parsing,50level L2,16route 공유 feature+4모듈,10Hz quote policy, lifecy
 
 명세: [STRATEGY_SPEC](../../mm_state/STRATEGY_SPEC.md), [EXECUTION_SIM_SPEC](../../mm_state/EXECUTION_SIM_SPEC.md), [STATE_MACHINE_SPEC](../../mm_state/STATE_MACHINE_SPEC.md), [EDA_PLAN](../../mm_state/EDA_PLAN.md), [BACKTEST_PROTOCOL](../../mm_state/BACKTEST_PROTOCOL.md), [RISK_CONTROLS](../../mm_state/RISK_CONTROLS.md).
 
-전략은 `strategy/s1_net_liquidity.py`, `s2_external_anchor.py`, `s3_aggressive_flow.py`, `s4_obi.py`; 공통 state/policy/calibration/lifecycle/analytics/risk는 `vibetrading/mm_state/`; paper engine은 `vibetrading/fv_pilot/simulation.py`; testnet Runner는 `vibetrading/fv_mm/runner.py`다. 새 run 명령과 fresh training/latency profile 조건은 BACKTEST_PROTOCOL에 기록했다.
+전략은 `src/vibetrading/strategies/research/state/s1_net_liquidity.py`, `s2_external_anchor.py`, `s3_aggressive_flow.py`, `s4_obi.py`; frozen fair-value 구현은 `src/vibetrading/strategies/legacy/fair_value/`; 공통 state/policy/calibration/lifecycle/analytics/risk는 `vibetrading/mm_state/`; paper engine은 `vibetrading/fv_pilot/simulation.py`; testnet Runner는 `vibetrading/fv_mm/runner.py`다. 새 run 명령과 fresh training/latency profile 조건은 BACKTEST_PROTOCOL에 기록했다.
 
 서버에는 검토 소스만 staged 상태다. 실행용5개 CLI·설정·dependencies 목록·6개 명세까지 추가 복사했고 network-none 환경에서5개 CLI의 import/--help가 성공했다. [완성된 검토 bundle](server_final/operational_bundle.json). `/root/vibetrading`의 생산 서비스·collector를 교체하지 않았고 실제 주문 제출 및 신규30분 운용은0회다. maker emergency는 꺼져 있다. 이번 historical 모델은 fresh operational 모델이 아니어서 모델 age gate가 다음 실제 운용에서 재학습을 요구한다.
 
@@ -208,7 +221,7 @@ JSON parsing,50level L2,16route 공유 feature+4모듈,10Hz quote policy, lifecy
         return h.hexdigest()
     raw={p:dict(expected=exp,actual=digest(src/p)) for p,exp in raw_expected.items()}
     if any(x['actual']!=x['expected'] for x in raw.values()):raise ValueError('Raw input integrity mismatch')
-    source_files=sorted((ROOT/'strategy').glob('*.py'))+sorted((ROOT/'vibetrading/mm_state').glob('*.py'))+sorted((ROOT/'vibetrading/fv_mm').glob('*.py'))+sorted((ROOT/'vibetrading/fv_pilot').glob('*.py'))+sorted((ROOT/'vibetrading/fv_mm/legacy').glob('*.py'))
+    source_files=strategy_source_files()+sorted((ROOT/'src/vibetrading/mm_state').glob('*.py'))+sorted((ROOT/'src/vibetrading/fv_mm').glob('*.py'))+sorted((ROOT/'src/vibetrading/fv_pilot').glob('*.py'))
     source_files += [ROOT/'scripts'/x for x in ('replay_mm_state_revision.py','benchmark_mm_state.py','collect_fv_public.py','collect_fv_mainnet.py','run_fv_pilot.py','run_fv_testnets.py','report_mm_state_revision.py','complete_mm_state_server_review.py','diagnose_mm_state_no_intents.py')]
     source_files += [ROOT/'README.md',ROOT/'config/fv_mm_testnets.json',ROOT/'config/mm_state_latency_scenarios.json',ROOT/'requirements-mm-state-research.txt']
     hashes={p.relative_to(ROOT).as_posix():digest(p) for p in source_files}
