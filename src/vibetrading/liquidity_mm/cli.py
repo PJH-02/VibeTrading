@@ -16,7 +16,12 @@ from .exchange import TestnetClient
 from .journal import write_json
 from .runner import execute
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+_PACKAGE_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = (
+    _PACKAGE_ROOT.parent.parent
+    if _PACKAGE_ROOT.parent.name == "src" and (_PACKAGE_ROOT.parent.parent / "pyproject.toml").is_file()
+    else _PACKAGE_ROOT.parent
+)
 DEFAULT_CONFIG = PROJECT_ROOT / "config" / "liquidity_mm_testnet.yaml"
 
 

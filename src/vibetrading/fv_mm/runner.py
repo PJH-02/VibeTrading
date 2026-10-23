@@ -429,9 +429,10 @@ class Runner:
 
     @staticmethod
     def source_hash():
-        root=Path(__file__).resolve().parents[2]
+        package=Path(__file__).resolve().parents[1]
+        root=package.parent.parent if package.parent.name=="src" and (package.parent.parent/"pyproject.toml").is_file() else package.parent
         digest=hashlib.sha256()
-        for folder in (root/"strategy",root/"vibetrading"/"fv_mm",root/"vibetrading"/"mm_state"):
+        for folder in (root/"strategy",package/"fv_mm",package/"mm_state"):
             for p in sorted(folder.glob("*.py")):
                 digest.update(p.name.encode()); digest.update(p.read_bytes())
         return digest.hexdigest()
