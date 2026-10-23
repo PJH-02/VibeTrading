@@ -1,0 +1,28 @@
+# VN07A — Reuse durable Paper claims to fence unverified strategy restart
+
+Parent VN07 remains incomplete: no strategy-state checkpoint/restore, no combined market/Paper/ETF recovery boundary is claimed here. This bounded subunit is explicitly authorized by the current user request to implement the next ticket under the minimal-reuse plan.
+
+## Objective and demonstrated gap
+PaperExecution already restores its matcher from PortfolioLedger; PaperStrategyRuntime.register always creates a fresh plugin instance. Durable claim_strategy_event prevents repeated event IDs but permits a NEW event to call a state-reset plugin after restart. Fence that risk until explicit strategy restore exists. Reuse the existing bounded SQLite receipt journal; no new table, file format, journal, matcher, engine, strategy protocol or broker code.
+
+## Allowed edits
+- src/vibetrading/portfolio_ledger.py: one read-only has_strategy_dispatch(strategy) predicate over existing strategy_event receipts.
+- src/vibetrading/strategy_runtime.py: register checks each bound account's durable evidence before admitting a new PAPER instance; report precise restart-barrier evidence.
+- tests/refactoring/test_strategy_restart_barrier.py: new regression/fault tests only. Existing tests/assertions/goldens MUST NOT change.
+
+Read the ticket plus portfolio_ledger.py, strategy_runtime.py and tests/refactoring/test_strategy_runtime.py (reuse helper fixtures), and paper_execution.py if necessary. Other provided files are import/test dependencies only. No exploration or metadata edits.
+
+## Exact contract
+1. has_strategy_dispatch checks ledger owner/open state and PAPER mode and validates bounded strategy identity. Stream existing portfolio_receipts rows for kind strategy_event. Any receipt for the SAME strategy with event_id other than @registration counts, including @action: claims and any config_version. @registration alone is harmless. Other strategies are independent. No receipt or counter writes; respect existing bounded journal; do not introduce SQL JSON extension dependency. Malformed receipt/schema must fail closed, never silently ignore possible evidence. Validate only the existing claim receipt schema, not arbitrary other-kind receipts.
+2. In register for phase paper: query ALL selected accounts before registration claims/create; existing evidence in ANY account means this new job is BLOCKED, reason strategy_state_restore_unverified. Permission-denied jobs remain permission blocked. Failures reading any evidence reject registration (no dispatch), do not proceed fresh. Config-version changes must not bypass same-strategy restart barrier. Durable registration fingerprint collision behavior is unchanged.
+3. Fresh account/new strategy, and harmless registration-only reopen continue existing behavior. Multiple new events in the SAME runtime remain allowed (check at registration only). Existing replay-only phase may warm callbacks without durable claims/actions/matcher advancement; it cannot establish restored-strategy proof or clear the PAPER barrier. resume/pause/resume must not bypass BLOCKED (existing pause currently unconditionally sets PAUSED: close this bypass for restart-blocked jobs without changing existing normal pause/halt semantics). Once a job is restart-blocked it stays blocked for that instance, including halt/resume sequences.
+4. Preserve existing at-most-once claims and exact Paper economic logic, orders, fills, balances, reservations and cancellation behavior. Do not automatically cancel restored orders on blocked registration. Existing _market may process native Paper facts; the barrier prevents new strategy callbacks/actions. No resets, claim deletion or automatic retry of ambiguous work.
+5. report restart_evidence explicitly lists blocked strategy IDs and strategy-state recovery as unverified; retain continuous_input_cursor MISSING_EVIDENCE/full_restart_gate BLOCKED. No production readiness claim.
+
+## Tests and acceptance
+First write new tests and run the focused new test command before source edits to demonstrate the missing NEW-event restart case (must observe actual failing pytest exit). Then implement and run:
+python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_strategy_restart_barrier.py tests/refactoring/test_strategy_runtime.py tests/refactoring/test_portfolio_ledger.py tests/refactoring/test_paper_execution.py
+
+Tests: actual close/reopen; new event after prior callback produces ZERO callback/action/new order while existing matcher state remains intact before new input; two new events same instance still work; registration-only reopen still works; other strategy unaffected; config change cannot bypass (use same module/compatible registration or show registration collision remains safe); durable action-only receipt fences; multiple accounts with evidence in only one fences; malformed claimed receipt and read failures fail closed; replay unchanged and no durable writes; pause/resume/halt bypass fails; no network. Reuse existing helper fixtures via from test_strategy_runtime import ... (pytest adds that test directory). If config change triggers existing immutable registration collision, that is safe and preserve it; test the all-config ledger predicate independently.
+
+No package install, subagents, network/service/accounts, trading, cloud/NATS/data changes, deletion, metadata changes, Git commits or pushes. Codex reviews diff and independently runs acceptance; worker never self-approves. Return actual commands/exits and limitations. Role refactor, exact qualified model opencode/deepseek-v4.1-flash-free.
