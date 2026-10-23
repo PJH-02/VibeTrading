@@ -1,0 +1,225 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "refactor",
+  "worker_process": {
+    "exit_code": -15,
+    "elapsed_seconds": 486.24177465200773,
+    "relay_http_statuses": [],
+    "served_models": [],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-repair1-stopped-b01e2eb2",
+  "usage_reported": [
+    {
+      "total": 3782,
+      "input": 1581,
+      "output": 108,
+      "reasoning": 45,
+      "cache": {
+        "write": 0,
+        "read": 2048
+      }
+    },
+    {
+      "total": 5898,
+      "input": 2076,
+      "output": 110,
+      "reasoning": 128,
+      "cache": {
+        "write": 0,
+        "read": 3584
+      }
+    },
+    {
+      "total": 8262,
+      "input": 2326,
+      "output": 255,
+      "reasoning": 49,
+      "cache": {
+        "write": 0,
+        "read": 5632
+      }
+    },
+    {
+      "total": 31921,
+      "input": 23634,
+      "output": 299,
+      "reasoning": 52,
+      "cache": {
+        "write": 0,
+        "read": 7936
+      }
+    },
+    {
+      "total": 33685,
+      "input": 768,
+      "output": 58,
+      "reasoning": 1371,
+      "cache": {
+        "write": 0,
+        "read": 31488
+      }
+    },
+    {
+      "total": 38587,
+      "input": 5964,
+      "output": 61,
+      "reasoning": 306,
+      "cache": {
+        "write": 0,
+        "read": 32256
+      }
+    },
+    {
+      "total": 38953,
+      "input": 620,
+      "output": 164,
+      "reasoning": 25,
+      "cache": {
+        "write": 0,
+        "read": 38144
+      }
+    },
+    {
+      "total": 42040,
+      "input": 647,
+      "output": 72,
+      "reasoning": 2665,
+      "cache": {
+        "write": 0,
+        "read": 38656
+      }
+    },
+    {
+      "total": 58616,
+      "input": 8755,
+      "output": 153,
+      "reasoning": 10412,
+      "cache": {
+        "write": 0,
+        "read": 39296
+      }
+    },
+    {
+      "total": 86312,
+      "input": 13473,
+      "output": 10987,
+      "reasoning": 13852,
+      "cache": {
+        "write": 0,
+        "read": 48000
+      }
+    },
+    {
+      "total": 87992,
+      "input": 24888,
+      "output": 80,
+      "reasoning": 1584,
+      "cache": {
+        "write": 0,
+        "read": 61440
+      }
+    },
+    {
+      "total": 99926,
+      "input": 1978,
+      "output": 245,
+      "reasoning": 11431,
+      "cache": {
+        "write": 0,
+        "read": 86272
+      }
+    },
+    {
+      "total": 100548,
+      "input": 11749,
+      "output": 139,
+      "reasoning": 468,
+      "cache": {
+        "write": 0,
+        "read": 88192
+      }
+    },
+    {
+      "total": 101198,
+      "input": 723,
+      "output": 635,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 99840
+      }
+    },
+    {
+      "total": 101793,
+      "input": 734,
+      "output": 576,
+      "reasoning": 3,
+      "cache": {
+        "write": 0,
+        "read": 100480
+      }
+    },
+    {
+      "total": 101910,
+      "input": 688,
+      "output": 80,
+      "reasoning": 22,
+      "cache": {
+        "write": 0,
+        "read": 101120
+      }
+    },
+    {
+      "total": 102470,
+      "input": 534,
+      "output": 104,
+      "reasoning": 72,
+      "cache": {
+        "write": 0,
+        "read": 101760
+      }
+    },
+    {
+      "total": 103007,
+      "input": 538,
+      "output": 42,
+      "reasoning": 155,
+      "cache": {
+        "write": 0,
+        "read": 102272
+      }
+    },
+    {
+      "total": 104160,
+      "input": 395,
+      "output": 280,
+      "reasoning": 701,
+      "cache": {
+        "write": 0,
+        "read": 102784
+      }
+    }
+  ],
+  "base_sha": "fa2478e5ca15b92d1db69d1cc7e0d8f7266b7146",
+  "scope": [
+    "docs/refactoring/vnext/reuse_audit/tx00_current/check.py",
+    "docs/refactoring/vnext/reuse_audit/tx00_current/inventory.json",
+    "docs/refactoring/vnext/reuse_audit/tx00_current/dispositions.json",
+    "docs/refactoring/vnext/reuse_audit/tx00_current/callers.json",
+    "docs/refactoring/vnext/reuse_audit/tx00_current/delta.json",
+    "docs/refactoring/vnext/reuse_audit/tx00_current/closure.md"
+  ],
+  "output_sha256": {
+    "docs/refactoring/vnext/reuse_audit/tx00_current/check.py": "e12751e84ac7dba2ef1350d40bc53529fee1fd25864afa651b1733cd7e6a0e8a",
+    "docs/refactoring/vnext/reuse_audit/tx00_current/inventory.json": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/refactoring/vnext/reuse_audit/tx00_current/dispositions.json": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/refactoring/vnext/reuse_audit/tx00_current/callers.json": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/refactoring/vnext/reuse_audit/tx00_current/delta.json": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/refactoring/vnext/reuse_audit/tx00_current/closure.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "automatic_acceptance": false
+}

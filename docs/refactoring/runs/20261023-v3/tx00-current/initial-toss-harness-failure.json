@@ -1,0 +1,32 @@
+{
+  "label": "existing-toss",
+  "baseline": false,
+  "source": "/home/pjh/.codex/worktrees/v3-local-candidate/vibetrading",
+  "exit_code": 1,
+  "elapsed_seconds": 8.15690407800139,
+  "base": "/tmp/vt-tx00-current-existing-toss-981aljyn",
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_tx00_toss_data_only.py",
+    "tests/test_toss_daymarket.py"
+  ],
+  "tests": {
+    "passed": 34,
+    "failed": 2,
+    "skipped": 0
+  },
+  "source_changed": [],
+  "stdout_tail": "..................................FF                                     [100%]\n=================================== FAILURES ===================================\n________________ test_spy_qqq_subscribe_on_same_toss_websocket _________________\n\n    def test_spy_qqq_subscribe_on_same_toss_websocket() -> None:\n>       collector = TossCollector(parse_toss_symbols(\"US:SPY,US:QQQ\"), publish_rest_snapshot=False)\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntests/test_toss_daymarket.py:13: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nsrc/vibetrading/providers/toss.py:346: in __init__\n    self.client = TossAuthClient()\n                  ^^^^^^^^^^^^^^^^\nsrc/vibetrading/providers/toss.py:112: in __init__\n    self.settings = settings or get_settings()\n                                ^^^^^^^^^^^^^^\nsrc/vibetrading/settings.py:412: in get_settings\n    settings.ensure_dirs()\nsrc/vibetrading/settings.py:289: in ensure_dirs\n    path.mkdir(parents=True, exist_ok=True)\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nself = PosixPath('/work/runtime_data'), mode = 511, parents = True\nexist_ok = True\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           OSError: [Errno 30] Read-only file system: '/work/runtime_data'\n\n/usr/lib/python3.12/pathlib.py:1313: OSError\n_______ test_toss_candle_is_published_only_after_close_and_deduplicates ________\n\n    def test_toss_candle_is_published_only_after_close_and_deduplicates() -> None:\n>       collector = TossCollector(parse_toss_symbols(\"US:QQQ\"), publish_rest_snapshot=False)\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntests/test_toss_daymarket.py:22: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nsrc/vibetrading/providers/toss.py:346: in __init__\n    self.client = TossAuthClient()\n                  ^^^^^^^^^^^^^^^^\nsrc/vibetrading/providers/toss.py:112: in __init__\n    self.settings = settings or get_settings()\n                                ^^^^^^^^^^^^^^\nsrc/vibetrading/settings.py:412: in get_settings\n    settings.ensure_dirs()\nsrc/vibetrading/settings.py:289: in ensure_dirs\n    path.mkdir(parents=True, exist_ok=True)\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nself = PosixPath('/work/runtime_data'), mode = 511, parents = True\nexist_ok = True\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           OSError: [Errno 30] Read-only file system: '/work/runtime_data'\n\n/usr/lib/python3.12/pathlib.py:1313: OSError\n=========================== short test summary info ============================\nFAILED tests/test_toss_daymarket.py::test_spy_qqq_subscribe_on_same_toss_websocket\nFAILED tests/test_toss_daymarket.py::test_toss_candle_is_published_only_after_close_and_deduplicates\n2 failed, 34 passed in 5.32s\n",
+  "disposition": "Harness-only read-only synthetic runtime-data mount issue; fixed only disposable test harness, no product/test edits; corrected run36 passed."
+}

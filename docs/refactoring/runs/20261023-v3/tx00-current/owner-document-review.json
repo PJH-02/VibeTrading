@@ -1,0 +1,19 @@
+{
+  "decision": "PASS",
+  "owner_product_or_checker_edits": 0,
+  "documentation_only_corrections": [
+    "Corrected 193 relative source links to the repository root",
+    "Bybit/Grvt class names and module-level execute caller",
+    "KIS daily_fills ownership and Kiwoom COM callback ownership",
+    "Separated PaperExecution methods from current PortfolioLedger methods with independently derived current lines",
+    "Explicit adapter handoff call site and auxiliary data-source/EOL provenance limits"
+  ],
+  "worker_output_hashes_before_owner_document_review": {
+    "docs/refactoring/vnext/reuse_audit/tx00_current/check.py": "a757346febe397c661d2539e0f69abcefa3b951ded436f6cf8d36549b9b58f5e",
+    "docs/refactoring/vnext/reuse_audit/tx00_current/inventory.json": "f73f16fb01bf21906df820fcc61e2e36c4d80ecb817f2d8b24326ea2001beb6e",
+    "docs/refactoring/vnext/reuse_audit/tx00_current/dispositions.json": "cd4b44c12bb564877648a731374616c8de78485a2f87f506bbdc8420230852b6",
+    "docs/refactoring/vnext/reuse_audit/tx00_current/callers.json": "aa5a8dfb4d72a52fb967c35b6b85315e4142d5ff561aeb2a55a1a1d5d056264c",
+    "docs/refactoring/vnext/reuse_audit/tx00_current/delta.json": "f1831de8e27e1a5f9f92ff0af49aeb251a995d79066c54ad56d21d270501be4c",
+    "docs/refactoring/vnext/reuse_audit/tx00_current/closure.md": "fada5f127ee57902f70d6fd301802571b8083941ced8c6a451f739d82198f56e"
+  }
+}
