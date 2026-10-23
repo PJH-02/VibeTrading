@@ -1,7 +1,7 @@
 {
   "decision": "PASS",
   "base_sha": "0b76fbd7fb029a192cea77447dbda22bee847ad0",
-  "source_sha": "79501a9c1484daa6528e129bab20d570dc66fcf9",
+  "source_sha": "89b961140cd4e86bdd57c5982dc97e7832c227ca",
   "task_comparison": {
     "tickets_production.json": {
       "changed_task_objects": [
@@ -64,7 +64,7 @@
     "--dir",
     "/home",
     "--bind",
-    "/tmp/vt-vn07b-final-metadata-nuzwmubl/tooling-os-home",
+    "/tmp/vt-vn07b-final-metadata-__fm29pr/tooling-os-home",
     "/home/pjh",
     "--ro-bind",
     "/home/pjh/.local/lib/python3.12/site-packages",
@@ -73,16 +73,16 @@
     "/home/pjh/.cache/vt-refactor-deps",
     "/home/pjh/.cache/vt-refactor-deps",
     "--bind",
-    "/tmp/vt-vn07b-final-metadata-nuzwmubl/tooling-os",
+    "/tmp/vt-vn07b-final-metadata-__fm29pr/tooling-os",
     "/work",
     "--bind",
-    "/tmp/vt-vn07b-final-metadata-nuzwmubl/tooling-os-evidence",
+    "/tmp/vt-vn07b-final-metadata-__fm29pr/tooling-os-evidence",
     "/evidence",
     "--ro-bind",
-    "/tmp/vt-vn07b-final-metadata-nuzwmubl/oracles/schema_oracle.json",
+    "/tmp/vt-vn07b-final-metadata-__fm29pr/oracles/schema_oracle.json",
     "/work/docs/refactoring/runs/20261018-stage-assignment/schema_oracle.json",
     "--ro-bind",
-    "/tmp/vt-vn07b-final-metadata-nuzwmubl/oracles/encoding_oracle.json",
+    "/tmp/vt-vn07b-final-metadata-__fm29pr/oracles/encoding_oracle.json",
     "/work/docs/refactoring/runs/20261018-stage-assignment/encoding_oracle.json",
     "--clearenv",
     "--setenv",
@@ -124,7 +124,7 @@
   "metadata_test_passed": 20,
   "metadata_test_exit": 0,
   "metadata_sha256": {
-    "docs/refactoring/vnext/tickets_production.json": "2ea204bcbe41978ff1d3d87a9000eb5a5719667ff694d80b401ba1d2afb495d3",
-    "docs/refactoring/vnext/stage_status.json": "ebd2a0eefbd3220495b948f8fa6217691122eeb168b6826dbd4acb68ee608206"
+    "docs/refactoring/vnext/tickets_production.json": "aafa7b7f943c7990957b8a1c2058eb1da8a4af566b898b55c43b98007536fe16",
+    "docs/refactoring/vnext/stage_status.json": "d2e1c1e2e9f2a24b8eecf4d76ab4e7dc46ba8d2e84b94219309486907af791c1"
   }
 }
