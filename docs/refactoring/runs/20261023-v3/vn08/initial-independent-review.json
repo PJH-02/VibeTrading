@@ -1,0 +1,37 @@
+{
+  "label": "initial-extended",
+  "baseline": false,
+  "source": "/tmp/vt-bounded-k6mcbuws/work",
+  "exit_code": 1,
+  "elapsed_seconds": 2.7050916029984364,
+  "base": "/tmp/vt-vn08-initial-extended-r_inc363",
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_spool_recovery.py",
+    "tests/refactoring/test_local_storage.py",
+    "tests/refactoring/test_checkpoint_startup.py",
+    "tests/refactoring/test_local_pipeline.py",
+    "tests/refactoring/test_local_engine.py",
+    "tests/refactoring/test_retained_spool.py",
+    "tests/refactoring/test_retained_storage.py",
+    "docs/tickets/VN08-reviewer-counterexamples.py"
+  ],
+  "tests": {
+    "passed": 268,
+    "failed": 6,
+    "skipped": 0
+  },
+  "source_changed": [],
+  "stdout_tail": "test_independent_reported_durable_high_water_never_regresses _________\n\ntmp_path = PosixPath('/tmp/pytest/test_independent_reported_dura0')\n\n    def test_independent_reported_durable_high_water_never_regresses(tmp_path):\n        _,tail,proof=active_tail_copy(tmp_path);r=reader(tail,proof)\n        with (tail/\"00000000000000000003.active\").open(\"ab\") as f:\n            f.write(frame(4,b\"fourth\")+frame(5,b\"fifth\"))\n        set_durable(tail,5)\n        assert [row.cursor.sequence for row in r.read_batch(max_records=1,max_bytes=8192)]==[2]\n        assert r.durable_cursor.sequence==5\n        set_durable(tail,4)\n>       with pytest.raises(SpoolError):\nE       Failed: DID NOT RAISE <class 'vibetrading.market_spool.SpoolError'>\n\ndocs/tickets/VN08-reviewer-counterexamples.py:169: Failed\n______ test_independent_capture_cannot_certify_consumer_ahead_of_producer ______\n\ntmp_path = PosixPath('/tmp/pytest/test_independent_capture_canno0')\n\n    def test_independent_capture_cannot_certify_consumer_ahead_of_producer(tmp_path):\n        source,_,_=setup_tail(tmp_path)\n>       with pytest.raises((SpoolError,ValueError)):\nE       Failed: DID NOT RAISE any of (<class 'vibetrading.market_spool.SpoolError'>, <class 'ValueError'>)\n\ndocs/tickets/VN08-reviewer-counterexamples.py:177: Failed\n________ test_independent_absolute_cursor_overflow_is_rejected_by_scan _________\n\ntmp_path = PosixPath('/tmp/pytest/test_independent_absolute_curs0')\n\n    def test_independent_absolute_cursor_overflow_is_rejected_by_scan(tmp_path):\n        _,tail,proof=setup_tail(tmp_path);maximum=2**63-1\n        (tail/\"00000000000000000002.sealed\").write_bytes(frame(maximum,b\"second\"))\n        (tail/\"00000000000000000003.sealed\").write_bytes(frame(maximum+1,b\"third\"))\n        set_durable(tail,maximum+1)\n        d=json.loads(proof.to_bytes());d.update(base_sequence=maximum-1,durable_sequence=maximum,\n            consumer_cursors=[[P,I,maximum-1]],first_retained_segment_sha256=hashlib.sha256(\n                (tail/\"00000000000000000002.sealed\").read_bytes()).hexdigest())\n        raw=spool._json(d)\n        bounded=RetainedPrefix.from_bytes(raw,expected_sha256=hashlib.sha256(raw).hexdigest(),\n                                          expected_generation=\"retention-1\")\n>       with pytest.raises((SpoolError,ValueError)):\nE       Failed: DID NOT RAISE any of (<class 'vibetrading.market_spool.SpoolError'>, <class 'ValueError'>)\n\ndocs/tickets/VN08-reviewer-counterexamples.py:193: Failed\n_ test_independent_inventory_enforces_capacity_before_accumulating_all_entries _\n\ntmp_path = PosixPath('/tmp/pytest/test_independent_inventory_enf0')\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x74b0406e3110>\n\n    def test_independent_inventory_enforces_capacity_before_accumulating_all_entries(tmp_path,monkeypatch):\n        from types import SimpleNamespace\n        _,tail,proof=setup_tail(tmp_path)\n        class Entry:\n            def __init__(self,n): self.name=f\"{n:020d}.sealed\"\n            def is_file(self,**kwargs): return True\n            def stat(self,**kwargs): return SimpleNamespace(st_size=1)\n        class Inventory:\n            def __enter__(self): return self\n            def __exit__(self,*args): return False\n            def __iter__(self):\n                for n in range(2,20):\n                    if n>5: raise AssertionError(\"inventory accumulated more than bounded segment capacity\")\n                    yield Entry(n)\n        monkeypatch.setattr(spool.os,\"scandir\",lambda *args: Inventory())\n        with pytest.raises(SpoolError):\n>           scan_spool(tail,producer_id=P,incarnation=I,retained_prefix=proof,\n                       **read_limits(max_records=2))\n\ndocs/tickets/VN08-reviewer-counterexamples.py:213: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nsrc/vibetrading/market_spool.py:581: in scan_spool\n    disk, last, active, checkpoint_temp, numbers = _inventory_retained(\nsrc/vibetrading/market_spool.py:439: in _inventory_retained\n    for entry in scan:\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nself = <VN08-reviewer-counterexamples.test_independent_inventory_enforces_capacity_before_accumulating_all_entries.<locals>.Inventory object at 0x74b0406e17f0>\n\n    def __iter__(self):\n        for n in range(2,20):\n>           if n>5: raise AssertionError(\"inventory accumulated more than bounded segment capacity\")\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AssertionError: inventory accumulated more than bounded segment capacity\n\ndocs/tickets/VN08-reviewer-counterexamples.py:209: AssertionError\n=========================== short test summary info ============================\nFAILED docs/tickets/VN08-reviewer-counterexamples.py::test_independent_same_confirmed_position_for_two_consumers_is_valid\nFAILED docs/tickets/VN08-reviewer-counterexamples.py::test_independent_forward_growth_cannot_exceed_retained_record_capacity\nFAILED docs/tickets/VN08-reviewer-counterexamples.py::test_independent_reported_durable_high_water_never_regresses\nFAILED docs/tickets/VN08-reviewer-counterexamples.py::test_independent_capture_cannot_certify_consumer_ahead_of_producer\nFAILED docs/tickets/VN08-reviewer-counterexamples.py::test_independent_absolute_cursor_overflow_is_rejected_by_scan\nFAILED docs/tickets/VN08-reviewer-counterexamples.py::test_independent_inventory_enforces_capacity_before_accumulating_all_entries\n6 failed, 268 passed in 2.28s\n"
+}
