@@ -1,0 +1,27 @@
+{
+  "decision": "REJECTED",
+  "selected_model": "freellmapi/glm-4.5-flash",
+  "attempts": 2,
+  "repair_delegations": 1,
+  "initial_failure": "Provider stream_error before edits; exit1",
+  "repair_worker_exit": 0,
+  "repair_dispatcher_exit": 1,
+  "repair_dispatcher_failure": "New whitespace diagnostics; baseline exit0, diff-check exit2",
+  "test_exit": 1,
+  "test_blocker": "Missing REFACTOR_GUARD_RECEIPT in initial optional-worker sandbox; no pytest collection. Independent environments use proper guard configuration.",
+  "provider_failures_observed": {
+    "502": 2,
+    "429": 3,
+    "served_model": "glm-4.5-flash"
+  },
+  "review_failures": [
+    "Forbidden pytest.skip and swallowed import failures can hide missing compatibility paths",
+    "Invented TeamType fallback; team/cache test only asserts callable",
+    "Wrong class attributes S1 etc instead of actual Strategy class",
+    "Path spellings passed to importlib instead of public load_strategy",
+    "New whitespace diagnostics"
+  ],
+  "adopted_files": [],
+  "raw_rejected_code_private": "/home/pjh/.local/state/codex-opencode/runs/v3-r04-independent-tests-repair1-bf44d503/rejected-R04-reviewer-oracle.py",
+  "scope_effect": "Optional supplemental test-code attempt rejected; R04 required acceptance covered by scoped worker tests, independent source/identity review, full guarded suite, provenance mutation checks, and distribution imports. No model substitution and no owner takeover of this rejected test ticket."
+}

@@ -72,7 +72,13 @@ R00 저장소 인벤토리는 이미 존재하고 수락되었습니다: [repo_i
 | storage | `src/vibetrading/local_storage.py`, `src/vibetrading/local_events.py`, `src/vibetrading/local_snapshot.py` |
 | account_order_ledger | `src/vibetrading/portfolio_ledger.py`, `src/vibetrading/execution_owner.py`, `src/vibetrading/paper_execution.py` (**부분 구현**; 입증된 시장 데이터 전용(market-only) 복구와 별개 트랙입니다) |
 | etf | `src/vibetrading/etf_trading.py`, `src/vibetrading/etf_journal.py` |
-| research | `strategy/`, `strategies/`, `services/signal_gen/`, `src/vibetrading/fv_mm/legacy/` |
+| modern strategy contract | `src/vibetrading/strategies/contract.py` (`vibetrading.strategies` public API) |
+| research / historical strategy | `src/vibetrading/strategies/research/state/`, `src/vibetrading/strategies/legacy/fair_value/`, `src/vibetrading/strategies/legacy/candle/` |
+| historical API adapters | `strategy/`, `strategies/`, `services/signal_gen/strategy_loader.py`, `src/vibetrading/strategy_contract.py`, `src/vibetrading/fv_mm/legacy/s*.py` |
+
+R04에서 현대 이벤트 전략의 로더는 하나로 통합했습니다. 레거시 캔들 서비스·백테스트는
+별도 계약을 유지하며 새 이벤트 전략으로 자동 승격하지 않습니다. 동일 이름의 상태 기반
+S1~S4와 과거 fair-value S1~S4는 서로 다른 계산이며 구현을 합치지 않았습니다.
 
 경계 표기: market-only 복구는 입증되었으나 계정·전략 복구(account_order_ledger 등)는 **불완전**하며,
 여기서 전체 Paper/Live 준비를 추론할 수 없습니다. research 그룹 내 소유자들은 서로 다른 트랙이고

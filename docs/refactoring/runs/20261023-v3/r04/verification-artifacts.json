@@ -1,0 +1,10 @@
+{
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-r04-independent-acceptance-95f63baef9",
+  "public_rendering": {
+    "tooling-initial-stdout.txt": {
+      "raw_sha256": "fa4afd533010a3d9a9067ee4c7e0f0ad0288adc115fb1cc5f12754da4a533b51",
+      "rendered_trailing_whitespace_removed": true
+    }
+  },
+  "raw_logs_unchanged": true
+}

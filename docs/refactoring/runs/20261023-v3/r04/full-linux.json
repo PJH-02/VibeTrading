@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "source_sha": "c605c19e79fc635281c6d794dd8a0ba23cb86376",
+  "passed": 1822,
+  "product_passed": 1653,
+  "tooling_passed": 169,
+  "additional_existing_review_probes_included": 8,
+  "live_data_deselected": 2,
+  "profiles": [
+    {
+      "profile": "product-guarded",
+      "source_sha": "c605c19e79fc635281c6d794dd8a0ba23cb86376",
+      "exit_code": 0,
+      "elapsed_seconds": 80.0484681950038,
+      "source_files_changed": [],
+      "stdout_tail": " [ 56%]\n........................................................................ [ 60%]\n........................................................................ [ 65%]\n........................................................................ [ 69%]\n........................................................................ [ 74%]\n........................................................................ [ 78%]\n........................................................................ [ 82%]\n........................................................................ [ 87%]\n........................................................................ [ 91%]\n........................................................................ [ 95%]\n.....................................................................    [100%]\n=============================== warnings summary ===============================\ntests/refactoring/test_src_packaging.py::test_setuptools_metadata_discovers_canonical_and_legacy_packages\n  /usr/lib/python3/dist-packages/babel/messages/catalog.py:13: DeprecationWarning: 'cgi' is deprecated and slated for removal in Python 3.13\n    from cgi import parse_header\n\ntests/refactoring/test_src_packaging.py::test_setuptools_metadata_discovers_canonical_and_legacy_packages\n  /usr/lib/python3/dist-packages/setuptools/sandbox.py:13: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html\n    import pkg_resources\n\ntests/refactoring/test_src_packaging.py::test_setuptools_metadata_discovers_canonical_and_legacy_packages\n  /usr/lib/python3/dist-packages/pkg_resources/__init__.py:2871: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('google')`.\n  Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages\n    declare_namespace(pkg)\n\ntests/refactoring/test_src_packaging.py::test_setuptools_metadata_discovers_canonical_and_legacy_packages\n  /usr/lib/python3/dist-packages/pkg_resources/__init__.py:2871: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('zope')`.\n  Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages\n    declare_namespace(pkg)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n1653 passed, 2 deselected, 4 warnings in 75.78s (0:01:15)\n",
+      "status": "PASS"
+    },
+    {
+      "profile": "tooling-os",
+      "source_sha": "c605c19e79fc635281c6d794dd8a0ba23cb86376",
+      "exit_code": 0,
+      "elapsed_seconds": 5.262991677001992,
+      "source_files_changed": [],
+      "stdout_tail": "........................................................................ [ 42%]\n........................................................................ [ 85%]\n.........................                                                [100%]\n169 passed in 4.95s\n",
+      "status": "PASS"
+    }
+  ],
+  "product_and_tooling_code_hashes_identical": true,
+  "snapshot_difference": {
+    "paths": [
+      "docs/refactoring/vnext/stage_status.json",
+      "docs/refactoring/vnext/tickets_production.json"
+    ],
+    "reason": "Owner used IN_PROGRESS instead of supported tooling status; corrected to VERIFIED and standard execution-control status. Product source, tests and historical oracles unchanged. Initial tooling failure retained in full-initial.json/tooling-initial-stdout.txt."
+  },
+  "initial_failed_tooling_tests": 1,
+  "guard": "unchanged historical offline guard plus OS network/PID/FS isolation",
+  "oracle_bytes": "same exact frozen read-only oracle hashes as R03; no assertion/golden edits"
+}

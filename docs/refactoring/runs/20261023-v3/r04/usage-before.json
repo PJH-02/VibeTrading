@@ -1,0 +1,249 @@
+{
+  "source_sha": "124aef4fd1ea55cec9f3e8d2953250786131c9bf",
+  "scanned": "tracked Python/config/Docker source; targeted static+dynamic literals, R00 historical inventory retained",
+  "uses": [
+    {
+      "path": "docs/refactoring/runs/20261023-v3/r00-generator.py",
+      "line": 80,
+      "text": "if label in {'__import__','import_module','spec_from_file_location','load_module','entry_points'}:"
+    },
+    {
+      "path": "docs/refactoring/runs/20261023-v3/r00-generator.py",
+      "line": 116,
+      "text": "elif name.startswith(('services/','shared/','strategy/','strategies/','vibetrading/fv_mm/legacy/')): group='COMPAT_REQUIRED_OR_RESEARCH_REVIEW'"
+    },
+    {
+      "path": "run_strategy.py",
+      "line": 64,
+      "text": "mod: ModuleType = importlib.import_module(module_name)"
+    },
+    {
+      "path": "scripts/build_all_strategy_report.py",
+      "line": 40,
+      "text": "'C01':('원형 OFI 전략 코드','src/vibetrading/fv_mm/legacy/s1_net_liquidity.py'),"
+    },
+    {
+      "path": "scripts/build_all_strategy_report.py",
+      "line": 49,
+      "text": "SOURCES.update({'C10':('원형 anchor 코드','src/vibetrading/fv_mm/legacy/s2_external_anchor.py'),"
+    },
+    {
+      "path": "scripts/build_all_strategy_report.py",
+      "line": 50,
+      "text": "'C11':('원형 공격체결 코드','src/vibetrading/fv_mm/legacy/s3_aggressive_flow.py'),"
+    },
+    {
+      "path": "scripts/build_all_strategy_report.py",
+      "line": 51,
+      "text": "'C12':('원형 OBI 코드','src/vibetrading/fv_mm/legacy/s4_obi.py')})"
+    },
+    {
+      "path": "scripts/diagnose_mm_state_no_intents.py",
+      "line": 20,
+      "text": "instruments[key]=i;models[key]=importlib.import_module('strategy.'+module).Strategy(mode='state',calibration=c,tick=float(i.tick))"
+    },
+    {
+      "path": "scripts/rebuild_fv_pilot_calibration.py",
+      "line": 23,
+      "text": "module,asset=ROUTES[sid];model=importlib.import_module('strategy.'+module).Strategy()"
+    },
+    {
+      "path": "scripts/replay_mm_state_revision.py",
+      "line": 19,
+      "text": "def factory(sid,c,tick):return importlib.import_module('strategy.'+ROUTES[sid][0]).Strategy(mode='state',calibration=c,tick=float(tick))"
+    },
+    {
+      "path": "scripts/report_mm_state_revision.py",
+      "line": 211,
+      "text": "source_files=sorted((ROOT/'strategy').glob('*.py'))+sorted((ROOT/'src/vibetrading/mm_state').glob('*.py'))+sorted((ROOT/'src/vibetrading/fv_mm').glob('*.py'))+sorted((ROOT/'src/vibetrading/fv_pilot').glob('*.py'))+sorted((ROOT/'src/vibetrading/fv_mm/legacy').glob('*.py'))"
+    },
+    {
+      "path": "scripts/run_backtest.py",
+      "line": 19,
+      "text": "from services.signal_gen.strategy_loader import resolve_strategy_team"
+    },
+    {
+      "path": "scripts/validate_system.py",
+      "line": 26,
+      "text": "from services.signal_gen.strategy_loader import get_strategy, clear_strategy_cache"
+    },
+    {
+      "path": "scripts/validate_system.py",
+      "line": 37,
+      "text": "def test_strategy_loader():"
+    },
+    {
+      "path": "scripts/validate_system.py",
+      "line": 238,
+      "text": "\"Strategy Loader\": test_strategy_loader(),"
+    },
+    {
+      "path": "services/signal_gen/engine.py",
+      "line": 29,
+      "text": "from .strategy_loader import StrategyWrapper, get_strategy"
+    },
+    {
+      "path": "services/signal_gen/strategy_loader.py",
+      "line": 156,
+      "text": "module = importlib.import_module(module_path)"
+    },
+    {
+      "path": "services/signal_gen/strategy_loader.py",
+      "line": 218,
+      "text": "module = importlib.import_module(f\"strategies.{strategy_name}\")"
+    },
+    {
+      "path": "src/vibetrading/fv_mm/market.py",
+      "line": 24,
+      "text": "self.models[venue,asset]=importlib.import_module(\"strategy.\"+module).Strategy(mode=strategy_mode)"
+    },
+    {
+      "path": "src/vibetrading/fv_pilot/market.py",
+      "line": 12,
+      "text": "self.models={(v,a):importlib.import_module(\"strategy.\"+module).Strategy(mode=strategy_mode) for v in VENUES for _,(module,a) in ROUTES.items()}"
+    },
+    {
+      "path": "src/vibetrading/mm_state/coordinator.py",
+      "line": 20,
+      "text": "m = importlib.import_module(\"strategy.\"+MODULES[sid]).Strategy(mode=\"state\",calibration=(calibrations or {}).get(sid,{}),**kwargs)"
+    },
+    {
+      "path": "src/vibetrading/mm_state/features.py",
+      "line": 200,
+      "text": "return importlib.import_module(\"vibetrading.fv_mm.legacy.\"+module).Strategy(coefficient=coefficient, **kwargs)"
+    },
+    {
+      "path": "src/vibetrading/strategy_contract.py",
+      "line": 82,
+      "text": "module = importlib.import_module(module_name)"
+    },
+    {
+      "path": "src/vibetrading/strategy_runner.py",
+      "line": 17,
+      "text": "from .strategy_contract import CompiledSubscription, StrategyModule, compile_subscriptions, compile_warmup, load_strategy"
+    },
+    {
+      "path": "src/vibetrading/strategy_runtime.py",
+      "line": 26,
+      "text": "from .strategy_contract import StrategyModule, compile_subscriptions, compile_warmup"
+    },
+    {
+      "path": "src/vibetrading/timefolio/runner.py",
+      "line": 26,
+      "text": "from vibetrading.strategy_contract import load_strategy"
+    },
+    {
+      "path": "tests/refactoring/test_agent_task.py",
+      "line": 1594,
+      "text": "module = importlib.import_module(\"scripts.dev.agent_task\")"
+    },
+    {
+      "path": "tests/refactoring/test_strategy_dispatch.py",
+      "line": 11,
+      "text": "from vibetrading.strategy_contract import StrategyModule, compile_subscriptions, compile_warmup, load_strategy"
+    },
+    {
+      "path": "tests/refactoring/test_strategy_dispatch.py",
+      "line": 214,
+      "text": "monkeypatch.setattr(\"strategies.example_signal.utc_now_ns\", lambda: NOW)"
+    },
+    {
+      "path": "tests/refactoring/test_strategy_runtime.py",
+      "line": 17,
+      "text": "from vibetrading.strategy_contract import StrategyModule"
+    },
+    {
+      "path": "tests/test_fv_mm.py",
+      "line": 5,
+      "text": "from strategy.s1_net_liquidity import Strategy as S1"
+    },
+    {
+      "path": "tests/test_fv_mm.py",
+      "line": 6,
+      "text": "from strategy.s2_external_anchor import Strategy as S2"
+    },
+    {
+      "path": "tests/test_fv_mm.py",
+      "line": 7,
+      "text": "from strategy.s3_aggressive_flow import Strategy as S3"
+    },
+    {
+      "path": "tests/test_fv_mm.py",
+      "line": 8,
+      "text": "from strategy.s4_obi import Strategy as S4"
+    },
+    {
+      "path": "tests/test_mm_state_revision.py",
+      "line": 14,
+      "text": "from strategy.s2_external_anchor import Strategy as S2"
+    },
+    {
+      "path": "tests/test_mm_state_revision.py",
+      "line": 15,
+      "text": "from strategy.s3_aggressive_flow import Strategy as S3"
+    }
+  ],
+  "moves": [
+    {
+      "from": "src/vibetrading/strategy_contract.py",
+      "to": "src/vibetrading/strategies/contract.py",
+      "sha256": "90fa77440bdcafdfa6e421f2c08a7d3bb8b6dfc3dcd0e5d0b2b3e88587ce4d16"
+    },
+    {
+      "from": "services/signal_gen/strategy_loader.py",
+      "to": "src/vibetrading/strategies/legacy/candle_loader.py",
+      "sha256": "400fa5fbe93aa171cb866da0ff77d316835c8fd167ee7f427b9e50253a141273"
+    },
+    {
+      "from": "strategies/example_signal.py",
+      "to": "src/vibetrading/strategies/example_signal.py",
+      "sha256": "cfb19db36ed7bd65b3b228548b5c905e43947b340149ba21513a281a1b0fb3da"
+    },
+    {
+      "from": "strategies/turtle_breakout.py",
+      "to": "src/vibetrading/strategies/legacy/candle/turtle_breakout.py",
+      "sha256": "0a1afea026d0d732ef58e7820c89ac019c7edaf7fa0d8fe524daae823d361c2c"
+    },
+    {
+      "from": "strategy/s1_net_liquidity.py",
+      "to": "src/vibetrading/strategies/research/state/s1_net_liquidity.py",
+      "sha256": "5e1a58de6e03799f780a300c890a64860ca944fb94be85115e99215db8a55b73"
+    },
+    {
+      "from": "src/vibetrading/fv_mm/legacy/s1_net_liquidity.py",
+      "to": "src/vibetrading/strategies/legacy/fair_value/s1_net_liquidity.py",
+      "sha256": "e59ec1ec844de3b1ba32652af93846e3c47a6f61607d81c26d46a6be991fda5c"
+    },
+    {
+      "from": "strategy/s2_external_anchor.py",
+      "to": "src/vibetrading/strategies/research/state/s2_external_anchor.py",
+      "sha256": "338a28e47f7150a5f60f39e6ac657ff37a4179f363a6e5327bc49712dcd98665"
+    },
+    {
+      "from": "src/vibetrading/fv_mm/legacy/s2_external_anchor.py",
+      "to": "src/vibetrading/strategies/legacy/fair_value/s2_external_anchor.py",
+      "sha256": "1222758b1ec9eddd444193eeda365c0238d8d71a0fcb17c029a3d09c12046a4d"
+    },
+    {
+      "from": "strategy/s3_aggressive_flow.py",
+      "to": "src/vibetrading/strategies/research/state/s3_aggressive_flow.py",
+      "sha256": "df17df812282194968c9b7363fabcb91a1e888c46a428b54c62174d8deea9695"
+    },
+    {
+      "from": "src/vibetrading/fv_mm/legacy/s3_aggressive_flow.py",
+      "to": "src/vibetrading/strategies/legacy/fair_value/s3_aggressive_flow.py",
+      "sha256": "618dd3e316f03c3ba3625e59334fe55e0b5e89a524abb16d9d38e35e832030d9"
+    },
+    {
+      "from": "strategy/s4_obi.py",
+      "to": "src/vibetrading/strategies/research/state/s4_obi.py",
+      "sha256": "241bae2c27c71941552eaf9989e1e82af60d29d2956c29562a35a3f0f3121e05"
+    },
+    {
+      "from": "src/vibetrading/fv_mm/legacy/s4_obi.py",
+      "to": "src/vibetrading/strategies/legacy/fair_value/s4_obi.py",
+      "sha256": "4cc047191c6de3157cceb2a8079e84c2a0e6ca650f6f281f3f40054933fad294"
+    }
+  ],
+  "decision": "Retain all historical entry paths as API adapters; no archive/deletion or economic merging; shared contracts and frozen paper_simulation remain legacy independent consumers."
+}

@@ -1,0 +1,44 @@
+{
+  "ticket_id": "R04",
+  "decision": "PASS",
+  "status": "ACCEPTED",
+  "scope": "LOCAL_ONLY; R04 only",
+  "base_sha": "124aef4fd1ea55cec9f3e8d2953250786131c9bf",
+  "pure_move_sha": "b3409b17f9cfe863528a6a9cecde7a4aa9aaab4b",
+  "source_sha": "c605c19e79fc635281c6d794dd8a0ba23cb86376",
+  "moved_modules": 12,
+  "immutable_economic_modules": 10,
+  "active_retired_imports": 0,
+  "modern_loader": "vibetrading.strategies.load_strategy (same object as contract and old API)",
+  "legacy_entrypoints": "12 module aliases, shared classes/functions/globals/cache; independent candle/state/fair-value contracts retained",
+  "new_strategy_auto_registration": false,
+  "worker": {
+    "implementation": "opencode/deepseek-v4.1-flash-free",
+    "repair_delegations": 1,
+    "scoped_pytest_exit": 0,
+    "scoped_passed": 211,
+    "initial_pytest_blocker": "Guard receipt environment missing; corrected on repair dispatch",
+    "owner_small_edit": "Restore CLI test environment/sys.path with pytest monkeypatch fixture"
+  },
+  "freellmapi_supplement": "REJECTED; see freellmapi-review.json, no skipped/weak tests adopted",
+  "independent_full_linux": {
+    "passed": 1822,
+    "product": 1653,
+    "tooling": 169,
+    "deselected_live_data": 2,
+    "exits": [
+      0,
+      0
+    ]
+  },
+  "provenance_mutation_checks": 28,
+  "packaging": "158 canonical Python modules; wheel/editable import/CLI plus all12 alias identities outside repository PASS",
+  "math_risk_routing": "C3/KP/KD, Mock/Mock2, TOSS DATA_ONLY unchanged; full existing tests retained",
+  "metadata_correction": "Owner corrected unsupported IN_PROGRESS status, then reran all169 tooling tests; initial failure retained",
+  "primary_workspace": "PENDING_APPLICATION",
+  "subsequent_ticket_work": false,
+  "server_deployed": false,
+  "live_mutations": false,
+  "accepted_kst": "2026-10-23T11:58:38.970705+09:00",
+  "publication": "Separate from local code acceptance; containing branch HEAD and remote ref are authoritative."
+}
