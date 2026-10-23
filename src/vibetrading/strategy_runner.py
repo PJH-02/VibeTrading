@@ -14,7 +14,7 @@ from .hot_path import DecisionSnapshot, HotPathStore, StrategyDataView
 from .models import AssetClass, BaseMarketEvent, EventType, InstrumentId, Signal, event_from_dict
 from .parquet_store import ParquetHistoryReader
 from .settings import get_settings
-from .strategy_contract import CompiledSubscription, StrategyModule, compile_subscriptions, compile_warmup, load_strategy
+from .strategies import CompiledSubscription, StrategyModule, compile_subscriptions, compile_warmup, load_strategy
 
 logger = logging.getLogger(__name__)
 

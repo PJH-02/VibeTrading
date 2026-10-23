@@ -17,7 +17,7 @@ class Coordinator(StateStrategy):
         kwargs={k:v for k,v in kwargs.items() if k!="calibration"}
         self.modules = {}
         for sid in PROFILES[profile]:
-            m = importlib.import_module("strategy."+MODULES[sid]).Strategy(mode="state",calibration=(calibrations or {}).get(sid,{}),**kwargs)
+            m = importlib.import_module("vibetrading.strategies.research.state."+MODULES[sid]).Strategy(mode="state",calibration=(calibrations or {}).get(sid,{}),**kwargs)
             m.engine,m.external_features = self.engine,True
             self.modules[sid] = m
 

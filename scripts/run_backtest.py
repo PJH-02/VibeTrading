@@ -16,7 +16,7 @@ from backtest.data_loader import BacktestDataLoader, create_candle_provider
 from backtest.engine import BacktestConfig, BacktestResult
 from backtest.engine_router import resolve_backtest_engine
 from backtest.walk_forward import WalkForwardConfig, WalkForwardValidator, generate_report
-from services.signal_gen.strategy_loader import resolve_strategy_team
+from vibetrading.strategies.legacy.candle_loader import resolve_strategy_team
 
 logging.basicConfig(
     level=logging.INFO,

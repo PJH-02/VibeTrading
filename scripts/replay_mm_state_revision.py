@@ -16,7 +16,7 @@ from vibetrading.mm_state.lifecycle import LifecyclePolicy
 from vibetrading.mm_state.policy import risk_state
 
 
-def factory(sid,c,tick):return importlib.import_module('strategy.'+ROUTES[sid][0]).Strategy(mode='state',calibration=c,tick=float(tick))
+def factory(sid,c,tick):return importlib.import_module('vibetrading.strategies.research.state.'+ROUTES[sid][0]).Strategy(mode='state',calibration=c,tick=float(tick))
 
 
 class Case:

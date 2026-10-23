@@ -1,6 +1,6 @@
 """
-Strategy Loader
-Direct import mechanism for trading strategies.
+Legacy Candle Strategy Loader
+Direct import mechanism for the canonical legacy candle strategies.
 
 Rules (from trading_spec.md):
 - Direct import only
@@ -8,6 +8,10 @@ Rules (from trading_spec.md):
 - Strategy treated as a black box
 - Strategy import occurs at process start
 - Strategy change requires process restart
+
+Only ``vibetrading.strategies.legacy.candle.<name>`` modules are imported. This
+API is explicitly the historical candle contract; it is never promoted into the
+modern event-strategy contract.
 """
 
 import importlib
@@ -17,6 +21,17 @@ from typing import Any, Callable, Dict, Optional, Protocol
 from shared.models import Candle, Position, Signal, StrategyContext, StrategyResult, TeamType
 
 logger = logging.getLogger(__name__)
+
+
+def _canonical_candle_module(strategy_name: str) -> str:
+    if not isinstance(strategy_name, str):
+        raise TypeError("Strategy name must be a string")
+    name = strategy_name.strip()
+    if not name or name.startswith((".", "/", "\\")) or any(token in name for token in ("..", "/", "\\", "\x00")):
+        raise ValueError(f"Invalid legacy candle strategy name: {strategy_name!r}")
+    if "." in name:
+        raise ValueError(f"Invalid legacy candle strategy name: {strategy_name!r}")
+    return f"vibetrading.strategies.legacy.candle.{name}"
 
 
 class StrategyProtocol(Protocol):
@@ -136,7 +151,8 @@ def load_strategy(strategy_name: str, expected_team: TeamType | None = None) -> 
     """
     Load a strategy by name via direct import.
     
-    Strategy modules are expected at: strategies/<strategy_name>.py
+    Strategy modules are expected at:
+    vibetrading/strategies/legacy/candle/<strategy_name>.py
     
     Args:
         strategy_name: Name of the strategy module (without .py)
@@ -149,7 +165,7 @@ def load_strategy(strategy_name: str, expected_team: TeamType | None = None) -> 
         ImportError: If strategy cannot be imported
         AttributeError: If strategy doesn't implement required interface
     """
-    module_path = f"strategies.{strategy_name}"
+    module_path = _canonical_candle_module(strategy_name)
     
     try:
         logger.info(f"Loading strategy from '{module_path}'")
@@ -215,7 +231,7 @@ def get_strategy_team(strategy_name: str) -> TeamType:
     if strategy_name in _strategy_declared_teams:
         return _strategy_declared_teams[strategy_name]
 
-    module = importlib.import_module(f"strategies.{strategy_name}")
+    module = importlib.import_module(_canonical_candle_module(strategy_name))
     strategy_obj = _resolve_strategy_object(module)
     team = _resolve_declared_team(strategy_obj)
     _strategy_declared_teams[strategy_name] = team
