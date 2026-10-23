@@ -171,7 +171,7 @@ if sys.argv[2]=='True':s._conn.execute('COMMIT')
 os._exit(0)
 '''
     subprocess.run([sys.executable, '-c', code, str(tmp_path/'.env'), str(commit)], check=True,
-                   env=dict(os.environ, PYTHONPATH=os.getcwd()))
+                   env=dict(os.environ, PYTHONPATH=os.pathsep.join((os.getcwd(), os.path.join(os.getcwd(), "src")))))
     reopened = RuntimeStore(_settings(tmp_path, ENV+FLAGS))
     assert reopened.event_committed(event.event_id) is (not commit)
     assert reopened._conn.execute('SELECT COUNT(*) FROM crypto_delivery_recovery').fetchone()[0] == (0 if commit else 2)

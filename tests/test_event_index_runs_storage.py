@@ -80,7 +80,7 @@ if sys.argv[2]=='True':c.execute('COMMIT')
 os._exit(0)
 '''
     subprocess.run([sys.executable, '-c', code, str(path), str(commit)], check=True,
-                   env=dict(os.environ, PYTHONPATH=os.getcwd()))
+                   env=dict(os.environ, PYTHONPATH=os.pathsep.join((os.getcwd(), os.path.join(os.getcwd(), "src")))))
     conn = sqlite3.connect(path, isolation_level=None)
     assert ExactEventRuns(conn).lookup([b'x' * 32]) == ({b'x' * 32: 7} if commit else {})
     assert conn.execute('PRAGMA quick_check').fetchone()[0] == 'ok'
