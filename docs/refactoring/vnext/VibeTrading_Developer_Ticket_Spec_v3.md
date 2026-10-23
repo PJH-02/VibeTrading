@@ -155,6 +155,8 @@ DONE의 상태표가 서버 운영 수락을 의미하지는 않는다. **구현
 - **테스트:** Market checkpoint 단독 복원 / 저널보다 앞·뒤인 input / partial write / invalid pending / double replay / newest checkpoint corruption / ETF·Paper 동시 재시작 / broad loss / source-missing fail-closed. 동일 원본에서 recovered booked balances·working orders·strategy claims 동등. 준비 불충분 시 신규 위험주문 0.
 - **Critical 리뷰:** Codex가 multi-ledger 원자성의 **실제** 보장 범위를 확인. SQLite 파일 두 개가 있을 때 원자적 Commit이라고 주장하지 않음. 필요한 경우 staged recovery/quarantine 방식 채택.
 
+- **최근 완료 하위 작업 VN07A:** 기존 Paper `strategy_event` 처리 기록으로 재시작한 전략의 상태 복원 미확인 시 신규 콜백·위험주문을 차단한다. 정상 동일 실행/REPLAY warmup과 명시적 pause/halt 취소는 보존한다. [수락 기록](../runs/20261023-v3/vn07a/acceptance.json). 전략 내부 상태 checkpoint·검증 복원·시장/Paper 저널 경계는 여전히 미완료이며 **VN07 완료 또는 VN08 착수 조건 충족을 뜻하지 않는다**.
+
 ### VN08 — Retained-prefix aware Spool Reader
 
 - **소유:** `vibetrading/market_spool.py::{SpoolReader,_inventory,scan_spool}` 및 `vibetrading/local_storage.py::{LocalSpoolStorage,_FactLedger}`, 관련 Reader Tests.
