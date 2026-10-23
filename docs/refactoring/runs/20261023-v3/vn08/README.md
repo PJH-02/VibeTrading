@@ -12,3 +12,5 @@ Accepted product/test source `8f3e3b761be794f9636a81603b8073074c293b79`. VN08 is
 - No pruning/delete API, actual source deletion, broker/cloud rewrite, automatic retention/cutover or LIVE grant. Existing producer writer still rejects trimmed directories. Production gate BLOCKED; later wiring/proof-only GC tasks remain separate.
 
 See acceptance.json, acceptance-matrix.json, independent-final.json, full-regression.json, verification-commands.json and worker-exits.json. Raw artifacts remain private.
+
+Original Windows checkout application verified45 changed paths and preserved174 preexisting dirty entries, including153 newline representations, substantive changes, deleted documents and untracked documents. See original-application.json. Candidate branch only, no main merge.
