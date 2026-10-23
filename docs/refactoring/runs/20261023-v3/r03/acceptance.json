@@ -1,10 +1,10 @@
 {
   "ticket_id": "R03",
-  "status": "VERIFIED_PENDING_PRIMARY_WORKSPACE_APPLY",
+  "status": "ACCEPTED",
   "source_sha": "8f0726c6ce28ee83800bc904c9f9918f791b03ec",
   "local_implementation": "COMPLETE",
-  "local_verification": "PASS_IN_ISOLATED_CANDIDATE",
-  "primary_workspace": "PENDING_APPLY",
+  "local_verification": "COMPLETE",
+  "primary_workspace": "APPLIED_AND_VERIFIED",
   "modules_moved": 140,
   "move_only_byte_ast_differences": 0,
   "final_product_modules_ast_identical": 135,
@@ -49,6 +49,14 @@
   "external_operational_validation": "NOT_PERFORMED; actual production-pinned bases/accounts/deployments outside local R03 gate",
   "unrelated_O01_baseline_bug": "Still REWORK_REQUIRED; R03 implements only path-map and header integration",
   "subsequent_ticket_work": false,
-  "pushed": false,
-  "deployed": false
+  "pushed": "AUTHORIZED_PUBLICATION_PENDING_VERIFICATION",
+  "deployed": false,
+  "decision": "PASS",
+  "accepted_kst": "2026-10-23T11:26:11.989628+09:00",
+  "primary_application": {
+    "receipt": "original-application.json",
+    "applied_head": "de692bfce842cb3acfd7b574adaf871d1c389900",
+    "normalized_source_files_verified": 140,
+    "actual_original_import_exit": 0
+  }
 }

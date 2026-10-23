@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "original_workspace": "/mnt/c/Users/박제형/Desktop/VibeTrading",
+  "branch": "codex/v3-local-candidate",
+  "applied_head": "de692bfce842cb3acfd7b574adaf871d1c389900",
+  "preserved_entries": 174,
+  "eol_only_changes_carried": 149,
+  "untracked_checkout_collisions_preserved": 5,
+  "preexisting_deleted_documents_preserved": 16,
+  "original_gitignore_preserved": true,
+  "old_package_alias_exists": false,
+  "cache_only_remnants_preserved_privately": true,
+  "backup": "/home/pjh/.local/state/codex-opencode/runs/r03-original-preservation-20261023T104921",
+  "managed_worktree_detached": true,
+  "normalized_source_files_verified": 140,
+  "actual_original_import_exit": 0,
+  "preservation_index_note": "A stale index-stat entry was refreshed only from exact HEAD bytes; no preexisting content was staged. First refused checkout restored all preexisting bytes before a safe retry."
+}
