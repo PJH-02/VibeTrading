@@ -49,7 +49,7 @@
   "external_operational_validation": "NOT_PERFORMED; actual production-pinned bases/accounts/deployments outside local R03 gate",
   "unrelated_O01_baseline_bug": "Still REWORK_REQUIRED; R03 implements only path-map and header integration",
   "subsequent_ticket_work": false,
-  "pushed": "AUTHORIZED_PUBLICATION_PENDING_VERIFICATION",
+  "pushed": "Publication is separate from local acceptance; verify the remote ref for the containing commit.",
   "deployed": false,
   "decision": "PASS",
   "accepted_kst": "2026-10-23T11:26:11.989628+09:00",
