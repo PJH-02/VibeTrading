@@ -1,0 +1,35 @@
+{
+  "label": "baseline-complete-inputs",
+  "baseline": true,
+  "source": "/home/pjh/.codex/worktrees/v3-local-candidate/vibetrading",
+  "exit_code": 0,
+  "elapsed_seconds": 1.6802403219917323,
+  "base": "/tmp/vt-tx01-baseline-complete-inputs-4u72s5_b",
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_portfolio_ledger.py",
+    "tests/refactoring/test_paper_execution.py",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/refactoring/test_tx00_toss_data_only.py",
+    "tests/refactoring/test_kr_strategy_extraction.py"
+  ],
+  "tests": {
+    "passed": 236,
+    "failed": 0,
+    "skipped": 0
+  },
+  "source_changed": [],
+  "stdout_tail": "........................................................................ [ 30%]\n........................................................................ [ 61%]\n........................................................................ [ 91%]\n....................                                                     [100%]\n236 passed in 1.28s\n"
+}

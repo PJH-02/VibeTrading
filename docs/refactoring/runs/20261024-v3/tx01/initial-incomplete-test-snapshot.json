@@ -1,0 +1,35 @@
+{
+  "label": "baseline",
+  "baseline": true,
+  "source": "/home/pjh/.codex/worktrees/v3-local-candidate/vibetrading",
+  "exit_code": 2,
+  "elapsed_seconds": 2.6425790060020518,
+  "base": "/tmp/vt-tx01-baseline-3tg10y93",
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_portfolio_ledger.py",
+    "tests/refactoring/test_paper_execution.py",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/refactoring/test_tx00_toss_data_only.py",
+    "tests/refactoring/test_kr_strategy_extraction.py"
+  ],
+  "tests": {
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0
+  },
+  "source_changed": [],
+  "stdout_tail": "\n==================================== ERRORS ====================================\n________ ERROR collecting tests/refactoring/test_tx00_toss_data_only.py ________\nImportError while importing test module '/work/tests/refactoring/test_tx00_toss_data_only.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.12/importlib/__init__.py:90: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/refactoring/test_tx00_toss_data_only.py:15: in <module>\n    from vibetrading.brokers import TossBrokerAdapter\nsrc/vibetrading/brokers.py:16: in <module>\n    from vibetrading.execution import BrokerAdapter\nsrc/vibetrading/execution.py:8: in <module>\n    from .sqlite_store import RuntimeStore\nE   ModuleNotFoundError: No module named 'vibetrading.sqlite_store'\n=========================== short test summary info ============================\nERROR tests/refactoring/test_tx00_toss_data_only.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 1.97s\n"
+}

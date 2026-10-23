@@ -1,0 +1,31 @@
+{
+  "source_sha": "1d1c2c8f6f0a76745fce9c04208f4e031c444cdd",
+  "base": "/tmp/vt-tx01-final-metadata-x06uaifk",
+  "status": "PASS",
+  "profiles": [
+    {
+      "profile": "tooling-os",
+      "source_sha": "1d1c2c8f6f0a76745fce9c04208f4e031c444cdd",
+      "exit_code": 0,
+      "elapsed_seconds": 0.35681256499083247,
+      "source_files_changed": [],
+      "stdout_tail": "....................                                                     [100%]\n20 passed in 0.10s\n",
+      "status": "PASS"
+    }
+  ],
+  "frozen_oracle_inputs": {
+    "docs/refactoring/runs/20261018-stage-assignment/schema_oracle.json": {
+      "checkout_sha256": "b31751c14369f01943c16a853ea683b4702fad91716efb5c36c2fc76d0237053",
+      "frozen_sha256": "028d9166533d077aacf03cd9c74adb563a2601e0aeb1333029c7fcb8a7e0625c",
+      "reconstruction": "Only LF/CRLF representation; exact original frozen SHA required, values and golden files untouched"
+    },
+    "docs/refactoring/runs/20261018-stage-assignment/encoding_oracle.json": {
+      "checkout_sha256": "cd8f5a8446bb4ed6095416a1c50d1d526db49ac17a8e98b1a57358b47554d733",
+      "frozen_sha256": "1bb9e0d00e2cbb1110e25cf85e5ac94fc97aeb42604c7ff658b2934f99bed513",
+      "reconstruction": "Only LF/CRLF representation; exact original frozen SHA required, values and golden files untouched"
+    }
+  },
+  "legacy_guard_sha256": "eb34edb62d47e484d6d7bf5fb6572750c8cbfa0ac5a4abd40bc1fbd9d3e130b9",
+  "tests_and_historical_goldens_modified": false,
+  "extra_six_tooling_review_probes": true
+}

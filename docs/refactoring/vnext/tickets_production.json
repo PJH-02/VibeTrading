@@ -3348,12 +3348,12 @@
     },
     {
       "task_id": "TX01",
-      "status": "PAPER_SCOPED_IMPLEMENTATION",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
       "kind": "IMPLEMENTATION",
       "depends_on": [
         "TX00"
       ],
-      "goal": "Reuse existing Signal/OrderIntent and strategy contract; add only necessary local Paper/strategy identity bridge. No universal replacement action API. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
+      "goal": "Preserve existing Signal/OrderIntent/Paper path; add full reference/product identity and causal intent creation checks before action claims.",
       "owner": "production_portfolio",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
@@ -3361,11 +3361,18 @@
         "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
         "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
         "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
-        "vibetrading/execution_ledger.py",
-        "vibetrading/models.py",
-        "vibetrading/strategy_contract.py"
+        "src/vibetrading/execution_ledger.py",
+        "src/vibetrading/models.py",
+        "src/vibetrading/strategy_contract.py",
+        "src/vibetrading/strategy_runtime.py",
+        "src/vibetrading/trading_contracts.py",
+        "src/vibetrading/paper_execution.py",
+        "src/vibetrading/portfolio_ledger.py"
       ],
-      "edit_paths": [],
+      "edit_paths": [
+        "src/vibetrading/strategy_runtime.py",
+        "tests/refactoring/test_tx01_signal_binding.py"
+      ],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -3380,7 +3387,10 @@
       "target_symbols": {
         "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "ADD_PROPOSED": [],
-        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
+        "DISPATCH": "docs/tickets/TX01-existing-paper-signal-binding.md",
+        "EDITED": [
+          "PaperStrategyRuntime._validate"
+        ]
       },
       "source_hashes": {
         "vibetrading/models.py": "aabd0b3a45184b5d733a2120c21a1a07c1b74698b5fd24c12cd78389e188fb9d",
@@ -3406,14 +3416,17 @@
         "path": "tests/refactoring/test_portfolio_ledger.py",
         "source_copy": "tmp/refactoring/20261020-production/<candidate>",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN",
+        "status": "PASS_LOCAL_SCOPED287_FULL2170",
         "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
-        "path_exists_at_audit": true
+        "path_exists_at_audit": true,
+        "receipt": "docs/refactoring/runs/20261024-v3/tx01/acceptance.json"
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
-      "gate_evidence": [],
-      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "gate_evidence": [
+        "docs/refactoring/runs/20261024-v3/tx01/acceptance.json"
+      ],
+      "authorization": "Current user request authorizes this bounded TX01 existing Paper signal/intent binding gap only; no new APIs, exchange code, or other ticket dispatch.",
       "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "implementation_evidence": {
         "paths": [
@@ -3434,11 +3447,24 @@
           "scope": "Offline fixture regression only; production gates remain open"
         },
         "production_ready": false,
-        "scope": "Local Paper/isolated request mapping only; full predecessor/external gates are not waived"
+        "scope": "Local Paper/isolated request mapping only; full predecessor/external gates are not waived",
+        "tx01_current_integration": {
+          "source_sha": "1d1c2c8f6f0a76745fce9c04208f4e031c444cdd",
+          "product_paths": [
+            "src/vibetrading/strategy_runtime.py"
+          ],
+          "test_paths": [
+            "tests/refactoring/test_tx01_signal_binding.py",
+            "docs/tickets/TX01-reviewer-counterexamples.py"
+          ],
+          "receipt": "docs/refactoring/runs/20261024-v3/tx01/acceptance.json",
+          "full_regression_passed": 2170,
+          "production_ready": false
+        }
       },
-      "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Reuse existing Signal/OrderIntent and strategy contract; add only necessary local Paper/strategy identity bridge. No universal replacement action API.",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "stage_classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage_status_detail": "Existing local Signal/OrderIntent/Paper binding completed; full identity and causal NEW validation before action claims. Independent287/full2170 PASS; no replacement APIs/exchange code.",
+      "commit_scope": "LOCAL_PAPER_CONTRACT_IMPLEMENTATION_ACCEPTED",
       "scope_revision": {
         "authority": "2026-10-23 explicit user correction",
         "disposition": "ADAPT_EXISTING_CONTRACT",
@@ -3448,7 +3474,17 @@
         "requires_function_gap_evidence_and_bounded_reticket": true,
         "historical_status_preserved": true,
         "supersedes_unselected_global_platform_gates": true
-      }
+      },
+      "production_ready": false,
+      "completion_scope": "LOCAL_EXISTING_SIGNAL_ORDERINTENT_PAPER_ONLY",
+      "completed_subunits": [
+        {
+          "id": "existing-paper-signal-binding",
+          "status": "ACCEPTED_LOCAL_ONLY",
+          "source_sha": "1d1c2c8f6f0a76745fce9c04208f4e031c444cdd",
+          "receipt": "docs/refactoring/runs/20261024-v3/tx01/acceptance.json"
+        }
+      ]
     },
     {
       "task_id": "TX02A",
@@ -5835,17 +5871,17 @@
   "user_request_latest": "다음 단계 티켓 및 단계 개발에 착수하라. VN09 local proof-only GC planning accepted; no deletion or later ticket started.",
   "execution_control": {
     "status": "LOCAL_TICKET_ACCEPTED",
-    "last_completed_ticket": "TX00",
+    "last_completed_ticket": "TX01",
     "last_completed_tooling_ticket": "R05",
     "active_ticket": null,
     "start_next_ticket": false,
-    "stop_after_ticket": "TX00",
+    "stop_after_ticket": "TX01",
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
-    "current_source_sha": "fa2478e5ca15b92d1db69d1cc7e0d8f7266b7146",
+    "current_source_sha": "1d1c2c8f6f0a76745fce9c04208f4e031c444cdd",
     "active_tooling_tickets": [],
     "active_parallel_tickets": [],
-    "last_completed_subunit": "TX00-current-static-audit"
+    "last_completed_subunit": "TX01-existing-paper-signal-binding"
   },
   "git_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
   "git_snapshot_policy": "All current code including unfinished prototypes included; stage classifications unchanged; no deployment authorization",
@@ -6660,10 +6696,10 @@
       "R06"
     ],
     "R05_calculators_are_not_plugin_completion": true,
-    "authorized_bounded_ticket": "docs/tickets/TX00-current-reuse-audit.md",
+    "authorized_bounded_ticket": "docs/tickets/TX01-existing-paper-signal-binding.md",
     "unselected_implementation_dispatch_authorized": false,
-    "last_accepted_bounded_ticket": "docs/tickets/TX00-current-reuse-audit.md",
-    "last_accepted_receipt": "docs/refactoring/runs/20261023-v3/tx00-current/acceptance.json"
+    "last_accepted_bounded_ticket": "docs/tickets/TX01-existing-paper-signal-binding.md",
+    "last_accepted_receipt": "docs/refactoring/runs/20261024-v3/tx01/acceptance.json"
   },
   "vn07a_validation": {
     "status": "ACCEPTED_LOCAL_SUBUNIT",
@@ -6719,5 +6755,13 @@
     "boundary_cases_passed": 14,
     "existing_toss_passed": 36,
     "new_product_code": false
+  },
+  "tx01_validation": {
+    "source_sha": "1d1c2c8f6f0a76745fce9c04208f4e031c444cdd",
+    "receipt": "docs/refactoring/runs/20261024-v3/tx01/acceptance.json",
+    "independent_scoped_passed": 287,
+    "full_regression_passed": 2170,
+    "new_product_api": false,
+    "production_ready": false
   }
 }

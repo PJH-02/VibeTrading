@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "date_kst": "2026-10-23",
+  "date_kst": "2026-10-24",
   "basis": [
     "refactoring_plan.md P00-P12",
     "docs/refactoring/vnext/11_integrated_vn_tx_plan.md",
@@ -8,8 +8,8 @@
   ],
   "definition": "완성은 로컬 기능 수락 범위. 운영/배포/장기 성능 완료와 별개. 부분 단계의 닫힌 하위 기능만 선별 커밋 가능",
   "counts": {
-    "COMPLETE_LOCAL_IMPLEMENTATION": 18,
-    "INCOMPLETE": 21,
+    "COMPLETE_LOCAL_IMPLEMENTATION": 19,
+    "INCOMPLETE": 20,
     "NOT_STARTED": 12
   },
   "tasks": [
@@ -198,9 +198,9 @@
     },
     {
       "task_id": "TX01",
-      "category": "INCOMPLETE",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
       "existing_phase": null,
-      "detail": "[Reuse-first scope; prior completion category preserved] Reuse existing Signal/OrderIntent and strategy contract; add only necessary local Paper/strategy identity bridge. No universal replacement action API.",
+      "detail": "TX01 existing Signal/OrderIntent/Paper contract locally accepted: full identity/time preflight; legacy wire/Decimal/KIS reference mapping preserved;287 scoped/2170 full PASS. No live readiness.",
       "production_ready": false,
       "scope_disposition": "ADAPT_EXISTING_CONTRACT"
     },
@@ -436,15 +436,15 @@
   "next_steps": [
     {
       "order": 1,
-      "stage": "TX01",
-      "work": "Select bounded existing Signal/OrderIntent/Paper identity bridge gap; TX00 static prerequisite complete. Preserve separate strategy-file/Paper implementation scope and current exchange/cloud paths.",
-      "gate": "Not started in TX00; issue bounded ticket and verify relevant existing invariants before implementation."
+      "stage": "TX02A",
+      "work": "Select bounded existing owner/lease/single-writer proof gap, preserving current ETF and Paper ownership.",
+      "gate": "Not started in TX01; bounded ticket required."
     },
     {
       "order": 2,
-      "stage": "TX02A/B → TX04A/B → VN13/TX05",
-      "work": "Reuse existing owner/lease/ledger/matcher and file strategy contract.",
-      "gate": "Each predecessor and individual bounded ticket required; no universal exchange rebuild."
+      "stage": "TX02B → TX04A/B → VN13/TX05",
+      "work": "Existing attribution/matcher and separate strategy-file/Paper linkage only.",
+      "gate": "Each prerequisite retained; no new universal trading platform."
     }
   ],
   "commit_candidate_source_set_sha256": "1ab8d78dc9a968f1febf7c877177b6007cf6155a1af72c6bf8a4ff8652d31b64",
@@ -484,17 +484,17 @@
   },
   "execution_control": {
     "status": "LOCAL_TICKET_ACCEPTED",
-    "last_completed_ticket": "TX00",
+    "last_completed_ticket": "TX01",
     "last_completed_tooling_ticket": "R05",
     "active_ticket": null,
     "start_next_ticket": false,
-    "stop_after_ticket": "TX00",
+    "stop_after_ticket": "TX01",
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
-    "current_source_sha": "fa2478e5ca15b92d1db69d1cc7e0d8f7266b7146",
+    "current_source_sha": "1d1c2c8f6f0a76745fce9c04208f4e031c444cdd",
     "active_tooling_tickets": [],
     "active_parallel_tickets": [],
-    "last_completed_subunit": "TX00-current-static-audit"
+    "last_completed_subunit": "TX01-existing-paper-signal-binding"
   },
   "current_wip": null,
   "last_completed_ticket": "VN09",
@@ -669,10 +669,10 @@
       "R06"
     ],
     "R05_calculators_are_not_plugin_completion": true,
-    "authorized_bounded_ticket": "docs/tickets/TX00-current-reuse-audit.md",
+    "authorized_bounded_ticket": "docs/tickets/TX01-existing-paper-signal-binding.md",
     "unselected_implementation_dispatch_authorized": false,
-    "last_accepted_bounded_ticket": "docs/tickets/TX00-current-reuse-audit.md",
-    "last_accepted_receipt": "docs/refactoring/runs/20261023-v3/tx00-current/acceptance.json"
+    "last_accepted_bounded_ticket": "docs/tickets/TX01-existing-paper-signal-binding.md",
+    "last_accepted_receipt": "docs/refactoring/runs/20261024-v3/tx01/acceptance.json"
   },
   "user_request_latest": "다음 단계 티켓 및 단계 개발에 착수하라. VN09 local proof-only GC planning accepted; no deletion or later ticket started.",
   "vn07a_validation": {
@@ -736,5 +736,13 @@
     "boundary_cases_passed": 14,
     "existing_toss_passed": 36,
     "new_product_code": false
+  },
+  "tx01_validation": {
+    "source_sha": "1d1c2c8f6f0a76745fce9c04208f4e031c444cdd",
+    "receipt": "docs/refactoring/runs/20261024-v3/tx01/acceptance.json",
+    "independent_scoped_passed": 287,
+    "full_regression_passed": 2170,
+    "new_product_api": false,
+    "production_ready": false
   }
 }

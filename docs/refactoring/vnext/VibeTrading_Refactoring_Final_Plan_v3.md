@@ -27,7 +27,7 @@
 
 | 현재 상태 | 근거·결함 | 처리 | 우선순위 |
 |---|---|---|---|
-| 51개 VN/TX 단계 | `stage_status.json`: 로컬 완료 18(TX00 정적 감사 포함), 부분/미완료 21, 미착수 12. VN09 수락 당시 전체 검증 2119 PASS/2 제외; 과거 1532 기록 보존 | 완료된 구현 재개발 금지, 최근 HEAD에서 결과 재검증 | P0 |
+| 51개 VN/TX 단계 | `stage_status.json`: 로컬 완료 19(TX00 정적 감사 포함), 부분/미완료 20, 미착수 12. VN09 수락 당시 전체 검증 2119 PASS/2 제외; 과거 1532 기록 보존 | 완료된 구현 재개발 금지, 최근 HEAD에서 결과 재검증 | P0 |
 | 제품 코드의 세대 혼재 | `vibetrading/`, `services/`, `shared/`, `strategy/`, `strategies/`, `fv_mm/legacy/` | 활성 진입점·동적 import·테스트 소비자 분류 후 단일 권위로 통합 | P0 |
 | 문서의 복수 권위 | 루트 구형 README·계획, 과거 P/VN/TX 문서·수백 기록 | 현재 README/AGENTS/architecture/status는 짧게, 상세 근거는 보존·archive | P0 |
 | 패키지 경로 복잡성 | 최상위 `vibetrading`와 루트 `services` 동시 존재 | `src/vibetrading` 표준 패키징; import/Compose/rollback 경로 동등성 | P0 |
@@ -103,7 +103,7 @@ VibeTrading/
 | **G2 문서/패키징** | R02·R03: README/status/AGENTS, `src/vibetrading` 기계적 이동, build/CLI/Compose 테스트 | GLM+codemod | 이동 전후 Golden·전체 pytest·Docker build 설정 동등, rollback 스크립트 보존 |
 | **G3 경계 통합** | R04·R05: legacy/caller 분류, 기존 전략 분리와 중복 해소, module ownership | GLM/DeepSeek; 고위험 Codex 리뷰 | 명백한 무참조 코드만 Archive; C3/KP/KD economics 불변. **기능 변경과 이동은 별도 Commit** |
 | **G4 복구/상태** | VN07·VN08·VN09(로컬 계약 완료; GC dry-run) | DeepSeek/GLM; Codex Critical review | 기존 market recovery/journal/reader/archive 재사용; strategy/Paper checkpoint continuity, Reader prefix, GC dry-run. 실제 삭제 0 |
-| **G5 파일 plugin + 기존 Paper** | TX00 정적 감사 완료; TX01→TX02A/B→TX04A/B→VN13/TX05; TX08A는 마지막 | GLM/DeepSeek; Codex 계약 결정 | 실제 시장 입력→기존 Runtime→기존 Paper matcher/ledger→restart; 전략별 file module, 동일계좌 safety. TX03 extra margin은 선택 |
+| **G5 파일 plugin + 기존 Paper** | TX00 정적 감사·TX01 로컬 계약 완료; TX02A/B→TX04A/B→VN13/TX05; TX08A는 마지막 | GLM/DeepSeek; Codex 계약 결정 | 실제 시장 입력→기존 Runtime→기존 Paper matcher/ledger→restart; 전략별 file module, 동일계좌 safety. TX03 extra margin은 선택 |
 | **G6 선택 기존 venue 감사** | TX06A–E/TX06, TX07A/B 중 선택된 route만 | GLM/DeepSeek; Codex review | **신규 connector build 없음.** 기존 testnet/prototype 경로의 함수·caller·environment를 감사하고, 입증된 선택 gap만 별도 티켓. all-five gate 아님 |
 | **G7 Projection/E2E** | VN15/TX09, TX10, VN17, VN18, TX11 | GLM/DeepSeek + pytest | actual/assumed/PAPER/recovery projection, 기존 cloud export, local wiring, narrow NATS-free E2E. cross-venue partial fill은 제외 |
 | **G8 최소 local acceptance** | TX12, VN19 | 스크립트 + Codex 최종 감사 | 정확 HEAD + scoped receipts + 기존 package/rollback. 범용 Trading Platform 완성 badge 없음, 실제 서버 배포 없음 |
@@ -143,4 +143,6 @@ VibeTrading/
 
 **첫 작업:** R00/G0에서 현재 HEAD와 Worktree, Repo 진입점, 활성/레거시 호출 관계를 **자동 추출**하고, 기존 티켓에 REPO/O 계열 증분 티켓만 붙인다. 제품 코드를 먼저 대량 수정하지 않는다. 이 세 문서를 추가로 전체 재작성하지 말고 구현 기준으로 삼는다.
 
-TX00은 현재 HEAD의 기존 함수·호출자·환경 정적 감사를 마감했다. 제품 주문 코드 변경0, 기존 cloud/전략/Golden 보존. TX01 및 다른 단계는 이번 수락에서 착수하지 않았다. [수락 기록](../runs/20261023-v3/tx00-current/acceptance.json).
+TX00 수락 당시 HEAD의 기존 함수·호출자·환경 정적 감사를 마감했다. 제품 주문 코드 변경0, 기존 cloud/전략/Golden 보존. TX01 및 다른 단계는 당시 TX00 수락에서 착수하지 않았다. [수락 기록](../runs/20261023-v3/tx00-current/acceptance.json).
+
+2026-10-24 TX01 로컬 계약 수락: 기존 Signal/OrderIntent/Paper 경로에 전체 종목·기준 feed·causal 생성시각 검사만 추가했다. 전체2170 PASS/외부2건 제외. 기존 거래소/cloud/전략 동작·Golden 보존; 다른 티켓은 미착수. [수락 기록](../runs/20261024-v3/tx01/acceptance.json).

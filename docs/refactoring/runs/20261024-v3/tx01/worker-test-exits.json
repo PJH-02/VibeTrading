@@ -1,0 +1,22 @@
+{
+  "worker_exit": 0,
+  "delegate_exit": 0,
+  "attempts": [
+    {
+      "command": "python3 -m pytest -p no:cacheprovider -q tests/refactoring/test_tx01_signal_binding.py",
+      "exit_code": 5,
+      "stdout_tail": "\nno tests ran in 0.01s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_portfolio_ledger.py tests/refactoring/test_paper_execution.py tests/refactoring/test_strategy_runtime.py tests/refactoring/test_strategy_restart_barrier.py tests/refactoring/test_tx00_toss_data_only.py tests/refactoring/test_kr_strategy_extraction.py tests/refactoring/test_tx01_signal_binding.py",
+      "exit_code": 0,
+      "stdout_tail": "........................................................................ [ 27%]\n........................................................................ [ 54%]\n........................................................................ [ 82%]\n..............................................                           [100%]\n262 passed in 10.81s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_portfolio_ledger.py tests/refactoring/test_paper_execution.py tests/refactoring/test_strategy_runtime.py tests/refactoring/test_strategy_restart_barrier.py tests/refactoring/test_tx00_toss_data_only.py tests/refactoring/test_kr_strategy_extraction.py tests/refactoring/test_tx01_signal_binding.py",
+      "exit_code": 0,
+      "stdout_tail": "........................................................................ [ 27%]\n........................................................................ [ 54%]\n........................................................................ [ 81%]\n................................................                         [100%]\n264 passed in 1.37s\n"
+    }
+  ],
+  "acceptance": "Only final264 PASS/exit0 and independent287/full2170 are acceptance evidence; early no-tests exit5 is retained."
+}

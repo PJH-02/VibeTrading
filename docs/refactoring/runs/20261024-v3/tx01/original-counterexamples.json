@@ -1,0 +1,36 @@
+{
+  "label": "original-extended-counterexamples",
+  "baseline": true,
+  "source": "/home/pjh/.codex/worktrees/v3-local-candidate/vibetrading",
+  "exit_code": 1,
+  "elapsed_seconds": 2.3852729520003777,
+  "base": "/tmp/vt-tx01-original-extended-counterexamples-gemtt4kz",
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_portfolio_ledger.py",
+    "tests/refactoring/test_paper_execution.py",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/refactoring/test_tx00_toss_data_only.py",
+    "tests/refactoring/test_kr_strategy_extraction.py",
+    "docs/tickets/TX01-reviewer-counterexamples.py"
+  ],
+  "tests": {
+    "passed": 238,
+    "failed": 21,
+    "skipped": 0
+  },
+  "source_changed": [],
+  "stdout_tail": "t'\n\n    @pytest.mark.parametrize(\"fault\", [\"signal_currency\", \"future_intent\"])\n    def test_real_runtime_faults_before_action_claim_or_order_admission(tmp_path, fault):\n        ledger = ledger_at(tmp_path)\n        try:\n            ledger.seed_balance(\"USDT\", D(100000), {\"source\": \"independent local probe\"})\n            matcher, now = matcher_for(ledger), [T]\n            host = runtime(ledger, matcher, now)\n            reg = registration(ledger, \"alpha\", [])\n            original_builder = reg.action_builder\n    \n            def builder(signal, view, config):\n                actions = original_builder(signal, view, config)\n                if fault == \"signal_currency\":\n                    return actions\n                return [replace(a, intent=a.intent.model_copy(update={\"created_ts_ns\": T+1}))\n                        for a in actions]\n    \n            if fault == \"signal_currency\":\n                create = reg.module.module.create_strategy\n    \n                class WrongReference:\n                    def on_event(self, event, data):\n                        emitted = create().on_event(event, data)\n                        return [s.model_copy(update={\"instrument\": BTC.model_copy(update={\"currency\": \"USD\"})})\n                                for s in emitted]\n    \n                reg.module.module.create_strategy = WrongReference\n            host.register(replace(reg, action_builder=builder))\n>           assert deliver(host, now, book()) == ()\nE           AssertionError: assert ('action-alph...dd9fb7fc6c6',) == ()\nE             \nE             Left contains one more item: 'action-alpha-458ff6ad1ed507cdd897ea09b35e6ce00304658f564607bf2796ddd9fb7fc6c6'\nE             Use -v to get more diff\n\ndocs/tickets/TX01-reviewer-counterexamples.py:157: AssertionError\n=============================== warnings summary ===============================\ndocs/tickets/TX01-reviewer-counterexamples.py::test_invalid_new_binding_is_rejected_without_persistent_or_matcher_changes[float_creation]\n  /home/pjh/.cache/vt-refactor-deps/pydantic/main.py:464: UserWarning: Pydantic serializer warnings:\n    PydanticSerializationUnexpectedValue(Expected `int` - serialized value may not be as expected [field_name='created_ts_ns', input_value=1.8e+18, input_type=float])\n    return self.__pydantic_serializer__.to_python(\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ============================\nFAILED docs/tickets/TX01-reviewer-counterexamples.py::test_invalid_new_binding_is_rejected_without_persistent_or_matcher_changes[intent_currency]\nFAILED docs/tickets/TX01-reviewer-counterexamples.py::test_invalid_new_binding_is_rejected_without_persistent_or_matcher_changes[intent_raw]\nFAILED docs/tickets/TX01-reviewer-counterexamples.py::test_invalid_new_binding_is_rejected_without_persistent_or_matcher_changes[signal_currency]\nFAILED docs/tickets/TX01-reviewer-counterexamples.py::test_invalid_new_binding_is_rejected_without_persistent_or_matcher_changes[signal_raw]\nFAILED docs/tickets/TX01-reviewer-counterexamples.py::test_invalid_new_binding_is_rejected_without_persistent_or_matcher_changes[signal_symbol]\nFAILED docs/tickets/TX01-reviewer-counterexamples.py::test_invalid_new_binding_is_rejected_without_persistent_or_matcher_changes[future_creation]\nFAILED docs/tickets/TX01-reviewer-counterexamples.py::test_invalid_new_binding_is_rejected_without_persistent_or_matcher_changes[pre_signal_creation]\nFAILED docs/tickets/TX01-reviewer-counterexamples.py::test_invalid_new_binding_is_rejected_without_persistent_or_matcher_changes[negative_creation]\nFAILED docs/tickets/TX01-reviewer-counterexamples.py::test_invalid_new_binding_is_rejected_without_persistent_or_matcher_changes[boolean_creation]\nFAILED docs/tickets/TX01-reviewer-counterexamples.py::test_invalid_new_binding_is_rejected_without_persistent_or_matcher_changes[float_creation]\nFAILED docs/tickets/TX01-reviewer-counterexamples.py::test_invalid_new_binding_is_rejected_without_persistent_or_matcher_changes[empty_intent]\nFAILED docs/tickets/TX01-reviewer-counterexamples.py::test_invalid_new_binding_is_rejected_without_persistent_or_matcher_changes[oversized_intent]\nFAILED docs/tickets/TX01-reviewer-counterexamples.py::test_invalid_new_binding_is_rejected_without_persistent_or_matcher_changes[empty_client]\nFAILED docs/tickets/TX01-reviewer-counterexamples.py::test_invalid_new_binding_is_rejected_without_persistent_or_matcher_changes[space_client]\nFAILED docs/tickets/TX01-reviewer-counterexamples.py::test_invalid_new_binding_is_rejected_without_persistent_or_matcher_changes[oversized_client]\nFAILED docs/tickets/TX01-reviewer-counterexamples.py::test_invalid_new_binding_is_rejected_without_persistent_or_matcher_changes[boolean_now]\nFAILED docs/tickets/TX01-reviewer-counterexamples.py::test_invalid_new_binding_is_rejected_without_persistent_or_matcher_changes[float_now]\nFAILED docs/tickets/TX01-reviewer-counterexamples.py::test_invalid_new_binding_is_rejected_without_persistent_or_matcher_changes[negative_now]\nFAILED docs/tickets/TX01-reviewer-counterexamples.py::test_invalid_second_action_blocks_the_entire_preflight_batch\nFAILED docs/tickets/TX01-reviewer-counterexamples.py::test_real_runtime_faults_before_action_claim_or_order_admission[signal_currency]\nFAILED docs/tickets/TX01-reviewer-counterexamples.py::test_real_runtime_faults_before_action_claim_or_order_admission[future_intent]\n21 failed, 238 passed, 1 warning in 1.82s\n"
+}

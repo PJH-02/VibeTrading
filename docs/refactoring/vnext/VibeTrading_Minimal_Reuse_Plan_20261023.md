@@ -73,7 +73,7 @@
 | cloud/manifest | `storage_backend.py` seam, registry metadata | manifest→strategy file/Paper 등록 연결 | 기존 uploader/verify/download 변경 없음 |
 | runtime wiring | `local_runtime.py`, `local_config.py`, release manifest | local process/bounded resource wiring | 기존 runtime·배포 topology 보존 |
 
-## 6. 범위 교정 당시 37개 — VN07·VN08·VN09와 TX00 정적 감사 완료, 현재 33개 잔여
+## 6. 범위 교정 당시 37개 — VN07·VN08·VN09·TX01 로컬 및 TX00 정적 감사 완료, 현재 32개 잔여
 
 `핵심`은 `tech_lead_scope_decisions.json`의 `mandatory_core` 18개다. `기반`은 TX00 감사, `집계`는 별도 신규 제품이 아닌 gate다. 역사 상태는 재설정·자동 승격하지 않는다.
 
@@ -89,7 +89,7 @@
 | VN19 | 핵심 | PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES | VN18 | 기존 packaging/export/rollback, 선택 data-path 전환 |
 | VN20 | 외부 | PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES | VN19 | proof 이후 외부 작업; 삭제 0 |
 | TX00 | 정적 감사 완료 | COMPLETE_LOCAL_IMPLEMENTATION (제품 구현 아님) | VN00 | 현재 함수·caller·환경 증거 마감; connector 변경0 |
-| TX01 | 핵심 | PAPER_SCOPED_IMPLEMENTATION | TX00 | 기존 Signal/OrderIntent + 최소 local identity bridge |
+| TX01 | 로컬 완료 | COMPLETE_LOCAL_IMPLEMENTATION (PAPER 계약) | TX00 | 기존 연결 재사용; 전체 identity/causal NEW 검사 완료 |
 | TX02A | 핵심 | PAPER_SCOPED_IMPLEMENTATION_LEGACY_FENCING_OPEN | TX01, VN10 | 기존 lease/journal/Paper owner 재사용, 단일 writer 증명 |
 | TX02B | 핵심 | PAPER_SCOPED_IMPLEMENTATION | TX02A | 기존 book의 attribution/reservation/restart gap만 |
 | TX02 | 집계 | PLANNED | TX02A, TX02B | 기존 owner/books 공동 수락 |
@@ -157,4 +157,8 @@ VN09 수락 당시에는 **17 완료 / 22 미완료 / 12 미착수**였다. 기�
 
 ## 12. TX00 현재 소스 정적 감사 수락
 
-현재 상태는 **18 완료 / 21 미완료 / 12 미착수**다. TX00 완료는 기존 실행 경로의 정적 재사용 감사이며 신규 venue 구현이나 운영 검증 완료를 뜻하지 않는다. 47파일/712정의/459정적 참조를 확인했고 기존 TOSS36건 및 독립 경계14건이 통과했다. 역사 감사·완료17개·거래소/cloud/전략 코드·Golden을 보존했다. 다음 선행은 TX01 기존 Signal/OrderIntent/Paper 연결이며 이 티켓에서는 착수하지 않았다. [현재 감사](./reuse_audit/tx00_current/closure.md)·[수락](../runs/20261023-v3/tx00-current/acceptance.json).
+TX00 수락 당시 상태는 **18 완료 / 21 미완료 / 12 미착수**였다. TX00 완료는 기존 실행 경로의 정적 재사용 감사이며 신규 venue 구현이나 운영 검증 완료를 뜻하지 않는다. 47파일/712정의/459정적 참조를 확인했고 기존 TOSS36건 및 독립 경계14건이 통과했다. 역사 감사·완료17개·거래소/cloud/전략 코드·Golden을 보존했다. 다음 선행은 TX01 기존 Signal/OrderIntent/Paper 연결이며 이 티켓에서는 착수하지 않았다. [현재 감사](./reuse_audit/tx00_current/closure.md)·[수락](../runs/20261023-v3/tx00-current/acceptance.json).
+
+## 13. TX01 기존 Paper 계약 로컬 수락 (2026-10-24)
+
+현재 **19 완료 / 20 미완료 / 12 미착수**다. 기존 연결이 충분하여 새 bridge/engine/API를 만들지 않았다. NEW 사전 검사17줄과 회귀시험을 추가했고 37개 다른 runtime 메서드는 AST가 같다. 기존236 PASS 기준 위에서 독립287/전체2170 PASS(외부 live-data2건 제외)를 확인했다. 역사 완료18개·Golden·거래소/cloud·Mock/Mock2·TOSS를 보존했다. 다음 TX02A 및 별도 전략 file/Paper 연속 입력 작업은 미착수다. [수락](../runs/20261024-v3/tx01/acceptance.json).
