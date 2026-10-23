@@ -5735,20 +5735,18 @@
     "additional_review_passed": 6,
     "deselected": 2
   },
-  "user_request_latest": "2026-10-23: execute R00/R01/O00/O01 then all DAG-ready v3 local implementation/verification; preserve legacy IDs/evidence; no production mutation/deploy/push/merge",
+  "user_request_latest": "2026-10-23: resume interrupted R03B1 only and stop after completing it; all other tickets/stages excluded from this session.",
   "execution_control": {
-    "status": "RUNNING_LOCAL_REFACTORING",
+    "status": "STOPPED_AT_USER_REQUEST",
     "last_completed_ticket": "VN14B",
-    "last_completed_tooling_ticket": "O01",
-    "active_ticket": "R03B1",
-    "start_next_ticket": true,
+    "last_completed_tooling_ticket": "R03B1",
+    "active_ticket": null,
+    "start_next_ticket": false,
     "stop_after_ticket": "R03B1",
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
-    "current_source_sha": "ac18621ea1b831d625d2187c11af4369b2232f34",
-    "active_tooling_tickets": [
-      "R03"
-    ],
+    "current_source_sha": "bf75b1c5d259433fc0aa2d9b43764855837b3f68",
+    "active_tooling_tickets": [],
     "active_parallel_tickets": []
   },
   "git_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
@@ -5804,7 +5802,7 @@
     },
     {
       "task_id": "R03",
-      "status": "RUNNING",
+      "status": "BLOCKED",
       "depends_on": [
         "R00",
         "R01",
@@ -5819,8 +5817,10 @@
           "receipt": "docs/refactoring/runs/20261023-v3/r03a/relocation.json"
         },
         "R03B1": {
-          "status": "PLANNED",
-          "scope": "Packaging and core Dockerfile layout"
+          "status": "ACCEPTED_SUBUNIT_ONLY",
+          "scope": "Packaging and core Dockerfile layout",
+          "source_sha": "bf75b1c5d259433fc0aa2d9b43764855837b3f68",
+          "receipt": "docs/refactoring/runs/20261023-v3/r03b1/acceptance.json"
         },
         "R03B2": {
           "status": "PLANNED",
@@ -5830,7 +5830,8 @@
           "status": "PLANNED",
           "scope": "Pathmap/tooling/release/deploy path consumers; exact scope to register beforedispatch"
         }
-      }
+      },
+      "blocker": "USER_SCOPE_BOUNDARY: stopped after accepted R03B1; remaining subunits not authorized in this session."
     },
     {
       "task_id": "R04",
@@ -5962,9 +5963,9 @@
       "contract_ids": [
         "v3 R03"
       ],
-      "receipt": null,
+      "receipt": "docs/refactoring/runs/20261023-v3/r03b1/acceptance.json",
       "task_id": "R03B1",
-      "status": "PLANNED",
+      "status": "ACCEPTED",
       "depends_on": [
         "R03A"
       ],
@@ -5989,7 +5990,8 @@
           "path": "tests/refactoring/test_src_packaging.py",
           "action": "ADD"
         }
-      ]
+      ],
+      "source_sha": "bf75b1c5d259433fc0aa2d9b43764855837b3f68"
     },
     {
       "scope": "LOCAL_ONLY",
@@ -6160,6 +6162,25 @@
         "stop_after_ticket": "VN14B"
       },
       "superseded_by": "2026-10-23 user VibeTrading v3 execution request; local-only work resumed"
+    },
+    {
+      "recorded_utc": "2026-10-23T00:00:31.082132+00:00",
+      "previous_execution_control": {
+        "status": "RUNNING_LOCAL_REFACTORING",
+        "last_completed_ticket": "VN14B",
+        "last_completed_tooling_ticket": "O01",
+        "active_ticket": "R03B1",
+        "start_next_ticket": true,
+        "stop_after_ticket": "R03B1",
+        "server_deploy_authorized": false,
+        "live_mutation_authorized": false,
+        "current_source_sha": "ac18621ea1b831d625d2187c11af4369b2232f34",
+        "active_tooling_tickets": [
+          "R03"
+        ],
+        "active_parallel_tickets": []
+      },
+      "superseded_by": "Latest user instruction: finish interrupted R03B1 only, then stop."
     }
   ],
   "current_local_baseline_validation": {
@@ -6192,5 +6213,10 @@
       "reproduction": "docs/refactoring/runs/20261023-v3/baseline/checkpoint-order-stdout.txt"
     }
   ],
-  "user_scope_latest": "Resume interrupted R03B1 only; do not start any other ticket or stage."
+  "user_scope_latest": "Finish interrupted R03B1 only; completed and stopped. Do not start another ticket or stage.",
+  "packaging_validation": {
+    "source_sha": "bf75b1c5d259433fc0aa2d9b43764855837b3f68",
+    "status": "R03B1_ONLY_PASS",
+    "receipt": "docs/refactoring/runs/20261023-v3/r03b1/acceptance.json"
+  }
 }
