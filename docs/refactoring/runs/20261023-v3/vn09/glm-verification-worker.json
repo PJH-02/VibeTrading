@@ -1,0 +1,30 @@
+{
+  "selected_model": "freellmapi/glm-4.5-flash",
+  "selected_provider": "freellmapi",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "test",
+  "worker_process": {
+    "exit_code": 1,
+    "elapsed_seconds": 75.88046550600848,
+    "relay_http_statuses": [
+      429,
+      429,
+      429,
+      429,
+      429,
+      429,
+      429,
+      429,
+      429
+    ],
+    "served_models": [],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-glm-verification-5ae2d555",
+  "usage_reported": [],
+  "base_sha": "ded3ac7f6c23ff6fb9d4194b6b9f55f2ef7da083",
+  "scope": [],
+  "output_sha256": {},
+  "automatic_acceptance": false
+}

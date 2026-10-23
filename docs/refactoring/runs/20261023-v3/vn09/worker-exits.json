@@ -1,0 +1,84 @@
+{
+  "runs": [
+    {
+      "run": "initial",
+      "provider": "opencode",
+      "model": "opencode/deepseek-v4.1-flash-free",
+      "role": "refactor",
+      "process": {
+        "exit_code": 0,
+        "elapsed_seconds": 853.6235584800015,
+        "relay_http_statuses": [],
+        "served_models": [],
+        "key_redaction_events": 0
+      },
+      "scope": [
+        "src/vibetrading/archive.py",
+        "src/vibetrading/local_storage.py",
+        "src/vibetrading/sqlite_store.py",
+        "tests/refactoring/test_spool_gc.py",
+        "tests/refactoring/test_spool_gc_storage.py"
+      ]
+    },
+    {
+      "run": "repair1",
+      "provider": "opencode",
+      "model": "opencode/deepseek-v4.1-flash-free",
+      "role": "refactor",
+      "process": {
+        "exit_code": 0,
+        "elapsed_seconds": 251.85676658598823,
+        "relay_http_statuses": [],
+        "served_models": [],
+        "key_redaction_events": 0
+      },
+      "scope": [
+        "src/vibetrading/archive.py",
+        "src/vibetrading/local_storage.py"
+      ]
+    },
+    {
+      "run": "repair2",
+      "provider": "opencode",
+      "model": "opencode/deepseek-v4.1-flash-free",
+      "role": "refactor",
+      "process": {
+        "exit_code": 0,
+        "elapsed_seconds": 102.9821094200015,
+        "relay_http_statuses": [],
+        "served_models": [],
+        "key_redaction_events": 0
+      },
+      "scope": [
+        "src/vibetrading/archive.py"
+      ]
+    },
+    {
+      "run": "glm-verification",
+      "provider": "freellmapi",
+      "model": "freellmapi/glm-4.5-flash",
+      "role": "test",
+      "process": {
+        "exit_code": 1,
+        "elapsed_seconds": 75.88046550600848,
+        "relay_http_statuses": [
+          429,
+          429,
+          429,
+          429,
+          429,
+          429,
+          429,
+          429,
+          429
+        ],
+        "served_models": [],
+        "key_redaction_events": 0
+      },
+      "scope": []
+    }
+  ],
+  "repair_delegations": 2,
+  "automatic_acceptance": false,
+  "extra_gateway_verification": "BLOCKED: pinned GLM route HTTP429; no pytest tool calls and no route substitution. Not used as PASS evidence."
+}

@@ -1,0 +1,11 @@
+{
+  "src/vibetrading/archive.py": {
+    "existing_functions_and_methods_preserved": 24
+  },
+  "src/vibetrading/local_storage.py": {
+    "existing_functions_and_methods_preserved": 28
+  },
+  "src/vibetrading/sqlite_store.py": {
+    "existing_functions_and_methods_preserved": 58
+  }
+}

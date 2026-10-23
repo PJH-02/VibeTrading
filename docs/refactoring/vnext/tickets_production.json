@@ -1560,7 +1560,7 @@
     {
       "task_id": "VN09",
       "existing_phase": "P07",
-      "status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
       "depends_on": [
         "VN08",
         "VN16"
@@ -1594,7 +1594,14 @@
         "vibetrading/local_storage.py",
         "vibetrading/market_spool.py"
       ],
-      "edit_paths": [],
+      "edit_paths": [
+        "src/vibetrading/archive.py",
+        "src/vibetrading/local_storage.py",
+        "src/vibetrading/sqlite_store.py",
+        "tests/refactoring/test_spool_gc.py",
+        "tests/refactoring/test_spool_gc_storage.py",
+        "tests/refactoring/test_spool_gc_review.py"
+      ],
       "forbidden_paths": [
         ".env*",
         "**/secrets/**",
@@ -1612,9 +1619,9 @@
       "target_symbols": {
         "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "ADD_PROPOSED": [],
-        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
+        "DISPATCH": "VN09_COMPLETE_LOCAL_PROOF_ONLY"
       },
-      "goal_and_acceptance": "Reuse existing archive/cloud integrity; GC enabled only after coverage/reader proof. Never rebuild working uploader or delete before verification. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
+      "goal_and_acceptance": "Reused real reader/checkpoint/storage/manifest/archive readback for an all-or-nothing GC candidate plan. Durable proposal cannot execute. Existing uploader/maintenance behavior preserved; production GC remains disabled.",
       "contracts": [
         "C01",
         "C02",
@@ -1646,12 +1653,12 @@
       "new_run_outputs": [
         "docs/refactoring/runs/20261020-vnext/<task_id>/ minimal source/contract/test/gate receipt"
       ],
-      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "authorization": "Latest user request satisfied by bounded VN09 local dry-run implementation and verification. No later ticket, deletion, live or deployment authorization.",
       "source_ticket": "docs/refactoring/vnext/tickets.json#VN09",
       "capacity_impacts": "Measure relevant CPU/event, bounded bytes/records/age/inflight, aggregate RSS/PSS and disk/WAL on 2vCPU/3.8GiB; no inferred production values.",
-      "stage_classification": "NOT_STARTED",
-      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Reuse existing archive/cloud integrity; GC enabled only after coverage/reader proof. Never rebuild working uploader or delete before verification.",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "stage_classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage_status_detail": "Local proof-only GC planning and atomic non-executable proposed intent accepted; no actual deletion/GC activation.",
+      "commit_scope": "COMPLETED_TICKET",
       "scope_revision": {
         "authority": "2026-10-23 explicit user correction",
         "disposition": "SAFE_STORAGE_GAP_ONLY",
@@ -1661,7 +1668,11 @@
         "requires_function_gap_evidence_and_bounded_reticket": true,
         "historical_status_preserved": true,
         "supersedes_unselected_global_platform_gates": true
-      }
+      },
+      "bounded_ticket": "docs/tickets/VN09-proof-only-spool-gc.md",
+      "production_ready": false,
+      "completion_receipt": "docs/refactoring/runs/20261023-v3/vn09/acceptance.json",
+      "next_action": "VN09 proof-only local work complete. Other tickets require separate bounded dispatch; actual GC/delete/cutover remains external/unapproved."
     },
     {
       "task_id": "VN10",
@@ -5791,29 +5802,30 @@
       }
     }
   ],
-  "updated_local": "2026-10-23T20:43:45.298996+09:00",
+  "updated_local": "2026-10-23T22:21:47.960180+09:00",
   "current_validation": {
     "status": "FULL_LOCAL_REGRESSION_PASS",
-    "source_sha": "8f3e3b761be794f9636a81603b8073074c293b79",
-    "receipt": "docs/refactoring/runs/20261023-v3/vn08/acceptance.json",
-    "passed": 2055,
+    "source_sha": "ded3ac7f6c23ff6fb9d4194b6b9f55f2ef7da083",
+    "receipt": "docs/refactoring/runs/20261023-v3/vn09/acceptance.json",
+    "passed": 2119,
     "deselected_live_data": 2,
-    "VN08_complete": true
+    "VN09_complete": true,
+    "scope": "DRY_RUN_ONLY"
   },
-  "user_request_latest": "다음 단계 티켓 및 단계 개발에 착수하라. opencode와 frellmapi 사용 구조는 유지. VN08 locally accepted; stop before VN09.",
+  "user_request_latest": "다음 단계 티켓 및 단계 개발에 착수하라. VN09 local proof-only GC planning accepted; no deletion or later ticket started.",
   "execution_control": {
     "status": "LOCAL_TICKET_ACCEPTED",
-    "last_completed_ticket": "VN08",
+    "last_completed_ticket": "VN09",
     "last_completed_tooling_ticket": "R05",
     "active_ticket": null,
     "start_next_ticket": false,
-    "stop_after_ticket": "VN08",
+    "stop_after_ticket": "VN09",
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
-    "current_source_sha": "8f3e3b761be794f9636a81603b8073074c293b79",
+    "current_source_sha": "ded3ac7f6c23ff6fb9d4194b6b9f55f2ef7da083",
     "active_tooling_tickets": [],
     "active_parallel_tickets": [],
-    "last_completed_subunit": "VN08"
+    "last_completed_subunit": "VN09"
   },
   "git_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
   "git_snapshot_policy": "All current code including unfinished prototypes included; stage classifications unchanged; no deployment authorization",
@@ -6522,6 +6534,14 @@
       "passed": 2019,
       "deselected_live_data": 2,
       "parent_VN07_complete": true
+    },
+    {
+      "status": "FULL_LOCAL_REGRESSION_PASS",
+      "source_sha": "8f3e3b761be794f9636a81603b8073074c293b79",
+      "receipt": "docs/refactoring/runs/20261023-v3/vn08/acceptance.json",
+      "passed": 2055,
+      "deselected_live_data": 2,
+      "VN08_complete": true
     }
   ],
   "user_scope_latest": "2026-10-23: preserve working exchange/order/cloud and strategy economics; NATS-free data/storage/recovery plus file-plugin Paper/multi-strategy reuse. This stage is audit and minimal-diff plan only; no exchange order code changes.",
@@ -6620,10 +6640,10 @@
       "R06"
     ],
     "R05_calculators_are_not_plugin_completion": true,
-    "authorized_bounded_ticket": "docs/tickets/VN08-retained-prefix-reader.md",
+    "authorized_bounded_ticket": "docs/tickets/VN09-proof-only-spool-gc.md",
     "unselected_implementation_dispatch_authorized": false,
-    "last_accepted_bounded_ticket": "docs/tickets/VN08-retained-prefix-reader.md",
-    "last_accepted_receipt": "docs/refactoring/runs/20261023-v3/vn08/acceptance.json"
+    "last_accepted_bounded_ticket": "docs/tickets/VN09-proof-only-spool-gc.md",
+    "last_accepted_receipt": "docs/refactoring/runs/20261023-v3/vn09/acceptance.json"
   },
   "vn07a_validation": {
     "status": "ACCEPTED_LOCAL_SUBUNIT",
@@ -6655,5 +6675,18 @@
     "live_data_deselected": 2,
     "production_ready": false,
     "extra_glm_tests": "BLOCKED; no new artifact; no model substitution"
+  },
+  "vn09_validation": {
+    "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+    "scope": "DRY_RUN_PROOF_AND_PROPOSED_INTENT_ONLY",
+    "source_sha": "ded3ac7f6c23ff6fb9d4194b6b9f55f2ef7da083",
+    "receipt": "docs/refactoring/runs/20261023-v3/vn09/acceptance.json",
+    "full_regression_passed": 2119,
+    "scoped_passed": 215,
+    "critical_cases": 32,
+    "live_data_deselected": 2,
+    "production_ready": false,
+    "GC_enabled": false,
+    "glm_verification": "BLOCKED_HTTP_429"
   }
 }

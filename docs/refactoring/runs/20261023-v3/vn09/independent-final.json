@@ -1,0 +1,37 @@
+{
+  "label": "final",
+  "baseline": false,
+  "source": "/home/pjh/.codex/worktrees/v3-local-candidate/vibetrading",
+  "exit_code": 0,
+  "elapsed_seconds": 3.2112443539954256,
+  "base": "/tmp/vt-vn09-final-dji67aww",
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_spool_recovery.py",
+    "tests/refactoring/test_local_storage.py",
+    "tests/refactoring/test_archive_integrity.py",
+    "tests/refactoring/test_retained_spool.py",
+    "tests/refactoring/test_retained_storage.py",
+    "tests/refactoring/test_spool_gc.py",
+    "tests/refactoring/test_spool_gc_storage.py",
+    "docs/tickets/VN09-reviewer-counterexamples.py"
+  ],
+  "tests": {
+    "passed": 215,
+    "failed": 0,
+    "skipped": 0
+  },
+  "source_changed": [],
+  "stdout_tail": "........................................................................ [ 33%]\n........................................................................ [ 66%]\n.......................................................................  [100%]\n215 passed in 2.85s\n"
+}

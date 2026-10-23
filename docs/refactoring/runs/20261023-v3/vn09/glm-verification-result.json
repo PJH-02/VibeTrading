@@ -1,0 +1,28 @@
+{
+  "status": "BLOCKED",
+  "selected_provider": "freellmapi",
+  "selected_model": "freellmapi/glm-4.5-flash",
+  "source_sha": "ded3ac7f6c23ff6fb9d4194b6b9f55f2ef7da083",
+  "worker_process": {
+    "exit_code": 1,
+    "elapsed_seconds": 75.88046550600848,
+    "relay_http_statuses": [
+      429,
+      429,
+      429,
+      429,
+      429,
+      429,
+      429,
+      429,
+      429
+    ],
+    "served_models": [],
+    "key_redaction_events": 0
+  },
+  "real_test_runs": [],
+  "errors": [
+    "{'name': 'APIError', 'data': {'message': 'All models exhausted: 1 route checked (1 rate-limited or on cooldown). Add more API keys or wait for rate limits to reset.', 'statusCode': 429, 'isRetryable': True, 'responseHeaders': {'content-length': '255', 'content-type': 'application/json; charset=utf-8', 'date': 'Fri, 23 Oct 2026 13:19:07 GMT', 'server': 'BaseHTTP/0.6 Python/3.12.3'}, 'responseBody': '{\"error\":{\"message\":\"All models exhausted: 1 route checked (1 rate-limited or on cooldown). Add mo"
+  ],
+  "route_substitution": false
+}
