@@ -5729,24 +5729,25 @@
   "updated_local": "2026-10-23",
   "current_validation": {
     "status": "FULL_LOCAL_REGRESSION_PASS",
-    "source_sha": "8f0726c6ce28ee83800bc904c9f9918f791b03ec",
-    "receipt": "docs/refactoring/runs/20261023-v3/r03/acceptance.json",
-    "passed": 1789,
+    "source_sha": "c605c19e79fc635281c6d794dd8a0ba23cb86376",
+    "receipt": "docs/refactoring/runs/20261023-v3/r04/acceptance.json",
+    "passed": 1822,
     "additional_review_included": 8,
     "deselected_live_data": 2,
-    "canonical_src_layout": true
+    "canonical_src_layout": true,
+    "canonical_strategy_ownership": true
   },
-  "user_request_latest": "2026-10-23: R03 finished in original local codebase, including directory move and compatibility; subsequent tickets not started.",
+  "user_request_latest": "2026-10-23: implement next ticket R04, delegate implementation/tests through qualified OpenCode/free worker routes.",
   "execution_control": {
     "status": "STOPPED_AT_USER_REQUEST",
     "last_completed_ticket": "VN14B",
-    "last_completed_tooling_ticket": "R03",
+    "last_completed_tooling_ticket": "R04",
     "active_ticket": null,
     "start_next_ticket": false,
-    "stop_after_ticket": "R03",
+    "stop_after_ticket": "R04",
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
-    "current_source_sha": "8f0726c6ce28ee83800bc904c9f9918f791b03ec",
+    "current_source_sha": "c605c19e79fc635281c6d794dd8a0ba23cb86376",
     "active_tooling_tickets": [],
     "active_parallel_tickets": []
   },
@@ -5840,13 +5841,75 @@
     },
     {
       "task_id": "R04",
-      "status": "PLANNED",
+      "status": "ACCEPTED",
       "depends_on": [
         "R03"
       ],
       "scope": "LOCAL_ONLY",
-      "base_sha": "440ef7e408be800d377f67373db2d3707d09de58",
-      "receipt": null
+      "base_sha": "124aef4fd1ea55cec9f3e8d2953250786131c9bf",
+      "receipt": "docs/refactoring/runs/20261023-v3/r04/acceptance.json",
+      "edit_paths": [
+        "src/vibetrading/strategy_contract.py",
+        "services/signal_gen/strategy_loader.py",
+        "strategies/example_signal.py",
+        "strategies/turtle_breakout.py",
+        "strategy/s1_net_liquidity.py",
+        "src/vibetrading/fv_mm/legacy/s1_net_liquidity.py",
+        "strategy/s2_external_anchor.py",
+        "src/vibetrading/fv_mm/legacy/s2_external_anchor.py",
+        "strategy/s3_aggressive_flow.py",
+        "src/vibetrading/fv_mm/legacy/s3_aggressive_flow.py",
+        "strategy/s4_obi.py",
+        "src/vibetrading/fv_mm/legacy/s4_obi.py",
+        "src/vibetrading/strategies/contract.py",
+        "src/vibetrading/strategies/legacy/candle_loader.py",
+        "src/vibetrading/strategies/example_signal.py",
+        "src/vibetrading/strategies/legacy/candle/turtle_breakout.py",
+        "src/vibetrading/strategies/research/state/s1_net_liquidity.py",
+        "src/vibetrading/strategies/legacy/fair_value/s1_net_liquidity.py",
+        "src/vibetrading/strategies/research/state/s2_external_anchor.py",
+        "src/vibetrading/strategies/legacy/fair_value/s2_external_anchor.py",
+        "src/vibetrading/strategies/research/state/s3_aggressive_flow.py",
+        "src/vibetrading/strategies/legacy/fair_value/s3_aggressive_flow.py",
+        "src/vibetrading/strategies/research/state/s4_obi.py",
+        "src/vibetrading/strategies/legacy/fair_value/s4_obi.py",
+        "src/vibetrading/strategy_runner.py",
+        "src/vibetrading/strategy_runtime.py",
+        "src/vibetrading/timefolio/runner.py",
+        "src/vibetrading/fv_mm/market.py",
+        "src/vibetrading/fv_pilot/market.py",
+        "src/vibetrading/mm_state/coordinator.py",
+        "src/vibetrading/mm_state/features.py",
+        "src/vibetrading/fv_mm/runner.py",
+        "src/vibetrading/fv_pilot/runner.py",
+        "services/signal_gen/engine.py",
+        "scripts/rebuild_fv_pilot_calibration.py",
+        "scripts/diagnose_mm_state_no_intents.py",
+        "scripts/replay_mm_state_revision.py",
+        "scripts/build_all_strategy_report.py",
+        "scripts/report_mm_state_revision.py",
+        "scripts/run_backtest.py",
+        "scripts/validate_system.py",
+        "run_strategy.py",
+        "src/vibetrading/strategies/__init__.py",
+        "src/vibetrading/strategies/legacy/__init__.py",
+        "src/vibetrading/strategies/legacy/candle/__init__.py",
+        "src/vibetrading/strategies/legacy/fair_value/__init__.py",
+        "src/vibetrading/strategies/research/__init__.py",
+        "src/vibetrading/strategies/research/state/__init__.py",
+        "tests/refactoring/test_strategy_ownership.py"
+      ],
+      "code_sha": "c605c19e79fc635281c6d794dd8a0ba23cb86376",
+      "pure_move_sha": "b3409b17f9cfe863528a6a9cecde7a4aa9aaab4b",
+      "worker_models": [
+        "opencode/deepseek-v4.1-flash-free",
+        "freellmapi/glm-4.5-flash"
+      ],
+      "worker_repairs": {
+        "R04B": 1,
+        "optional_independent_tests": 1
+      },
+      "acceptance": "PASS; optional GLM test-code attempt rejected, not adopted"
     },
     {
       "task_id": "R05",
@@ -6356,13 +6419,13 @@
       "reproduction": "docs/refactoring/runs/20261023-v3/baseline/checkpoint-order-stdout.txt"
     }
   ],
-  "user_scope_latest": "R03 complete, applied to original local codebase, stop before R04; no additional feature work.",
+  "user_scope_latest": "R04 completed locally; stop before R05. No other ticket or stage implementation.",
   "packaging_validation": {
     "source_sha": "bf75b1c5d259433fc0aa2d9b43764855837b3f68",
     "status": "R03B1_ONLY_PASS",
     "receipt": "docs/refactoring/runs/20261023-v3/r03b1/acceptance.json"
   },
-  "progress_report": "docs/refactoring/runs/20261023-v3/r03/README.md",
+  "progress_report": "docs/refactoring/runs/20261023-v3/r04/README.md",
   "primary_workspace_application": {
     "root": "/mnt/c/Users/박제형/Desktop/VibeTrading",
     "branch": "codex/v3-local-candidate",
@@ -6376,6 +6439,15 @@
       "passed": 1711,
       "additional_review_passed": 6,
       "deselected": 2
+    },
+    {
+      "status": "FULL_LOCAL_REGRESSION_PASS",
+      "source_sha": "8f0726c6ce28ee83800bc904c9f9918f791b03ec",
+      "receipt": "docs/refactoring/runs/20261023-v3/r03/acceptance.json",
+      "passed": 1789,
+      "additional_review_included": 8,
+      "deselected_live_data": 2,
+      "canonical_src_layout": true
     }
   ]
 }

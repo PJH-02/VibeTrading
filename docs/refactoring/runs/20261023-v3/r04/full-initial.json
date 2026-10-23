@@ -1,0 +1,41 @@
+{
+  "source_sha": "c605c19e79fc635281c6d794dd8a0ba23cb86376",
+  "base": "/tmp/vt-r04-full-v913d348",
+  "status": "FAIL",
+  "profiles": [
+    {
+      "profile": "product-guarded",
+      "source_sha": "c605c19e79fc635281c6d794dd8a0ba23cb86376",
+      "exit_code": 0,
+      "elapsed_seconds": 80.0484681950038,
+      "source_files_changed": [],
+      "stdout_tail": " [ 56%]\n........................................................................ [ 60%]\n........................................................................ [ 65%]\n........................................................................ [ 69%]\n........................................................................ [ 74%]\n........................................................................ [ 78%]\n........................................................................ [ 82%]\n........................................................................ [ 87%]\n........................................................................ [ 91%]\n........................................................................ [ 95%]\n.....................................................................    [100%]\n=============================== warnings summary ===============================\ntests/refactoring/test_src_packaging.py::test_setuptools_metadata_discovers_canonical_and_legacy_packages\n  /usr/lib/python3/dist-packages/babel/messages/catalog.py:13: DeprecationWarning: 'cgi' is deprecated and slated for removal in Python 3.13\n    from cgi import parse_header\n\ntests/refactoring/test_src_packaging.py::test_setuptools_metadata_discovers_canonical_and_legacy_packages\n  /usr/lib/python3/dist-packages/setuptools/sandbox.py:13: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html\n    import pkg_resources\n\ntests/refactoring/test_src_packaging.py::test_setuptools_metadata_discovers_canonical_and_legacy_packages\n  /usr/lib/python3/dist-packages/pkg_resources/__init__.py:2871: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('google')`.\n  Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages\n    declare_namespace(pkg)\n\ntests/refactoring/test_src_packaging.py::test_setuptools_metadata_discovers_canonical_and_legacy_packages\n  /usr/lib/python3/dist-packages/pkg_resources/__init__.py:2871: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('zope')`.\n  Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages\n    declare_namespace(pkg)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n1653 passed, 2 deselected, 4 warnings in 75.78s (0:01:15)\n",
+      "status": "PASS"
+    },
+    {
+      "profile": "tooling-os",
+      "source_sha": "c605c19e79fc635281c6d794dd8a0ba23cb86376",
+      "exit_code": 1,
+      "elapsed_seconds": 16.71751946099539,
+      "source_files_changed": [],
+      "stdout_tail": "i(tmp_path):\n        canonical = REPO_ROOT / TICKETS_DIR\n        directory = tmp_path / TICKETS_DIR\n        directory.mkdir(parents=True)\n        for name in (\"tickets_production.json\", \"stage_status.json\"):\n            source = canonical / name\n            assert source.is_file(), f\"missing real canonical file: {source}\"\n            (directory / name).write_bytes(source.read_bytes())\n    \n        tickets = json.loads((directory / \"tickets_production.json\").read_text(encoding=\"utf-8\"))\n        stage = json.loads((directory / \"stage_status.json\").read_text(encoding=\"utf-8\"))\n        tasks = tickets[\"tasks\"]\n        tooling = tickets.get(\"tooling_tasks\", [])\n        stage_by_id = {item[\"task_id\"]: item[\"category\"] for item in stage[\"tasks\"]}\n    \n>       status = dev_status.load_status(tmp_path)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntests/refactoring/test_dev_status.py:396: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nscripts/dev/status.py:211: in load_status\n    records, tooling_records = _collect_tasks(tickets)\n                               ^^^^^^^^^^^^^^^^^^^^^^^\nscripts/dev/status.py:103: in _collect_tasks\n    tooling_records.append(_record(raw, \"R/O\", \"tooling_tasks\", seen))\n                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nraw = {'base_sha': '124aef4fd1ea55cec9f3e8d2953250786131c9bf', 'depends_on': ['R03'], 'edit_paths': ['src/vibetrading/strate...ading/fv_mm/legacy/s1_net_liquidity.py', ...], 'receipt': 'docs/refactoring/runs/20261023-v3/r04/acceptance.json', ...}\nfamily = 'R/O', label = 'tooling_tasks'\nseen = {'R00', 'R01', 'R02', 'R03', 'R04', 'TX00', ...}\n\n    def _record(raw, family: str, label: str, seen: set) -> dict:\n        if not isinstance(raw, dict):\n            raise ValueError(f\"{label}[] must be an object, got {type(raw).__name__}\")\n        tid = _require_str(raw.get(\"task_id\"), f\"{label}[].task_id\")\n        if tid in seen:\n            raise ValueError(f\"duplicate task_id: {tid}\")\n        seen.add(tid)\n        status = _require_str(raw.get(\"status\"), f\"{tid}.status\")\n        if family == \"R/O\" and status not in TOOLING_STATUSES:\n>           raise ValueError(f\"{tid}: unknown tooling status {status}\")\nE           ValueError: R04: unknown tooling status IN_PROGRESS\n\nscripts/dev/status.py:123: ValueError\n=========================== short test summary info ============================\nFAILED tests/refactoring/test_dev_status.py::test_real_copied_canonical_cli\n1 failed, 168 passed in 15.98s\n",
+      "status": "FAIL"
+    }
+  ],
+  "frozen_oracle_inputs": {
+    "docs/refactoring/runs/20261018-stage-assignment/schema_oracle.json": {
+      "checkout_sha256": "b31751c14369f01943c16a853ea683b4702fad91716efb5c36c2fc76d0237053",
+      "frozen_sha256": "028d9166533d077aacf03cd9c74adb563a2601e0aeb1333029c7fcb8a7e0625c",
+      "reconstruction": "Only LF/CRLF representation; exact original frozen SHA required, values and golden files untouched"
+    },
+    "docs/refactoring/runs/20261018-stage-assignment/encoding_oracle.json": {
+      "checkout_sha256": "cd8f5a8446bb4ed6095416a1c50d1d526db49ac17a8e98b1a57358b47554d733",
+      "frozen_sha256": "1bb9e0d00e2cbb1110e25cf85e5ac94fc97aeb42604c7ff658b2934f99bed513",
+      "reconstruction": "Only LF/CRLF representation; exact original frozen SHA required, values and golden files untouched"
+    }
+  },
+  "legacy_guard_sha256": "eb34edb62d47e484d6d7bf5fb6572750c8cbfa0ac5a4abd40bc1fbd9d3e130b9",
+  "tests_and_historical_goldens_modified": false,
+  "extra_six_tooling_review_probes": true,
+  "r04_independent_worker_probes": "Supplemental FreeLLM worker pending; not included in this suite"
+}

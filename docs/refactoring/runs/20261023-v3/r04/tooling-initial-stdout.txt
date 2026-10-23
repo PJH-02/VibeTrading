@@ -1,0 +1,56 @@
+........................................................................ [ 42%]
+........................................................................ [ 85%]
+................F........                                                [100%]
+=================================== FAILURES ===================================
+________________________ test_real_copied_canonical_cli ________________________
+
+tmp_path = PosixPath('/tmp/pytest/test_real_copied_canonical_cli0')
+
+    def test_real_copied_canonical_cli(tmp_path):
+        canonical = REPO_ROOT / TICKETS_DIR
+        directory = tmp_path / TICKETS_DIR
+        directory.mkdir(parents=True)
+        for name in ("tickets_production.json", "stage_status.json"):
+            source = canonical / name
+            assert source.is_file(), f"missing real canonical file: {source}"
+            (directory / name).write_bytes(source.read_bytes())
+
+        tickets = json.loads((directory / "tickets_production.json").read_text(encoding="utf-8"))
+        stage = json.loads((directory / "stage_status.json").read_text(encoding="utf-8"))
+        tasks = tickets["tasks"]
+        tooling = tickets.get("tooling_tasks", [])
+        stage_by_id = {item["task_id"]: item["category"] for item in stage["tasks"]}
+
+>       status = dev_status.load_status(tmp_path)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/refactoring/test_dev_status.py:396:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts/dev/status.py:211: in load_status
+    records, tooling_records = _collect_tasks(tickets)
+                               ^^^^^^^^^^^^^^^^^^^^^^^
+scripts/dev/status.py:103: in _collect_tasks
+    tooling_records.append(_record(raw, "R/O", "tooling_tasks", seen))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+raw = {'base_sha': '124aef4fd1ea55cec9f3e8d2953250786131c9bf', 'depends_on': ['R03'], 'edit_paths': ['src/vibetrading/strate...ading/fv_mm/legacy/s1_net_liquidity.py', ...], 'receipt': 'docs/refactoring/runs/20261023-v3/r04/acceptance.json', ...}
+family = 'R/O', label = 'tooling_tasks'
+seen = {'R00', 'R01', 'R02', 'R03', 'R04', 'TX00', ...}
+
+    def _record(raw, family: str, label: str, seen: set) -> dict:
+        if not isinstance(raw, dict):
+            raise ValueError(f"{label}[] must be an object, got {type(raw).__name__}")
+        tid = _require_str(raw.get("task_id"), f"{label}[].task_id")
+        if tid in seen:
+            raise ValueError(f"duplicate task_id: {tid}")
+        seen.add(tid)
+        status = _require_str(raw.get("status"), f"{tid}.status")
+        if family == "R/O" and status not in TOOLING_STATUSES:
+>           raise ValueError(f"{tid}: unknown tooling status {status}")
+E           ValueError: R04: unknown tooling status IN_PROGRESS
+
+scripts/dev/status.py:123: ValueError
+=========================== short test summary info ============================
+FAILED tests/refactoring/test_dev_status.py::test_real_copied_canonical_cli
+1 failed, 168 passed in 15.98s

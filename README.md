@@ -14,8 +14,10 @@ python3 -m pip install --no-deps -e .
 python3 main.py --help
 ```
 
-R03은 패키지 루트 이동과 경로 호환성 작업입니다. `core/feeds/strategies` 등 내부 도메인의
-최종 분리는 후속 R04/R05 및 해당 VN/TX 티켓에서 진행합니다.
+R03에서 패키지 루트를 이동했고, R04에서 전략 로딩을 `vibetrading.strategies.load_strategy`로
+통합했습니다. 과거 캔들 전략과 서로 다른 S1~S4 구현은 `strategies/legacy/` 및
+`strategies/research/state/`로 분리하고 기존 import는 호환 어댑터로 보존합니다.
+C3/KP/KD 계산 분리는 후속 R05 범위이며 다른 도메인은 해당 VN/TX 티켓에서 진행합니다.
 
 ## 현재 상태 (v3 리팩토링 기준)
 

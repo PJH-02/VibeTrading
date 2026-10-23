@@ -1,0 +1,11 @@
+{
+  "decision": "PASS",
+  "final_metadata_test_exit": 0,
+  "stdout": ".                                                                        [100%]\n1 passed in 0.08s\n",
+  "original_vn_tx_tasks_and_stage_counts_unchanged": true,
+  "other_tooling_rows_unchanged": true,
+  "model_profiles_unchanged": true,
+  "stop_after_ticket": "R04",
+  "R05": "PLANNED",
+  "O01": "REWORK_REQUIRED"
+}
