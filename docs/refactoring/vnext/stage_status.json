@@ -611,13 +611,13 @@
   ],
   "primary_workspace_application": {
     "status": "PASS",
-    "receipt": "docs/refactoring/runs/20261023-v3/tx00-current/original-application.json",
-    "applied_head": "18337aef5c9ae5b08ca6c97af8d705040f1fcd06",
-    "accepted_source_sha": "fa2478e5ca15b92d1db69d1cc7e0d8f7266b7146",
+    "receipt": "docs/refactoring/runs/20261024-v3/tx01/original-application.json",
+    "applied_head": "3cb68e394403b5548c6780c3462758a36a474839",
+    "accepted_source_sha": "1d1c2c8f6f0a76745fce9c04208f4e031c444cdd",
     "original_workspace": "/mnt/c/Users/박제형/Desktop/VibeTrading",
     "preexisting_dirty_entries_preserved": 174,
-    "scope": "TX00 local static reuse audit documents applied; product code unchanged; stop before TX01",
-    "previous_application_receipt": "docs/refactoring/runs/20261023-v3/vn09/original-application.json"
+    "scope": "TX01 existing Paper NEW signal/intent validation applied; stop before TX02A and all other tickets",
+    "previous_application_receipt": "docs/refactoring/runs/20261023-v3/tx00-current/original-application.json"
   },
   "refactoring_scope_revision": {
     "authority": "Explicit user instruction, 2026-10-23",
