@@ -56,5 +56,11 @@
     "other_48_task_objects_preserved": true
   },
   "product_scope_review": "docs/refactoring/runs/20261024-v3/batch-tx04b-vn13/product-scope-review.json",
-  "production_trading_accounts_accessed": false
+  "production_trading_accounts_accessed": false,
+  "primary_workspace_application": {
+    "decision": "PASS",
+    "receipt": "docs/refactoring/runs/20261024-v3/batch-tx04b-vn13/original-application.json",
+    "preserved_entries": 174,
+    "applied_source_and_documents_head": "8e2753b760c780ff360ddd0146dae5ab350212d6"
+  }
 }
