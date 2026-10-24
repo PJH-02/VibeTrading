@@ -255,6 +255,8 @@ class PortfolioLedger:
             raise RuntimeError("Strategy event claim requires a standalone paper commit")
         for name, value in (("strategy", strategy), ("config_version", config_version), ("event_id", event_id)):
             bounded_identity(value, name)
+        if strategy.startswith("@"):
+            raise ValueError("Reserved strategy namespace")
         if not evidence:
             raise ValueError("Strategy event claim requires immutable evidence")
         identity = hashlib.sha256(canonical([self.scope.key, strategy, config_version, event_id]).encode()).hexdigest()
@@ -439,7 +441,7 @@ class PortfolioLedger:
         if self.mode != TradingMode.PAPER:
             raise ValueError("Live/sandbox authoritative margin is UNVERIFIED; admission unavailable")
         bounded_identity(strategy, "strategy")
-        if strategy == "@physical":
+        if strategy.startswith("@"):
             raise ValueError("Reserved strategy namespace")
         rules.supported()
         if intent.instrument.model_dump(mode="json") != rules.instrument.model_dump(mode="json") or intent.instrument.venue.value != self.scope.venue:
