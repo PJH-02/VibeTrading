@@ -109,7 +109,8 @@ class LocalMarketEngine:
     def __init__(self, *, producer_providers: Mapping[str, str], budgets: EngineBudgets,
                  on_invalidate: Callable[[str, str], None],
                  hot_path: HotPathStore | None = None, state_callbacks: tuple = (),
-                 post_apply_callbacks: tuple = (), snapshot_clock: Callable[[], int] | None = None,
+                 post_apply_callbacks: tuple = (), on_tick: Callable[[int], None] | None = None,
+                 snapshot_clock: Callable[[], int] | None = None,
                  trading_filter: Callable[[BaseMarketEvent], bool] | None = None,
                  fresh_starts: Mapping[str, str] | None = None, verified_fresh_start: bool = False,
                  clock: Callable[[], int] = time.monotonic_ns):
@@ -130,6 +131,8 @@ class LocalMarketEngine:
                 or (snapshot_clock is not None and inspect.iscoroutinefunction(snapshot_clock))):
             raise ValueError("Post-apply callbacks require the hot-path authority and an explicit epoch clock")
         callbacks = (on_invalidate, *state_callbacks, *post_apply_callbacks)
+        if on_tick is not None:
+            callbacks += (on_tick,)
         if any(not callable(callback) or inspect.iscoroutinefunction(callback) for callback in callbacks):
             raise TypeError("Engine callbacks must be synchronous")
         if trading_filter is not None and (not callable(trading_filter) or inspect.iscoroutinefunction(trading_filter)):
@@ -137,6 +140,7 @@ class LocalMarketEngine:
         self.budgets, self.on_invalidate, self.hot_path = budgets, on_invalidate, hot_path
         self.state_callbacks, self.clock = state_callbacks, clock
         self.post_apply_callbacks = post_apply_callbacks
+        self.on_tick = on_tick
         self.snapshot_clock = snapshot_clock or time.time_ns
         self.trading_filter = trading_filter or (lambda event: event.instrument.asset_class == AssetClass.ETF)
         self._feeds = {producer: _Feed(provider) for producer, provider in producer_providers.items()}
@@ -1001,6 +1005,11 @@ class LocalMarketEngine:
         while True:
             await asyncio.sleep(self.budgets.tick_seconds)
             self.check_health()
+            if self.on_tick is not None:
+                epoch = self.snapshot_clock()
+                if type(epoch) is not int or epoch <= 0:
+                    raise EngineError("tick_epoch_clock_invalid")
+                _sync(self.on_tick, epoch)
 
     async def close(self):
         with self._owner_operation(exclusive=True):

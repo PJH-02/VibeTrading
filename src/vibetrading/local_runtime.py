@@ -483,6 +483,7 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
         # The selected Paper callback is published only after every proof.
         post_apply_callbacks=(() if runtime_checkpoint is not None else
             ((paper_runtime.process_applied,) if paper_runtime is not None else ())),
+        on_tick=(getattr(paper_runtime,"advance",None) if paper_runtime is not None else None),
         snapshot_clock=time.time_ns,
         trading_filter=(lambda event:event.provider=='kiwoom' and event.instrument.asset_class==AssetClass.ETF)
             if plan.etf_enabled else lambda event:False)
