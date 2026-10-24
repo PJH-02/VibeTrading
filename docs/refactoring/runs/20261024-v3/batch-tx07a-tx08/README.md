@@ -25,3 +25,5 @@ C3/KP/KD·Mock/Mock2·TOSS DATA_ONLY·기존 거래소/cloud·Golden을 보존�
 - **미착수 (11):** VN15, VN17, VN18, VN19, VN20, TX07B, TX07, TX09, TX10, TX11, TX12.
 
 기존 완료27개와 비선택48개 task 객체·모델 profile·permissions·tooling·DAG 간선을 보존했다. 로컬 candidate commit/적용만 수행하며 원격 push/배포/실주문은 수행하지 않는다. 기존 사용자 dirty174건은 별도 적용 receipt로 보존을 검증한다.
+
+원본 작업폴더에 로컬 적용 완료: `f0d0d5e873d5b05cb5e3ee574f0dd396d3b1a913` (검증 source `04c9f576925c4ad4c8b559501e09055e52201b83`). 사용자 dirty174건·실제 수정 byte·삭제/미추적 문서·줄바꿈을 보존했다. [적용 기록](original-application.json). 이후 메타데이터 검사/적용 receipt만 별도 로컬 commit으로 갱신한다. 원격 push는 수행하지 않았다.
