@@ -23,7 +23,7 @@
     "--basetemp",
     "/tmp/pytest",
     "--junitxml",
-    "/tmp/junit.xml",
+    "/evidence/junit.xml",
     "tests/refactoring/test_vnext_vn10.py",
     "tests/refactoring/test_portfolio_ledger.py",
     "tests/refactoring/test_paper_execution.py",
@@ -34,5 +34,6 @@
     "tests/refactoring/test_kr_strategy_extraction.py",
     "tests/refactoring/test_tx02a_owner_fence.py",
     "docs/tickets/TX02A-reviewer-counterexamples.py"
-  ]
+  ],
+  "host_command_record": "/home/pjh/.local/state/codex-opencode/runs/tx02a-independent-uk22xq4g/metadata.json"
 }

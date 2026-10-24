@@ -1,20 +1,20 @@
 {
-  "source_sha": "150751b3df1d179ed8e7c551df7a0016892230a1",
-  "base": "/home/pjh/.local/state/codex-opencode/runs/tx02a-metadata-yzqanev4",
+  "source_sha": "7582638df412293ef7c8f17daa99f3ec53fe8b0c",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx02a-metadata-rms6mtch",
   "status": "PASS",
   "profiles": [
     {
       "profile": "metadata-os",
-      "source_sha": "150751b3df1d179ed8e7c551df7a0016892230a1",
+      "source_sha": "7582638df412293ef7c8f17daa99f3ec53fe8b0c",
       "exit_code": 0,
-      "elapsed_seconds": 0.7533149160153698,
+      "elapsed_seconds": 2.1313561229908373,
       "tests": {
         "passed": 20,
         "failed": 0,
         "skipped": 0
       },
       "source_files_changed": [],
-      "stdout_tail": "....................                                                     [100%]\n20 passed in 0.24s\n"
+      "stdout_tail": "....................                                                     [100%]\n20 passed in 0.69s\n"
     }
   ],
   "frozen_oracle_sha256": {

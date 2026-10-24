@@ -23,7 +23,7 @@
     "--basetemp",
     "/tmp/pytest",
     "--junitxml",
-    "/tmp/junit.xml",
+    "/evidence/junit.xml",
     "tests/refactoring/test_vnext_vn10.py",
     "tests/refactoring/test_portfolio_ledger.py",
     "tests/refactoring/test_paper_execution.py",
@@ -33,5 +33,6 @@
     "tests/refactoring/test_tx00_toss_data_only.py",
     "tests/refactoring/test_kr_strategy_extraction.py",
     "docs/tickets/TX02A-reviewer-counterexamples.py"
-  ]
+  ],
+  "host_command_record": "/home/pjh/.local/state/codex-opencode/runs/tx02a-original-extended-gw61bt8z/metadata.json"
 }
