@@ -678,7 +678,16 @@ class PaperStrategyRuntime:
                         else:
                             matcher.on_book(mapped(projected))
                     elif isinstance(event, TradeEvent):
-                        matcher.on_trade(mapped(event))
+                        # A fresh trade is only new evidence about the trade.
+                        # It cannot make the reference book that the matcher
+                        # would consume for arrival/fill any fresher, so reject
+                        # stale cached depth before on_trade moves the clock.
+                        reference_book = snapshot.latest_book(reference_key)
+                        if reference_book is None or not self._fresh_input(reference_book, snapshot.now_ns):
+                            self._fence_feed(key, reference_key, matcher, "reference_book_not_fresh")
+                            matcher.advance(snapshot.now_ns)
+                        else:
+                            matcher.on_trade(mapped(event))
                 except Exception as exc:
                     self._account_faults[account] = type(exc).__name__
                     try:

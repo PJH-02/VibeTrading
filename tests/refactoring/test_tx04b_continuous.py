@@ -17,9 +17,9 @@ from vibetrading.feed_recovery import EngineCursor, RecoveryFrame
 from vibetrading.hot_path import HotPathStore
 from vibetrading.local_config import LocalRuntimePlan
 from vibetrading.local_engine import EngineBudgets, EngineError, LocalMarketEngine
-from vibetrading.models import Side
+from vibetrading.models import OrderDestination, OrderIntent, Side
 from vibetrading.strategy_runtime import PaperStrategyRuntime
-from vibetrading.trading_contracts import TradingMode
+from vibetrading.trading_contracts import ActionKind, ExecutionAction, TradingMode
 
 
 def engine_budgets():
@@ -200,6 +200,41 @@ def test_late_stale_event_fences_before_any_cached_depth_fill(tmp_path):
         assert ledger.get("one")["state"] == "REJECTED"
         assert D(ledger.get("one")["reservation"]) == 0
         assert ledger.position("strategy", BTC.key) == 0
+        assert BTC.key in host.report()["invalid_inputs"]
+    finally:
+        ledger.close()
+
+
+def test_fresh_trade_cannot_consume_stale_reference_book_for_pending_ioc(tmp_path):
+    ledger, matcher, host, now = stale_runtime(tmp_path)
+    try:
+        observed = []
+        def ioc_actions(signal, view, config):
+            identity = signal.signal_id
+            intent = OrderIntent(intent_id=identity, job_id="ioc",
+                signal_id=signal.signal_id, destination=OrderDestination.REAL,
+                instrument=BTC, side=Side.BUY, created_ts_ns=signal.event_ts_ns,
+                client_order_id="client-"+identity, quantity=D(1), limit_price=D(101))
+            return [ExecutionAction("action-"+identity, ActionKind.NEW, ledger.scope,
+                "ioc", "config-1", TradingMode.PAPER, signal.valid_until_ts_ns,
+                intent=intent, post_only=False, time_in_force="IOC")]
+        host.register(registration(ledger, "ioc", observed, builder=ioc_actions))
+        deliver(host, now, book())
+        assert len(observed) == 1
+        identity = next(iter(matcher.report()["open_orders"]))
+        assert matcher.report()["open_orders"][identity]["arrival_ns"] == T + 10
+        assert D(ledger.get(identity)["reservation"]) > 0
+
+        # The trade itself is fresh, but the only reference book is from T.
+        # It must not advance the pending IOC arrival into cached depth.
+        now[0] = T + 11
+        host.process_event(trade(T + 11, side=Side.SELL, price=100))
+        assert matcher.report()["fills"] == 0
+        assert matcher.report()["open_orders"] == {}
+        assert ledger.get(identity)["state"] == "REJECTED"
+        assert D(ledger.get(identity)["reservation"]) == 0
+        assert ledger.position("strategy", BTC.key) == 0
+        assert D(ledger.report()["balances"]["USDT"]) == D(100000)
         assert BTC.key in host.report()["invalid_inputs"]
     finally:
         ledger.close()
