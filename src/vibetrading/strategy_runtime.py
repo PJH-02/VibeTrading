@@ -641,15 +641,53 @@ class PaperStrategyRuntime:
     def _market(self, result, snapshot, phase):
         if phase not in {"LIVE", "PAPER"} or result.duplicate or result.reason == "raw_only":
             return
+        event, reference_key = result.event, result.event.instrument.key
+        if (self._deferred_input_gaps and (not result.applied
+                or not self._fresh_input(result.event, snapshot.now_ns))):
+            return
+        # Matcher callbacks advance every order in the physical account, not
+        # only this event's instrument. Before any such clock movement, fence
+        # stale committed depth from the actual durable matcher books. The
+        # post-apply snapshot contains the arriving book and cannot attest the
+        # old depth that an account-wide advance would otherwise consume.
+        for account, matcher in self.accounts.items():
+            if account in self._account_faults:
+                continue
+            try:
+                state = matcher.ledger.paper_state() or {}
+                books = state.get("books") if isinstance(state, dict) else None
+                orders = state.get("orders") if isinstance(state, dict) else None
+                books = books if isinstance(books, dict) else {}
+                orders = orders if isinstance(orders, dict) else {}
+                for key, bound_spec in self.products.items():
+                    if matcher.ledger.scope.venue != bound_spec.instrument.venue.value:
+                        continue
+                    feed = self.reference_feeds.get(key, key)
+                    cached = books.get(key)
+                    if isinstance(cached, dict):
+                        received = cached.get("received_ns")
+                        source_ts = cached.get("source_ns")
+                        stale = (isinstance(received, bool) or not isinstance(received, int)
+                                 or not 0 <= snapshot.now_ns-received <= self.budgets.max_feed_age_ns
+                                 or (source_ts is not None and (
+                                     isinstance(source_ts, bool) or not isinstance(source_ts, int)
+                                     or not 0 <= snapshot.now_ns-source_ts <= self.budgets.max_feed_age_ns)))
+                        if stale:
+                            self._fence_feed(key, feed, matcher, "cached_book_not_fresh")
+                    elif any(isinstance(order, dict) and order.get("instrument") == key
+                             for order in orders.values()):
+                        # A missing book is actionable only where committed
+                        # risk still depends on it; otherwise a first book is
+                        # allowed to establish its generation normally.
+                        self._fence_feed(key, feed, matcher, "cached_book_missing")
+            except Exception as exc:
+                self._account_faults[account] = type(exc).__name__
         if self._deferred_input_gaps:
-            if not result.applied or not self._fresh_input(result.event, snapshot.now_ns):
-                return
             # Recovery did not establish a continuous matching input cursor.
             # Fence from the last committed clock before advancing any account
             # using a new live input; cached depth cannot fill the missing span.
             self._gap_matchers(self._deferred_input_gaps)
             self._deferred_input_gaps.clear()
-        event, reference_key = result.event, result.event.instrument.key
         for account, matcher in self.accounts.items():
             if account in self._account_faults:
                 continue
@@ -675,8 +713,11 @@ class PaperStrategyRuntime:
                         if projected is None:
                             self._fence_feed(key, reference_key, matcher, "projected_book_missing")
                             matcher.advance(snapshot.now_ns)
-                        else:
-                            matcher.on_book(mapped(projected))
+                        elif matcher.on_book(mapped(projected)):
+                            # The native matcher accepted the fresh full book
+                            # (including any explicit new generation) after the
+                            # preflight fence; only now may that feed reopen.
+                            self._invalid_inputs.pop(reference_key, None)
                     elif isinstance(event, TradeEvent):
                         # A fresh trade is only new evidence about the trade.
                         # It cannot make the reference book that the matcher
