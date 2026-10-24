@@ -1,0 +1,8 @@
+{
+  "decision": "REQUIRES_TEST_PATH_REPAIR",
+  "independent_tests": 97,
+  "independent_exit": 0,
+  "reason": "Direct host.process_event reattaches input phase after checkpoint instead of proving the existing spool/engine boundary. Preserve all manual economic expectations and require duplicate native evidence through real appended transport suffix.",
+  "production_gap_proven": false,
+  "repair_delegations_requested": 1
+}

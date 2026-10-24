@@ -1,0 +1,21 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "worker_exit": 0,
+  "delegate_exit": 0,
+  "actual_test_commands": [
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_execution_owner.py tests/refactoring/test_execution_nonce.py tests/refactoring/test_portfolio_ledger.py tests/refactoring/test_vnext_vn12.py tests/refactoring/test_tx02b_attribution.py tests/refactoring/test_tx07a_fact_contract.py",
+      "exit_code": 1,
+      "output_tail": "E         \nE         Omitting 1 identical items, use -vv to show\nE         Differing items:\nE         {'order_id': 'fake-client-one'} != {'order_id': 'fake-one'}\nE         Use -v to get more diff\n\ntests/refactoring/test_tx07a_fact_contract.py:231: AssertionError\n=========================== short test summary info ============================\nFAILED tests/refactoring/test_tx07a_fact_contract.py::test_offline_owner_fill_before_ack_is_one_immutable_fact[1-SUBMITTED-expected_reservation0-expected_position0]\nFAILED tests/refactoring/test_tx07a_fact_contract.py::test_offline_owner_fill_before_ack_is_one_immutable_fact[2-FILLED-expected_reservation1-expected_position1]\n2 failed, 77 passed in 0.57s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_execution_owner.py tests/refactoring/test_execution_nonce.py tests/refactoring/test_portfolio_ledger.py tests/refactoring/test_vnext_vn12.py tests/refactoring/test_tx02b_attribution.py tests/refactoring/test_tx07a_fact_contract.py",
+      "exit_code": 0,
+      "output_tail": "........................................................................ [ 91%]\n.......                                                                  [100%]\n79 passed in 0.57s\n"
+    }
+  ],
+  "private_run": "/home/pjh/.local/state/codex-opencode/runs/tx07a-worker-v19jo2s9",
+  "automatic_acceptance": false
+}

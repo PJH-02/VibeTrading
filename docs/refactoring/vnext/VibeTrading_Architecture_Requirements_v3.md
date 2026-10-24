@@ -413,3 +413,5 @@ opencode run --model '<configured-provider>/<verified-model-id>' \
 2026-10-24 후속 구현 추적: 기존 NATS-free post-apply 경로와 watchdog을 Paper에 연결하고 stale book을 시계 전진 전에 차단했다. 파일별 명시 configuration은 기존 loader/register를 재사용한다. 새 runtime·plugin manager·account engine은 없으며 기존 C3/KP/KD·ETF·거래소·cloud 경제/운영 경로는 보존했다. 전체2322 PASS/외부2건 제외는 로컬 선택 계약 증거이며 live/process-isolation/server 검증은 별도다. [증거](../runs/20261024-v3/batch-tx04b-vn13/acceptance.json).
 
 2026-10-24 TX05 추적: 별도 파일 전략에서 Signal/Paper 체결/PnL/실제 체크포인트 복구까지 기존 구현을 연결한 로컬 경제 E2E를 수락했다. 제품 변경0, 전체2325 PASS/외부2건 제외. callback timeout은 반환 뒤 검사하는 기존 cooperative 범위이며 hard isolation/live/server 검증은 별도다. [증거](../runs/20261024-v3/tx05/acceptance.json).
+
+2026-10-24 TX07A/TX08A/TX08 추적: 기존 fact 필드와 terminal/중복 규칙은 문서/테스트로 고정했다. 동일 Paper 계좌를 공유하는 모든 등록은 명시한 account notional/capital limit이 같아야 하며 claim/plugin 생성 전에 검사한다. 전략별 예산/funding buffer는 독립이고 fair scheduler/새 policy registry를 만들지 않는다. 실제 두 파일 전략의 spool·부분 체결·checkpoint 복구·취소 소유권·중복 체결을 기존 경로에서 검증했다. 전체 2348 PASS/외부2건 제외는 선택 로컬 계약 증거다. 기존 거래소·C3/KP/KD·Mock/Mock2·TOSS DATA_ONLY·cloud·Golden은 보존했다. [증거](../runs/20261024-v3/batch-tx07a-tx08/acceptance.json).

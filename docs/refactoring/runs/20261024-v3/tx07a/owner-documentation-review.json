@@ -1,0 +1,5 @@
+{
+  "owner_product_edits": 0,
+  "owner_documentation_edits": 1,
+  "correction": "Separate Paper strategy attribution argument from OrderIntent.job_id; preserve actual ETF/offline identity semantics"
+}

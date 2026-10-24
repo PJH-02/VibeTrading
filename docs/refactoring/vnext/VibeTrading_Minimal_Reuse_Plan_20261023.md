@@ -106,12 +106,12 @@
 | TX06D | 선택 | REQUEST_MAPPING_ONLY_FULL_CODE_COMPLETION_BLOCKED | TX00 | Bybit fv_mm/liquidity/probe 유지, testnet 한정 |
 | TX06E | 선택 | REQUEST_MAPPING_ONLY_FULL_CODE_COMPLETION_BLOCKED | TX00 | Hyperliquid SDK/broker 보존 |
 | TX06 | 선택 | PLANNED | TX00 | all-five rebuild gate 제거; 선택 route 감사만 |
-| TX07A | 핵심 | PLANNED | TX01 | 기존 order/fill/journal 위 최소 정규화 projection |
+| TX07A | 핵심 | COMPLETE_LOCAL_IMPLEMENTATION | TX01 | 기존 fact 계약/필드 매핑 문서와 테스트; product 변경0 |
 | TX07B | 선택 | PLANNED | TX00, TX07A | 기존 reconciliation의 입증된 gap만 |
 | TX07 | 선택 | PLANNED | TX07A, TX07B | 선택 runtime equivalence gate |
-| TX08A | 핵심 | PAPER_SHARED_ACCOUNT_FIXTURE_IMPLEMENTATION | TX02, TX05, TX07A | 동일계좌 동시전략 reservation/attribution/cancel/restart |
+| TX08A | 핵심 | COMPLETE_LOCAL_IMPLEMENTATION | TX02, TX05, TX07A | 동일계좌 동시전략 reservation/attribution/cancel/restart |
 | TX08B | 선택 | PAPER_OBSERVATIONAL_COORDINATOR_IMPLEMENTED | TX08A, TX07A | cross-venue는 명시 수요까지 DEFER |
-| TX08 | 집계 | PLANNED | TX08A | same-account evidence만 |
+| TX08 | 집계 | COMPLETE_LOCAL_IMPLEMENTATION | TX08A | same-account evidence만 |
 | TX09 | 핵심 | PLANNED | VN15 | VN15와 동일 read-only projection/control |
 | TX10 | 핵심 | PLANNED | TX01 | 기존 Ncloud 유지; manifest→plugin/Paper metadata만 |
 | TX11 | 집계 | PLANNED | TX05, TX08A, TX10, VN15, VN18 | 좁은 NATS-free E2E, five-venue/arb 제외 |
@@ -179,4 +179,8 @@ TX02A 수락 당시 **20 완료 / 19 미완료 / 12 미착수**였다. 기존 sh
 
 ## 17. TX05 기존 파일 전략/Paper 경제 E2E 수락 (2026-10-24)
 
-현재 **27 완료 / 12 미완료 / 12 미착수**다. 기존 VN13/TX04 경로와 실제 체크포인트를 재사용했다. 제품 변경0, 독립286/전체2325 PASS(외부2건 제외). 완료된26개·비선택50개 task 객체와 DAG 간선, 기존 전략/거래소/cloud/Golden을 보존했다. 추가 티켓/배포/실주문은 진행하지 않았다. [전체 분류·증거](../runs/20261024-v3/tx05/README.md).
+TX05 수락 당시 **27 완료 / 12 미완료 / 12 미착수**였다. 기존 VN13/TX04 경로와 실제 체크포인트를 재사용했다. 제품 변경0, 독립286/전체2325 PASS(외부2건 제외). 완료된26개·비선택50개 task 객체와 DAG 간선, 기존 전략/거래소/cloud/Golden을 보존했다. 추가 티켓/배포/실주문은 진행하지 않았다. [전체 분류·증거](../runs/20261024-v3/tx05/README.md).
+
+## 18. TX07A → TX08A → TX08 로컬 수락 (2026-10-24)
+
+현재 **30 완료 / 10 미완료 / 11 미착수**다. fact 필드가 이미 충분해 신규 projection을 만들지 않았으며 계좌 한도 충돌만 기존 등록 메서드 한 곳에서 보완했다. 실제 별도 파일 전략 2개의 공동 Paper·부분 체결·체크포인트 복구·취소 소유권을 검증했다. 전체 2348 PASS/외부2건 제외. 기존 완료27개·비선택48개 task 객체와 DAG 간선을 보존했다. 새 거래소 주문 코드/범용 runtime/상태 머신은 없고 TX07B/TX08B 등 네 번째 티켓은 착수하지 않았다. [전체 상태와 증거](../runs/20261024-v3/batch-tx07a-tx08/README.md).

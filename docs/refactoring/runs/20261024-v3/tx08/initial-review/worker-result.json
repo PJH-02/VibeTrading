@@ -1,0 +1,9 @@
+{
+  "mode": "worker",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx08-worker-0pbn6uyb",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/tx08-worker-0pbn6uyb/work",
+  "exit_code": 0,
+  "elapsed_seconds": 352.7697250340134,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "ROLE=refactor\nMODEL=opencode/deepseek-v4.1-flash-free\nARTIFACTS=/home/pjh/.local/state/codex-opencode/runs/refactor.Aw4rAu9d\nWORKER_EXIT=0\nBASELINE_DIFF_CHECK_EXIT=0\nDIFF_CHECK_EXIT=0\nARTIFACTS=/home/pjh/.local/state/codex-opencode/runs/refactor.Aw4rAu9d\n"
+}

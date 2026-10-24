@@ -1,0 +1,37 @@
+{
+  "decision": "PASS",
+  "task_id": "TX07A",
+  "source_sha": "c052cdc760366923853d4674129b87b818560ec3",
+  "selected_provider": "opencode",
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "worker_exit": 0,
+  "delegate_exit": 0,
+  "repair_delegations": 0,
+  "owner_product_edits": 0,
+  "changed_product_symbols": [],
+  "other_product_methods_ast_unchanged": 0,
+  "product_paths": [],
+  "scoped_test_passed": 79,
+  "independent_exit": 0,
+  "product_and_test_sha256": {
+    "tests/refactoring/test_tx07a_fact_contract.py": "1a9900b29da16823a345dbe04caebe71d20275602444e6cdf127f1950655162a"
+  },
+  "full_batch_validation": {
+    "receipt": "docs/refactoring/runs/20261024-v3/batch-tx07a-tx08/full-regression.json",
+    "source_sha": "04c9f576925c4ad4c8b559501e09055e52201b83",
+    "passed": 2348,
+    "exit_codes": [
+      0,
+      0
+    ],
+    "deselected_live_data": 2
+  },
+  "live_readiness": false,
+  "scope": "Existing local Paper contracts only; no live/venue/cloud/strategy rebuild or data deletion",
+  "final_batch_sha256": {
+    "tests/refactoring/test_tx07a_fact_contract.py": "1a9900b29da16823a345dbe04caebe71d20275602444e6cdf127f1950655162a"
+  },
+  "stage_hashes_scope": "Stage hashes pin each stage commit; final_batch_sha256 pins full-tested final source.",
+  "owner_documentation_edits": 1,
+  "owner_documentation_review": "docs/refactoring/runs/20261024-v3/tx07a/owner-documentation-review.json"
+}

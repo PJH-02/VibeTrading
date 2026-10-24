@@ -1,0 +1,37 @@
+{
+  "mode": "baseline",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx08-baseline-5nou8xrd",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/tx08-baseline-5nou8xrd/work",
+  "exit_code": 0,
+  "elapsed_seconds": 2.284847112983698,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "........................................................................ [ 75%]\n........................                                                 [100%]\n96 passed in 1.88s\n",
+  "tests": {
+    "passed": 96,
+    "failed": 0,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_tx07a_fact_contract.py",
+    "tests/refactoring/test_tx08a_account_policy.py",
+    "tests/refactoring/test_tx02a_owner_fence.py",
+    "tests/refactoring/test_tx02b_attribution.py",
+    "tests/refactoring/test_tx02_joint_gate.py",
+    "tests/refactoring/test_tx04b_continuous.py",
+    "tests/refactoring/test_vn13_file_registration.py",
+    "tests/refactoring/test_tx05_file_paper_e2e.py",
+    "tests/refactoring/test_runtime_checkpoint_integration.py"
+  ]
+}

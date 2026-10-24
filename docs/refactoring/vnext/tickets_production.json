@@ -4888,12 +4888,12 @@
     },
     {
       "task_id": "TX07A",
-      "status": "PLANNED",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
       "kind": "IMPLEMENTATION",
       "depends_on": [
         "TX01"
       ],
-      "goal": "Small normalized local identity/event mapping over existing order/fill/journal semantics; no second universal order lifecycle state machine. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
+      "goal": "Seal existing local order/fill/UNKNOWN/terminal identity contract using explicit field and authority mapping plus real ledger/ETF/offline-owner regression; existing fields suffice, no new projection API or universal lifecycle.",
       "owner": "root",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
@@ -4901,10 +4901,16 @@
         "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
         "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
         "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
-        "vibetrading/etf_journal.py",
-        "vibetrading/execution_ledger.py"
+        "src/vibetrading/etf_journal.py",
+        "src/vibetrading/execution_ledger.py",
+        "src/vibetrading/execution_owner.py",
+        "src/vibetrading/portfolio_ledger.py",
+        "src/vibetrading/paper_execution.py"
       ],
-      "edit_paths": [],
+      "edit_paths": [
+        "tests/refactoring/test_tx07a_fact_contract.py",
+        "docs/refactoring/vnext/reuse_audit/tx07a_fact_contract.md"
+      ],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -4919,11 +4925,15 @@
       "target_symbols": {
         "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "ADD_PROPOSED": [],
-        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
+        "DISPATCH": "docs/tickets/TX07A-existing-fact-contract.md",
+        "EDITED": []
       },
       "source_hashes": {
-        "vibetrading/execution_ledger.py": "657366cf0eb15c898786feb7704363043bb52674b507804d7a9b9d0ef350d70e",
-        "vibetrading/etf_journal.py": "cd81396df9174c73fcaa80f479fe8c06a11a37e99f16daa269eb75a84644d79d"
+        "src/vibetrading/execution_owner.py": "adfea4b451d57b07f880cd93d37f17c8de029bc4aef9ac533b1a30fc3c33491d",
+        "src/vibetrading/execution_ledger.py": "84296516ac8a4ea511a0098693936519221a04552591aebd3f8a43376a850d8a",
+        "src/vibetrading/etf_journal.py": "cffe2e82930b6c7172aa0764106b48c5116814f53294e13d1cfd33eb4da3c485",
+        "src/vibetrading/portfolio_ledger.py": "985bdb8677de66b4e8651098df3ecea6d8d1a3c920fd7e4c9baf4669323e53c9",
+        "src/vibetrading/paper_execution.py": "09968938308ee8a3e8c431f7da96c02edbcf5c2fdc618e6a5d116fd24ce2b72a"
       },
       "contract_ids": [
         "C01",
@@ -4941,21 +4951,47 @@
       ],
       "capacity_impacts": "All row/queue/document/DB/WAL/schedule limits explicit; measure aggregate same2vCPU/3.8GiB, no default production capacity",
       "isolated_tests": {
-        "path": "tests/refactoring/test_tx07a.py",
-        "source_copy": "tmp/refactoring/20261020-production/<candidate>",
+        "path": "tests/refactoring/test_tx07a_fact_contract.py",
+        "source_copy": "/home/pjh/.local/state/codex-opencode/runs/tx07a-independent-2m14polw/work",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN",
-        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
-        "path_exists_at_audit": false
+        "status": "PASS",
+        "reuse_scope": "Selected bounded local contract and existing tests; no broader native/live guarantee.",
+        "path_exists_at_audit": true,
+        "command": [
+          "python3",
+          "-m",
+          "pytest",
+          "-p",
+          "pytest_asyncio.plugin",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "--basetemp",
+          "/tmp/pytest",
+          "--junitxml",
+          "/evidence/junit.xml",
+          "tests/refactoring/test_execution_owner.py",
+          "tests/refactoring/test_execution_nonce.py",
+          "tests/refactoring/test_portfolio_ledger.py",
+          "tests/refactoring/test_vnext_vn12.py",
+          "tests/refactoring/test_tx02b_attribution.py",
+          "tests/refactoring/test_tx07a_fact_contract.py"
+        ],
+        "exit_code": 0,
+        "passed": 79,
+        "receipt": "docs/refactoring/runs/20261024-v3/tx07a/acceptance.json",
+        "source_sha": "04c9f576925c4ad4c8b559501e09055e52201b83"
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
-      "gate_evidence": [],
-      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
-      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
-      "stage_classification": "NOT_STARTED",
-      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Small normalized local identity/event mapping over existing order/fill/journal semantics; no second universal order lifecycle state machine.",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "gate_evidence": [
+        "docs/refactoring/runs/20261024-v3/tx07a/acceptance.json"
+      ],
+      "authorization": "Current user selected exactly TX07A,TX08A,TX08 for local work; this bounded local contract independently accepted; no live/deploy authority.",
+      "external_verification": "No external/account calls in this batch. Existing operator-reported working native paths preserved. Local synthetic acceptance does not prove native venue or live account readiness.",
+      "stage_classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage_status_detail": "TX07A: selected local contract complete; independent 79 scoped PASS, final full 2348 PASS / 2 live-data deselected. Seal existing local order/fill/UNKNOWN/terminal identity contract using explicit field and authority mapping plus real ledger/ETF/offline-owner regression; existing fields suffice, no new projection API or universal lifecycle. No live readiness.",
+      "commit_scope": "LOCAL_IMPLEMENTATION_AND_VERIFICATION_COMPLETE",
       "scope_revision": {
         "authority": "2026-10-23 explicit user correction",
         "disposition": "ADAPT_EXISTING_FACTS",
@@ -4965,6 +5001,24 @@
         "requires_function_gap_evidence_and_bounded_reticket": true,
         "historical_status_preserved": true,
         "supersedes_unselected_global_platform_gates": true
+      },
+      "completion_scope": "LOCAL_EXISTING_FACT_CONTRACT",
+      "production_ready": false,
+      "implementation_evidence": {
+        "batch_current_integration": {
+          "source_sha": "c052cdc760366923853d4674129b87b818560ec3",
+          "receipt": "docs/refactoring/runs/20261024-v3/tx07a/acceptance.json",
+          "scoped_tests": 79,
+          "production_ready": false,
+          "full_batch_source_sha": "04c9f576925c4ad4c8b559501e09055e52201b83",
+          "full_regression_passed": 2348,
+          "full_receipt": "docs/refactoring/runs/20261024-v3/batch-tx07a-tx08/full-regression.json",
+          "repair_delegations": 0
+        },
+        "historical_source_hashes": {
+          "vibetrading/execution_ledger.py": "657366cf0eb15c898786feb7704363043bb52674b507804d7a9b9d0ef350d70e",
+          "vibetrading/etf_journal.py": "cd81396df9174c73fcaa80f479fe8c06a11a37e99f16daa269eb75a84644d79d"
+        }
       }
     },
     {
@@ -5714,14 +5768,14 @@
     },
     {
       "task_id": "TX08A",
-      "status": "PAPER_SHARED_ACCOUNT_FIXTURE_IMPLEMENTATION",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
       "kind": "IMPLEMENTATION",
       "depends_on": [
         "TX02",
         "TX05",
         "TX07A"
       ],
-      "goal": "Priority: existing owner/ledger safe simultaneous strategy reservations, attribution, cancel ownership and restart under one account; Paper first, no live account rewrite. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
+      "goal": "Reuse existing serialized Paper ledger and per-strategy reservation/cancel/restart authority; reject inconsistent account-wide limits across registrations before claims or plugin creation; no legacy/live risk engine rewrite.",
       "owner": "root",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
@@ -5729,9 +5783,15 @@
         "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
         "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
         "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
-        "vibetrading/execution_owner.py"
+        "src/vibetrading/execution_owner.py",
+        "src/vibetrading/strategy_runtime.py",
+        "src/vibetrading/portfolio_ledger.py",
+        "src/vibetrading/process_lease.py"
       ],
-      "edit_paths": [],
+      "edit_paths": [
+        "src/vibetrading/strategy_runtime.py",
+        "tests/refactoring/test_tx08a_account_policy.py"
+      ],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -5746,10 +5806,15 @@
       "target_symbols": {
         "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "ADD_PROPOSED": [],
-        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
+        "DISPATCH": "docs/tickets/TX08A-shared-account-policy.md",
+        "EDITED": [
+          "PaperStrategyRuntime.register"
+        ]
       },
       "source_hashes": {
-        "vibetrading/execution_owner.py": "3a14368e015d88e8a8170fb7c7e3693da5a57ec933c66ccfa6ed5d57facc319b"
+        "src/vibetrading/strategy_runtime.py": "912a404285a3efab97fd918274e8f34ec83fe0fd2634d044e6f23fdabbe7db66",
+        "src/vibetrading/portfolio_ledger.py": "985bdb8677de66b4e8651098df3ecea6d8d1a3c920fd7e4c9baf4669323e53c9",
+        "src/vibetrading/process_lease.py": "d78e36766bd2b257a3068921e128fdc33f518e599870f974d333bf988d05b7a5"
       },
       "contract_ids": [
         "C01",
@@ -5767,18 +5832,48 @@
       ],
       "capacity_impacts": "All row/queue/document/DB/WAL/schedule limits explicit; measure aggregate same2vCPU/3.8GiB, no default production capacity",
       "isolated_tests": {
-        "path": "tests/refactoring/test_tx08a.py",
-        "source_copy": "tmp/refactoring/20261020-production/<candidate>",
+        "path": "tests/refactoring/test_tx08a_account_policy.py",
+        "source_copy": "/home/pjh/.local/state/codex-opencode/runs/tx08a-independent-oyl88du3/work",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN",
-        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
-        "path_exists_at_audit": false
+        "status": "PASS",
+        "reuse_scope": "Selected bounded local contract and existing tests; no broader native/live guarantee.",
+        "path_exists_at_audit": true,
+        "command": [
+          "python3",
+          "-m",
+          "pytest",
+          "-p",
+          "pytest_asyncio.plugin",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "--basetemp",
+          "/tmp/pytest",
+          "--junitxml",
+          "/evidence/junit.xml",
+          "tests/refactoring/test_strategy_runtime.py",
+          "tests/refactoring/test_strategy_restart_barrier.py",
+          "tests/refactoring/test_portfolio_ledger.py",
+          "tests/refactoring/test_tx02a_owner_fence.py",
+          "tests/refactoring/test_tx02b_attribution.py",
+          "tests/refactoring/test_vn13_file_registration.py",
+          "tests/refactoring/test_tx07a_fact_contract.py",
+          "tests/refactoring/test_runtime_checkpoint_integration.py",
+          "tests/refactoring/test_tx08a_account_policy.py",
+          "docs/tickets/TX08A-reviewer-counterexamples.py"
+        ],
+        "exit_code": 0,
+        "passed": 133,
+        "receipt": "docs/refactoring/runs/20261024-v3/tx08a/acceptance.json",
+        "source_sha": "04c9f576925c4ad4c8b559501e09055e52201b83"
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
-      "gate_evidence": [],
-      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
-      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
+      "gate_evidence": [
+        "docs/refactoring/runs/20261024-v3/tx08a/acceptance.json"
+      ],
+      "authorization": "Current user selected exactly TX07A,TX08A,TX08 for local work; this bounded local contract independently accepted; no live/deploy authority.",
+      "external_verification": "No external/account calls in this batch. Existing operator-reported working native paths preserved. Local synthetic acceptance does not prove native venue or live account readiness.",
       "implementation_evidence": {
         "paths": [
           "vibetrading/strategy_runtime.py",
@@ -5799,11 +5894,24 @@
           "scope": "Offline fixture regression only; production gates remain open"
         },
         "production_ready": false,
-        "scope": "Local Paper/isolated request mapping only; full predecessor/external gates are not waived"
+        "scope": "Local Paper/isolated request mapping only; full predecessor/external gates are not waived",
+        "batch_current_integration": {
+          "source_sha": "1ecba70af14d6edab82844a6c9fcd44664732c10",
+          "receipt": "docs/refactoring/runs/20261024-v3/tx08a/acceptance.json",
+          "scoped_tests": 133,
+          "production_ready": false,
+          "full_batch_source_sha": "04c9f576925c4ad4c8b559501e09055e52201b83",
+          "full_regression_passed": 2348,
+          "full_receipt": "docs/refactoring/runs/20261024-v3/batch-tx07a-tx08/full-regression.json",
+          "repair_delegations": 0
+        },
+        "historical_source_hashes": {
+          "vibetrading/execution_owner.py": "3a14368e015d88e8a8170fb7c7e3693da5a57ec933c66ccfa6ed5d57facc319b"
+        }
       },
-      "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Priority: existing owner/ledger safe simultaneous strategy reservations, attribution, cancel ownership and restart under one account; Paper first, no live account rewrite.",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "stage_classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage_status_detail": "TX08A: selected local contract complete; independent 133 scoped PASS, final full 2348 PASS / 2 live-data deselected. Reuse existing serialized Paper ledger and per-strategy reservation/cancel/restart authority; reject inconsistent account-wide limits across registrations before claims or plugin creation; no legacy/live risk engine rewrite. No live readiness.",
+      "commit_scope": "LOCAL_IMPLEMENTATION_AND_VERIFICATION_COMPLETE",
       "scope_revision": {
         "authority": "2026-10-23 explicit user correction",
         "disposition": "COMPLETE_MISSING_SAME_ACCOUNT_SAFETY",
@@ -5813,7 +5921,9 @@
         "requires_function_gap_evidence_and_bounded_reticket": true,
         "historical_status_preserved": true,
         "supersedes_unselected_global_platform_gates": true
-      }
+      },
+      "completion_scope": "LOCAL_SAME_ACCOUNT_PAPER_CONTRACT",
+      "production_ready": false
     },
     {
       "task_id": "TX08B",
@@ -5920,21 +6030,28 @@
     },
     {
       "task_id": "TX08",
-      "status": "PLANNED",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
       "kind": "ACCEPTANCE_AGGREGATE",
       "depends_on": [
         "TX08A"
       ],
-      "goal": "Require TX08A selected same-account evidence; cross-venue atomic execution is not mandatory core scope. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
+      "goal": "Joint acceptance of two actual file strategies on one existing Paper account through real spool/engine, checkpoint restore, attribution, cancel ownership and duplicate-safe fills; cross-venue TX08B is not required.",
       "owner": "root",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
       "read_paths": [
         "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
         "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
-        "docs/refactoring/vnext/reuse_audit/function_dispositions.json"
+        "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
+        "src/vibetrading/strategy_runtime.py",
+        "src/vibetrading/local_engine.py",
+        "src/vibetrading/runtime_checkpoint.py",
+        "src/vibetrading/portfolio_ledger.py",
+        "src/vibetrading/paper_execution.py"
       ],
-      "edit_paths": [],
+      "edit_paths": [
+        "tests/refactoring/test_tx08_same_account_gate.py"
+      ],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -5949,9 +6066,16 @@
       "target_symbols": {
         "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "ADD_PROPOSED": [],
-        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
+        "DISPATCH": "docs/tickets/TX08-existing-same-account-gate.md",
+        "EDITED": []
       },
-      "source_hashes": {},
+      "source_hashes": {
+        "src/vibetrading/strategy_runtime.py": "912a404285a3efab97fd918274e8f34ec83fe0fd2634d044e6f23fdabbe7db66",
+        "src/vibetrading/local_engine.py": "d6cab3158e4c6afd5907e3f9429d7c5fbd5b4ca4e4b6217850b9052306e75fe5",
+        "src/vibetrading/runtime_checkpoint.py": "46ac8b152c5b12bb14ed78e1f05853f9f1c14ed2cde7d5bec4709c5b61a5ed08",
+        "src/vibetrading/portfolio_ledger.py": "985bdb8677de66b4e8651098df3ecea6d8d1a3c920fd7e4c9baf4669323e53c9",
+        "src/vibetrading/paper_execution.py": "09968938308ee8a3e8c431f7da96c02edbcf5c2fdc618e6a5d116fd24ce2b72a"
+      },
       "contract_ids": [
         "C01",
         "C02",
@@ -5968,21 +6092,51 @@
       ],
       "capacity_impacts": "All row/queue/document/DB/WAL/schedule limits explicit; measure aggregate same2vCPU/3.8GiB, no default production capacity",
       "isolated_tests": {
-        "path": null,
-        "source_copy": "tmp/refactoring/20261020-production/<candidate>",
+        "path": "tests/refactoring/test_tx08_same_account_gate.py",
+        "source_copy": "/home/pjh/.local/state/codex-opencode/runs/tx08-independent-9b8e17qp/work",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN",
-        "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
-        "path_exists_at_audit": false
+        "status": "PASS",
+        "reuse_scope": "Selected bounded local contract and existing tests; no broader native/live guarantee.",
+        "path_exists_at_audit": true,
+        "command": [
+          "python3",
+          "-m",
+          "pytest",
+          "-p",
+          "pytest_asyncio.plugin",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "--basetemp",
+          "/tmp/pytest",
+          "--junitxml",
+          "/evidence/junit.xml",
+          "tests/refactoring/test_tx07a_fact_contract.py",
+          "tests/refactoring/test_tx08a_account_policy.py",
+          "tests/refactoring/test_tx02a_owner_fence.py",
+          "tests/refactoring/test_tx02b_attribution.py",
+          "tests/refactoring/test_tx02_joint_gate.py",
+          "tests/refactoring/test_tx04b_continuous.py",
+          "tests/refactoring/test_vn13_file_registration.py",
+          "tests/refactoring/test_tx05_file_paper_e2e.py",
+          "tests/refactoring/test_runtime_checkpoint_integration.py",
+          "tests/refactoring/test_tx08_same_account_gate.py"
+        ],
+        "exit_code": 0,
+        "passed": 97,
+        "receipt": "docs/refactoring/runs/20261024-v3/tx08/acceptance.json",
+        "source_sha": "04c9f576925c4ad4c8b559501e09055e52201b83"
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
-      "gate_evidence": [],
-      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
-      "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
-      "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. Require TX08A selected same-account evidence; cross-venue atomic execution is not mandatory core scope.",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "gate_evidence": [
+        "docs/refactoring/runs/20261024-v3/tx08/acceptance.json"
+      ],
+      "authorization": "Current user selected exactly TX07A,TX08A,TX08 for local work; this bounded local contract independently accepted; no live/deploy authority.",
+      "external_verification": "No external/account calls in this batch. Existing operator-reported working native paths preserved. Local synthetic acceptance does not prove native venue or live account readiness.",
+      "stage_classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage_status_detail": "TX08: selected local contract complete; independent 97 scoped PASS, final full 2348 PASS / 2 live-data deselected. Joint acceptance of two actual file strategies on one existing Paper account through real spool/engine, checkpoint restore, attribution, cancel ownership and duplicate-safe fills; cross-venue TX08B is not required. No live readiness.",
+      "commit_scope": "LOCAL_IMPLEMENTATION_AND_VERIFICATION_COMPLETE",
       "scope_revision": {
         "authority": "2026-10-23 explicit user correction",
         "disposition": "SAME_ACCOUNT_GATE_ONLY",
@@ -5992,6 +6146,21 @@
         "requires_function_gap_evidence_and_bounded_reticket": true,
         "historical_status_preserved": true,
         "supersedes_unselected_global_platform_gates": true
+      },
+      "completion_scope": "LOCAL_SAME_ACCOUNT_PAPER_CONTRACT",
+      "production_ready": false,
+      "implementation_evidence": {
+        "batch_current_integration": {
+          "source_sha": "04c9f576925c4ad4c8b559501e09055e52201b83",
+          "receipt": "docs/refactoring/runs/20261024-v3/tx08/acceptance.json",
+          "scoped_tests": 97,
+          "production_ready": false,
+          "full_batch_source_sha": "04c9f576925c4ad4c8b559501e09055e52201b83",
+          "full_regression_passed": 2348,
+          "full_receipt": "docs/refactoring/runs/20261024-v3/batch-tx07a-tx08/full-regression.json",
+          "repair_delegations": 1
+        },
+        "historical_source_hashes": {}
       }
     },
     {
@@ -6320,35 +6489,39 @@
       }
     }
   ],
-  "updated_local": "2026-10-24T22:00:49.657045+09:00",
+  "updated_local": "2026-10-24T22:40:54.853658+09:00",
   "current_validation": {
     "status": "FULL_LOCAL_REGRESSION_PASS",
-    "source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
-    "receipt": "docs/refactoring/runs/20261024-v3/tx05/acceptance.json",
-    "passed": 2325,
+    "source_sha": "04c9f576925c4ad4c8b559501e09055e52201b83",
+    "receipt": "docs/refactoring/runs/20261024-v3/batch-tx07a-tx08/acceptance.json",
+    "passed": 2348,
     "deselected_live_data": 2,
-    "scope": "LOCAL_FILE_PAPER_ECONOMIC_CHECKPOINT_E2E",
+    "scope": "LOCAL_EXISTING_FACT_AND_SAME_ACCOUNT_PAPER_CONTRACT",
     "production_ready": false
   },
-  "user_request_latest": "Start and complete next ticket TX05 only using existing OpenCode delegation; local implementation/verification and preservation, no further ticket dispatch or new remote publication authority.",
+  "user_request_latest": "Execute exactly the next three bounded local tickets TX07A, TX08A, TX08. Stop after TX08; no fourth ticket or remote publication in this batch.",
   "execution_control": {
-    "status": "LOCAL_TICKET_ACCEPTED",
-    "last_completed_ticket": "TX05",
+    "status": "LOCAL_BATCH_ACCEPTED",
+    "last_completed_ticket": "TX08",
     "last_completed_tooling_ticket": "R05",
     "active_ticket": null,
     "start_next_ticket": false,
-    "stop_after_ticket": "TX05",
+    "stop_after_ticket": "TX08",
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
-    "current_source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
+    "current_source_sha": "04c9f576925c4ad4c8b559501e09055e52201b83",
     "active_tooling_tickets": [],
     "active_parallel_tickets": [],
-    "last_completed_subunit": "TX05",
+    "last_completed_subunit": "TX08",
     "authorized_batch_tickets": [
-      "TX05"
+      "TX07A",
+      "TX08A",
+      "TX08"
     ],
     "batch_completed_tickets": [
-      "TX05"
+      "TX07A",
+      "TX08A",
+      "TX08"
     ]
   },
   "git_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
@@ -7139,6 +7312,15 @@
       "deselected_live_data": 2,
       "scope": "LOCAL_CONTINUOUS_PAPER_AND_EXPLICIT_FILE_PLUGIN",
       "production_ready": false
+    },
+    {
+      "status": "FULL_LOCAL_REGRESSION_PASS",
+      "source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
+      "receipt": "docs/refactoring/runs/20261024-v3/tx05/acceptance.json",
+      "passed": 2325,
+      "deselected_live_data": 2,
+      "scope": "LOCAL_FILE_PAPER_ECONOMIC_CHECKPOINT_E2E",
+      "production_ready": false
     }
   ],
   "refactoring_scope_revision": {
@@ -7193,10 +7375,12 @@
     "R05_calculators_are_not_plugin_completion": true,
     "authorized_bounded_ticket": null,
     "unselected_implementation_dispatch_authorized": false,
-    "last_accepted_bounded_ticket": "docs/tickets/TX05-existing-file-paper-economic-e2e.md",
-    "last_accepted_receipt": "docs/refactoring/runs/20261024-v3/tx05/acceptance.json",
+    "last_accepted_bounded_ticket": "docs/tickets/TX08-existing-same-account-gate.md",
+    "last_accepted_receipt": "docs/refactoring/runs/20261024-v3/tx08/acceptance.json",
     "authorized_batch_tickets": [
-      "TX05"
+      "TX07A",
+      "TX08A",
+      "TX08"
     ]
   },
   "vn07a_validation": {
@@ -7291,10 +7475,12 @@
   },
   "current_batch_commit_scope": {
     "tickets": [
-      "TX05"
+      "TX07A",
+      "TX08A",
+      "TX08"
     ],
-    "source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
-    "scope": "Local accepted TX05 test/receipt only; existing174 dirty entries excluded/preserved. No current remote push authority."
+    "source_sha": "04c9f576925c4ad4c8b559501e09055e52201b83",
+    "authorization": "Local task implementation, review, status receipts and local candidate commits/application. No remote push; existing 174 dirty user entries preserved and excluded."
   },
   "batch_tx04b_vn13_validation": {
     "status": "FULL_LOCAL_REGRESSION_PASS",
@@ -7335,6 +7521,32 @@
       ],
       "source_sha": "3376c9ed58474bc51134efc786a9e1c94629e278",
       "authorization": "Current user explicitly requested up to three next tickets, status update, commit and push candidate. Existing 174 dirty user entries are preserved, not included in these commits."
+    },
+    {
+      "tickets": [
+        "TX05"
+      ],
+      "source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
+      "scope": "Local accepted TX05 test/receipt only; existing174 dirty entries excluded/preserved. No current remote push authority."
     }
-  ]
+  ],
+  "batch_tx07a_tx08_validation": {
+    "status": "FULL_LOCAL_REGRESSION_PASS",
+    "source_sha": "04c9f576925c4ad4c8b559501e09055e52201b83",
+    "receipt": "docs/refactoring/runs/20261024-v3/batch-tx07a-tx08/acceptance.json",
+    "passed": 2348,
+    "deselected_live_data": 2,
+    "scope": "LOCAL_EXISTING_FACT_AND_SAME_ACCOUNT_PAPER_CONTRACT",
+    "production_ready": false,
+    "batch_tickets": [
+      "TX07A",
+      "TX08A",
+      "TX08"
+    ],
+    "stage_receipts": [
+      "docs/refactoring/runs/20261024-v3/tx07a/acceptance.json",
+      "docs/refactoring/runs/20261024-v3/tx08a/acceptance.json",
+      "docs/refactoring/runs/20261024-v3/tx08/acceptance.json"
+    ]
+  }
 }
