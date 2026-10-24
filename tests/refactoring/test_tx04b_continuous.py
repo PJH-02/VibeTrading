@@ -331,3 +331,106 @@ def test_replay_recovery_and_permission_fences_never_add_risk(tmp_path):
             denied_ledger.close()
     finally:
         ledger.close()
+
+
+def test_fresh_other_instrument_book_does_not_fill_btc_stale_depth(tmp_path):
+    other = BTC.model_copy(update={"raw_symbol": "ETHUSDT", "std_symbol": "ETHUSDT"})
+    ledger = ledger_at(tmp_path)
+    try:
+        ledger.seed_balance("USDT", D(100000), {"source": "synthetic"})
+        matcher, now = matcher_for(ledger), [T]
+        host = PaperStrategyRuntime(hot_path=HotPathStore(),
+            accounts={ledger.scope.key: matcher},
+            products={BTC.key: spec(), other.key: spec(other)},
+            known_instruments={BTC.key: BTC, other.key: other}, reference_feeds={},
+            budgets=budget(max_feed_age_ns=5), settings={"fixture": "two feeds"},
+            mode=TradingMode.PAPER, phase="paper", now_ns=lambda: now[0])
+        host.process_event(book())
+        created, _ = paper_submit(matcher, "btc", price=101, quantity=1, now=T,
+                                  post_only=False, time_in_force="IOC")
+        assert created and len(matcher.report()["open_orders"]) == 1
+        now[0] = T + 11
+        host.process_event(book(T + 11, instrument=other))
+        assert matcher.report()["fills"] == 0
+        assert matcher.report()["open_orders"] == {}
+        assert ledger.get("btc")["state"] == "REJECTED"
+        assert D(ledger.get("btc")["reservation"]) == 0
+        assert ledger.position("strategy", BTC.key) == 0
+        assert D(ledger.report()["balances"]["USDT"]) == D(100000)
+        assert BTC.key in host.report()["invalid_inputs"]
+        assert other.key not in host.report()["invalid_inputs"]
+        assert BTC.key in matcher.report()["blocked"]
+        assert other.key not in matcher.report()["blocked"]
+    finally:
+        ledger.close()
+
+
+def test_fresh_same_feed_trade_after_other_book_does_not_fill_btc(tmp_path):
+    other = BTC.model_copy(update={"raw_symbol": "ETHUSDT", "std_symbol": "ETHUSDT"})
+    ledger = ledger_at(tmp_path)
+    try:
+        ledger.seed_balance("USDT", D(100000), {"source": "synthetic"})
+        matcher, now = matcher_for(ledger), [T]
+        host = PaperStrategyRuntime(hot_path=HotPathStore(),
+            accounts={ledger.scope.key: matcher},
+            products={BTC.key: spec(), other.key: spec(other)},
+            known_instruments={BTC.key: BTC, other.key: other}, reference_feeds={},
+            budgets=budget(max_feed_age_ns=5), settings={"fixture": "two feeds"},
+            mode=TradingMode.PAPER, phase="paper", now_ns=lambda: now[0])
+        host.process_event(book())
+        created, _ = paper_submit(matcher, "btc", price=101, quantity=1, now=T,
+                                  post_only=False, time_in_force="IOC")
+        assert created and len(matcher.report()["open_orders"]) == 1
+        now[0] = T + 7
+        host.process_event(book(T + 7, instrument=other))
+        assert other.key not in host.report()["invalid_inputs"]
+        assert other.key not in matcher.report()["blocked"]
+        now[0] = T + 11
+        host.process_event(trade(T + 11, side=Side.SELL, price=100, instrument=other))
+        assert matcher.report()["fills"] == 0
+        assert matcher.report()["open_orders"] == {}
+        assert ledger.position("strategy", BTC.key) == 0
+        assert D(ledger.report()["balances"]["USDT"]) == D(100000)
+        assert BTC.key in host.report()["invalid_inputs"]
+        assert other.key not in host.report()["invalid_inputs"]
+        assert BTC.key in matcher.report()["blocked"]
+        assert other.key not in matcher.report()["blocked"]
+    finally:
+        ledger.close()
+
+
+def test_new_btc_book_never_fills_old_depth_and_only_explicit_generation_reopens(tmp_path):
+    for generation, reopened in ((2, True), (1, False)):
+        ledger = ledger_at(tmp_path / ("generation-" + str(generation)))
+        try:
+            ledger.seed_balance("USDT", D(100000), {"source": "synthetic"})
+            matcher, now = matcher_for(ledger), [T]
+            host = PaperStrategyRuntime(hot_path=HotPathStore(),
+                accounts={ledger.scope.key: matcher}, products={BTC.key: spec()},
+                known_instruments={BTC.key: BTC}, reference_feeds={},
+                budgets=budget(max_feed_age_ns=5), settings={"fixture": "btc"},
+                mode=TradingMode.PAPER, phase="paper", now_ns=lambda: now[0])
+            host.process_event(book())
+            created, _ = paper_submit(matcher, "btc", price=101, quantity=1, now=T,
+                                      post_only=False, time_in_force="IOC")
+            assert created and len(matcher.report()["open_orders"]) == 1
+            now[0] = T + 11
+            incoming = book(T + 11, sequence=2)
+            if generation == 2:
+                incoming = incoming.model_copy(update={"sync_generation": 2})
+            host.process_event(incoming)
+            assert matcher.report()["fills"] == 0
+            assert matcher.report()["open_orders"] == {}
+            assert ledger.get("btc")["state"] == "REJECTED"
+            assert D(ledger.get("btc")["reservation"]) == 0
+            assert ledger.position("strategy", BTC.key) == 0
+            assert D(ledger.report()["balances"]["USDT"]) == D(100000)
+            if reopened:
+                assert BTC.key not in host.report()["invalid_inputs"]
+                assert BTC.key not in matcher.report()["blocked"]
+                assert host.report()["account_faults"] == {}
+            else:
+                assert BTC.key in host.report()["invalid_inputs"]
+                assert BTC.key in matcher.report()["blocked"]
+        finally:
+            ledger.close()
