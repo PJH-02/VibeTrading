@@ -1,0 +1,37 @@
+{
+  "mode": "independent",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/vn13-independent-e8kq_zb_",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/vn13-independent-e8kq_zb_/work",
+  "exit_code": 0,
+  "elapsed_seconds": 3.7349495840026066,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "........................................................................ [ 31%]\n........................................................................ [ 62%]\n........................................................................ [ 93%]\n................                                                         [100%]\n232 passed in 2.95s\n",
+  "tests": {
+    "passed": 232,
+    "failed": 0,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/refactoring/test_strategy_dispatch.py",
+    "tests/refactoring/test_runtime_checkpoint_integration.py",
+    "tests/refactoring/test_tx04b_continuous.py",
+    "tests/refactoring/test_tx04_joint_gate.py",
+    "tests/refactoring/test_kr_strategy_extraction.py",
+    "tests/refactoring/test_vn13_file_registration.py",
+    "docs/tickets/VN13-reviewer-counterexamples.py"
+  ]
+}

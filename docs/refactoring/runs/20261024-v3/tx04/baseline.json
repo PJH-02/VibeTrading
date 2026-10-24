@@ -1,0 +1,35 @@
+{
+  "mode": "baseline",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx04gate-baseline-336i36zp",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/tx04gate-baseline-336i36zp/work",
+  "exit_code": 0,
+  "elapsed_seconds": 6.980256320995977,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "........................................................................ [ 78%]\n....................                                                     [100%]\n92 passed in 6.15s\n",
+  "tests": {
+    "passed": 92,
+    "failed": 0,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/refactoring/test_paper_execution.py",
+    "tests/refactoring/test_runtime_checkpoint_integration.py",
+    "tests/refactoring/test_runtime_checkpoint_acceptance.py",
+    "tests/refactoring/test_tx04a_alignment.py",
+    "tests/refactoring/test_tx04b_continuous.py"
+  ]
+}

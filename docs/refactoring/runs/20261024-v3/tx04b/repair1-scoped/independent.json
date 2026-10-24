@@ -1,0 +1,38 @@
+{
+  "mode": "independent",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx04bfix-independent-qq5coqix",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/tx04bfix-independent-qq5coqix/work",
+  "exit_code": 0,
+  "elapsed_seconds": 4.092172421980649,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "........................................................................ [ 50%]\n......................................................................   [100%]\n142 passed in 3.42s\n",
+  "tests": {
+    "passed": 142,
+    "failed": 0,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/refactoring/test_local_engine.py",
+    "tests/refactoring/test_local_runtime.py",
+    "tests/refactoring/test_runtime_checkpoint_integration.py",
+    "tests/refactoring/test_paper_execution.py",
+    "tests/refactoring/test_tx02_joint_gate.py",
+    "tests/refactoring/test_tx04a_alignment.py",
+    "tests/refactoring/test_tx04b_continuous.py",
+    "docs/tickets/TX04B-reviewer-counterexamples.py"
+  ]
+}

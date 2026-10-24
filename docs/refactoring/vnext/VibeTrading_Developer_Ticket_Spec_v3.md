@@ -178,6 +178,8 @@ DONE의 상태표가 서버 운영 수락을 의미하지는 않는다. **구현
 
 ### VN13 — 전략 FILE plugin → 기존 Paper (TX05와 한 workstream)
 
+- **현재 로컬 수락(2026-10-24):** 파일별 명시 configuration을 기존 loader/register에 연결했다. 실제 별도 .py 파일의 Signal이 공유 입력을 거쳐 기존 Paper로 전달되며, warmup/permission/REPLAY/restart 차단을 보존한다. 독립232 PASS. C3/KP/KD는 기존 ETF 경로를 유지하며 calculator만으로 plugin 완료를 주장하지 않는다. TX05는 이번에 착수하지 않았다. [수락](../runs/20261024-v3/vn13/acceptance.json).
+
 - **소유:** 신규 `src/vibetrading/strategies/<strategy-id>.py` 또는 `strategies/kr/{c3,kp,kd}.py`, 기존 `strategies/contract.py` seam, `strategy_runtime.py`, `local_runtime.py`의 최소 wiring, 관련 tests.
 - **재사용:** `STRATEGY_ID/SUBSCRIPTIONS/WARMUP/create_strategy/on_event` 기존 contract, `PaperStrategyRuntime.register/process_event/_dispatch`, `PaperExecution`/`PortfolioLedger`. C3/KP/KD 수학 함수는 **재사용 calculator**이며 file plugin 완료로 간주하지 않는다.
 - **최소 구현:** 전략별 importable Python file, explicit config/subscriptions/warmup, shared data가 만든 Signal을 기존 Paper로 전달. 신규 runtime에 hardcoded strategy-ID branching 금지. registry/config 등록은 명시적으로만. `SHADOW/REPLAY` 신규 주문 0, PAPER 외부 mutation 0.
@@ -290,14 +292,18 @@ DONE의 상태표가 서버 운영 수락을 의미하지는 않는다. **구현
 
 ### TX04B — NATS-free 연속 입력을 기존 matcher에 연결
 
-- **소유:** `paper_execution.py::{advance,_arrive,_sweep,on_book,on_trade}`, `market` snapshot seam.
-- **선행:** TX04A, VN03. **현재:** continuous input/recovery open.
+- **소유:** 기존 `LocalMarketEngine.__init__/_watch`, `local_runtime.run_engine`, `PaperStrategyRuntime._market/_fence_feed/advance`의 최소 wiring. `PaperExecution` API·계산은 그대로 재사용한다.
+- **선행:** TX04A, VN03. **현재:** 기존 NATS-free 입력·Paper idle lifecycle 로컬 완료(2026-10-24).
 - **구현(ADAPT):** 기존 matcher에 continuous local data/replay input을 연결한다. causal timestamps(`received/decision/submitted/arrives/cancel_effective/market_event`)와 gap/stale/epoch reset 시 신규 risk admission 차단, maker queue uncertainty, depth 기반 taker를 유지한다. 새 exchange simulator/client 금지.
 - **수락:** post-only cross reject, cancel/fill race, gap/duplicate/order inversion, deterministic replay, 외부 API 0.
+
+- **현재 수락:** 기존 watchdog을 재사용해 idle 만료/취소를 진행한다. 시계 전진 전에 참조 호가의 수신/원천 시각을 검사하며, 새 trade가 오래된 book을 신선하게 만들지 않는다. 독립149 PASS; repair1/2와 반례를 보존했다. [수락](../runs/20261024-v3/tx04b/acceptance.json).
 
 ### TX04 — 기존 Paper E2E gate
 
 - **선행:** TX04A/B. **수락:** local event→기존 matcher→single durable fill→기존 ledger/PnL→restart continuity; uncertainty 표시, 외부 mutation 0.
+
+- **현재 수락:** 제품 변경0. 실제 engine frame→기존 runtime→matcher/ledger, idle watchdog 취소, 중복/REPLAY, 최신 원장 재시작과 기존 coupled checkpoint 회귀를 공동 검증했다. 독립96 PASS. [수락](../runs/20261024-v3/tx04/acceptance.json).
 
 ### TX05 — VN13과 동일 workstream
 
