@@ -308,9 +308,11 @@ DONE의 상태표가 서버 운영 수락을 의미하지는 않는다. **구현
 ### TX05 — VN13과 동일 workstream
 
 - **소유:** `PaperStrategyRuntime.register/process_event/_dispatch`, `strategies/contract.py`, 기존 local runtime wiring.
-- **선행:** VN13. **현재:** PAPER_FIXTURE_PRODUCTION_BLOCKED.
+- **선행:** VN13. **현재:** 기존 파일 전략/Paper 경제 E2E 로컬 완료(2026-10-24); production gate 별도.
 - **구현:** 별도 Worker/Runtime을 만들지 않고 VN13의 전략 file module을 기존 `PaperStrategyRuntime`에 등록한다. shared state 1회 apply, duplicate signal/intent 0, dependency/warmup/exception/TTL/bounded queue, PAPER 외부 mutation 0. Hard isolation을 주장하려면 측정된 process/pool 계약이 필요하며, 없으면 cooperative limitation을 명시한다.
 - **수락:** 기존 Golden, strategy file register→Signal→Paper→PnL, slow/raise/stale snapshot, ETF 무관 feed 장애, `SharedStrategyRunner` 중복 live 권위 0.
+
+- **현재 수락:** 제품 변경0. 실제 파일 등록→공유 engine 입력→부분 체결→체크포인트 복구/연속 실행의 경제 결과를 수동 계산값과 대조했다. 독립286/전체2325 PASS(외부2건 제외). 파일 callback raise/slow-return 격리를 검증했고 hard preemption/process isolation을 주장하지 않는다. [수락](../runs/20261024-v3/tx05/acceptance.json).
 
 ### TX06A — Binance: 기존 connector 보존, 신규 build 금지
 

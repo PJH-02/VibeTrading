@@ -1,0 +1,8 @@
+{
+  "scope": "Small Codex test-only strengthening after worker exit0; no product edit",
+  "original_worker_test_sha256": "615c3937725d28cefc21c2c52e382617e49f2bd439a7c5580c69e8a94efeaf8c",
+  "final_test_sha256": "1c5e9e82c74dee3171b82f5247cbcfa52dc615a6ea1df6eb34b80b805ba9f56c",
+  "change": "Compare all deterministic order evidence fields; exclude only per-branch engine incarnation and its derived fingerprint",
+  "owner_test_edits": 1,
+  "owner_product_edits": 0
+}

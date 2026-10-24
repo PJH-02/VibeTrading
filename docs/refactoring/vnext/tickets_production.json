@@ -4716,12 +4716,12 @@
     },
     {
       "task_id": "TX05",
-      "status": "PAPER_FIXTURE_INTEGRATION_IMPLEMENTED_PRODUCTION_BLOCKED",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
       "kind": "IMPLEMENTATION",
       "depends_on": [
         "VN13"
       ],
-      "goal": "One implementation workstream with VN13: file-based strategy plugin -> existing local strategy runtime -> existing Paper matcher. No parallel new runtime or mandatory replacement of live execution. Binding scope: docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md; no product implementation authorized by this planning stage.",
+      "goal": "Reuse accepted VN13/TX04 implementations and jointly verify actual file-based Signal/Paper economic continuation across real checkpoint restore, plus cooperative callback faults.",
       "owner": "root",
       "reviewer": "independent safety reviewer; Luna for simple diff only",
       "integrator": "root",
@@ -4729,10 +4729,27 @@
         "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
         "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
         "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
-        "vibetrading/hot_path.py",
-        "vibetrading/strategy_runner.py"
+        "src/vibetrading/hot_path.py",
+        "src/vibetrading/strategy_runner.py",
+        "src/vibetrading/strategy_runtime.py",
+        "src/vibetrading/local_engine.py",
+        "src/vibetrading/runtime_checkpoint.py",
+        "src/vibetrading/paper_execution.py",
+        "src/vibetrading/portfolio_ledger.py",
+        "tests/refactoring/test_vn13_file_registration.py",
+        "tests/refactoring/test_tx04_joint_gate.py",
+        "tests/refactoring/test_tx04b_continuous.py",
+        "tests/refactoring/test_runtime_checkpoint_integration.py",
+        "tests/refactoring/test_strategy_runtime.py",
+        "tests/refactoring/test_strategy_restart_barrier.py",
+        "tests/refactoring/test_strategy_dispatch.py",
+        "tests/refactoring/test_etf_dispatch_guards.py",
+        "tests/refactoring/test_local_runtime.py",
+        "tests/refactoring/test_kr_strategy_extraction.py"
       ],
-      "edit_paths": [],
+      "edit_paths": [
+        "tests/refactoring/test_tx05_file_paper_e2e.py"
+      ],
       "forbidden_paths": [
         ".env*",
         "runtime_data/**",
@@ -4747,12 +4764,15 @@
       "target_symbols": {
         "REUSE_EVIDENCE": "docs/refactoring/vnext/reuse_audit/function_dispositions.json",
         "ADD_PROPOSED": [],
-        "DISPATCH": "BLOCKED_UNTIL_SELECTED_FUNCTION_REUSE_TICKET"
+        "DISPATCH": "docs/tickets/TX05-existing-file-paper-economic-e2e.md",
+        "EDITED": []
       },
       "source_hashes": {
-        "vibetrading/strategy_contract.py": "90c13b60901be209984e66f8910e31a19423ad59704e4bc6b3e64aeb6d85f0e6",
-        "vibetrading/strategy_runner.py": "78f500e1adf4e7f0a2d1a2a115e7979171f19438eb2fe892796bd73033d0a3c1",
-        "vibetrading/hot_path.py": "fa384f323d53b4b0a5eed58b59775b5611a2311a27f0b171ef5dd29e8258a378"
+        "src/vibetrading/strategy_runtime.py": "22622783877598c9c23c0c9c036732c197d6490037b57134a274b195739748b6",
+        "src/vibetrading/local_engine.py": "d6cab3158e4c6afd5907e3f9429d7c5fbd5b4ca4e4b6217850b9052306e75fe5",
+        "src/vibetrading/runtime_checkpoint.py": "46ac8b152c5b12bb14ed78e1f05853f9f1c14ed2cde7d5bec4709c5b61a5ed08",
+        "src/vibetrading/paper_execution.py": "09968938308ee8a3e8c431f7da96c02edbcf5c2fdc618e6a5d116fd24ce2b72a",
+        "src/vibetrading/portfolio_ledger.py": "985bdb8677de66b4e8651098df3ecea6d8d1a3c920fd7e4c9baf4669323e53c9"
       },
       "contract_ids": [
         "C01",
@@ -4770,17 +4790,48 @@
       ],
       "capacity_impacts": "All row/queue/document/DB/WAL/schedule limits explicit; measure aggregate same2vCPU/3.8GiB, no default production capacity",
       "isolated_tests": {
-        "path": "tests/refactoring/test_strategy_runtime.py",
-        "source_copy": "tmp/refactoring/20261020-production/<candidate>",
+        "path": "tests/refactoring/test_tx05_file_paper_e2e.py",
+        "source_copy": "/home/pjh/.local/state/codex-opencode/runs/tx05-independent-xyt69rsc/work",
         "launcher": "docs/refactoring/runs/20261020-production/run_offline_tests.py and run_linux_tests.py",
-        "status": "NOT_RUN",
+        "status": "PASS",
         "reuse_scope": "Existing regression only; absent proposed test paths are not authorization to build generic venue/platform tests. New tests require a selected missing-function ticket.",
-        "path_exists_at_audit": true
+        "path_exists_at_audit": true,
+        "command": [
+          "python3",
+          "-m",
+          "pytest",
+          "-p",
+          "pytest_asyncio.plugin",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "--basetemp",
+          "/tmp/pytest",
+          "--junitxml",
+          "/evidence/junit.xml",
+          "tests/refactoring/test_vn13_file_registration.py",
+          "tests/refactoring/test_tx04_joint_gate.py",
+          "tests/refactoring/test_tx04b_continuous.py",
+          "tests/refactoring/test_runtime_checkpoint_integration.py",
+          "tests/refactoring/test_strategy_runtime.py",
+          "tests/refactoring/test_strategy_restart_barrier.py",
+          "tests/refactoring/test_strategy_dispatch.py",
+          "tests/refactoring/test_etf_dispatch_guards.py",
+          "tests/refactoring/test_local_runtime.py",
+          "tests/refactoring/test_kr_strategy_extraction.py",
+          "tests/refactoring/test_tx05_file_paper_e2e.py"
+        ],
+        "exit_code": 0,
+        "passed": 286,
+        "receipt": "docs/refactoring/runs/20261024-v3/tx05/acceptance.json",
+        "source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd"
       },
       "independent_oracle": "Existing economic/native fixtures, official response/signature examples, causal invariants and manually calculated Decimal ledgers; no self-generated expected output",
       "rollback_compatibility": "Legacy ETF/live source untouched unless explicitly owned. New Paper DB never opened as real; additive migration must preserve latest facts; no restoring oldliveDB. Incompatible candidate remains blocked.",
-      "gate_evidence": [],
-      "authorization": "LOCAL_PLANNING_ONLY. No product changes; prior broad implementation authorization superseded. Codex must issue a bounded gap/reuse ticket under the revised scope before implementation.",
+      "gate_evidence": [
+        "docs/refactoring/runs/20261024-v3/tx05/acceptance.json"
+      ],
+      "authorization": "Current user selected TX05 only for local development and verification; this bounded local contract independently accepted; no live/deploy authority.",
       "external_verification": "Not performed in this static planning phase. Preserve operator-reported working existing routes; no retroactive unsupported claim. Only an explicitly selected NEW route/promotion may require external evidence; no account calls authorized now.",
       "implementation_evidence": {
         "paths": [
@@ -4802,11 +4853,26 @@
           "scope": "Offline fixture regression only; production gates remain open"
         },
         "production_ready": false,
-        "scope": "Local Paper/isolated request mapping only; full predecessor/external gates are not waived"
+        "scope": "Local Paper/isolated request mapping only; full predecessor/external gates are not waived",
+        "batch_current_integration": {
+          "source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
+          "receipt": "docs/refactoring/runs/20261024-v3/tx05/acceptance.json",
+          "scoped_tests": 286,
+          "production_ready": false,
+          "full_regression_passed": 2325,
+          "full_receipt": "docs/refactoring/runs/20261024-v3/tx05/full-regression.json",
+          "product_changes": 0,
+          "remote_push_performed": false
+        },
+        "historical_source_hashes": {
+          "vibetrading/strategy_contract.py": "90c13b60901be209984e66f8910e31a19423ad59704e4bc6b3e64aeb6d85f0e6",
+          "vibetrading/strategy_runner.py": "78f500e1adf4e7f0a2d1a2a115e7979171f19438eb2fe892796bd73033d0a3c1",
+          "vibetrading/hot_path.py": "fa384f323d53b4b0a5eed58b59775b5611a2311a27f0b171ef5dd29e8258a378"
+        }
       },
-      "stage_classification": "INCOMPLETE",
-      "stage_status_detail": "Scope revised to reuse-first; existing category/evidence preserved. One implementation workstream with VN13: file-based strategy plugin -> existing local strategy runtime -> existing Paper matcher. No parallel new runtime or mandatory replacement of live execution.",
-      "commit_scope": "NOT_INCLUDED_AS_COMPLETED_CODE",
+      "stage_classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage_status_detail": "TX05 local configured-file -> shared input -> Paper fill/PnL -> actual checkpoint continuation acceptance complete; independent286 scoped/full2325 PASS,2 live-data excluded; no product edits or hard isolation/live claim.",
+      "commit_scope": "LOCAL_IMPLEMENTATION_AND_VERIFICATION_COMPLETE",
       "scope_revision": {
         "authority": "2026-10-23 explicit user correction",
         "disposition": "MERGE_WITH_VN13",
@@ -4816,7 +4882,9 @@
         "requires_function_gap_evidence_and_bounded_reticket": true,
         "historical_status_preserved": true,
         "supersedes_unselected_global_platform_gates": true
-      }
+      },
+      "completion_scope": "LOCAL_EXISTING_FILE_PAPER_ECONOMIC_E2E",
+      "production_ready": false
     },
     {
       "task_id": "TX07A",
@@ -6252,39 +6320,35 @@
       }
     }
   ],
-  "updated_local": "2026-10-24T21:35:27.504066+09:00",
+  "updated_local": "2026-10-24T22:00:49.657045+09:00",
   "current_validation": {
     "status": "FULL_LOCAL_REGRESSION_PASS",
-    "source_sha": "3376c9ed58474bc51134efc786a9e1c94629e278",
-    "receipt": "docs/refactoring/runs/20261024-v3/batch-tx04b-vn13/acceptance.json",
-    "passed": 2322,
+    "source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
+    "receipt": "docs/refactoring/runs/20261024-v3/tx05/acceptance.json",
+    "passed": 2325,
     "deselected_live_data": 2,
-    "scope": "LOCAL_CONTINUOUS_PAPER_AND_EXPLICIT_FILE_PLUGIN",
+    "scope": "LOCAL_FILE_PAPER_ECONOMIC_CHECKPOINT_E2E",
     "production_ready": false
   },
-  "user_request_latest": "Exactly next three sequential tickets TX04B, TX04 joint gate, VN13; update completed/incomplete/not-started and commit/push candidate, stop before TX05.",
+  "user_request_latest": "Start and complete next ticket TX05 only using existing OpenCode delegation; local implementation/verification and preservation, no further ticket dispatch or new remote publication authority.",
   "execution_control": {
-    "status": "LOCAL_BATCH_ACCEPTED",
-    "last_completed_ticket": "VN13",
+    "status": "LOCAL_TICKET_ACCEPTED",
+    "last_completed_ticket": "TX05",
     "last_completed_tooling_ticket": "R05",
     "active_ticket": null,
     "start_next_ticket": false,
-    "stop_after_ticket": "VN13",
+    "stop_after_ticket": "TX05",
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
-    "current_source_sha": "3376c9ed58474bc51134efc786a9e1c94629e278",
+    "current_source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
     "active_tooling_tickets": [],
     "active_parallel_tickets": [],
-    "last_completed_subunit": "VN13",
+    "last_completed_subunit": "TX05",
     "authorized_batch_tickets": [
-      "TX04B",
-      "TX04",
-      "VN13"
+      "TX05"
     ],
     "batch_completed_tickets": [
-      "TX04B",
-      "TX04",
-      "VN13"
+      "TX05"
     ]
   },
   "git_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
@@ -7066,6 +7130,15 @@
       "deselected_live_data": 2,
       "scope": "LOCAL_PAPER_ETF_REUSE_BATCH",
       "production_ready": false
+    },
+    {
+      "status": "FULL_LOCAL_REGRESSION_PASS",
+      "source_sha": "3376c9ed58474bc51134efc786a9e1c94629e278",
+      "receipt": "docs/refactoring/runs/20261024-v3/batch-tx04b-vn13/acceptance.json",
+      "passed": 2322,
+      "deselected_live_data": 2,
+      "scope": "LOCAL_CONTINUOUS_PAPER_AND_EXPLICIT_FILE_PLUGIN",
+      "production_ready": false
     }
   ],
   "refactoring_scope_revision": {
@@ -7120,12 +7193,10 @@
     "R05_calculators_are_not_plugin_completion": true,
     "authorized_bounded_ticket": null,
     "unselected_implementation_dispatch_authorized": false,
-    "last_accepted_bounded_ticket": "docs/tickets/VN13-existing-file-registration.md",
-    "last_accepted_receipt": "docs/refactoring/runs/20261024-v3/vn13/acceptance.json",
+    "last_accepted_bounded_ticket": "docs/tickets/TX05-existing-file-paper-economic-e2e.md",
+    "last_accepted_receipt": "docs/refactoring/runs/20261024-v3/tx05/acceptance.json",
     "authorized_batch_tickets": [
-      "TX04B",
-      "TX04",
-      "VN13"
+      "TX05"
     ]
   },
   "vn07a_validation": {
@@ -7220,12 +7291,10 @@
   },
   "current_batch_commit_scope": {
     "tickets": [
-      "TX04B",
-      "TX04",
-      "VN13"
+      "TX05"
     ],
-    "source_sha": "3376c9ed58474bc51134efc786a9e1c94629e278",
-    "authorization": "Current user explicitly requested up to three next tickets, status update, commit and push candidate. Existing 174 dirty user entries are preserved, not included in these commits."
+    "source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
+    "scope": "Local accepted TX05 test/receipt only; existing174 dirty entries excluded/preserved. No current remote push authority."
   },
   "batch_tx04b_vn13_validation": {
     "status": "FULL_LOCAL_REGRESSION_PASS",
@@ -7245,5 +7314,27 @@
       "docs/refactoring/runs/20261024-v3/tx04/acceptance.json",
       "docs/refactoring/runs/20261024-v3/vn13/acceptance.json"
     ]
-  }
+  },
+  "tx05_validation": {
+    "status": "FULL_LOCAL_REGRESSION_PASS",
+    "source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
+    "receipt": "docs/refactoring/runs/20261024-v3/tx05/acceptance.json",
+    "passed": 2325,
+    "deselected_live_data": 2,
+    "scope": "LOCAL_FILE_PAPER_ECONOMIC_CHECKPOINT_E2E",
+    "production_ready": false,
+    "independent_scoped_passed": 286,
+    "product_changes": 0
+  },
+  "commit_scope_history": [
+    {
+      "tickets": [
+        "TX04B",
+        "TX04",
+        "VN13"
+      ],
+      "source_sha": "3376c9ed58474bc51134efc786a9e1c94629e278",
+      "authorization": "Current user explicitly requested up to three next tickets, status update, commit and push candidate. Existing 174 dirty user entries are preserved, not included in these commits."
+    }
+  ]
 }
