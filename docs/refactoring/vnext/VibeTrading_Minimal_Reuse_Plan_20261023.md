@@ -99,7 +99,7 @@
 | TX04A | 핵심 | COMPLETE_LOCAL_IMPLEMENTATION | TX02B | 기존 atomic persistence의 restart/dedup gap |
 | TX04B | 핵심 | COMPLETE_LOCAL_IMPLEMENTATION | TX04A, VN03 | NATS-free 연속 입력을 기존 matcher에 연결 |
 | TX04 | 집계 | COMPLETE_LOCAL_IMPLEMENTATION | TX04A, TX04B | 기존 Paper E2E gate |
-| TX05 | 핵심 | PAPER_FIXTURE_INTEGRATION_IMPLEMENTED_PRODUCTION_BLOCKED | VN13 | VN13과 동일 workstream |
+| TX05 | 핵심 | COMPLETE_LOCAL_IMPLEMENTATION | VN13 | VN13과 동일 workstream |
 | TX06A | 선택 | REQUEST_MAPPING_ONLY_FULL_CODE_COMPLETION_BLOCKED | TX00 | Binance 기존 connector 유지; 새 wrapper 금지 |
 | TX06B | 선택 | REQUEST_MAPPING_ONLY_FULL_CODE_COMPLETION_BLOCKED | TX00 | Arcus 기존 WS/signer 유지 |
 | TX06C | 선택 | REQUEST_MAPPING_ONLY_FULL_CODE_COMPLETION_BLOCKED | TX00 | GRVT fv_mm/private/reconcile 유지 |
@@ -175,4 +175,8 @@ TX02A 수락 당시 **20 완료 / 19 미완료 / 12 미착수**였다. 기존 sh
 
 ## 16. TX04B → TX04 → VN13 연속 수락 (2026-10-24)
 
-현재 **26 완료 / 13 미완료 / 12 미착수**다. 기존 연속 입력·idle Paper 진행·stale 참조 호가 차단과 파일별 명시 configuration 연결을 완료했다. 전체2322 PASS/외부2건 제외. 이전 완료23개와 비선택48개 task 객체·DAG 간선을 보존했으며 기존 거래소/cloud/C3/KP/KD 경제 경로를 보존했다. 다음 후보 TX05는 VN13 결과를 재사용해 남은 공동 E2E만 확인하며 새 runtime을 만들지 않는다. 이번에 착수하지 않았다. [전체 상태](../runs/20261024-v3/batch-tx04b-vn13/README.md).
+이전 배치 수락 당시 **26 완료 / 13 미완료 / 12 미착수**였다. 기존 연속 입력·idle Paper 진행·stale 참조 호가 차단과 파일별 명시 configuration 연결을 완료했다. 전체2322 PASS/외부2건 제외. 이전 완료23개와 비선택48개 task 객체·DAG 간선을 보존했으며 기존 거래소/cloud/C3/KP/KD 경제 경로를 보존했다. 다음 후보 TX05는 VN13 결과를 재사용해 남은 공동 E2E만 확인하며 새 runtime을 만들지 않는다. 이번에 착수하지 않았다. [전체 상태](../runs/20261024-v3/batch-tx04b-vn13/README.md).
+
+## 17. TX05 기존 파일 전략/Paper 경제 E2E 수락 (2026-10-24)
+
+현재 **27 완료 / 12 미완료 / 12 미착수**다. 기존 VN13/TX04 경로와 실제 체크포인트를 재사용했다. 제품 변경0, 독립286/전체2325 PASS(외부2건 제외). 완료된26개·비선택50개 task 객체와 DAG 간선, 기존 전략/거래소/cloud/Golden을 보존했다. 추가 티켓/배포/실주문은 진행하지 않았다. [전체 분류·증거](../runs/20261024-v3/tx05/README.md).

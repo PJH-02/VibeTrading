@@ -8,8 +8,8 @@
   ],
   "definition": "완성은 로컬 기능 수락 범위. 운영/배포/장기 성능 완료와 별개. 부분 단계의 닫힌 하위 기능만 선별 커밋 가능",
   "counts": {
-    "COMPLETE_LOCAL_IMPLEMENTATION": 26,
-    "INCOMPLETE": 13,
+    "COMPLETE_LOCAL_IMPLEMENTATION": 27,
+    "INCOMPLETE": 12,
     "NOT_STARTED": 12
   },
   "tasks": [
@@ -278,9 +278,9 @@
     },
     {
       "task_id": "TX05",
-      "category": "INCOMPLETE",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
       "existing_phase": null,
-      "detail": "[Reuse-first scope; prior completion category preserved] One implementation workstream with VN13: file-based strategy plugin -> existing local strategy runtime -> existing Paper matcher. No parallel new runtime or mandatory replacement of live execution.",
+      "detail": "TX05 local configured-file -> shared input -> Paper fill/PnL -> actual checkpoint continuation acceptance complete; independent286 scoped/full2325 PASS,2 live-data excluded; no product edits or hard isolation/live claim.",
       "production_ready": false,
       "scope_disposition": "MERGE_WITH_VN13"
     },
@@ -436,15 +436,9 @@
   "next_steps": [
     {
       "order": 1,
-      "stage": "TX05",
-      "work": "Reuse accepted VN13 file configuration/Paper path for its remaining explicit E2E acceptance; no second strategy runtime.",
-      "gate": "Not dispatched by this batch; requires a later bounded selection."
-    },
-    {
-      "order": 2,
-      "stage": "Remaining selected local core",
-      "work": "Keep revised DAG and working exchange/cloud/legacy ETF behavior.",
-      "gate": "Batch stopped after VN13; unselected implementation dispatch disabled."
+      "stage": "Next bounded local core per revised DAG",
+      "work": "Reuse completed TX05/VN13; choose next missing contract only after a later request.",
+      "gate": "No further ticket dispatched in TX05."
     }
   ],
   "commit_candidate_source_set_sha256": "1ab8d78dc9a968f1febf7c877177b6007cf6155a1af72c6bf8a4ff8652d31b64",
@@ -483,31 +477,27 @@
     "snapshot_head": "The Git commit containing this record; inspect git log -1"
   },
   "execution_control": {
-    "status": "LOCAL_BATCH_ACCEPTED",
-    "last_completed_ticket": "VN13",
+    "status": "LOCAL_TICKET_ACCEPTED",
+    "last_completed_ticket": "TX05",
     "last_completed_tooling_ticket": "R05",
     "active_ticket": null,
     "start_next_ticket": false,
-    "stop_after_ticket": "VN13",
+    "stop_after_ticket": "TX05",
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
-    "current_source_sha": "3376c9ed58474bc51134efc786a9e1c94629e278",
+    "current_source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
     "active_tooling_tickets": [],
     "active_parallel_tickets": [],
-    "last_completed_subunit": "VN13",
+    "last_completed_subunit": "TX05",
     "authorized_batch_tickets": [
-      "TX04B",
-      "TX04",
-      "VN13"
+      "TX05"
     ],
     "batch_completed_tickets": [
-      "TX04B",
-      "TX04",
-      "VN13"
+      "TX05"
     ]
   },
   "current_wip": null,
-  "last_completed_ticket": "VN13",
+  "last_completed_ticket": "TX05",
   "work_in_progress_commit_policy": "All 11 former excluded source/test files included as unfinished snapshot; exclusions apply only to older completed-feature validation",
   "legacy_completed_commit": {
     "head": "90847f84243d01ec98c9815216c96c8f2749028b",
@@ -515,11 +505,11 @@
   },
   "current_snapshot_validation": {
     "status": "FULL_LOCAL_REGRESSION_PASS",
-    "source_sha": "3376c9ed58474bc51134efc786a9e1c94629e278",
-    "receipt": "docs/refactoring/runs/20261024-v3/batch-tx04b-vn13/acceptance.json",
-    "passed": 2322,
+    "source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
+    "receipt": "docs/refactoring/runs/20261024-v3/tx05/acceptance.json",
+    "passed": 2325,
     "deselected_live_data": 2,
-    "scope": "LOCAL_CONTINUOUS_PAPER_AND_EXPLICIT_FILE_PLUGIN",
+    "scope": "LOCAL_FILE_PAPER_ECONOMIC_CHECKPOINT_E2E",
     "production_ready": false
   },
   "execution_history": [
@@ -572,7 +562,7 @@
     }
   ],
   "historical_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
-  "updated_local": "2026-10-24T21:35:27.510354+09:00",
+  "updated_local": "2026-10-24T22:00:49.662289+09:00",
   "snapshot_validation_history": [
     "docs/refactoring/runs/20261023-v3/baseline/result.json",
     {
@@ -619,6 +609,15 @@
       "passed": 2266,
       "deselected_live_data": 2,
       "scope": "LOCAL_PAPER_ETF_REUSE_BATCH",
+      "production_ready": false
+    },
+    {
+      "status": "FULL_LOCAL_REGRESSION_PASS",
+      "source_sha": "3376c9ed58474bc51134efc786a9e1c94629e278",
+      "receipt": "docs/refactoring/runs/20261024-v3/batch-tx04b-vn13/acceptance.json",
+      "passed": 2322,
+      "deselected_live_data": 2,
+      "scope": "LOCAL_CONTINUOUS_PAPER_AND_EXPLICIT_FILE_PLUGIN",
       "production_ready": false
     }
   ],
@@ -699,15 +698,13 @@
     "R05_calculators_are_not_plugin_completion": true,
     "authorized_bounded_ticket": null,
     "unselected_implementation_dispatch_authorized": false,
-    "last_accepted_bounded_ticket": "docs/tickets/VN13-existing-file-registration.md",
-    "last_accepted_receipt": "docs/refactoring/runs/20261024-v3/vn13/acceptance.json",
+    "last_accepted_bounded_ticket": "docs/tickets/TX05-existing-file-paper-economic-e2e.md",
+    "last_accepted_receipt": "docs/refactoring/runs/20261024-v3/tx05/acceptance.json",
     "authorized_batch_tickets": [
-      "TX04B",
-      "TX04",
-      "VN13"
+      "TX05"
     ]
   },
-  "user_request_latest": "Exactly next three sequential tickets TX04B, TX04 joint gate, VN13; update completed/incomplete/not-started and commit/push candidate, stop before TX05.",
+  "user_request_latest": "Start and complete next ticket TX05 only using existing OpenCode delegation; local implementation/verification and preservation, no further ticket dispatch or new remote publication authority.",
   "vn07a_validation": {
     "status": "ACCEPTED_LOCAL_SUBUNIT",
     "source_sha": "60d763209134527e289d3760ec55be9ea9ec6b37",
@@ -807,12 +804,10 @@
   },
   "current_batch_commit_scope": {
     "tickets": [
-      "TX04B",
-      "TX04",
-      "VN13"
+      "TX05"
     ],
-    "source_sha": "3376c9ed58474bc51134efc786a9e1c94629e278",
-    "authorization": "Current user explicitly requested up to three next tickets, status update, commit and push candidate. Existing 174 dirty user entries are preserved, not included in these commits."
+    "source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
+    "scope": "Local accepted TX05 test/receipt only; existing174 dirty entries excluded/preserved. No current remote push authority."
   },
   "legacy_work_in_progress_note": "excluded_work_in_progress and legacy commit/source path lists describe earlier snapshots; current tasks/categories/counts and current batch receipts are the current status and commit boundary.",
   "batch_tx04b_vn13_validation": {
@@ -833,5 +828,27 @@
       "docs/refactoring/runs/20261024-v3/tx04/acceptance.json",
       "docs/refactoring/runs/20261024-v3/vn13/acceptance.json"
     ]
-  }
+  },
+  "tx05_validation": {
+    "status": "FULL_LOCAL_REGRESSION_PASS",
+    "source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
+    "receipt": "docs/refactoring/runs/20261024-v3/tx05/acceptance.json",
+    "passed": 2325,
+    "deselected_live_data": 2,
+    "scope": "LOCAL_FILE_PAPER_ECONOMIC_CHECKPOINT_E2E",
+    "production_ready": false,
+    "independent_scoped_passed": 286,
+    "product_changes": 0
+  },
+  "commit_scope_history": [
+    {
+      "tickets": [
+        "TX04B",
+        "TX04",
+        "VN13"
+      ],
+      "source_sha": "3376c9ed58474bc51134efc786a9e1c94629e278",
+      "authorization": "Current user explicitly requested up to three next tickets, status update, commit and push candidate. Existing 174 dirty user entries are preserved, not included in these commits."
+    }
+  ]
 }

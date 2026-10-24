@@ -1,0 +1,1070 @@
+{
+  "schema_version": 1,
+  "sources": {
+    "tickets": "docs/refactoring/vnext/tickets_production.json",
+    "stage_status": "docs/refactoring/vnext/stage_status.json"
+  },
+  "execution_control": {
+    "tickets_status": "LOCAL_TICKET_ACCEPTED",
+    "stage_status_status": "LOCAL_TICKET_ACCEPTED",
+    "start_next_ticket": {
+      "tickets": false,
+      "stage_status": false
+    },
+    "paused": true
+  },
+  "counts": {
+    "COMPLETE_LOCAL_IMPLEMENTATION": 27,
+    "INCOMPLETE": 12,
+    "NOT_STARTED": 12
+  },
+  "tooling_counts": {
+    "ACCEPTED": 11,
+    "PLANNED": 1,
+    "REWORK_REQUIRED": 1
+  },
+  "node_totals": {
+    "VN_TX": 51,
+    "RO": 13
+  },
+  "ready": [],
+  "running": [],
+  "external": [
+    "VN20"
+  ],
+  "nodes": [
+    {
+      "task_id": "VN00",
+      "family": "VN/TX",
+      "status": "COMPLETE_CURRENT_READ_ONLY_BASELINE",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "VN01",
+      "family": "VN/TX",
+      "status": "LOCAL_IMPLEMENTATION_COMPLETE_OPERATIONAL_GATES_OPEN",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "VN00"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "VN02",
+      "family": "VN/TX",
+      "status": "LOCAL_IMPLEMENTATION_COMPLETE_OPERATIONAL_GATES_OPEN",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "VN01"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "VN03",
+      "family": "VN/TX",
+      "status": "LOCAL_IMPLEMENTATION_COMPLETE_OPERATIONAL_GATES_OPEN",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "VN02"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "VN04A",
+      "family": "VN/TX",
+      "status": "LOCAL_IMPLEMENTATION_COMPLETE_OPERATIONAL_GATES_OPEN",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "VN03"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "VN04B",
+      "family": "VN/TX",
+      "status": "LOCAL_IMPLEMENTATION_COMPLETE_OPERATIONAL_GATES_OPEN",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "VN04A"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "VN05",
+      "family": "VN/TX",
+      "status": "LOCAL_IMPLEMENTATION_COMPLETE_OPERATIONAL_GATES_OPEN",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "VN01",
+        "VN04B"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "VN06",
+      "family": "VN/TX",
+      "status": "LOCAL_IMPLEMENTATION_COMPLETE_OPERATIONAL_GATES_OPEN",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "VN03"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "VN07",
+      "family": "VN/TX",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "VN04B",
+        "VN06"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "VN08",
+      "family": "VN/TX",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "VN07"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "VN09",
+      "family": "VN/TX",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "VN08",
+        "VN16"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "VN10",
+      "family": "VN/TX",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "VN00"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "VN11",
+      "family": "VN/TX",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "VN10"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "VN12",
+      "family": "VN/TX",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "VN11"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "VN13",
+      "family": "VN/TX",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "TX01",
+        "TX04B",
+        "VN03"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "VN14A",
+      "family": "VN/TX",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "VN12"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "VN14B",
+      "family": "VN/TX",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "VN04B",
+        "VN14A"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "VN15",
+      "family": "VN/TX",
+      "status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
+      "stage": "NOT_STARTED",
+      "depends_on": [
+        "VN14B"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "PAUSED_DISPATCH",
+      "ready": false
+    },
+    {
+      "task_id": "VN16",
+      "family": "VN/TX",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "VN00"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "VN17",
+      "family": "VN/TX",
+      "status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
+      "stage": "NOT_STARTED",
+      "depends_on": [
+        "VN09",
+        "VN13",
+        "VN15",
+        "VN16"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [
+        "VN15"
+      ],
+      "state": "BLOCKED",
+      "ready": false
+    },
+    {
+      "task_id": "VN18",
+      "family": "VN/TX",
+      "status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
+      "stage": "NOT_STARTED",
+      "depends_on": [
+        "VN05",
+        "VN17"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [
+        "VN17"
+      ],
+      "state": "BLOCKED",
+      "ready": false
+    },
+    {
+      "task_id": "VN19",
+      "family": "VN/TX",
+      "status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
+      "stage": "NOT_STARTED",
+      "depends_on": [
+        "VN18"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [
+        "VN18"
+      ],
+      "state": "BLOCKED",
+      "ready": false
+    },
+    {
+      "task_id": "VN20",
+      "family": "VN/TX",
+      "status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
+      "stage": "NOT_STARTED",
+      "depends_on": [
+        "VN19"
+      ],
+      "complete": false,
+      "running": false,
+      "external": true,
+      "missing_dependencies": [
+        "VN19"
+      ],
+      "state": "EXTERNAL",
+      "ready": false
+    },
+    {
+      "task_id": "TX00",
+      "family": "VN/TX",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "VN00"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "TX01",
+      "family": "VN/TX",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "TX00"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "TX02A",
+      "family": "VN/TX",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "TX01",
+        "VN10"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "TX02B",
+      "family": "VN/TX",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "TX02A"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "TX02",
+      "family": "VN/TX",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "TX02A",
+        "TX02B"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "TX03A",
+      "family": "VN/TX",
+      "status": "ISOLATED_LINEAR_PAPER_ONLY",
+      "stage": "INCOMPLETE",
+      "depends_on": [
+        "TX01"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "PAUSED_DISPATCH",
+      "ready": false
+    },
+    {
+      "task_id": "TX03B",
+      "family": "VN/TX",
+      "status": "PAPER_CASHFLOW_IMPLEMENTATION_ACTUAL_MARGIN_OPEN",
+      "stage": "INCOMPLETE",
+      "depends_on": [
+        "TX02B",
+        "TX03A"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [
+        "TX03A"
+      ],
+      "state": "BLOCKED",
+      "ready": false
+    },
+    {
+      "task_id": "TX03",
+      "family": "VN/TX",
+      "status": "PLANNED",
+      "stage": "INCOMPLETE",
+      "depends_on": [
+        "TX03A",
+        "TX03B"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [
+        "TX03A",
+        "TX03B"
+      ],
+      "state": "BLOCKED",
+      "ready": false
+    },
+    {
+      "task_id": "TX04A",
+      "family": "VN/TX",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "TX02B"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "TX04B",
+      "family": "VN/TX",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "TX04A",
+        "VN03"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "TX04",
+      "family": "VN/TX",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "TX04A",
+        "TX04B"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "TX05",
+      "family": "VN/TX",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "stage": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "depends_on": [
+        "VN13"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "TX07A",
+      "family": "VN/TX",
+      "status": "PLANNED",
+      "stage": "NOT_STARTED",
+      "depends_on": [
+        "TX01"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "PAUSED_DISPATCH",
+      "ready": false
+    },
+    {
+      "task_id": "TX06A",
+      "family": "VN/TX",
+      "status": "REQUEST_MAPPING_ONLY_FULL_CODE_COMPLETION_BLOCKED",
+      "stage": "INCOMPLETE",
+      "depends_on": [
+        "TX00"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "PAUSED_DISPATCH",
+      "ready": false
+    },
+    {
+      "task_id": "TX06B",
+      "family": "VN/TX",
+      "status": "REQUEST_MAPPING_ONLY_FULL_CODE_COMPLETION_BLOCKED",
+      "stage": "INCOMPLETE",
+      "depends_on": [
+        "TX00"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "PAUSED_DISPATCH",
+      "ready": false
+    },
+    {
+      "task_id": "TX06C",
+      "family": "VN/TX",
+      "status": "REQUEST_MAPPING_ONLY_FULL_CODE_COMPLETION_BLOCKED",
+      "stage": "INCOMPLETE",
+      "depends_on": [
+        "TX00"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "PAUSED_DISPATCH",
+      "ready": false
+    },
+    {
+      "task_id": "TX06D",
+      "family": "VN/TX",
+      "status": "REQUEST_MAPPING_ONLY_FULL_CODE_COMPLETION_BLOCKED",
+      "stage": "INCOMPLETE",
+      "depends_on": [
+        "TX00"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "PAUSED_DISPATCH",
+      "ready": false
+    },
+    {
+      "task_id": "TX06E",
+      "family": "VN/TX",
+      "status": "REQUEST_MAPPING_ONLY_FULL_CODE_COMPLETION_BLOCKED",
+      "stage": "INCOMPLETE",
+      "depends_on": [
+        "TX00"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "PAUSED_DISPATCH",
+      "ready": false
+    },
+    {
+      "task_id": "TX06",
+      "family": "VN/TX",
+      "status": "PLANNED",
+      "stage": "INCOMPLETE",
+      "depends_on": [
+        "TX00"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "PAUSED_DISPATCH",
+      "ready": false
+    },
+    {
+      "task_id": "TX07B",
+      "family": "VN/TX",
+      "status": "PLANNED",
+      "stage": "NOT_STARTED",
+      "depends_on": [
+        "TX00",
+        "TX07A"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [
+        "TX07A"
+      ],
+      "state": "BLOCKED",
+      "ready": false
+    },
+    {
+      "task_id": "TX07",
+      "family": "VN/TX",
+      "status": "PLANNED",
+      "stage": "NOT_STARTED",
+      "depends_on": [
+        "TX07A",
+        "TX07B"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [
+        "TX07A",
+        "TX07B"
+      ],
+      "state": "BLOCKED",
+      "ready": false
+    },
+    {
+      "task_id": "TX08A",
+      "family": "VN/TX",
+      "status": "PAPER_SHARED_ACCOUNT_FIXTURE_IMPLEMENTATION",
+      "stage": "INCOMPLETE",
+      "depends_on": [
+        "TX02",
+        "TX05",
+        "TX07A"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [
+        "TX07A"
+      ],
+      "state": "BLOCKED",
+      "ready": false
+    },
+    {
+      "task_id": "TX08B",
+      "family": "VN/TX",
+      "status": "PAPER_OBSERVATIONAL_COORDINATOR_IMPLEMENTED",
+      "stage": "INCOMPLETE",
+      "depends_on": [
+        "TX07A",
+        "TX08A"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [
+        "TX07A",
+        "TX08A"
+      ],
+      "state": "BLOCKED",
+      "ready": false
+    },
+    {
+      "task_id": "TX08",
+      "family": "VN/TX",
+      "status": "PLANNED",
+      "stage": "INCOMPLETE",
+      "depends_on": [
+        "TX08A"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [
+        "TX08A"
+      ],
+      "state": "BLOCKED",
+      "ready": false
+    },
+    {
+      "task_id": "TX09",
+      "family": "VN/TX",
+      "status": "PLANNED",
+      "stage": "NOT_STARTED",
+      "depends_on": [
+        "VN15"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [
+        "VN15"
+      ],
+      "state": "BLOCKED",
+      "ready": false
+    },
+    {
+      "task_id": "TX10",
+      "family": "VN/TX",
+      "status": "PLANNED",
+      "stage": "NOT_STARTED",
+      "depends_on": [
+        "TX01"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "PAUSED_DISPATCH",
+      "ready": false
+    },
+    {
+      "task_id": "TX11",
+      "family": "VN/TX",
+      "status": "PLANNED",
+      "stage": "NOT_STARTED",
+      "depends_on": [
+        "TX05",
+        "TX08A",
+        "TX10",
+        "VN15",
+        "VN18"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [
+        "TX08A",
+        "TX10",
+        "VN15",
+        "VN18"
+      ],
+      "state": "BLOCKED",
+      "ready": false
+    },
+    {
+      "task_id": "TX12",
+      "family": "VN/TX",
+      "status": "PLANNED",
+      "stage": "NOT_STARTED",
+      "depends_on": [
+        "TX11",
+        "VN19"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [
+        "TX11",
+        "VN19"
+      ],
+      "state": "BLOCKED",
+      "ready": false
+    },
+    {
+      "task_id": "R00",
+      "family": "R/O",
+      "status": "ACCEPTED",
+      "stage": null,
+      "depends_on": [],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "R01",
+      "family": "R/O",
+      "status": "ACCEPTED",
+      "stage": null,
+      "depends_on": [
+        "R00"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "R02",
+      "family": "R/O",
+      "status": "ACCEPTED",
+      "stage": null,
+      "depends_on": [
+        "R00",
+        "R01"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "R03",
+      "family": "R/O",
+      "status": "ACCEPTED",
+      "stage": null,
+      "depends_on": [
+        "R00",
+        "R01",
+        "R02"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "R04",
+      "family": "R/O",
+      "status": "ACCEPTED",
+      "stage": null,
+      "depends_on": [
+        "R03"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "R05",
+      "family": "R/O",
+      "status": "ACCEPTED",
+      "stage": null,
+      "depends_on": [
+        "R03",
+        "R04",
+        "VN10",
+        "VN11",
+        "VN12"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "R06",
+      "family": "R/O",
+      "status": "PLANNED",
+      "stage": null,
+      "depends_on": [
+        "R04",
+        "R05"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "PAUSED_DISPATCH",
+      "ready": false
+    },
+    {
+      "task_id": "O00",
+      "family": "R/O",
+      "status": "ACCEPTED",
+      "stage": null,
+      "depends_on": [
+        "R00"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "O01",
+      "family": "R/O",
+      "status": "REWORK_REQUIRED",
+      "stage": null,
+      "depends_on": [
+        "O00",
+        "R01"
+      ],
+      "complete": false,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "BLOCKED",
+      "ready": false
+    },
+    {
+      "task_id": "R03A",
+      "family": "R/O",
+      "status": "ACCEPTED",
+      "stage": null,
+      "depends_on": [
+        "R00",
+        "R01",
+        "R02"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "R03B1",
+      "family": "R/O",
+      "status": "ACCEPTED",
+      "stage": null,
+      "depends_on": [
+        "R03A"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "R03B2",
+      "family": "R/O",
+      "status": "ACCEPTED",
+      "stage": null,
+      "depends_on": [
+        "R03B1"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    },
+    {
+      "task_id": "R03C",
+      "family": "R/O",
+      "status": "ACCEPTED",
+      "stage": null,
+      "depends_on": [
+        "R03B1",
+        "R03B2"
+      ],
+      "complete": true,
+      "running": false,
+      "external": false,
+      "missing_dependencies": [],
+      "state": "COMPLETE",
+      "ready": false
+    }
+  ],
+  "paused": true,
+  "last_completed_ticket": "TX05",
+  "last_completed_tooling_ticket": "R05",
+  "git_head": "d4342f97eadf9ac0c8500b99abb7742ea27985e0"
+}

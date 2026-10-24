@@ -1,0 +1,24 @@
+{
+  "decision": "PASS",
+  "base_sha": "959db09bfb583a7d00d9c5156d42b76d91c10f86",
+  "production_changes": 0,
+  "prior_tests_and_goldens_changed": 0,
+  "new_test_file": "tests/refactoring/test_tx05_file_paper_e2e.py",
+  "new_test_cases": 3,
+  "manual_oracle": {
+    "entry_fill_price": "99",
+    "exit_fill_price": "101",
+    "contract_multiplier": "10",
+    "closed_quantity": "1",
+    "realized": "20",
+    "fees": "2",
+    "final_balance": "100018",
+    "final_reservation": "0",
+    "final_position": "0"
+  },
+  "real_checkpoint_restore_and_file_loader": true,
+  "evidence_comparison_excludes_only_engine_incarnation_and_derived_fingerprint": true,
+  "owner_test_edits": 1,
+  "owner_product_edits": 0,
+  "canonical_diff_check_exit": 0
+}

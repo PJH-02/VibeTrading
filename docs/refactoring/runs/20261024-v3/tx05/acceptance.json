@@ -1,0 +1,48 @@
+{
+  "decision": "PASS",
+  "task_id": "TX05",
+  "source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
+  "selected_provider": "opencode",
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "worker_exit": 0,
+  "delegate_exit": 0,
+  "repair_delegations": 0,
+  "owner_product_edits": 0,
+  "changed_product_symbols": [],
+  "other_product_methods_ast_unchanged": 0,
+  "product_paths": [],
+  "scoped_test_passed": 286,
+  "independent_exit": 0,
+  "product_and_test_sha256": {
+    "tests/refactoring/test_tx05_file_paper_e2e.py": "1c5e9e82c74dee3171b82f5247cbcfa52dc615a6ea1df6eb34b80b805ba9f56c"
+  },
+  "full_batch_validation": {
+    "receipt": "docs/refactoring/runs/20261024-v3/tx05/full-regression.json",
+    "source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
+    "passed": 2325,
+    "exit_codes": [
+      0,
+      0
+    ],
+    "deselected_live_data": 2
+  },
+  "live_readiness": false,
+  "scope": "TX05 only: reuse existing file registration/Paper/checkpoint code; integration test changes only. Cooperative after-return timeout, no hard isolation or live readiness.",
+  "owner_test_edits": 1,
+  "owner_test_review": "docs/refactoring/runs/20261024-v3/tx05/owner-test-review.json",
+  "production_changes": 0,
+  "full_regression_passed": 2325,
+  "metadata_verification": "PASS",
+  "other_tickets_started": false,
+  "production_ready": false,
+  "remote_push_performed": false,
+  "final_metadata_verification": {
+    "receipt": "docs/refactoring/runs/20261024-v3/tx05/final-scope-status-validation.json",
+    "passed": 20,
+    "exit_code": 0,
+    "canonical_cli_exit": 0,
+    "other_50_task_objects_preserved": true
+  },
+  "product_scope_review": "docs/refactoring/runs/20261024-v3/tx05/product-scope-review.json",
+  "upstream_weight_identity": "UNKNOWN"
+}

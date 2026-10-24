@@ -1,6 +1,6 @@
 {
   "authority": "DERIVED_FROM_CANONICAL_TICKETS_NOT_NEW_STATUS_DATABASE",
-  "source_sha": "3376c9ed58474bc51134efc786a9e1c94629e278",
+  "source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
   "cycle_free": true,
   "completed_task_ids_preserved": [
     "VN00",
@@ -336,7 +336,9 @@
         "VN13"
       ],
       "historical_status": "PAPER_FIXTURE_INTEGRATION_IMPLEMENTED_PRODUCTION_BLOCKED",
-      "scope_disposition": "MERGE_WITH_VN13"
+      "scope_disposition": "MERGE_WITH_VN13",
+      "current_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "receipt": "docs/refactoring/runs/20261024-v3/tx05/acceptance.json"
     },
     {
       "task_id": "TX07A",
@@ -559,6 +561,13 @@
       "receipt": "docs/refactoring/runs/20261024-v3/vn13/acceptance.json",
       "status": "COMPLETE_LOCAL_IMPLEMENTATION",
       "scope": "LOCAL_CONTINUOUS_PAPER_FILE_PLUGIN"
+    },
+    {
+      "task_id": "TX05",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
+      "receipt": "docs/refactoring/runs/20261024-v3/tx05/acceptance.json",
+      "scope": "LOCAL_EXISTING_FILE_PAPER_ECONOMIC_E2E"
     }
   ]
 }
