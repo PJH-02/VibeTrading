@@ -92,7 +92,13 @@
     "POSIX/Linux functional and crash tests do not establish Windows/live/deployment/capacity acceptance.",
     "Existing sandbox/live ledger behavior has no added physical authority and no production capability upgrade."
   ],
-  "original_workspace_application": "PENDING",
+  "original_workspace_application": {
+    "decision": "PASS",
+    "receipt": "docs/refactoring/runs/20261024-v3/tx02a/original-application.json",
+    "preexisting_dirty_entries_preserved": 174,
+    "canonical_paths_verified": 23,
+    "accepted_product_and_test_hashes_verified": 3
+  },
   "final_metadata_verification": {
     "receipt": "docs/refactoring/runs/20261024-v3/tx02a/final-scope-status-validation.json",
     "passed": 20,
