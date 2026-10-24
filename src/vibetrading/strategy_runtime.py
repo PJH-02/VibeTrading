@@ -27,7 +27,7 @@ from .hot_path import ApplyResult, DecisionSnapshot, HotPathStore, StrategyDataV
 from .models import (AssetClass, BaseMarketEvent, EventType, OrderBookEvent, Signal, TradeEvent, Venue,
                      event_from_dict, stable_hash)
 from .paper_execution import PaperExecution
-from .strategies import StrategyModule, compile_subscriptions, compile_warmup
+from .strategies import StrategyModule, compile_subscriptions, compile_warmup, load_strategy
 from .trading_contracts import (ActionKind, ExecutionAction, ProductSpec, TradingMode,
                                 bounded_identity)
 
@@ -249,6 +249,54 @@ class PaperStrategyRuntime:
         elif job.restart_blocked:
             job.state, job.reason = "BLOCKED", "strategy_state_restore_unverified"
         self._jobs[sid] = job
+
+    def register_configured(self, document, *, action_builder):
+        """Load one explicit strategy file and register it through the existing path."""
+        if not isinstance(document, Mapping):
+            raise ValueError("Strategy configuration document must be an explicit mapping")
+        fields = {"job_id", "module", "strategy_version", "config_version", "config",
+                  "research_receipt", "paper_permission", "required_feeds", "warmup_bars",
+                  "accounts", "risk"}
+        if set(document) != fields:
+            raise ValueError("Strategy configuration requires exactly the explicit registration fields")
+        module_name = document["module"]
+        if not isinstance(module_name, str) or not module_name.strip():
+            raise ValueError("Strategy module must be a nonempty canonical name")
+        config, receipt = document["config"], document["research_receipt"]
+        if not isinstance(config, Mapping) or not isinstance(receipt, Mapping):
+            raise ValueError("Strategy config and research receipt must be explicit mappings")
+        feeds, accounts = document["required_feeds"], document["accounts"]
+        if not isinstance(feeds, (list, tuple)) or isinstance(feeds, str):
+            raise ValueError("Required feeds must be an explicit list or tuple")
+        if not isinstance(accounts, (list, tuple)) or isinstance(accounts, str):
+            raise ValueError("Accounts must be an explicit list or tuple")
+        if not all(isinstance(value, str) and value for value in (*feeds, *accounts)):
+            raise ValueError("Required feeds and accounts must be explicit nonempty strings")
+        if not isinstance(document["paper_permission"], bool):
+            raise ValueError("PAPER permission must be explicit")
+        if len(self._document(document).encode()) > self.budgets.max_config_bytes:
+            raise ValueError("Strategy configuration document capacity exceeded")
+        risk_document = document["risk"]
+        if not isinstance(risk_document, Mapping) or set(risk_document) != set(accounts):
+            raise ValueError("Strategy risk requires exact account bindings")
+        risk_fields = {"funding_buffer", "account_notional_limit", "strategy_notional_limit",
+                       "account_capital_limit", "strategy_capital_limit", "margin_rate"}
+        risk = {}
+        for account, values in risk_document.items():
+            if not isinstance(values, Mapping) or set(values) != risk_fields:
+                raise ValueError("Strategy risk requires exact explicit StrategyRisk fields")
+            try:
+                risk[account] = StrategyRisk(**dict(values))
+            except (ArithmeticError, TypeError, ValueError) as exc:
+                raise ValueError("Strategy risk values must be explicit finite decimals") from exc
+        module = load_strategy(module_name)
+        return self.register(StrategyRegistration(
+            job_id=document["job_id"], module=module,
+            strategy_version=document["strategy_version"],
+            config_version=document["config_version"], config=config,
+            research_receipt=receipt, paper_permission=document["paper_permission"],
+            required_feeds=tuple(feeds), warmup_bars=document["warmup_bars"],
+            accounts=tuple(accounts), risk=risk, action_builder=action_builder))
 
     def prepare_history(self, instrument_key: str, rows):
         if self._processing or instrument_key not in self.known:
