@@ -225,6 +225,20 @@ class PaperStrategyRuntime:
             research_receipt=_freeze(registration.research_receipt),
             risk=MappingProxyType(dict(registration.risk)),
             accounts=tuple(registration.accounts), required_feeds=tuple(registration.required_feeds))
+        # The physical account owns one explicit policy across every strategy
+        # registered against it.  Account-scoped limits are compared with all
+        # existing jobs (including paused/blocked/faulted ones) before any
+        # durable claim or plugin instance exists; strategy-scoped limits and
+        # funding buffers stay independent per registration.
+        for account in registration.accounts:
+            candidate = registration.risk[account]
+            for existing in self._jobs.values():
+                if account not in existing.registration.accounts:
+                    continue
+                current = existing.registration.risk[account]
+                if (candidate.account_notional_limit != current.account_notional_limit
+                        or candidate.account_capital_limit != current.account_capital_limit):
+                    raise ValueError("Shared account risk limits differ from existing registrations")
         restart_blocked = False
         if self.phase != "replay":
             # Any prior dispatch evidence in any bound account means a fresh
