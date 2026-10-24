@@ -76,7 +76,7 @@
     "--dir",
     "/home",
     "--bind",
-    "/home/pjh/.local/state/codex-opencode/runs/account-three-metadata-cx2e4v1l/metadata-os-home",
+    "/home/pjh/.local/state/codex-opencode/runs/account-three-metadata-ygcx8109/metadata-os-home",
     "/home/pjh",
     "--ro-bind",
     "/home/pjh/.nvm/versions/node/v22.22.0/lib/node_modules/opencode-ai/bin/opencode.exe",
@@ -88,7 +88,7 @@
     "/home/pjh/.cache/vt-refactor-deps",
     "/home/pjh/.cache/vt-refactor-deps",
     "--ro-bind",
-    "/home/pjh/.local/state/codex-opencode/runs/account-three-metadata-cx2e4v1l/metadata-os",
+    "/home/pjh/.local/state/codex-opencode/runs/account-three-metadata-ygcx8109/metadata-os",
     "/work",
     "--tmpfs",
     "/home/pjh",
@@ -123,10 +123,10 @@
     "--chdir",
     "/work",
     "--bind",
-    "/home/pjh/.local/state/codex-opencode/runs/account-three-metadata-cx2e4v1l/metadata-os",
+    "/home/pjh/.local/state/codex-opencode/runs/account-three-metadata-ygcx8109/metadata-os",
     "/work",
     "--bind",
-    "/home/pjh/.local/state/codex-opencode/runs/account-three-metadata-cx2e4v1l/metadata-os-evidence",
+    "/home/pjh/.local/state/codex-opencode/runs/account-three-metadata-ygcx8109/metadata-os-evidence",
     "/evidence",
     "--setenv",
     "PYTHONPATH",
@@ -147,10 +147,10 @@
     "REFACTOR_GUARD_RECEIPT",
     "/evidence/guard.jsonl",
     "--ro-bind",
-    "/home/pjh/.local/state/codex-opencode/runs/account-three-metadata-cx2e4v1l/oracles/schema_oracle.json",
+    "/home/pjh/.local/state/codex-opencode/runs/account-three-metadata-ygcx8109/oracles/schema_oracle.json",
     "/work/docs/refactoring/runs/20261018-stage-assignment/schema_oracle.json",
     "--ro-bind",
-    "/home/pjh/.local/state/codex-opencode/runs/account-three-metadata-cx2e4v1l/oracles/encoding_oracle.json",
+    "/home/pjh/.local/state/codex-opencode/runs/account-three-metadata-ygcx8109/oracles/encoding_oracle.json",
     "/work/docs/refactoring/runs/20261018-stage-assignment/encoding_oracle.json",
     "--",
     "python3",
@@ -160,7 +160,7 @@
     "--json"
   ],
   "metadata_sha256": {
-    "docs/refactoring/vnext/tickets_production.json": "9df2944b455d6b74cadf9d894a434133357173a0445be8b924a77ec5b7f948aa",
-    "docs/refactoring/vnext/stage_status.json": "51fbba140f05916ffb287dc2e258c0972b957e30cb3463e1a5ce15142c9c836a"
+    "docs/refactoring/vnext/tickets_production.json": "57ea7ccd1796ee0d2ceb061999f74e63a2b2f330d3435d02becce805daec1bb8",
+    "docs/refactoring/vnext/stage_status.json": "2ad4c9b6c733e6391beec2a40d73ab97255cc07dae42b7dc40f5068044d1eb41"
   }
 }
