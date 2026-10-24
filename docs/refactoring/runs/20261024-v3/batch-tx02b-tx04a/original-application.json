@@ -1,0 +1,28 @@
+{
+  "decision": "PASS",
+  "applied_head": "6abe410da621d1b44beb4c9a2f9e5d37a7eb7db6",
+  "branch": "codex/v3-local-candidate",
+  "original_workspace": "/mnt/c/Users/박제형/Desktop/VibeTrading",
+  "preserved_entries": 174,
+  "eol_only_carried": 153,
+  "canonical_paths_verified": 44,
+  "substantive_user_bytes_preserved": true,
+  "deleted_and_untracked_documents_preserved": true,
+  "backup": "/home/pjh/.local/state/codex-opencode/runs/batch-three-preserve-a20ab6b133",
+  "accepted_source_sha": "a561db3d9937b90f4fe370e151c9265fdaf45489",
+  "selected_tickets": [
+    "TX02B",
+    "TX02",
+    "TX04A"
+  ],
+  "previous_application_receipt": "docs/refactoring/runs/20261024-v3/tx02a/original-application.json",
+  "preexisting_primary_diff_check": {
+    "baseline_sha": "a5f1d53bfc753347eee171dcab435c8076dd92b7",
+    "exit_code": 2,
+    "stdout_sha256": "6fe2a296d01c688c6727b7a5024a47073466da57161596369841f5d6708d7358",
+    "stdout_lines": 81754,
+    "scope": "Preexisting primary dirty work only, before application; managed clean baseline had no diagnostics. Not attributed to worker."
+  },
+  "canonical_new_change_diff_check_exit": 0,
+  "scope": "Exactly selected three local reuse tickets; no TX04B or other implementation dispatched."
+}

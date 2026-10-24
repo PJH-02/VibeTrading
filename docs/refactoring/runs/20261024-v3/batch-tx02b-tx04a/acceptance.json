@@ -69,5 +69,11 @@
     "canonical_cli_exit": 0,
     "other_48_task_objects_preserved": true
   },
-  "product_scope_review": "docs/refactoring/runs/20261024-v3/batch-tx02b-tx04a/product-scope-review.json"
+  "product_scope_review": "docs/refactoring/runs/20261024-v3/batch-tx02b-tx04a/product-scope-review.json",
+  "primary_workspace_application": {
+    "decision": "PASS",
+    "receipt": "docs/refactoring/runs/20261024-v3/batch-tx02b-tx04a/original-application.json",
+    "preserved_entries": 174,
+    "applied_source_and_documents_head": "6abe410da621d1b44beb4c9a2f9e5d37a7eb7db6"
+  }
 }

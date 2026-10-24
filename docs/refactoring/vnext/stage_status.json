@@ -630,13 +630,13 @@
   ],
   "primary_workspace_application": {
     "status": "PASS",
-    "receipt": "docs/refactoring/runs/20261024-v3/tx02a/original-application.json",
-    "applied_head": "7582638df412293ef7c8f17daa99f3ec53fe8b0c",
-    "accepted_source_sha": "150751b3df1d179ed8e7c551df7a0016892230a1",
+    "receipt": "docs/refactoring/runs/20261024-v3/batch-tx02b-tx04a/original-application.json",
+    "applied_head": "6abe410da621d1b44beb4c9a2f9e5d37a7eb7db6",
+    "accepted_source_sha": "a561db3d9937b90f4fe370e151c9265fdaf45489",
     "original_workspace": "/mnt/c/Users/박제형/Desktop/VibeTrading",
     "preexisting_dirty_entries_preserved": 174,
-    "scope": "TX02A local cooperative Paper owner fence applied; no TX02B or other ticket dispatch",
-    "previous_application_receipt": "docs/refactoring/runs/20261024-v3/tx01/original-application.json"
+    "scope": "TX02B, TX02 joint gate and TX04A only; no fourth ticket dispatched",
+    "previous_application_receipt": "docs/refactoring/runs/20261024-v3/tx02a/original-application.json"
   },
   "refactoring_scope_revision": {
     "authority": "Explicit user instruction, 2026-10-23",
