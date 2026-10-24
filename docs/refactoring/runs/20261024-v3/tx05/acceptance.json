@@ -44,5 +44,11 @@
     "other_50_task_objects_preserved": true
   },
   "product_scope_review": "docs/refactoring/runs/20261024-v3/tx05/product-scope-review.json",
-  "upstream_weight_identity": "UNKNOWN"
+  "upstream_weight_identity": "UNKNOWN",
+  "primary_workspace_application": {
+    "decision": "PASS",
+    "receipt": "docs/refactoring/runs/20261024-v3/tx05/original-application.json",
+    "preserved_entries": 174,
+    "applied_source_and_documents_head": "71c146060abc9aec076df08ee9e19c1d31b67741"
+  }
 }
