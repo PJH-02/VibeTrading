@@ -249,13 +249,17 @@ DONE의 상태표가 서버 운영 수락을 의미하지는 않는다. **구현
 ### TX02B — 기존 journal/ledger의 attribution gap만
 
 - **소유:** `PortfolioLedger.apply_fill/_strategy_credit`, `EtfJournal.apply_status/logical_book`.
-- **선행:** TX02A. **현재:** PAPER_SCOPED.
+- **선행:** TX02A. **현재:** 기존 로컬 Paper attribution 보호 완료(2026-10-24).
 - **구현(REUSE):** ETF는 `EtfJournal`, 신규 PAPER는 `PortfolioLedger`를 권위로 유지한다. Fill→physical+virtual+fee+reservation의 기존 transaction을 재사용하고, 입증된 same-account attribution/reservation/restart gap만 보완한다. external fill 임의 strategy 귀속 0.
 - **수락:** 두 전략 반대 포지션 physical/virtual equation, pending worst-case 미상쇄, restart 후 attribution 동일.
+
+- **현재 수락:** 내부 `@` 전략명은 주문/전략 event claim 경계에서 거절한다. 내부 netting/funding 귀속과 기존 회계는 보존했다. 독립301 PASS. [수락](../runs/20261024-v3/tx02b/acceptance.json).
 
 ### TX02 — 기존 owner/books 공동 gate
 
 - **선행:** TX02A/B. **구현 중복 금지:** 소유권/장부를 Portfolio/ETF에 다시 만들지 않는다. **수락:** 선택 mode의 reserve/partial-fill/cancel/unknown/restart에서 기존 원장 재계산 일치, `sum(released)≤sum(original)`.
+
+- **현재 수락:** 제품 변경 없이 실제 기존 Paper matcher/ledger와 별도 EtfJournal의 두 전략 반대 포지션·예약·부분 체결·취소·UNKNOWN·최신 DB 재시작을 수동 계산값과 대조했다. 독립103 PASS; ETF owner는 기존 VN10 Mock/Mock2 검증을 재사용했다. [수락](../runs/20261024-v3/tx02/acceptance.json).
 
 ### TX03A — 상품 일반화는 DEFER, 기존 Paper 범위 재사용
 
@@ -278,9 +282,11 @@ DONE의 상태표가 서버 운영 수락을 의미하지는 않는다. **구현
 ### TX04A — 기존 Paper durability 재사용
 
 - **소유:** `paper_execution.py::{_transition,submit,cancel,_fill}`, `portfolio_ledger.py::{transaction,save_paper_state}`.
-- **선행:** TX02B. **현재:** LOCAL_IMPLEMENTED_TEST_PASS_PRODUCTION_OPEN.
+- **선행:** TX02B. **현재:** 기존 로컬 Paper 내구 상태 정합성 완료(2026-10-24); production open.
 - **구현(REUSE):** 기존 atomic transaction과 `_aligned` restart check를 재사용하고, 입증된 restart/dedup gap만 보완한다. `intent_id+fill_serial+source_event` identity, crash-after-write/before-visible, conservative fill semantics 유지.
 - **수락:** submit/cancel/fill 중 exception/disk full/kill, restart 후 balance/position/open orders 일치, fill 1회, 외부 mutation 0.
+
+- **현재 수락:** 기존 `_aligned`가 저장된 보호가격·만료시각·옵션·group을 원장과 비교하고 `_transition`이 커밋 전에도 정합성을 확인한다. 기존 schema/version2·fill identity·보수적 체결 계산은 보존했다. 독립137 / 전체2266 PASS(외부2건 제외). [수락](../runs/20261024-v3/tx04a/acceptance.json). TX04B 연속 입력이나 TX04 집계 완료는 포함하지 않는다.
 
 ### TX04B — NATS-free 연속 입력을 기존 matcher에 연결
 

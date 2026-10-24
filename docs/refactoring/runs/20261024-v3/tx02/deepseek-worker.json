@@ -1,0 +1,32 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "worker_exit": 0,
+  "delegate_exit": 0,
+  "actual_test_commands": [
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_vnext_vn10.py tests/refactoring/test_vnext_vn12.py tests/refactoring/test_portfolio_ledger.py tests/refactoring/test_paper_execution.py tests/refactoring/test_tx02a_owner_fence.py tests/refactoring/test_tx02b_attribution.py tests/refactoring/test_tx02_joint_gate.py",
+      "exit_code": 1,
+      "output_tail": "beta-sell\") == D(\"103.02\")\n            assert D(report[\"simulated_margin\"]) == D(\"200\")\n            by_strategy = {row[\"strategy\"]: row for row in report[\"strategy_cash\"]}\n>           assert D(by_strategy[\"alpha\"][\"fees\"]) == D(\"-0.99\")\nE           AssertionError: assert Decimal('0.990') == Decimal('-0.99')\nE            +  where Decimal('0.990') = D('0.990')\nE            +  and   Decimal('-0.99') = D('-0.99')\n\ntests/refactoring/test_tx02_joint_gate.py:121: AssertionError\n=========================== short test summary info ============================\nFAILED tests/refactoring/test_tx02_joint_gate.py::test_joint_paper_owner_books_cancel_restart_and_physical_fence\n1 failed, 102 passed in 3.46s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_vnext_vn10.py tests/refactoring/test_vnext_vn12.py tests/refactoring/test_portfolio_ledger.py tests/refactoring/test_paper_execution.py tests/refactoring/test_tx02a_owner_fence.py tests/refactoring/test_tx02b_attribution.py tests/refactoring/test_tx02_joint_gate.py",
+      "exit_code": 1,
+      "output_tail": "ledger, \"alpha-buy\") == 0\n            assert reserved(ledger, \"beta-sell\") == D(\"103.02\")\n            assert initial_reservations - D(ledger.report()[\"reserved\"][\"USDT\"]) == D(\"304.98\")\n    \n            beta_before = ledger.get(\"beta-sell\")\n>           beta_leaves = Decimal(matcher.report()[\"open_orders\"][\"beta-sell\"][\"leaves\"])\n                          ^^^^^^^\nE           NameError: name 'Decimal' is not defined\n\ntests/refactoring/test_tx02_joint_gate.py:173: NameError\n=========================== short test summary info ============================\nFAILED tests/refactoring/test_tx02_joint_gate.py::test_joint_paper_owner_books_cancel_restart_and_physical_fence\n1 failed, 102 passed in 2.87s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_vnext_vn10.py tests/refactoring/test_vnext_vn12.py tests/refactoring/test_portfolio_ledger.py tests/refactoring/test_paper_execution.py tests/refactoring/test_tx02a_owner_fence.py tests/refactoring/test_tx02b_attribution.py tests/refactoring/test_tx02_joint_gate.py",
+      "exit_code": 1,
+      "output_tail": "assert ledger.position(\"@physical\", INSTRUMENT.key) == -1\n            assert ledger.position(\"alpha\", INSTRUMENT.key) == 1\n            assert ledger.position(\"beta\", INSTRUMENT.key) == -2\n            assert D(report[\"balances\"][\"USDT\"]) == D(\"100016.99\")\n>           assert report[\"reserved\"][\"USDT\"] == \"0\"\nE           AssertionError: assert '0.000' == '0'\nE             \nE             - 0\nE             + 0.000\n\ntests/refactoring/test_tx02_joint_gate.py:209: AssertionError\n=========================== short test summary info ============================\nFAILED tests/refactoring/test_tx02_joint_gate.py::test_joint_paper_owner_books_cancel_restart_and_physical_fence\n1 failed, 102 passed in 4.37s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_vnext_vn10.py tests/refactoring/test_vnext_vn12.py tests/refactoring/test_portfolio_ledger.py tests/refactoring/test_paper_execution.py tests/refactoring/test_tx02a_owner_fence.py tests/refactoring/test_tx02b_attribution.py tests/refactoring/test_tx02_joint_gate.py",
+      "exit_code": 0,
+      "output_tail": "........................................................................ [ 69%]\n...............................                                          [100%]\n103 passed in 4.47s\n"
+    }
+  ],
+  "private_run": "/home/pjh/.local/state/codex-opencode/runs/tx02gate-worker-fd97sus3",
+  "automatic_acceptance": false,
+  "denied_or_error_tool_attempts": []
+}

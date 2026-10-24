@@ -1,0 +1,37 @@
+{
+  "mode": "original-review",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx02b-original-review-xkhvjb3w",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/tx02b-original-review-xkhvjb3w/work",
+  "exit_code": 1,
+  "elapsed_seconds": 29.843623422988458,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "ple(book._db.iterdump())\n>           with pytest.raises(ValueError):\nE           Failed: DID NOT RAISE <class 'ValueError'>\n\ndocs/tickets/TX02B-reviewer-counterexamples.py:15: Failed\n_ test_reserved_strategy_cannot_modify_orders_cash_or_receipts[claim-@custom] __\n\ntmp_path = PosixPath('/tmp/pytest/test_reserved_strategy_cannot_8')\nstrategy = '@custom', operation = 'claim'\n\n    @pytest.mark.parametrize('strategy', ['@physical', '@physical_netting_adjustment',\n        '@unallocated_funding', '@custom', '@'])\n    @pytest.mark.parametrize('operation', ['admit', 'claim'])\n    def test_reserved_strategy_cannot_modify_orders_cash_or_receipts(tmp_path, strategy, operation):\n        with seeded(tmp_path) as book:\n            before = tuple(book._db.iterdump())\n>           with pytest.raises(ValueError):\nE           Failed: DID NOT RAISE <class 'ValueError'>\n\ndocs/tickets/TX02B-reviewer-counterexamples.py:15: Failed\n____ test_reserved_strategy_cannot_modify_orders_cash_or_receipts[claim-@] _____\n\ntmp_path = PosixPath('/tmp/pytest/test_reserved_strategy_cannot_9')\nstrategy = '@', operation = 'claim'\n\n    @pytest.mark.parametrize('strategy', ['@physical', '@physical_netting_adjustment',\n        '@unallocated_funding', '@custom', '@'])\n    @pytest.mark.parametrize('operation', ['admit', 'claim'])\n    def test_reserved_strategy_cannot_modify_orders_cash_or_receipts(tmp_path, strategy, operation):\n        with seeded(tmp_path) as book:\n            before = tuple(book._db.iterdump())\n>           with pytest.raises(ValueError):\nE           Failed: DID NOT RAISE <class 'ValueError'>\n\ndocs/tickets/TX02B-reviewer-counterexamples.py:15: Failed\n=========================== short test summary info ============================\nFAILED docs/tickets/TX02B-reviewer-counterexamples.py::test_reserved_strategy_cannot_modify_orders_cash_or_receipts[admit-@physical_netting_adjustment]\nFAILED docs/tickets/TX02B-reviewer-counterexamples.py::test_reserved_strategy_cannot_modify_orders_cash_or_receipts[admit-@unallocated_funding]\nFAILED docs/tickets/TX02B-reviewer-counterexamples.py::test_reserved_strategy_cannot_modify_orders_cash_or_receipts[admit-@custom]\nFAILED docs/tickets/TX02B-reviewer-counterexamples.py::test_reserved_strategy_cannot_modify_orders_cash_or_receipts[admit-@]\nFAILED docs/tickets/TX02B-reviewer-counterexamples.py::test_reserved_strategy_cannot_modify_orders_cash_or_receipts[claim-@physical]\nFAILED docs/tickets/TX02B-reviewer-counterexamples.py::test_reserved_strategy_cannot_modify_orders_cash_or_receipts[claim-@physical_netting_adjustment]\nFAILED docs/tickets/TX02B-reviewer-counterexamples.py::test_reserved_strategy_cannot_modify_orders_cash_or_receipts[claim-@unallocated_funding]\nFAILED docs/tickets/TX02B-reviewer-counterexamples.py::test_reserved_strategy_cannot_modify_orders_cash_or_receipts[claim-@custom]\nFAILED docs/tickets/TX02B-reviewer-counterexamples.py::test_reserved_strategy_cannot_modify_orders_cash_or_receipts[claim-@]\n9 failed, 284 passed in 23.18s\n",
+  "tests": {
+    "passed": 284,
+    "failed": 9,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_portfolio_ledger.py",
+    "tests/refactoring/test_paper_execution.py",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/refactoring/test_tx02a_owner_fence.py",
+    "tests/refactoring/test_tx01_signal_binding.py",
+    "tests/refactoring/test_tx00_toss_data_only.py",
+    "tests/refactoring/test_kr_strategy_extraction.py",
+    "docs/tickets/TX02B-reviewer-counterexamples.py"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "scope": "Codex-owned reviewer fixture only; worker product unchanged",
+  "initial_independent_result": "INVALID_PROBE_HARNESS",
+  "initial_independent_exit": 1,
+  "initial_independent_passed": 133,
+  "initial_independent_failed": 4,
+  "issue": "Standalone claim API incorrectly called within matcher transaction",
+  "correction": "Use existing request_cancel inside transaction; verify real SQL and matcher-memory rollback",
+  "corrected_original_exit": 1,
+  "corrected_original_passed": 97,
+  "corrected_original_failed": 23,
+  "corrected_candidate_exit": 0,
+  "corrected_candidate_passed": 137,
+  "premature_full_run": {
+    "private_run": "/home/pjh/.local/state/codex-opencode/runs/batch-three-full-miqrd55v",
+    "valid_for_final_acceptance": false,
+    "source_sha": "6641af407cea2b842dcc8c8fc83add1a01e6eefe",
+    "product_exit": 4,
+    "reason": "Not-yet-committed TX04A reviewer file missing; no product tests collected"
+  },
+  "repair_delegations": 0
+}

@@ -1,0 +1,38 @@
+{
+  "mode": "independent",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx02b-independent-0x_dh948",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/tx02b-independent-0x_dh948/work",
+  "exit_code": 0,
+  "elapsed_seconds": 14.908991028991295,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "........................................................................ [ 23%]\n........................................................................ [ 47%]\n........................................................................ [ 71%]\n........................................................................ [ 95%]\n.............                                                            [100%]\n301 passed in 12.57s\n",
+  "tests": {
+    "passed": 301,
+    "failed": 0,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_portfolio_ledger.py",
+    "tests/refactoring/test_paper_execution.py",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/refactoring/test_tx02a_owner_fence.py",
+    "tests/refactoring/test_tx01_signal_binding.py",
+    "tests/refactoring/test_tx00_toss_data_only.py",
+    "tests/refactoring/test_kr_strategy_extraction.py",
+    "tests/refactoring/test_tx02b_attribution.py",
+    "docs/tickets/TX02B-reviewer-counterexamples.py"
+  ]
+}
