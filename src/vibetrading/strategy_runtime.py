@@ -664,14 +664,17 @@ class PaperStrategyRuntime:
                         "event_id": stable_hash(["paper_reference", value.event_id, reference_key, key])})
                 try:
                     if not self._fresh_input(event, snapshot.now_ns):
-                        matcher.on_gap(key, max(snapshot.now_ns, matcher.report()["clock_ns"]),
-                                       "receipt_or_native_source_not_fresh")
+                        self._fence_feed(key, reference_key, matcher,
+                                         "receipt_or_native_source_not_fresh")
+                        matcher.advance(snapshot.now_ns)
                     elif not result.applied or snapshot.quality.get(reference_key) != "VALID":
-                        matcher.on_gap(key, int(event.receive_ts_ns), result.reason)
+                        self._fence_feed(key, reference_key, matcher, result.reason)
+                        matcher.advance(snapshot.now_ns)
                     elif isinstance(event, OrderBookEvent):
                         projected = snapshot.latest_book(reference_key)
                         if projected is None:
-                            matcher.on_gap(key, int(event.receive_ts_ns), "projected_book_missing")
+                            self._fence_feed(key, reference_key, matcher, "projected_book_missing")
+                            matcher.advance(snapshot.now_ns)
                         else:
                             matcher.on_book(mapped(projected))
                     elif isinstance(event, TradeEvent):
@@ -679,10 +682,21 @@ class PaperStrategyRuntime:
                 except Exception as exc:
                     self._account_faults[account] = type(exc).__name__
                     try:
-                        matcher.on_gap(key, max(int(event.receive_ts_ns), matcher.report()["clock_ns"]),
-                                       "market_input_rejected")
+                        self._fence_feed(key, reference_key, matcher, "market_input_rejected")
+                        matcher.advance(snapshot.now_ns)
                     except Exception:
                         pass
+
+    def _fence_feed(self, product_key, feed_key, matcher, reason):
+        """Invalidate one exact feed and fence from its last durable clock."""
+        bounded = reason if isinstance(reason, str) and reason else "market_input_invalid"
+        bounded = bounded[:1024]
+        self._invalid_inputs[feed_key] = bounded[:256]
+        for job in self._jobs.values():
+            if (feed_key in job.registration.required_feeds
+                    and job.state not in {"PAUSED", "HALTED", "FAULTED", "BLOCKED"}):
+                job.state, job.reason = "WARMING", "input_invalid"
+        matcher.on_gap(product_key, matcher.report()["clock_ns"], bounded)
 
     def _fresh_input(self, event, now):
         return (event.ingest_mode == "realtime" and event.receive_ts_ns is not None and
@@ -949,10 +963,23 @@ class PaperStrategyRuntime:
                 if account in self._account_faults:
                     continue
                 try:
-                    for key in self.products:
-                        if (self.products[key].instrument.venue.value == matcher.ledger.scope.venue and
-                                snapshot.quality.get(self.reference_feeds.get(key, key)) != "VALID"):
-                            matcher.on_gap(key, now_ns, "dependency_invalid_or_stale")
+                    for key, spec in self.products.items():
+                        if spec.instrument.venue.value != matcher.ledger.scope.venue:
+                            continue
+                        feed = self.reference_feeds.get(key, key)
+                        projected = snapshot.latest_book(feed)
+                        if snapshot.quality.get(feed) != "VALID":
+                            reason = "dependency_invalid_or_stale"
+                        elif projected is None:
+                            reason = "projected_book_missing"
+                        elif not self._fresh_input(projected, now_ns):
+                            reason = "receipt_or_native_source_not_fresh"
+                        else:
+                            continue
+                        # Never let advance consume cached depth across the
+                        # unobserved span. Fence from the matcher's last
+                        # durable clock, then only cancellation/expiry may move.
+                        self._fence_feed(key, feed, matcher, reason)
                     matcher.advance(now_ns)
                 except Exception as exc:
                     self._account_faults[account] = type(exc).__name__
