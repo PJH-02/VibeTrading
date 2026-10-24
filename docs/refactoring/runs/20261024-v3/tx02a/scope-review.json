@@ -1,0 +1,18 @@
+{
+  "decision": "PASS",
+  "changed_methods": [
+    "PortfolioLedger.__init__",
+    "PortfolioLedger._check",
+    "PortfolioLedger.transaction",
+    "PortfolioLedger.close"
+  ],
+  "other_methods_ast_unchanged": 44,
+  "schema_sql_unchanged": true,
+  "non_output_worker_inputs_unchanged": true,
+  "worker_paths": [
+    "src/vibetrading/portfolio_ledger.py",
+    "tests/refactoring/test_tx02a_owner_fence.py"
+  ],
+  "owner_product_edits": 0,
+  "repair_delegations": 0
+}

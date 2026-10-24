@@ -245,7 +245,9 @@
         "VN10"
       ],
       "historical_status": "PAPER_SCOPED_IMPLEMENTATION_LEGACY_FENCING_OPEN",
-      "scope_disposition": "ADAPT_EXISTING_OWNER"
+      "scope_disposition": "ADAPT_EXISTING_OWNER",
+      "current_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "completion_scope": "LOCAL_COOPERATIVE_PAPER_OWNER"
     },
     {
       "task_id": "TX02B",
@@ -496,6 +498,13 @@
       "scope": "LOCAL_EXISTING_PAPER_CONTRACT",
       "source_sha": "1d1c2c8f6f0a76745fce9c04208f4e031c444cdd",
       "receipt": "docs/refactoring/runs/20261024-v3/tx01/acceptance.json"
+    },
+    {
+      "task_id": "TX02A",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "scope": "LOCAL_COOPERATIVE_PAPER_OWNER",
+      "source_sha": "150751b3df1d179ed8e7c551df7a0016892230a1",
+      "receipt": "docs/refactoring/runs/20261024-v3/tx02a/acceptance.json"
     }
   ]
 }
