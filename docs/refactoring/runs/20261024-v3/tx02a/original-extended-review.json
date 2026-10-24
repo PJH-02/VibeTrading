@@ -1,0 +1,37 @@
+{
+  "mode": "original-extended",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx02a-original-extended-gw61bt8z",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/tx02a-original-extended-gw61bt8z/work",
+  "exit_code": 1,
+  "elapsed_seconds": 15.975630629982334,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "e>\nAssertionError: fork child used or closed inherited ledger\n___ test_owned_process_crash_releases_fence_and_recovers_latest_reservation ____\n\ntmp_path = PosixPath('/tmp/pytest/test_owned_process_crash_relea0')\n\n    def test_owned_process_crash_releases_fence_and_recovers_latest_reservation(tmp_path):\n        script = r'''\n    import sys\n    from pathlib import Path\n    from decimal import Decimal\n    from test_portfolio_ledger import ledger,admit\n    assert getattr(sys,'_vibetrading_offline_guard',False)\n    book=ledger(Path(sys.argv[1]))\n    book.seed_balance('USDT',Decimal(1000),{'source':'synthetic crash fixture'})\n    admit(book)\n    print('READY',flush=True)\n    sys.stdin.read()\n    '''\n        process = subprocess.Popen([sys.executable, '-c', script, str(tmp_path)],\n            stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)\n        try:\n            with selectors.DefaultSelector() as ready:\n                ready.register(process.stdout, selectors.EVENT_READ)\n                assert ready.select(timeout=8), 'synthetic owner failed to reach ready state'\n            assert process.stdout.readline().strip() == 'READY'\n>           with pytest.raises(RuntimeError, match='another process'):\nE           Failed: DID NOT RAISE <class 'RuntimeError'>\n\ndocs/tickets/TX02A-reviewer-counterexamples.py:233: Failed\n=========================== short test summary info ============================\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_alternate_product_and_db_cannot_create_second_writer[other]\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_alternate_product_and_db_cannot_create_second_writer[cash]\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_alternate_product_and_db_cannot_create_second_writer[linear_perpetual]\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_reuses_physical_key_with_existing_execution_ledger[True]\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_reuses_physical_key_with_existing_execution_ledger[False]\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_scope_lease_loss_blocks_reads_and_allows_cleanup[move]\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_scope_lease_loss_blocks_reads_and_allows_cleanup[close]\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_physical_lease_loss_blocks_work_and_is_sticky\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_ownership_loss_during_transaction_never_commits[False]\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_ownership_loss_during_transaction_never_commits[True]\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_failed_backend_close_keeps_physical_exclusion_until_retry\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_fork_inherited_ledger_cannot_use_or_close_parent\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_owned_process_crash_releases_fence_and_recovers_latest_reservation\n13 failed, 292 passed in 13.40s\n",
+  "tests": {
+    "passed": 292,
+    "failed": 13,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/tmp/junit.xml",
+    "tests/refactoring/test_vnext_vn10.py",
+    "tests/refactoring/test_portfolio_ledger.py",
+    "tests/refactoring/test_paper_execution.py",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/refactoring/test_tx01_signal_binding.py",
+    "tests/refactoring/test_tx00_toss_data_only.py",
+    "tests/refactoring/test_kr_strategy_extraction.py",
+    "docs/tickets/TX02A-reviewer-counterexamples.py"
+  ]
+}

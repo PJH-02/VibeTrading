@@ -241,9 +241,10 @@ DONE의 상태표가 서버 운영 수락을 의미하지는 않는다. **구현
 ### TX02A — 기존 owner/lease 재사용, 단일 writer 증명
 
 - **소유:** `portfolio_ledger.py`, `etf_journal.py`, `process_lease.py`, `execution_owner.py`의 기존 seam.
-- **선행:** TX01, VN10. **현재:** PAPER_SCOPED_LEGACY_FENCING_OPEN.
+- **선행:** TX01, VN10. **현재:** 로컬 협조 프로세스의 Paper owner fence 완료(2026-10-24).
 - **구현(ADAPT):** ETF `_acquire_ownership`/`EtfJournal`과 `PortfolioLedger` lease를 재사용한다. 선택된 mode에서 하나의 physical account writer만 허용하고, 다른 DB path/중복 process/stale epoch를 거절한다. ETF `mock`/`mock2` 구분 보존, 새 account engine 금지.
 - **수락:** 같은 계좌 2 owner 동시 허가 0, owner 장애/restart fence, ledger mismatch 거절, 다른 계좌에 불필요한 global lock 0.
+- **현재 수락:** 기존 `ProcessLease.account`를 공유 root의 PAPER 물리 계좌 잠금으로 재사용했다. 기존 scope binding·schema·경제 동작은 유지하고, lease 상실/fork 접근·commit·cleanup 경계만 보완했다. 독립323/전체2204 PASS(외부 live-data2건 제외). 보호된 동일 root와 협조 버전/로컬 볼륨 전제이며 real/cross-host 권한은 주장하지 않는다. [수락](../runs/20261024-v3/tx02a/acceptance.json). TX02B 이후 및 TX02 집계 완료는 별도다.
 
 ### TX02B — 기존 journal/ledger의 attribution gap만
 

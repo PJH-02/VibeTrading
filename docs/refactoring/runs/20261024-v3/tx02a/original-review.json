@@ -1,0 +1,37 @@
+{
+  "mode": "original-review",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx02a-original-review-9ge4m0od",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/tx02a-original-review-9ge4m0od/work",
+  "exit_code": 1,
+  "elapsed_seconds": 16.91830057199695,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "andled that.\n                process.kill()\n                # We don't call process.wait() as .__exit__ does that for us.\n                raise\n            retcode = process.poll()\n            if check and retcode:\n>               raise CalledProcessError(retcode, process.args,\n                                         output=stdout, stderr=stderr)\nE               subprocess.CalledProcessError: Command '['/usr/bin/python3', '-c', \"\\nimport os,sys\\nfrom pathlib import Path\\nfrom test_portfolio_ledger import ledger\\nassert getattr(sys,'_vibetrading_offline_guard',False)\\nroot=Path(sys.argv[1]); book=ledger(root)\\npid=os.fork()\\nif pid==0:\\n    blocked=[]\\n    for operation in (book.account_version,book.close):\\n        try: operation()\\n        except RuntimeError: blocked.append(True)\\n        else: blocked.append(False)\\n    os._exit(0 if all(blocked) else 42)\\nstatus=os.waitpid(pid,0)[1]\\nassert status==0, 'fork child used or closed inherited ledger'\\nbook.account_version()\\ntry: ledger(root)\\nexcept RuntimeError: pass\\nelse: raise AssertionError('child released parent lease')\\nbook.close(); ledger(root).close()\\n\", '/tmp/pytest/test_fork_inherited_ledger_can0']' returned non-zero exit status 1.\n\n/usr/lib/python3.12/subprocess.py:571: CalledProcessError\n----------------------------- Captured stderr call -----------------------------\nTraceback (most recent call last):\n  File \"<string>\", line 16, in <module>\nAssertionError: fork child used or closed inherited ledger\n=========================== short test summary info ============================\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_alternate_product_and_db_cannot_create_second_writer[other]\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_alternate_product_and_db_cannot_create_second_writer[cash]\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_alternate_product_and_db_cannot_create_second_writer[linear_perpetual]\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_reuses_physical_key_with_existing_execution_ledger[True]\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_reuses_physical_key_with_existing_execution_ledger[False]\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_scope_lease_loss_blocks_reads_and_allows_cleanup[move]\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_scope_lease_loss_blocks_reads_and_allows_cleanup[close]\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_physical_lease_loss_blocks_work_and_is_sticky\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_ownership_loss_during_transaction_never_commits[False]\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_ownership_loss_during_transaction_never_commits[True]\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_failed_backend_close_keeps_physical_exclusion_until_retry\nFAILED docs/tickets/TX02A-reviewer-counterexamples.py::test_fork_inherited_ledger_cannot_use_or_close_parent\n12 failed, 292 passed in 12.29s\n",
+  "tests": {
+    "passed": 292,
+    "failed": 12,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/tmp/junit.xml",
+    "tests/refactoring/test_vnext_vn10.py",
+    "tests/refactoring/test_portfolio_ledger.py",
+    "tests/refactoring/test_paper_execution.py",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/refactoring/test_tx01_signal_binding.py",
+    "tests/refactoring/test_tx00_toss_data_only.py",
+    "tests/refactoring/test_kr_strategy_extraction.py",
+    "docs/tickets/TX02A-reviewer-counterexamples.py"
+  ]
+}
