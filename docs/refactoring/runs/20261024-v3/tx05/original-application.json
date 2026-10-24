@@ -1,0 +1,26 @@
+{
+  "decision": "PASS",
+  "applied_head": "71c146060abc9aec076df08ee9e19c1d31b67741",
+  "branch": "codex/v3-local-candidate",
+  "original_workspace": "/mnt/c/Users/박제형/Desktop/VibeTrading",
+  "preserved_entries": 174,
+  "eol_only_carried": 153,
+  "canonical_paths_verified": 23,
+  "substantive_user_bytes_preserved": true,
+  "deleted_and_untracked_documents_preserved": true,
+  "backup": "/home/pjh/.local/state/codex-opencode/runs/tx05-preserve-xcvbn23s",
+  "accepted_source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
+  "selected_tickets": [
+    "TX05"
+  ],
+  "previous_application_receipt": "docs/refactoring/runs/20261024-v3/batch-tx04b-vn13/original-application.json",
+  "preexisting_primary_diff_check": {
+    "baseline_sha": "959db09bfb583a7d00d9c5156d42b76d91c10f86",
+    "exit_code": 2,
+    "stdout_sha256": "fce6202a67226bec6a9f2a03dc1d9cc5a5056fb01653ce9f72e6e1eda9f99600",
+    "stdout_lines": 81772,
+    "scope": "Preexisting primary dirty work only; not worker changes"
+  },
+  "canonical_new_change_diff_check_exit": 0,
+  "scope": "TX05 local file/Paper economic E2E only; production edits0, no further ticket or remote push."
+}

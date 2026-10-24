@@ -638,13 +638,13 @@
   ],
   "primary_workspace_application": {
     "status": "PASS",
-    "receipt": "docs/refactoring/runs/20261024-v3/batch-tx04b-vn13/original-application.json",
-    "applied_head": "8e2753b760c780ff360ddd0146dae5ab350212d6",
-    "accepted_source_sha": "3376c9ed58474bc51134efc786a9e1c94629e278",
+    "receipt": "docs/refactoring/runs/20261024-v3/tx05/original-application.json",
+    "applied_head": "71c146060abc9aec076df08ee9e19c1d31b67741",
+    "accepted_source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
     "original_workspace": "/mnt/c/Users/박제형/Desktop/VibeTrading",
     "preexisting_dirty_entries_preserved": 174,
-    "scope": "TX04B, TX04 joint gate and VN13 only; no fourth ticket dispatched",
-    "previous_application_receipt": "docs/refactoring/runs/20261024-v3/batch-tx02b-tx04a/original-application.json"
+    "scope": "TX05 only; no further ticket dispatched or remote push",
+    "previous_application_receipt": "docs/refactoring/runs/20261024-v3/batch-tx04b-vn13/original-application.json"
   },
   "refactoring_scope_revision": {
     "authority": "Explicit user instruction, 2026-10-23",

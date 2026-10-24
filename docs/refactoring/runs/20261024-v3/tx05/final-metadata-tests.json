@@ -1,13 +1,13 @@
 {
-  "source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
-  "base": "/home/pjh/.local/state/codex-opencode/runs/tx05-metadata-_guriqh1",
+  "source_sha": "71c146060abc9aec076df08ee9e19c1d31b67741",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx05-metadata-s93e8fjt",
   "status": "PASS",
   "profiles": [
     {
       "profile": "metadata-os",
-      "source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
+      "source_sha": "71c146060abc9aec076df08ee9e19c1d31b67741",
       "exit_code": 0,
-      "elapsed_seconds": 0.35799279500497505,
+      "elapsed_seconds": 0.35357426601694897,
       "tests": {
         "passed": 20,
         "failed": 0,
