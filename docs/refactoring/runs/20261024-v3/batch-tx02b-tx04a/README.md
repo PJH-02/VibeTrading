@@ -19,3 +19,5 @@
 - **미착수 (12):** VN15, VN17, VN18, VN19, VN20, TX07A, TX07B, TX07, TX09, TX10, TX11, TX12.
 
 이전 완료20개와 비선택48개 task 객체는 그대로 보존한다. 마지막 TX04A 뒤 dispatch를 중지했고 다음 후보는 TX04B지만 미착수다. Git 게시 범위는 사용자 승인된 `codex/v3-local-candidate`이며 main 병합/배포/실주문은 실행하지 않는다. 사용자 기존 수정174건은 primary 적용 검증에서 별도 보존한다.
+
+기존 작업 폴더 적용은 [적용 기록](original-application.json)에서 PASS로 확인했다. 기존 사용자 수정174건(줄바꿈 차이153·삭제16·미추적3·기타 수정2)을 보존했다. 기존 dirty work의 `diff --check` 진단은 따로 기록했고, 이번 canonical 변경의 검사 종료코드는0이다. 최종 커밋/원격 SHA는 Git 이력과 `origin/codex/v3-local-candidate`로 확인한다.
