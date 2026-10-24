@@ -6,7 +6,7 @@ from test_strategy_runtime import (T, BTC, ledger_at, matcher_for, runtime, budg
     registration, deliver, book, trade)
 from vibetrading.models import Side
 
-@pytest.mark.parametrize("delivery", ["tick", "late_native_event"])
+@pytest.mark.parametrize("delivery", ["tick", "late_native_event", "fresh_trade_old_book"])
 def test_missing_freshness_never_consumes_cached_ioc_depth(tmp_path, delivery):
     ledger=ledger_at(tmp_path)
     try:
@@ -23,7 +23,8 @@ def test_missing_freshness_never_consumes_cached_ioc_depth(tmp_path, delivery):
         assert matcher.report()["fills"]==0
         if delivery=="tick":host.advance(T+11)
         else:
-            event=trade(T+11,side=Side.SELL,price=100).model_copy(update={"source_ts_ns":T})
+            event=trade(T+11,side=Side.SELL,price=100)
+            if delivery=="late_native_event":event=event.model_copy(update={"source_ts_ns":T})
             deliver(host,now,event)
         assert matcher.report()["fills"]==0
         assert ledger.position("probe",BTC.key)==0
