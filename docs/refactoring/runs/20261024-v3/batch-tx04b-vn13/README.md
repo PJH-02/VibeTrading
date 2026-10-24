@@ -19,3 +19,5 @@ C3/KP/KD·Mock/Mock2·TOSS DATA_ONLY·거래소/cloud·기존 Golden은 보존�
 - **미착수 (12):** VN15, VN17, VN18, VN19, VN20, TX07A, TX07B, TX07, TX09, TX10, TX11, TX12.
 
 비선택48개 task 객체와 이전 완료23개는 그대로 보존한다. dispatch는 VN13 뒤 중지했으며 다음 TX05는 이번에 추가 개발하지 않았다. 게시 브랜치는 사용자 승인된 `codex/v3-local-candidate`이고 main/배포/실주문 변경은 없다. 기존 사용자 수정174건은 별도 적용 검증으로 보존한다.
+
+기존 작업 폴더는 [적용 기록](original-application.json)에서 PASS로 확인했다. 사용자 수정174건(줄바꿈 차이153·삭제16·미추적3·기타 수정2)을 보존했다. 기존 dirty work의 diff-check 진단은 별도로 기록했고, 이번 canonical 변경의 검사 종료코드는0이다. 최종 원격 SHA는 Git 이력과 `origin/codex/v3-local-candidate`로 확인한다.
