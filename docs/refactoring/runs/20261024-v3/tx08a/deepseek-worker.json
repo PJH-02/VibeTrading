@@ -1,0 +1,66 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "worker_exit": 0,
+  "delegate_exit": 0,
+  "actual_test_commands": [
+    {
+      "command": "python3 -m pytest --version",
+      "exit_code": 0,
+      "output_tail": "pytest 9.0.2\n"
+    },
+    {
+      "command": "python3 -m pytest -q -p no:cacheprovider --collect-only tests/refactoring/test_strategy_runtime.py",
+      "exit_code": 0,
+      "output_tail": "recovery_phase_invalidation_defers_matching_until_live_input\ntests/refactoring/test_strategy_runtime.py::test_real_shared_engine_applies_once_replay_has_no_orders_and_fault_is_dependency_scoped\n\n=============================== warnings summary ===============================\ntests/refactoring/test_strategy_runtime.py:458\n  /work/tests/refactoring/test_strategy_runtime.py:458: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.asyncio\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n16 tests collected in 0.27s\n"
+    },
+    {
+      "command": "python3 -m pytest -q -p no:cacheprovider --collect-only tests/refactoring/test_tx07a_fact_contract.py tests/refactoring/test_tx02b_attribution.py",
+      "exit_code": 0,
+      "output_tail": "sts/refactoring/test_tx07a_fact_contract.py:204: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.asyncio\n\ntests/refactoring/test_tx07a_fact_contract.py:263\n  /work/tests/refactoring/test_tx07a_fact_contract.py:263: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.asyncio\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n15 tests collected in 0.20s\n"
+    },
+    {
+      "command": "python3 -m pytest -q -p no:cacheprovider tests/refactoring/test_strategy_runtime.py -k registr",
+      "exit_code": 5,
+      "output_tail": "\n=============================== warnings summary ===============================\ntests/refactoring/test_strategy_runtime.py:458\n  /work/tests/refactoring/test_strategy_runtime.py:458: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.asyncio\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n16 deselected, 1 warning in 0.27s\n"
+    },
+    {
+      "command": "python3 -m pytest -q -p no:cacheprovider tests/refactoring/test_tx08a_account_policy.py",
+      "exit_code": 5,
+      "output_tail": "\nno tests ran in 0.01s\n"
+    },
+    {
+      "command": "python3 -m pytest -q -p no:cacheprovider tests/refactoring/test_strategy_runtime.py::test_callback_fault_isolated_and_cooperative_timeout_reports_production_block",
+      "exit_code": 0,
+      "output_tail": ".                                                                        [100%]\n=============================== warnings summary ===============================\ntests/refactoring/test_strategy_runtime.py:458\n  /work/tests/refactoring/test_strategy_runtime.py:458: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.asyncio\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n1 passed, 1 warning in 0.29s\n"
+    },
+    {
+      "command": "python3 -m pytest -q -p no:cacheprovider tests/refactoring/test_portfolio_ledger.py",
+      "exit_code": 0,
+      "output_tail": "........................                                                 [100%]\n24 passed in 0.24s\n"
+    },
+    {
+      "command": "python3 -m pytest -q -p no:cacheprovider tests/refactoring/test_tx02a_owner_fence.py",
+      "exit_code": 0,
+      "output_tail": "..................                                                       [100%]\n18 passed in 0.40s\n"
+    },
+    {
+      "command": "python3 -m pytest -q -p no:cacheprovider tests/refactoring/test_strategy_runtime.py::test_two_strategies_one_account_one_snapshot_opposite_virtual_fills_and_no_network tests/refactoring/test_vn13_file_registration.py::test_two_real_files_share_snapshot_and_link_to_existing_paper",
+      "exit_code": 0,
+      "output_tail": "..                                                                       [100%]\n=============================== warnings summary ===============================\ntests/refactoring/test_strategy_runtime.py:458\n  /work/tests/refactoring/test_strategy_runtime.py:458: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.asyncio\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n2 passed, 1 warning in 0.30s\n"
+    },
+    {
+      "command": "python3 -m pytest -q -p no:cacheprovider tests/refactoring/test_strategy_restart_barrier.py tests/refactoring/test_runtime_checkpoint_integration.py",
+      "exit_code": 1,
+      "output_tail": "est_runtime_checkpoint_integration.py::test_market_suffix_beyond_c_quarantines_selected_consumer_without_callback\nFAILED tests/refactoring/test_runtime_checkpoint_integration.py::test_corrupt_newest_real_bundle_fences_before_callback_publication\nFAILED tests/refactoring/test_runtime_checkpoint_integration.py::test_run_engine_requires_readiness_before_inspecting_runtime_fields\nFAILED tests/refactoring/test_runtime_checkpoint_integration.py::test_restored_runtime_matches_uninterrupted_next_event_and_has_no_duplicate\nFAILED tests/refactoring/test_runtime_checkpoint_integration.py::test_partial_fill_reservation_and_reopened_next_event_are_economic_parity\n5 failed, 11 passed, 6 warnings in 0.37s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_strategy_runtime.py tests/refactoring/test_strategy_restart_barrier.py tests/refactoring/test_portfolio_ledger.py tests/refactoring/test_tx02a_owner_fence.py tests/refactoring/test_tx02b_attribution.py tests/refactoring/test_vn13_file_registration.py tests/refactoring/test_tx07a_fact_contract.py tests/refactoring/test_runtime_checkpoint_integration.py tests/refactoring/test_tx08a_account_policy.py",
+      "exit_code": 0,
+      "output_tail": "........................................................................ [ 55%]\n..........................................................               [100%]\n130 passed in 3.05s\n"
+    }
+  ],
+  "private_run": "/home/pjh/.local/state/codex-opencode/runs/tx08a-worker-b_1gswcj",
+  "automatic_acceptance": false
+}

@@ -230,3 +230,7 @@ VN14A-1: selected-scope resume와 상위 halt/다른 전략 보존, 명시 paren
 ## 2026-10-24 현재 — TX05 로컬 수락
 
 최신 canonical 집계는 **27 완료 / 12 미완료 / 12 미착수**다. 기존 파일 전략/Paper 경제 checkpoint E2E 검증을 마감했고 전체2325 PASS/외부2건 제외다. 이번에는 TX05 하나만 진행했다. [전체 분류와 증거](../runs/20261024-v3/tx05/README.md).
+
+## 2026-10-24 최신 — TX07A/TX08A/TX08 수락
+
+최신 canonical 집계는 **30 완료 / 10 미완료 / 11 미착수**다. 기존 fact 계약, 동일 계좌 한도 일관성, 두 파일 전략의 공동 Paper/복구 gate를 완료했다. 전체 2348 PASS/외부2건 제외. 이번 연속3개 뒤 dispatch를 중지했다. [전체 분류와 증거](../runs/20261024-v3/batch-tx07a-tx08/README.md).

@@ -1,0 +1,23 @@
+{
+  "decision": "PASS",
+  "base_sha": "08954916104f654935ed6ec598f1c9731d72841b",
+  "source_sha": "04c9f576925c4ad4c8b559501e09055e52201b83",
+  "non_document_paths": [
+    "src/vibetrading/strategy_runtime.py",
+    "tests/refactoring/test_tx07a_fact_contract.py",
+    "tests/refactoring/test_tx08_same_account_gate.py",
+    "tests/refactoring/test_tx08a_account_policy.py"
+  ],
+  "changed_product_symbols": [
+    "PaperStrategyRuntime.register"
+  ],
+  "other_product_methods_ast_unchanged": 39,
+  "existing_tests_and_goldens_changed": false,
+  "existing_exchange_and_cloud_paths_changed": false,
+  "new_projection_api": false,
+  "new_runtime_or_risk_engine": false,
+  "owner_product_edits": 0,
+  "tx07a_owner_documentation_corrections": 1,
+  "account_policy_guard": "Compare both existing account_notional_limit and account_capital_limit across every overlapping registration before durable claims or plugin creation; Decimal numeric equality, all lifecycle states; no account minimum/default registry.",
+  "limits": "Current trusted local Paper host registration only. Existing native-live, legacy direct-ledger, cross-product/venue risk policy and process-isolation claims are outside this selected contract."
+}

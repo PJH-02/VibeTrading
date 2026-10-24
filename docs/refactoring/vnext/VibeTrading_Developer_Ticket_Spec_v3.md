@@ -348,11 +348,13 @@ DONE의 상태표가 서버 운영 수락을 의미하지는 않는다. **구현
 
 - **선행:** TX00. **수락:** 선택된 기존 route 하나에 대해 함수/caller/environment가 matrix와 일치하고, UNKNOWN/N/A가 honest하다. **all-five rebuild gate는 제거**하며 완료 adapter prototype evidence를 지우지 않는다.
 
-### TX07A — 기존 fact 위 최소 projection
+### TX07A — 기존 fact 계약과 최소 필드 매핑 (로컬 완료)
 
-- **소유:** `trading_contracts.py`, `execution_owner.py`, 기존 `execution_ledger.py`, `tests/refactoring/test_tx07a.py`(존재 시 재사용).
-- **선행:** TX01. **구현(ADAPT):** 기존 `Runner.order_event/execution_event`, `fv_mm.on_order/on_fill`, `EtfJournal.apply_status`, `PaperExecution._fill`의 identity/terminal 규칙 위에 필요한 canonical 이름만 projection한다. 두 번째 universal lifecycle state machine 금지. ACK-after-fill이 terminal을 역전하지 않고 cumulative fill이 단조다.
+- **소유:** 기존 `execution_owner.py`, `execution_ledger.py`, `etf_journal.py`, `portfolio_ledger.py`는 재사용한다. 이번 변경은 `tests/refactoring/test_tx07a_fact_contract.py`와 `reuse_audit/tx07a_fact_contract.md`다.
+- **선행:** TX01. **구현(REUSE):** 기존 저장 필드와 authority가 선택된 Paper/ETF/offline owner 계약에 충분함을 확인했다. 필드/identity/terminal 매핑을 문서와 테스트로 고정하며 새 projection API나 universal lifecycle state machine을 만들지 않는다. Native venue 확장은 별도 선택 범위다.
 - **수락:** 기존 ledger checksum, late/duplicate fill, ACK/fill 역순, UNKNOWN positive match, 기존 Golden 불변.
+
+- **현재 수락(2026-10-24):** 제품 변경0, 독립 79 PASS. 중복/충돌 fill, ACK 역순, 누적 체결, UNKNOWN reservation과 기존 ETF 경제 동작을 보존했다. [증거](../runs/20261024-v3/tx07a/acceptance.json).
 
 ### TX07B — 기존 reconciliation 재사용
 
@@ -367,9 +369,11 @@ DONE의 상태표가 서버 운영 수락을 의미하지는 않는다. **구현
 ### TX08A — 동일계좌 전략 safety (우선)
 
 - **소유:** `portfolio_ledger.py::{admit_order,_gross_notional,_reserved}`, `strategy_runtime.py` risk binding, `etf_journal.py` 기존 book.
-- **선행:** TX02, TX05, TX07A. **현재:** PAPER_SHARED_ACCOUNT_FIXTURE_IMPLEMENTATION.
+- **선행:** TX02, TX05, TX07A. **현재:** LOCAL_SAME_ACCOUNT_PAPER_CONTRACT_COMPLETE (2026-10-24).
 - **구현(REUSE/ADAPT):** 기존 account-wide serialized reservation, strategy budget, worst-case exposure를 재사용한다. 두 전략 반대 포지션이 net zero여도 pending/cancel-pending/UNKNOWN을 낙관 상쇄하지 않는다. **새 multi-strategy 연결에서 입증된** attribution/reservation/cancel ownership/restart gap만 보완한다. 기존 ETF runtime 재작성·새 universal risk engine 금지.
-- **수락:** 2+ same-account strategies, reservation race/crash/restart, physical=virtual+external equation, cancel ownership, one physical writer, strategy fairness. Paper first, live rewrite 없음.
+- **수락:** 2+ same-account strategies, reservation race/crash/restart, physical=virtual+external equation, cancel ownership, one physical writer, strategy별 namespace·예산 격리. 공정성은 격리 범위이며 max-min 배분/스케줄러 보장은 없다. Paper first, live rewrite 없음.
+
+- **현재 수락:** `PaperStrategyRuntime.register` 한 메서드에서 동일 계좌의 notional/capital 한도 불일치를 claim/plugin 생성 전에 거절한다. 전략별 한도/funding buffer는 독립이다. 수정 전 반례2건 실패 → 수정 후 독립 133 PASS. paused/blocked/faulted 등록도 검사한다. 기존 원장/취소/복구를 재사용한다. [증거](../runs/20261024-v3/tx08a/acceptance.json).
 
 ### TX08B — Cross-venue group: DEFER
 
@@ -381,6 +385,8 @@ DONE의 상태표가 서버 운영 수락을 의미하지는 않는다. **구현
 ### TX08 — Same-account gate only
 
 - **선행:** TX08A. **수락:** selected same-account attribution/reservation/cancel/restart evidence, margin over-reservation 0, stale risky admission 0. TX08B/cross-venue는 선행·수락 조건이 아니다.
+
+- **현재 로컬 수락:** 실제 별도 전략 .py 파일 2개를 같은 계좌에 연결하여 spool/engine→부분 체결→실제 checkpoint 복구→소유권 취소→나머지 체결/중복을 검증했다. 독립 97 PASS. 새 product 코드0, TX08B는 착수하지 않았다. [증거](../runs/20261024-v3/tx08/acceptance.json).
 
 ### TX09 — VN15와 동일 Projection/Control workstream
 

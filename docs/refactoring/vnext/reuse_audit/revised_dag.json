@@ -1,6 +1,6 @@
 {
   "authority": "DERIVED_FROM_CANONICAL_TICKETS_NOT_NEW_STATUS_DATABASE",
-  "source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
+  "source_sha": "04c9f576925c4ad4c8b559501e09055e52201b83",
   "cycle_free": true,
   "completed_task_ids_preserved": [
     "VN00",
@@ -346,7 +346,9 @@
         "TX01"
       ],
       "historical_status": "PLANNED",
-      "scope_disposition": "ADAPT_EXISTING_FACTS"
+      "scope_disposition": "ADAPT_EXISTING_FACTS",
+      "current_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "receipt": "docs/refactoring/runs/20261024-v3/tx07a/acceptance.json"
     },
     {
       "task_id": "TX06A",
@@ -422,7 +424,9 @@
         "TX07A"
       ],
       "historical_status": "PAPER_SHARED_ACCOUNT_FIXTURE_IMPLEMENTATION",
-      "scope_disposition": "COMPLETE_MISSING_SAME_ACCOUNT_SAFETY"
+      "scope_disposition": "COMPLETE_MISSING_SAME_ACCOUNT_SAFETY",
+      "current_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "receipt": "docs/refactoring/runs/20261024-v3/tx08a/acceptance.json"
     },
     {
       "task_id": "TX08B",
@@ -439,7 +443,9 @@
         "TX08A"
       ],
       "historical_status": "PLANNED",
-      "scope_disposition": "SAME_ACCOUNT_GATE_ONLY"
+      "scope_disposition": "SAME_ACCOUNT_GATE_ONLY",
+      "current_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "receipt": "docs/refactoring/runs/20261024-v3/tx08/acceptance.json"
     },
     {
       "task_id": "TX09",
@@ -568,6 +574,27 @@
       "source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
       "receipt": "docs/refactoring/runs/20261024-v3/tx05/acceptance.json",
       "scope": "LOCAL_EXISTING_FILE_PAPER_ECONOMIC_E2E"
+    },
+    {
+      "task_id": "TX07A",
+      "source_sha": "c052cdc760366923853d4674129b87b818560ec3",
+      "receipt": "docs/refactoring/runs/20261024-v3/tx07a/acceptance.json",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "scope": "LOCAL_EXISTING_FACT_SAME_ACCOUNT_PAPER"
+    },
+    {
+      "task_id": "TX08A",
+      "source_sha": "1ecba70af14d6edab82844a6c9fcd44664732c10",
+      "receipt": "docs/refactoring/runs/20261024-v3/tx08a/acceptance.json",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "scope": "LOCAL_EXISTING_FACT_SAME_ACCOUNT_PAPER"
+    },
+    {
+      "task_id": "TX08",
+      "source_sha": "04c9f576925c4ad4c8b559501e09055e52201b83",
+      "receipt": "docs/refactoring/runs/20261024-v3/tx08/acceptance.json",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "scope": "LOCAL_EXISTING_FACT_SAME_ACCOUNT_PAPER"
     }
   ]
 }

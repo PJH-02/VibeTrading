@@ -1,0 +1,62 @@
+[
+  {
+    "status": "error",
+    "command": "ls -la /work && ls -la /work/tests/refactoring | sed -n '1,200p'",
+    "exit_code": null,
+    "output_tail": ""
+  },
+  {
+    "status": "error",
+    "command": "cd /work && git status --short && git log --oneline -5",
+    "exit_code": null,
+    "output_tail": ""
+  },
+  {
+    "status": "error",
+    "command": "grep -n \"on_tick\\|async def start\\|def advance\\|class LocalMarketEngine\\|def capture_checkpoint\\|def complete_checkpoint_recovery\\|def close\\|def on_frame\" /work/src/vibetrading/local_engine.py",
+    "exit_code": null,
+    "output_tail": ""
+  },
+  {
+    "status": "error",
+    "command": "true",
+    "exit_code": null,
+    "output_tail": ""
+  },
+  {
+    "status": "error",
+    "command": "true",
+    "exit_code": null,
+    "output_tail": ""
+  },
+  {
+    "status": "error",
+    "command": "true",
+    "exit_code": null,
+    "output_tail": ""
+  },
+  {
+    "status": "error",
+    "command": "true",
+    "exit_code": null,
+    "output_tail": ""
+  },
+  {
+    "status": "completed",
+    "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_tx07a_fact_contract.py tests/refactoring/test_tx08a_account_policy.py tests/refactoring/test_tx02a_owner_fence.py tests/refactoring/test_tx02b_attribution.py tests/refactoring/test_tx02_joint_gate.py tests/refactoring/test_tx04b_continuous.py tests/refactoring/test_vn13_file_registration.py tests/refactoring/test_tx05_file_paper_e2e.py tests/refactoring/test_runtime_checkpoint_integration.py tests/refactoring/test_tx08_same_account_gate.py",
+    "exit_code": 1,
+    "output_tail": "__file__\n            beta_file = host._jobs[BETA_SID].registration.module.module.__file__\n            assert alpha_file == str(alpha_path) and beta_file == str(beta_path)\n            assert alpha_file != beta_file\n    \n            engine = live_engine(item, host, now, monotonic)\n            first_book = book()\n            feed_new(engine, item, 1, first_book, now, monotonic)\n            assert host.hot_path.apply_seq == 1\n            assert host.report()[\"strategies\"][ALPHA_SID][\"callbacks\"] == 1\n            assert host.report()[\"strategies\"][BETA_SID][\"callbacks\"] == 1\n            alpha_row = order_for(ledger.report(), ALPHA_SID)\n            beta_row = order_for(ledger.report(), BETA_SID)\n            alpha_id, beta_id = alpha_row[\"intent_id\"], beta_row[\"intent_id\"]\n            assert (alpha_row[\"side\"], beta_row[\"side\"]) == (\"buy\", \"sell\")\n            assert D(alpha_row[\"reservation\"]) == D(\"201.96\")\n            assert D(beta_row[\"reservation\"]) == D(\"206.04\")\n            assert D(ledger.report()[\"reserved\"][\"USDT\"]) == D(\"408\")\n            # Opposite pending exposure is gross, not netted away.\n>           assert D(ledger.report()[\"physical_positions\"][BTC.key]) == 0\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           KeyError: 'bybit:crypto_perp:BTCUSDT'\n\ntests/refactoring/test_tx08_same_account_gate.py:156: KeyError\n=========================== short test summary info ============================\nFAILED tests/refactoring/test_tx08_same_account_gate.py::test_selected_same_account_files_restore_cancel_and_finish_once\n1 failed, 96 passed in 3.04s\n"
+  },
+  {
+    "status": "completed",
+    "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_tx07a_fact_contract.py tests/refactoring/test_tx08a_account_policy.py tests/refactoring/test_tx02a_owner_fence.py tests/refactoring/test_tx02b_attribution.py tests/refactoring/test_tx02_joint_gate.py tests/refactoring/test_tx04b_continuous.py tests/refactoring/test_vn13_file_registration.py tests/refactoring/test_tx05_file_paper_e2e.py tests/refactoring/test_runtime_checkpoint_integration.py tests/refactoring/test_tx08_same_account_gate.py",
+    "exit_code": 0,
+    "output_tail": "........................................................................ [ 74%]\n.........................                                                [100%]\n97 passed in 2.20s\n"
+  },
+  {
+    "status": "completed",
+    "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_tx07a_fact_contract.py tests/refactoring/test_tx08a_account_policy.py tests/refactoring/test_tx02a_owner_fence.py tests/refactoring/test_tx02b_attribution.py tests/refactoring/test_tx02_joint_gate.py tests/refactoring/test_tx04b_continuous.py tests/refactoring/test_vn13_file_registration.py tests/refactoring/test_tx05_file_paper_e2e.py tests/refactoring/test_runtime_checkpoint_integration.py tests/refactoring/test_tx08_same_account_gate.py",
+    "exit_code": 0,
+    "output_tail": "........................................................................ [ 74%]\n.........................                                                [100%]\n97 passed in 1.60s\n"
+  }
+]

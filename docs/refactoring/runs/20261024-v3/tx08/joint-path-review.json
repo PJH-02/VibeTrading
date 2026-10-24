@@ -1,0 +1,10 @@
+{
+  "decision": "PASS",
+  "test_sha256": "12a007033277d5447626023cbc57cab9890fafb22215c6495c46ff787362b218",
+  "review": "Actual loaded separate file modules, real RuntimeCheckpoint save/restore and callback publication proof, no product monkeypatch/state/cursor assignment. Duplicate native buy payload appended via MarketSpool receipt4 and transformed field-for-field into EngineCursor. Real engine callback updates input authority with apply_seq3 unchanged. Final native trade is receipt5/apply_seq4; stale full-book receipt6 admits no new orders.",
+  "direct_runtime_dispatch_calls": 0,
+  "manual_economic_values_retained": true,
+  "initial_joint_path_claim_accepted": false,
+  "repair_delegations": 1,
+  "production_edits": 0
+}
