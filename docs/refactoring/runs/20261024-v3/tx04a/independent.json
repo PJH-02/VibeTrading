@@ -1,0 +1,38 @@
+{
+  "mode": "independent",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx04a-independent-_z6yzgbm",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/tx04a-independent-_z6yzgbm/work",
+  "exit_code": 0,
+  "elapsed_seconds": 2.9824312110140454,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "........................................................................ [ 52%]\n.................................................................        [100%]\n137 passed in 2.54s\n",
+  "tests": {
+    "passed": 137,
+    "failed": 0,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_paper_execution.py",
+    "tests/refactoring/test_portfolio_ledger.py",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/refactoring/test_runtime_checkpoint_integration.py",
+    "tests/refactoring/test_tx02a_owner_fence.py",
+    "tests/refactoring/test_tx02b_attribution.py",
+    "tests/refactoring/test_tx02_joint_gate.py",
+    "tests/refactoring/test_tx04a_alignment.py",
+    "docs/tickets/TX04A-reviewer-counterexamples.py"
+  ]
+}

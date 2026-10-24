@@ -1,0 +1,38 @@
+{
+  "decision": "PASS",
+  "task_id": "TX04A",
+  "source_sha": "a561db3d9937b90f4fe370e151c9265fdaf45489",
+  "selected_provider": "opencode",
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "worker_exit": 0,
+  "delegate_exit": 0,
+  "repair_delegations": 0,
+  "owner_product_edits": 0,
+  "changed_product_symbols": [
+    "PaperExecution._aligned",
+    "PaperExecution._transition"
+  ],
+  "other_product_methods_ast_unchanged": 20,
+  "product_paths": [
+    "src/vibetrading/paper_execution.py"
+  ],
+  "scoped_test_passed": 137,
+  "independent_exit": 0,
+  "product_and_test_sha256": {
+    "src/vibetrading/paper_execution.py": "09968938308ee8a3e8c431f7da96c02edbcf5c2fdc618e6a5d116fd24ce2b72a",
+    "tests/refactoring/test_tx04a_alignment.py": "70c419893be6b6db3b7ed1923259fcb822f815c642fb68ef1221493c093802ac",
+    "docs/tickets/TX04A-reviewer-counterexamples.py": "5ba4175dbb17bb9725b75571a7de9a4e72c1b980a2b5cf012296f3c656d0b04a"
+  },
+  "full_batch_validation": {
+    "receipt": "docs/refactoring/runs/20261024-v3/batch-tx02b-tx04a/full-regression.json",
+    "source_sha": "a561db3d9937b90f4fe370e151c9265fdaf45489",
+    "passed": 2266,
+    "exit_codes": [
+      0,
+      0
+    ],
+    "deselected_live_data": 2
+  },
+  "live_readiness": false,
+  "scope": "Existing selected local Paper/ETF reuse contract only; no live readiness."
+}

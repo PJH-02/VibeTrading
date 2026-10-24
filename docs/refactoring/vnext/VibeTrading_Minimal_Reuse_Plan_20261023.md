@@ -91,12 +91,12 @@
 | TX00 | 정적 감사 완료 | COMPLETE_LOCAL_IMPLEMENTATION (제품 구현 아님) | VN00 | 현재 함수·caller·환경 증거 마감; connector 변경0 |
 | TX01 | 로컬 완료 | COMPLETE_LOCAL_IMPLEMENTATION (PAPER 계약) | TX00 | 기존 연결 재사용; 전체 identity/causal NEW 검사 완료 |
 | TX02A | 로컬 완료 | COMPLETE_LOCAL_IMPLEMENTATION (협조 Paper owner) | TX01, VN10 | 기존 물리 계좌 lease/checked API·commit·cleanup fence 수락 |
-| TX02B | 핵심 | PAPER_SCOPED_IMPLEMENTATION | TX02A | 기존 book의 attribution/reservation/restart gap만 |
-| TX02 | 집계 | PLANNED | TX02A, TX02B | 기존 owner/books 공동 수락 |
+| TX02B | 핵심 | COMPLETE_LOCAL_IMPLEMENTATION | TX02A | 기존 book의 attribution/reservation/restart gap만 |
+| TX02 | 집계 | COMPLETE_LOCAL_IMPLEMENTATION | TX02A, TX02B | 기존 owner/books 공동 수락 |
 | TX03A | 선택 | ISOLATED_LINEAR_PAPER_ONLY | TX01 | 추가 상품 일반화는 요청 시까지 DEFER |
 | TX03B | 선택 | PAPER_CASHFLOW_IMPLEMENTATION_ACTUAL_MARGIN_OPEN | TX02B, TX03A | 선택 Paper 회계 gap만; universal live margin 금지 |
 | TX03 | 선택 | PLANNED | TX03A, TX03B | 명시 선택 상품 gate만 |
-| TX04A | 핵심 | LOCAL_IMPLEMENTED_INTEGRATED_OFFLINE_TEST_PASS_PRODUCTION_OPEN | TX02B | 기존 atomic persistence의 restart/dedup gap |
+| TX04A | 핵심 | COMPLETE_LOCAL_IMPLEMENTATION | TX02B | 기존 atomic persistence의 restart/dedup gap |
 | TX04B | 핵심 | MATCHER_DURABLE_CONTINUOUS_INPUT_RECOVERY_OPEN | TX04A, VN03 | NATS-free 연속 입력을 기존 matcher에 연결 |
 | TX04 | 집계 | PLANNED | TX04A, TX04B | 기존 Paper E2E gate |
 | TX05 | 핵심 | PAPER_FIXTURE_INTEGRATION_IMPLEMENTED_PRODUCTION_BLOCKED | VN13 | VN13과 동일 workstream |
@@ -165,4 +165,10 @@ TX01 수락 당시에는 **19 완료 / 20 미완료 / 12 미착수**였다. 기�
 
 ## 14. TX02A 기존 Paper owner 로컬 수락 (2026-10-24)
 
-현재 **20 완료 / 19 미완료 / 12 미착수**다. 기존 shared-root 물리 계좌 lease를 재사용하고 다른44개 장부 메서드·schema·계산·체결·Golden·ETF/Mock/Mock2/TOSS/cloud를 보존했다. 기존289 PASS 위에서 독립323/전체2204 PASS(외부2건 제외)를 확인했다. owner 강제 종료 후 최신 잔액/예약/UNKNOWN 복구도 합성 child process로 검증했다. 동일 보호 root/협조 버전/로컬 볼륨 전제이며 새 owner 서비스·epoch 엔진·real 거래소 권한을 만들지 않았다. 다음 TX02B와 다른 티켓은 미착수다. [수락](../runs/20261024-v3/tx02a/acceptance.json).
+TX02A 수락 당시 **20 완료 / 19 미완료 / 12 미착수**였다. 기존 shared-root 물리 계좌 lease를 재사용하고 다른44개 장부 메서드·schema·계산·체결·Golden·ETF/Mock/Mock2/TOSS/cloud를 보존했다. 기존289 PASS 위에서 독립323/전체2204 PASS(외부2건 제외)를 확인했다. owner 강제 종료 후 최신 잔액/예약/UNKNOWN 복구도 합성 child process로 검증했다. 동일 보호 root/협조 버전/로컬 볼륨 전제이며 새 owner 서비스·epoch 엔진·real 거래소 권한을 만들지 않았다. 다음 TX02B와 다른 티켓은 미착수다. [수락](../runs/20261024-v3/tx02a/acceptance.json).
+
+## 15. TX02B → TX02 → TX04A 연속 수락 (2026-10-24)
+
+현재 **23 완료 / 16 미완료 / 12 미착수**다. TX02B는 일반 전략의 내부 `@` 귀속 이름 사용만 차단했고, TX02는 기존 Paper/ETF 장부의 수동 계산 공동 검증이며, TX04A는 기존 matcher/원장 주문 정합성 확인을 보완했다. 전체2266 PASS/외부2건 제외. 완료된20개와 다른48개 task 객체·DAG 간선·원래 거래소/클라우드·전략/Golden을 보존했다.
+
+남은28개는 아래 배치 현황과 두 canonical JSON에서 확인한다. 다음 후보는 TX04B 연속 입력과 VN13/TX05 전략 파일 연결이며 이번에는 착수하지 않았다. 추가 상품/거래소 범용화는 여전히 필수가 아니다. [전체 완료/미완료/미착수 목록](../runs/20261024-v3/batch-tx02b-tx04a/README.md).

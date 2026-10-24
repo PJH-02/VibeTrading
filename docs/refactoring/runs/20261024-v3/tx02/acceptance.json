@@ -1,0 +1,31 @@
+{
+  "decision": "PASS",
+  "task_id": "TX02",
+  "source_sha": "6641af407cea2b842dcc8c8fc83add1a01e6eefe",
+  "selected_provider": "opencode",
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "worker_exit": 0,
+  "delegate_exit": 0,
+  "repair_delegations": 0,
+  "owner_product_edits": 0,
+  "changed_product_symbols": [],
+  "other_product_methods_ast_unchanged": 0,
+  "product_paths": [],
+  "scoped_test_passed": 103,
+  "independent_exit": 0,
+  "product_and_test_sha256": {
+    "tests/refactoring/test_tx02_joint_gate.py": "981b1fdfe21ce7de72ebe5275f7a822ea0d8516c791081b2bf7552443902b985"
+  },
+  "full_batch_validation": {
+    "receipt": "docs/refactoring/runs/20261024-v3/batch-tx02b-tx04a/full-regression.json",
+    "source_sha": "a561db3d9937b90f4fe370e151c9265fdaf45489",
+    "passed": 2266,
+    "exit_codes": [
+      0,
+      0
+    ],
+    "deselected_live_data": 2
+  },
+  "live_readiness": false,
+  "scope": "Existing selected local Paper/ETF reuse contract only; no live readiness."
+}

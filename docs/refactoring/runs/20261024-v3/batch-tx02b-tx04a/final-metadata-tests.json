@@ -1,0 +1,27 @@
+{
+  "source_sha": "a561db3d9937b90f4fe370e151c9265fdaf45489",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/batch-three-metadata-vs3gnsr2",
+  "status": "PASS",
+  "profiles": [
+    {
+      "profile": "metadata-os",
+      "source_sha": "a561db3d9937b90f4fe370e151c9265fdaf45489",
+      "exit_code": 0,
+      "elapsed_seconds": 0.5867615600000136,
+      "tests": {
+        "passed": 20,
+        "failed": 0,
+        "skipped": 0
+      },
+      "source_files_changed": [],
+      "stdout_tail": "....................                                                     [100%]\n20 passed in 0.19s\n"
+    }
+  ],
+  "frozen_oracle_sha256": {
+    "docs/refactoring/runs/20261018-stage-assignment/schema_oracle.json": "028d9166533d077aacf03cd9c74adb563a2601e0aeb1333029c7fcb8a7e0625c",
+    "docs/refactoring/runs/20261018-stage-assignment/encoding_oracle.json": "1bb9e0d00e2cbb1110e25cf85e5ac94fc97aeb42604c7ff658b2934f99bed513"
+  },
+  "legacy_guard_sha256": "eb34edb62d47e484d6d7bf5fb6572750c8cbfa0ac5a4abd40bc1fbd9d3e130b9",
+  "preexisting_tests_and_goldens_modified": false,
+  "source_inputs_changed_by_tests": false
+}

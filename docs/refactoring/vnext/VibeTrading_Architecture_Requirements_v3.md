@@ -407,3 +407,5 @@ opencode run --model '<configured-provider>/<verified-model-id>' \
 - OpenCode CLI: https://opencode.ai/docs/cli/
 - FreeLLMAPI repository and API/client setup: https://github.com/tashfeenahmed/freellmapi 및 `docs/en/clients/01-agent-clients.md`
 
+
+2026-10-24 구현 추적: TX02B/TX02/TX04A는 기존 PortfolioLedger·PaperExecution·EtfJournal 재사용 계약으로 로컬 수락했다. 내부 예약 전략명 경계와 저장된 주문 사실의 커밋 전/재시작 정합성만 보완했으며 새 원장·matcher·거래소 계층은 추가하지 않았다. 전체2266 PASS/외부2건 제외는 선택된 로컬 증거다. TX04B 연속 입력·전략 파일 E2E·실운영 완료는 별도다. [증거](../runs/20261024-v3/batch-tx02b-tx04a/acceptance.json).

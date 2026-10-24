@@ -1,0 +1,34 @@
+{
+  "mode": "baseline",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx02gate-baseline-5zszkbwn",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/tx02gate-baseline-5zszkbwn/work",
+  "exit_code": 0,
+  "elapsed_seconds": 9.5315240760101,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "........................................................................ [ 71%]\n.............................                                            [100%]\n101 passed in 6.70s\n",
+  "tests": {
+    "passed": 101,
+    "failed": 0,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_vnext_vn10.py",
+    "tests/refactoring/test_vnext_vn12.py",
+    "tests/refactoring/test_portfolio_ledger.py",
+    "tests/refactoring/test_paper_execution.py",
+    "tests/refactoring/test_tx02a_owner_fence.py",
+    "tests/refactoring/test_tx02b_attribution.py"
+  ]
+}

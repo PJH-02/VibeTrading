@@ -8,8 +8,8 @@
   ],
   "definition": "완성은 로컬 기능 수락 범위. 운영/배포/장기 성능 완료와 별개. 부분 단계의 닫힌 하위 기능만 선별 커밋 가능",
   "counts": {
-    "COMPLETE_LOCAL_IMPLEMENTATION": 20,
-    "INCOMPLETE": 19,
+    "COMPLETE_LOCAL_IMPLEMENTATION": 23,
+    "INCOMPLETE": 16,
     "NOT_STARTED": 12
   },
   "tasks": [
@@ -214,17 +214,17 @@
     },
     {
       "task_id": "TX02B",
-      "category": "INCOMPLETE",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
       "existing_phase": null,
-      "detail": "[Reuse-first scope; prior completion category preserved] Reuse EtfJournal per-strategy books and PortfolioLedger Paper books; complete only demonstrated same-account attribution/reservation/restart gaps.",
+      "detail": "TX02B existing local reuse contract complete; 301 independent scoped PASS, full pinned batch 2266 PASS / 2 live-data deselected. No live readiness.",
       "production_ready": false,
       "scope_disposition": "COMPLETE_MISSING_ATTRIBUTION"
     },
     {
       "task_id": "TX02",
-      "category": "INCOMPLETE",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
       "existing_phase": null,
-      "detail": "[Reuse-first scope; prior completion category preserved] Joint acceptance of selected existing account owner/books; do not build new generic account engine.",
+      "detail": "TX02 existing local reuse contract complete; 103 independent scoped PASS, full pinned batch 2266 PASS / 2 live-data deselected. No live readiness.",
       "production_ready": false,
       "scope_disposition": "REUSE_AGGREGATE"
     },
@@ -254,9 +254,9 @@
     },
     {
       "task_id": "TX04A",
-      "category": "INCOMPLETE",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
       "existing_phase": null,
-      "detail": "[Reuse-first scope; prior completion category preserved] Reuse existing PaperExecution/PortfolioLedger atomic persistence; finish demonstrated Paper restart/dedup gaps, retain conservative fill semantics.",
+      "detail": "TX04A existing local reuse contract complete; 137 independent scoped PASS, full pinned batch 2266 PASS / 2 live-data deselected. No live readiness.",
       "production_ready": false,
       "scope_disposition": "COMPLETE_MISSING_PAPER_DURABILITY"
     },
@@ -436,15 +436,15 @@
   "next_steps": [
     {
       "order": 1,
-      "stage": "TX02B",
-      "work": "Select only existing journal/ledger attribution/reservation/restart gap, preserving EtfJournal and PortfolioLedger ownership.",
-      "gate": "Not started in TX02A; new bounded reuse ticket required."
+      "stage": "TX04B",
+      "work": "Select one bounded causal NATS-free continuous input gap and reuse current matcher; then VN13/TX05 strategy-file linkage.",
+      "gate": "NOT DISPATCHED in this batch; requires a future user request and bounded ticket."
     },
     {
       "order": 2,
-      "stage": "TX04A/B → VN13/TX05",
-      "work": "Reuse matcher and separate strategy-file/Paper continuous input linkage.",
-      "gate": "Each predecessor and bounded scope retained; no universal trading rebuild."
+      "stage": "Remaining selected local core",
+      "work": "Preserve current DAG; no exchange/cloud rebuild, extra margin or optional all-five platform.",
+      "gate": "Current batch stops after TX04A; unselected implementation dispatch disabled."
     }
   ],
   "commit_candidate_source_set_sha256": "1ab8d78dc9a968f1febf7c877177b6007cf6155a1af72c6bf8a4ff8652d31b64",
@@ -483,21 +483,31 @@
     "snapshot_head": "The Git commit containing this record; inspect git log -1"
   },
   "execution_control": {
-    "status": "LOCAL_TICKET_ACCEPTED",
-    "last_completed_ticket": "TX02A",
+    "status": "LOCAL_BATCH_ACCEPTED",
+    "last_completed_ticket": "TX04A",
     "last_completed_tooling_ticket": "R05",
     "active_ticket": null,
     "start_next_ticket": false,
-    "stop_after_ticket": "TX02A",
+    "stop_after_ticket": "TX04A",
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
-    "current_source_sha": "150751b3df1d179ed8e7c551df7a0016892230a1",
+    "current_source_sha": "a561db3d9937b90f4fe370e151c9265fdaf45489",
     "active_tooling_tickets": [],
     "active_parallel_tickets": [],
-    "last_completed_subunit": "TX02A-existing-paper-owner-fence"
+    "last_completed_subunit": "TX04A",
+    "authorized_batch_tickets": [
+      "TX02B",
+      "TX02",
+      "TX04A"
+    ],
+    "batch_completed_tickets": [
+      "TX02B",
+      "TX02",
+      "TX04A"
+    ]
   },
   "current_wip": null,
-  "last_completed_ticket": "VN09",
+  "last_completed_ticket": "TX04A",
   "work_in_progress_commit_policy": "All 11 former excluded source/test files included as unfinished snapshot; exclusions apply only to older completed-feature validation",
   "legacy_completed_commit": {
     "head": "90847f84243d01ec98c9815216c96c8f2749028b",
@@ -505,13 +515,12 @@
   },
   "current_snapshot_validation": {
     "status": "FULL_LOCAL_REGRESSION_PASS",
-    "source_sha": "2b85c95a4e7951ac2a7590db24416e5b5f76d958",
-    "receipt": "docs/refactoring/runs/20261023-v3/r05/acceptance.json",
-    "passed": 1961,
-    "additional_review_included": 8,
+    "source_sha": "a561db3d9937b90f4fe370e151c9265fdaf45489",
+    "receipt": "docs/refactoring/runs/20261024-v3/batch-tx02b-tx04a/acceptance.json",
+    "passed": 2266,
     "deselected_live_data": 2,
-    "canonical_src_layout": true,
-    "kr_pure_decision_extraction": true
+    "scope": "LOCAL_PAPER_ETF_REUSE_BATCH",
+    "production_ready": false
   },
   "execution_history": [
     {
@@ -563,7 +572,7 @@
     }
   ],
   "historical_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
-  "updated_local": "2026-10-23T22:21:47.960180+09:00",
+  "updated_local": "2026-10-24T17:09:25.668334+09:00",
   "snapshot_validation_history": [
     "docs/refactoring/runs/20261023-v3/baseline/result.json",
     {
@@ -592,6 +601,16 @@
       "deselected_live_data": 2,
       "canonical_src_layout": true,
       "canonical_strategy_ownership": true
+    },
+    {
+      "status": "FULL_LOCAL_REGRESSION_PASS",
+      "source_sha": "2b85c95a4e7951ac2a7590db24416e5b5f76d958",
+      "receipt": "docs/refactoring/runs/20261023-v3/r05/acceptance.json",
+      "passed": 1961,
+      "additional_review_included": 8,
+      "deselected_live_data": 2,
+      "canonical_src_layout": true,
+      "kr_pure_decision_extraction": true
     }
   ],
   "user_scope_latest": "2026-10-23: preserve working exchange/order/cloud and strategy economics; NATS-free data/storage/recovery plus file-plugin Paper/multi-strategy reuse. This stage is audit and minimal-diff plan only; no exchange order code changes.",
@@ -669,12 +688,17 @@
       "R06"
     ],
     "R05_calculators_are_not_plugin_completion": true,
-    "authorized_bounded_ticket": "docs/tickets/TX02A-existing-paper-owner-fence.md",
+    "authorized_bounded_ticket": null,
     "unselected_implementation_dispatch_authorized": false,
-    "last_accepted_bounded_ticket": "docs/tickets/TX02A-existing-paper-owner-fence.md",
-    "last_accepted_receipt": "docs/refactoring/runs/20261024-v3/tx02a/acceptance.json"
+    "last_accepted_bounded_ticket": "docs/tickets/TX04A-existing-matcher-alignment.md",
+    "last_accepted_receipt": "docs/refactoring/runs/20261024-v3/tx04a/acceptance.json",
+    "authorized_batch_tickets": [
+      "TX02B",
+      "TX02",
+      "TX04A"
+    ]
   },
-  "user_request_latest": "다음 단계 티켓 및 단계 개발에 착수하라. VN09 local proof-only GC planning accepted; no deletion or later ticket started.",
+  "user_request_latest": "Exactly three sequential tickets TX02B, TX02 joint gate, TX04A; update completed/incomplete/not-started and commit/push candidate, no fourth ticket.",
   "vn07a_validation": {
     "status": "ACCEPTED_LOCAL_SUBUNIT",
     "source_sha": "60d763209134527e289d3760ec55be9ea9ec6b37",
@@ -752,5 +776,24 @@
     "full_regression_passed": 2204,
     "new_global_owner_service": false,
     "production_ready": false
+  },
+  "batch_tx02b_tx04a_validation": {
+    "status": "FULL_LOCAL_REGRESSION_PASS",
+    "source_sha": "a561db3d9937b90f4fe370e151c9265fdaf45489",
+    "receipt": "docs/refactoring/runs/20261024-v3/batch-tx02b-tx04a/acceptance.json",
+    "passed": 2266,
+    "deselected_live_data": 2,
+    "scope": "LOCAL_PAPER_ETF_REUSE_BATCH",
+    "production_ready": false,
+    "batch_tickets": [
+      "TX02B",
+      "TX02",
+      "TX04A"
+    ],
+    "stage_receipts": [
+      "docs/refactoring/runs/20261024-v3/tx02b/acceptance.json",
+      "docs/refactoring/runs/20261024-v3/tx02/acceptance.json",
+      "docs/refactoring/runs/20261024-v3/tx04a/acceptance.json"
+    ]
   }
 }

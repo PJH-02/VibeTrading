@@ -1,0 +1,26 @@
+{
+  "decision": "PASS",
+  "base_sha": "a5f1d53bfc753347eee171dcab435c8076dd92b7",
+  "methods": {
+    "src/vibetrading/portfolio_ledger.py": {
+      "changed_methods": [
+        "PortfolioLedger.claim_strategy_event",
+        "PortfolioLedger.admit_order"
+      ],
+      "other_methods_ast_unchanged": 46,
+      "sha256": "985bdb8677de66b4e8651098df3ecea6d8d1a3c920fd7e4c9baf4669323e53c9"
+    },
+    "src/vibetrading/paper_execution.py": {
+      "changed_methods": [
+        "PaperExecution._aligned",
+        "PaperExecution._transition"
+      ],
+      "other_methods_ast_unchanged": 20,
+      "sha256": "09968938308ee8a3e8c431f7da96c02edbcf5c2fdc618e6a5d116fd24ce2b72a"
+    }
+  },
+  "other_runtime_exchange_cloud_strategy_files_byte_unchanged_in_managed_git": true,
+  "preexisting_tests_and_goldens_modified": false,
+  "new_test_modules": 3,
+  "canonical_diff_check_exit": 0
+}
