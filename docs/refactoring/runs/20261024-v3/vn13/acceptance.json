@@ -1,0 +1,48 @@
+{
+  "decision": "PASS",
+  "task_id": "VN13",
+  "source_sha": "3376c9ed58474bc51134efc786a9e1c94629e278",
+  "selected_provider": "opencode",
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "worker_exit": 0,
+  "delegate_exit": 0,
+  "repair_delegations": 1,
+  "owner_product_edits": 0,
+  "changed_product_symbols": [
+    "PaperStrategyRuntime.register_configured"
+  ],
+  "other_product_methods_ast_unchanged": 39,
+  "product_paths": [
+    "src/vibetrading/strategy_runtime.py"
+  ],
+  "scoped_test_passed": 232,
+  "independent_exit": 0,
+  "product_and_test_sha256": {
+    "src/vibetrading/strategy_runtime.py": "22622783877598c9c23c0c9c036732c197d6490037b57134a274b195739748b6",
+    "tests/refactoring/test_vn13_file_registration.py": "22188b21b4239cb23c5c59b6e1dbed6ce2bd4717fb938ffdd09a89f7f70e65ed",
+    "docs/tickets/VN13-reviewer-counterexamples.py": "6b9ca312cd9b276fecd9446f291759edfd9bfbceff9f1d8ebb156773bee15935"
+  },
+  "full_batch_validation": {
+    "receipt": "docs/refactoring/runs/20261024-v3/batch-tx04b-vn13/full-regression.json",
+    "source_sha": "3376c9ed58474bc51134efc786a9e1c94629e278",
+    "passed": 2322,
+    "exit_codes": [
+      0,
+      0
+    ],
+    "deselected_live_data": 2
+  },
+  "live_readiness": false,
+  "scope": "Existing local Paper contracts only; no live/venue/cloud/strategy rebuild or data deletion",
+  "implementation_worker_test_execution": "NOT_RUN_COLLECTION_ONLY",
+  "verification_worker_receipt": "docs/refactoring/runs/20261024-v3/vn13/verification-worker.json",
+  "verification_worker_passed": 225,
+  "verification_worker_exit": 0,
+  "owner_documentation_edits": 1,
+  "final_batch_sha256": {
+    "src/vibetrading/strategy_runtime.py": "22622783877598c9c23c0c9c036732c197d6490037b57134a274b195739748b6",
+    "tests/refactoring/test_vn13_file_registration.py": "22188b21b4239cb23c5c59b6e1dbed6ce2bd4717fb938ffdd09a89f7f70e65ed",
+    "docs/tickets/VN13-reviewer-counterexamples.py": "6b9ca312cd9b276fecd9446f291759edfd9bfbceff9f1d8ebb156773bee15935"
+  },
+  "stage_hashes_scope": "product_and_test_sha256 pins the stage commit; later selected tickets may legitimately modify the same runtime. final_batch_sha256 pins the final full-tested source."
+}

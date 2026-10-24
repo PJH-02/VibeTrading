@@ -1,0 +1,36 @@
+{
+  "mode": "original-review",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/vn13-original-review-autaquxw",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/vn13-original-review-autaquxw/work",
+  "exit_code": 1,
+  "elapsed_seconds": 16.98278583100182,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "f change==\"traversal\":doc[\"module\"]=\"strategies/../os.py\"\n            elif change==\"risk\":doc[\"risk\"][ledger.scope.key][\"account_capital_limit\"]=\"-1\"\n            else:doc[\"accounts\"]=ledger.scope.key\n            before=tuple(ledger._db.iterdump())\n            with pytest.raises((ValueError,TypeError)):\n>               host.register_configured(doc,action_builder=builder)\n                ^^^^^^^^^^^^^^^^^^^^^^^^\nE               AttributeError: 'PaperStrategyRuntime' object has no attribute 'register_configured'\n\ndocs/tickets/VN13-reviewer-counterexamples.py:65: AttributeError\n________ test_bad_configuration_writes_no_claim_or_job[account_string] _________\n\ntmp_path = PosixPath('/tmp/pytest/test_bad_configuration_writes_5')\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x75748b1be480>\nchange = 'account_string'\n\n    @pytest.mark.parametrize(\"change\",[\"unknown\",\"missing_permission\",\"oversize\",\"traversal\",\"risk\",\"account_string\"])\n    def test_bad_configuration_writes_no_claim_or_job(tmp_path,monkeypatch,change):\n        ledger=ledger_at(tmp_path)\n        try:\n            ledger.seed_balance(\"USDT\",D(100000),{\"synthetic\":True})\n            host=runtime(ledger,matcher_for(ledger),[T]);_,doc,builder=file_and_document(tmp_path,monkeypatch,ledger,\"reviewer_reject\")\n            if change==\"unknown\":doc[\"live_permission\"]=True\n            elif change==\"missing_permission\":del doc[\"paper_permission\"]\n            elif change==\"oversize\":doc[\"config\"]={\"padding\":\"x\"*40000}\n            elif change==\"traversal\":doc[\"module\"]=\"strategies/../os.py\"\n            elif change==\"risk\":doc[\"risk\"][ledger.scope.key][\"account_capital_limit\"]=\"-1\"\n            else:doc[\"accounts\"]=ledger.scope.key\n            before=tuple(ledger._db.iterdump())\n            with pytest.raises((ValueError,TypeError)):\n>               host.register_configured(doc,action_builder=builder)\n                ^^^^^^^^^^^^^^^^^^^^^^^^\nE               AttributeError: 'PaperStrategyRuntime' object has no attribute 'register_configured'\n\ndocs/tickets/VN13-reviewer-counterexamples.py:65: AttributeError\n=========================== short test summary info ============================\nFAILED docs/tickets/VN13-reviewer-counterexamples.py::test_real_two_files_share_applied_snapshot_and_keep_account_attribution\nFAILED docs/tickets/VN13-reviewer-counterexamples.py::test_bad_configuration_writes_no_claim_or_job[unknown]\nFAILED docs/tickets/VN13-reviewer-counterexamples.py::test_bad_configuration_writes_no_claim_or_job[missing_permission]\nFAILED docs/tickets/VN13-reviewer-counterexamples.py::test_bad_configuration_writes_no_claim_or_job[oversize]\nFAILED docs/tickets/VN13-reviewer-counterexamples.py::test_bad_configuration_writes_no_claim_or_job[traversal]\nFAILED docs/tickets/VN13-reviewer-counterexamples.py::test_bad_configuration_writes_no_claim_or_job[risk]\nFAILED docs/tickets/VN13-reviewer-counterexamples.py::test_bad_configuration_writes_no_claim_or_job[account_string]\n7 failed, 196 passed in 14.44s\n",
+  "tests": {
+    "passed": 196,
+    "failed": 7,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/refactoring/test_strategy_dispatch.py",
+    "tests/refactoring/test_runtime_checkpoint_integration.py",
+    "tests/refactoring/test_tx04b_continuous.py",
+    "tests/refactoring/test_tx04_joint_gate.py",
+    "tests/refactoring/test_kr_strategy_extraction.py",
+    "docs/tickets/VN13-reviewer-counterexamples.py"
+  ]
+}

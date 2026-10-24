@@ -409,3 +409,5 @@ opencode run --model '<configured-provider>/<verified-model-id>' \
 
 
 2026-10-24 구현 추적: TX02B/TX02/TX04A는 기존 PortfolioLedger·PaperExecution·EtfJournal 재사용 계약으로 로컬 수락했다. 내부 예약 전략명 경계와 저장된 주문 사실의 커밋 전/재시작 정합성만 보완했으며 새 원장·matcher·거래소 계층은 추가하지 않았다. 전체2266 PASS/외부2건 제외는 선택된 로컬 증거다. TX04B 연속 입력·전략 파일 E2E·실운영 완료는 별도다. [증거](../runs/20261024-v3/batch-tx02b-tx04a/acceptance.json).
+
+2026-10-24 후속 구현 추적: 기존 NATS-free post-apply 경로와 watchdog을 Paper에 연결하고 stale book을 시계 전진 전에 차단했다. 파일별 명시 configuration은 기존 loader/register를 재사용한다. 새 runtime·plugin manager·account engine은 없으며 기존 C3/KP/KD·ETF·거래소·cloud 경제/운영 경로는 보존했다. 전체2322 PASS/외부2건 제외는 로컬 선택 계약 증거이며 live/process-isolation/server 검증은 별도다. [증거](../runs/20261024-v3/batch-tx04b-vn13/acceptance.json).

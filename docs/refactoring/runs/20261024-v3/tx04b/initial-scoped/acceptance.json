@@ -1,0 +1,37 @@
+{
+  "decision": "PASS_LOCAL_SCOPED",
+  "task_id": "TX04B",
+  "source_sha": "356b234f07cce4f440bf9df2f8861ccaec981a18",
+  "selected_provider": "opencode",
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "worker_exit": 0,
+  "delegate_exit": 0,
+  "repair_delegations": 0,
+  "owner_product_edits": 0,
+  "changed_product_symbols": [
+    "LocalMarketEngine.__init__",
+    "LocalMarketEngine._watch",
+    "run_engine",
+    "PaperStrategyRuntime._market",
+    "PaperStrategyRuntime._fence_feed",
+    "PaperStrategyRuntime.advance"
+  ],
+  "other_product_methods_ast_unchanged": 109,
+  "product_paths": [
+    "src/vibetrading/local_engine.py",
+    "src/vibetrading/local_runtime.py",
+    "src/vibetrading/strategy_runtime.py"
+  ],
+  "scoped_test_passed": 140,
+  "independent_exit": 0,
+  "product_and_test_sha256": {
+    "src/vibetrading/local_engine.py": "d6cab3158e4c6afd5907e3f9429d7c5fbd5b4ca4e4b6217850b9052306e75fe5",
+    "src/vibetrading/local_runtime.py": "3929f297321bbf1d972d575bd96c3a52837334228cccb80b5bedf9302e424b43",
+    "src/vibetrading/strategy_runtime.py": "2db8fb3eaa27c3af895330866595b684d9f026c716c439f1e03892cb223cf427",
+    "tests/refactoring/test_tx04b_continuous.py": "a11133e2de829b5a82d6fb88d93ed90a4694c13123be578c8e495b31089fc583",
+    "docs/tickets/TX04B-reviewer-counterexamples.py": "25a4f717e109fcbfed156d988153ef8c5c1046364f55f92c62236f3ec702c85a"
+  },
+  "full_batch_validation": "PENDING_FINAL_BATCH",
+  "live_readiness": false,
+  "scope": "Existing local Paper contracts only; no live/venue/cloud/strategy rebuild or data deletion"
+}

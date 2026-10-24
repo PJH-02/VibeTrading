@@ -1,0 +1,40 @@
+{
+  "source_sha": "3376c9ed58474bc51134efc786a9e1c94629e278",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/next-three-full-pp1lcq6r",
+  "status": "PASS",
+  "profiles": [
+    {
+      "profile": "product-guarded",
+      "source_sha": "3376c9ed58474bc51134efc786a9e1c94629e278",
+      "exit_code": 0,
+      "elapsed_seconds": 29.581539392995182,
+      "tests": {
+        "passed": 2153,
+        "failed": 0,
+        "skipped": 0
+      },
+      "source_files_changed": [],
+      "stdout_tail": ".................................................. [ 76%]\n........................................................................ [ 80%]\n........................................................................ [ 83%]\n........................................................................ [ 86%]\n........................................................................ [ 90%]\n........................................................................ [ 93%]\n........................................................................ [ 96%]\n.................................................................        [100%]\n=============================== warnings summary ===============================\ntests/refactoring/test_src_packaging.py::test_setuptools_metadata_discovers_canonical_and_legacy_packages\n  /usr/lib/python3/dist-packages/babel/messages/catalog.py:13: DeprecationWarning: 'cgi' is deprecated and slated for removal in Python 3.13\n    from cgi import parse_header\n\ntests/refactoring/test_src_packaging.py::test_setuptools_metadata_discovers_canonical_and_legacy_packages\n  /usr/lib/python3/dist-packages/setuptools/sandbox.py:13: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html\n    import pkg_resources\n\ntests/refactoring/test_src_packaging.py::test_setuptools_metadata_discovers_canonical_and_legacy_packages\n  /usr/lib/python3/dist-packages/pkg_resources/__init__.py:2871: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('google')`.\n  Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages\n    declare_namespace(pkg)\n\ntests/refactoring/test_src_packaging.py::test_setuptools_metadata_discovers_canonical_and_legacy_packages\n  /usr/lib/python3/dist-packages/pkg_resources/__init__.py:2871: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('zope')`.\n  Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages\n    declare_namespace(pkg)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n2153 passed, 2 deselected, 4 warnings in 28.26s\n"
+    },
+    {
+      "profile": "tooling-os",
+      "source_sha": "3376c9ed58474bc51134efc786a9e1c94629e278",
+      "exit_code": 0,
+      "elapsed_seconds": 4.719315247988561,
+      "tests": {
+        "passed": 169,
+        "failed": 0,
+        "skipped": 0
+      },
+      "source_files_changed": [],
+      "stdout_tail": "........................................................................ [ 42%]\n........................................................................ [ 85%]\n.........................                                                [100%]\n169 passed in 4.43s\n"
+    }
+  ],
+  "frozen_oracle_sha256": {
+    "docs/refactoring/runs/20261018-stage-assignment/schema_oracle.json": "028d9166533d077aacf03cd9c74adb563a2601e0aeb1333029c7fcb8a7e0625c",
+    "docs/refactoring/runs/20261018-stage-assignment/encoding_oracle.json": "1bb9e0d00e2cbb1110e25cf85e5ac94fc97aeb42604c7ff658b2934f99bed513"
+  },
+  "legacy_guard_sha256": "eb34edb62d47e484d6d7bf5fb6572750c8cbfa0ac5a4abd40bc1fbd9d3e130b9",
+  "preexisting_tests_and_goldens_modified": false,
+  "source_inputs_changed_by_tests": false
+}

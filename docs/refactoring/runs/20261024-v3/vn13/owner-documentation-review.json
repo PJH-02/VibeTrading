@@ -1,0 +1,9 @@
+{
+  "scope": "Codex small documentation-only correction after worker exit0",
+  "corrected": [
+    "Use existing bound ledger.scope.key consistently",
+    "Define builder before calling register_configured"
+  ],
+  "owner_product_edits": 0,
+  "owner_documentation_edits": 1
+}

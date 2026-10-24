@@ -1,6 +1,6 @@
 {
   "authority": "DERIVED_FROM_CANONICAL_TICKETS_NOT_NEW_STATUS_DATABASE",
-  "source_sha": "a561db3d9937b90f4fe370e151c9265fdaf45489",
+  "source_sha": "3376c9ed58474bc51134efc786a9e1c94629e278",
   "cycle_free": true,
   "completed_task_ids_preserved": [
     "VN00",
@@ -147,7 +147,9 @@
         "TX04B"
       ],
       "historical_status": "PAPER_FIXTURE_INTEGRATION_IMPLEMENTED_PRODUCTION_BLOCKED",
-      "scope_disposition": "STRATEGY_FILE_PLUGIN_PAPER"
+      "scope_disposition": "STRATEGY_FILE_PLUGIN_PAPER",
+      "current_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "receipt": "docs/refactoring/runs/20261024-v3/vn13/acceptance.json"
     },
     {
       "task_id": "VN14A",
@@ -313,7 +315,9 @@
         "VN03"
       ],
       "historical_status": "MATCHER_DURABLE_CONTINUOUS_INPUT_RECOVERY_OPEN",
-      "scope_disposition": "ADAPT_LOCAL_MARKET_INPUT"
+      "scope_disposition": "ADAPT_LOCAL_MARKET_INPUT",
+      "current_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "receipt": "docs/refactoring/runs/20261024-v3/tx04b/acceptance.json"
     },
     {
       "task_id": "TX04",
@@ -322,7 +326,9 @@
         "TX04B"
       ],
       "historical_status": "PLANNED",
-      "scope_disposition": "REUSE_PAPER_GATE"
+      "scope_disposition": "REUSE_PAPER_GATE",
+      "current_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "receipt": "docs/refactoring/runs/20261024-v3/tx04/acceptance.json"
     },
     {
       "task_id": "TX05",
@@ -532,6 +538,27 @@
       "receipt": "docs/refactoring/runs/20261024-v3/tx04a/acceptance.json",
       "status": "COMPLETE_LOCAL_IMPLEMENTATION",
       "scope": "LOCAL_EXISTING_PAPER_ETF_REUSE"
+    },
+    {
+      "task_id": "TX04B",
+      "source_sha": "da7608c4d2ad7b309699216562b5b19ab8aafe23",
+      "receipt": "docs/refactoring/runs/20261024-v3/tx04b/acceptance.json",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "scope": "LOCAL_CONTINUOUS_PAPER_FILE_PLUGIN"
+    },
+    {
+      "task_id": "TX04",
+      "source_sha": "82e78a2ae9218c78e4a38a5c3c2a3a947725cbe5",
+      "receipt": "docs/refactoring/runs/20261024-v3/tx04/acceptance.json",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "scope": "LOCAL_CONTINUOUS_PAPER_FILE_PLUGIN"
+    },
+    {
+      "task_id": "VN13",
+      "source_sha": "3376c9ed58474bc51134efc786a9e1c94629e278",
+      "receipt": "docs/refactoring/runs/20261024-v3/vn13/acceptance.json",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "scope": "LOCAL_CONTINUOUS_PAPER_FILE_PLUGIN"
     }
   ]
 }

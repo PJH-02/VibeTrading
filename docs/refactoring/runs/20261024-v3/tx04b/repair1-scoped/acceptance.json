@@ -1,0 +1,32 @@
+{
+  "decision": "PASS_LOCAL_SCOPED",
+  "task_id": "TX04B",
+  "source_sha": "d3ad262b2549045aae564a77a822fee290e03425",
+  "selected_provider": "opencode",
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "worker_exit": 0,
+  "delegate_exit": 0,
+  "repair_delegations": 1,
+  "owner_product_edits": 0,
+  "changed_product_symbols": [
+    "PaperStrategyRuntime._market"
+  ],
+  "other_product_methods_ast_unchanged": 38,
+  "product_paths": [
+    "src/vibetrading/strategy_runtime.py"
+  ],
+  "scoped_test_passed": 142,
+  "independent_exit": 0,
+  "product_and_test_sha256": {
+    "src/vibetrading/strategy_runtime.py": "a9a37504a5a97ec3457ddcd7c01532e31529abd66926bec7f17675ef8eee8c6c",
+    "tests/refactoring/test_tx04b_continuous.py": "5e602f83f0ad4bfa9ccbc5455a654a9d9e3b9a05f609c4087a152f44024c478f",
+    "docs/tickets/TX04B-reviewer-counterexamples.py": "eeaf4a6090525a64167c6f94687fcb7f4dfc4a26986d127f61a3ef732acdbd7e"
+  },
+  "full_batch_validation": "PENDING_FINAL_BATCH",
+  "live_readiness": false,
+  "scope": "Existing local Paper contracts only; no live/venue/cloud/strategy rebuild or data deletion",
+  "initial_source_sha": "356b234f07cce4f440bf9df2f8861ccaec981a18",
+  "initial_worker_evidence": "docs/refactoring/runs/20261024-v3/tx04b/initial-scoped/deepseek-worker.json",
+  "extended_failed_review": "docs/refactoring/runs/20261024-v3/tx04b/extended-review.json",
+  "initial_scoped_acceptance_superseded": true
+}

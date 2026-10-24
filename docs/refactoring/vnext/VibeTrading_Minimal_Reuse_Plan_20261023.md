@@ -82,7 +82,7 @@
 | VN07 | 로컬 완료 | COMPLETE_LOCAL_IMPLEMENTATION (이전 partial 증거 보존) | VN06, VN04B | exact-cut 단계적 복구·전체 격리; VN07B 수락 |
 | VN08 | 로컬 완료 | COMPLETE_LOCAL_IMPLEMENTATION (이전 상태 보존) | VN07 | retained-prefix proof·실제 storage restart 검증 |
 | VN09 | 로컬 완료 | COMPLETE_LOCAL_IMPLEMENTATION (dry-run only) | VN08, VN16 | 실제 증거 교집합·비실행 제안서; 삭제/자동 전환 없음 |
-| VN13 | 핵심 | PAPER_FIXTURE_INTEGRATION_IMPLEMENTED_PRODUCTION_BLOCKED | VN03, TX01, TX04B | 전략별 Python file + 기존 contract + shared data/Paper |
+| VN13 | 핵심 | COMPLETE_LOCAL_IMPLEMENTATION | VN03, TX01, TX04B | 전략별 Python file + 기존 contract + shared data/Paper |
 | VN15 | 핵심 | PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES | VN14B | TX09와 한 projection workstream |
 | VN17 | 핵심 | PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES | VN09, VN15, VN16, VN13 | 기존 runtime local wiring/bounded resources |
 | VN18 | 핵심 | PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES | VN17, VN05 | Golden + data recovery + 선택 plugin/Paper/same-account fault |
@@ -97,8 +97,8 @@
 | TX03B | 선택 | PAPER_CASHFLOW_IMPLEMENTATION_ACTUAL_MARGIN_OPEN | TX02B, TX03A | 선택 Paper 회계 gap만; universal live margin 금지 |
 | TX03 | 선택 | PLANNED | TX03A, TX03B | 명시 선택 상품 gate만 |
 | TX04A | 핵심 | COMPLETE_LOCAL_IMPLEMENTATION | TX02B | 기존 atomic persistence의 restart/dedup gap |
-| TX04B | 핵심 | MATCHER_DURABLE_CONTINUOUS_INPUT_RECOVERY_OPEN | TX04A, VN03 | NATS-free 연속 입력을 기존 matcher에 연결 |
-| TX04 | 집계 | PLANNED | TX04A, TX04B | 기존 Paper E2E gate |
+| TX04B | 핵심 | COMPLETE_LOCAL_IMPLEMENTATION | TX04A, VN03 | NATS-free 연속 입력을 기존 matcher에 연결 |
+| TX04 | 집계 | COMPLETE_LOCAL_IMPLEMENTATION | TX04A, TX04B | 기존 Paper E2E gate |
 | TX05 | 핵심 | PAPER_FIXTURE_INTEGRATION_IMPLEMENTED_PRODUCTION_BLOCKED | VN13 | VN13과 동일 workstream |
 | TX06A | 선택 | REQUEST_MAPPING_ONLY_FULL_CODE_COMPLETION_BLOCKED | TX00 | Binance 기존 connector 유지; 새 wrapper 금지 |
 | TX06B | 선택 | REQUEST_MAPPING_ONLY_FULL_CODE_COMPLETION_BLOCKED | TX00 | Arcus 기존 WS/signer 유지 |
@@ -169,6 +169,10 @@ TX02A 수락 당시 **20 완료 / 19 미완료 / 12 미착수**였다. 기존 sh
 
 ## 15. TX02B → TX02 → TX04A 연속 수락 (2026-10-24)
 
-현재 **23 완료 / 16 미완료 / 12 미착수**다. TX02B는 일반 전략의 내부 `@` 귀속 이름 사용만 차단했고, TX02는 기존 Paper/ETF 장부의 수동 계산 공동 검증이며, TX04A는 기존 matcher/원장 주문 정합성 확인을 보완했다. 전체2266 PASS/외부2건 제외. 완료된20개와 다른48개 task 객체·DAG 간선·원래 거래소/클라우드·전략/Golden을 보존했다.
+이전 배치 수락 당시 **23 완료 / 16 미완료 / 12 미착수**였다. TX02B는 일반 전략의 내부 `@` 귀속 이름 사용만 차단했고, TX02는 기존 Paper/ETF 장부의 수동 계산 공동 검증이며, TX04A는 기존 matcher/원장 주문 정합성 확인을 보완했다. 전체2266 PASS/외부2건 제외. 완료된20개와 다른48개 task 객체·DAG 간선·원래 거래소/클라우드·전략/Golden을 보존했다.
 
 남은28개는 아래 배치 현황과 두 canonical JSON에서 확인한다. 다음 후보는 TX04B 연속 입력과 VN13/TX05 전략 파일 연결이며 이번에는 착수하지 않았다. 추가 상품/거래소 범용화는 여전히 필수가 아니다. [전체 완료/미완료/미착수 목록](../runs/20261024-v3/batch-tx02b-tx04a/README.md).
+
+## 16. TX04B → TX04 → VN13 연속 수락 (2026-10-24)
+
+현재 **26 완료 / 13 미완료 / 12 미착수**다. 기존 연속 입력·idle Paper 진행·stale 참조 호가 차단과 파일별 명시 configuration 연결을 완료했다. 전체2322 PASS/외부2건 제외. 이전 완료23개와 비선택48개 task 객체·DAG 간선을 보존했으며 기존 거래소/cloud/C3/KP/KD 경제 경로를 보존했다. 다음 후보 TX05는 VN13 결과를 재사용해 남은 공동 E2E만 확인하며 새 runtime을 만들지 않는다. 이번에 착수하지 않았다. [전체 상태](../runs/20261024-v3/batch-tx04b-vn13/README.md).

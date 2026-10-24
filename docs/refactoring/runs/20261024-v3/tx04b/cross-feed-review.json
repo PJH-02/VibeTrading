@@ -1,0 +1,38 @@
+{
+  "mode": "cross-feed-review",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx04b-cross-feed-review-x3om6zt3",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/tx04b-cross-feed-review-x3om6zt3/work",
+  "exit_code": 1,
+  "elapsed_seconds": 7.713393251993693,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "           def builder(signal,view,config):\n                return [replace(a,post_only=False,time_in_force=\"IOC\",intent=a.intent.model_copy(update={\"limit_price\":D(101)}))for a in reg.action_builder(signal,view,config)]\n            host.register(replace(reg,action_builder=builder));deliver(host,now,book())\n            if delivery==\"other_trade\":\n                deliver(host,now,book(T+7,instrument=other))\n                deliver(host,now,trade(T+11,side=Side.SELL,price=100,instrument=other))\n            else:deliver(host,now,book(T+11,instrument=other))\n>           assert matcher.report()[\"fills\"]==0\nE           assert 1 == 0\n\ndocs/tickets/TX04B-reviewer-counterexamples.py:57: AssertionError\n_____ test_other_fresh_feed_cannot_advance_stale_pending_ioc[other_trade] ______\n\ntmp_path = PosixPath('/tmp/pytest/test_other_fresh_feed_cannot_a1')\ndelivery = 'other_trade'\n\n    @pytest.mark.parametrize(\"delivery\",[\"other_book\",\"other_trade\"])\n    def test_other_fresh_feed_cannot_advance_stale_pending_ioc(tmp_path,delivery):\n        from vibetrading.hot_path import HotPathStore\n        from vibetrading.strategy_runtime import PaperStrategyRuntime\n        from vibetrading.trading_contracts import TradingMode\n        from test_strategy_runtime import spec\n        other=BTC.model_copy(update={\"raw_symbol\":\"ETHUSDT\",\"std_symbol\":\"ETHUSDT\"})\n        ledger=ledger_at(tmp_path)\n        try:\n            ledger.seed_balance(\"USDT\",D(100000),{\"synthetic\":True});matcher=matcher_for(ledger);now=[T]\n            host=PaperStrategyRuntime(hot_path=HotPathStore(),accounts={ledger.scope.key:matcher},\n                products={BTC.key:spec(),other.key:spec(other)},known_instruments={BTC.key:BTC,other.key:other},\n                reference_feeds={},budgets=budget(max_feed_age_ns=5),settings={\"synthetic\":True},\n                mode=TradingMode.PAPER,phase=\"paper\",now_ns=lambda:now[0])\n            reg=registration(ledger,\"cross_probe\",[])\n            def builder(signal,view,config):\n                return [replace(a,post_only=False,time_in_force=\"IOC\",intent=a.intent.model_copy(update={\"limit_price\":D(101)}))for a in reg.action_builder(signal,view,config)]\n            host.register(replace(reg,action_builder=builder));deliver(host,now,book())\n            if delivery==\"other_trade\":\n                deliver(host,now,book(T+7,instrument=other))\n                deliver(host,now,trade(T+11,side=Side.SELL,price=100,instrument=other))\n            else:deliver(host,now,book(T+11,instrument=other))\n>           assert matcher.report()[\"fills\"]==0\nE           assert 1 == 0\n\ndocs/tickets/TX04B-reviewer-counterexamples.py:57: AssertionError\n=========================== short test summary info ============================\nFAILED docs/tickets/TX04B-reviewer-counterexamples.py::test_other_fresh_feed_cannot_advance_stale_pending_ioc[other_book]\nFAILED docs/tickets/TX04B-reviewer-counterexamples.py::test_other_fresh_feed_cannot_advance_stale_pending_ioc[other_trade]\n2 failed, 142 passed in 6.80s\n",
+  "tests": {
+    "passed": 142,
+    "failed": 2,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/refactoring/test_local_engine.py",
+    "tests/refactoring/test_local_runtime.py",
+    "tests/refactoring/test_runtime_checkpoint_integration.py",
+    "tests/refactoring/test_paper_execution.py",
+    "tests/refactoring/test_tx02_joint_gate.py",
+    "tests/refactoring/test_tx04a_alignment.py",
+    "tests/refactoring/test_tx04b_continuous.py",
+    "docs/tickets/TX04B-reviewer-counterexamples.py"
+  ]
+}

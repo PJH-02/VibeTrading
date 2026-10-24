@@ -1,0 +1,38 @@
+{
+  "mode": "extended-review",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx04b-extended-review-ix1v1cf_",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/tx04b-extended-review-ix1v1cf_/work",
+  "exit_code": 1,
+  "elapsed_seconds": 4.232889859005809,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "........................................................................ [ 51%]\n....................................................................F    [100%]\n=================================== FAILURES ===================================\n_ test_missing_freshness_never_consumes_cached_ioc_depth[fresh_trade_old_book] _\n\ntmp_path = PosixPath('/tmp/pytest/test_missing_freshness_never_c2')\ndelivery = 'fresh_trade_old_book'\n\n    @pytest.mark.parametrize(\"delivery\", [\"tick\", \"late_native_event\", \"fresh_trade_old_book\"])\n    def test_missing_freshness_never_consumes_cached_ioc_depth(tmp_path, delivery):\n        ledger=ledger_at(tmp_path)\n        try:\n            ledger.seed_balance(\"USDT\",D(100000),{\"synthetic\":True})\n            matcher=matcher_for(ledger);now=[T];observed=[]\n            host=runtime(ledger,matcher,now,budgets=budget(max_feed_age_ns=5))\n            reg=registration(ledger,\"probe\",observed)\n            def builder(signal,view,config):\n                values=reg.action_builder(signal,view,config)\n                return [replace(action,post_only=False,time_in_force=\"IOC\",\n                    intent=action.intent.model_copy(update={\"limit_price\":D(101)})) for action in values]\n            host.register(replace(reg,action_builder=builder))\n            assert len(deliver(host,now,book()))==1\n            assert matcher.report()[\"fills\"]==0\n            if delivery==\"tick\":host.advance(T+11)\n            else:\n                event=trade(T+11,side=Side.SELL,price=100)\n                if delivery==\"late_native_event\":event=event.model_copy(update={\"source_ts_ns\":T})\n                deliver(host,now,event)\n>           assert matcher.report()[\"fills\"]==0\nE           assert 1 == 0\n\ndocs/tickets/TX04B-reviewer-counterexamples.py:29: AssertionError\n=========================== short test summary info ============================\nFAILED docs/tickets/TX04B-reviewer-counterexamples.py::test_missing_freshness_never_consumes_cached_ioc_depth[fresh_trade_old_book]\n1 failed, 140 passed in 3.64s\n",
+  "tests": {
+    "passed": 140,
+    "failed": 1,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/refactoring/test_local_engine.py",
+    "tests/refactoring/test_local_runtime.py",
+    "tests/refactoring/test_runtime_checkpoint_integration.py",
+    "tests/refactoring/test_paper_execution.py",
+    "tests/refactoring/test_tx02_joint_gate.py",
+    "tests/refactoring/test_tx04a_alignment.py",
+    "tests/refactoring/test_tx04b_continuous.py",
+    "docs/tickets/TX04B-reviewer-counterexamples.py"
+  ]
+}
