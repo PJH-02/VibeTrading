@@ -76,7 +76,7 @@
     "--dir",
     "/home",
     "--bind",
-    "/home/pjh/.local/state/codex-opencode/runs/projection-three-metadata-7u0zat2o/metadata-os-home",
+    "/home/pjh/.local/state/codex-opencode/runs/projection-three-metadata-mdjctcwx/metadata-os-home",
     "/home/pjh",
     "--ro-bind",
     "/home/pjh/.nvm/versions/node/v22.22.0/lib/node_modules/opencode-ai/bin/opencode.exe",
@@ -88,7 +88,7 @@
     "/home/pjh/.cache/vt-refactor-deps",
     "/home/pjh/.cache/vt-refactor-deps",
     "--ro-bind",
-    "/home/pjh/.local/state/codex-opencode/runs/projection-three-metadata-7u0zat2o/metadata-os",
+    "/home/pjh/.local/state/codex-opencode/runs/projection-three-metadata-mdjctcwx/metadata-os",
     "/work",
     "--tmpfs",
     "/home/pjh",
@@ -123,10 +123,10 @@
     "--chdir",
     "/work",
     "--bind",
-    "/home/pjh/.local/state/codex-opencode/runs/projection-three-metadata-7u0zat2o/metadata-os",
+    "/home/pjh/.local/state/codex-opencode/runs/projection-three-metadata-mdjctcwx/metadata-os",
     "/work",
     "--bind",
-    "/home/pjh/.local/state/codex-opencode/runs/projection-three-metadata-7u0zat2o/metadata-os-evidence",
+    "/home/pjh/.local/state/codex-opencode/runs/projection-three-metadata-mdjctcwx/metadata-os-evidence",
     "/evidence",
     "--setenv",
     "PYTHONPATH",
@@ -147,10 +147,10 @@
     "REFACTOR_GUARD_RECEIPT",
     "/evidence/guard.jsonl",
     "--ro-bind",
-    "/home/pjh/.local/state/codex-opencode/runs/projection-three-metadata-7u0zat2o/oracles/schema_oracle.json",
+    "/home/pjh/.local/state/codex-opencode/runs/projection-three-metadata-mdjctcwx/oracles/schema_oracle.json",
     "/work/docs/refactoring/runs/20261018-stage-assignment/schema_oracle.json",
     "--ro-bind",
-    "/home/pjh/.local/state/codex-opencode/runs/projection-three-metadata-7u0zat2o/oracles/encoding_oracle.json",
+    "/home/pjh/.local/state/codex-opencode/runs/projection-three-metadata-mdjctcwx/oracles/encoding_oracle.json",
     "/work/docs/refactoring/runs/20261018-stage-assignment/encoding_oracle.json",
     "--",
     "python3",
@@ -160,7 +160,7 @@
     "--json"
   ],
   "metadata_sha256": {
-    "docs/refactoring/vnext/tickets_production.json": "d9223f42e23b7a2c39a9d6a3668752c99e541f38e7a4ba9282aa6ab9fcecdc52",
-    "docs/refactoring/vnext/stage_status.json": "e5c9dfb6f4c3969c963d1b574ab92dadbc8818e38a03932a3a1528cc4c87ee72"
+    "docs/refactoring/vnext/tickets_production.json": "092eabca63d8122c0c8ac14aae8756f26270e6ab67dc84f1d3056fc43632da30",
+    "docs/refactoring/vnext/stage_status.json": "cb74fc7a2cd9d5ebf658bc39f23a4fb22b2b63155cc56f69db323e897bf0be6c"
   }
 }

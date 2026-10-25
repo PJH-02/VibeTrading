@@ -27,3 +27,5 @@ Codex 소규모 검토 수정: VN15의 position 필드 순서/필수 strategy id
 기존 완료30개/비선택48개 객체·profiles/permissions/tooling·DAG 간선을 보존했다. 다음 VN17 또는 네 번째 티켓은 착수하지 않았다. 로컬 commit/원본 적용만 수행하고 원격 push는 하지 않는다. 사용자 dirty174건 보존은 별도 적용 receipt에 기록한다.
 
 조회 활성화는 기존 실행 설정의 `PAPER_PROJECTION_DATABASES`에 Paper 원장 절대 경로 JSON 배열을 명시한다(최대16개). 미설정/누락 원장은 UNAVAILABLE이며 자동 계좌 탐색이나 live 연결은 없다. `/feeds`는 기존 `LOCAL_MARKET_SNAPSHOT_FILE`/`LOCAL_SNAPSHOT_BUDGETS`를 재사용한다. manifest 연결의 필드/상한은 [TX10 bounded ticket](../../../../tickets/TX10-existing-export-registration-link.md)에 있다. `available_at_ns`는 명시적으로 제공한 provenance 시각과 현재/행 시각을 비교하는 계약이며, 역사적 데이터 가용성을 별도 외부 기관이 증명한 것으로 해석하지 않는다.
+
+원본 작업폴더에 로컬 적용 완료: `0f56fccf4b65d63b2b62cd89f34906b421e57579` (검증 source `b74e22d443aff428e7971d1695cf00ecd9553818`). 사용자 dirty174건·실제 수정 byte·삭제/미추적 문서·줄바꿈을 보존했다. [적용 기록](original-application.json). 이후 메타데이터 검사/적용 receipt만 별도 로컬 commit으로 갱신한다. 원격 push는 수행하지 않았다.

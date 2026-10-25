@@ -660,13 +660,13 @@
   ],
   "primary_workspace_application": {
     "status": "PASS",
-    "receipt": "docs/refactoring/runs/20261024-v3/batch-tx07a-tx08/original-application.json",
-    "source_sha": "04c9f576925c4ad4c8b559501e09055e52201b83",
-    "applied_head": "f0d0d5e873d5b05cb5e3ee574f0dd396d3b1a913",
+    "receipt": "docs/refactoring/runs/20261025-v3/batch-vn15-tx10/original-application.json",
+    "source_sha": "b74e22d443aff428e7971d1695cf00ecd9553818",
+    "applied_head": "0f56fccf4b65d63b2b62cd89f34906b421e57579",
     "preserved_user_entries": 174,
     "substantive_user_bytes_preserved": true,
     "remote_push_performed": false,
-    "previous_receipt": "docs/refactoring/runs/20261024-v3/tx05/original-application.json"
+    "previous_receipt": "docs/refactoring/runs/20261024-v3/batch-tx07a-tx08/original-application.json"
   },
   "refactoring_scope_revision": {
     "authority": "Explicit user instruction, 2026-10-23",

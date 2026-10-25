@@ -1,13 +1,13 @@
 {
-  "source_sha": "b74e22d443aff428e7971d1695cf00ecd9553818",
-  "base": "/home/pjh/.local/state/codex-opencode/runs/projection-three-metadata-7u0zat2o",
+  "source_sha": "0f56fccf4b65d63b2b62cd89f34906b421e57579",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/projection-three-metadata-mdjctcwx",
   "status": "PASS",
   "profiles": [
     {
       "profile": "metadata-os",
-      "source_sha": "b74e22d443aff428e7971d1695cf00ecd9553818",
+      "source_sha": "0f56fccf4b65d63b2b62cd89f34906b421e57579",
       "exit_code": 0,
-      "elapsed_seconds": 0.35356437298469245,
+      "elapsed_seconds": 0.3561846239899751,
       "tests": {
         "passed": 20,
         "failed": 0,
