@@ -18,7 +18,9 @@ import hashlib
 import inspect
 import json
 import math
+import stat
 import time
+from pathlib import Path
 from types import MappingProxyType
 from typing import Any, Callable, Mapping
 
@@ -264,6 +266,170 @@ class PaperStrategyRuntime:
             job.state, job.reason = "BLOCKED", "strategy_state_restore_unverified"
         self._jobs[sid] = job
 
+    def _validate_data_manifest(self, receipt):
+        """Verify an optional point-in-time data-export manifest binding."""
+        if "data_manifest" not in receipt:
+            return
+        fields = {"path", "sha256", "available_at_ns", "max_manifest_bytes",
+                  "max_files", "max_total_bytes"}
+        descriptor = receipt["data_manifest"]
+        if not isinstance(descriptor, Mapping) or set(descriptor) != fields:
+            raise ValueError("Data manifest requires exactly the explicit descriptor fields")
+
+        def bounded_int(value, name, minimum, maximum):
+            if (isinstance(value, bool) or not isinstance(value, int)
+                    or not minimum <= value <= maximum):
+                raise ValueError(name + " must be an explicit bounded integer")
+            return value
+
+        def nonnegative_int(value, name):
+            if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+                raise ValueError(name + " must be an explicit nonnegative integer")
+            return value
+
+        def checksum(value, name):
+            if (not isinstance(value, str) or len(value) != 64
+                    or any(character not in "0123456789abcdef" for character in value)):
+                raise ValueError(name + " must be a lowercase SHA-256 digest")
+            return value
+
+        path_value = descriptor["path"]
+        if (not isinstance(path_value, str) or not path_value
+                or not Path(path_value).is_absolute()
+                or Path(path_value).name != "manifest.jsonl"):
+            raise ValueError("Data manifest path must be an absolute manifest.jsonl path")
+        manifest_sha = checksum(descriptor["sha256"], "Data manifest sha256")
+        available_at_ns = bounded_int(descriptor["available_at_ns"],
+                                      "Data manifest available_at_ns", 1, self.now_ns())
+        max_manifest_bytes = bounded_int(descriptor["max_manifest_bytes"],
+                                         "Data manifest max_manifest_bytes", 1, 1048576)
+        max_files = bounded_int(descriptor["max_files"],
+                                "Data manifest max_files", 1, 10000)
+        max_total_bytes = bounded_int(descriptor["max_total_bytes"],
+                                      "Data manifest max_total_bytes", 1, 1073741824)
+
+        def regular_file(path, name):
+            for candidate in (path, *path.parents):
+                try:
+                    if candidate.is_symlink():
+                        raise ValueError(name + " must not traverse a symlink")
+                except OSError as exc:
+                    raise ValueError(name + " is not readable") from exc
+            try:
+                info = path.lstat()
+            except OSError as exc:
+                raise ValueError(name + " must be an existing regular file") from exc
+            if not stat.S_ISREG(info.st_mode):
+                raise ValueError(name + " must be an existing regular file")
+            return info
+
+        manifest_path = Path(path_value)
+        manifest_info = regular_file(manifest_path, "Data manifest")
+        if manifest_info.st_size > max_manifest_bytes:
+            raise ValueError("Data manifest exceeds its explicit byte bound")
+        try:
+            with manifest_path.open("rb") as handle:
+                raw = handle.read(max_manifest_bytes + 1)
+        except OSError as exc:
+            raise ValueError("Data manifest is not readable") from exc
+        if len(raw) > max_manifest_bytes:
+            raise ValueError("Data manifest exceeds its explicit byte bound")
+        if hashlib.sha256(raw).hexdigest() != manifest_sha:
+            raise ValueError("Data manifest checksum differs from its explicit descriptor")
+        try:
+            text = raw.decode("utf-8")
+        except UnicodeDecodeError as exc:
+            raise ValueError("Data manifest is not UTF-8 JSONL") from exc
+
+        def unique_object(pairs):
+            result = {}
+            for key, value in pairs:
+                if key in result:
+                    raise ValueError("Data manifest rows require unique object keys")
+                result[key] = value
+            return result
+
+        def reject_constant(value):
+            raise ValueError("Data manifest rows require finite JSON numbers")
+
+        required = {"relative_path", "sha256", "byte_size", "file_id",
+                    "min_ts_ns", "max_ts_ns"}
+        rows, file_ids, relative_paths = [], set(), set()
+        total_declared = 0
+        for line in text.splitlines():
+            if not line.strip():
+                continue
+            try:
+                row = json.loads(line, object_pairs_hook=unique_object,
+                                 parse_constant=reject_constant)
+            except ValueError as exc:
+                raise ValueError("Data manifest line is not unique-key JSON") from exc
+            if type(row) is not dict or not required <= set(row):
+                raise ValueError("Data manifest rows require the existing exporter fields")
+            relative = row["relative_path"]
+            if not isinstance(relative, str) or not relative:
+                raise ValueError("Data manifest relative_path must be a nonempty string")
+            relative_path = Path(relative)
+            if (relative_path.is_absolute() or ".." in relative_path.parts
+                    or not relative_path.parts):
+                raise ValueError("Data manifest relative_path must stay relative without traversal")
+            file_id = row["file_id"]
+            if not isinstance(file_id, str) or not file_id:
+                raise ValueError("Data manifest file_id must be a nonempty string")
+            checksum(row["sha256"], "Data manifest row sha256")
+            byte_size = nonnegative_int(row["byte_size"], "Data manifest row byte_size")
+            min_ts_ns = nonnegative_int(row["min_ts_ns"], "Data manifest row min_ts_ns")
+            max_ts_ns = nonnegative_int(row["max_ts_ns"], "Data manifest row max_ts_ns")
+            if min_ts_ns > max_ts_ns:
+                raise ValueError("Data manifest row min_ts_ns exceeds max_ts_ns")
+            if max_ts_ns > available_at_ns:
+                raise ValueError("Data manifest row max_ts_ns is not yet available")
+            if file_id in file_ids or relative_path.as_posix() in relative_paths:
+                raise ValueError("Data manifest rows require unique file_id and relative_path")
+            file_ids.add(file_id)
+            relative_paths.add(relative_path.as_posix())
+            total_declared += byte_size
+            rows.append(row)
+        if not rows:
+            raise ValueError("Data manifest must contain at least one row")
+        if len(rows) > max_files:
+            raise ValueError("Data manifest file count exceeds its explicit bound")
+        if total_declared > max_total_bytes:
+            raise ValueError("Data manifest total bytes exceed their explicit bound")
+
+        root = manifest_path.parent
+        total_read = 0
+        for row in rows:
+            target = root / row["relative_path"]
+            try:
+                target.relative_to(root)
+            except ValueError as exc:
+                raise ValueError("Data manifest relative_path escapes its export root") from exc
+            info = regular_file(target, "Data manifest referenced object")
+            expected_size = row["byte_size"]
+            if info.st_size != expected_size:
+                raise ValueError("Data manifest referenced object byte size differs")
+            if total_read + expected_size > max_total_bytes:
+                raise ValueError("Data manifest referenced bytes exceed their explicit bound")
+            digest = hashlib.sha256()
+            remaining = expected_size
+            try:
+                with target.open("rb") as handle:
+                    while remaining:
+                        block = handle.read(min(1024 * 1024, remaining))
+                        if not block:
+                            raise ValueError("Data manifest referenced object is truncated")
+                        digest.update(block)
+                        remaining -= len(block)
+                    extra = handle.read(1)
+            except OSError as exc:
+                raise ValueError("Data manifest referenced object is not readable") from exc
+            if extra:
+                raise ValueError("Data manifest referenced object grew beyond its declared size")
+            total_read += expected_size
+            if digest.hexdigest() != row["sha256"]:
+                raise ValueError("Data manifest referenced object checksum differs")
+
     def register_configured(self, document, *, action_builder):
         """Load one explicit strategy file and register it through the existing path."""
         if not isinstance(document, Mapping):
@@ -303,6 +469,7 @@ class PaperStrategyRuntime:
                 risk[account] = StrategyRisk(**dict(values))
             except (ArithmeticError, TypeError, ValueError) as exc:
                 raise ValueError("Strategy risk values must be explicit finite decimals") from exc
+        self._validate_data_manifest(receipt)
         module = load_strategy(module_name)
         return self.register(StrategyRegistration(
             job_id=document["job_id"], module=module,
