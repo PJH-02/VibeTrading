@@ -598,13 +598,36 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
                                 else:etf.journal.db.close()
 
 
-def main(argv=None):
+def main(argv=None, *, paper_runtime=None, paper_feed_dependencies=None):
     parser=argparse.ArgumentParser(description='Explicit NATS-free local roles')
     parser.add_argument('role',choices=('check','collector','engine','storage','telegram','dashboard'))
     parser.add_argument('--config',type=Path,required=True)
     parser.add_argument('--producer')
     args=parser.parse_args(argv)
+
+    # Load plan first for validation
     plan=LocalRuntimePlan.load(args.config)
+
+    # This is explicit borrowed local assembly, not a capability promotion.
+    if paper_feed_dependencies is not None and paper_runtime is None:
+        raise ValueError('Paper dependencies require an explicit Paper runtime')
+    if paper_runtime is not None:
+        from .strategy_runtime import PaperStrategyRuntime
+        from .trading_contracts import TradingMode
+        if args.role != 'engine':
+            raise ValueError('Paper injection is supported only by the engine role')
+        if not isinstance(paper_runtime, PaperStrategyRuntime):
+            raise TypeError('paper_runtime must be a PaperStrategyRuntime')
+        if paper_runtime.phase != 'paper' or any(
+                matcher.ledger.mode != TradingMode.PAPER for matcher in paper_runtime.accounts.values()):
+            raise ValueError('Paper injection requires explicit PAPER mode and paper phase')
+        if paper_feed_dependencies is not None and (
+                not isinstance(paper_feed_dependencies, dict)
+                or set(paper_feed_dependencies) != {item.producer for item in plan.producers}
+                or any(not isinstance(keys, tuple) or len(set(keys)) != len(keys)
+                       or not set(keys) <= set(paper_runtime.known)
+                       for keys in paper_feed_dependencies.values())):
+            raise ValueError('Paper dependencies require the exact configured producer and known-feed inventory')
     # Validate mounts before any settings helper creates a data directory.
     os.environ['VIBETRADING_RUNTIME']='local'
     settings=RuntimeSettings.from_env()
@@ -617,6 +640,14 @@ def main(argv=None):
             'producers':[item.producer for item in plan.producers],'capacity_contract_verified':True}))
         return 0
     settings.ensure_dirs()
+
+    # Provide snapshot settings for telegram and dashboard roles
+    if args.role in ('telegram', 'dashboard'):
+        os.environ['LOCAL_MARKET_SNAPSHOT_FILE']=str(settings.state_dir/'local-market.json')
+        os.environ['LOCAL_SNAPSHOT_BUDGETS']=json.dumps(plan.snapshot)
+        settings.env['LOCAL_MARKET_SNAPSHOT_FILE']=str(settings.state_dir/'local-market.json')
+        settings.env['LOCAL_SNAPSHOT_BUDGETS']=json.dumps(plan.snapshot)
+
     if args.role=='telegram':
         from .local_events import FactsEventBudgets, LocalFactsEventBus
         from .telegram import TelegramController
@@ -626,15 +657,18 @@ def main(argv=None):
         return 0
     if args.role=='dashboard':
         from .dashboard.bridge import run
-        os.environ['LOCAL_MARKET_SNAPSHOT_FILE']=str(settings.state_dir/'local-market.json')
-        os.environ['LOCAL_SNAPSHOT_BUDGETS']=json.dumps(plan.snapshot)
         asyncio.run(run())
         return 0
     if args.role=='collector':
         matches=[item for item in plan.producers if item.producer==args.producer]
         if len(matches)!=1:raise ValueError('select one configured producer')
         asyncio.run(run_collector(plan,matches[0],settings))
-    elif args.role=='engine':asyncio.run(run_engine(plan,settings))
+    elif args.role=='engine':
+        if paper_runtime is None:
+            asyncio.run(run_engine(plan,settings))
+        else:
+            asyncio.run(run_engine(plan,settings, paper_runtime=paper_runtime,
+                                   paper_feed_dependencies=paper_feed_dependencies))
     else:
         from .local_storage import run_local_storage
         run_local_storage(plan,settings)
