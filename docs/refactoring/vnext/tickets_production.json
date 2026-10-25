@@ -7714,13 +7714,13 @@
   "progress_report": "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
   "primary_workspace_application": {
     "status": "PASS",
-    "receipt": "docs/refactoring/runs/20261025-v3/batch-vn15-tx10/original-application.json",
-    "source_sha": "b74e22d443aff428e7971d1695cf00ecd9553818",
-    "applied_head": "0f56fccf4b65d63b2b62cd89f34906b421e57579",
+    "receipt": "docs/refactoring/runs/20261025-v3/core5/batch-vn17-tx12/original-application.json",
+    "source_sha": "001d10d20f1dce58fcb0349983f368af10a2bdc1",
+    "applied_head": "e87a24cf863de5ef135d6ab45a05422a983f5c2b",
     "preserved_user_entries": 174,
     "substantive_user_bytes_preserved": true,
     "remote_push_performed": false,
-    "previous_receipt": "docs/refactoring/runs/20261024-v3/batch-tx07a-tx08/original-application.json"
+    "previous_receipt": "docs/refactoring/runs/20261025-v3/batch-vn15-tx10/original-application.json"
   },
   "current_validation_history": [
     {
