@@ -1,0 +1,15 @@
+{
+  "owner_product_edits": 1,
+  "owner_product_path": "src/vibetrading/telegram.py",
+  "owner_changed_symbols": [
+    "TelegramController._read_projection",
+    "TelegramController._projection_reply"
+  ],
+  "worker_product_sha256": "37c2876889dcbecf9a9d18ece3687e9d1ee4d6aa5066cedc2f091f816e5247f7",
+  "reviewed_product_sha256": "c84ee8a63978e172557535581b881fed46eb2ef284e4ed4aef975253018ffae1",
+  "worker_original_source_copy": "/home/pjh/.local/state/codex-opencode/runs/tx09-independent-fxytycsd/work",
+  "reason": "Missing configured source cannot be OK empty PnL; partial-source errors retain PARTIAL; known account gap must remain UNRECONCILED in query header. Existing owner/TTL/epoch/outbox code unchanged. Small review correction after two independent counterexamples.",
+  "before_change_passed": 104,
+  "before_change_failed": 2,
+  "before_change_exit": 1
+}

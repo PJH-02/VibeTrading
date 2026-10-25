@@ -1,0 +1,12 @@
+{
+  "owner_product_edits": 1,
+  "owner_product_path": "src/vibetrading/dashboard/projection.py",
+  "owner_changed_symbols": [
+    "_paper_id",
+    "_paper_source"
+  ],
+  "worker_product_sha256": "b5fa104b075bbdd243307dfe20b2242faef5a486fb673165f059c3231ffe7332",
+  "reviewed_product_sha256": "44838392ae9b05a35e0a04456fce965fb54aadbe6eabdb369e68b654b1f8f282",
+  "reason": "Small interface correction: source position tuple order; required strategy id/name; unambiguous account-scoped read-view ids with original intent_id retained. New worker test references follow original intent_id rather than read-view id. No economic/owner logic changes.",
+  "worker_original_source_copy": "/home/pjh/.local/state/codex-opencode/runs/vn15-independent-9n2vb331/work"
+}

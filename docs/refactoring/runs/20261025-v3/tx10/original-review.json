@@ -1,0 +1,36 @@
+{
+  "mode": "independent",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx10-independent-tg1njk5b",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/tx10-independent-tg1njk5b/work",
+  "exit_code": 1,
+  "elapsed_seconds": 3.1837196960113943,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "xPath('/tmp/pytest/test_untrusted_manifest_never_4')\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7e6fd8b65d90>\nfailure = 'path_alias'\n\n    @pytest.mark.parametrize(\"failure\",[\"manifest_tamper\",\"object_tamper\",\"future_availability\",\"bool_limit\",\"path_alias\"])\n    def test_untrusted_manifest_never_reaches_module_loader_or_claim(tmp_path,monkeypatch,failure):\n        root=tmp_path/\"export\";root.mkdir();obj=root/\"a.parquet\";obj.write_bytes(b\"abc\")\n        row={\"relative_path\":\"a.parquet\",\"file_id\":\"one\",\"byte_size\":3,\n             \"sha256\":hashlib.sha256(b\"abc\").hexdigest(),\"min_ts_ns\":1,\"max_ts_ns\":2}\n        manifest=root/\"manifest.jsonl\";raw=(json.dumps(row)+\"\\n\").encode();manifest.write_bytes(raw)\n        desc={\"path\":str(manifest),\"sha256\":hashlib.sha256(raw).hexdigest(),\n              \"available_at_ns\":T,\"max_manifest_bytes\":4096,\"max_files\":2,\"max_total_bytes\":100}\n        if failure==\"manifest_tamper\":manifest.write_bytes(raw+b\" \")\n        elif failure==\"object_tamper\":obj.write_bytes(b\"abd\")\n        elif failure==\"future_availability\":desc[\"available_at_ns\"]=T+1\n        elif failure==\"bool_limit\":desc[\"max_files\"]=True\n        if failure==\"path_alias\":\n            other=dict(row,file_id=\"two\",relative_path=\"./a.parquet\")\n            altered=(json.dumps(row)+\"\\n\"+json.dumps(other)+\"\\n\").encode()\n            manifest.write_bytes(altered);desc[\"sha256\"]=hashlib.sha256(altered).hexdigest()\n        ledger=ledger_at(tmp_path)\n        try:\n            ledger.seed_balance(\"USDT\",D(10000),{\"source\":\"synthetic\"})\n            host=runtime(ledger,matcher_for(ledger),[T]);document=configured(ledger,\"never_import_this\",\"one\")\n            document[\"research_receipt\"][\"data_manifest\"]=desc\n            def forbidden(*args):raise AssertionError(\"invalid manifest reached module import\")\n            monkeypatch.setattr(mod,\"load_strategy\",forbidden)\n            before=tuple(ledger._db.iterdump())\n            with pytest.raises((ValueError,RuntimeError)):\n>               host.register_configured(document,action_builder=lambda *args:[])\n\ndocs/tickets/TX10-reviewer-counterexamples.py:34: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nsrc/vibetrading/strategy_runtime.py:473: in register_configured\n    module = load_strategy(module_name)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nargs = ('never_import_this',)\n\n>   def forbidden(*args):raise AssertionError(\"invalid manifest reached module import\")\n                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE   AssertionError: invalid manifest reached module import\n\ndocs/tickets/TX10-reviewer-counterexamples.py:30: AssertionError\n=========================== short test summary info ============================\nFAILED docs/tickets/TX10-reviewer-counterexamples.py::test_untrusted_manifest_never_reaches_module_loader_or_claim[path_alias]\n1 failed, 145 passed in 2.62s\n",
+  "tests": {
+    "passed": 145,
+    "failed": 1,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_vn13_file_registration.py",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/test_market_export_analysis.py",
+    "tests/test_export_duplicate_reclaim.py",
+    "tests/test_storage_pipeline.py",
+    "tests/refactoring/test_tx10_manifest_registration.py",
+    "docs/tickets/TX10-reviewer-counterexamples.py"
+  ]
+}

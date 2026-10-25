@@ -1,6 +1,6 @@
 {
   "authority": "DERIVED_FROM_CANONICAL_TICKETS_NOT_NEW_STATUS_DATABASE",
-  "source_sha": "04c9f576925c4ad4c8b559501e09055e52201b83",
+  "source_sha": "b74e22d443aff428e7971d1695cf00ecd9553818",
   "cycle_free": true,
   "completed_task_ids_preserved": [
     "VN00",
@@ -174,7 +174,9 @@
         "VN14B"
       ],
       "historical_status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
-      "scope_disposition": "MERGE_WITH_TX09"
+      "scope_disposition": "MERGE_WITH_TX09",
+      "current_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "receipt": "docs/refactoring/runs/20261025-v3/vn15/acceptance.json"
     },
     {
       "task_id": "VN16",
@@ -453,7 +455,9 @@
         "VN15"
       ],
       "historical_status": "PLANNED",
-      "scope_disposition": "MERGE_WITH_VN15"
+      "scope_disposition": "MERGE_WITH_VN15",
+      "current_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "receipt": "docs/refactoring/runs/20261025-v3/tx09/acceptance.json"
     },
     {
       "task_id": "TX10",
@@ -461,7 +465,9 @@
         "TX01"
       ],
       "historical_status": "PLANNED",
-      "scope_disposition": "KEEP_CLOUD_ADAPT_PLUGIN_METADATA"
+      "scope_disposition": "KEEP_CLOUD_ADAPT_PLUGIN_METADATA",
+      "current_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "receipt": "docs/refactoring/runs/20261025-v3/tx10/acceptance.json"
     },
     {
       "task_id": "TX11",
@@ -595,6 +601,27 @@
       "receipt": "docs/refactoring/runs/20261024-v3/tx08/acceptance.json",
       "status": "COMPLETE_LOCAL_IMPLEMENTATION",
       "scope": "LOCAL_EXISTING_FACT_SAME_ACCOUNT_PAPER"
+    },
+    {
+      "task_id": "VN15",
+      "source_sha": "32459273714852c398b7cc1a0e8a5b41774751e9",
+      "receipt": "docs/refactoring/runs/20261025-v3/vn15/acceptance.json",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "scope": "LOCAL_COLD_PAPER_REPORTING_MANIFEST"
+    },
+    {
+      "task_id": "TX09",
+      "source_sha": "f3ab055f34de1806fa00ba478a03d70ce87cc93c",
+      "receipt": "docs/refactoring/runs/20261025-v3/tx09/acceptance.json",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "scope": "LOCAL_COLD_PAPER_REPORTING_MANIFEST"
+    },
+    {
+      "task_id": "TX10",
+      "source_sha": "b74e22d443aff428e7971d1695cf00ecd9553818",
+      "receipt": "docs/refactoring/runs/20261025-v3/tx10/acceptance.json",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "scope": "LOCAL_COLD_PAPER_REPORTING_MANIFEST"
     }
   ]
 }

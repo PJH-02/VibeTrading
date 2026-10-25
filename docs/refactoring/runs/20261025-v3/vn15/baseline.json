@@ -1,0 +1,34 @@
+{
+  "mode": "baseline",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/vn15-baseline-41x8cead",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/vn15-baseline-41x8cead/work",
+  "exit_code": 0,
+  "elapsed_seconds": 2.12933448900003,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "...................................................................      [100%]\n67 passed in 1.65s\n",
+  "tests": {
+    "passed": 67,
+    "failed": 0,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/test_dashboard.py",
+    "tests/test_dual_mock_and_assumed.py",
+    "tests/test_telegram_status.py",
+    "tests/test_trade_exclusions.py",
+    "tests/test_local_snapshot.py",
+    "tests/refactoring/test_portfolio_ledger.py"
+  ]
+}

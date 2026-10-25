@@ -1,0 +1,26 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "worker_exit": 0,
+  "delegate_exit": 0,
+  "actual_test_commands": [
+    {
+      "command": "python3 -m pytest --version",
+      "exit_code": 0,
+      "output_tail": "pytest 9.0.2\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_vn13_file_registration.py tests/refactoring/test_strategy_runtime.py tests/refactoring/test_strategy_restart_barrier.py tests/test_market_export_analysis.py tests/test_export_duplicate_reclaim.py tests/test_storage_pipeline.py tests/refactoring/test_tx10_manifest_registration.py",
+      "exit_code": 0,
+      "output_tail": "........................................................................ [ 51%]\n.....................................................................    [100%]\n141 passed in 2.94s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_vn13_file_registration.py tests/refactoring/test_strategy_runtime.py tests/refactoring/test_strategy_restart_barrier.py tests/test_market_export_analysis.py tests/test_export_duplicate_reclaim.py tests/test_storage_pipeline.py tests/refactoring/test_tx10_manifest_registration.py",
+      "exit_code": 0,
+      "output_tail": "........................................................................ [ 51%]\n.....................................................................    [100%]\n141 passed in 2.33s\n"
+    }
+  ],
+  "private_run": "/home/pjh/.local/state/codex-opencode/runs/tx10-worker-kq529wbp",
+  "automatic_acceptance": false
+}

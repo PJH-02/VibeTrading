@@ -27,7 +27,7 @@
 
 | 현재 상태 | 근거·결함 | 처리 | 우선순위 |
 |---|---|---|---|
-| 51개 VN/TX 단계 | `stage_status.json`: 로컬 완료 30(TX00 정적 감사 포함), 부분/미완료 10, 미착수 11. TX07A/TX08A/TX08 수락 전체 2348 PASS/2 제외; 과거 검증 기록 보존 | 완료된 구현 재개발 금지, 최근 HEAD에서 결과 재검증 | P0 |
+| 51개 VN/TX 단계 | `stage_status.json`: 로컬 완료 33(TX00 정적 감사 포함), 부분/미완료 10, 미착수 8. VN15/TX09/TX10 수락 전체 2438 PASS/2 제외; 과거 검증 기록 보존 | 완료된 구현 재개발 금지, 최근 HEAD에서 결과 재검증 | P0 |
 | 제품 코드의 세대 혼재 | `vibetrading/`, `services/`, `shared/`, `strategy/`, `strategies/`, `fv_mm/legacy/` | 활성 진입점·동적 import·테스트 소비자 분류 후 단일 권위로 통합 | P0 |
 | 문서의 복수 권위 | 루트 구형 README·계획, 과거 P/VN/TX 문서·수백 기록 | 현재 README/AGENTS/architecture/status는 짧게, 상세 근거는 보존·archive | P0 |
 | 패키지 경로 복잡성 | 최상위 `vibetrading`와 루트 `services` 동시 존재 | `src/vibetrading` 표준 패키징; import/Compose/rollback 경로 동등성 | P0 |
@@ -156,3 +156,5 @@ TX00 수락 당시 HEAD의 기존 함수·호출자·환경 정적 감사를 마
 2026-10-24 TX05 수락: 기존 파일 전략·Paper·체크포인트 구현을 재사용한 경제 E2E 검증을 완료했다. 제품 코드 변경0, 전체2325 PASS/외부2건 제외. **27 완료 / 12 미완료 / 12 미착수**. 다른 티켓은 착수하지 않았다. [수락](../runs/20261024-v3/tx05/acceptance.json).
 
 2026-10-24 다음3개 수락: **TX07A → TX08A → TX08**. 기존 fact/원장/전략 파일/Paper 복구를 재사용하고 계좌 한도 충돌만 기존 등록 메서드에서 보완했다. 전체 2348 PASS/외부2건 제외. **30 완료 / 10 미완료 / 11 미착수**. 네 번째 티켓은 진행하지 않았다. [배치 기록](../runs/20261024-v3/batch-tx07a-tx08/README.md).
+
+2026-10-25 VN15/TX09/TX10 로컬 수락: 기존 Paper readonly 조회·Telegram/owner/outbox·export를 재사용했다. 전체 2438 PASS/외부2건 제외, **33 완료 / 10 미완료 / 8 미착수**. VN17 및 네 번째 티켓은 진행하지 않았다. [배치 기록](../runs/20261025-v3/batch-vn15-tx10/README.md).
