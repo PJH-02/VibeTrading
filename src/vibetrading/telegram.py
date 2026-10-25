@@ -20,8 +20,10 @@ import aiohttp
 import psutil
 
 from .bus import NatsJetStreamBus
+from .dashboard.projection import paper_projection, paper_projection_paths
 from .health import check as health_check
 from .health import configured_crypto_providers
+from .local_snapshot import local_snapshot_config, read_market_snapshot
 from .session_alerts import SESSIONS, session_state
 from .settings import RuntimeSettings, get_settings
 from .telegram_trade import trade_report
@@ -76,11 +78,16 @@ class TelegramController:
     """Minimal allowlisted control/observability loop; inactive without credentials."""
 
     def __init__(self, settings: RuntimeSettings | None = None, *, bus=None, bus_factory=None,
-                 command_handler=None, command_ttl_seconds=None) -> None:
+                 command_handler=None, command_ttl_seconds=None, projection_reader=None) -> None:
         if bus is not None and bus_factory is not None:
             raise ValueError("select either bus or bus_factory")
         if bus_factory is not None and (not callable(bus_factory) or inspect.iscoroutinefunction(bus_factory)):
             raise TypeError("bus_factory must be a synchronous callable")
+        if projection_reader is not None and (
+                not callable(projection_reader) or inspect.iscoroutinefunction(projection_reader)
+                or inspect.iscoroutinefunction(getattr(projection_reader, '__call__', None))):
+            raise TypeError("projection_reader must be a synchronous callable")
+        self._projection_reader = projection_reader
         self.settings = settings or get_settings()
         self.token = self.settings.env.get("TELEGRAM_BOT_TOKEN")
         self.allowed_id = str(self.settings.telegram_user_id or "")
@@ -606,6 +613,14 @@ class TelegramController:
             except Exception as exc:
                 logger.warning('Collector status unavailable (%s)', type(exc).__name__)
                 reply = '수집기 상태 조회 실패. 서버 상태 파일을 확인해야 합니다.'
+            if (self._projection_reader is not None
+                    or 'PAPER_PROJECTION_DATABASES' in self.settings.env):
+                summary = await self._projection_reply('status')
+                addition = '\npaper: ' + summary
+                if len((reply + addition).encode('utf-8')) <= 3500:
+                    reply += addition
+                else:
+                    reply += '\npaper: UNAVAILABLE response_budget_exceeded'
             await self._send(session, chat_id, reply)
             logger.info('Telegram command replied command=status')
         elif command == 'trade':
@@ -616,10 +631,211 @@ class TelegramController:
                 reply = '거래 내역 조회 실패. 거래 기록을 확인해야 합니다.'
             await self._send(session, chat_id, reply)
             logger.info('Telegram command replied command=trade')
+        elif command in {'feeds', 'strategies', 'orders', 'positions', 'pnl'}:
+            # Reporting is a cold read. It never shares the owner command path
+            # and a reader failure cannot create, expire or acknowledge control.
+            reply = await self._projection_reply(command)
+            await self._send(session, chat_id, reply)
+            logger.info('Telegram command replied command=%s', command)
         elif command in {'help', 'start'}:
-            await self._send(session, chat_id, 'status: 수집기별 상태·수집 종목\ntrade: 당일 종목별 거래·당일 및 전체 기록기간 순수익·수수료')
+            await self._send(session, chat_id, 'status: 수집기별 상태·수집 종목\ntrade: 당일 종목별 거래·당일 및 전체 기록기간 순수익·수수료\nfeeds: 로컬 시세 스냅샷\nstrategies: Paper 전략\norders: Paper 주문\npositions: Paper 포지션\npnl: Paper 통화별 손익')
         elif command in {'pause', 'halt', 'resume'}:
             await self._control_command(session, update, command, chat_id)
+
+    def _read_projection(self, command: str) -> dict:
+        """Synchronous cold read used off the event loop by _projection_reply."""
+        if command == 'feeds':
+            now = time.time_ns()
+            try:
+                path, budgets = local_snapshot_config(self.settings.env)
+                document = read_market_snapshot(path, budgets)
+            except Exception:
+                return {"command": "feeds", "status": "UNAVAILABLE", "mode": "LOCAL_MARKET_SNAPSHOT",
+                        "evidence": "MARKET_SNAPSHOT", "freshness": "UNAVAILABLE",
+                        "read_at_ns": now, "fact_asof_ns": None, "engine": {}, "markets": [],
+                        "errors": [{"source": "local_market_snapshot", "type": "UNAVAILABLE",
+                                    "reason": "snapshot_unavailable"}]}
+            engine = document.get("engine") if isinstance(document.get("engine"), dict) else {}
+            feeds = []
+            raw_feeds = engine.get("feeds") if isinstance(engine.get("feeds"), dict) else {}
+            for name, item in raw_feeds.items():
+                if not isinstance(item, dict):
+                    continue
+                feeds.append({"name": name, "provider": item.get("provider"),
+                              "mode": item.get("mode"), "reason": item.get("reason"),
+                              "generation": item.get("generation"),
+                              "applied_sequence": item.get("applied_sequence")})
+            markets = []
+            for row in document.get("markets") or []:
+                if not isinstance(row, dict):
+                    continue
+                compact = {key: row.get(key) for key in
+                           ("key", "venue", "symbol", "provider", "asset_class", "currency",
+                            "section", "price", "last_event_ms", "session", "book_valid",
+                            "gap_reason", "quote_kind")}
+                book = row.get("book")
+                if isinstance(book, dict):
+                    for side in ("bids", "asks"):
+                        levels = book.get(side)
+                        compact[side[:-1]] = (levels[0][0] if isinstance(levels, list) and levels
+                                              and isinstance(levels[0], list) and levels[0] else None)
+                markets.append(compact)
+            age = max(0, now - int(document.get("generated_ns") or 0))
+            freshness = "FRESH" if age <= budgets.max_age_seconds * 1_000_000_000 else "STALE"
+            return {"command": "feeds", "status": "OK", "mode": "LOCAL_MARKET_SNAPSHOT",
+                    "evidence": "MARKET_SNAPSHOT", "freshness": freshness,
+                    "read_at_ns": now, "fact_asof_ns": document.get("generated_ns"),
+                    "engine": {"incarnation": engine.get("incarnation"),
+                               "apply_seq": engine.get("apply_seq"),
+                               "healthy": engine.get("healthy"), "feeds": feeds},
+                    "markets": markets, "errors": []}
+        try:
+            paths = paper_projection_paths(self.settings.env)
+        except Exception:
+            return {"command": command, "status": "UNAVAILABLE", "mode": "PAPER_SIMULATION",
+                    "evidence": "PAPER_SIMULATION", "freshness": "UNAVAILABLE",
+                    "read_at_ns": time.time_ns(), "fact_asof_ns": None,
+                    "accounts": [], "orders": [], "strategies": [], "positions": [],
+                    "pnl": [], "errors": [{"type": "UNAVAILABLE", "reason": "config_invalid"}]}
+        if not paths:
+            return {"command": command, "status": "UNAVAILABLE", "mode": "PAPER_SIMULATION",
+                    "evidence": "PAPER_SIMULATION", "freshness": "UNAVAILABLE",
+                    "read_at_ns": time.time_ns(), "fact_asof_ns": None,
+                    "accounts": [], "orders": [], "strategies": [], "positions": [],
+                    "pnl": [], "errors": [{"type": "UNAVAILABLE", "reason": "not_configured"}]}
+        try:
+            document = paper_projection(paths, limit=500)
+        except Exception:
+            return {"command": command, "status": "UNAVAILABLE", "mode": "UNAVAILABLE",
+                    "evidence": "UNAVAILABLE", "freshness": "UNAVAILABLE",
+                    "read_at_ns": time.time_ns(), "fact_asof_ns": None,
+                    "accounts": [], "orders": [], "strategies": [], "positions": [],
+                    "pnl": [], "errors": [{"type": "UNAVAILABLE", "reason": "unavailable"}]}
+        result = dict(document)
+        result["command"] = command
+        result["status"] = ("PARTIAL" if result.get("accounts") else "UNAVAILABLE") if result.get("errors") else "OK"
+        return result
+
+    async def _projection_reply(self, command: str) -> str:
+        """Bounded JSON reply; reader work never runs on the event-loop thread."""
+        def unavailable(reason: str) -> str:
+            return json.dumps({"command": command, "status": "UNAVAILABLE", "mode": "UNAVAILABLE",
+                "evidence": "UNAVAILABLE", "freshness": "UNAVAILABLE",
+                "read_at_ns": time.time_ns(), "fact_asof_ns": None,
+                "errors": [{"type": "UNAVAILABLE", "reason": reason}]},
+                ensure_ascii=False, allow_nan=False, separators=(",", ":"))
+
+        def text(value):
+            return value if isinstance(value, str) and len(value) <= 512 else None
+
+        def clean(row, fields):
+            if not isinstance(row, dict):
+                return None
+            return {key: row.get(key) for key in fields}
+
+        reader = self._projection_reader or self._read_projection
+        try:
+            document = await asyncio.to_thread(reader, command)
+        except asyncio.CancelledError:
+            raise
+        except Exception:
+            return unavailable("reader_failed")
+        if not isinstance(document, dict):
+            return unavailable("reader_failed")
+
+        safe_reasons = {"missing", "nonpaper", "schema", "corrupt_or_schema", "row_limit",
+                        "unavailable", "value", "not_configured", "config_invalid",
+                        "snapshot_unavailable", "response_budget_exceeded", "reader_failed"}
+        errors = []
+        raw_errors = document.get("errors")
+        if isinstance(raw_errors, list):
+            for item in raw_errors[:32]:
+                if not isinstance(item, dict):
+                    continue
+                reason = item.get("reason")
+                error = {"type": "UNAVAILABLE",
+                         "reason": reason if isinstance(reason, str) and reason in safe_reasons
+                         else "unavailable"}
+                source = text(item.get("source"))
+                if source is not None:
+                    error["source"] = source
+                errors.append(error)
+
+        response = {
+            "command": text(document.get("command")) or command,
+            "status": document.get("status") if document.get("status") in ("OK", "PARTIAL", "UNAVAILABLE") else "OK",
+            "mode": text(document.get("mode")) or "UNAVAILABLE",
+            "evidence": text(document.get("evidence")) or "UNAVAILABLE",
+            "freshness": text(document.get("freshness")) or "UNVERIFIED",
+            "fact_asof_ns": document.get("fact_asof_ns"),
+            "read_at_ns": document.get("read_at_ns"),
+        }
+        if command != "feeds":
+            accounts = document.get("accounts", [])
+            if not isinstance(accounts, list):
+                return unavailable("reader_failed")
+            response["recovery"] = "UNRECONCILED" if any(
+                isinstance(row, dict) and row.get("recovery") == "UNRECONCILED"
+                for row in accounts) else "UNVERIFIED"
+        if command == "status":
+            for section in ("accounts", "orders", "strategies", "positions", "pnl"):
+                rows = document.get(section)
+                response[section + "_count"] = len(rows) if isinstance(rows, list) else 0
+            response["errors"] = errors
+        elif command == "feeds":
+            engine = document.get("engine") if isinstance(document.get("engine"), dict) else {}
+            response["engine"] = {
+                "incarnation": text(engine.get("incarnation")),
+                "apply_seq": engine.get("apply_seq"),
+                "healthy": engine.get("healthy") if isinstance(engine.get("healthy"), bool) else None,
+                "feeds": [clean(item, ("name", "provider", "mode", "reason", "generation",
+                                       "applied_sequence"))
+                          for item in engine.get("feeds") or [] if isinstance(item, dict)][:32],
+            }
+            response["markets"] = [clean(row, ("key", "venue", "symbol", "provider", "asset_class",
+                                               "currency", "section", "price", "last_event_ms",
+                                               "session", "book_valid", "gap_reason", "quote_kind",
+                                               "bid", "ask"))
+                                   for row in document.get("markets") or [] if isinstance(row, dict)][:128]
+            response["errors"] = errors
+        elif command in {"strategies", "orders", "positions", "pnl"}:
+            fields = {
+                "strategies": ("id", "name", "strategy", "account", "mode", "evidence",
+                               "running", "status", "recovery", "updated_ms"),
+                "orders": ("id", "intent_id", "strategy", "account", "section", "mode", "evidence",
+                           "instrument", "symbol", "venue", "asset_class", "side", "quantity",
+                           "filled", "reservation", "reserve_currency", "currency", "status",
+                           "recovery", "created_ms", "updated_ms"),
+                "positions": ("category", "strategy", "account", "instrument", "symbol", "venue",
+                              "asset_class", "quantity", "average", "margin", "currency", "mode",
+                              "evidence", "recovery"),
+                "pnl": ("strategy", "account", "currency", "realized_pnl", "fees", "funding",
+                        "unrealized_pnl", "unrealized_pnl_status", "unrealized_pnl_reason",
+                        "mark", "mark_asof", "mode", "evidence", "recovery"),
+            }[command]
+            rows = document.get(command)
+            if not isinstance(rows, list):
+                return unavailable("reader_failed")
+            cleaned = [clean(row, fields) for row in rows if isinstance(row, dict)]
+            if command == "pnl":
+                for row in cleaned:
+                    row.setdefault("unrealized_pnl", None)
+                    row.setdefault("mark", None)
+                    if row.get("unrealized_pnl_status") is None:
+                        row["unrealized_pnl_status"] = "UNAVAILABLE"
+            response[command] = cleaned
+            response["errors"] = errors
+        else:
+            return unavailable("reader_failed")
+
+        try:
+            encoded = json.dumps(response, ensure_ascii=False, allow_nan=False,
+                                 separators=(",", ":"))
+        except (TypeError, ValueError):
+            return unavailable("reader_failed")
+        if len(encoded.encode("utf-8")) > 3500:
+            return unavailable("response_budget_exceeded")
+        return encoded
 
     async def _control_command(self, session, update, action, chat_id):
         if self._command_handler is None:
