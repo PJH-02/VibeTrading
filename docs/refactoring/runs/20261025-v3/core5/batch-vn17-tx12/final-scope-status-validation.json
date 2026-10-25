@@ -80,7 +80,7 @@
     "--dir",
     "/home",
     "--bind",
-    "/home/pjh/.local/state/codex-opencode/runs/core-five-metadata-q4_4hxhp/metadata-os-home",
+    "/home/pjh/.local/state/codex-opencode/runs/core-five-metadata-o_xyhq2s/metadata-os-home",
     "/home/pjh",
     "--ro-bind",
     "/home/pjh/.nvm/versions/node/v22.22.0/lib/node_modules/opencode-ai/bin/opencode.exe",
@@ -92,7 +92,7 @@
     "/home/pjh/.cache/vt-refactor-deps",
     "/home/pjh/.cache/vt-refactor-deps",
     "--ro-bind",
-    "/home/pjh/.local/state/codex-opencode/runs/core-five-metadata-q4_4hxhp/metadata-os",
+    "/home/pjh/.local/state/codex-opencode/runs/core-five-metadata-o_xyhq2s/metadata-os",
     "/work",
     "--tmpfs",
     "/home/pjh",
@@ -127,10 +127,10 @@
     "--chdir",
     "/work",
     "--bind",
-    "/home/pjh/.local/state/codex-opencode/runs/core-five-metadata-q4_4hxhp/metadata-os",
+    "/home/pjh/.local/state/codex-opencode/runs/core-five-metadata-o_xyhq2s/metadata-os",
     "/work",
     "--bind",
-    "/home/pjh/.local/state/codex-opencode/runs/core-five-metadata-q4_4hxhp/metadata-os-evidence",
+    "/home/pjh/.local/state/codex-opencode/runs/core-five-metadata-o_xyhq2s/metadata-os-evidence",
     "/evidence",
     "--setenv",
     "PYTHONPATH",
@@ -151,10 +151,10 @@
     "REFACTOR_GUARD_RECEIPT",
     "/evidence/guard.jsonl",
     "--ro-bind",
-    "/home/pjh/.local/state/codex-opencode/runs/core-five-metadata-q4_4hxhp/oracles/schema_oracle.json",
+    "/home/pjh/.local/state/codex-opencode/runs/core-five-metadata-o_xyhq2s/oracles/schema_oracle.json",
     "/work/docs/refactoring/runs/20261018-stage-assignment/schema_oracle.json",
     "--ro-bind",
-    "/home/pjh/.local/state/codex-opencode/runs/core-five-metadata-q4_4hxhp/oracles/encoding_oracle.json",
+    "/home/pjh/.local/state/codex-opencode/runs/core-five-metadata-o_xyhq2s/oracles/encoding_oracle.json",
     "/work/docs/refactoring/runs/20261018-stage-assignment/encoding_oracle.json",
     "--",
     "python3",
@@ -164,7 +164,7 @@
     "--json"
   ],
   "metadata_sha256": {
-    "docs/refactoring/vnext/tickets_production.json": "afd4d4e16361e86bdb230fa64e29db8a69ae3ece45d1855b4bc0b1b065a6940a",
-    "docs/refactoring/vnext/stage_status.json": "bb2de1c9c357509d15172dc622ddf932e45fe46f88f65d3c837584ea450c9f86"
+    "docs/refactoring/vnext/tickets_production.json": "018652d4b55a93a3c799568d1cb9a7d5d25f32b9bcb752b8a829a8948ac05cdf",
+    "docs/refactoring/vnext/stage_status.json": "2190ee743e8911c20448b986643d151f39499140214e3929f253ce197b72ccc7"
   }
 }

@@ -25,3 +25,5 @@ TX11은 실제 두 파일의 manifest→Signal→기존 Paper→완전 체결·�
 - **미착수 (3):** VN20, TX07B, TX07.
 
 기존 완료33개/비선택46개 task 객체와 DAG·models/permissions/tooling을 보존했다. VN20 실제 삭제와 여섯 번째 티켓은 착수하지 않았다. 로컬 commit/원본 적용만 수행하며 원격 push/운영 배포/실계좌 접근은 없다. 사용자 dirty174건 보존은 적용 receipt에 기록한다.
+
+원본 작업폴더에 로컬 적용 완료: `e87a24cf863de5ef135d6ab45a05422a983f5c2b` (검증 source `001d10d20f1dce58fcb0349983f368af10a2bdc1`). 사용자 dirty174건·실제 수정 byte·삭제/미추적 문서·줄바꿈을 보존했다. [적용 기록](original-application.json). 이후 메타데이터 검사/적용 receipt만 별도 로컬 commit으로 갱신한다. 원격 push는 수행하지 않았다.
