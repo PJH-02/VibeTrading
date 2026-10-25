@@ -1,0 +1,32 @@
+{
+  "mode": "baseline",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/vn19-baseline-3pkxd0ev",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/vn19-baseline-3pkxd0ev/work",
+  "exit_code": 0,
+  "elapsed_seconds": 0.3703372719755862,
+  "read_only_inputs_changed": [],
+  "relay_evidence": null,
+  "stdout_tail": "............................................                             [100%]\n44 passed in 0.16s\n",
+  "tests": {
+    "passed": 44,
+    "failed": 0,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_src_release_paths.py",
+    "tests/test_crypto_release.py",
+    "tests/refactoring/test_runtime_mounts.py"
+  ]
+}

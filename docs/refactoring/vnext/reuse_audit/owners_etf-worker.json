@@ -1,0 +1,71 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "audit",
+  "worker_process": {
+    "exit_code": 0,
+    "elapsed_seconds": 169.7918247589987,
+    "relay_http_statuses": [],
+    "served_models": [],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-owners_etf-4705aaea",
+  "usage_reported": [
+    {
+      "total": 4789,
+      "input": 4276,
+      "output": 221,
+      "reasoning": 292,
+      "cache": {
+        "write": 0,
+        "read": 0
+      }
+    },
+    {
+      "total": 35490,
+      "input": 32167,
+      "output": 201,
+      "reasoning": 306,
+      "cache": {
+        "write": 0,
+        "read": 2816
+      }
+    },
+    {
+      "total": 51633,
+      "input": 16432,
+      "output": 204,
+      "reasoning": 53,
+      "cache": {
+        "write": 0,
+        "read": 34944
+      }
+    },
+    {
+      "total": 77623,
+      "input": 25838,
+      "output": 106,
+      "reasoning": 351,
+      "cache": {
+        "write": 0,
+        "read": 51328
+      }
+    },
+    {
+      "total": 114201,
+      "input": 12519,
+      "output": 8528,
+      "reasoning": 16098,
+      "cache": {
+        "write": 0,
+        "read": 77056
+      }
+    }
+  ],
+  "base_sha": "4977ab509490173e312183f32d47f862d94ee0bf",
+  "scope": [],
+  "output_sha256": {},
+  "automatic_acceptance": false
+}

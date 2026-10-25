@@ -1,0 +1,26 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "worker_exit": 0,
+  "delegate_exit": 0,
+  "actual_test_commands": [
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_portfolio_ledger.py tests/refactoring/test_paper_execution.py tests/refactoring/test_strategy_runtime.py tests/refactoring/test_strategy_restart_barrier.py tests/refactoring/test_tx02a_owner_fence.py tests/refactoring/test_tx01_signal_binding.py tests/refactoring/test_tx00_toss_data_only.py tests/refactoring/test_kr_strategy_extraction.py tests/refactoring/test_tx02b_attribution.py",
+      "exit_code": 0,
+      "output_tail": "........................................................................ [ 24%]\n........................................................................ [ 49%]\n........................................................................ [ 74%]\n........................................................................ [ 99%]\n..                                                                       [100%]\n290 passed in 13.66s\n"
+    }
+  ],
+  "private_run": "/home/pjh/.local/state/codex-opencode/runs/tx02b-worker-h91yh5kw",
+  "automatic_acceptance": false,
+  "denied_or_error_tool_attempts": [
+    {
+      "tool": "bash",
+      "input": {
+        "command": "wc -l src/vibetrading/portfolio_ledger.py tests/refactoring/test_portfolio_ledger.py tests/refactoring/test_strategy_runtime.py src/vibetrading/etf_journal.py src/vibetrading/trading_contracts.py"
+      },
+      "status": "error",
+      "error": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"python3 -m pytest*\",\"action\":\"allow\"}]"
+    }
+  ]
+}

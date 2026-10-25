@@ -1,0 +1,891 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "refactor",
+  "worker_process": {
+    "exit_code": 0,
+    "elapsed_seconds": 725.3175754979966,
+    "relay_http_statuses": [],
+    "served_models": [],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-plan-docs-7e84a817",
+  "usage_reported": [
+    {
+      "total": 5217,
+      "input": 4983,
+      "output": 153,
+      "reasoning": 81,
+      "cache": {
+        "write": 0,
+        "read": 0
+      }
+    },
+    {
+      "total": 13488,
+      "input": 13418,
+      "output": 51,
+      "reasoning": 19,
+      "cache": {
+        "write": 0,
+        "read": 0
+      }
+    },
+    {
+      "total": 13883,
+      "input": 275,
+      "output": 265,
+      "reasoning": 31,
+      "cache": {
+        "write": 0,
+        "read": 13312
+      }
+    },
+    {
+      "total": 31683,
+      "input": 17834,
+      "output": 231,
+      "reasoning": 50,
+      "cache": {
+        "write": 0,
+        "read": 13568
+      }
+    },
+    {
+      "total": 44267,
+      "input": 12430,
+      "output": 270,
+      "reasoning": 207,
+      "cache": {
+        "write": 0,
+        "read": 31360
+      }
+    },
+    {
+      "total": 60639,
+      "input": 16653,
+      "output": 171,
+      "reasoning": 39,
+      "cache": {
+        "write": 0,
+        "read": 43776
+      }
+    },
+    {
+      "total": 79013,
+      "input": 18388,
+      "output": 196,
+      "reasoning": 13,
+      "cache": {
+        "write": 0,
+        "read": 60416
+      }
+    },
+    {
+      "total": 84251,
+      "input": 3675,
+      "output": 89,
+      "reasoning": 1767,
+      "cache": {
+        "write": 0,
+        "read": 78720
+      }
+    },
+    {
+      "total": 84440,
+      "input": 2046,
+      "output": 80,
+      "reasoning": 10,
+      "cache": {
+        "write": 0,
+        "read": 82304
+      }
+    },
+    {
+      "total": 84631,
+      "input": 315,
+      "output": 46,
+      "reasoning": 46,
+      "cache": {
+        "write": 0,
+        "read": 84224
+      }
+    },
+    {
+      "total": 84878,
+      "input": 301,
+      "output": 63,
+      "reasoning": 34,
+      "cache": {
+        "write": 0,
+        "read": 84480
+      }
+    },
+    {
+      "total": 85064,
+      "input": 206,
+      "output": 42,
+      "reasoning": 80,
+      "cache": {
+        "write": 0,
+        "read": 84736
+      }
+    },
+    {
+      "total": 85335,
+      "input": 246,
+      "output": 44,
+      "reasoning": 181,
+      "cache": {
+        "write": 0,
+        "read": 84864
+      }
+    },
+    {
+      "total": 97144,
+      "input": 385,
+      "output": 5227,
+      "reasoning": 6540,
+      "cache": {
+        "write": 0,
+        "read": 84992
+      }
+    },
+    {
+      "total": 101924,
+      "input": 11784,
+      "output": 4361,
+      "reasoning": 403,
+      "cache": {
+        "write": 0,
+        "read": 85376
+      }
+    },
+    {
+      "total": 105048,
+      "input": 4788,
+      "output": 2856,
+      "reasoning": 252,
+      "cache": {
+        "write": 0,
+        "read": 97152
+      }
+    },
+    {
+      "total": 106284,
+      "input": 3176,
+      "output": 458,
+      "reasoning": 762,
+      "cache": {
+        "write": 0,
+        "read": 101888
+      }
+    },
+    {
+      "total": 107716,
+      "input": 1339,
+      "output": 1391,
+      "reasoning": 26,
+      "cache": {
+        "write": 0,
+        "read": 104960
+      }
+    },
+    {
+      "total": 107838,
+      "input": 1491,
+      "output": 93,
+      "reasoning": 14,
+      "cache": {
+        "write": 0,
+        "read": 106240
+      }
+    },
+    {
+      "total": 110279,
+      "input": 2079,
+      "output": 499,
+      "reasoning": 53,
+      "cache": {
+        "write": 0,
+        "read": 107648
+      }
+    },
+    {
+      "total": 110397,
+      "input": 108246,
+      "output": 93,
+      "reasoning": 10,
+      "cache": {
+        "write": 0,
+        "read": 2048
+      }
+    },
+    {
+      "total": 113525,
+      "input": 2455,
+      "output": 1314,
+      "reasoning": 60,
+      "cache": {
+        "write": 0,
+        "read": 109696
+      }
+    },
+    {
+      "total": 113857,
+      "input": 3332,
+      "output": 292,
+      "reasoning": 25,
+      "cache": {
+        "write": 0,
+        "read": 110208
+      }
+    },
+    {
+      "total": 114648,
+      "input": 336,
+      "output": 540,
+      "reasoning": 236,
+      "cache": {
+        "write": 0,
+        "read": 113536
+      }
+    },
+    {
+      "total": 115705,
+      "input": 2535,
+      "output": 775,
+      "reasoning": 267,
+      "cache": {
+        "write": 0,
+        "read": 112128
+      }
+    },
+    {
+      "total": 116301,
+      "input": 1160,
+      "output": 581,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 114560
+      }
+    },
+    {
+      "total": 118051,
+      "input": 605,
+      "output": 1734,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 115712
+      }
+    },
+    {
+      "total": 118488,
+      "input": 1843,
+      "output": 332,
+      "reasoning": 89,
+      "cache": {
+        "write": 0,
+        "read": 116224
+      }
+    },
+    {
+      "total": 121150,
+      "input": 4711,
+      "output": 2224,
+      "reasoning": 423,
+      "cache": {
+        "write": 0,
+        "read": 113792
+      }
+    },
+    {
+      "total": 123780,
+      "input": 2765,
+      "output": 2606,
+      "reasoning": 9,
+      "cache": {
+        "write": 0,
+        "read": 118400
+      }
+    },
+    {
+      "total": 126903,
+      "input": 2707,
+      "output": 3084,
+      "reasoning": 24,
+      "cache": {
+        "write": 0,
+        "read": 121088
+      }
+    },
+    {
+      "total": 128426,
+      "input": 3142,
+      "output": 1489,
+      "reasoning": 19,
+      "cache": {
+        "write": 0,
+        "read": 123776
+      }
+    },
+    {
+      "total": 129776,
+      "input": 10425,
+      "output": 1335,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 118016
+      }
+    },
+    {
+      "total": 129919,
+      "input": 1408,
+      "output": 91,
+      "reasoning": 36,
+      "cache": {
+        "write": 0,
+        "read": 128384
+      }
+    },
+    {
+      "total": 131292,
+      "input": 3980,
+      "output": 409,
+      "reasoning": 55,
+      "cache": {
+        "write": 0,
+        "read": 126848
+      }
+    },
+    {
+      "total": 131969,
+      "input": 491,
+      "output": 573,
+      "reasoning": 89,
+      "cache": {
+        "write": 0,
+        "read": 130816
+      }
+    },
+    {
+      "total": 132766,
+      "input": 784,
+      "output": 700,
+      "reasoning": 82,
+      "cache": {
+        "write": 0,
+        "read": 131200
+      }
+    },
+    {
+      "total": 133053,
+      "input": 813,
+      "output": 253,
+      "reasoning": 19,
+      "cache": {
+        "write": 0,
+        "read": 131968
+      }
+    },
+    {
+      "total": 133415,
+      "input": 332,
+      "output": 292,
+      "reasoning": 55,
+      "cache": {
+        "write": 0,
+        "read": 132736
+      }
+    },
+    {
+      "total": 133695,
+      "input": 3638,
+      "output": 216,
+      "reasoning": 49,
+      "cache": {
+        "write": 0,
+        "read": 129792
+      }
+    },
+    {
+      "total": 133993,
+      "input": 334,
+      "output": 272,
+      "reasoning": 11,
+      "cache": {
+        "write": 0,
+        "read": 133376
+      }
+    },
+    {
+      "total": 134324,
+      "input": 376,
+      "output": 290,
+      "reasoning": 26,
+      "cache": {
+        "write": 0,
+        "read": 133632
+      }
+    },
+    {
+      "total": 134728,
+      "input": 1347,
+      "output": 342,
+      "reasoning": 47,
+      "cache": {
+        "write": 0,
+        "read": 132992
+      }
+    },
+    {
+      "total": 135391,
+      "input": 855,
+      "output": 523,
+      "reasoning": 125,
+      "cache": {
+        "write": 0,
+        "read": 133888
+      }
+    },
+    {
+      "total": 135767,
+      "input": 750,
+      "output": 321,
+      "reasoning": 40,
+      "cache": {
+        "write": 0,
+        "read": 134656
+      }
+    },
+    {
+      "total": 136272,
+      "input": 1510,
+      "output": 384,
+      "reasoning": 106,
+      "cache": {
+        "write": 0,
+        "read": 134272
+      }
+    },
+    {
+      "total": 137120,
+      "input": 607,
+      "output": 784,
+      "reasoning": 49,
+      "cache": {
+        "write": 0,
+        "read": 135680
+      }
+    },
+    {
+      "total": 137629,
+      "input": 943,
+      "output": 411,
+      "reasoning": 83,
+      "cache": {
+        "write": 0,
+        "read": 136192
+      }
+    },
+    {
+      "total": 138740,
+      "input": 2348,
+      "output": 1007,
+      "reasoning": 89,
+      "cache": {
+        "write": 0,
+        "read": 135296
+      }
+    },
+    {
+      "total": 139393,
+      "input": 1667,
+      "output": 581,
+      "reasoning": 57,
+      "cache": {
+        "write": 0,
+        "read": 137088
+      }
+    },
+    {
+      "total": 139863,
+      "input": 656,
+      "output": 387,
+      "reasoning": 68,
+      "cache": {
+        "write": 0,
+        "read": 138752
+      }
+    },
+    {
+      "total": 140706,
+      "input": 2278,
+      "output": 817,
+      "reasoning": 11,
+      "cache": {
+        "write": 0,
+        "read": 137600
+      }
+    },
+    {
+      "total": 140991,
+      "input": 945,
+      "output": 226,
+      "reasoning": 44,
+      "cache": {
+        "write": 0,
+        "read": 139776
+      }
+    },
+    {
+      "total": 141520,
+      "input": 1614,
+      "output": 272,
+      "reasoning": 242,
+      "cache": {
+        "write": 0,
+        "read": 139392
+      }
+    },
+    {
+      "total": 142843,
+      "input": 1922,
+      "output": 91,
+      "reasoning": 158,
+      "cache": {
+        "write": 0,
+        "read": 140672
+      }
+    },
+    {
+      "total": 149824,
+      "input": 8728,
+      "output": 91,
+      "reasoning": 77,
+      "cache": {
+        "write": 0,
+        "read": 140928
+      }
+    },
+    {
+      "total": 151543,
+      "input": 8796,
+      "output": 77,
+      "reasoning": 78,
+      "cache": {
+        "write": 0,
+        "read": 142592
+      }
+    },
+    {
+      "total": 154022,
+      "input": 2396,
+      "output": 232,
+      "reasoning": 98,
+      "cache": {
+        "write": 0,
+        "read": 151296
+      }
+    },
+    {
+      "total": 154283,
+      "input": 437,
+      "output": 204,
+      "reasoning": 42,
+      "cache": {
+        "write": 0,
+        "read": 153600
+      }
+    },
+    {
+      "total": 154488,
+      "input": 4666,
+      "output": 190,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 149632
+      }
+    },
+    {
+      "total": 156461,
+      "input": 520,
+      "output": 295,
+      "reasoning": 1662,
+      "cache": {
+        "write": 0,
+        "read": 153984
+      }
+    },
+    {
+      "total": 157547,
+      "input": 2236,
+      "output": 363,
+      "reasoning": 708,
+      "cache": {
+        "write": 0,
+        "read": 154240
+      }
+    },
+    {
+      "total": 158057,
+      "input": 1146,
+      "output": 485,
+      "reasoning": 10,
+      "cache": {
+        "write": 0,
+        "read": 156416
+      }
+    },
+    {
+      "total": 158561,
+      "input": 3576,
+      "output": 485,
+      "reasoning": 4,
+      "cache": {
+        "write": 0,
+        "read": 154496
+      }
+    },
+    {
+      "total": 159353,
+      "input": 1136,
+      "output": 770,
+      "reasoning": 7,
+      "cache": {
+        "write": 0,
+        "read": 157440
+      }
+    },
+    {
+      "total": 159662,
+      "input": 1416,
+      "output": 289,
+      "reasoning": 5,
+      "cache": {
+        "write": 0,
+        "read": 157952
+      }
+    },
+    {
+      "total": 160137,
+      "input": 1222,
+      "output": 202,
+      "reasoning": 249,
+      "cache": {
+        "write": 0,
+        "read": 158464
+      }
+    },
+    {
+      "total": 160533,
+      "input": 792,
+      "output": 95,
+      "reasoning": 286,
+      "cache": {
+        "write": 0,
+        "read": 159360
+      }
+    },
+    {
+      "total": 164208,
+      "input": 3502,
+      "output": 305,
+      "reasoning": 273,
+      "cache": {
+        "write": 0,
+        "read": 160128
+      }
+    },
+    {
+      "total": 164473,
+      "input": 4607,
+      "output": 200,
+      "reasoning": 50,
+      "cache": {
+        "write": 0,
+        "read": 159616
+      }
+    },
+    {
+      "total": 165305,
+      "input": 904,
+      "output": 264,
+      "reasoning": 553,
+      "cache": {
+        "write": 0,
+        "read": 163584
+      }
+    },
+    {
+      "total": 165598,
+      "input": 840,
+      "output": 275,
+      "reasoning": 3,
+      "cache": {
+        "write": 0,
+        "read": 164480
+      }
+    },
+    {
+      "total": 165903,
+      "input": 365,
+      "output": 288,
+      "reasoning": 2,
+      "cache": {
+        "write": 0,
+        "read": 165248
+      }
+    },
+    {
+      "total": 166161,
+      "input": 414,
+      "output": 236,
+      "reasoning": 7,
+      "cache": {
+        "write": 0,
+        "read": 165504
+      }
+    },
+    {
+      "total": 166396,
+      "input": 288,
+      "output": 220,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 165888
+      }
+    },
+    {
+      "total": 166633,
+      "input": 2316,
+      "output": 221,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 164096
+      }
+    },
+    {
+      "total": 167908,
+      "input": 505,
+      "output": 201,
+      "reasoning": 1058,
+      "cache": {
+        "write": 0,
+        "read": 166144
+      }
+    },
+    {
+      "total": 168191,
+      "input": 1523,
+      "output": 191,
+      "reasoning": 77,
+      "cache": {
+        "write": 0,
+        "read": 166400
+      }
+    },
+    {
+      "total": 77813,
+      "input": 74318,
+      "output": 2202,
+      "reasoning": 1165,
+      "cache": {
+        "write": 0,
+        "read": 128
+      }
+    },
+    {
+      "total": 24906,
+      "input": 21976,
+      "output": 73,
+      "reasoning": 41,
+      "cache": {
+        "write": 0,
+        "read": 2816
+      }
+    },
+    {
+      "total": 26746,
+      "input": 1902,
+      "output": 71,
+      "reasoning": 69,
+      "cache": {
+        "write": 0,
+        "read": 24704
+      }
+    },
+    {
+      "total": 28961,
+      "input": 1758,
+      "output": 440,
+      "reasoning": 267,
+      "cache": {
+        "write": 0,
+        "read": 26496
+      }
+    },
+    {
+      "total": 29055,
+      "input": 26160,
+      "output": 72,
+      "reasoning": 7,
+      "cache": {
+        "write": 0,
+        "read": 2816
+      }
+    },
+    {
+      "total": 30254,
+      "input": 1226,
+      "output": 74,
+      "reasoning": 26,
+      "cache": {
+        "write": 0,
+        "read": 28928
+      }
+    },
+    {
+      "total": 33897,
+      "input": 2457,
+      "output": 484,
+      "reasoning": 876,
+      "cache": {
+        "write": 0,
+        "read": 30080
+      }
+    }
+  ],
+  "base_sha": "4977ab509490173e312183f32d47f862d94ee0bf",
+  "scope": [
+    "docs/refactoring/vnext/VibeTrading_Refactoring_Final_Plan_v3.md",
+    "docs/refactoring/vnext/VibeTrading_Developer_Ticket_Spec_v3.md",
+    "docs/refactoring/vnext/VibeTrading_Architecture_Requirements_v3.md",
+    "docs/refactoring/vnext/11_integrated_vn_tx_plan.md",
+    "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md",
+    "docs/refactoring/vnext/12_production_acceptance_matrix.md",
+    "docs/refactoring/vnext/13_strategy_deployment_lifecycle.md",
+    "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md",
+    "docs/refactoring/vnext/reuse_audit/execution_reuse_matrix.md"
+  ],
+  "output_sha256": {
+    "docs/refactoring/vnext/VibeTrading_Refactoring_Final_Plan_v3.md": "be4e21507ed3ecf4d16ee7d586de69d5dd0acc454adfde208b9d4ba32b9b958c",
+    "docs/refactoring/vnext/VibeTrading_Developer_Ticket_Spec_v3.md": "0d53ea1b677ec2d23366f4ec4dc0796799a97f1e2e9921507fb72165c8ba3cac",
+    "docs/refactoring/vnext/VibeTrading_Architecture_Requirements_v3.md": "58ac9af326ac758cbfdeddbe898d98ea03fe605b6b2d29b689685eacb28386e1",
+    "docs/refactoring/vnext/11_integrated_vn_tx_plan.md": "aea6c3b0c76c5fbf1a8bb4812f55bd4000e4a542ada4d8bdd6e85692b2f026ad",
+    "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md": "5a1668041372a481334bd4ff5f9e746303898d02fb68284b077b7763d6e28c89",
+    "docs/refactoring/vnext/12_production_acceptance_matrix.md": "6d2a1b8f8516e207f087a6d7249ccb7fcf6ae597cde88f93dcc08bad4a74e8b4",
+    "docs/refactoring/vnext/13_strategy_deployment_lifecycle.md": "661203b293f3ce4def021d4eeeb845119a9f77d211471af7386f5c4a7e770907",
+    "docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md": "f633cf2a1f342552b4aa25d4ced6b98d8415cab25150b306ccd69a15415e0409",
+    "docs/refactoring/vnext/reuse_audit/execution_reuse_matrix.md": "9fd41dd7b966bda15234eb75bcf28c3db563af2dc70aaa5fa1d7dc3bb7e5dcef"
+  },
+  "automatic_acceptance": false
+}

@@ -1,0 +1,25 @@
+{
+  "decision": "PASS",
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "role": "refactor",
+  "worker_exit": 0,
+  "delegate_exit": 0,
+  "product_edits": 0,
+  "input_files_unchanged": true,
+  "source_file_sha256": {
+    "src/vibetrading/strategy_runtime.py": "22622783877598c9c23c0c9c036732c197d6490037b57134a274b195739748b6",
+    "tests/refactoring/test_vn13_file_registration.py": "22188b21b4239cb23c5c59b6e1dbed6ce2bd4717fb938ffdd09a89f7f70e65ed"
+  },
+  "actual_test_commands": [
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_strategy_runtime.py tests/refactoring/test_strategy_restart_barrier.py tests/refactoring/test_strategy_dispatch.py tests/refactoring/test_runtime_checkpoint_integration.py tests/refactoring/test_tx04b_continuous.py tests/refactoring/test_tx04_joint_gate.py tests/refactoring/test_kr_strategy_extraction.py tests/refactoring/test_vn13_file_registration.py",
+      "exit_code": 0,
+      "output_tail": "........................................................................ [ 32%]\n........................................................................ [ 64%]\n........................................................................ [ 96%]\n.........                                                                [100%]\n225 passed in 2.31s\n"
+    }
+  ],
+  "passed": 225,
+  "implementation_worker_test_execution": "NOT_RUN_COLLECTION_ONLY",
+  "verification_completion_delegation": 1,
+  "private_run": "/home/pjh/.local/state/codex-opencode/runs/vn13verify-worker-ym45qzsx"
+}

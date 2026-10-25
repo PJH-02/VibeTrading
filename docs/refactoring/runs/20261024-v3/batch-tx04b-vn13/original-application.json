@@ -1,0 +1,28 @@
+{
+  "decision": "PASS",
+  "applied_head": "8e2753b760c780ff360ddd0146dae5ab350212d6",
+  "branch": "codex/v3-local-candidate",
+  "original_workspace": "/mnt/c/Users/박제형/Desktop/VibeTrading",
+  "preserved_entries": 174,
+  "eol_only_carried": 153,
+  "canonical_paths_verified": 66,
+  "substantive_user_bytes_preserved": true,
+  "deleted_and_untracked_documents_preserved": true,
+  "backup": "/home/pjh/.local/state/codex-opencode/runs/next-three-preserve-njs5omng",
+  "accepted_source_sha": "3376c9ed58474bc51134efc786a9e1c94629e278",
+  "selected_tickets": [
+    "TX04B",
+    "TX04",
+    "VN13"
+  ],
+  "previous_application_receipt": "docs/refactoring/runs/20261024-v3/batch-tx02b-tx04a/original-application.json",
+  "preexisting_primary_diff_check": {
+    "baseline_sha": "6221f4866d68dba97cc2cf08a355cc4624929219",
+    "exit_code": 2,
+    "stdout_sha256": "5ac00c540b6710fe46ff432300105a70e68d70006c0d2ee39f6057e9c3344b4e",
+    "stdout_lines": 81762,
+    "scope": "Preexisting primary dirty work only; not worker changes"
+  },
+  "canonical_new_change_diff_check_exit": 0,
+  "scope": "Exactly selected three local reuse tickets; TX05 and other tickets not dispatched."
+}

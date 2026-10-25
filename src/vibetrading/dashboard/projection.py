@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import re
 import sqlite3
 import time
@@ -215,3 +216,298 @@ def timefolio_metrics(summary: dict) -> dict:
                     if normalized in choices:
                         metrics[name] = number(str(row[index + 1]).replace("원", ""))
     return metrics
+
+
+_PAPER_UNAVAILABLE = "UNAVAILABLE"
+_PAPER_UNRECONCILED_STATES = {"OPEN", "UNKNOWN", "CANCEL_PENDING"}
+_PAPER_REQUIRED_COLUMNS = {
+    "portfolio_metadata": {"key", "value"},
+    "portfolio_balances": {"currency", "amount"},
+    "portfolio_orders": {"intent_id", "strategy", "payload", "rules", "state", "quantity",
+                         "filled", "reservation", "reserve_currency", "instrument", "side"},
+    "portfolio_positions": {"strategy", "instrument", "quantity", "average", "margin"},
+    "portfolio_strategy_cash": {"strategy", "currency", "amount", "fees", "funding", "realized"},
+    "portfolio_gaps": {"instrument"},
+}
+
+
+class _PaperUnavailable(Exception):
+    def __init__(self, reason: str) -> None:
+        self.reason = reason
+
+
+def _paper_config_error() -> ValueError:
+    return ValueError("PAPER_PROJECTION_DATABASES must be a JSON array of 1..16 distinct absolute paths")
+
+
+def paper_projection_paths(env) -> tuple[Path, ...]:
+    """Parse explicit paper DB locations; no globbing or directory discovery."""
+    raw = env.get("PAPER_PROJECTION_DATABASES")
+    if raw is None:
+        return ()
+    if not isinstance(raw, str):
+        raise _paper_config_error()
+    try:
+        values = json.loads(raw)
+    except (TypeError, ValueError) as exc:
+        raise _paper_config_error() from exc
+    if not isinstance(values, list) or not 1 <= len(values) <= 16:
+        raise _paper_config_error()
+    paths, seen = [], set()
+    for value in values:
+        if not isinstance(value, str) or not value or len(value.encode("utf-8")) > 4096:
+            raise _paper_config_error()
+        if any(character in value for character in "*?["):
+            raise _paper_config_error()
+        path = Path(value)
+        if not path.is_absolute():
+            raise _paper_config_error()
+        normalized = str(path)
+        if normalized in seen:
+            raise _paper_config_error()
+        seen.add(normalized)
+        paths.append(path)
+    return tuple(paths)
+
+
+def _paper_json_object(value: Any) -> dict:
+    try:
+        document = json.loads(value)
+    except (TypeError, ValueError):
+        return {}
+    return document if isinstance(document, dict) else {}
+
+
+def _paper_text(value: Any, *, allow_empty: bool = False) -> str | None:
+    if not isinstance(value, str) or len(value.encode("utf-8")) > 512:
+        return None
+    if not allow_empty and not value:
+        return None
+    return value
+
+
+def _paper_decimal(value: Any) -> str:
+    try:
+        number = Decimal(str(value))
+    except (InvalidOperation, TypeError, ValueError) as exc:
+        raise _PaperUnavailable("value") from exc
+    if not number.is_finite():
+        raise _PaperUnavailable("value")
+    return str(number)
+
+
+def _paper_instrument_parts(key: Any) -> tuple[str | None, str | None, str | None]:
+    text = _paper_text(key)
+    if text is None:
+        return None, None, None
+    parts = text.split(":")
+    return (parts[0] if parts else None, parts[1] if len(parts) > 1 else None,
+            parts[2] if len(parts) > 2 else None)
+
+
+def _paper_order_facts(payload_text: Any, rules_text: Any, instrument: Any):
+    payload = _paper_json_object(payload_text)
+    rules = _paper_json_object(rules_text)
+    details = payload.get("instrument") if isinstance(payload.get("instrument"), dict) else {}
+    venue, asset_class, symbol = _paper_instrument_parts(instrument)
+    venue = _paper_text(details.get("venue")) or venue
+    asset_class = _paper_text(details.get("asset_class")) or asset_class
+    symbol = _paper_text(details.get("std_symbol")) or symbol
+    currency = _paper_text(details.get("currency"))
+    if currency is None:
+        currency = _paper_text(rules.get("settlement_currency")) or _paper_text(rules.get("collateral_currency"))
+    section = "crypto" if asset_class and asset_class.startswith("crypto") else (
+        "stocks" if asset_class else None)
+    return symbol, venue, asset_class, currency, section
+
+
+def _paper_schema(db: sqlite3.Connection) -> None:
+    tables = {row[0] for row in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+    for table, columns in _PAPER_REQUIRED_COLUMNS.items():
+        if table not in tables:
+            raise _PaperUnavailable("schema")
+        actual = {row[1] for row in db.execute("PRAGMA table_info(" + table + ")")}
+        if not columns <= actual:
+            raise _PaperUnavailable("schema")
+
+
+def _paper_rows(db: sqlite3.Connection, sql: str, limit: int) -> list:
+    rows = list(db.execute(sql, (limit + 1,)))
+    if len(rows) > limit:
+        # No partial aggregate may be presented as the whole account.
+        raise _PaperUnavailable("row_limit")
+    return rows
+
+
+def _paper_id(scope, kind, identity):
+    return "paper:" + hashlib.sha256(json.dumps([scope, kind, identity], ensure_ascii=False).encode()).hexdigest()
+
+
+def _paper_source(path: Path, limit: int):
+    if not path.is_file():
+        raise _PaperUnavailable("missing")
+    try:
+        db = readonly_db(path)
+    except (OSError, sqlite3.Error) as exc:
+        raise _PaperUnavailable("unavailable") from exc
+    try:
+        db.execute("BEGIN")
+        _paper_schema(db)
+        metadata = {row[0]: row[1] for row in db.execute("SELECT key,value FROM portfolio_metadata")}
+        mode = metadata.get("mode")
+        if mode != "paper":
+            raise _PaperUnavailable("nonpaper")
+        scope = _paper_text(metadata.get("scope"))
+        version_text = metadata.get("account_version")
+        if scope is None or not isinstance(version_text, str) or not version_text.isdigit():
+            raise _PaperUnavailable("schema")
+        version = int(version_text)
+
+        balances = _paper_rows(db, "SELECT currency,amount FROM portfolio_balances ORDER BY currency LIMIT ?", limit)
+        order_rows = _paper_rows(db, "SELECT intent_id,strategy,payload,rules,state,quantity,filled,"
+                                     "reservation,reserve_currency,instrument,side FROM portfolio_orders "
+                                     "ORDER BY rowid LIMIT ?", limit)
+        position_rows = _paper_rows(db, "SELECT strategy,instrument,quantity,average,margin "
+                                         "FROM portfolio_positions ORDER BY strategy,instrument LIMIT ?", limit)
+        cash_rows = _paper_rows(db, "SELECT strategy,currency,amount,fees,funding,realized "
+                                    "FROM portfolio_strategy_cash ORDER BY strategy,currency LIMIT ?", limit)
+        gap_rows = _paper_rows(db, "SELECT instrument FROM portfolio_gaps ORDER BY instrument LIMIT ?", limit)
+        db.execute("COMMIT")
+    except _PaperUnavailable:
+        if db.in_transaction:
+            try:
+                db.execute("ROLLBACK")
+            except sqlite3.Error:
+                pass
+        raise
+    except (KeyError, OSError, TypeError, ValueError, sqlite3.Error) as exc:
+        if db.in_transaction:
+            try:
+                db.execute("ROLLBACK")
+            except sqlite3.Error:
+                pass
+        raise _PaperUnavailable("corrupt_or_schema") from exc
+    finally:
+        db.close()
+
+    orders, currencies = [], {}
+    for row in order_rows:
+        instrument = _paper_text(row["instrument"])
+        symbol, venue, asset_class, currency, section = _paper_order_facts(
+            row["payload"], row["rules"], instrument)
+        state = _paper_text(row["state"])
+        recovery = "UNRECONCILED" if state in _PAPER_UNRECONCILED_STATES else "UNVERIFIED"
+        orders.append({
+            "id": _paper_id(scope, "order", row["intent_id"]), "intent_id": _paper_text(row["intent_id"]), "strategy": _paper_text(row["strategy"]),
+            "account": scope, "section": section, "mode": "paper", "evidence": "PAPER_SIMULATION",
+            "instrument": instrument, "symbol": symbol, "venue": venue, "asset_class": asset_class,
+            "side": _paper_text(row["side"]), "quantity": _paper_decimal(row["quantity"]),
+            "filled": _paper_decimal(row["filled"]), "reservation": _paper_decimal(row["reservation"]),
+            "reserve_currency": _paper_text(row["reserve_currency"]),
+            "currency": currency, "status": state, "recovery": recovery,
+            "created_ms": None, "updated_ms": None,
+        })
+        currencies[instrument] = currency
+
+    positions = []
+    strategy_names = []
+    for row in position_rows:
+        strategy = _paper_text(row["strategy"])
+        instrument = _paper_text(row["instrument"])
+        if strategy == "@physical":
+            category = "physical"
+        elif strategy == "@physical_netting_adjustment":
+            category = "netting"
+        elif strategy and strategy.startswith("@"):
+            category = "account"
+        else:
+            category = "virtual"
+        venue, asset_class, symbol = _paper_instrument_parts(instrument)
+        strategy_unresolved = any(
+            item["strategy"] == strategy and item["recovery"] == "UNRECONCILED" for item in orders)
+        positions.append({
+            "category": category, "strategy": strategy, "account": scope,
+            "instrument": instrument, "symbol": symbol, "venue": venue, "asset_class": asset_class,
+            "quantity": _paper_decimal(row["quantity"]), "average": _paper_decimal(row["average"]),
+            "margin": _paper_decimal(row["margin"]), "currency": currencies.get(instrument),
+            "mode": "paper", "evidence": "PAPER_SIMULATION",
+            "recovery": "UNRECONCILED" if strategy_unresolved else "UNVERIFIED",
+        })
+        if strategy and not strategy.startswith("@"):
+            strategy_names.append(strategy)
+
+    pnl = []
+    for row in cash_rows:
+        strategy, currency = _paper_text(row["strategy"]), _paper_text(row["currency"])
+        strategy_unresolved = any(
+            item["strategy"] == strategy and item["recovery"] == "UNRECONCILED" for item in orders)
+        pnl.append({
+            "strategy": strategy, "account": scope, "currency": currency,
+            "realized_pnl": _paper_decimal(row["realized"]), "fees": _paper_decimal(row["fees"]),
+            "funding": _paper_decimal(row["funding"]),
+            "unrealized_pnl": None, "unrealized_pnl_status": "UNAVAILABLE",
+            "unrealized_pnl_reason": "NO_TRUSTED_MARK", "mark": None, "mark_asof": None,
+            "mode": "paper", "evidence": "PAPER_SIMULATION",
+            "recovery": "UNRECONCILED" if strategy_unresolved else "UNVERIFIED",
+        })
+        if strategy and not strategy.startswith("@"):
+            strategy_names.append(strategy)
+
+    for item in orders:
+        if item["strategy"] and not item["strategy"].startswith("@"):
+            strategy_names.append(item["strategy"])
+
+    gap_instruments = [_paper_text(row["instrument"]) for row in gap_rows]
+    account_unreconciled = bool(gap_instruments) or any(
+        item["recovery"] == "UNRECONCILED" for item in orders)
+    recovery = "UNRECONCILED" if account_unreconciled else "UNVERIFIED"
+    account = {
+        "source": str(path), "scope": scope, "account": scope, "mode": "paper",
+        "evidence": "PAPER_SIMULATION", "account_version": version,
+        "balances": [{"currency": _paper_text(row["currency"]), "amount": _paper_decimal(row["amount"])}
+                     for row in balances],
+        "gap_instruments": gap_instruments, "gap_count": len(gap_instruments), "recovery": recovery,
+    }
+    strategies = []
+    for name in sorted(dict.fromkeys(strategy_names)):
+        unresolved = any(item["strategy"] == name and item["recovery"] == "UNRECONCILED"
+                         for item in orders)
+        strategies.append({
+            "id": _paper_id(scope, "strategy", name), "name": name, "updated_ms": None,
+            "strategy": name, "account": scope, "mode": "paper", "evidence": "PAPER_SIMULATION",
+            "running": None, "status": "UNVERIFIED",
+            "recovery": "UNRECONCILED" if unresolved else "UNVERIFIED",
+        })
+    return account, orders, strategies, positions, pnl
+
+
+def paper_projection(paths, *, limit: int) -> dict:
+    """Cold bounded read of explicitly configured paper accounts; never owner writes."""
+    if isinstance(limit, bool) or not isinstance(limit, int) or not 1 <= limit <= 1000:
+        raise ValueError("Paper projection limit must be an explicit integer in 1..1000")
+    if isinstance(paths, (str, bytes)) or not isinstance(paths, (list, tuple)):
+        raise ValueError("Paper projection paths must be an explicit sequence")
+    if len(paths) > 16:
+        raise ValueError("At most 16 paper projection databases are supported")
+    configured = tuple(Path(path) for path in paths)
+    document = {"mode": "paper", "evidence": "PAPER_SIMULATION", "freshness": "UNVERIFIED",
+                "read_at_ns": time.time_ns(), "fact_asof_ns": None,
+                "accounts": [], "orders": [], "strategies": [], "positions": [],
+                "pnl": [], "errors": []}
+    for path in configured:
+        try:
+            account, orders, strategies, positions, pnl = _paper_source(path, limit)
+        except _PaperUnavailable as exc:
+            document["errors"].append({"source": str(path), "type": _PAPER_UNAVAILABLE,
+                                       "reason": exc.reason})
+            continue
+        except (OSError, sqlite3.Error, TypeError, ValueError):
+            document["errors"].append({"source": str(path), "type": _PAPER_UNAVAILABLE,
+                                       "reason": "unavailable"})
+            continue
+        document["accounts"].append(account)
+        document["orders"].extend(orders)
+        document["strategies"].extend(strategies)
+        document["positions"].extend(positions)
+        document["pnl"].extend(pnl)
+    return document

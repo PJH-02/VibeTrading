@@ -1,0 +1,37 @@
+{
+  "label": "repair1-identity-review",
+  "baseline": false,
+  "source": "/tmp/vt-bounded-1rg00wmz/work",
+  "exit_code": 1,
+  "elapsed_seconds": 2.561857233988121,
+  "base": "/tmp/vt-vn08-repair1-identity-review-vy2zkw28",
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_spool_recovery.py",
+    "tests/refactoring/test_local_storage.py",
+    "tests/refactoring/test_checkpoint_startup.py",
+    "tests/refactoring/test_local_pipeline.py",
+    "tests/refactoring/test_local_engine.py",
+    "tests/refactoring/test_retained_spool.py",
+    "tests/refactoring/test_retained_storage.py",
+    "docs/tickets/VN08-reviewer-counterexamples.py"
+  ],
+  "tests": {
+    "passed": 274,
+    "failed": 1,
+    "skipped": 0
+  },
+  "source_changed": [],
+  "stdout_tail": "........................................................................ [ 26%]\n........................................................................ [ 52%]\n........................................................................ [ 78%]\n.....................................................F.....              [100%]\n=================================== FAILURES ===================================\n__ test_independent_same_confirmed_position_for_two_consumers_is_valid[True] ___\n\ntmp_path = PosixPath('/tmp/pytest/test_independent_same_confirme1')\nreuse_object = True\n\n    @pytest.mark.parametrize(\"reuse_object\", [False, True])\n    def test_independent_same_confirmed_position_for_two_consumers_is_valid(tmp_path,reuse_object):\n        source,_,_=setup_tail(tmp_path)\n        position=SpoolCursor(P,I,1)\n        positions=(position,position if reuse_object else SpoolCursor(P,I,1))\n>       proof=capture_retained_prefix(source,P,I,first_retained_segment=2,generation=\"two-readers\",\n            consumer_cursors=positions,**read_limits())\n\ndocs/tickets/VN08-reviewer-counterexamples.py:147: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nsrc/vibetrading/market_spool.py:779: in capture_retained_prefix\n    return RetainedPrefix(\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nself = <[AttributeError(\"'RetainedPrefix' object has no attribute 'producer_id'\") raised in repr()] RetainedPrefix object at 0x75afeb8d8bf0>\n_factory = <object object at 0x75b01877a080>\n\n    def __init__(self, _factory, *, producer_id, incarnation, generation,\n                 base_sequence, base_payload_sha256, first_retained_segment,\n                 first_retained_segment_sha256, prefix_chain_sha256,\n                 checkpoint_sha256, durable_sequence, consumer_cursors,\n                 max_disk_bytes, max_records, max_frame_bytes, max_header_bytes):\n        if _factory is not _FACTORY:\n            raise TypeError(\"RetainedPrefix must be issued by capture_retained_prefix or from_bytes\")\n        _identity(producer_id, \"producer_id\")\n        _identity(incarnation, \"incarnation\")\n        _identity(generation, \"generation\")\n        base = _bounded_absolute(base_sequence, \"base_sequence\")\n        first = _bounded_absolute(first_retained_segment, \"first_retained_segment\")\n        if first <= 1:\n            raise ValueError(\"retained prefix must have a nonzero removed prefix\")\n        durable = _bounded_absolute(durable_sequence, \"durable_sequence\")\n        if durable < base:\n            raise ValueError(\"captured durable sequence must cover the base\")\n        _digest(base_payload_sha256, \"base_payload_sha256\")\n        _digest(first_retained_segment_sha256, \"first_retained_segment_sha256\")\n        _digest(prefix_chain_sha256, \"prefix_chain_sha256\")\n        _digest(checkpoint_sha256, \"checkpoint_sha256\")\n        for name, value in ((\"max_disk_bytes\", max_disk_bytes),\n                            (\"max_records\", max_records),\n                            (\"max_frame_bytes\", max_frame_bytes),\n                            (\"max_header_bytes\", max_header_bytes)):\n            if (isinstance(value, bool) or not isinstance(value, int)\n                    or value <= 0 or value > _MAX_ABSOLUTE):\n                raise ValueError(f\"{name} must be a positive bounded integer\")\n        if not isinstance(consumer_cursors, tuple) or not 1 <= len(consumer_cursors) <= _MAX_CONSUMERS:\n            raise ValueError(f\"consumer_cursors must be a nonempty tuple of at most {_MAX_CONSUMERS}\")\n        cursors = []\n        seen_objects = set()\n        for cursor in consumer_cursors:\n            if not isinstance(cursor, SpoolCursor):\n                raise ValueError(\"consumer_cursors must contain only SpoolCursor values\")\n            if id(cursor) in seen_objects:\n>               raise ValueError(\"consumer cursor declaration was reused\")\nE               ValueError: consumer cursor declaration was reused\n\nsrc/vibetrading/market_spool.py:123: ValueError\n=========================== short test summary info ============================\nFAILED docs/tickets/VN08-reviewer-counterexamples.py::test_independent_same_confirmed_position_for_two_consumers_is_valid[True]\n1 failed, 274 passed in 2.16s\n"
+}

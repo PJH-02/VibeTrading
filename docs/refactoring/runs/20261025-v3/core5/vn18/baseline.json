@@ -1,0 +1,39 @@
+{
+  "mode": "baseline",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/vn18-baseline-gasfjs_k",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/vn18-baseline-gasfjs_k/work",
+  "exit_code": 0,
+  "elapsed_seconds": 4.645502125000348,
+  "read_only_inputs_changed": [],
+  "relay_evidence": null,
+  "stdout_tail": "........................................................................ [ 19%]\n........................................................................ [ 39%]\n........................................................................ [ 58%]\n........................................................................ [ 78%]\n........................................................................ [ 97%]\n.........                                                                [100%]\n369 passed in 4.09s\n",
+  "tests": {
+    "passed": 369,
+    "failed": 0,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_vn17_role_assembly.py",
+    "tests/refactoring/test_runtime_checkpoint_integration.py",
+    "tests/refactoring/test_tx08_same_account_gate.py",
+    "tests/refactoring/test_local_storage.py",
+    "tests/refactoring/test_spool_recovery.py",
+    "tests/refactoring/test_local_transport.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/refactoring/test_tx10_manifest_registration.py",
+    "tests/test_dual_mock_and_assumed.py",
+    "tests/refactoring/test_kr_strategy_extraction.py"
+  ]
+}

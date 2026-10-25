@@ -1,0 +1,76 @@
+{
+  "decision": "PASS",
+  "ticket": "VN07",
+  "bounded_ticket": "VN07B",
+  "parent_complete": true,
+  "completion_class": "COMPLETE_LOCAL_IMPLEMENTATION",
+  "base_sha": "0b76fbd7fb029a192cea77447dbda22bee847ad0",
+  "source_sha": "79501a9c1484daa6528e129bab20d570dc66fcf9",
+  "product_paths": [
+    "src/vibetrading/runtime_checkpoint.py",
+    "src/vibetrading/strategy_runtime.py",
+    "src/vibetrading/local_runtime.py",
+    "src/vibetrading/etf_trading.py"
+  ],
+  "product_and_new_test_sha256": {
+    "src/vibetrading/runtime_checkpoint.py": "46ac8b152c5b12bb14ed78e1f05853f9f1c14ed2cde7d5bec4709c5b61a5ed08",
+    "src/vibetrading/strategy_runtime.py": "0be6dbd7c3c4c84d92f22c10b01193a107d5d5284b329d2862ca46c011bde932",
+    "src/vibetrading/local_runtime.py": "01509bc63079a29196e0c5ab8f30cf091050a295c2115848849b2cefc8a654d1",
+    "src/vibetrading/etf_trading.py": "2aa3c53c0948df4ce42c0de15b6e18192577a2d7bb767dfce44e4239e073463b",
+    "tests/refactoring/test_runtime_checkpoint.py": "89f876e9cdcbba7a0620677e676768ca9dce8693fb53f276c2e2aa339cae78ef",
+    "tests/refactoring/test_runtime_checkpoint_integration.py": "9e49ffd3b0e56b36842f4e53a0247f0d11ee16fe30949cdc9505e1ca1d8b15e3",
+    "tests/refactoring/test_runtime_checkpoint_acceptance.py": "d2c1b535a714ade98b7c0d04b17029b273f679171d331b942df40177117040a3"
+  },
+  "selected_provider": "opencode",
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "upstream_weight_identity": "UNKNOWN",
+  "worker_exits": {
+    "initial": 124,
+    "repair1": 0,
+    "repair2": 124
+  },
+  "repair_delegations": 2,
+  "owner_small_edit": "12-line checkpoint destination guard prevents overwriting selected SQLite main/WAL/SHM/journal. Separate pinned repo; documented AGENTS small-edit exception; no full owner takeover. Independent critical tests also added.",
+  "independent_scoped": {
+    "passed": 237,
+    "exit_code": 0,
+    "critical_cases": 22,
+    "note": "Overlaps full suite; not additive"
+  },
+  "full_regression": {
+    "passed": 2019,
+    "product_passed": 1850,
+    "tooling_passed": 169,
+    "live_data_deselected": 2,
+    "product_exit": 0,
+    "tooling_exit": 0,
+    "source_mutations": []
+  },
+  "test_provenance": "Tracked working-file manifest pinned identically for product/tooling profiles; product and new tests match accepted commit. In-flight status metadata is validated separately after legitimate completion records. Frozen original oracle bytes reconstructed only by LF/CRLF in disposable test snapshots; old source/tests/goldens unchanged.",
+  "scope": "Coupled bounded market + opt-in plugin state + seals over existing Paper/ETF journals; read-only journal proof, staged recovery and explicit combined readiness. Legacy market helper AST identical.",
+  "local_atomicity": "Exact-cut staged restore/quarantine across separate journals; never backup/restore/rewind economic SQLite data and never claim multi-DB atomic commits",
+  "unsupported_input_result": "Nonempty consumer-unproven suffix or ahead/behind journal => all selected consumers QUARANTINED, no risk retransmission. Continuous input processing belongs TX04B.",
+  "production_gate": "BLOCKED",
+  "deployment_wiring": "Opt-in owner API only; VN17 deployment/config wiring not included",
+  "baseline_diff_check_exit": 0,
+  "new_diff_diagnostics": 0,
+  "existing_tests_and_goldens_changed": false,
+  "exchange_order_and_cloud_implementation_changed": false,
+  "other_ticket_implementation": false,
+  "live_mutations": 0,
+  "data_deletions": 0,
+  "original_preservation_manifest": "/tmp/vt-vn07b-original-preservation.json",
+  "final_metadata_verification": {
+    "receipt": "docs/refactoring/runs/20261023-v3/vn07b/final-scope-status-validation.json",
+    "passed": 20,
+    "exit_code": 0,
+    "canonical_cli_exit": 0,
+    "other_50_task_objects_preserved": true
+  },
+  "original_workspace_application": {
+    "decision": "PASS",
+    "receipt": "docs/refactoring/runs/20261023-v3/vn07b/original-application.json",
+    "preserved_entries": 174,
+    "verified_paths": 42
+  }
+}

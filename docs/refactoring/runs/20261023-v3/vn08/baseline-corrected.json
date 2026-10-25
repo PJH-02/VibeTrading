@@ -1,0 +1,34 @@
+{
+  "label": "baseline-corrected",
+  "baseline": true,
+  "source": "/home/pjh/.codex/worktrees/v3-local-candidate/vibetrading",
+  "exit_code": 0,
+  "elapsed_seconds": 4.113623060999089,
+  "base": "/tmp/vt-vn08-baseline-corrected-2s7wg4cs",
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_spool_recovery.py",
+    "tests/refactoring/test_local_storage.py",
+    "tests/refactoring/test_checkpoint_startup.py",
+    "tests/refactoring/test_local_pipeline.py",
+    "tests/refactoring/test_local_engine.py"
+  ],
+  "tests": {
+    "passed": 239,
+    "failed": 0,
+    "skipped": 0
+  },
+  "source_changed": [],
+  "stdout_tail": "........................................................................ [ 30%]\n........................................................................ [ 60%]\n........................................................................ [ 90%]\n.......................                                                  [100%]\n239 passed in 3.54s\n"
+}

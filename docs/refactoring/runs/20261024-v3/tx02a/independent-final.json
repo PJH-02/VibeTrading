@@ -1,0 +1,39 @@
+{
+  "mode": "independent",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx02a-independent-uk22xq4g",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/tx02a-independent-uk22xq4g/work",
+  "exit_code": 0,
+  "elapsed_seconds": 4.941593223018572,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "........................................................................ [ 22%]\n........................................................................ [ 44%]\n........................................................................ [ 66%]\n........................................................................ [ 89%]\n...................................                                      [100%]\n323 passed in 4.29s\n",
+  "tests": {
+    "passed": 323,
+    "failed": 0,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_vnext_vn10.py",
+    "tests/refactoring/test_portfolio_ledger.py",
+    "tests/refactoring/test_paper_execution.py",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/refactoring/test_tx01_signal_binding.py",
+    "tests/refactoring/test_tx00_toss_data_only.py",
+    "tests/refactoring/test_kr_strategy_extraction.py",
+    "tests/refactoring/test_tx02a_owner_fence.py",
+    "docs/tickets/TX02A-reviewer-counterexamples.py"
+  ],
+  "host_command_record": "/home/pjh/.local/state/codex-opencode/runs/tx02a-independent-uk22xq4g/metadata.json"
+}

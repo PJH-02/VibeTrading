@@ -1,0 +1,40 @@
+{
+  "source_sha": "8f3e3b761be794f9636a81603b8073074c293b79",
+  "base": "/tmp/vt-vn08-full-fsurcgix",
+  "status": "PASS",
+  "profiles": [
+    {
+      "profile": "product-guarded",
+      "source_sha": "8f3e3b761be794f9636a81603b8073074c293b79",
+      "exit_code": 0,
+      "elapsed_seconds": 28.682177023001714,
+      "source_files_changed": [],
+      "stdout_tail": ".......... [ 64%]\n........................................................................ [ 68%]\n........................................................................ [ 72%]\n........................................................................ [ 76%]\n........................................................................ [ 80%]\n........................................................................ [ 83%]\n........................................................................ [ 87%]\n........................................................................ [ 91%]\n........................................................................ [ 95%]\n........................................................................ [ 99%]\n..............                                                           [100%]\n=============================== warnings summary ===============================\ntests/refactoring/test_src_packaging.py::test_setuptools_metadata_discovers_canonical_and_legacy_packages\n  /usr/lib/python3/dist-packages/babel/messages/catalog.py:13: DeprecationWarning: 'cgi' is deprecated and slated for removal in Python 3.13\n    from cgi import parse_header\n\ntests/refactoring/test_src_packaging.py::test_setuptools_metadata_discovers_canonical_and_legacy_packages\n  /usr/lib/python3/dist-packages/setuptools/sandbox.py:13: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html\n    import pkg_resources\n\ntests/refactoring/test_src_packaging.py::test_setuptools_metadata_discovers_canonical_and_legacy_packages\n  /usr/lib/python3/dist-packages/pkg_resources/__init__.py:2871: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('google')`.\n  Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages\n    declare_namespace(pkg)\n\ntests/refactoring/test_src_packaging.py::test_setuptools_metadata_discovers_canonical_and_legacy_packages\n  /usr/lib/python3/dist-packages/pkg_resources/__init__.py:2871: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('zope')`.\n  Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages\n    declare_namespace(pkg)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n1886 passed, 2 deselected, 4 warnings in 27.36s\n",
+      "status": "PASS"
+    },
+    {
+      "profile": "tooling-os",
+      "source_sha": "8f3e3b761be794f9636a81603b8073074c293b79",
+      "exit_code": 0,
+      "elapsed_seconds": 6.0887978469982045,
+      "source_files_changed": [],
+      "stdout_tail": "........................................................................ [ 42%]\n........................................................................ [ 85%]\n.........................                                                [100%]\n169 passed in 5.70s\n",
+      "status": "PASS"
+    }
+  ],
+  "frozen_oracle_inputs": {
+    "docs/refactoring/runs/20261018-stage-assignment/schema_oracle.json": {
+      "checkout_sha256": "b31751c14369f01943c16a853ea683b4702fad91716efb5c36c2fc76d0237053",
+      "frozen_sha256": "028d9166533d077aacf03cd9c74adb563a2601e0aeb1333029c7fcb8a7e0625c",
+      "reconstruction": "Only LF/CRLF representation; exact original frozen SHA required, values and golden files untouched"
+    },
+    "docs/refactoring/runs/20261018-stage-assignment/encoding_oracle.json": {
+      "checkout_sha256": "cd8f5a8446bb4ed6095416a1c50d1d526db49ac17a8e98b1a57358b47554d733",
+      "frozen_sha256": "1bb9e0d00e2cbb1110e25cf85e5ac94fc97aeb42604c7ff658b2934f99bed513",
+      "reconstruction": "Only LF/CRLF representation; exact original frozen SHA required, values and golden files untouched"
+    }
+  },
+  "legacy_guard_sha256": "eb34edb62d47e484d6d7bf5fb6572750c8cbfa0ac5a4abd40bc1fbd9d3e130b9",
+  "tests_and_historical_goldens_modified": false,
+  "extra_six_tooling_review_probes": true
+}

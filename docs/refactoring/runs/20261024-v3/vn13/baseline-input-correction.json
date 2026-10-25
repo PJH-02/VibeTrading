@@ -1,0 +1,16 @@
+{
+  "scope": "Private isolated input allowlist only; no product change or worker repair",
+  "initial_baseline_exit": 1,
+  "initial_baseline_passed": 195,
+  "initial_baseline_failed": 1,
+  "initial_error": "Missing preserved root strategies compatibility import aliases in private snapshot",
+  "readonly_inputs_added": [
+    "strategies/__init__.py",
+    "strategies/example_signal.py"
+  ],
+  "corrected_baseline_exit": 0,
+  "corrected_baseline_passed": 196,
+  "corrected_missing_feature_review_passed": 196,
+  "corrected_missing_feature_review_failed": 7,
+  "initial_diagnostics_valid_as_product_failure": false
+}

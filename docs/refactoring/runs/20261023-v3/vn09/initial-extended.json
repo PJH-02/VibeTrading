@@ -1,0 +1,37 @@
+{
+  "label": "initial-extended",
+  "baseline": false,
+  "source": "/tmp/vt-bounded-891g7u6s/work",
+  "exit_code": 1,
+  "elapsed_seconds": 3.053995384994778,
+  "base": "/tmp/vt-vn09-initial-extended-28er7eka",
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_spool_recovery.py",
+    "tests/refactoring/test_local_storage.py",
+    "tests/refactoring/test_archive_integrity.py",
+    "tests/refactoring/test_retained_spool.py",
+    "tests/refactoring/test_retained_storage.py",
+    "tests/refactoring/test_spool_gc.py",
+    "tests/refactoring/test_spool_gc_storage.py",
+    "docs/tickets/VN09-reviewer-counterexamples.py"
+  ],
+  "tests": {
+    "passed": 205,
+    "failed": 6,
+    "skipped": 0
+  },
+  "source_changed": [],
+  "stdout_tail": "idence.symlink_to(s.source.spool_root,target_is_directory=True)\n        invoked=changing_verify(s,rebind)\n>       result=call(s,intent_path=target);assert invoked;blocked(s,result)\n                                                         ^^^^^^^^^^^^^^^^^\n\ndocs/tickets/VN09-reviewer-counterexamples.py:194: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ns = namespace(folder=PosixPath('/tmp/pytest/test_independent_intent_parent1/market'), settings=RuntimeSettings(env={'VIBET...ence\":3,\"price\":\"100.123456789012345678\",\"quantity\":\"1E-18\",\"aggressor_side\":\"unknown\",\"trade_id\":null}'], facts=False)\nresult = {'blocked': [], 'catalogue_generation': '28041a09a63143fdac6880119df01908', 'checkpoint': {'durable_sequence': 3, 'sha256': '58a7ebb2a89a668e0288b0fd0efef6baec32018526d8d81c73b87bcbf0d717b2'}, 'deleted': 0, ...}\n\n    def blocked(s,result):\n>       assert result[\"eligible\"]==[] and result[\"deleted\"]==0 and result[\"executable\"] is False,result\nE       AssertionError: {'blocked': [], 'catalogue_generation': '28041a09a63143fdac6880119df01908', 'checkpoint': {'durable_sequence': 3, 'sha256': '58a7ebb2a89a668e0288b0fd0efef6baec32018526d8d81c73b87bcbf0d717b2'}, 'deleted': 0, ...}\nE       assert ([{'bytes': 99...0000000, ...}] == []\nE         \nE         Left contains 2 more items, first extra item: {'bytes': 990, 'device': 152, 'inode': 4725, 'mtime_ns': 1999999990000000000, ...}\nE         Use -v to get more diff)\n\ndocs/tickets/VN09-reviewer-counterexamples.py:82: AssertionError\n_ test_independent_evidence_iterable_capacity_is_checked_before_materialization[legacy] _\n\nsetup = <function setup.<locals>.create at 0x7053247b3e20>\n\n    def test_independent_evidence_iterable_capacity_is_checked_before_materialization(setup):\n        from vibetrading.market_spool import read_spool_records\n        s=setup();accepted(s)\n        record=next(read_spool_records(s.source.spool_root,producer_id=s.source.producer,\n            incarnation=s.source.incarnation,**s.source.limits.reader_kwargs))\n        def excessive():\n            for n in range(1000):\n                if n>500:raise AssertionError(\"unbounded evidence iterable consumed\")\n                yield record\n        before=preserved(s)\n        with pytest.raises((ValueError,RuntimeError)):\n>           s.storage.spool_gc_evidence(s.source.producer,excessive())\n\ndocs/tickets/VN09-reviewer-counterexamples.py:210: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nsrc/vibetrading/local_storage.py:614: in spool_gc_evidence\n    records = tuple(records)\n              ^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\n    def excessive():\n        for n in range(1000):\n>           if n>500:raise AssertionError(\"unbounded evidence iterable consumed\")\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AssertionError: unbounded evidence iterable consumed\n\ndocs/tickets/VN09-reviewer-counterexamples.py:206: AssertionError\n_ test_independent_evidence_iterable_capacity_is_checked_before_materialization[compact] _\n\nsetup = <function setup.<locals>.create at 0x7053247e3e20>\n\n    def test_independent_evidence_iterable_capacity_is_checked_before_materialization(setup):\n        from vibetrading.market_spool import read_spool_records\n        s=setup();accepted(s)\n        record=next(read_spool_records(s.source.spool_root,producer_id=s.source.producer,\n            incarnation=s.source.incarnation,**s.source.limits.reader_kwargs))\n        def excessive():\n            for n in range(1000):\n                if n>500:raise AssertionError(\"unbounded evidence iterable consumed\")\n                yield record\n        before=preserved(s)\n        with pytest.raises((ValueError,RuntimeError)):\n>           s.storage.spool_gc_evidence(s.source.producer,excessive())\n\ndocs/tickets/VN09-reviewer-counterexamples.py:210: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nsrc/vibetrading/local_storage.py:614: in spool_gc_evidence\n    records = tuple(records)\n              ^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\n    def excessive():\n        for n in range(1000):\n>           if n>500:raise AssertionError(\"unbounded evidence iterable consumed\")\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE           AssertionError: unbounded evidence iterable consumed\n\ndocs/tickets/VN09-reviewer-counterexamples.py:206: AssertionError\n=========================== short test summary info ============================\nFAILED docs/tickets/VN09-reviewer-counterexamples.py::test_independent_intent_destination_appearing_during_verify_is_preserved[legacy]\nFAILED docs/tickets/VN09-reviewer-counterexamples.py::test_independent_intent_destination_appearing_during_verify_is_preserved[compact]\nFAILED docs/tickets/VN09-reviewer-counterexamples.py::test_independent_intent_parent_rebinding_cannot_overwrite_spool_checkpoint[legacy]\nFAILED docs/tickets/VN09-reviewer-counterexamples.py::test_independent_intent_parent_rebinding_cannot_overwrite_spool_checkpoint[compact]\nFAILED docs/tickets/VN09-reviewer-counterexamples.py::test_independent_evidence_iterable_capacity_is_checked_before_materialization[legacy]\nFAILED docs/tickets/VN09-reviewer-counterexamples.py::test_independent_evidence_iterable_capacity_is_checked_before_materialization[compact]\n6 failed, 205 passed in 2.67s\n"
+}

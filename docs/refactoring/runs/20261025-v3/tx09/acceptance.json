@@ -1,0 +1,48 @@
+{
+  "decision": "PASS",
+  "task_id": "TX09",
+  "source_sha": "f3ab055f34de1806fa00ba478a03d70ce87cc93c",
+  "selected_provider": "opencode",
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "worker_exit": 0,
+  "delegate_exit": 0,
+  "repair_delegations": 0,
+  "owner_product_edits": 1,
+  "changed_product_symbols": [
+    "TelegramController.__init__",
+    "TelegramController._handle",
+    "TelegramController._read_projection",
+    "TelegramController._projection_reply"
+  ],
+  "other_product_methods_ast_unchanged": 30,
+  "product_paths": [
+    "src/vibetrading/telegram.py"
+  ],
+  "scoped_test_passed": 106,
+  "independent_exit": 0,
+  "product_and_test_sha256": {
+    "src/vibetrading/telegram.py": "c84ee8a63978e172557535581b881fed46eb2ef284e4ed4aef975253018ffae1",
+    "tests/refactoring/test_tx09_paper_queries.py": "a4cfd77fa7e0649ca7d6059200d893f5b748477ec44f5fa733b2ab5970e08c80",
+    "docs/tickets/TX09-reviewer-counterexamples.py": "b4e9c329ac354e32e39333babdfd23b6dd2fccf9e9d7980c26b538db4b2c515e"
+  },
+  "full_batch_validation": {
+    "receipt": "docs/refactoring/runs/20261025-v3/batch-vn15-tx10/full-regression.json",
+    "source_sha": "b74e22d443aff428e7971d1695cf00ecd9553818",
+    "passed": 2438,
+    "exit_codes": [
+      0,
+      0
+    ],
+    "deselected_live_data": 2
+  },
+  "live_readiness": false,
+  "scope": "Existing local Paper contracts only; no live/venue/cloud/strategy rebuild or data deletion",
+  "owner_review_receipt": "docs/refactoring/runs/20261025-v3/tx09/owner-review.json",
+  "worker_tested_original_output": true,
+  "owner_reviewed_source_independently_tested": true,
+  "final_batch_sha256": {
+    "src/vibetrading/telegram.py": "c84ee8a63978e172557535581b881fed46eb2ef284e4ed4aef975253018ffae1",
+    "tests/refactoring/test_tx09_paper_queries.py": "a4cfd77fa7e0649ca7d6059200d893f5b748477ec44f5fa733b2ab5970e08c80",
+    "docs/tickets/TX09-reviewer-counterexamples.py": "b4e9c329ac354e32e39333babdfd23b6dd2fccf9e9d7980c26b538db4b2c515e"
+  }
+}

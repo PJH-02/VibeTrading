@@ -5,6 +5,7 @@ import argparse
 import datetime
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 
@@ -94,6 +95,162 @@ def main():
     output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     print(json.dumps({"state":result["state"],"changed_sources":len(result["changed_sources"]),
         "roles":len(result["roles"]),"blockers":len(result["blockers"])},ensure_ascii=False))
+
+
+def build_local(root: Path, *, expected_head: str, paths) -> dict:
+    """Stdlib-only readonly source review for local rollback preparation.
+
+    Args:
+        root: Repository root directory
+        expected_head: Expected lowercase40hex git commit hash
+        paths: List/tuple of 1-1024 unique canonical repository-relative file names
+
+    Returns:
+        Dict with review state including file hashes and verification status
+    """
+    # Validate parameters
+    if not isinstance(root, Path):
+        raise TypeError("root must be a Path object")
+    if root.is_symlink():
+        raise ValueError("root symlink rejected")
+    if not root.is_dir():
+        raise ValueError("root must be an existing directory")
+
+    if not isinstance(expected_head, str):
+        raise TypeError("expected_head must be a string")
+    if len(expected_head) != 40 or not all(c in '0123456789abcdef' for c in expected_head):
+        raise ValueError("expected_head must be lowercase40hex")
+
+    if not isinstance(paths, (list, tuple)):
+        raise TypeError("paths must be a list or tuple")
+    if not (1 <= len(paths) <= 1024):
+        raise ValueError("paths must contain 1-1024 entries")
+
+    # Get actual git HEAD
+    try:
+        result = subprocess.run(
+            ['git', 'rev-parse', 'HEAD'],
+            cwd=root,
+            capture_output=True,
+            check=True
+        )
+        actual_head = result.stdout.decode('utf-8').strip().lower()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        raise RuntimeError("git command failed or not available")
+
+    if actual_head != expected_head:
+        raise ValueError(f"HEAD mismatch: expected {expected_head}, got {actual_head}")
+
+    # Validate paths and collect files
+    files = {}
+    allowed_suffixes = {'.py', '.json', '.yaml', '.yml', '.toml', '.md', '.txt'}
+    forbidden_component_names = {'.', '..'}
+    secret_components = {'.git', '.ssh', '.aws', 'secrets', 'runtime_data'}
+    forbidden_suffixes = {'.key', '.pem', '.p12', '.database'}
+
+    for path_str in paths:
+        if not isinstance(path_str, str):
+            raise TypeError("all paths must be strings")
+
+        # Reject raw absolute paths
+        if Path(path_str).is_absolute():
+            raise ValueError(f"raw absolute path not allowed: {path_str}")
+
+        # Canonicalization and validation of relative paths
+        # Check for '.', '..', '//', and './' components and forbidden names
+        normalized_path = Path(path_str).as_posix()
+        if normalized_path != path_str: # Check for non-canonical forms like double slashes, etc.
+             raise ValueError(f"non-canonical path: {path_str}")
+        if "/./" in normalized_path or "/../" in normalized_path or normalized_path.startswith("./") or normalized_path.startswith("../"):
+            raise ValueError(f"unsafe path components or aliases in: {path_str}")
+        if normalized_path == "." or normalized_path == "..":
+             raise ValueError(f"unsafe path components or aliases in: {path_str}")
+
+        if path_str in files:
+            raise ValueError("duplicate path rejected")
+        parts = Path(path_str).parts
+        if any(part in forbidden_component_names for part in parts):
+            raise ValueError(f"unsafe path components in: {path_str}")
+
+        if any(part in secret_components for part in parts):
+             raise ValueError(f"secret path component in: {path_str}")
+
+        # Check for '.env*' files
+        if any(part.startswith(".env") for part in parts):
+            raise ValueError(f"forbidden .env* file in: {path_str}")
+
+        path = root / path_str
+
+        # Check if resulting path is a symlink
+        if any(parent.is_symlink() for parent in (path, *path.parents)):
+            raise ValueError("symlink not allowed (file or ancestor)")
+        if path.is_symlink():
+            raise ValueError(f"symlink not allowed: {path_str}")
+
+        # Check file existence and type
+        if not path.exists():
+            raise ValueError(f"file not found: {path_str}")
+        if not path.is_file():
+            raise ValueError(f"not a regular file: {path_str}")
+
+        # Check file extension and forbidden suffixes
+        if path.suffix in forbidden_suffixes:
+            raise ValueError(f"disallowed file extension/suffix: {path_str}")
+        if path.suffix not in allowed_suffixes:
+            raise ValueError(f"disallowed file extension: {path_str}")
+
+        # Check if file is tracked in git
+        try:
+            result = subprocess.run(
+                ['git', 'ls-files', '--error-unmatch', str(path)],
+                cwd=root,
+                capture_output=True,
+                check=True
+            )
+            # No need to decode stdout here, just checking exit code
+        except subprocess.CalledProcessError:
+            raise ValueError(f"untracked file: {path_str}")
+
+        # Verify file content matches committed blob
+        try:
+            result = subprocess.run(
+                ['git', 'cat-file', 'blob', f'HEAD:{path_str}'],
+                cwd=root,
+                capture_output=True,
+                check=True
+            )
+            committed_content = result.stdout
+        except subprocess.CalledProcessError:
+            raise ValueError(f"failed to read committed blob: {path_str}")
+
+        actual_content = path.read_bytes()
+        if actual_content != committed_content:
+            raise ValueError(f"content drift: {path_str}")
+
+        # Calculate SHA256
+        sha256 = hashlib.sha256(actual_content).hexdigest()
+        files[path_str] = sha256
+
+    package_path = source_package(root)
+    source_layout = "src" if package_path == root/"src"/PACKAGE else "flat"
+
+    return {
+        "schema_version": 1,
+        "state": "LOCAL_REVIEW_PACKAGE_ONLY",
+        "source_sha": expected_head,
+        "source_layout": source_layout,
+        "files": files,
+        "server_deployed": False,
+        "live_active": False,
+        "build_image_verified": False,
+        "external_gates": {
+            "current_mount_device": "NOT_RUN",
+            "immutable_candidate_image": "NOT_RUN",
+            "rollback_image_digest": "NOT_RUN",
+            "production_load": "NOT_RUN",
+            "account_verification": "NOT_RUN"
+        }
+    }
 
 
 if __name__=="__main__":

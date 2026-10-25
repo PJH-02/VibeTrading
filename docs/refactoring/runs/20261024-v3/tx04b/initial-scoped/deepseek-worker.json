@@ -1,0 +1,85 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "worker_exit": 0,
+  "delegate_exit": 0,
+  "actual_test_commands": [
+    {
+      "command": "python3 -m pytest --version",
+      "exit_code": 0,
+      "output_tail": "pytest 9.0.2\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_strategy_runtime.py tests/refactoring/test_strategy_restart_barrier.py tests/refactoring/test_local_engine.py tests/refactoring/test_local_runtime.py tests/refactoring/test_runtime_checkpoint_integration.py tests/refactoring/test_paper_execution.py tests/refactoring/test_tx02_joint_gate.py tests/refactoring/test_tx04a_alignment.py tests/refactoring/test_tx04b_continuous.py",
+      "exit_code": 0,
+      "output_tail": "........................................................................ [ 55%]\n..........................................................               [100%]\n130 passed in 4.90s\n"
+    },
+    {
+      "command": "python3 -m pytest -q -p no:cacheprovider tests/refactoring/test_strategy_runtime.py -x",
+      "exit_code": 1,
+      "output_tail": "e.py:458\n  /work/tests/refactoring/test_strategy_runtime.py:458: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.asyncio\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ============================\nFAILED tests/refactoring/test_strategy_runtime.py::test_real_shared_engine_applies_once_replay_has_no_orders_and_fault_is_dependency_scoped\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n1 failed, 15 passed, 1 warning in 1.79s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_strategy_runtime.py",
+      "exit_code": 0,
+      "output_tail": "................                                                         [100%]\n16 passed in 3.36s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_strategy_runtime.py tests/refactoring/test_strategy_restart_barrier.py tests/refactoring/test_local_engine.py tests/refactoring/test_local_runtime.py tests/refactoring/test_runtime_checkpoint_integration.py tests/refactoring/test_paper_execution.py tests/refactoring/test_tx02_joint_gate.py tests/refactoring/test_tx04a_alignment.py",
+      "exit_code": 0,
+      "output_tail": "........................................................................ [ 55%]\n..........................................................               [100%]\n130 passed in 7.54s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_paper_execution.py -k \"restart_retains\"",
+      "exit_code": 0,
+      "output_tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.22s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_paper_execution.py -k \"gap_blocks\"",
+      "exit_code": 0,
+      "output_tail": ".                                                                        [100%]\n1 passed, 11 deselected in 0.20s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_tx02_joint_gate.py",
+      "exit_code": 0,
+      "output_tail": "..                                                                       [100%]\n2 passed in 0.32s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_tx04b_continuous.py",
+      "exit_code": 0,
+      "output_tail": "........                                                                 [100%]\n8 passed in 0.55s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_strategy_runtime.py tests/refactoring/test_strategy_restart_barrier.py tests/refactoring/test_local_engine.py tests/refactoring/test_local_runtime.py tests/refactoring/test_runtime_checkpoint_integration.py tests/refactoring/test_paper_execution.py tests/refactoring/test_tx02_joint_gate.py tests/refactoring/test_tx04a_alignment.py tests/refactoring/test_tx04b_continuous.py",
+      "exit_code": 0,
+      "output_tail": "........................................................................ [ 52%]\n..................................................................       [100%]\n138 passed in 4.47s\n"
+    }
+  ],
+  "private_run": "/home/pjh/.local/state/codex-opencode/runs/tx04b-worker-hh9l7a_8",
+  "automatic_acceptance": false,
+  "denied_or_error_tool_attempts": [
+    {
+      "tool": "bash",
+      "input": {
+        "command": "ls /work/src/vibetrading && ls /work/tests/refactoring | head -50"
+      },
+      "error": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"python3 -m pytest*\",\"action\":\"allow\"}]"
+    },
+    {
+      "tool": "bash",
+      "input": {
+        "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_strategy_runtime.py tests/refactoring/test_strategy_restart_barrier.py tests/refactoring/test_local_engine.py tests/refactoring/test_local_runtime.py tests/refactoring/test_runtime_checkpoint_integration.py tests/refactoring/test_paper_execution.py tests/refactoring/test_tx02_joint_gate.py tests/refactoring/test_tx04a_alignment.py tests/refactoring/test_tx04b_continuous.py 2>&1 | tail -30",
+        "timeout": 300000
+      },
+      "error": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"python3 -m pytest*\",\"action\":\"allow\"}]"
+    },
+    {
+      "tool": "bash",
+      "input": {
+        "command": "python3 -c \"import inspect, vibetrading.hot_path as h; print(inspect.getsource(h.HotPathStore.latest_book)); print(inspect.getsource(h.HotPathStore.snapshot))\""
+      },
+      "error": "The user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{\"permission\":\"*\",\"action\":\"allow\",\"pattern\":\"*\"},{\"permission\":\"*\",\"action\":\"deny\",\"pattern\":\"*\"},{\"permission\":\"bash\",\"pattern\":\"*\",\"action\":\"deny\"},{\"permission\":\"bash\",\"pattern\":\"python3 -m pytest*\",\"action\":\"allow\"}]"
+    }
+  ]
+}

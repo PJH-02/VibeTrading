@@ -1,0 +1,21 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "worker_exit": 0,
+  "delegate_exit": 0,
+  "actual_test_commands": [
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_vn15_paper_projection.py tests/refactoring/test_vnext_vn14b.py tests/refactoring/test_control_inbox.py tests/refactoring/test_outbox_isolation.py tests/test_telegram_status.py tests/test_dual_mock_and_assumed.py tests/refactoring/test_tx09_paper_queries.py",
+      "exit_code": 1,
+      "output_tail": "xpired[\"message\"][\"date\"] -= 1000\n                bot._state.receive(expired)\n                await bot._handle(None, expired)\n>               assert \"명령 형식\" in bot._state.next_message()[\"text\"]\nE               AssertionError: assert '명령 형식' in '명령 거절: owner의 만료·범위·준비 상태를 확인하세요.'\n\ntests/refactoring/test_tx09_paper_queries.py:337: AssertionError\n=========================== short test summary info ============================\nFAILED tests/refactoring/test_tx09_paper_queries.py::test_reader_failure_malformed_oversized_and_nonfinite_are_fixed_unavailable\nFAILED tests/refactoring/test_tx09_paper_queries.py::test_invalid_acl_and_expired_control_reporting_never_commit\n2 failed, 100 passed in 1.63s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_vn15_paper_projection.py tests/refactoring/test_vnext_vn14b.py tests/refactoring/test_control_inbox.py tests/refactoring/test_outbox_isolation.py tests/test_telegram_status.py tests/test_dual_mock_and_assumed.py tests/refactoring/test_tx09_paper_queries.py",
+      "exit_code": 0,
+      "output_tail": "........................................................................ [ 70%]\n..............................                                           [100%]\n102 passed in 1.53s\n"
+    }
+  ],
+  "private_run": "/home/pjh/.local/state/codex-opencode/runs/tx09-worker-ie9646hb",
+  "automatic_acceptance": false
+}

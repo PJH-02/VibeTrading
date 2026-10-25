@@ -11,7 +11,8 @@ from pathlib import Path
 
 import aiohttp
 from cryptography.hazmat.primitives import serialization
-from vibetrading.dashboard.projection import MarketProjection, mm_projection, runtime_orders
+from vibetrading.dashboard.projection import (MarketProjection, mm_projection, paper_projection,
+                                              paper_projection_paths, runtime_orders)
 from vibetrading.dashboard.accounts import bybit_account
 from vibetrading.local_snapshot import SnapshotError, local_snapshot_config, read_market_snapshot
 
@@ -62,6 +63,7 @@ async def run(*, stop: asyncio.Event | None = None) -> None:
         raise ValueError("Unknown dashboard runtime profile")
     local_mode = profile == "local"
     snapshot_file, snapshot_budgets = local_snapshot_config(os.environ) if local_mode else (None, None)
+    paper_paths = paper_projection_paths(os.environ) if local_mode else ()
     url = os.environ["DASHBOARD_SITE_URL"].rstrip("/")
     if not url.startswith("https://"):
         raise ValueError("DASHBOARD_SITE_URL must use HTTPS")
@@ -76,10 +78,11 @@ async def run(*, stop: asyncio.Event | None = None) -> None:
     telemetry: dict = {}
     connection = None
     if local_mode:
-        # Market data already belongs to the engine. The local facts reader
-        # has not been configured here, so do not invent strategy telemetry.
-        errors["local-telemetry"] = {"source": "local-facts", "type": "StrategyTelemetryNotConfigured",
-                                     "at_ms": int(time.time() * 1000)}
+        if not paper_paths:
+            # Market data already belongs to the engine. Without explicit paper
+            # DBs do not invent strategy telemetry.
+            errors["local-telemetry"] = {"source": "local-facts", "type": "StrategyTelemetryNotConfigured",
+                                         "at_ms": int(time.time() * 1000)}
     else:
         import nats
         connection = await nats.connect(os.environ.get("NATS_URL", "nats://nats:4222"), max_reconnect_attempts=-1)
@@ -150,7 +153,27 @@ async def run(*, stop: asyncio.Event | None = None) -> None:
                         pass
                     orders.extend(exchange_orders)
                     strategies.extend(exchange_strategies)
-                    orders = sorted(orders, key=lambda x: x["updated_ms"], reverse=True)[:1000]
+                    if local_mode and paper_paths:
+                        try:
+                            paper = await asyncio.to_thread(paper_projection, paper_paths, limit=500)
+                        except Exception:
+                            errors["paper-projection"] = {"source": "paper-projection",
+                                                          "type": "PaperProjectionUnavailable",
+                                                          "at_ms": int(time.time() * 1000)}
+                        else:
+                            orders.extend(paper["orders"])
+                            strategies.extend(paper["strategies"])
+                            errors.pop("paper-projection", None)
+                            paper_errors = {
+                                "paper-projection:" + str(item["source"]): {
+                                    "source": "paper-projection", "type": item["type"],
+                                    "reason": item["reason"], "at_ms": int(time.time() * 1000)}
+                                for item in paper["errors"]}
+                            for error_key in [key for key in errors if key.startswith("paper-projection:")]:
+                                if error_key not in paper_errors:
+                                    errors.pop(error_key, None)
+                            errors.update(paper_errors)
+                    orders = sorted(orders, key=lambda x: x.get("updated_ms") or 0, reverse=True)[:1000]
                     try:
                         account_state = json.loads((monitor_root / "timefolio.json").read_text(encoding="utf-8"))
                     except (OSError, ValueError):

@@ -48,10 +48,54 @@ class PaperExecution:
             context.prec = 128
             for identity, order in state["orders"].items():
                 row = rows[identity]
+                if not isinstance(order, dict):
+                    raise ValueError("Paper matcher order record is malformed")
                 if (D(row["quantity"])-D(row["filled"]) != D(order["leaves"]) or
                         row["strategy"] != order["strategy"] or row["instrument"] != order["instrument"] or
                         row["side"] != order["side"] or json.loads(row["rules"]) != order["rules"]):
                     raise ValueError("Paper matcher and durable order facts disagree")
+                try:
+                    payload = json.loads(row["payload"])
+                except (TypeError, ValueError) as exc:
+                    raise ValueError("Paper matcher order payload is malformed") from exc
+                metadata = payload.get("metadata") if isinstance(payload, dict) else None
+                if not isinstance(metadata, dict):
+                    raise ValueError("Paper matcher order payload metadata is malformed")
+                saved_price, admitted_price = order.get("price"), payload.get("limit_price")
+                if not isinstance(saved_price, str) or not isinstance(admitted_price, str):
+                    raise ValueError("Paper matcher protective price is missing or malformed")
+                try:
+                    saved_price, admitted_price = D(saved_price), D(admitted_price)
+                except (ArithmeticError, TypeError, ValueError) as exc:
+                    raise ValueError("Paper matcher protective price is missing or malformed") from exc
+                if not saved_price.is_finite() or not admitted_price.is_finite():
+                    raise ValueError("Paper matcher protective price is missing or malformed")
+                if saved_price != admitted_price:
+                    raise ValueError("Paper matcher protective price differs from the admitted order")
+                saved_expiry, durable_expiry = order.get("expiry_ns"), row["expiry_ns"]
+                if type(saved_expiry) is not int or type(durable_expiry) is not int:
+                    raise ValueError("Paper matcher expiry is missing or malformed")
+                if saved_expiry != durable_expiry:
+                    raise ValueError("Paper matcher expiry differs from the durable order")
+                for name in ("post_only", "reduce_only"):
+                    saved, admitted = order.get(name), metadata.get(name)
+                    if type(saved) is not bool or type(admitted) is not bool:
+                        raise ValueError("Paper matcher " + name + " is missing or malformed")
+                    if saved is not admitted:
+                        raise ValueError("Paper matcher " + name + " differs from the admitted order")
+                saved_tif, admitted_tif = order.get("time_in_force"), metadata.get("time_in_force")
+                if not isinstance(saved_tif, str) or not isinstance(admitted_tif, str):
+                    raise ValueError("Paper matcher time_in_force is missing or malformed")
+                if saved_tif != admitted_tif:
+                    raise ValueError("Paper matcher time_in_force differs from the admitted order")
+                if "group_id" not in order or "group_id" not in metadata:
+                    raise ValueError("Paper matcher group_id is missing or malformed")
+                saved_group, admitted_group = order["group_id"], metadata["group_id"]
+                if not (saved_group is None or isinstance(saved_group, str)) or not (
+                        admitted_group is None or isinstance(admitted_group, str)):
+                    raise ValueError("Paper matcher group_id is missing or malformed")
+                if saved_group != admitted_group:
+                    raise ValueError("Paper matcher group_id differs from the admitted order")
 
     def _check_bound(self, state):
         if len(state["orders"]) > self.config["max_open_orders"]:
@@ -70,6 +114,7 @@ class PaperExecution:
             with self.ledger.transaction():
                 self._aligned(staged)
                 result = operation(staged)
+                self._aligned(staged)
                 self._check_bound(staged)
                 self.ledger.save_paper_state(staged)
         self._state = staged

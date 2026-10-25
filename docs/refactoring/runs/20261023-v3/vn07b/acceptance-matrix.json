@@ -1,0 +1,84 @@
+{
+  "source_sha": "79501a9c1484daa6528e129bab20d570dc66fcf9",
+  "criteria": [
+    {
+      "criterion": "plugin_state_and_exact_cut",
+      "decision": "PASS",
+      "passing_tests": [
+        "tests.refactoring.test_runtime_checkpoint_acceptance::test_exact_cut_restores_real_plugin_and_waits_for_fresh_matching_input",
+        "tests.refactoring.test_runtime_checkpoint_integration::test_restored_runtime_matches_uninterrupted_next_event_and_has_no_duplicate",
+        "tests.refactoring.test_runtime_checkpoint_integration::test_partial_fill_reservation_and_reopened_next_event_are_economic_parity"
+      ]
+    },
+    {
+      "criterion": "all_selected_accounts_fenced",
+      "decision": "PASS",
+      "passing_tests": [
+        "tests.refactoring.test_runtime_checkpoint::test_nested_account_row_change_breaks_journal_equality_at_same_row_count",
+        "tests.refactoring.test_runtime_checkpoint_acceptance::test_readiness_side_effect_cannot_commit_stale_journal_proof",
+        "tests.refactoring.test_runtime_checkpoint_acceptance::test_restore_hook_side_effect_quarantines_before_first_callback",
+        "tests.refactoring.test_runtime_checkpoint_acceptance::test_corrupt_newest_bundle_fences_before_any_restore_side_effect",
+        "tests.refactoring.test_runtime_checkpoint_acceptance::test_two_real_account_journals_restore_together_or_fence_together[False]",
+        "tests.refactoring.test_runtime_checkpoint_acceptance::test_two_real_account_journals_restore_together_or_fence_together[True]"
+      ]
+    },
+    {
+      "criterion": "real_runtime_startup_and_etf",
+      "decision": "PASS",
+      "passing_tests": [
+        "tests.refactoring.test_checkpoint_runtime::test_checkpoint_startup_rejects_etf_before_factory_or_account_initialization",
+        "tests.refactoring.test_runtime_checkpoint::test_etf_unresolved_dispatch_state_quarantines_before_any_callback[PREPARED]",
+        "tests.refactoring.test_runtime_checkpoint::test_etf_unresolved_dispatch_state_quarantines_before_any_callback[HANDOFF]",
+        "tests.refactoring.test_runtime_checkpoint::test_etf_unresolved_dispatch_state_quarantines_before_any_callback[UNKNOWN]",
+        "tests.refactoring.test_runtime_checkpoint::test_etf_malformed_pending_intent_is_rejected_even_with_pending_status",
+        "tests.refactoring.test_runtime_checkpoint_acceptance::test_etf_checkpoint_gate_precedes_unguarded_order_and_observation[RECOVERING]",
+        "tests.refactoring.test_runtime_checkpoint_acceptance::test_etf_checkpoint_gate_precedes_unguarded_order_and_observation[QUARANTINED]",
+        "tests.refactoring.test_runtime_checkpoint_acceptance::test_real_legacy_etf_journal_and_paper_share_recovery_boundary",
+        "tests.refactoring.test_runtime_checkpoint_acceptance::test_real_driver_starts_transport_and_etf_only_after_group_ready[False]",
+        "tests.refactoring.test_runtime_checkpoint_acceptance::test_real_driver_starts_transport_and_etf_only_after_group_ready[True]",
+        "tests.refactoring.test_runtime_checkpoint_acceptance::test_unguarded_etf_rechecks_checkpoint_gate_after_observation_await",
+        "tests.refactoring.test_runtime_checkpoint_integration::test_run_engine_requires_readiness_before_inspecting_runtime_fields"
+      ]
+    },
+    {
+      "criterion": "corruption_bounds_and_io",
+      "decision": "PASS",
+      "passing_tests": [
+        "tests.refactoring.test_checkpoint_runtime::test_checkpoint_startup_rejects_each_missing_option_before_setup[checkpoint_path]",
+        "tests.refactoring.test_checkpoint_runtime::test_checkpoint_startup_rejects_each_missing_option_before_setup[checkpoint_codec]",
+        "tests.refactoring.test_checkpoint_runtime::test_checkpoint_startup_rejects_each_missing_option_before_setup[checkpoint_engine_incarnation]",
+        "tests.refactoring.test_checkpoint_runtime::test_checkpoint_startup_rejects_each_missing_option_before_setup[checkpoint_readiness]",
+        "tests.refactoring.test_checkpoint_startup::test_bad_global_order_never_grants_readiness[missing]",
+        "tests.refactoring.test_checkpoint_startup::test_bad_retained_checkpoint_prefix_rejects_before_install[missing_c]",
+        "tests.refactoring.test_checkpoint_startup::test_sealed_inplace_or_missing_retained_segment_fails_closed[sealed-inplace-2-sealed segment changed]",
+        "tests.refactoring.test_checkpoint_startup::test_sealed_inplace_or_missing_retained_segment_fails_closed[missing-suffix-2-missing]",
+        "tests.refactoring.test_checkpoint_startup::test_sealed_inplace_or_missing_retained_segment_fails_closed[missing-prefix-1-missing]",
+        "tests.refactoring.test_runtime_checkpoint::test_runtime_envelope_rejects_duplicate_noncanonical_and_checksum_tamper",
+        "tests.refactoring.test_runtime_checkpoint::test_plugin_checksum_tamper_is_rejected_before_any_publication",
+        "tests.refactoring.test_runtime_checkpoint::test_journal_evidence_hashes_schema_rows_and_enforces_budgets",
+        "tests.refactoring.test_runtime_checkpoint::test_missing_or_corrupt_newest_source_quarantines_every_consumer",
+        "tests.refactoring.test_runtime_checkpoint::test_plugin_restore_rejects_missing_or_async_hook_before_staging[missing-requires a synchronous restore_state]",
+        "tests.refactoring.test_runtime_checkpoint::test_plugin_restore_rejects_missing_or_async_hook_before_staging[async-must be synchronous]",
+        "tests.refactoring.test_runtime_checkpoint::test_atomic_writer_failure_preserves_previous_bundle_and_removes_temporary",
+        "tests.refactoring.test_runtime_checkpoint_acceptance::test_corrupt_newest_bundle_fences_before_any_restore_side_effect",
+        "tests.refactoring.test_runtime_checkpoint_acceptance::test_wall_clock_regression_is_rejected_instead_of_clamped_to_saved_time",
+        "tests.refactoring.test_runtime_checkpoint_acceptance::test_checkpoint_output_cannot_replace_its_existing_economic_journal[]",
+        "tests.refactoring.test_runtime_checkpoint_acceptance::test_checkpoint_output_cannot_replace_its_existing_economic_journal[-wal]",
+        "tests.refactoring.test_runtime_checkpoint_acceptance::test_checkpoint_output_cannot_replace_its_existing_economic_journal[-shm]",
+        "tests.refactoring.test_runtime_checkpoint_acceptance::test_checkpoint_output_cannot_replace_its_existing_economic_journal[-journal]",
+        "tests.refactoring.test_runtime_checkpoint_integration::test_corrupt_newest_real_bundle_fences_before_callback_publication"
+      ]
+    },
+    {
+      "criterion": "permissions_and_no_cached_matching",
+      "decision": "PASS",
+      "passing_tests": [
+        "tests.refactoring.test_runtime_checkpoint::test_recovery_gate_blocks_callbacks_and_advance_until_verified_publication",
+        "tests.refactoring.test_runtime_checkpoint::test_plugin_restore_binds_full_product_identity_permission_and_saved_lifecycle",
+        "tests.refactoring.test_runtime_checkpoint_acceptance::test_exact_cut_restores_real_plugin_and_waits_for_fresh_matching_input"
+      ]
+    }
+  ],
+  "atomicity": "Staged proof/readiness across independent existing SQLite journals; NO cross-DB atomic commit/rollback claim",
+  "readiness": "Exact consistent cut only. Missing/corrupt/ahead/behind/pending/unproven input suffix quarantines all selected consumers; continuous suffix Paper processing remains TX04B."
+}

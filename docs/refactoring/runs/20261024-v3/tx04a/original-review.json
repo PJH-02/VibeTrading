@@ -1,0 +1,37 @@
+{
+  "mode": "original-review",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx04a-original-review-f2obz0pi",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/tx04a-original-review-f2obz0pi/work",
+  "exit_code": 1,
+  "elapsed_seconds": 2.8315256079949904,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "ts_one_sided_conflict_without_database_repair[price-99.000000000000000000000000000000000001]\nFAILED docs/tickets/TX04A-reviewer-counterexamples.py::test_restart_rejects_one_sided_conflict_without_database_repair[price-None]\nFAILED docs/tickets/TX04A-reviewer-counterexamples.py::test_restart_rejects_one_sided_conflict_without_database_repair[price-NaN]\nFAILED docs/tickets/TX04A-reviewer-counterexamples.py::test_restart_rejects_one_sided_conflict_without_database_repair[expiry_ns-1800000000000001001]\nFAILED docs/tickets/TX04A-reviewer-counterexamples.py::test_restart_rejects_one_sided_conflict_without_database_repair[expiry_ns-1.800000000000001e+18]\nFAILED docs/tickets/TX04A-reviewer-counterexamples.py::test_restart_rejects_one_sided_conflict_without_database_repair[expiry_ns-True]\nFAILED docs/tickets/TX04A-reviewer-counterexamples.py::test_restart_rejects_one_sided_conflict_without_database_repair[post_only-False]\nFAILED docs/tickets/TX04A-reviewer-counterexamples.py::test_restart_rejects_one_sided_conflict_without_database_repair[post_only-1]\nFAILED docs/tickets/TX04A-reviewer-counterexamples.py::test_restart_rejects_one_sided_conflict_without_database_repair[reduce_only-True]\nFAILED docs/tickets/TX04A-reviewer-counterexamples.py::test_restart_rejects_one_sided_conflict_without_database_repair[reduce_only-0]\nFAILED docs/tickets/TX04A-reviewer-counterexamples.py::test_restart_rejects_one_sided_conflict_without_database_repair[time_in_force-IOC]\nFAILED docs/tickets/TX04A-reviewer-counterexamples.py::test_restart_rejects_one_sided_conflict_without_database_repair[group_id-forged]\nFAILED docs/tickets/TX04A-reviewer-counterexamples.py::test_restart_rejects_missing_order_facts_without_default_inference[price]\nFAILED docs/tickets/TX04A-reviewer-counterexamples.py::test_restart_rejects_missing_order_facts_without_default_inference[expiry_ns]\nFAILED docs/tickets/TX04A-reviewer-counterexamples.py::test_restart_rejects_missing_order_facts_without_default_inference[post_only]\nFAILED docs/tickets/TX04A-reviewer-counterexamples.py::test_restart_rejects_missing_order_facts_without_default_inference[reduce_only]\nFAILED docs/tickets/TX04A-reviewer-counterexamples.py::test_restart_rejects_missing_order_facts_without_default_inference[time_in_force]\nFAILED docs/tickets/TX04A-reviewer-counterexamples.py::test_restart_rejects_missing_order_facts_without_default_inference[group_id]\nFAILED docs/tickets/TX04A-reviewer-counterexamples.py::test_post_operation_conflict_rolls_back_book_and_unpublished_memory[price-98]\nFAILED docs/tickets/TX04A-reviewer-counterexamples.py::test_post_operation_conflict_rolls_back_book_and_unpublished_memory[expiry_ns-1800000000000001001]\nFAILED docs/tickets/TX04A-reviewer-counterexamples.py::test_post_operation_conflict_rolls_back_book_and_unpublished_memory[post_only-False]\nFAILED docs/tickets/TX04A-reviewer-counterexamples.py::test_post_operation_conflict_rolls_back_book_and_unpublished_memory[group_id-forged]\n23 failed, 97 passed in 2.36s\n",
+  "tests": {
+    "passed": 97,
+    "failed": 23,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_paper_execution.py",
+    "tests/refactoring/test_portfolio_ledger.py",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/refactoring/test_runtime_checkpoint_integration.py",
+    "tests/refactoring/test_tx02a_owner_fence.py",
+    "tests/refactoring/test_tx02b_attribution.py",
+    "tests/refactoring/test_tx02_joint_gate.py",
+    "docs/tickets/TX04A-reviewer-counterexamples.py"
+  ]
+}

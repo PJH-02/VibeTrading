@@ -1,0 +1,42 @@
+{
+  "decision": "PASS",
+  "task_id": "VN19",
+  "source_sha": "278b9efd3bcf98a4d8458e54aa761d0cbe4142ea",
+  "selected_provider": "freellmapi",
+  "selected_model": "freellmapi/gemini-2.5-flash",
+  "worker_acceptance": "FAILED_PARTIAL_NOT_ACCEPTED",
+  "worker_exit": 1,
+  "delegate_exit": 1,
+  "repair_delegations": 1,
+  "owner_product_edits": 1,
+  "acceptance_basis": "Codex critical review and actual independent isolated execution; worker statements/failing attempts are NOT acceptance evidence.",
+  "changed_product_symbols": [
+    "build_local"
+  ],
+  "other_product_methods_ast_unchanged": 3,
+  "product_paths": [
+    "scripts/refactoring/build_release_manifest.py"
+  ],
+  "scoped_test_passed": 66,
+  "independent_exit": 0,
+  "product_and_test_sha256": {
+    "scripts/refactoring/build_release_manifest.py": "f5c3723e45a77ce76980afcd9c278efa1b2027c95ebde18aa30b178e037ce97c",
+    "tests/refactoring/test_vn19_local_release.py": "5b4558cf96a7457f80865d78bc205922f1236fbf0b3c9fd4da62d9b9eb87107a"
+  },
+  "full_batch_validation": {
+    "receipt": "docs/refactoring/runs/20261025-v3/core5/batch-vn17-tx12/full-regression.json",
+    "source_sha": "001d10d20f1dce58fcb0349983f368af10a2bdc1",
+    "passed": 2480,
+    "exit_codes": [
+      0,
+      0
+    ],
+    "deselected_live_data": 2
+  },
+  "live_readiness": false,
+  "scope": "Selected local contract only. No live/accounts/remote/deploy/deletion or new universal platform.",
+  "final_batch_sha256": {
+    "scripts/refactoring/build_release_manifest.py": "f5c3723e45a77ce76980afcd9c278efa1b2027c95ebde18aa30b178e037ce97c",
+    "tests/refactoring/test_vn19_local_release.py": "5b4558cf96a7457f80865d78bc205922f1236fbf0b3c9fd4da62d9b9eb87107a"
+  }
+}

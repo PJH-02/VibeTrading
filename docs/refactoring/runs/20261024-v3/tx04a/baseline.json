@@ -1,0 +1,36 @@
+{
+  "mode": "baseline",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx04a-baseline-71t8hurl",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/tx04a-baseline-71t8hurl/work",
+  "exit_code": 0,
+  "elapsed_seconds": 17.507321554992814,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "........................................................................ [ 75%]\n........................                                                 [100%]\n96 passed in 12.91s\n",
+  "tests": {
+    "passed": 96,
+    "failed": 0,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_paper_execution.py",
+    "tests/refactoring/test_portfolio_ledger.py",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/refactoring/test_runtime_checkpoint_integration.py",
+    "tests/refactoring/test_tx02a_owner_fence.py",
+    "tests/refactoring/test_tx02b_attribution.py",
+    "tests/refactoring/test_tx02_joint_gate.py"
+  ]
+}

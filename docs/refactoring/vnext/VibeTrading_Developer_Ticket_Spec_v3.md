@@ -5,6 +5,8 @@
 > **GitHub 관측 기준:** `PJH-02/VibeTrading`, `a9a83af43897fdf8badc303aaf3b6ebf2eda87c5` (2026-10-21). 이 시점의 티켓 상태: VN/TX 총 51개, Complete local 14 / Incomplete 23 / Not started 14. 실제 시작 시 먼저 `git rev-parse HEAD`와 `git status --porcelain`을 확인할 것.
 >
 > **기본 권위:** 원본 `docs/refactoring/vnext/tickets_production.json`의 기존 ID/depends_on/edit_paths/forbidden_paths와 기존 수락·검증 기록. 아래 **R/O 티켓은 새로운 제안**, `VN/TX` 작업은 과거 티켓의 남은 로컬 수락 내용을 구체화한 **Delta Spec**이다. 충돌 시 조용히 실행하지 말고 `CONTRACT_DECISION`으로 올릴 것.
+>
+> **2026-10-23 binding scope correction (문서 기준 SHA `4977ab509490173e312183f32d47f862d94ee0bf`; 위 2026-10-21 관측선은 역사 기록):** [tech_lead_scope_decisions.json](./reuse_audit/tech_lead_scope_decisions.json)·[revised_dag.json](./reuse_audit/revised_dag.json)·[VibeTrading_Minimal_Reuse_Plan_20261023.md](./VibeTrading_Minimal_Reuse_Plan_20261023.md)·[execution_reuse_matrix.md](./reuse_audit/execution_reuse_matrix.md)가 이 명세의 광범위한 connector/Platform 문구를 대체한다. 현재 동작하는 ETF/venue/cloud/strategy 경로를 보존하고, **새 HTTP/sign/private wrapper·all-five venue rebuild·universal real margin/lifecycle·cross-venue atomic group·새 cloud uploader는 필수 작업이 아니다.** 기본값은 KEEP이며, 입증된 선택 함수 gap에 대해서만 Tech Lead의 bounded gap ticket 후 제품 변경이 가능하다. 이 문서는 제품 코드를 변경하지 않는다.
 
 ## A. 구현 표준 계약
 
@@ -145,236 +147,286 @@ stop_conditions: [scope_drift, safety_failure, missing_capability]
 
 DONE의 상태표가 서버 운영 수락을 의미하지는 않는다. **구현이 끝났다는 사실과 신규 릴리스 후보에서 그 기능을 재검증해야 한다는 사실을 분리**한다.
 
-### VN07 — Market Checkpoint + ETF/Paper/Strategy 원자적 복구 잔여
+### VN07 — Market Checkpoint + ETF/Paper/Strategy 단계적 복구 (로컬 완료)
 
 - **소유 파일:** `vibetrading/local_runtime.py::replay_startup`, `vibetrading/local_engine.py::{begin_recovery,apply_replay,handoff}`, `vibetrading/market_checkpoint.py`, `vibetrading/etf_trading.py`의 startup seam, `vibetrading/portfolio_ledger.py`, `vibetrading/paper_execution.py`, `vibetrading/strategy_runtime.py`; 적용 시 R03 path map 사용.
-- **현재 상태:** Market checkpoint, producer durable order, journal lifecycle **구현 완료**. ETF/Paper account·전략·pending action의 동일 복구 경계 **미완료**.
-- **구현:** `market state cursor / strategy claim cursor / paper order+fill journal version / ETF journal pending handoff`의 복구 순서를 명세화. Startup `RECOVERING`에서 전략 Callback warmup 허용 여부와 **신규 intent 전송 0** 계약. `History.available_at`과 feed generation 보존. Crash 지점마다 recover/reconcile→Ready 판정; replay output은 원장을 재전송하지 않는다.
+- **현재 상태:** Market checkpoint, producer durable order, journal lifecycle **구현 완료**. VN07B에서 ETF/Paper·전략 상태의 동일 경계 검증과 단계적 복구를 **로컬 완료**했다. 정확히 일치하는 cut만 복구하고, 앞·뒤 저널/미확인 suffix/불명확 handoff는 전체 격리한다. 독립 SQLite 간 atomic commit이나 연속 Paper suffix 처리는 주장하지 않는다. [수락 기록](../runs/20261023-v3/vn07b/acceptance.json).
+- **구현(REUSE 우선):** 기존 market checkpoint/journal, `PaperExecution`/`PortfolioLedger`, ETF journal 위에서 `strategy claim cursor / paper order+fill journal version / ETF journal pending handoff`의 복구 순서만 연결한다. Universal account-state replacement는 금지. Startup `RECOVERING`에서 전략 Callback warmup 허용 여부와 **신규 intent 전송 0** 계약. `History.available_at`과 feed generation 보존. Crash 지점마다 recover/reconcile→Ready 판정; replay output은 원장을 재전송하지 않는다.
 - **테스트:** Market checkpoint 단독 복원 / 저널보다 앞·뒤인 input / partial write / invalid pending / double replay / newest checkpoint corruption / ETF·Paper 동시 재시작 / broad loss / source-missing fail-closed. 동일 원본에서 recovered booked balances·working orders·strategy claims 동등. 준비 불충분 시 신규 위험주문 0.
 - **Critical 리뷰:** Codex가 multi-ledger 원자성의 **실제** 보장 범위를 확인. SQLite 파일 두 개가 있을 때 원자적 Commit이라고 주장하지 않음. 필요한 경우 staged recovery/quarantine 방식 채택.
 
-### VN08 — Retained-prefix aware Spool Reader
+- **최근 완료 하위 작업 VN07A:** 기존 Paper `strategy_event` 처리 기록으로 재시작한 전략의 상태 복원 미확인 시 신규 콜백·위험주문을 차단한다. 정상 동일 실행/REPLAY warmup과 명시적 pause/halt 취소는 보존한다. [수락 기록](../runs/20261023-v3/vn07a/acceptance.json). VN07A 당시 열려 있던 전략 내부 상태 checkpoint·검증 복원·시장/Paper 경계는 후속 VN07B에서 로컬 완료했다. VN07B 수락 당시 VN08은 미착수였으며, 후속 VN08 로컬 수락은 아래 기록을 따른다.
+
+- **VN07 전체 검증:** 제품 1,850 + tooling 169 = **2,019 PASS**, live-data 2건 제외. 기존 Golden/거래소 주문·cloud 동작 보존. 복수 실제 Paper 원장과 ETF/Paper 동시 복구, 상태 hook/준비 검사 중 저널 변조, 최신 파일 손상 및 출력 경로 충돌 반례 포함. Production gate는 BLOCKED이며 별도 서버 배포/wiring은 VN17 범위다.
+
+### VN08 — Retained-prefix aware Spool Reader (로컬 완료)
 
 - **소유:** `vibetrading/market_spool.py::{SpoolReader,_inventory,scan_spool}` 및 `vibetrading/local_storage.py::{LocalSpoolStorage,_FactLedger}`, 관련 Reader Tests.
 - **선행:** VN07. **목적:** 원본 전체를 보존한 v1 Reader와 `base_cursor>0`의 새 Reader를 혼동하지 않음.
 - **구현:** checkpoint의 digest/gen/first-retained segment를 재생 시작 증거로 사용. 유실된 gap, chain mismatch, truncated header, CRC miss, fence mismatch 시 비정상 복구를 거부. 여러 reader가 서로 다른 Base를 가질 때 oldest needed range 보존.
 - **테스트:** v1 전체 Replay 동일, rotated segments, missing first/last segment, reader pin·crash·bad proof, 즉시 LIVE 거절. GC는 계속 비활성.
 
-### VN09 — GC 증거 기반 회수 및 실패 시 보존
+- **로컬 수락:** 명시적으로 pin한 hash/generation·first-retained segment 증거와 실제 저장소 progress/manifest/fact 검증을 연결했다. 단조 durable watermark, record/segment/absolute cursor 한도와 consumer별 base 검증을 포함한다. 기존 v1 writer/frame/checkpoint AST 불변. 전체 **2,055 PASS**, live-data 2건 제외. [수락 기록](../runs/20261023-v3/vn08/acceptance.json). GC·생산 데이터 삭제·자동 cutover/LIVE 승격은 없었다. VN08 수락 당시 VN09는 미착수였으며 후속 dry-run 수락은 아래 기록을 따른다.
+
+### VN09 — GC 증거 기반 후보 계획 및 실패 시 보존 (로컬 완료, dry-run)
 
 - **소유:** `market_spool.py`, `local_storage.py`, `archive.py`의 실제 증거 함수; 새 별도 GC framework 금지.
 - **선행:** VN08, VN16. **구현:** Segment별 `checkpoint_coverage ∧ reader_progress ∧ parquet_commit/provenance ∧ remote_integrity/readback ∧ retention_elapsed ∧ lease_free`를 만족한 경우에만 회수 **후보**. Atomic planner는 `dry_run=True` 기본. S3/객체 저장소가 막히거나 incomplete progress면 보존. Checkpoint rollover/crash와 GC 경쟁 중 delete 의도를 durable record로 분리.
 - **테스트:** 오류 주입을 포함한 사본에서 eligible/forbidden segment 목록 일치, **유일본 삭제 0건**, remote hash mismatch 0 삭제, data-root mount 잘못 지정 0 삭제. **운영 원본의 실제 삭제 실행은 별도 승인**.
 
-### VN13 — Local SharedStrategyRunner의 실제 Paper Dispatch
+- **로컬 수락:** 기존 checkpoint/reader/storage/manifest·compaction·원격 Parquet/sidecar/원본 spool readback 증거의 교집합으로 후보를 계산하고, 경로 경합에도 기존 파일을 덮어쓰지 않는 비실행 제안서를 남긴다. 전체 **2,119 PASS**, live-data 2건 제외. 기존 함수 110개 AST·Golden·uploader 유지. [수락 기록](../runs/20261023-v3/vn09/acceptance.json). 원본 prefix·원격 spool 사본·owner 확인 reader/lease 입력이 없으면 전체 보존한다. 실제 GC/삭제·자동 운영 연결은 포함하지 않으며 production gate는 BLOCKED다.
 
-- **소유:** `strategy_runner.py`, `strategy_contract.py`, `local_runtime.py`, 신규 `strategy_runtime.py`와의 seam, `tests/refactoring/test_strategy_runtime.py`·`test_strategy_dispatch.py`.
-- **선행:** VN03, TX01, TX04B 및 TX05 통합 직전 계약 확인. **주의:** 과거 VN13과 TX05의 **상호 연동을 중복 Worker로 만들지 않음**.
-- **구현:** 실제 Market Engine에서 `apply()` 1회 후 immutable snapshot을 다수 전략에 전달. Paper Action만 계좌 Owner로 라우팅. `LIVE_MARKET_DATA` vs `execution=PAPER` 직교; `SHADOW/REPLAY`은 신규 주문 0. 전략별 dependency/warmup/quality/risk gate, 예외 경계, action byte/count/TTL 상한. Python callback을 실제로 preempt 못한다는 현재 계약을 그대로 둔 채 'hard isolated'라고 표시 금지: 프로세스 격리 또는 별도의 Worker Pool을 **측정한 비용과 안전 계약으로** 결정.
-- **테스트:** 동일 시장 상태 공유, 임의 느린 전략/무한 loop 격리 반례, ETF 비관련 feed 장애, Replay→LIVE Handoff 뒤 Paper 중복 0, NATS-free path에서 NATS client construct 0.
+### VN13 — 전략 FILE plugin → 기존 Paper (TX05와 한 workstream)
 
-### VN15 — 실제·가정·복구 상태가 구분된 PnL/Control Projection
+- **현재 로컬 수락(2026-10-24):** 파일별 명시 configuration을 기존 loader/register에 연결했다. 실제 별도 .py 파일의 Signal이 공유 입력을 거쳐 기존 Paper로 전달되며, warmup/permission/REPLAY/restart 차단을 보존한다. 독립232 PASS. C3/KP/KD는 기존 ETF 경로를 유지하며 calculator만으로 plugin 완료를 주장하지 않는다. TX05는 이번에 착수하지 않았다. [수락](../runs/20261024-v3/vn13/acceptance.json).
 
-- **소유:** `telegram_trade.py`, `telegram.py`, `vibetrading/dashboard/bridge.py`, Owner/Portfolio read-only snapshot.
-- **선행:** VN14B; TX09 통합 중 중복 처리 금지.
-- **구현:** `actual`, `assumed/PAPER`, `recovery/unreconciled`를 같은 수치로 표현하지 않음. `PnL = realized/unrealized/fees/funding`과 계산 기준통화·기준가격·Timestamp·Data freshness 포함. 값 근거가 불명확하면 `UNAVAILABLE`. `status/feeds/orders/positions/pnl`는 cold read model에서 조회하고 Order Hot Path에서 DB read/API 호출 금지. `/pause,/halt,/resume`은 오직 권위 Owner로 전달.
-- **테스트:** missing FX, stale mark, incomplete fill, Telegram outage, restart 중 stale snapshot. 과거 `/trade`, Mock2 보고 회귀.
+- **소유:** 신규 `src/vibetrading/strategies/<strategy-id>.py` 또는 `strategies/kr/{c3,kp,kd}.py`, 기존 `strategies/contract.py` seam, `strategy_runtime.py`, `local_runtime.py`의 최소 wiring, 관련 tests.
+- **재사용:** `STRATEGY_ID/SUBSCRIPTIONS/WARMUP/create_strategy/on_event` 기존 contract, `PaperStrategyRuntime.register/process_event/_dispatch`, `PaperExecution`/`PortfolioLedger`. C3/KP/KD 수학 함수는 **재사용 calculator**이며 file plugin 완료로 간주하지 않는다.
+- **최소 구현:** 전략별 importable Python file, explicit config/subscriptions/warmup, shared data가 만든 Signal을 기존 Paper로 전달. 신규 runtime에 hardcoded strategy-ID branching 금지. registry/config 등록은 명시적으로만. `SHADOW/REPLAY` 신규 주문 0, PAPER 외부 mutation 0.
+- **보존 gate:** 기존 전략 economics와 Golden decision/qty/price/account_mode 불변. ETF runtime을 새 Paper 원장으로 이관하지 않는다.
+- **테스트:** 기존 Golden 먼저, 가장 작은 기존 runtime fixture, file discovery/registration, shared data→Signal→Paper, restart continuity. 새 fault test는 local data/Paper gap에만.
 
-### VN17 — 역할별 로컬 구성 및 자원 예산 Gate
+### VN15 — actual/assumed/Paper/recovery Projection (TX09와 한 workstream)
 
-- **소유:** `local_config.py`, `scripts/refactoring/build_release_manifest.py`, `deploy/local-runtime.yml` (존재 확인 후 ADD), `tests/refactoring/test_runtime_mounts.py`.
-- **선행:** VN09, VN13, VN15, VN16. **구현:** NATS-free `collector/engine/storage/telegram/dashboard` 실제 역할별 이미지·Cmd·Env·Mount/Host 경계와 2vCPU/3.8GiB RAM, 메모리 예약, 동일 물리 데이터 디스크, Spool/Parquet/Checkpoint/DB peak 예산. Docker 경로는 `src` 이동된 release image 기준 검증, 운영 server config를 자동 수정하지 않음.
-- **테스트:** docker compose config, role imports, volume device alias, impossible budget, credential render, CPU threads (`ARROW_NUM_THREADS`, multiprocessing), stale source SHA. 각 역할의 CPU/RSS/PSS는 합산 피크로 예산 평가.
+- **소유:** `telegram_trade.py`, `telegram.py`, `vibetrading/dashboard/bridge.py`, 기존 Owner/Portfolio read-only snapshot.
+- **재사용:** `EtfTradingLoop.account_report :708`, `report_daily :698`, `EtfJournal.notify :290`, 기존 Telegram command/ACL 경로. 새 dashboard platform을 만들지 않는다.
+- **최소 구현:** `actual`, `assumed/PAPER`, `recovery/unreconciled` label 분리. `PnL=realized/unrealized/fees/funding`과 통화·기준가격·timestamp·freshness; 근거 불명은 `UNAVAILABLE`. cold read only, submit hot path reporting I/O 0. `/pause,/halt,/resume`은 기존 권위 Owner로 전달.
+- **테스트:** missing FX/stale mark/incomplete fill/Telegram outage/restart stale snapshot. 기존 `/trade`, Mock2 보고 회귀.
 
-### VN18 — 로컬 통합·성능·장애 수락
+- **현재 로컬 수락(2026-10-25):** Reuse existing bounded readonly Paper ledger projection in the existing local dashboard cold scan; separate PAPER_SIMULATION, UNKNOWN/unreconciled and unavailable marks/timestamps from actual venue evidence. 독립 77 PASS. [증거](../runs/20261025-v3/vn15/acceptance.json).
 
-- **소유:** `scripts/refactoring/benchmark_vnext.py`(기존 파일 존재 여부 검증), 관련 runtime/replay 테스트, `docs/refactoring/runs/<new-run>/` 간결 영수증.
-- **선행:** VN17, VN05. **구현:** 고정 Trace·동일 계정/전략 수·동일 하드웨어·동일 커밋의 A1 vs 후보 경로를 측정. `receive→apply→decision→paper_admit`, p50/95/99/99.9, CPU/event, RSS/PSS peak, swap, Byte Queue Age, storage lag, disk growth, error/gap 카운터.
-- **테스트:** 로컬 NATS-free >30분, 저장 격리(Parquet 15분 중단), Cloud Mock 24h **가상 경과는 실제 wall-clock과 구분**, 프로세스 kill/restart, 누적 매칭. 실제 서버의 72h soak·실제 장중/Cloud/API 장애는 외부 Gate로 남김.
+### VN17 — 기존 runtime의 최소 local wiring
 
-### VN19 — 출시/롤백 준비 패키지(로컬까지만)
+- **소유:** `local_config.py`, `scripts/refactoring/build_release_manifest.py`, 기존 runtime mount tests. 새 topology가 필요하면 별도 Tech Lead ticket.
+- **재사용:** 기존 collector/engine/storage/runtime/Telegram 경로와 현재 배포 구성을 우선한다. 역할별 프로세스/자원 상한은 실제 local 병목에만 추가한다.
+- **최소 구현:** NATS-free selected data path와 strategy-file/Paper/projection을 기존 runtime에 연결. 운영 server config 자동 수정 금지, universal execution deployment topology 금지.
+- **테스트:** 기존 role import/compose config 유지, bounded queue/resource, stale source SHA. 합산 CPU/RSS/PSS는 기존 profile로 평가.
 
-- **소유:** `docs/refactoring/runs/<new-run>/release_manifest.json`, `cutover_runbook.md`, `rollback_runbook.md` 및 소스/이미지 hash 스크립트.
-- **선행:** VN18. **구현:** 정확 SHA, 역할별 이미지 Digest, 데이터 볼륨 마운트·SQL Schema/Epoch, 기존 P02 활성 역할, `src` 패키징 CLI 변경, cutover/rollback 단계별 명령과 검사 예상 결과, 증거 부족 시 중단 조건. 명령은 승인 전 실행 금지.
-- **수락:** Release Image 내부 import/entrypoints 및 Docker Compose 구성 성공, 기존 `deploy_p02_schema.py` 회귀. 최신 원장·UNKNOWN 예약·원본 백로그 복구를 위한 안전 절차; 원장 과거 이미지 덮어쓰기 없음.
+- **현재 로컬 수락(2026-10-25):** Minimum existing local role assembly: explicit borrowed Paper main API forwards the same owner/runtime to run_engine; local Telegram/dashboard share plan-derived snapshot configuration; no new auto-loader/topology. 독립 221 PASS. [증거](../runs/20261025-v3/core5/vn17/acceptance.json). 운영/삭제 승인이 아니다.
 
-### VN20 — NATS 과거 코드 삭제는 **서버 안정화 이후**
+### VN18 — 기존 Golden + 선택 local fault gate
 
-- **지금 할 일:** `bus.py`, `runtime.py`, `market_fanout.py`, 구 Docker Compose/NATS config, `requirements.txt`의 참조 지도·정식 신규 코드의 무참조 증명·삭제 Candidate List.
-- **지금 하지 않을 일:** NATS 서비스/백로그/레거시 복구 코드/현재 P02 배포 복귀 경로 삭제, 운영 원본 데이터 GC, 복구 책임의 무리한 제거. `P11 실제 운영 전환+안정화+롤백 만료` 전 Gate Closed.
-- **수락:** `VN20_PREPARED`, `VN20_APPLIED=false`로 표기. 문서 완료 ≠ 실제 제거 완료.
+- **소유:** 기존 test runner, smallest existing runtime mocks/transport fixtures, `docs/refactoring/runs/<new-run>/` 요약.
+- **재사용:** 기존 Golden, `PaperExecution`/`PortfolioLedger`/`strategy_runtime` fixtures, data recovery tests. 새 venue reconnect 구현 금지.
+- **최소 테스트:** **unchanged Golden first**; selected data/storage recovery, strategy file/Paper restart/dedup, same-account reservation/cancel/restart fault. 새 테스트는 누락 local gap에만. live operation은 외부 gate이며 자동 재실행하지 않는다.
+- **수락:** 기존 runtime behavior equivalence, mutation 0, unknown reservation 유지. 과거 HEAD 1961 pass는 과거 사실이며 이 문서 단계의 새 PASS가 아니다.
+
+- **현재 로컬 수락(2026-10-25):** Existing Golden and selected real local assembly/startup/recovery faults, preserving newest ledger/UNKNOWN and fail-closed callback/socket publication. 독립 372 PASS. [증거](../runs/20261025-v3/core5/vn18/acceptance.json). 운영/삭제 승인이 아니다.
+
+### VN19 — 기존 packaging/export/rollback 재사용
+
+- **소유:** 기존 release manifest, `cutover_runbook.md`, `rollback_runbook.md`, hash scripts.
+- **재사용:** 기존 packaging/export/rollback, `deploy_p02_schema.py`, Ncloud archive 경로. 새 uploader/backtest platform 없음.
+- **최소 구현:** 정확 SHA, 기존 image/volume/schema 호환, selected local data-path 전환 절차와 중단 조건. 명령은 승인 전 실행 금지.
+- **수락:** 기존 image import/entrypoint와 Compose config, rollback 보존, 원장 과거 이미지 덮어쓰기 0.
+
+- **현재 로컬 수락(2026-10-25):** Readonly committed-source local review package with expected Git SHA and source-drift/secret/path rejection; existing builders and latest-ledger rollback preserved; no image/server operation. 독립 66 PASS. [증거](../runs/20261025-v3/core5/vn19/acceptance.json). 운영/삭제 승인이 아니다.
+
+### VN20 — 외부 proof 이후 legacy 정리 (삭제 금지)
+
+- **현재:** 참조 지도·삭제 candidate list만. NATS/legacy 복구 경로·P02 rollback·운영 데이터는 보존한다.
+- **Gate:** `P11 cutover → 안정화 → rollback 필요 해소`와 active import/dynamic/deploy/rollback/Golden 무영향 증명 이후 **별도 승인**.
+- **표기:** `VN20_PREPARED`, `VN20_APPLIED=false`; 이번 단계 소스 삭제 0. 문서 완료 ≠ 실제 제거.
 
 ## D. TX 기존/신규 Trading Infrastructure 세부 명세
 
 > TX 상위 집계 단계(예: TX02, TX03, TX04, TX06–08)는 하위 티켓이 구현되었다고 `PASS`가 되지 않는다. **실제 같은 계좌·전략·Replay E2E**에서 수락해야 한다. 아래 테스트 파일은 기존 티켓에서 제안된 경로를 우선 사용하고, 없는 파일은 ADD로 명시한다. 기존 제품 코드에 없는 심볼은 `(ADD)`로 구분한다.
 
-### TX00 — Venue/Product/Account Capability Audit 확정
+### TX00 — Reuse Audit (기존 경로 인벤토리)
 
-- **소유:** `docs/refactoring/adapter_capabilities.json`, vNext capability matrix, `trading_contracts.py`, 공급자별 실제 Adapter. `TOSS=DATA_ONLY` 적용.
-- **선행:** R00/VN00. **현재:** Perp 상품/계좌 지원 실증 부족.
-- **구현:** `(venue, product family, environment, account domain, position mode, margin mode)` 차원의 registry. Binance USDT-M/COIN-M 및 Venue별 Linear/Inverse는 미증명 교차 지원 금지. 각 필드에 `SUPPORTED_CODE`, `SUPPORTED_FIXTURE`, `SANDBOX_REQUIRED`, `LIVE_REQUIRED`, `UNSUPPORTED`, `UNKNOWN` 구분. TOSS mutation capabilities=false. Official API URL·버전·확인일 기록.
-- **수락:** 5 Perp Venue + KIS/Kiwoom/TOSS 데이터/거래 역할의 표 생성; Unknown이 True로 기본설정되지 않음; Secret 없이 실행 가능한 Contract Tests 식별.
+- **소유:** `docs/refactoring/vnext/reuse_audit/**`의 static evidence와 `execution_reuse_matrix.md`; 제품 코드 수정 0.
+- **선행:** VN00. **현재:** 로컬 정적 재사용 감사 완료(제품/실거래 지원 완료 의미 아님).
+- **구현:** `(venue, product, environment, account domain, position/margin mode)`별 **기존** 함수와 caller를 기록하고 `TOSS=DATA_ONLY`를 적용한다. `SUPPORTED_CODE/FIXTURE/SANDBOX_REQUIRED/LIVE_REQUIRED/UNSUPPORTED/UNKNOWN`은 honest label이며 빈 generic wrapper만으로 미지원을 선언하지 않는다. 새 connector/registry 구현 없음.
+- **수락:** 모든 발견 path와 `Class.method/path:line` 링크, UNKNOWN/N/A 명시, secret 없음, raw audit와 machine evidence의 한계 표기. 601-function/245-call evidence를 수기/live 검증으로 과장하지 않는다.
+- **현재 수락:** HEAD `fa2478e5` 기준 47파일·712정의·510입력·459정적 참조를 대조했다. 역사692정의 중679동일/13변경, 복구20추가/삭제0. [현재 감사](./reuse_audit/tx00_current/closure.md)·[수락](../runs/20261023-v3/tx00-current/acceptance.json). 기존 TOSS36건과 독립 경계14건 PASS. TX01 제품 변경은 이 감사에 포함하지 않는다.
 
-### TX01 — 단일 Strategy Action/Mode/Product 계약
+### TX01 — 기존 Signal/OrderIntent·strategy contract 재사용
 
-- **소유:** `vibetrading/trading_contracts.py`, `strategy_contract.py`, `execution_owner.py`의 현재 입력 seam; `tests/refactoring/test_portfolio_ledger.py`와 새 `test_tx01.py`.
-- **선행:** TX00. **현재:** Cash/Paper 초안.
-- **구현:** immutable `OrderIntent`, `CancelIntent`, optional scoped `ReplaceIntent`, `ExecutionGroupIntent`의 식별자/Version/Schema. `execution_mode ∈ {DISABLED,PAPER,SANDBOX,LIVE}`와 `market_data_mode ∈ {REPLAY,SHADOW,LIVE_MARKET_DATA}` 직교. 최소 `(strategy_id,account_scope,venue,instrument,side,position_side,qty,limit_or_protection,TIF,reduce_only,post_only,expiry,evidence,cfg_hash,epoch)`. 계약 수량·Decimal 원값 보존. 동일 ID 다른 payload 불변 충돌로 거절.
-- **수락:** Paper에서 모든 외부 mutate entrypoint unreachable; incompatible Spot vs Perp reject, invalid Tick/Lot reject, mode/promotion isolation; 기존 Signal 호환 Fixture 유지. 타입 스키마 증분은 원본 event v2 wire 변경과 구분.
+- **소유:** `trading_contracts.py`, `strategy_contract.py`, `execution_owner.py`의 현재 seam; 기존 ledger tests.
+- **선행:** TX00. **현재:** 기존 Signal/OrderIntent/Paper 계약 로컬 완료(2026-10-24).
+- **구현(ADAPT):** 기존 immutable `OrderIntent`/`Signal`과 `ExecutionOwner`/`PaperExecution` 계약을 재사용한다. 필요한 경우에만 local Paper/strategy identity bridge를 최소 추가한다. **universal replacement action API나 새 order engine을 만들지 않는다.** 금액/수량 Decimal 원값, 동일 ID 다른 payload 거절, Spot≠Perp, TOSS mutation 거절을 유지한다.
+- **수락:** 기존 Signal fixture 호환, Paper 외부 mutation 0, invalid tick/lot/mode reject, 기존 ledger checksum 불변.
+- **현재 수락:** 새 API 없이 기존 `_validate`의 NEW 사전 검사17줄을 보완했다. 전체 InstrumentId/기준 feed/ID/생성시각을 검증하고 Kiwoom→KIS ETF Paper·wire·Decimal·기존 matcher/ledger를 보존했다. 독립287건, 전체2170건 PASS(외부 live-data2건 제외). [수락](../runs/20261024-v3/tx01/acceptance.json). TX02A 이후와 전략 plugin 완성을 뜻하지 않는다.
 
-### TX02A — Account Scope/Owner Lease/Legacy ETF Fencing
+### TX02A — 기존 owner/lease 재사용, 단일 writer 증명
 
-- **소유:** `portfolio_ledger.py`, `process_lease.py`, `execution_owner.py`, `etf_journal.py`.
-- **선행:** TX01, VN10. **현재:** Paper scope owner lease만 구현, 기존 ETF/Generic owner의 실제 격리 통합 부족.
-- **구현:** canonical scope key에 Environment/Account/Subaccount/Venue/Product Domain 포함. 하나의 계좌 위험/주문 원장 authority, 다른 DB 파일 경로·중복 process start·stale epoch를 거절. ETF `Mock`와 `Mock2` 구분 보존. Non-cooperating 다른 Host는 로컬 file lease만으로 안전 보장하지 못하므로 전환 별도 External Gate.
-- **수락:** 같은 계좌에 2개 Owner가 별도 경로로 동시에 허가 0, 특정 Owner 장애 후 Grace/unknown fence와 재시작, Ledger mismatch 거절; 계좌 다른 경우 불필요한 전역 Lock 없음.
+- **소유:** `portfolio_ledger.py`, `etf_journal.py`, `process_lease.py`, `execution_owner.py`의 기존 seam.
+- **선행:** TX01, VN10. **현재:** 로컬 협조 프로세스의 Paper owner fence 완료(2026-10-24).
+- **구현(ADAPT):** ETF `_acquire_ownership`/`EtfJournal`과 `PortfolioLedger` lease를 재사용한다. 선택된 mode에서 하나의 physical account writer만 허용하고, 다른 DB path/중복 process/stale epoch를 거절한다. ETF `mock`/`mock2` 구분 보존, 새 account engine 금지.
+- **수락:** 같은 계좌 2 owner 동시 허가 0, owner 장애/restart fence, ledger mismatch 거절, 다른 계좌에 불필요한 global lock 0.
+- **현재 수락:** 기존 `ProcessLease.account`를 공유 root의 PAPER 물리 계좌 잠금으로 재사용했다. 기존 scope binding·schema·경제 동작은 유지하고, lease 상실/fork 접근·commit·cleanup 경계만 보완했다. 독립323/전체2204 PASS(외부 live-data2건 제외). 보호된 동일 root와 협조 버전/로컬 볼륨 전제이며 real/cross-host 권한은 주장하지 않는다. [수락](../runs/20261024-v3/tx02a/acceptance.json). TX02B 이후 및 TX02 집계 완료는 별도다.
 
-### TX02B — 전략별 Virtual Book과 Physical Account 귀속
+### TX02B — 기존 journal/ledger의 attribution gap만
 
-- **소유:** `portfolio_ledger.py::{position,admit_order,active_orders}`, `trading_contracts.py`.
-- **선행:** TX02A. **현재:** fixture 단계.
-- **구현:** `Fill→(physical aggregate update,strategy virtual allocation,fees,bal, reservations)` 하나의 권위 Commit. 주문 전략 귀속은 Fill 생성 시 고정. 외부 수동 거래·기존 포지션은 `UNALLOCATED/EXTERNAL` 등 별도 영역으로 유지. 계좌 Physical Net=전략 Virtual 합 + 외부/미해결/조정 오프셋을 감사 가능한 equation으로 표시.
-- **수락:** 두 전략 반대 포지션 +0.4/−0.3→physical +0.1(모드/계약일치 전제), 각 PnL 별도, 미체결 주문의 Worst-case 노출 미상쇄, external fill 임의 strategy 귀속 0.
+- **소유:** `PortfolioLedger.apply_fill/_strategy_credit`, `EtfJournal.apply_status/logical_book`.
+- **선행:** TX02A. **현재:** 기존 로컬 Paper attribution 보호 완료(2026-10-24).
+- **구현(REUSE):** ETF는 `EtfJournal`, 신규 PAPER는 `PortfolioLedger`를 권위로 유지한다. Fill→physical+virtual+fee+reservation의 기존 transaction을 재사용하고, 입증된 same-account attribution/reservation/restart gap만 보완한다. external fill 임의 strategy 귀속 0.
+- **수락:** 두 전략 반대 포지션 physical/virtual equation, pending worst-case 미상쇄, restart 후 attribution 동일.
 
-### TX02 — Owner + Virtual/Physical Portfolio Aggregate Gate
+- **현재 수락:** 내부 `@` 전략명은 주문/전략 event claim 경계에서 거절한다. 내부 netting/funding 귀속과 기존 회계는 보존했다. 독립301 PASS. [수락](../runs/20261024-v3/tx02b/acceptance.json).
 
-- **선행:** TX02A/B, 관련 VN10–12. **구현 중복 금지:** 소유권과 장부 상태를 Portfolio/ETF path에 둘로 다시 만들지 않는다.
-- **수락:** 동일 계좌 두 전략 동시 reserve/partial-fill/cancel/unknown/owner-restart 시 모든 현금·마진·pos 재계산 일치; `sum(released reservations)≤sum(original reservations)`.
+### TX02 — 기존 owner/books 공동 gate
 
-### TX03A — Perp ProductSpec 및 Margin Model Capability
+- **선행:** TX02A/B. **구현 중복 금지:** 소유권/장부를 Portfolio/ETF에 다시 만들지 않는다. **수락:** 선택 mode의 reserve/partial-fill/cancel/unknown/restart에서 기존 원장 재계산 일치, `sum(released)≤sum(original)`.
 
-- **소유:** `trading_contracts.py`, `portfolio_ledger.py`.
-- **선행:** TX01. **현재:** CASH 및 isolated linear paper 모델만 확인.
-- **구현:** Linear/Inverse별 노출량/계약 승수/Collateral/Settlement/Funding와 필요한 마진 모델 **분리**. 모드를 지원하지 않는 상품은 `UNSUPPORTED`, 계산 불충분하면 신규 주문을 차단. Cross·Hedge·Portfolio Margin의 정확한 실 API 검증이 없으면 간단한 비율 공식으로 지원 표기 금지.
-- **수락:** 0/음수/NaN/nonrepresentable qty, collateral mismatch, base/quote currency mismatch, inverse PnL 계산 검증. 기존 isolated-linear fixture 그대로 PASS. **새 범위에 대해 지원하지 않는 것을 정확히 차단하는 것도 안전성 수락 조건**이지만 최종 5 Venue 목표에서 미지원 범위는 명시적 남은 구현으로 표시.
+- **현재 수락:** 제품 변경 없이 실제 기존 Paper matcher/ledger와 별도 EtfJournal의 두 전략 반대 포지션·예약·부분 체결·취소·UNKNOWN·최신 DB 재시작을 수동 계산값과 대조했다. 독립103 PASS; ETF owner는 기존 VN10 Mock/Mock2 검증을 재사용했다. [수락](../runs/20261024-v3/tx02/acceptance.json).
 
-### TX03B — Fee·Funding·Equity·Margin Accounting
+### TX03A — 상품 일반화는 DEFER, 기존 Paper 범위 재사용
 
-- **소유:** `portfolio_ledger.py::{_balance,_position,_strategy_credit,_margin}`, `trading_contracts.py`, test_portfolio_ledger.
-- **선행:** TX02B, TX03A. **현재:** Paper 수수료/리베이트/Funding 초안.
-- **구현:** confirmed fill·fee asset·maker rebate·funding settlement의 유일 identity별 1회 적용. Mark Price/Index Timestamp와 Currency Conversion 근거 없는 Unrealized PnL은 `UNAVAILABLE`. Order reservation과 실제 Position Margin을 분리. Equity/Available/Buffer Worst-case를 같은 원장에서 계산.
-- **수락:** non-base fee currency, funding 중복/역순, mark stale, external deposit/withdraw, cancel/fill 경쟁·rollback 후 sum invariant. 특정 사업자 cross margin formula 미확인 상태에서 fake value 0 또는 `FULL_READY` 금지.
+- **소유:** `trading_contracts.py`, `portfolio_ledger.py`의 기존 ProductSpec/CAPABILITIES.
+- **선행:** TX01. **현재:** CASH + isolated linear PAPER만 확인.
+- **구현:** 기존 isolated-linear/cash 범위를 재사용한다. Inverse/cross/hedge/portfolio margin과 추가 상품은 **명시적 전략 수요 전까지 DEFER**하며, 미지원은 `UNSUPPORTED`로 정확히 차단한다. 새 universal margin engine/fake cross formula 금지.
+- **수락:** 기존 fixture 불변, invalid qty/collateral/currency reject, unsupported fail-closed.
 
-### TX03 — Perp Portfolio Aggregate Gate
+### TX03B — 선택된 Paper 회계 gap만
 
-- **선행:** TX03A/B. **수락:** explicit 지원한 Venue×Product×Mode에서 계좌/전략별 margin/position/equity/fees/funding 체결 순서 불변, profile 누락시 위험 주문 0. Unsupported/Provider-dependent modes는 capability blocked로 표시.
+- **소유:** `PortfolioLedger.apply_fill/_margin/_capital/apply_funding`, `EtfJournal.apply_status`.
+- **선행:** TX02B, TX03A. **현재:** PAPER_CASHFLOW_ACTUAL_MARGIN_OPEN.
+- **구현(REUSE):** 기존 fee/realized/funding identity와 reservation/position 분리를 재사용한다. 선택된 PAPER 상품의 누락 회계만 보완하고, 실제 live margin/FX/mark 역산은 `UNAVAILABLE`로 남긴다. Universal live margin ledger rewrite 금지.
+- **수락:** fee currency/funding 중복·역순/mark stale/external cash movement, 기존 sum invariant. Fake 0 또는 `FULL_READY` 금지.
 
-### TX04A — Durable Local Paper Account/Matching 원자 커밋
+### TX03 — 선택 상품 gate (필수 core 아님)
 
-- **소유:** `portfolio_ledger.py`, `paper_execution.py::{_transition,submit,cancel,_fill}`.
-- **선행:** TX02B, TX03B. **현재:** matcher durable state, fill dedup 초안.
-- **구현:** Matching State Update는 Portfolio Reservation/Fill/Position과 같은 transaction에 적용되거나 재시작 복구 시 중복이 정확히 차단되어야 한다. `intent_id+fill_serial+source_event` 기반 식별과 Crash-after-write/Crash-before-visible 경우 테스트.
-- **수락:** Submit/Cancel/Fill 중 임의 exception·disk full·process kill, 재시작 후 잔고/pos/open orders 일치, fill 1회, LIVE mutation 0.
+- **선행:** TX03A/B. **수락:** 명시 선택된 기존 Venue×Product×Mode에서만 기존 ledger 일관성, profile 누락 시 위험 주문 0. broad perpetual platform 완성은 요구하지 않는다.
 
-### TX04B — 인과적인 Paper Matching 및 연속 LIVE 입력
+### TX04A — 기존 Paper durability 재사용
 
-- **소유:** `paper_execution.py::{submit,cancel,advance,_arrive,_sweep,_receipt,on_book,on_trade}`, `market` snapshot seam.
-- **선행:** TX04A. **현재:** Book/Trade 기반 인과적 Fixture, 전체 input continuity 미완료.
-- **구현:** `received_at`, `decision_at`, `submitted_at`, `arrives_at`, `cancel_effective_at`, `market_event_ts`를 별도 사용. OrderBook Gap/Stale/Epoch/Feed Reset에서 새 risk admission 차단. Maker 체결에 Queue Position 불확실성 반영, touch→무조건 체결 금지. Taker는 arrival 시점 유효 Depth/Protection 기반, Qty > visible liquidity 시 불리한 잔여 처리. 활성 주문을 `venue+instrument+side+price` 등으로 bounded index하여 비관련 Venue 전체 순회 방지(먼저 benchmark).
-- **수락:** cross-spread post-only reject; cancel-before-fill / fill-during-cancel; source event gap과 중복/순서역전; replay result deterministic; venue fee/funding accounting; 2개의 분리 Paper 전략이 실제 외부 API를 호출 0건.
+- **소유:** `paper_execution.py::{_transition,submit,cancel,_fill}`, `portfolio_ledger.py::{transaction,save_paper_state}`.
+- **선행:** TX02B. **현재:** 기존 로컬 Paper 내구 상태 정합성 완료(2026-10-24); production open.
+- **구현(REUSE):** 기존 atomic transaction과 `_aligned` restart check를 재사용하고, 입증된 restart/dedup gap만 보완한다. `intent_id+fill_serial+source_event` identity, crash-after-write/before-visible, conservative fill semantics 유지.
+- **수락:** submit/cancel/fill 중 exception/disk full/kill, restart 후 balance/position/open orders 일치, fill 1회, 외부 mutation 0.
 
-### TX04 — Paper Engine E2E Aggregate Gate
+- **현재 수락:** 기존 `_aligned`가 저장된 보호가격·만료시각·옵션·group을 원장과 비교하고 `_transition`이 커밋 전에도 정합성을 확인한다. 기존 schema/version2·fill identity·보수적 체결 계산은 보존했다. 독립137 / 전체2266 PASS(외부2건 제외). [수락](../runs/20261024-v3/tx04a/acceptance.json). TX04B 연속 입력이나 TX04 집계 완료는 포함하지 않는다.
 
-- **선행:** TX04A/B. **수락:** Event→virtual exchange admission/match→single durable Fill→strategy+account PnL→restart continuity; intentional conservative fill uncertainty 표시. 전략별 Dummy 및 제약 기반 Fixture 모두 PASS.
+### TX04B — NATS-free 연속 입력을 기존 matcher에 연결
 
-### TX05 — Shared Paper Strategy Runtime (VN13과 공동 수락)
+- **소유:** 기존 `LocalMarketEngine.__init__/_watch`, `local_runtime.run_engine`, `PaperStrategyRuntime._market/_fence_feed/advance`의 최소 wiring. `PaperExecution` API·계산은 그대로 재사용한다.
+- **선행:** TX04A, VN03. **현재:** 기존 NATS-free 입력·Paper idle lifecycle 로컬 완료(2026-10-24).
+- **구현(ADAPT):** 기존 matcher에 continuous local data/replay input을 연결한다. causal timestamps(`received/decision/submitted/arrives/cancel_effective/market_event`)와 gap/stale/epoch reset 시 신규 risk admission 차단, maker queue uncertainty, depth 기반 taker를 유지한다. 새 exchange simulator/client 금지.
+- **수락:** post-only cross reject, cancel/fill race, gap/duplicate/order inversion, deterministic replay, 외부 API 0.
 
-- **소유:** `strategy_runtime.py::{PaperStrategyRuntime.register,process_event,process_applied,_dispatch}`, `strategy_contract.py`, Local Runtime wiring.
-- **선행:** TX04B, TX07A, VN13. **현재:** cooperative callback, isolated paper fixture. 소스 문서상 Callback이 영구 블로킹하면 강제 중단 불가능.
-- **구현:** Strategy Register/Unregister/Dependency/Warmup/Exception/TTL/Bounded Queue. Instrument dependency별 invalid; shared State 한 번 apply; 동일 Event에 중복 signal/intent 없음. **강제 Callback 차단의 운영 계약 결정 필수:** (1) Process isolation(우선 Candidate) vs (2) 사용자 승인된 bounded cooperative strategies; 측정해 위험/CPU 허용되지 않으면 `PAPER_READY` 차단. GIL/thread timer만으로 hard kill 보장 주장 금지.
-- **수락:** strategy A 무한 loop→다른 전략·수집기가 계속 진전하거나 해당 runtime에서 안전하게 fail-closed. slow callback/raised exception/out-of-date snapshot; 신규 dummy register→Paper action→PnL without broker edits. `SharedStrategyRunner` 별도 NATS Runner와 중복 Live 권위 생성 금지.
+- **현재 수락:** 기존 watchdog을 재사용해 idle 만료/취소를 진행한다. 시계 전진 전에 참조 호가의 수신/원천 시각을 검사하며, 새 trade가 오래된 book을 신선하게 만들지 않는다. 독립149 PASS; repair1/2와 반례를 보존했다. [수락](../runs/20261024-v3/tx04b/acceptance.json).
 
-### TX06A — Binance Perpetual Venue Adapter 완성
+### TX04 — 기존 Paper E2E gate
 
-- **소유:** `perp_execution.py::BinancePerpAdapter`, Native metadata/client order/status/cancel/account/position/fills handlers 및 관련 tests.
-- **선행:** TX01, TX03B, TX07A. **현재:** request/sign/query mapping 중심, real HTTP transport/private lifecycle 미완료.
-- **구현:** 기존 `BinanceBrokerAdapter` Spot와 분리, 명시한 USDT-M 또는 COIN-M subset에 한정; OrderId/ClientId/Side/PositionSide/reduceOnly/TimeInForce 변환, exchange-specific timestamp/recvWindow/signature, open order/status/fill/position/funding and pagination, user-data private stream gap→REST reconciliation. symbol 필수 조회 인자 검증.
-- **시험:** signed canonical REST fixtures, 400/429/500/timeout, server date skew, immediate fill-before-ACK, duplicate WebSocket trade, restarted cursor, unsupported hedge/cross. 실 API mutation 없음.
+- **선행:** TX04A/B. **수락:** local event→기존 matcher→single durable fill→기존 ledger/PnL→restart continuity; uncertainty 표시, 외부 mutation 0.
 
-### TX06B — Arcus Perpetual Venue Adapter 완성
+- **현재 수락:** 제품 변경0. 실제 engine frame→기존 runtime→matcher/ledger, idle watchdog 취소, 중복/REPLAY, 최신 원장 재시작과 기존 coupled checkpoint 회귀를 공동 검증했다. 독립96 PASS. [수락](../runs/20261024-v3/tx04/acceptance.json).
 
-- **소유:** `perp_execution.py::ArcusPerpAdapter` 및 기존 Arcus signer/nonce/chain-specific helper.
-- **구현:** 실제 지원되는 Arcus 상품·계정·Order Type/Cancel/Fill/Position/Collateral API를 공식 문서·Fixture에 매핑. Nonce/Signer lifecycle, expired signature, client ID, pagination, private stream/reconnect, unknown order risk reservation. SDK·서명 코드가 필요한 경우 기존 검증 함수 재사용, 막연한 Binance API 필드 차용 금지.
-- **시험:** signature prepared bytes→reference fixture, nonce collisions, chain/market id mismatch, cancel timeout, missing private event and REST recovery. 적절한 Testnet이 없으면 `EXTERNAL_VALIDATION_PENDING`, 코드 구현은 계속.
+### TX05 — VN13과 동일 workstream
 
-### TX06C — GRVT Perpetual Venue Adapter 완성
+- **소유:** `PaperStrategyRuntime.register/process_event/_dispatch`, `strategies/contract.py`, 기존 local runtime wiring.
+- **선행:** VN13. **현재:** 기존 파일 전략/Paper 경제 E2E 로컬 완료(2026-10-24); production gate 별도.
+- **구현:** 별도 Worker/Runtime을 만들지 않고 VN13의 전략 file module을 기존 `PaperStrategyRuntime`에 등록한다. shared state 1회 apply, duplicate signal/intent 0, dependency/warmup/exception/TTL/bounded queue, PAPER 외부 mutation 0. Hard isolation을 주장하려면 측정된 process/pool 계약이 필요하며, 없으면 cooperative limitation을 명시한다.
+- **수락:** 기존 Golden, strategy file register→Signal→Paper→PnL, slow/raise/stale snapshot, ETF 무관 feed 장애, `SharedStrategyRunner` 중복 live 권위 0.
 
-- **소유:** `perp_execution.py::GrvtPerpAdapter`, `GrvtSigningComposition`, 과거 GRVT 서명/수집 모듈.
-- **구현:** signed payload/typed data/nonce·expiry, client order id→broker id, cancel/status/open orders, fills/funding/margin/position API, private event gap and reconciliation, post-only/reduce-only/tif 정확히 매핑. Cross-exchange의 GRVT account scope 권위 유지.
-- **시험:** signer expected bytes, stale nonce, canceled after partial fill, unknown with no broker ID, >1 strategy same account ordering; 무허가 mutation 0.
+- **현재 수락:** 제품 변경0. 실제 파일 등록→공유 engine 입력→부분 체결→체크포인트 복구/연속 실행의 경제 결과를 수동 계산값과 대조했다. 독립286/전체2325 PASS(외부2건 제외). 파일 callback raise/slow-return 격리를 검증했고 hard preemption/process isolation을 주장하지 않는다. [수락](../runs/20261024-v3/tx05/acceptance.json).
 
-### TX06D — Bybit Perpetual Venue Adapter 완성
+### TX06A — Binance: 기존 connector 보존, 신규 build 금지
 
-- **소유:** `perp_execution.py::BybitPerpAdapter`, `liquidity_mm`의 기존 Testnet Execution Probe(검증된 부분만 재사용).
-- **구현:** category linear/inverse scope, positionIdx/one-way/hedge, Create/Amend/Cancel/GetOrders/Execution/Position/Wallet, Private order/execution stream, recv-window/timestamp/sign, rate-limit budget. 기존 Testnet Probe의 주문/취소 로직을 복사하지 않고 호출 seam 재사용 가능성을 확인.
-- **시험:** duplicate execution ID, filled-before-ACK, cancel race, positionIdx mistake, maker post-only crossing, unknown timeout; Testnet Probe 코드를 실행 경로의 유일 권위로 만들지는 않음.
+- **소유/근거:** `services/execution/crypto_binance.py`(spot), `perp_execution.py::BinancePerpAdapter`(test-visible mapping), legacy `brokers.py`. **선행:** TX00.
+- **범위:** 기존 spot과 perp mapping/environment를 **감사·비교**한다. **새 HTTP/signer/private wrapper를 만들지 않는다.** Binance spot을 perp로 선언하지 않는다. 선택된 local bridge가 실제로 필요하면 function-level caller·환경 증거와 Tech Lead gap ticket이 먼저다.
+- **수락:** 기존 함수/transport 보존, spot≠perp, UNKNOWN/UNSUPPORTED honest label, 무허가 mutation 0. Live 검증은 external.
 
-### TX06E — Hyperliquid Perpetual Venue Adapter 완성
+### TX06B — Arcus: 기존 WS/signer 보존
 
-- **소유:** `perp_execution.py::HyperliquidPerpAdapter`, 기존 독립 signer nonce journal 및 네트워크 adapter.
-- **구현:** Hyperliquid API native action payload, subaccount/vault/nonce isolation, asset index/meta, perp leverage/position/open orders/fills/funding/fills-paging, cancel and failure statuses, private subscriptions, explicit wallet vs API wallet 권한. 기존 generic Hyperliquid `order unsupported` stub가 있으면 명시된 계약 구현 또는 제거 검토.
-- **시험:** native signer nonce persisted across restart, duplicate nonce reject, wrong chain/domain reject, execution group partial fill, missing/private gap→safe reconcile. 실 API mutation은 별도 승인.
+- **소유/근거:** `extended_brokers.py::ArcusBrokerAdapter`, `perp_execution.py::ArcusPerpAdapter`/signer composition. **선행:** TX00.
+- **범위:** 기존 WebSocket RPC, Ed25519 signer/nonce, order/status/account 경로를 보존하고 testnet/live 차이를 기록한다. 새 generic transport/nonce client를 만들지 않는다. 누락 capability는 함수·caller 증거 없이는 개발하지 않는다.
+- **수락:** 기존 서명/경로 불변, unsupported/UNKNOWN fail-closed, mutation 0. Live external.
 
-### TX06 — 5개 Venue의 Capability Matrix 집계 Gate
+### TX06C — GRVT: 기존 fv_mm/private/reconcile 보존
 
-- **선행:** TX06A–E. **수락:** 다섯 Venue 각각 최소 하나 이상의 **명시적 Perp Product/Environment supported scope**에 대해 metadata, submit, cancel, status, open orders, fills, positions, funding, wallet/margin and UNKNOWN local transport fixture PASS. 다른 모드 미지원은 명시; 모델이 임의로 테스트용 성공 응답을 합성하여 공식 응답이라 주장하면 FAIL. 실계좌 준비 상태 `LIVE_VERIFIED`는 현재 자동 불가.
+- **소유/근거:** `fv_mm/venues.Grvt`, `fv_mm/private.grvt_private`, `extended_brokers.GrvtBrokerAdapter`, `perp_execution.GrvtSigningComposition`. **선행:** TX00.
+- **범위:** 기존 testnet `*_USDT_Perp`, EIP-712/signing, private `v1.order/v1.fill`, reconcile을 재사용한다. **incomplete generic adapter를 working exchange 연결 부재로 해석하지 않는다.** `native_client_id` bit-width/hash 결함은 **UNVERIFIED**이므로 이 ticket에서 수정하지 않는다.
+- **수락:** 기존 경로 보존, 중복 framework 0, client-ID defect evidence 없으면 변경 0.
 
-### TX07A — Canonical Order/Fill/Cancel/Funding Fact Contract
+### TX06D — Bybit: testnet 경로 보존
 
-- **소유:** `trading_contracts.py`, `execution_owner.py`, `execution_ledger.py` 및 `tests/refactoring/test_tx07a.py` (ADD).
-- **선행:** TX01. **구현:** `OrderSubmitted/Accepted/Rejected/Unknown/PartiallyFilled/Filled/CancelPending/Cancelled/Expired/Funding/AccountChange`의 identity·state transitions·monotonic cumulative qty. `Broker ACK`와 `confirmed fill`이 역순 도착 가능. Out-of-order event가 Terminal을 역전시키지 않음. 원장 트랜잭션·reservation/physical/virtual accounting의 단일 권위.
-- **수락:** 가장자리 case fixture table: `ACK→partial→cancel→latefill`, `fill→ACK`, double fill, reject after known fill, timeout UNKNOWN→positive match, unknown→incomplete pagination. 원장 checksum 동일.
+- **소유/근거:** `liquidity_mm/exchange.TestnetClient`, `fv_mm/venues.Bybit`, `bybit_execution.BybitOrderClient/Probe`, `perp_execution.BybitPerpAdapter`. **선행:** TX00.
+- **범위:** 기존 testnet-only 실행/조회/정규화를 재사용하고, probe를 production live authority로 승격하지 않는다. 새 duplicate order/private client·새 wrapper 금지. `run`의 live block과 testnet gate를 보존한다.
+- **수락:** duplicate execution dedup, cancel ACK≠terminal, unknown reservation, live mutation 0. Live external.
 
-### TX07B — Venue별 Private/REST/Timeout Reconciliation
+### TX06E — Hyperliquid: SDK/broker 보존
 
-- **소유:** `perp_execution.py::{_Adapter.reconcile,venue-specific reconcilers}`, `tests/refactoring/test_tx07b.py` (ADD), `execution_owner` seam.
-- **선행:** TX06, TX07A. **구현:** `Private Streaming cursor+seq/generation`, REST pagination completeness proof, order status/cancel/fill/funding time-window. 조회가 일부만 성공하면 `absence != never submitted`. Credential-less Test Harness로 데이터 결과 정규화. Reconcile 전 ambiguous reservation 계속 유지.
-- **수락:** unmatched native ID, pages incomplete, duplicate trade events, stream gap, reconciliation timeout, disconnect reconnection, API 429/expired session에서 신규 위험 handoff 차단.
+- **소유/근거:** `brokers.HyperliquidBrokerAdapter`(read/stub), `perp_execution.HyperliquidPerpAdapter`/SDK signing composition. **선행:** TX00.
+- **범위:** 기존 read path와 SDK signer composition을 보존하고, generic transport 미구현을 자동 개발 사유로 삼지 않는다. Native action/nonce/subaccount/vault는 기존 composition 범위에서만 감사한다.
+- **수락:** broker placeholder와 perp composition 분리, existing signer 불변, mutation 0.
 
-### TX07 — Lifecycle Aggregate Gate
+### TX06 — 선택 venue audit gate (필수 core 아님)
 
-- **선행:** TX07A/B. **수락:** 모든 지원 Venue의 계약시험에서 주문/취소/UNKNOWN/fee/funding 중복반영 0, known positions/books 재구성, blocked 상황에서 unsupervised retry/false absence 0.
+- **선행:** TX00. **수락:** 선택된 기존 route 하나에 대해 함수/caller/environment가 matrix와 일치하고, UNKNOWN/N/A가 honest하다. **all-five rebuild gate는 제거**하며 완료 adapter prototype evidence를 지우지 않는다.
 
-### TX08A — 멀티전략 동일 계좌 위험/귀속
+### TX07A — 기존 fact 계약과 최소 필드 매핑 (로컬 완료)
 
-- **소유:** `portfolio_ledger.py`, `strategy_runtime.py`, `tests/refactoring/test_tx08a.py`.
-- **선행:** TX02/TX03/TX07A/TX05. **구현:** account-wide single serialized reservation, strategy-specific budget, intent/working/cancel-pending/UNKNOWN worst-case exposure. 두 전략의 반대 Position이 계좌상 net zero인 경우에도 미체결 주문은 별도 확률적 예상 대신 안전 Worst-case로 계산. 전략 과도한 quote replacement→취소/원장 처리 starvation 방지.
-- **수락:** 2+ strategies same GRVT account, 3 concurrent KIS C3/KD/KP intent (Fixture), reservation race and crash, physical vs virtual reconciled equation. Strategy fairness 측정.
+- **소유:** 기존 `execution_owner.py`, `execution_ledger.py`, `etf_journal.py`, `portfolio_ledger.py`는 재사용한다. 이번 변경은 `tests/refactoring/test_tx07a_fact_contract.py`와 `reuse_audit/tx07a_fact_contract.md`다.
+- **선행:** TX01. **구현(REUSE):** 기존 저장 필드와 authority가 선택된 Paper/ETF/offline owner 계약에 충분함을 확인했다. 필드/identity/terminal 매핑을 문서와 테스트로 고정하며 새 projection API나 universal lifecycle state machine을 만들지 않는다. Native venue 확장은 별도 선택 범위다.
+- **수락:** 기존 ledger checksum, late/duplicate fill, ACK/fill 역순, UNKNOWN positive match, 기존 Golden 불변.
 
-### TX08B — Cross-exchange Partial Fill/UNKNOWN Execution Group
+- **현재 수락(2026-10-24):** 제품 변경0, 독립 79 PASS. 중복/충돌 fill, ACK 역순, 누적 체결, UNKNOWN reservation과 기존 ETF 경제 동작을 보존했다. [증거](../runs/20261024-v3/tx07a/acceptance.json).
 
-- **소유:** `execution_groups.py`, Owner read-only group facts, `tests/refactoring/test_tx08b.py`.
-- **선행:** TX08A/TX07A. **현재:** Paper 관측 Group Coordinator 초안.
-- **구현:** immutable `group_id`, child intents, Venue Account Scopes, filled quantities, target hedge ratio, residual delta, group epoch/TTL. 실제 계좌 간 Atomic Commit 환상 금지. 하나만 체결된 경우 exposure 계산과 별도 승인된 reduce-only risk response. Group state는 account Owner의 권위 원장을 대체하지 않음.
-- **수락:** GRVT confirmed long+Binance unknown short, partial fill, delayed hedge, duplicate reconciliation, opposite orders from other strategy; 무조건 반복/유휴 계좌 침범 0.
+### TX07B — 기존 reconciliation 재사용
 
-### TX08 — Shared Account/Cross Venue Aggregate Gate
+- **소유:** `liquidity_mm.Runner.reconcile`, `fv_mm.Runner.reconcile`, `EtfTradingLoop.reconcile`, `PortfolioLedger.reconcile_positions`, `perp_execution._Adapter.reconcile`.
+- **선행:** TX00, TX07A. **구현:** 선택된 경로의 입증된 cursor/seq/window/absence gap만 보완한다. **모든 venue에 새 Private Stream을 강제하지 않는다.** 일부 조회 실패는 미제출 증거가 아니며 ambiguous reservation을 유지한다.
+- **수락:** existing reconcile 동작 보존, false absence 0, unknown 유지, 선택 path 외 변경 0.
 
-- **선행:** TX08A/B. **수락:** 전략 귀속과 account physical state 일치, margin over-reservation 0, stale order>TTL risky admissions 0, strategy pause가 타 전략 안전 동작을 불필요하게 차단하지 않음.
+### TX07 — 선택 execution equivalence gate (필수 core 아님)
 
-### TX09 — Telegram/PnL/Portfolio Control Projection 통합
+- **선행:** TX07A/B. **수락:** 선택된 기존 runtime이 order/cancel/UNKNOWN/fee/funding을 중복 없이 projection하고, blocked 상황에서 unsupervised retry가 0. 새 universal lifecycle engine을 요구하지 않는다.
 
-- **소유:** `telegram.py`, `telegram_trade.py`, `dashboard/bridge.py`, `local_observation.py`, `tests/refactoring/test_tx09.py`.
-- **선행:** TX08, VN14B, VN15. **구현:** `/status`, `/feeds`, `/strategies`, `/orders`, `/positions`, `/pnl <strategy|all>`, `/pause`, `/halt`, `/resume` 수립. 기존 `/trade` 보존. Owner effect/receipt 같은 authoritative journal에 기록하고 Telegram은 ACL/TTL/중복 검증된 전달자. 상위 halt를 전략 resume으로 해제 불가. stale Mark/FX/Paper/Actual 명확.
-- **수락:** allowed numeric identity만 명령, Telegram 중복/429/네트워크 끊김에서 account mutation 1회 이하, cold report 조회가 Hot Path 지연 증가시키지 않음, unknown position 읽기 Fail-visible.
+### TX08A — 동일계좌 전략 safety (우선)
 
-### TX10 — Data Export 및 별도 Backtest→Paper Promotion Metadata
+- **소유:** `portfolio_ledger.py::{admit_order,_gross_notional,_reserved}`, `strategy_runtime.py` risk binding, `etf_journal.py` 기존 book.
+- **선행:** TX02, TX05, TX07A. **현재:** LOCAL_SAME_ACCOUNT_PAPER_CONTRACT_COMPLETE (2026-10-24).
+- **구현(REUSE/ADAPT):** 기존 account-wide serialized reservation, strategy budget, worst-case exposure를 재사용한다. 두 전략 반대 포지션이 net zero여도 pending/cancel-pending/UNKNOWN을 낙관 상쇄하지 않는다. **새 multi-strategy 연결에서 입증된** attribution/reservation/cancel ownership/restart gap만 보완한다. 기존 ETF runtime 재작성·새 universal risk engine 금지.
+- **수락:** 2+ same-account strategies, reservation race/crash/restart, physical=virtual+external equation, cancel ownership, one physical writer, strategy별 namespace·예산 격리. 공정성은 격리 범위이며 max-min 배분/스케줄러 보장은 없다. Paper first, live rewrite 없음.
 
-- **소유:** `strategy_registry.py` 또는 기존 Registry seam, `ParquetHistoryReader`, 검증 가능한 Export CLI, `tests/refactoring/test_tx10.py`.
-- **선행:** TX01. **구현:** 운영 서버에서 Backtest 실행 금지. 서버가 내보내는 것은 immutable Parquet/DataManifest/Source ID/Bar Timestamp-Convention/Available-at/Native Sequence/Gap Flags/Contract Metadata/Schema Hash. 사용자 연구 결과의 `strategy_version, config_hash, data_manifest, approval record`와 Paper 계정 등록 권한의 연결. Live Promotion은 사용자 승인과 Account Reconciliation 뒤에만 허용.
-- **수락:** Timestamp end/start 미혼동, 1분봉 available_at 미래정보 접근 차단, 결측값 조용한 ffill 없음, Export 재수행 시 checksum 동일. `PAPER→LIVE` 단순 config toggle만으로 Real API 전송 0.
+- **현재 수락:** `PaperStrategyRuntime.register` 한 메서드에서 동일 계좌의 notional/capital 한도 불일치를 claim/plugin 생성 전에 거절한다. 전략별 한도/funding buffer는 독립이다. 수정 전 반례2건 실패 → 수정 후 독립 133 PASS. paused/blocked/faulted 등록도 검사한다. 기존 원장/취소/복구를 재사용한다. [증거](../runs/20261024-v3/tx08a/acceptance.json).
 
-### TX11 — 최종 다중 전략 로컬 End-to-End 및 Capacity
+### TX08B — Cross-venue group: DEFER
 
-- **소유:** test-only Dummy Strategies/Fixture, `local_runtime.py` seam, `scripts/refactoring/benchmark_vnext.py` 등 기존 Driver.
-- **선행:** TX05, TX06, TX07, TX08, TX09, TX10, VN18. **구현:** KIS 3전략 + GRVT MM dummy + GRVT–Binance arb dummy + 독립 Crypto venue strategy의 복합 synthetic/local-live-input E2E. `MarketEvent→one state apply→strategy intents→account risk→paper order→partial fill→virtual/physical ledger→report→crash/restart`.
-- **수락:** 2vCPU/3.8GiB RAM와 비슷한 격리 환경에서 peak CPU/RSS/PSS/Swap, `receive→decision→admission` p95/p99/p99.9, queue age/lag/error, unknown/late-fill, batch backup/Parquet slowdown, storage/Telegram outage, model-free deterministic execution. 단일 Dummy 테스트만으로 ALL READY 불가.
+- **소유:** 기존 `execution_groups.py`, `PortfolioLedger.record_group_fact/group_facts`.
+- **선행:** TX08A, TX07A. **현재:** PAPER_OBSERVATIONAL_COORDINATOR_IMPLEMENTED.
+- **범위:** 기존 observational group facts를 보존한다. **cross-exchange atomic execution, 자동 hedge/unwind, 새 group state machine은 명시 전략 수요 전까지 deferred**이며 core multi-strategy acceptance가 아니다. 분산 원자성 주장 0.
+- **수락:** 기존 group fact 동작 보존, account Owner 권위 미대체, 추가 구현 0이면 0으로 보고.
 
-### TX12 — 최종 로컬 Production Infrastructure Acceptance
+### TX08 — Same-account gate only
 
-- **소유:** Release candidate+Runner Gate, `docs/refactoring/vnext` current status, 서명되지 않은/비밀 없는 local runbook 및 Source Manifest.
-- **선행:** TX11, VN19. **구현:** 현재 HEAD 기준 각 지원 Venue·상품·Paper/Live capability, Market, Data Export, Multi Strategy, Owner/Portfolio, Restore, GC, Telegram, Build, Full Linux Test, Fault Injection을 매트릭스에 연결. 진짜 서버·실계좌가 있어야만 수행 가능한 항목만 별도 External Gate 문서에 남김.
-- **수락:** Candidate의 Local 기능 미구현 0(지원 선언 Scope 기준), Linux Full Test PASS, Callback isolation·Multi-account concurrency PASS, Paper 외부 mutation 0, Source/Build hash 고정, `server_deployed=false`, `live_active=false`.
+- **선행:** TX08A. **수락:** selected same-account attribution/reservation/cancel/restart evidence, margin over-reservation 0, stale risky admission 0. TX08B/cross-venue는 선행·수락 조건이 아니다.
+
+- **현재 로컬 수락:** 실제 별도 전략 .py 파일 2개를 같은 계좌에 연결하여 spool/engine→부분 체결→실제 checkpoint 복구→소유권 취소→나머지 체결/중복을 검증했다. 독립 97 PASS. 새 product 코드0, TX08B는 착수하지 않았다. [증거](../runs/20261024-v3/tx08/acceptance.json).
+
+### TX09 — VN15와 동일 Projection/Control workstream
+
+- **소유:** `telegram.py`, `telegram_trade.py`, `dashboard/bridge.py`, `local_observation.py`, 기존 `account_report`/`notify`.
+- **선행:** VN15. **구현:** VN15의 actual/assumed/PAPER/recovery label을 `/status,/feeds,/strategies,/orders,/positions,/pnl`에 투영한다. 기존 `/trade`와 Mock2 보고를 보존하고, `/pause,/halt,/resume`은 기존 권위 Owner로 전달한다. 새 dashboard platform·submit-path reporting I/O 금지.
+- **수락:** numeric ACL/TTL/dedup, Telegram 장애에서 account mutation 1회 이하, cold read가 hot path를 막지 않음, unknown fail-visible.
+
+- **현재 로컬 수락(2026-10-25):** Reuse existing Telegram numeric ACL/outbox and opt-in authoritative owner command bridge; add bounded cold Paper queries and existing local feed snapshot reads without affecting trade/status legacy or submit path. 독립 106 PASS. [증거](../runs/20261025-v3/tx09/acceptance.json).
+
+### TX10 — 기존 Ncloud/Export 보존 + plugin metadata 연결
+
+- **소유:** 기존 `storage_backend.archive_backend`/`NcloudStorageBackend`, `ParquetHistoryReader`, 기존 registry seam.
+- **선행:** TX01. **구현(REUSE):** working Ncloud put/verify/download와 기존 export/manifest를 **변경 없이 보존**한다. 누락된 data-manifest→strategy file/Paper registration linkage만 최소 추가한다. 새 uploader/backtest platform/SDK client 금지.
+- **수락:** 기존 upload/download/checksum 회귀, timestamp/available-at/ffill invariant, `PAPER→LIVE` config toggle만으로 real API 0.
+
+- **현재 로컬 수락(2026-10-25):** Optional bounded data_manifest provenance in existing explicit strategy/Paper registration; validate manifest and referenced object hashes and availability before import/claims; preserve existing export/Ncloud clients unchanged. 독립 146 PASS. [증거](../runs/20261025-v3/tx10/acceptance.json).
+
+### TX11 — 좁은 NATS-free core E2E
+
+- **소유:** 기존 local runtime/Paper/strategy seam, test-only fixtures, 기존 benchmark driver.
+- **선행:** TX05, TX08A, TX10, VN15, VN18. **구현:** `data→strategy file→existing Paper→same-account attribution→report/restart` 한 줄과 보존된 legacy Golden을 검증한다. **five-venue/arbitrage platform scenario는 제거**한다. 새 state machine/engine 없음.
+- **수락:** deterministic local E2E, restart continuity, mutation 0, 기존 runtime behavior 동등. 2vCPU/3.8GiB 측정은 기존 profile로 수행하되 새 제품 요구가 아니다.
+
+- **현재 로컬 수락(2026-10-25):** Joint owned data-manifest/two-real-file/Paper/same-account/cold report/outbox/exact-cut recovery E2E using existing authoritative components and manual Decimal facts. 독립 85 PASS. [증거](../runs/20261025-v3/core5/tx11/acceptance.json). 운영/삭제 승인이 아니다.
+
+### TX12 — 최소 local acceptance
+
+- **소유:** 기존 release candidate/runner gate, `docs/refactoring/vnext` status, secret-free runbook/manifest.
+- **선행:** TX11, VN19. **구현:** 선택된 local scope(data/storage/recovery/plugins/Paper/same-account)와 unchanged legacy runtime을 matrix에 연결한다. 실제 서버/실계좌 항목만 External Gate로 남긴다.
+- **수락:** 선택 scope 미구현 0, scoped test PASS(또는 NOT_RUN 명시), Paper 외부 mutation 0, source/build hash 고정, `server_deployed=false`, `live_active=false`. **generic Trading Platform 완성 badge 없음.** 소스 삭제 0/제품 변경 0은 owner 검증 전 self-acceptance가 아니다.
+
+- **현재 로컬 수락(2026-10-25):** Final minimal local acceptance matrix: source/receipt/package proof for selected core; external server/image/account/capacity gates explicit, optional venue/platform work and VN20 deletion unperformed. 독립 53 PASS. [증거](../runs/20261025-v3/core5/tx12/acceptance.json). 운영/삭제 승인이 아니다.
 
 ## E. 파일/함수 소유권 및 합치면 안 되는 경계
 
@@ -412,4 +464,4 @@ external_only: [none or exact API check]
 next_ready: [ids]
 ```
 
-**종결 조건:** `R00–R06/O00–O01` + 기존 VN/TX에서 로컬 구현 가능한 범위가 새 Candidate SHA에서 모두 증명되고, 최종 TOSS DATA_ONLY / 5 Perp Venue capability / 3 KIS 전략 / NATS-free Paper / 2vCPU 리소스 범위가 실제 Fixture 및 패키지 검증으로 입증되어야 한다. Legacy 원본 서비스 삭제(VN20), 실계좌/서버 운영 Gate는 **별도 승인된 사후 작업**으로 남긴다.
+**종결 조건:** `R00–R06/O00–O01` + 기존 VN/TX 중 **선택된 필수 core 18개**와 TX11/TX12 aggregate가 새 Candidate SHA에서 증명되고, TOSS DATA_ONLY / 보존된 기존 ETF·venue 경로 / strategy-file→기존 Paper / same-account safety / NATS-free local data·recovery / 기존 cloud 경로가 기존 Golden과 최소 fixture로 입증되어야 한다. **all-five venue rebuild, TX03 extra margin, TX08B cross-venue, 새 uploader/Private Stream은 종결 조건이 아니다.** Legacy 원본 서비스 삭제(VN20), 실계좌/서버 운영 Gate는 별도 승인 사후 작업이며 이번 단계 소스 삭제 0이다.

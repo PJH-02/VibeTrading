@@ -1,0 +1,36 @@
+{
+  "mode": "baseline",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx04b-baseline-ebsjo52_",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/tx04b-baseline-ebsjo52_/work",
+  "exit_code": 0,
+  "elapsed_seconds": 7.058553580020089,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "........................................................................ [ 55%]\n..........................................................               [100%]\n130 passed in 6.09s\n",
+  "tests": {
+    "passed": 130,
+    "failed": 0,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/refactoring/test_local_engine.py",
+    "tests/refactoring/test_local_runtime.py",
+    "tests/refactoring/test_runtime_checkpoint_integration.py",
+    "tests/refactoring/test_paper_execution.py",
+    "tests/refactoring/test_tx02_joint_gate.py",
+    "tests/refactoring/test_tx04a_alignment.py"
+  ]
+}

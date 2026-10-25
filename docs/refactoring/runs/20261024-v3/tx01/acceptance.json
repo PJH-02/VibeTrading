@@ -1,0 +1,99 @@
+{
+  "decision": "PASS",
+  "task_id": "TX01",
+  "completion_scope": "LOCAL_EXISTING_SIGNAL_ORDERINTENT_PAPER_CONTRACT_ONLY",
+  "base_sha": "fad4e81bdabbc689a8757ccec43da81acf5300d4",
+  "source_sha": "1d1c2c8f6f0a76745fce9c04208f4e031c444cdd",
+  "selected_provider": "opencode",
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "upstream_weight_identity": "UNKNOWN",
+  "role": "refactor",
+  "worker_exit_code": 0,
+  "delegate_exit_code": 0,
+  "repair_delegations": 0,
+  "owner_product_edits": 0,
+  "product_paths": [
+    "src/vibetrading/strategy_runtime.py"
+  ],
+  "changed_product_symbols": [
+    "PaperStrategyRuntime._validate"
+  ],
+  "product_added_lines": 17,
+  "other_runtime_methods_ast_preserved": 37,
+  "new_worker_test_cases": 28,
+  "new_independent_test_cases": 23,
+  "product_and_test_sha256": {
+    "src/vibetrading/strategy_runtime.py": "a86e3958785768797c367950d76952f82a15eeb2900e30b8b5bc1fff5ea61351",
+    "tests/refactoring/test_tx01_signal_binding.py": "17967810eebcdfb55c291fb3b5afddd4210bb00ebccf542dec055e7de8d65c20",
+    "docs/tickets/TX01-reviewer-counterexamples.py": "e5d242f730c4147a108564de4ffaa1c11187a5af7462e54fb6776b05bc1ab518"
+  },
+  "baseline": {
+    "passed": 236,
+    "exit_code": 0
+  },
+  "original_counterexamples": {
+    "passed": 238,
+    "failed": 21,
+    "exit_code": 1,
+    "source": "Original unchanged base",
+    "receipt": "original-counterexamples.json"
+  },
+  "independent_scoped": {
+    "passed": 287,
+    "exit_code": 0,
+    "receipt": "independent-final.json"
+  },
+  "full_regression": {
+    "passed": 2170,
+    "product_passed": 2001,
+    "tooling_passed": 169,
+    "external_live_data_deselected": 2,
+    "exit_codes": [
+      0,
+      0
+    ],
+    "receipt": "full-regression.json"
+  },
+  "counts_overlap": true,
+  "initial_snapshot_error": "Missing existing sqlite_store transitive input caused collection exit2; corrected disposable snapshot only, not product/test code. Preserved separately.",
+  "safety_and_preservation": {
+    "legacy_signal_orderintent_wire": true,
+    "exact_decimal_values": true,
+    "explicit_kiwoom_reference_to_kis_etf_paper": true,
+    "c3_kp_kd_golden_unchanged": true,
+    "mock_mock2_unchanged": true,
+    "toss_data_only_unchanged": true,
+    "existing_ledger_matcher_schema_and_economics_unchanged": true,
+    "exchange_order_cloud_wrappers_unchanged": true,
+    "new_api_engine_registry": false,
+    "existing_tests_or_goldens_modified": false,
+    "external_mutations": 0,
+    "production_data_deletions": 0
+  },
+  "preflight": "Full intent/product and signal/declared reference InstrumentId, bounded intent/client IDs, causal integer intent creation and NEW validation time before action claims. Existing full pending batch is prevalidated.",
+  "limits": [
+    "Existing event callback claims and fault/cancel policy are preserved; not a claim of whole-callback database rollback.",
+    "Existing local PAPER capability only; no live/SANDBOX account readiness or deployment approval.",
+    "No new strategy file/Paper continuous input/same-account fencing work is claimed; those remain separate tickets.",
+    "ExecutionAction/Signal/OrderIntent and existing matcher/ledger are reused; no replacement bridge API or new risk arithmetic."
+  ],
+  "production_gate": "BLOCKED_UNCHANGED",
+  "model_profiles_and_free_gateway_configuration_unchanged": true,
+  "free_gateway_invoked_this_ticket": false,
+  "model_fallback": false,
+  "next_ticket_started": false,
+  "original_workspace_application": {
+    "decision": "PASS",
+    "receipt": "docs/refactoring/runs/20261024-v3/tx01/original-application.json",
+    "preexisting_dirty_entries_preserved": 174,
+    "canonical_paths_verified": 24,
+    "accepted_product_and_test_paths_verified": 3
+  },
+  "final_metadata_verification": {
+    "receipt": "docs/refactoring/runs/20261024-v3/tx01/final-scope-status-validation.json",
+    "passed": 20,
+    "exit_code": 0,
+    "canonical_cli_exit": 0,
+    "other_50_task_objects_preserved": true
+  }
+}

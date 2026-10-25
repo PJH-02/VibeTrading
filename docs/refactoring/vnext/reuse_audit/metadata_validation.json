@@ -1,0 +1,9 @@
+{
+  "decision": "PASS",
+  "cycle_free": true,
+  "completed_rows_preserved": 14,
+  "all_task_statuses_preserved": true,
+  "scope_revised": 37,
+  "all_future_product_edit_allowlists_cleared_pending_bounded_gap_tickets": true,
+  "new_order_code": false
+}

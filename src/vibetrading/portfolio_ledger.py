@@ -5,6 +5,7 @@ from contextlib import contextmanager
 from decimal import Decimal, InvalidOperation, ROUND_CEILING, localcontext
 import hashlib
 import json
+import os
 from pathlib import Path
 import sqlite3
 import threading
@@ -52,10 +53,12 @@ def reserve_product(quantity, unit):
 class PortfolioLedger:
     """One cooperative scope owner; paper cash and isolated linear simulation only.
 
-    Paths live inside owner_root/<mode>. Owner-root protection/ACL and a local
-    volume are deployment requirements; this lease cannot fence other hosts.
-    Balances and physical positions are simulated account facts, never evidence
-    of actual venue holdings. Explicit snapshots reconcile deviations into gaps.
+    Paths live inside owner_root/<mode>. Paper mode also fences the physical
+    account/environment on owner_root, shared with ExecutionLedger, so product
+    labels cannot split an account. Owner-root protection/ACL and a local volume
+    are deployment requirements; this lease cannot fence other hosts. Balances
+    and physical positions are simulated account facts, never evidence of actual
+    venue holdings. Explicit snapshots reconcile deviations into gaps.
     """
 
     CAPABILITIES = {"cash": "paper", "linear_perpetual": "paper simulation assumption",
@@ -76,11 +79,19 @@ class PortfolioLedger:
         self.path, self.owner_root = Path(path).resolve(), Path(owner_root).resolve()
         if not self.path.is_relative_to(self.owner_root / self.mode.value):
             raise ValueError("Portfolio path must be inside protected owner_root/<mode>")
-        self._thread, self._closed = threading.get_ident(), False
+        self._thread, self._pid, self._closed = threading.get_ident(), os.getpid(), False
+        self._authority = None
+        if self.mode == TradingMode.PAPER:
+            # The explicit owner_root is the physical authority root shared with
+            # ExecutionLedger(authority_root=owner_root, environment='paper').
+            # Product labels/DB paths must not split this account/environment key.
+            self._authority = ProcessLease.account(self.owner_root, scope.venue, scope.account, "paper")
         self._lease = ProcessLease(self.owner_root / ".portfolio-owners" /
                                    (hashlib.sha256(scope.key.encode()).hexdigest() + ".lock"))
-        self._lease.acquire()
         try:
+            if self._authority is not None:
+                self._authority.acquire()
+            self._lease.acquire()
             binding = self._lease.path.with_suffix(".binding")
             expected = canonical({"scope": scope.key, "mode": self.mode.value, "path": str(self.path)})
             if binding.exists() and binding.read_text(encoding="utf-8") != expected:
@@ -90,7 +101,6 @@ class PortfolioLedger:
                 with binding.open("x", encoding="utf-8") as handle:
                     handle.write(expected)
                     handle.flush()
-                    import os
                     os.fsync(handle.fileno())
             self.path.parent.mkdir(parents=True, exist_ok=True)
             self._db = sqlite3.connect(self.path, isolation_level=None, timeout=2)
@@ -131,11 +141,16 @@ class PortfolioLedger:
             if hasattr(self, "_db"):
                 self._db.close()
             self._lease.close()
+            if self._authority is not None:
+                self._authority.close()
             raise
 
     def _check(self):
-        if self._closed or threading.get_ident() != self._thread:
+        if self._closed or threading.get_ident() != self._thread or os.getpid() != self._pid:
             raise RuntimeError("Portfolio requires its open owning thread")
+        self._lease.check()
+        if self._authority is not None:
+            self._authority.check()
 
     @property
     def transaction_active(self):
@@ -173,6 +188,7 @@ class PortfolioLedger:
             self._db.execute("SAVEPOINT " + marker)
             try:
                 yield self._db
+                self._check()
                 self._db.execute("RELEASE " + marker)
             except BaseException:
                 self._db.execute("ROLLBACK TO " + marker)
@@ -191,6 +207,7 @@ class PortfolioLedger:
             wal = Path(str(self.path) + "-wal")
             if (wal.stat().st_size if wal.exists() else 0) + pages * (size + 24) + 32 > self.max_wal_bytes:
                 raise RuntimeError("Portfolio conservative WAL transaction budget exhausted")
+            self._check()
             self._db.execute("COMMIT")
         except BaseException:
             if self._db.in_transaction:
@@ -238,6 +255,8 @@ class PortfolioLedger:
             raise RuntimeError("Strategy event claim requires a standalone paper commit")
         for name, value in (("strategy", strategy), ("config_version", config_version), ("event_id", event_id)):
             bounded_identity(value, name)
+        if strategy.startswith("@"):
+            raise ValueError("Reserved strategy namespace")
         if not evidence:
             raise ValueError("Strategy event claim requires immutable evidence")
         identity = hashlib.sha256(canonical([self.scope.key, strategy, config_version, event_id]).encode()).hexdigest()
@@ -245,6 +264,41 @@ class PortfolioLedger:
             return self._receipt("strategy_event", identity,
                                  {"strategy": strategy, "config_version": config_version,
                                   "event_id": event_id, "evidence": evidence})
+
+    def has_strategy_dispatch(self, strategy):
+        """Read-only evidence that a strategy dispatched beyond registration.
+
+        Streams only the existing bounded strategy_event receipts. Registration
+        alone is harmless; any action claim, including one written under a
+        different config version, fences a fresh instance. Unknown or malformed
+        receipt evidence fails closed instead of being ignored.
+        """
+        self._check()
+        if self.mode != TradingMode.PAPER:
+            raise ValueError("Strategy dispatch evidence requires paper mode")
+        bounded_identity(strategy, "strategy")
+        found = False
+        rows = self._db.execute(
+            "SELECT fingerprint,document FROM portfolio_receipts WHERE kind='strategy_event'")
+        for fingerprint, document in rows:
+            if not isinstance(fingerprint, str) or not isinstance(document, str):
+                raise ValueError("Malformed strategy event receipt")
+            try:
+                receipt = json.loads(document)
+                if not isinstance(receipt, dict) or set(receipt) != {
+                        "strategy", "config_version", "event_id", "evidence"}:
+                    raise ValueError("Strategy event receipt schema differs")
+                for name in ("strategy", "config_version", "event_id"):
+                    bounded_identity(receipt[name], "receipt " + name)
+                if not receipt["evidence"]:
+                    raise ValueError("Strategy event receipt lacks evidence")
+            except (TypeError, ValueError) as exc:
+                raise ValueError("Malformed strategy event receipt") from exc
+            if hashlib.sha256(document.encode("utf-8")).hexdigest() != fingerprint:
+                raise ValueError("Malformed strategy event receipt")
+            if receipt["strategy"] == strategy and receipt["event_id"] != "@registration":
+                found = True
+        return found
 
     def record_group_fact(self, group_id, kind, fact_id, document, *, max_groups, max_observations):
         """Append bounded observational group facts; never mutate child orders."""
@@ -387,7 +441,7 @@ class PortfolioLedger:
         if self.mode != TradingMode.PAPER:
             raise ValueError("Live/sandbox authoritative margin is UNVERIFIED; admission unavailable")
         bounded_identity(strategy, "strategy")
-        if strategy == "@physical":
+        if strategy.startswith("@"):
             raise ValueError("Reserved strategy namespace")
         rules.supported()
         if intent.instrument.model_dump(mode="json") != rules.instrument.model_dump(mode="json") or intent.instrument.venue.value != self.scope.venue:
@@ -641,11 +695,16 @@ class PortfolioLedger:
                 "gaps": {r[0]: json.loads(r[1]) for r in self._db.execute("SELECT * FROM portfolio_gaps")}, "readiness": self.readiness()}
 
     def close(self):
-        if not self._closed:
-            self._check()
-            self._db.close()
-            self._closed = True
-            self._lease.close()
+        # Cleanup survives lease-path loss, but never a foreign thread/process.
+        if self._closed:
+            return
+        if threading.get_ident() != self._thread or os.getpid() != self._pid:
+            raise RuntimeError("Portfolio requires its open owning thread")
+        self._db.close()
+        self._lease.close()
+        if self._authority is not None:
+            self._authority.close()
+        self._closed = True
 
     def __enter__(self):
         return self

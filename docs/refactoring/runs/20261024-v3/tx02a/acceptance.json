@@ -1,0 +1,109 @@
+{
+  "decision": "PASS",
+  "task_id": "TX02A",
+  "completion_scope": "LOCAL_PAPER_COOPERATIVE_PHYSICAL_OWNER_FENCE",
+  "base_sha": "3de567280cdf20b6533b91373d4dd231d1e5ee72",
+  "source_sha": "150751b3df1d179ed8e7c551df7a0016892230a1",
+  "selected_provider": "opencode",
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "upstream_weight_identity": "UNKNOWN",
+  "role": "refactor",
+  "worker_exit": 0,
+  "delegate_exit": 0,
+  "repair_delegations": 0,
+  "owner_product_edits": 0,
+  "product_paths": [
+    "src/vibetrading/portfolio_ledger.py"
+  ],
+  "product_and_test_sha256": {
+    "src/vibetrading/portfolio_ledger.py": "8925dc2700a27c0312d2a15ad4864db5195f535ba3e564429b05debf21096a61",
+    "tests/refactoring/test_tx02a_owner_fence.py": "14a010ca7264186cf28aba0be71a02a84ec200fc4b93fb2c8a046558a29d763a",
+    "docs/tickets/TX02A-reviewer-counterexamples.py": "39a8677fd74e03179fd9064cf93e5da0311656026189eec1c2e085373fdb3e0f"
+  },
+  "changed_methods": [
+    "PortfolioLedger.__init__",
+    "PortfolioLedger._check",
+    "PortfolioLedger.transaction",
+    "PortfolioLedger.close"
+  ],
+  "other_methods_ast_preserved": 44,
+  "schema_sql_unchanged": true,
+  "legacy_binding_format_and_path_unchanged": true,
+  "new_worker_test_cases": 18,
+  "new_independent_test_cases": 16,
+  "baseline": {
+    "passed": 289,
+    "exit_code": 0
+  },
+  "original_review": {
+    "passed": 292,
+    "failed": 13,
+    "exit_code": 1,
+    "receipt": "original-extended-review.json"
+  },
+  "independent_scoped": {
+    "passed": 323,
+    "exit_code": 0,
+    "receipt": "independent-final.json"
+  },
+  "full_regression": {
+    "passed": 2204,
+    "product_passed": 2035,
+    "tooling_passed": 169,
+    "external_live_data_deselected": 2,
+    "exit_codes": [
+      0,
+      0
+    ],
+    "receipt": "full-regression.json"
+  },
+  "counts_overlap": true,
+  "safety_evidence": [
+    "Alternate product/DB and PortfolioLedger vs ExecutionLedger share one canonical Paper physical lock on owner_root.",
+    "Distinct accounts/environments remain independent.",
+    "Lost/closed lease and inherited fork work/close refused; observed inode loss remains sticky.",
+    "Lease loss at outer COMMIT or nested RELEASE rolls back pending facts even if inner error is caught.",
+    "Backend close failure retains leases; successful cleanup after lease-path loss and retry preserve ownership.",
+    "Test-owned process crash releases OS locks; fresh owner recovers latest1000 balance and UNKNOWN order reservation100.200 without restoring old data."
+  ],
+  "preservation": {
+    "legacy_etf_mock_mock2": true,
+    "toss_data_only": true,
+    "c3_kp_kd_golden": true,
+    "exact_decimal_economics_and_receipts": true,
+    "matcher_and_schema": true,
+    "existing_exchange_cloud_implementation": true,
+    "process_lease_implementation": true,
+    "existing_tests_unchanged": true
+  },
+  "new_owner_service_registry_epoch_engine": false,
+  "external_accounts_or_orders": false,
+  "production_data_deletion": false,
+  "deploy": false,
+  "next_ticket_started": false,
+  "model_profiles_and_free_gateway_configuration_unchanged": true,
+  "free_gateway_invoked_this_ticket": false,
+  "model_fallback": false,
+  "production_gate": "BLOCKED_UNCHANGED",
+  "limits": [
+    "Same canonical physical account/environment, protected shared owner_root and cooperating current processes on a supported local volume are prerequisites.",
+    "No cross-host, alternate-root global fencing, hostile-directory, mixed-old-version cross-product or real-exchange authority guarantee.",
+    "Checked ledger APIs are fenced; arbitrary private DB handles or malicious in-process code are not an isolation boundary.",
+    "POSIX/Linux functional and crash tests do not establish Windows/live/deployment/capacity acceptance.",
+    "Existing sandbox/live ledger behavior has no added physical authority and no production capability upgrade."
+  ],
+  "original_workspace_application": {
+    "decision": "PASS",
+    "receipt": "docs/refactoring/runs/20261024-v3/tx02a/original-application.json",
+    "preexisting_dirty_entries_preserved": 174,
+    "canonical_paths_verified": 23,
+    "accepted_product_and_test_hashes_verified": 3
+  },
+  "final_metadata_verification": {
+    "receipt": "docs/refactoring/runs/20261024-v3/tx02a/final-scope-status-validation.json",
+    "passed": 20,
+    "exit_code": 0,
+    "canonical_cli_exit": 0,
+    "other_50_task_objects_preserved": true
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "label": "repair1-review",
+  "baseline": false,
+  "source": "/tmp/vt-bounded-1rg00wmz/work",
+  "exit_code": 0,
+  "elapsed_seconds": 2.586120831008884,
+  "base": "/tmp/vt-vn08-repair1-review-ilsfbve_",
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_spool_recovery.py",
+    "tests/refactoring/test_local_storage.py",
+    "tests/refactoring/test_checkpoint_startup.py",
+    "tests/refactoring/test_local_pipeline.py",
+    "tests/refactoring/test_local_engine.py",
+    "tests/refactoring/test_retained_spool.py",
+    "tests/refactoring/test_retained_storage.py",
+    "docs/tickets/VN08-reviewer-counterexamples.py"
+  ],
+  "tests": {
+    "passed": 274,
+    "failed": 0,
+    "skipped": 0
+  },
+  "source_changed": [],
+  "stdout_tail": "........................................................................ [ 26%]\n........................................................................ [ 52%]\n........................................................................ [ 78%]\n..........................................................               [100%]\n274 passed in 2.16s\n"
+}

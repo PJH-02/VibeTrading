@@ -1,0 +1,9 @@
+{
+  "decision": "PRIVATE_LAUNCHER_SETUP_FAILURE",
+  "exit_code": 3,
+  "inference_requested": false,
+  "source_changes": [],
+  "provider_settings_changed": false,
+  "reason": "Temporary isolated host omitted the existing FreeLLMRelay URL; copied config baseURL was null. Reuse existing _load_provider/FreeLLMRelay, preserve protected secret storage.",
+  "private_run": "/home/pjh/.local/state/codex-opencode/runs/vn17-worker-ba9s4iu0"
+}

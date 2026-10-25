@@ -1,0 +1,11 @@
+{
+  "decision": "PASS",
+  "source_head": "4977ab509490173e312183f32d47f862d94ee0bf",
+  "canonical_mermaid_generated": true,
+  "current_function_count": 692,
+  "current_direct_calls": 422,
+  "perp_direct_calls": 26,
+  "worker_old_snapshot_counts_corrected": true,
+  "raw_defect_claims_not_approved": true,
+  "ordered_prose_corrected_to_parallel_DAG_branches": true
+}

@@ -311,7 +311,8 @@ async def replay_checkpoint_startup(engine,producers,*,codec,payload,expected_en
     for reader in readers.values():
         await asyncio.to_thread(reader.validate_inventory)
     handoffs=engine.restore_virgin(codec,payload,highwaters,
-        verified_cursors=verified,expected_engine_incarnation=expected_engine_incarnation,apply_order=apply_order)
+        verified_cursors=verified,expected_engine_incarnation=expected_engine_incarnation,
+        apply_order=apply_order)
     try:
         # A restore hook may have replaced C=0 or an unopened tail. Recheck
         # before applying any frame; later opens still check their descriptor.
@@ -411,10 +412,27 @@ def etf_feed_dependencies(plan, producer):
 async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_feed_dependencies=None,
                      recovery_readiness=None,checkpoint_path=None,checkpoint_codec=None,
                      checkpoint_engine_incarnation=None,checkpoint_readiness=None,checkpoint_apply_order=None,
-                     checkpoint_journal=None,on_command=None):
+                     checkpoint_journal=None,runtime_checkpoint=None,on_command=None):
     checkpoint_enabled=any(value is not None for value in (
         checkpoint_path,checkpoint_codec,checkpoint_engine_incarnation,checkpoint_apply_order)) or (
             checkpoint_readiness is not None and checkpoint_journal is None)
+    if runtime_checkpoint is not None:
+        from .runtime_checkpoint import RuntimeCheckpoint
+        if type(runtime_checkpoint) is not RuntimeCheckpoint:
+            raise ValueError('runtime_checkpoint requires the exact coupled checkpoint owner')
+        if checkpoint_enabled or checkpoint_journal is not None:
+            raise ValueError('Coupled runtime checkpoint is mutually exclusive with market/journal startup options')
+        # No automatic readiness authority. Require the explicit synchronous
+        # callback before inspecting any Paper/setup/factory/transport field.
+        if recovery_readiness is None:
+            raise ValueError('Coupled runtime checkpoint requires an explicit synchronous readiness callback')
+        if (not callable(recovery_readiness)
+                or inspect.iscoroutinefunction(recovery_readiness)):
+            raise TypeError('Recovery readiness must be an explicit synchronous state validator')
+        if paper_runtime is None and not plan.etf_enabled:
+            raise ValueError('Coupled runtime checkpoint requires a selected Paper/ETF consumer')
+        if paper_runtime is not None and paper_runtime.hot_path.apply_seq != 0:
+            raise ValueError('Coupled runtime restore requires a virgin Paper hot path')
     if checkpoint_journal is not None:
         if (type(checkpoint_journal) is not CheckpointJournal or checkpoint_enabled
                 or not callable(checkpoint_readiness) or inspect.iscoroutinefunction(checkpoint_readiness)):
@@ -461,7 +479,11 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
     engine=LocalMarketEngine(producer_providers={p.producer:p.provider for p in plan.producers},
         budgets=EngineBudgets(**plan.engine),on_invalidate=invalid,
         hot_path=paper_runtime.hot_path if paper_runtime is not None else HotPathStore(),
-        post_apply_callbacks=(paper_runtime.process_applied,) if paper_runtime is not None else (),
+        # Coupled restore installs market/plugin state with no callback attached.
+        # The selected Paper callback is published only after every proof.
+        post_apply_callbacks=(() if runtime_checkpoint is not None else
+            ((paper_runtime.process_applied,) if paper_runtime is not None else ())),
+        on_tick=(getattr(paper_runtime,"advance",None) if paper_runtime is not None else None),
         snapshot_clock=time.time_ns,
         trading_filter=(lambda event:event.provider=='kiwoom' and event.instrument.asset_class==AssetClass.ETF)
             if plan.etf_enabled else lambda event:False)
@@ -489,7 +511,24 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
     snapshot_writer=None
     task=None
     try:
-        if checkpoint_journal is not None:
+        if runtime_checkpoint is not None:
+            if plan.etf_enabled:
+                from .local_observation import LocalObservationBus
+                item=plan.observation
+                observation=LocalObservationBus(producer=item.producer,incarnation=item.incarnation,
+                    spool_factory=lambda:create_spool(item),
+                    budgets=item.pipeline,on_invalid=lambda reason:invalid(item.producer,reason))
+                await observation.connect()
+                if etf_factory is None:
+                    from .etf_trading import EtfTradingLoop
+                    etf_factory=EtfTradingLoop
+                etf=etf_factory(settings=settings,bus=observation,
+                    event_source=engine.event_source(required_producers=()))
+            handoffs=await runtime_checkpoint.restore(engine,plan.producers,
+                paper_runtime=paper_runtime,etf=etf,readiness=recovery_readiness)
+            if paper_runtime is not None:
+                engine.post_apply_callbacks=(paper_runtime.process_applied,)
+        elif checkpoint_journal is not None:
             journal_restored=await checkpoint_journal.restore(engine,plan.producers,checkpoint_readiness)
             handoffs=() if journal_restored else await replay_startup(engine,plan.producers,promote=False)
         elif checkpoint_enabled:
@@ -499,7 +538,7 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
                 payload=payload,expected_engine_incarnation=checkpoint_engine_incarnation,apply_order=checkpoint_apply_order)
         else:
             handoffs=await replay_startup(engine,plan.producers,promote=False)
-        if plan.etf_enabled:
+        if plan.etf_enabled and etf is None:
             from .local_observation import LocalObservationBus
             item=plan.observation
             observation=LocalObservationBus(producer=item.producer,incarnation=item.incarnation,
@@ -520,7 +559,7 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
         if checkpoint_enabled:
             if engine.complete_checkpoint_recovery(checkpoint_readiness) is not True:
                 raise RuntimeError('checkpoint readiness validation did not permit startup')
-        elif not journal_restored:
+        elif runtime_checkpoint is None and not journal_restored:
             for initial,high in handoffs:
                 engine.arm_initial_resume(initial,high)
         if checkpoint_journal is not None:await checkpoint_journal.rotate(engine)
@@ -559,13 +598,36 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
                                 else:etf.journal.db.close()
 
 
-def main(argv=None):
+def main(argv=None, *, paper_runtime=None, paper_feed_dependencies=None):
     parser=argparse.ArgumentParser(description='Explicit NATS-free local roles')
     parser.add_argument('role',choices=('check','collector','engine','storage','telegram','dashboard'))
     parser.add_argument('--config',type=Path,required=True)
     parser.add_argument('--producer')
     args=parser.parse_args(argv)
+
+    # Load plan first for validation
     plan=LocalRuntimePlan.load(args.config)
+
+    # This is explicit borrowed local assembly, not a capability promotion.
+    if paper_feed_dependencies is not None and paper_runtime is None:
+        raise ValueError('Paper dependencies require an explicit Paper runtime')
+    if paper_runtime is not None:
+        from .strategy_runtime import PaperStrategyRuntime
+        from .trading_contracts import TradingMode
+        if args.role != 'engine':
+            raise ValueError('Paper injection is supported only by the engine role')
+        if not isinstance(paper_runtime, PaperStrategyRuntime):
+            raise TypeError('paper_runtime must be a PaperStrategyRuntime')
+        if paper_runtime.phase != 'paper' or any(
+                matcher.ledger.mode != TradingMode.PAPER for matcher in paper_runtime.accounts.values()):
+            raise ValueError('Paper injection requires explicit PAPER mode and paper phase')
+        if paper_feed_dependencies is not None and (
+                not isinstance(paper_feed_dependencies, dict)
+                or set(paper_feed_dependencies) != {item.producer for item in plan.producers}
+                or any(not isinstance(keys, tuple) or len(set(keys)) != len(keys)
+                       or not set(keys) <= set(paper_runtime.known)
+                       for keys in paper_feed_dependencies.values())):
+            raise ValueError('Paper dependencies require the exact configured producer and known-feed inventory')
     # Validate mounts before any settings helper creates a data directory.
     os.environ['VIBETRADING_RUNTIME']='local'
     settings=RuntimeSettings.from_env()
@@ -578,6 +640,14 @@ def main(argv=None):
             'producers':[item.producer for item in plan.producers],'capacity_contract_verified':True}))
         return 0
     settings.ensure_dirs()
+
+    # Provide snapshot settings for telegram and dashboard roles
+    if args.role in ('telegram', 'dashboard'):
+        os.environ['LOCAL_MARKET_SNAPSHOT_FILE']=str(settings.state_dir/'local-market.json')
+        os.environ['LOCAL_SNAPSHOT_BUDGETS']=json.dumps(plan.snapshot)
+        settings.env['LOCAL_MARKET_SNAPSHOT_FILE']=str(settings.state_dir/'local-market.json')
+        settings.env['LOCAL_SNAPSHOT_BUDGETS']=json.dumps(plan.snapshot)
+
     if args.role=='telegram':
         from .local_events import FactsEventBudgets, LocalFactsEventBus
         from .telegram import TelegramController
@@ -587,15 +657,18 @@ def main(argv=None):
         return 0
     if args.role=='dashboard':
         from .dashboard.bridge import run
-        os.environ['LOCAL_MARKET_SNAPSHOT_FILE']=str(settings.state_dir/'local-market.json')
-        os.environ['LOCAL_SNAPSHOT_BUDGETS']=json.dumps(plan.snapshot)
         asyncio.run(run())
         return 0
     if args.role=='collector':
         matches=[item for item in plan.producers if item.producer==args.producer]
         if len(matches)!=1:raise ValueError('select one configured producer')
         asyncio.run(run_collector(plan,matches[0],settings))
-    elif args.role=='engine':asyncio.run(run_engine(plan,settings))
+    elif args.role=='engine':
+        if paper_runtime is None:
+            asyncio.run(run_engine(plan,settings))
+        else:
+            asyncio.run(run_engine(plan,settings, paper_runtime=paper_runtime,
+                                   paper_feed_dependencies=paper_feed_dependencies))
     else:
         from .local_storage import run_local_storage
         run_local_storage(plan,settings)

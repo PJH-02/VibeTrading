@@ -1,0 +1,36 @@
+{
+  "decision": "PASS",
+  "base_sha": "6221f4866d68dba97cc2cf08a355cc4624929219",
+  "methods": {
+    "src/vibetrading/local_engine.py": {
+      "changed_or_added_methods": [
+        "LocalMarketEngine.__init__",
+        "LocalMarketEngine._watch"
+      ],
+      "existing_other_methods_ast_unchanged": 58,
+      "sha256": "d6cab3158e4c6afd5907e3f9429d7c5fbd5b4ca4e4b6217850b9052306e75fe5"
+    },
+    "src/vibetrading/local_runtime.py": {
+      "changed_or_added_methods": [
+        "run_engine"
+      ],
+      "existing_other_methods_ast_unchanged": 15,
+      "sha256": "3929f297321bbf1d972d575bd96c3a52837334228cccb80b5bedf9302e424b43"
+    },
+    "src/vibetrading/strategy_runtime.py": {
+      "changed_or_added_methods": [
+        "PaperStrategyRuntime.register_configured",
+        "PaperStrategyRuntime._market",
+        "PaperStrategyRuntime._fence_feed",
+        "PaperStrategyRuntime.advance"
+      ],
+      "existing_other_methods_ast_unchanged": 36,
+      "sha256": "22622783877598c9c23c0c9c036732c197d6490037b57134a274b195739748b6"
+    }
+  },
+  "other_existing_methods_ast_unchanged": 109,
+  "changed_product_files": 3,
+  "new_test_modules": 3,
+  "existing_tests_goldens_exchange_cloud_etf_strategy_files_unchanged": true,
+  "canonical_diff_check_exit": 0
+}

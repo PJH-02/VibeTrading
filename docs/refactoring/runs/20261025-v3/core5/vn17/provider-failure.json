@@ -1,0 +1,17 @@
+{
+  "selected_provider": "opencode",
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "decision": "PROVIDER_UNAVAILABLE",
+  "observed_error": "Free usage limit reached",
+  "observed_event_count": 0,
+  "host_exit": -15,
+  "termination_reason": "Codex stopped own idle provider retry after confirmed free-usage-limit failure",
+  "worker_exit": "NOT_REPORTED_DUE_TO_SUPERVISOR_TERMINATION",
+  "source_changes": [],
+  "read_only_inputs_changed": [],
+  "private_run": "/home/pjh/.local/state/codex-opencode/runs/vn17-worker-kxx4vod8",
+  "retry_provider": "freellmapi",
+  "retry_model": "freellmapi/glm-4.5-flash",
+  "retry_role": "implement",
+  "retry_announcement": "Explicit commentary before switch; existing validated free implementation route, no account/model profile change"
+}

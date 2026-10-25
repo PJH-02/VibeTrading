@@ -1,0 +1,36 @@
+{
+  "mode": "original-review",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx08apre-original-review-l4bwfcdl",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/tx08apre-original-review-l4bwfcdl/work",
+  "exit_code": 1,
+  "elapsed_seconds": 1.4726669150113594,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "........................................................................ [ 63%]\n.......................................FF.                               [100%]\n=================================== FAILURES ===================================\n_ test_second_strategy_cannot_redeclare_shared_account_policy[account_notional_limit] _\n\ntmp_path = PosixPath('/tmp/pytest/test_second_strategy_cannot_re0')\nfield = 'account_notional_limit'\n\n    @pytest.mark.parametrize(\"field\",[\"account_notional_limit\",\"account_capital_limit\"])\n    def test_second_strategy_cannot_redeclare_shared_account_policy(tmp_path,field):\n        ledger=ledger_at(tmp_path)\n        try:\n            ledger.seed_balance(\"USDT\",D(100000),{\"synthetic\":True})\n            now=[T];host=runtime(ledger,matcher_for(ledger),now)\n            first=registration(ledger,\"alpha\",[])\n            limits=replace(first.risk[ledger.scope.key],**{field:D(1000)})\n            host.register(replace(first,risk={ledger.scope.key:limits}))\n            before=tuple(ledger._db.iterdump());jobs=tuple(host._jobs)\n>           with pytest.raises(ValueError):host.register(registration(ledger,\"beta\",[]))\nE           Failed: DID NOT RAISE <class 'ValueError'>\n\ndocs/tickets/TX08A-reviewer-counterexamples.py:17: Failed\n_ test_second_strategy_cannot_redeclare_shared_account_policy[account_capital_limit] _\n\ntmp_path = PosixPath('/tmp/pytest/test_second_strategy_cannot_re1')\nfield = 'account_capital_limit'\n\n    @pytest.mark.parametrize(\"field\",[\"account_notional_limit\",\"account_capital_limit\"])\n    def test_second_strategy_cannot_redeclare_shared_account_policy(tmp_path,field):\n        ledger=ledger_at(tmp_path)\n        try:\n            ledger.seed_balance(\"USDT\",D(100000),{\"synthetic\":True})\n            now=[T];host=runtime(ledger,matcher_for(ledger),now)\n            first=registration(ledger,\"alpha\",[])\n            limits=replace(first.risk[ledger.scope.key],**{field:D(1000)})\n            host.register(replace(first,risk={ledger.scope.key:limits}))\n            before=tuple(ledger._db.iterdump());jobs=tuple(host._jobs)\n>           with pytest.raises(ValueError):host.register(registration(ledger,\"beta\",[]))\nE           Failed: DID NOT RAISE <class 'ValueError'>\n\ndocs/tickets/TX08A-reviewer-counterexamples.py:17: Failed\n=========================== short test summary info ============================\nFAILED docs/tickets/TX08A-reviewer-counterexamples.py::test_second_strategy_cannot_redeclare_shared_account_policy[account_notional_limit]\nFAILED docs/tickets/TX08A-reviewer-counterexamples.py::test_second_strategy_cannot_redeclare_shared_account_policy[account_capital_limit]\n2 failed, 112 passed in 1.20s\n",
+  "tests": {
+    "passed": 112,
+    "failed": 2,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/refactoring/test_portfolio_ledger.py",
+    "tests/refactoring/test_tx02a_owner_fence.py",
+    "tests/refactoring/test_tx02b_attribution.py",
+    "tests/refactoring/test_vn13_file_registration.py",
+    "tests/refactoring/test_runtime_checkpoint_integration.py",
+    "docs/tickets/TX08A-reviewer-counterexamples.py"
+  ]
+}

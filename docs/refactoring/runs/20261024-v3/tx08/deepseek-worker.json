@@ -1,0 +1,126 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "worker_exit": 0,
+  "delegate_exit": 0,
+  "actual_test_commands": [
+    {
+      "command": "python3 -m pytest --version",
+      "exit_code": 0,
+      "output_tail": "pytest 9.0.2\n"
+    },
+    {
+      "command": "python3 -m pytest -q -p no:cacheprovider tests/refactoring/test_tx08_same_account_gate.py",
+      "exit_code": 1,
+      "output_tail": "st.org/en/stable/how-to/mark.html\n    @pytest.mark.asyncio\n\ntests/refactoring/test_tx08_same_account_gate.py:116\n  /work/tests/refactoring/test_tx08_same_account_gate.py:116: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.asyncio\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ============================\nFAILED tests/refactoring/test_tx08_same_account_gate.py::test_selected_same_account_files_restore_cancel_and_finish_once\n1 failed, 8 warnings in 0.44s\n"
+    },
+    {
+      "command": "python3 -m pytest -q -p no:cacheprovider tests/refactoring/test_vn13_file_registration.py",
+      "exit_code": 0,
+      "output_tail": ".............................                                            [100%]\n=============================== warnings summary ===============================\ntests/refactoring/test_strategy_runtime.py:458\n  /work/tests/refactoring/test_strategy_runtime.py:458: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.asyncio\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n29 passed, 1 warning in 0.42s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_tx08_same_account_gate.py",
+      "exit_code": 0,
+      "output_tail": ".                                                                        [100%]\n1 passed in 0.47s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_tx05_file_paper_e2e.py tests/refactoring/test_runtime_checkpoint_integration.py",
+      "exit_code": 0,
+      "output_tail": "........                                                                 [100%]\n8 passed in 0.62s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_tx08_same_account_gate.py",
+      "exit_code": 0,
+      "output_tail": ".                                                                        [100%]\n1 passed in 0.44s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_tx08_same_account_gate.py",
+      "exit_code": 0,
+      "output_tail": ".                                                                        [100%]\n1 passed in 0.48s\n"
+    },
+    {
+      "command": "python3 -m pytest --co -q -p no:cacheprovider tests/refactoring/test_tx08_same_account_gate.py",
+      "exit_code": 0,
+      "output_tail": "refactoring/test_tx05_file_paper_e2e.py:480: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.asyncio\n\ntests/refactoring/test_tx08_same_account_gate.py:116\n  /work/tests/refactoring/test_tx08_same_account_gate.py:116: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.asyncio\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n1 test collected in 0.41s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_tx08_same_account_gate.py",
+      "exit_code": 0,
+      "output_tail": ".                                                                        [100%]\n1 passed in 0.44s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_tx08_same_account_gate.py",
+      "exit_code": 0,
+      "output_tail": ".                                                                        [100%]\n1 passed in 0.54s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_vn13_file_registration.py tests/refactoring/test_tx05_file_paper_e2e.py tests/refactoring/test_runtime_checkpoint_integration.py",
+      "exit_code": 0,
+      "output_tail": ".....................................                                    [100%]\n37 passed in 0.78s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_tx08_same_account_gate.py",
+      "exit_code": 0,
+      "output_tail": ".                                                                        [100%]\n1 passed in 0.44s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_tx08_same_account_gate.py",
+      "exit_code": 0,
+      "output_tail": ".                                                                        [100%]\n1 passed in 0.45s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_tx08_same_account_gate.py",
+      "exit_code": 0,
+      "output_tail": ".                                                                        [100%]\n1 passed in 0.49s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_tx07a_fact_contract.py tests/refactoring/test_tx08a_account_policy.py tests/refactoring/test_tx02a_owner_fence.py tests/refactoring/test_tx02b_attribution.py tests/refactoring/test_tx02_joint_gate.py tests/refactoring/test_tx04b_continuous.py",
+      "exit_code": 0,
+      "output_tail": "...........................................................              [100%]\n59 passed in 1.17s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_tx08_same_account_gate.py",
+      "exit_code": 0,
+      "output_tail": ".                                                                        [100%]\n1 passed in 0.53s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_tx08_same_account_gate.py",
+      "exit_code": 0,
+      "output_tail": ".                                                                        [100%]\n1 passed in 0.50s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_tx08_same_account_gate.py",
+      "exit_code": 1,
+      "output_tail": "t isinstance(cursor, EngineCursor) or type(cursor.sequence) is not int\n                or not 0 <= cursor.sequence <= 2**63 - 1\n                or any(not isinstance(value, str) or not value or len(value.encode(\"utf-8\")) > 128\n                       for value in (cursor.producer, cursor.incarnation))):\n>           raise EngineError(\"invalid_engine_cursor\")\nE           vibetrading.local_engine.EngineError: invalid_engine_cursor\n\nsrc/vibetrading/local_engine.py:87: EngineError\n=========================== short test summary info ============================\nFAILED tests/refactoring/test_tx08_same_account_gate.py::test_selected_same_account_files_restore_cancel_and_finish_once\n1 failed in 0.49s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_tx08_same_account_gate.py",
+      "exit_code": 1,
+      "output_tail": "t isinstance(cursor, EngineCursor) or type(cursor.sequence) is not int\n                or not 0 <= cursor.sequence <= 2**63 - 1\n                or any(not isinstance(value, str) or not value or len(value.encode(\"utf-8\")) > 128\n                       for value in (cursor.producer, cursor.incarnation))):\n>           raise EngineError(\"invalid_engine_cursor\")\nE           vibetrading.local_engine.EngineError: invalid_engine_cursor\n\nsrc/vibetrading/local_engine.py:87: EngineError\n=========================== short test summary info ============================\nFAILED tests/refactoring/test_tx08_same_account_gate.py::test_selected_same_account_files_restore_cancel_and_finish_once\n1 failed in 0.47s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_tx08_same_account_gate.py",
+      "exit_code": 1,
+      "output_tail": "ert engine.stats[\"feeds\"][item.producer][\"applied_sequence\"] == 5\n>           assert host.hot_path.apply_seq == 5\nE           assert 4 == 5\nE            +  where 4 = <vibetrading.hot_path.HotPathStore object at 0x7d9df7a4d7c0>.apply_seq\nE            +    where <vibetrading.hot_path.HotPathStore object at 0x7d9df7a4d7c0> = <vibetrading.strategy_runtime.PaperStrategyRuntime object at 0x7d9df7d82840>.hot_path\n\ntests/refactoring/test_tx08_same_account_gate.py:324: AssertionError\n=========================== short test summary info ============================\nFAILED tests/refactoring/test_tx08_same_account_gate.py::test_selected_same_account_files_restore_cancel_and_finish_once\n1 failed in 0.60s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_tx08_same_account_gate.py",
+      "exit_code": 0,
+      "output_tail": ".                                                                        [100%]\n1 passed in 0.43s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_tx07a_fact_contract.py tests/refactoring/test_tx08a_account_policy.py tests/refactoring/test_tx02a_owner_fence.py tests/refactoring/test_tx02b_attribution.py tests/refactoring/test_tx02_joint_gate.py tests/refactoring/test_tx04b_continuous.py tests/refactoring/test_vn13_file_registration.py tests/refactoring/test_tx05_file_paper_e2e.py tests/refactoring/test_runtime_checkpoint_integration.py tests/refactoring/test_tx08_same_account_gate.py",
+      "exit_code": 0,
+      "output_tail": "........................................................................ [ 74%]\n.........................                                                [100%]\n97 passed in 1.60s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_tx07a_fact_contract.py tests/refactoring/test_tx08a_account_policy.py tests/refactoring/test_tx02a_owner_fence.py tests/refactoring/test_tx02b_attribution.py tests/refactoring/test_tx02_joint_gate.py tests/refactoring/test_tx04b_continuous.py tests/refactoring/test_vn13_file_registration.py tests/refactoring/test_tx05_file_paper_e2e.py tests/refactoring/test_runtime_checkpoint_integration.py tests/refactoring/test_tx08_same_account_gate.py",
+      "exit_code": 0,
+      "output_tail": "........................................................................ [ 74%]\n.........................                                                [100%]\n97 passed in 1.66s\n"
+    }
+  ],
+  "private_run": "/home/pjh/.local/state/codex-opencode/runs/tx08-worker-1qoo5ndy",
+  "automatic_acceptance": false
+}

@@ -1,0 +1,81 @@
+{
+  "decision": "PASS",
+  "ticket": "VN08",
+  "completion_class": "COMPLETE_LOCAL_IMPLEMENTATION",
+  "base_sha": "e934af784f5a1d65473dddb950ac9fc011d220ab",
+  "source_sha": "8f3e3b761be794f9636a81603b8073074c293b79",
+  "product_paths": [
+    "src/vibetrading/market_spool.py",
+    "src/vibetrading/local_storage.py"
+  ],
+  "product_and_new_test_sha256": {
+    "src/vibetrading/market_spool.py": "91740019c89e9585b4308e2b41f0e2db84272c6ee6a28fdd45c96a9d04799af4",
+    "src/vibetrading/local_storage.py": "2aa914f95bbb924c41cbd512c7e8a728ae06edba9442d73b54f6558ce9e6816a",
+    "tests/refactoring/test_retained_spool.py": "e16c6903951a761336193d58532e79dcd9ade03a93ddf3659f95bb32fd332ac6",
+    "tests/refactoring/test_retained_storage.py": "5ecdcf9be77974d605d15978f6b82fd83d3adfebb10bb8efd9712166dbff3a89",
+    "tests/refactoring/test_retained_review.py": "8c1b7227514f4dbd5b70fdb1bcba585bb40117992aef316141dd606b45588304"
+  },
+  "selected_implementation": "opencode/deepseek-v4.1-flash-free",
+  "selected_extra_test_worker": "freellmapi/glm-4.5-flash",
+  "extra_worker_status": "BLOCKED_STREAM_INTERRUPTION_AND_HTTP_429_NO_NEW_TEST_ARTIFACT",
+  "upstream_weight_identity": "UNKNOWN; gateway response model tag glm-4.5-flash observed, not weight identity proof",
+  "repair_delegations": 2,
+  "independent_scoped": {
+    "passed": 275,
+    "exit_code": 0,
+    "reviewer_counterexamples": 15,
+    "note": "Overlaps full suite, not additive"
+  },
+  "full_regression": {
+    "passed": 2055,
+    "product_passed": 1886,
+    "tooling_passed": 169,
+    "live_data_deselected": 2,
+    "product_exit": 0,
+    "tooling_exit": 0,
+    "source_mutations": []
+  },
+  "baseline": {
+    "guarded_scope_passed": 239,
+    "exit_code": 0,
+    "harness_env_correction": "Removed shared DATA_ROOT override; initial53 failures were a reproducible harness state collision. Existing tests, guard and product bytes unchanged for corrected baseline."
+  },
+  "scope": "Opt-in retained reader proof and existing storage progress/manifest/fact attestation. Full prefix must exist during read-only capture; caller pins serialized proof hash and generation independently. Actual first sealed anchor and contiguous suffix verified; monotonic durable watermark and retained capacities enforced.",
+  "proof_trust": "Trusted owner provenance; not remote/archive/GC authority or protection against malicious owner. Never automatically trusts a proof discovered in spool.",
+  "resource_bounds": "8192 proof bytes; <=17 consumer cursors; <=2**63-1 absolute cursor; max_records+1 inventory limit enforced during scan. Segment metadata O(retained segments), frame streaming and1MiB hash chunks. Every nonempty batch rehashes the first retained sealed segment, O(anchor bytes). No production CPU/RSS/PSS sizing claim.",
+  "compatibility_ast": {
+    "MarketSpool": "IDENTICAL",
+    "_checkpoint": "IDENTICAL",
+    "_inventory": "IDENTICAL",
+    "_frames": "IDENTICAL"
+  },
+  "storage_behavior": "Requires real persisted progress>=base; exact-base digest plus original manifest or local-fact attestation. Never creates/reset progress from a proof; original sources preserved by tests.",
+  "new_test_contract_correction": "Only newly introduced VN08 test changed: identical consumer positions valid even sharing same SpoolCursor object. No memory-identity workaround; no historical tests weakened.",
+  "owner_product_edits": 0,
+  "existing_tests_and_goldens_changed": false,
+  "exchange_order_and_cloud_implementation_changed": false,
+  "GC_enabled": false,
+  "production_data_deletions": 0,
+  "original_spool_deletions": 0,
+  "live_mutations": 0,
+  "other_ticket_implementation": false,
+  "next_ticket_started": false,
+  "production_gate": "BLOCKED",
+  "runtime_wiring": "Explicit opt-in reader/storage API. Existing writer still rejects trimmed directory; no automatic retention, producer recovery/cutover or LIVE grant. Later VN09/VN17 scoped proofs required.",
+  "baseline_diff_check_exit": 0,
+  "new_diff_diagnostics": 0,
+  "original_preservation_manifest": "/tmp/vt-vn08-original-preservation.json",
+  "final_metadata_verification": {
+    "receipt": "docs/refactoring/runs/20261023-v3/vn08/final-scope-status-validation.json",
+    "passed": 20,
+    "exit_code": 0,
+    "canonical_cli_exit": 0,
+    "other_50_task_objects_preserved": true
+  },
+  "original_workspace_application": {
+    "decision": "PASS",
+    "receipt": "docs/refactoring/runs/20261023-v3/vn08/original-application.json",
+    "preserved_entries": 174,
+    "verified_paths": 45
+  }
+}

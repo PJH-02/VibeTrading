@@ -1,0 +1,41 @@
+{
+  "decision": "FAIL",
+  "passed": 229,
+  "failed": 2,
+  "result": {
+    "label": "repair1",
+    "baseline": false,
+    "exit_code": 1,
+    "elapsed_seconds": 3.8155944050085964,
+    "base": "/tmp/vt-vn07b-repair1-tqtanf5j",
+    "argv": [
+      "python3",
+      "-m",
+      "pytest",
+      "-p",
+      "pytest_asyncio.plugin",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--basetemp",
+      "/tmp/pytest",
+      "--junitxml",
+      "/evidence/junit.xml",
+      "tests/refactoring/test_runtime_checkpoint.py",
+      "tests/refactoring/test_runtime_checkpoint_integration.py",
+      "tests/refactoring/test_strategy_restart_barrier.py",
+      "tests/refactoring/test_strategy_runtime.py",
+      "tests/refactoring/test_portfolio_ledger.py",
+      "tests/refactoring/test_paper_execution.py",
+      "tests/refactoring/test_checkpoint_startup.py",
+      "tests/refactoring/test_checkpoint_runtime.py",
+      "tests/refactoring/test_checkpoint_journal.py",
+      "tests/refactoring/test_vnext_vn07.py",
+      "tests/refactoring/test_local_runtime.py",
+      "docs/tickets/VN07B-reviewer-counterexamples.py",
+      "docs/tickets/VN07A-reviewer-counterexamples.py"
+    ],
+    "stdout_tail": "........................................................................ [ 31%]\n........................................................................ [ 62%]\n........................................................................ [ 93%]\n.........FF....                                                          [100%]\n=================================== FAILURES ===================================\n___ test_wall_clock_regression_is_rejected_instead_of_clamped_to_saved_time ____\n\ntmp_path = PosixPath('/tmp/pytest/test_wall_clock_regression_is_0')\n\n    @pytest.mark.asyncio\n    async def test_wall_clock_regression_is_rejected_instead_of_clamped_to_saved_time(tmp_path):\n        source = fixture(tmp_path, fresh=True)\n        input_book(source, 1)\n        await source.manager.save(source.engine, paper_runtime=source.host)\n        await close(source)\n        target = fixture(tmp_path, fresh=False)\n        target.now[0] = T - 1\n        try:\n>           with pytest.raises((ValueError, RuntimeError), match=\"(?i)clock|regress|epoch\"):\nE           Failed: DID NOT RAISE any of (<class 'ValueError'>, <class 'RuntimeError'>)\n\ndocs/tickets/VN07B-reviewer-counterexamples.py:420: Failed\n_____ test_unguarded_etf_rechecks_checkpoint_gate_after_observation_await ______\n\n    @pytest.mark.asyncio\n    async def test_unguarded_etf_rechecks_checkpoint_gate_after_observation_await():\n        calls = []\n        etf = EtfTradingLoop.__new__(EtfTradingLoop)\n        etf._checkpoint_recovery_state = \"READY\"\n        etf.execution_guards_enabled = lambda: False\n        etf._check_ownership = lambda: None\n        async def observation(_intent):\n            calls.append(\"observation\")\n            etf._checkpoint_recovery_state = \"RECOVERING\"\n        async def submit(_intent):\n            calls.append(\"submit\")\n            return {\"unwanted\": \"new-intent\"}\n        etf.bus = SimpleNamespace(publish_order_intent=observation)\n        etf.journal = SimpleNamespace(ambiguous=lambda *args: calls.append(\"ambiguous\"))\n        broker = SimpleNamespace(submit_order=submit)\n        etf.brokers = {\"mock\": broker}\n>       with pytest.raises(EtfDispatchBlocked):\nE       Failed: DID NOT RAISE <class 'vibetrading.etf_trading.EtfDispatchBlocked'>\n\ndocs/tickets/VN07B-reviewer-counterexamples.py:446: Failed\n=========================== short test summary info ============================\nFAILED docs/tickets/VN07B-reviewer-counterexamples.py::test_wall_clock_regression_is_rejected_instead_of_clamped_to_saved_time\nFAILED docs/tickets/VN07B-reviewer-counterexamples.py::test_unguarded_etf_rechecks_checkpoint_gate_after_observation_await\n2 failed, 229 passed in 3.46s\n"
+  },
+  "worker_uds_baseline": "Worker omitted TMP, so unchanged guard rejected its UDS test. Independent run explicitly uses TMP=/tmp and that test passes; guard/source regression unchanged."
+}

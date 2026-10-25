@@ -1,0 +1,16 @@
+{
+  "decision": "PASS",
+  "applied_head": "0f56fccf4b65d63b2b62cd89f34906b421e57579",
+  "branch": "codex/v3-local-candidate",
+  "original_workspace": "/mnt/c/Users/박제형/Desktop/VibeTrading",
+  "preserved_entries": 174,
+  "eol_only_carried": 153,
+  "canonical_paths_verified": 49,
+  "substantive_user_bytes_preserved": true,
+  "deleted_and_untracked_documents_preserved": true,
+  "backup": "/home/pjh/.local/state/codex-opencode/runs/projection-three-preserve-k4ictaty",
+  "source_sha": "b74e22d443aff428e7971d1695cf00ecd9553818",
+  "method": "Reviewed scoped restore plus atomic same-task local branch advance; no merge or remote operation",
+  "previous_application_receipt": "docs/refactoring/runs/20261024-v3/batch-tx07a-tx08/original-application.json",
+  "remote_push_performed": false
+}

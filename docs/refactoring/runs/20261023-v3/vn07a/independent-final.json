@@ -1,0 +1,27 @@
+{
+  "label": "final",
+  "baseline": false,
+  "exit_code": 0,
+  "elapsed_seconds": 0.7331869560002815,
+  "base": "/tmp/vt-vn07a-final-athe21d4",
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/tmp/junit.xml",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_portfolio_ledger.py",
+    "tests/refactoring/test_paper_execution.py",
+    "docs/tickets/VN07A-reviewer-counterexamples.py"
+  ],
+  "stdout_tail": "...................................................................      [100%]\n67 passed in 0.53s\n"
+}

@@ -1,0 +1,36 @@
+{
+  "decision": "PASS",
+  "task_id": "VN18",
+  "source_sha": "1a4d840a9d8db11dd4bc5932967b27e287bd42b4",
+  "selected_provider": "Codex critical verification",
+  "selected_model": "Unchanged configured Codex model",
+  "worker_acceptance": "NOT_DISPATCHED_AFTER_PROVIDER_LIMITS",
+  "worker_exit": null,
+  "delegate_exit": null,
+  "repair_delegations": 0,
+  "owner_product_edits": 0,
+  "acceptance_basis": "Codex critical review and actual independent isolated execution; worker statements/failing attempts are NOT acceptance evidence.",
+  "changed_product_symbols": [],
+  "other_product_methods_ast_unchanged": 0,
+  "product_paths": [],
+  "scoped_test_passed": 372,
+  "independent_exit": 0,
+  "product_and_test_sha256": {
+    "tests/refactoring/test_vn18_local_fault_gate.py": "309c406698a8d48186c4b0c609abb3a14de57f6de535674b65f7b23274c81c0d"
+  },
+  "full_batch_validation": {
+    "receipt": "docs/refactoring/runs/20261025-v3/core5/batch-vn17-tx12/full-regression.json",
+    "source_sha": "001d10d20f1dce58fcb0349983f368af10a2bdc1",
+    "passed": 2480,
+    "exit_codes": [
+      0,
+      0
+    ],
+    "deselected_live_data": 2
+  },
+  "live_readiness": false,
+  "scope": "Selected local contract only. No live/accounts/remote/deploy/deletion or new universal platform.",
+  "final_batch_sha256": {
+    "tests/refactoring/test_vn18_local_fault_gate.py": "309c406698a8d48186c4b0c609abb3a14de57f6de535674b65f7b23274c81c0d"
+  }
+}

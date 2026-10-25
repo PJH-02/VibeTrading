@@ -1,0 +1,37 @@
+{
+  "label": "initial-review",
+  "baseline": false,
+  "source": "/tmp/vt-bounded-891g7u6s/work",
+  "exit_code": 1,
+  "elapsed_seconds": 2.981005516994628,
+  "base": "/tmp/vt-vn09-initial-review-hz7188lc",
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_spool_recovery.py",
+    "tests/refactoring/test_local_storage.py",
+    "tests/refactoring/test_archive_integrity.py",
+    "tests/refactoring/test_retained_spool.py",
+    "tests/refactoring/test_retained_storage.py",
+    "tests/refactoring/test_spool_gc.py",
+    "tests/refactoring/test_spool_gc_storage.py",
+    "docs/tickets/VN09-reviewer-counterexamples.py"
+  ],
+  "tests": {
+    "passed": 205,
+    "failed": 4,
+    "skipped": 0
+  },
+  "source_changed": [],
+  "stdout_tail": "717b2'}, 'deleted': 0, ...}\n\n    def blocked(s,result):\n>       assert result[\"eligible\"]==[] and result[\"deleted\"]==0 and result[\"executable\"] is False,result\nE       AssertionError: {'blocked': [], 'catalogue_generation': '90c5ca3d80844bcd907faae7680a27e0', 'checkpoint': {'durable_sequence': 3, 'sha256': '58a7ebb2a89a668e0288b0fd0efef6baec32018526d8d81c73b87bcbf0d717b2'}, 'deleted': 0, ...}\nE       assert ([{'bytes': 99...0000000, ...}] == []\nE         \nE         Left contains 2 more items, first extra item: {'bytes': 990, 'device': 160, 'inode': 4640, 'mtime_ns': 1999999990000000000, ...}\nE         Use -v to get more diff)\n\ndocs/tickets/VN09-reviewer-counterexamples.py:82: AssertionError\n_ test_independent_intent_parent_rebinding_cannot_overwrite_spool_checkpoint[legacy] _\n\nsetup = <function setup.<locals>.create at 0x784bfc3c8720>\n\n    def test_independent_intent_parent_rebinding_cannot_overwrite_spool_checkpoint(setup):\n        s=setup();accepted(s);evidence=s.folder/\"evidence\";evidence.mkdir();target=evidence/\"checkpoint.json\"\n        source_checkpoint=s.source.spool_root/\"checkpoint.json\";original=source_checkpoint.read_bytes()\n        def rebind():\n            evidence.rename(s.folder/\"old-evidence\")\n            evidence.symlink_to(s.source.spool_root,target_is_directory=True)\n        invoked=changing_verify(s,rebind)\n>       result=call(s,intent_path=target);assert invoked;blocked(s,result)\n                                                         ^^^^^^^^^^^^^^^^^\n\ndocs/tickets/VN09-reviewer-counterexamples.py:194: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ns = namespace(folder=PosixPath('/tmp/pytest/test_independent_intent_parent0/market'), settings=RuntimeSettings(env={'VIBET...ence\":3,\"price\":\"100.123456789012345678\",\"quantity\":\"1E-18\",\"aggressor_side\":\"unknown\",\"trade_id\":null}'], facts=False)\nresult = {'blocked': [], 'catalogue_generation': '4e6b11d847024c09839c320c7ba884d3', 'checkpoint': {'durable_sequence': 3, 'sha256': '58a7ebb2a89a668e0288b0fd0efef6baec32018526d8d81c73b87bcbf0d717b2'}, 'deleted': 0, ...}\n\n    def blocked(s,result):\n>       assert result[\"eligible\"]==[] and result[\"deleted\"]==0 and result[\"executable\"] is False,result\nE       AssertionError: {'blocked': [], 'catalogue_generation': '4e6b11d847024c09839c320c7ba884d3', 'checkpoint': {'durable_sequence': 3, 'sha256': '58a7ebb2a89a668e0288b0fd0efef6baec32018526d8d81c73b87bcbf0d717b2'}, 'deleted': 0, ...}\nE       assert ([{'bytes': 99...0000000, ...}] == []\nE         \nE         Left contains 2 more items, first extra item: {'bytes': 990, 'device': 160, 'inode': 4683, 'mtime_ns': 1999999990000000000, ...}\nE         Use -v to get more diff)\n\ndocs/tickets/VN09-reviewer-counterexamples.py:82: AssertionError\n_ test_independent_intent_parent_rebinding_cannot_overwrite_spool_checkpoint[compact] _\n\nsetup = <function setup.<locals>.create at 0x784bfc3ca660>\n\n    def test_independent_intent_parent_rebinding_cannot_overwrite_spool_checkpoint(setup):\n        s=setup();accepted(s);evidence=s.folder/\"evidence\";evidence.mkdir();target=evidence/\"checkpoint.json\"\n        source_checkpoint=s.source.spool_root/\"checkpoint.json\";original=source_checkpoint.read_bytes()\n        def rebind():\n            evidence.rename(s.folder/\"old-evidence\")\n            evidence.symlink_to(s.source.spool_root,target_is_directory=True)\n        invoked=changing_verify(s,rebind)\n>       result=call(s,intent_path=target);assert invoked;blocked(s,result)\n                                                         ^^^^^^^^^^^^^^^^^\n\ndocs/tickets/VN09-reviewer-counterexamples.py:194: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ns = namespace(folder=PosixPath('/tmp/pytest/test_independent_intent_parent1/market'), settings=RuntimeSettings(env={'VIBET...ence\":3,\"price\":\"100.123456789012345678\",\"quantity\":\"1E-18\",\"aggressor_side\":\"unknown\",\"trade_id\":null}'], facts=False)\nresult = {'blocked': [], 'catalogue_generation': 'f10fbddffb9d43babab6a411cdafe5d6', 'checkpoint': {'durable_sequence': 3, 'sha256': '58a7ebb2a89a668e0288b0fd0efef6baec32018526d8d81c73b87bcbf0d717b2'}, 'deleted': 0, ...}\n\n    def blocked(s,result):\n>       assert result[\"eligible\"]==[] and result[\"deleted\"]==0 and result[\"executable\"] is False,result\nE       AssertionError: {'blocked': [], 'catalogue_generation': 'f10fbddffb9d43babab6a411cdafe5d6', 'checkpoint': {'durable_sequence': 3, 'sha256': '58a7ebb2a89a668e0288b0fd0efef6baec32018526d8d81c73b87bcbf0d717b2'}, 'deleted': 0, ...}\nE       assert ([{'bytes': 99...0000000, ...}] == []\nE         \nE         Left contains 2 more items, first extra item: {'bytes': 990, 'device': 160, 'inode': 4726, 'mtime_ns': 1999999990000000000, ...}\nE         Use -v to get more diff)\n\ndocs/tickets/VN09-reviewer-counterexamples.py:82: AssertionError\n=========================== short test summary info ============================\nFAILED docs/tickets/VN09-reviewer-counterexamples.py::test_independent_intent_destination_appearing_during_verify_is_preserved[legacy]\nFAILED docs/tickets/VN09-reviewer-counterexamples.py::test_independent_intent_destination_appearing_during_verify_is_preserved[compact]\nFAILED docs/tickets/VN09-reviewer-counterexamples.py::test_independent_intent_parent_rebinding_cannot_overwrite_spool_checkpoint[legacy]\nFAILED docs/tickets/VN09-reviewer-counterexamples.py::test_independent_intent_parent_rebinding_cannot_overwrite_spool_checkpoint[compact]\n4 failed, 205 passed in 2.61s\n"
+}

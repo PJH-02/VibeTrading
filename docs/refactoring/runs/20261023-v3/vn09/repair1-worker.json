@@ -1,0 +1,307 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "refactor",
+  "worker_process": {
+    "exit_code": 0,
+    "elapsed_seconds": 251.85676658598823,
+    "relay_http_statuses": [],
+    "served_models": [],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-repair1-a9fbe73c",
+  "usage_reported": [
+    {
+      "total": 4155,
+      "input": 1939,
+      "output": 168,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 2048
+      }
+    },
+    {
+      "total": 4581,
+      "input": 382,
+      "output": 214,
+      "reasoning": 17,
+      "cache": {
+        "write": 0,
+        "read": 3968
+      }
+    },
+    {
+      "total": 18479,
+      "input": 14118,
+      "output": 130,
+      "reasoning": 7,
+      "cache": {
+        "write": 0,
+        "read": 4224
+      }
+    },
+    {
+      "total": 18925,
+      "input": 505,
+      "output": 47,
+      "reasoning": 69,
+      "cache": {
+        "write": 0,
+        "read": 18304
+      }
+    },
+    {
+      "total": 32870,
+      "input": 14095,
+      "output": 79,
+      "reasoning": 8,
+      "cache": {
+        "write": 0,
+        "read": 18688
+      }
+    },
+    {
+      "total": 35540,
+      "input": 2707,
+      "output": 50,
+      "reasoning": 15,
+      "cache": {
+        "write": 0,
+        "read": 32768
+      }
+    },
+    {
+      "total": 39139,
+      "input": 3297,
+      "output": 149,
+      "reasoning": 237,
+      "cache": {
+        "write": 0,
+        "read": 35456
+      }
+    },
+    {
+      "total": 41718,
+      "input": 2985,
+      "output": 67,
+      "reasoning": 10,
+      "cache": {
+        "write": 0,
+        "read": 38656
+      }
+    },
+    {
+      "total": 41926,
+      "input": 217,
+      "output": 81,
+      "reasoning": 28,
+      "cache": {
+        "write": 0,
+        "read": 41600
+      }
+    },
+    {
+      "total": 47043,
+      "input": 5225,
+      "output": 81,
+      "reasoning": 9,
+      "cache": {
+        "write": 0,
+        "read": 41728
+      }
+    },
+    {
+      "total": 49537,
+      "input": 1822,
+      "output": 142,
+      "reasoning": 725,
+      "cache": {
+        "write": 0,
+        "read": 46848
+      }
+    },
+    {
+      "total": 51807,
+      "input": 3020,
+      "output": 94,
+      "reasoning": 53,
+      "cache": {
+        "write": 0,
+        "read": 48640
+      }
+    },
+    {
+      "total": 52921,
+      "input": 1215,
+      "output": 83,
+      "reasoning": 39,
+      "cache": {
+        "write": 0,
+        "read": 51584
+      }
+    },
+    {
+      "total": 55105,
+      "input": 2274,
+      "output": 83,
+      "reasoning": 12,
+      "cache": {
+        "write": 0,
+        "read": 52736
+      }
+    },
+    {
+      "total": 63467,
+      "input": 1711,
+      "output": 196,
+      "reasoning": 6648,
+      "cache": {
+        "write": 0,
+        "read": 54912
+      }
+    },
+    {
+      "total": 64802,
+      "input": 6906,
+      "output": 1309,
+      "reasoning": 11,
+      "cache": {
+        "write": 0,
+        "read": 56576
+      }
+    },
+    {
+      "total": 64993,
+      "input": 1457,
+      "output": 169,
+      "reasoning": 7,
+      "cache": {
+        "write": 0,
+        "read": 63360
+      }
+    },
+    {
+      "total": 65159,
+      "input": 240,
+      "output": 151,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 64768
+      }
+    },
+    {
+      "total": 65323,
+      "input": 279,
+      "output": 148,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 64896
+      }
+    },
+    {
+      "total": 65477,
+      "input": 187,
+      "output": 109,
+      "reasoning": 29,
+      "cache": {
+        "write": 0,
+        "read": 65152
+      }
+    },
+    {
+      "total": 65716,
+      "input": 212,
+      "output": 224,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 65280
+      }
+    },
+    {
+      "total": 65905,
+      "input": 324,
+      "output": 168,
+      "reasoning": 5,
+      "cache": {
+        "write": 0,
+        "read": 65408
+      }
+    },
+    {
+      "total": 66048,
+      "input": 283,
+      "output": 79,
+      "reasoning": 22,
+      "cache": {
+        "write": 0,
+        "read": 65664
+      }
+    },
+    {
+      "total": 68524,
+      "input": 1841,
+      "output": 80,
+      "reasoning": 683,
+      "cache": {
+        "write": 0,
+        "read": 65920
+      }
+    },
+    {
+      "total": 70788,
+      "input": 1235,
+      "output": 165,
+      "reasoning": 1676,
+      "cache": {
+        "write": 0,
+        "read": 67712
+      }
+    },
+    {
+      "total": 70970,
+      "input": 1939,
+      "output": 167,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 68864
+      }
+    },
+    {
+      "total": 71533,
+      "input": 202,
+      "output": 168,
+      "reasoning": 379,
+      "cache": {
+        "write": 0,
+        "read": 70784
+      }
+    },
+    {
+      "total": 74193,
+      "input": 663,
+      "output": 532,
+      "reasoning": 2086,
+      "cache": {
+        "write": 0,
+        "read": 70912
+      }
+    }
+  ],
+  "base_sha": "593b40b8e293f736509f4c1705bb3fa23d3ca362",
+  "scope": [
+    "src/vibetrading/archive.py",
+    "src/vibetrading/local_storage.py"
+  ],
+  "output_sha256": {
+    "src/vibetrading/archive.py": "16aeb1b3e8079411e761cac98742bbb7cb243af5eb0837b269d123fb7ac95aea",
+    "src/vibetrading/local_storage.py": "0eea36703d0cdd1b2fdaea0330c96dad2a1396fa221bb02de0e23b3653e918b5"
+  },
+  "automatic_acceptance": false
+}

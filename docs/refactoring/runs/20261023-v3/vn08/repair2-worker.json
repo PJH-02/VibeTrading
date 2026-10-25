@@ -1,0 +1,87 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "refactor",
+  "worker_process": {
+    "exit_code": 0,
+    "elapsed_seconds": 26.352924377002637,
+    "relay_http_statuses": [],
+    "served_models": [],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-repair2-08cd8b36",
+  "usage_reported": [
+    {
+      "total": 3920,
+      "input": 857,
+      "output": 247,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 2816
+      }
+    },
+    {
+      "total": 4382,
+      "input": 1394,
+      "output": 158,
+      "reasoning": 14,
+      "cache": {
+        "write": 0,
+        "read": 2816
+      }
+    },
+    {
+      "total": 12685,
+      "input": 8437,
+      "output": 49,
+      "reasoning": 103,
+      "cache": {
+        "write": 0,
+        "read": 4096
+      }
+    },
+    {
+      "total": 27306,
+      "input": 14232,
+      "output": 458,
+      "reasoning": 200,
+      "cache": {
+        "write": 0,
+        "read": 12416
+      }
+    },
+    {
+      "total": 27519,
+      "input": 708,
+      "output": 187,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 26624
+      }
+    },
+    {
+      "total": 27936,
+      "input": 305,
+      "output": 363,
+      "reasoning": 4,
+      "cache": {
+        "write": 0,
+        "read": 27264
+      }
+    }
+  ],
+  "base_sha": "e934af784f5a1d65473dddb950ac9fc011d220ab",
+  "scope": [
+    "src/vibetrading/market_spool.py",
+    "tests/refactoring/test_retained_spool.py"
+  ],
+  "output_sha256": {
+    "src/vibetrading/market_spool.py": "91740019c89e9585b4308e2b41f0e2db84272c6ee6a28fdd45c96a9d04799af4",
+    "tests/refactoring/test_retained_spool.py": "e16c6903951a761336193d58532e79dcd9ade03a93ddf3659f95bb32fd332ac6"
+  },
+  "automatic_acceptance": false
+}

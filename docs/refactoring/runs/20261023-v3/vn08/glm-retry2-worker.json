@@ -1,0 +1,47 @@
+{
+  "selected_model": "freellmapi/glm-4.5-flash",
+  "selected_provider": "freellmapi",
+  "upstream_weight_identity": "UNKNOWN",
+  "quota_independence": "NOT_ASSUMED",
+  "role": "implement",
+  "worker_process": {
+    "exit_code": 1,
+    "elapsed_seconds": 80.61997258001065,
+    "relay_http_statuses": [
+      429,
+      200,
+      200,
+      429,
+      429,
+      429,
+      429,
+      429,
+      429
+    ],
+    "served_models": [
+      "glm-4.5-flash"
+    ],
+    "key_redaction_events": 0
+  },
+  "private_artifacts": "/home/pjh/.local/state/codex-opencode/runs/v3-glm-retry2-67545f91",
+  "usage_reported": [
+    {
+      "total": 3960,
+      "input": 840,
+      "output": 288,
+      "reasoning": 0,
+      "cache": {
+        "write": 0,
+        "read": 2832
+      }
+    }
+  ],
+  "base_sha": "f5a7d52c4d69e6112f116578d4f5f9747b1e82b2",
+  "scope": [
+    "tests/refactoring/test_retained_acceptance.py"
+  ],
+  "output_sha256": {
+    "tests/refactoring/test_retained_acceptance.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "automatic_acceptance": false
+}

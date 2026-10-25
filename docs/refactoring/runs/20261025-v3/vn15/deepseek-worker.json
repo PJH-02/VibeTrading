@@ -1,0 +1,31 @@
+{
+  "selected_model": "opencode/deepseek-v4.1-flash-free",
+  "selected_provider": "opencode",
+  "upstream_weight_identity": "UNKNOWN",
+  "worker_exit": 0,
+  "delegate_exit": 0,
+  "actual_test_commands": [
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/test_dashboard.py tests/test_dual_mock_and_assumed.py tests/test_telegram_status.py tests/test_trade_exclusions.py tests/test_local_snapshot.py tests/refactoring/test_portfolio_ledger.py tests/refactoring/test_vn15_paper_projection.py",
+      "exit_code": 1,
+      "output_tail": "order[\"id\"] == \"paper-order\" and order[\"mode\"] == \"paper\" for order in snapshot[\"orders\"])\nE       assert False\nE        +  where False = any(<generator object test_local_bridge_opt_in_appends_paper_facts_without_missing_telemetry.<locals>.<genexpr> at 0x726cd6360110>)\n\ntests/refactoring/test_vn15_paper_projection.py:366: AssertionError\n=========================== short test summary info ============================\nFAILED tests/refactoring/test_vn15_paper_projection.py::test_cold_thread_read_of_real_ledger_is_bounded_exact_and_untouched\nFAILED tests/refactoring/test_vn15_paper_projection.py::test_local_bridge_opt_in_appends_paper_facts_without_missing_telemetry\n2 failed, 71 passed in 2.20s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/refactoring/test_vn15_paper_projection.py::test_cold_thread_read_of_real_ledger_is_bounded_exact_and_untouched -vv",
+      "exit_code": 1,
+      "output_tail": "ack (expected 4, got 3)', 'source': '/tmp/pytest-of-unknown/pytest-1/test_cold_thread_read_of_real_0/owner/paper/account.sqlite', 'type': 'UNAVAILABLE'}\nE             \nE             Full diff:\nE             - []\nE             + [\nE             +     {...\nE             \nE             ...Full output truncated (5 lines hidden), use '-vv' to show\n\ntests/refactoring/test_vn15_paper_projection.py:181: AssertionError\n=========================== short test summary info ============================\nFAILED tests/refactoring/test_vn15_paper_projection.py::test_cold_thread_read_of_real_ledger_is_bounded_exact_and_untouched\n============================== 1 failed in 0.55s ===============================\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/test_dashboard.py tests/test_dual_mock_and_assumed.py tests/test_telegram_status.py tests/test_trade_exclusions.py tests/test_local_snapshot.py tests/refactoring/test_portfolio_ledger.py tests/refactoring/test_vn15_paper_projection.py",
+      "exit_code": 0,
+      "output_tail": "........................................................................ [ 98%]\n.                                                                        [100%]\n73 passed in 4.98s\n"
+    },
+    {
+      "command": "python3 -m pytest -p pytest_asyncio.plugin -q -p no:cacheprovider tests/test_dashboard.py tests/test_dual_mock_and_assumed.py tests/test_telegram_status.py tests/test_trade_exclusions.py tests/test_local_snapshot.py tests/refactoring/test_portfolio_ledger.py tests/refactoring/test_vn15_paper_projection.py",
+      "exit_code": 0,
+      "output_tail": "........................................................................ [ 98%]\n.                                                                        [100%]\n73 passed in 3.75s\n"
+    }
+  ],
+  "private_run": "/home/pjh/.local/state/codex-opencode/runs/vn15-worker-atmmbzqz",
+  "automatic_acceptance": false
+}

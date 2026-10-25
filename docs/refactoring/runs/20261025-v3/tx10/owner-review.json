@@ -1,0 +1,14 @@
+{
+  "owner_product_edits": 1,
+  "owner_product_path": "src/vibetrading/strategy_runtime.py",
+  "owner_changed_symbols": [
+    "PaperStrategyRuntime._validate_data_manifest"
+  ],
+  "worker_product_sha256": "38fd78814289dd638bb60fa947b153bd7abcbc3df760e3f4b1cc503bedfc7168",
+  "reviewed_product_sha256": "42ec6dda8fc8a5a4e0b66fcf26a7878c7bc3aaad203d52b527bcf2f125fc72c0",
+  "reason": "Normalize relative Path aliases before manifest duplicate-path check; a.parquet and ./a.parquet must not bind the same object twice under distinct file IDs. Two-line review fix after independent counterexample reproduced one failure.",
+  "before_change_passed": 145,
+  "before_change_failed": 1,
+  "before_change_exit": 1,
+  "worker_original_source_copy": "/home/pjh/.local/state/codex-opencode/runs/tx10-independent-tg1njk5b/work"
+}

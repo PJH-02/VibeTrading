@@ -20,6 +20,8 @@ from contextlib import closing
 from pathlib import Path
 
 from .process_lease import ProcessLease
+from .strategies.kr import kd as _kd, kp as _kp
+from .strategies.kr._intraday import intraday_decision as _intraday_decision
 
 import numpy as np
 import pandas as pd
@@ -46,20 +48,12 @@ class EtfDispatchBlocked(RuntimeError):
 
 
 def intraday_decision(strategy: str, feature: dict, book: dict) -> tuple[int, float, str]:
-    """Frozen M1-P stops/sizing and one-entry-per-day selections."""
-    direction = int(book['direction']) if book['positions'] else 0
-    if direction:
-        stop = max(feature['upper_band'],feature['vwap_used']) if direction == 1 else min(feature['lower_band'],feature['vwap_used'])
-        if feature['price'] <= stop if direction == 1 else feature['price'] >= stop:
-            return 0, 0., 'paper_stop'
-        return direction, 0., 'hold'
-    if not feature.get('usable') or book['entries']:
-        return 0, 0., 'no_entry'
-    side = int(feature['entry_signal'])
-    if side == 0 or (strategy == 'KP' and side != 1):
-        return 0, 0., 'no_entry'
-    leverage = min(2. if strategy == 'KP' else 1., .02 / feature['vol14'] * feature['signal_strength'])
-    return side, leverage, 'entry'
+    """Frozen M1-P compatibility dispatcher to the KR pure helpers."""
+    if strategy == 'KP':
+        return _kp.decide(feature, book)
+    if strategy == 'KD':
+        return _kd.decide(feature, book)
+    return _intraday_decision(strategy, feature, book)
 
 
 class EtfTradingLoop:
@@ -93,6 +87,8 @@ class EtfTradingLoop:
             self._warmup_task = None
             self.phase = 'starting'
             self._c3_attempt_ns = 0
+            self._checkpoint_recovery_state, self._checkpoint_recovery_reason = 'IDLE', None
+            self._checkpoint_initialized = False
         except BaseException:
             if hasattr(self,'journal'): self.journal.db.close()
             for lease in reversed(tuple(self._owner_leases.values())): lease.close()
@@ -163,6 +159,42 @@ class EtfTradingLoop:
     def recover_assumptions(self):
         rate=Decimal(self.settings.env.get('ETF_ASSUMED_FEE_RATE','.000148'))
         self.journal.recover_assumptions(rate)
+
+    def begin_checkpoint_recovery(self):
+        if getattr(self,'_runner_task',None) is not None:
+            raise RuntimeError('ETF checkpoint recovery requires a stopped runner')
+        if getattr(self,'_checkpoint_recovery_state','IDLE') == 'QUARANTINED':
+            raise RuntimeError('ETF runtime is permanently quarantined')
+        if getattr(self,'_checkpoint_recovery_state','IDLE') == 'RECOVERING':
+            raise RuntimeError('ETF checkpoint recovery is already in progress')
+        self._checkpoint_recovery_state = 'RECOVERING'
+        self._checkpoint_recovery_reason = 'checkpoint_restore_started'
+        self._checkpoint_initialized = False
+        self.phase = 'recovery_pending'
+
+    def quarantine_checkpoint_recovery(self, reason):
+        self._checkpoint_recovery_state = 'QUARANTINED'
+        self._checkpoint_recovery_reason = str(reason)[:256] or 'checkpoint_restore_failed'
+        self.phase = 'recovery_quarantined'
+
+    def mark_checkpoint_recovery_ready(self, day):
+        if self._checkpoint_recovery_state != 'RECOVERING':
+            return False
+        if not day or self._day != day:
+            return False
+        self._checkpoint_recovery_state = 'READY'
+        self._checkpoint_recovery_reason = None
+        self._checkpoint_initialized = True
+        # Do not force legacy alpha readiness. The existing initialize phase is
+        # preserved so normal quote/history/timer checks still own economic
+        # readiness; this gate only proves the checkpoint cut.
+        return True
+
+    def _check_checkpoint_dispatch(self):
+        # This fence is independent of ETF_EXECUTION_GUARDS. A runtime that has
+        # not proved its exact restored cut must never reach a broker mutation.
+        if getattr(self,'_checkpoint_recovery_state','IDLE') in {'RECOVERING','QUARANTINED'}:
+            raise EtfDispatchBlocked('ETF runtime is not READY after checkpoint recovery')
 
     async def initialize(self):
         self._check_ownership()
@@ -324,6 +356,7 @@ class EtfTradingLoop:
             'quote':intent.metadata.get('intent_quote'),'source_provider':intent.metadata.get('source_provider')}
 
     def _check_dispatch(self, intent):
+        self._check_checkpoint_dispatch()
         self._check_ownership()
         symbol = intent.instrument.raw_symbol
         if intent.side == Side.BUY:
@@ -350,6 +383,7 @@ class EtfTradingLoop:
     async def _submit_staged(self, broker, intent):
         """The observational bus never determines whether broker handoff occurred."""
         guarded = self.execution_guards_enabled()
+        self._check_checkpoint_dispatch()
         try:
             self._check_ownership()
             if broker is not self.brokers.get(intent.metadata.get('account_scope')):
@@ -358,6 +392,9 @@ class EtfTradingLoop:
                 await self.bus.publish_order_intent(intent)
             except Exception as exc:
                 log.warning('ETF intent observation deferred id=%s (%s)',intent.intent_id,type(exc).__name__)
+            # The observation await can yield to a READY->RECOVERING transition;
+            # recheck synchronously before either dispatch branch.
+            self._check_checkpoint_dispatch()
             if guarded:
                 namespace = type(broker).__dict__
                 if (namespace.get('execution_permit_protocol') != 1 or 'submit_order_with_permit' not in namespace
@@ -391,6 +428,7 @@ class EtfTradingLoop:
             raise
 
     async def place(self, strategy: str, symbol: str, side: Side, quantity: int, identity: str, *, direction: int = 0, safety_stop: float | None = None, auction_market: bool = False, recovery_cleanup: bool = False, valid_until_ts_ns: int | None = None):
+        self._check_checkpoint_dispatch()
         self._check_ownership()
         key = hashlib.sha256((identity+':'+symbol+':'+side.value).encode()).hexdigest()
         requested_quantity, requested_expiry = quantity,valid_until_ts_ns

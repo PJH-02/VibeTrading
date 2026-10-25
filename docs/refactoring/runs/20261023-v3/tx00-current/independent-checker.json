@@ -1,0 +1,17 @@
+{
+  "decision": "PASS",
+  "exit_code": 0,
+  "argv": [
+    "python3",
+    "docs/refactoring/vnext/reuse_audit/tx00_current/check.py",
+    "--root",
+    "/work",
+    "--check"
+  ],
+  "stdout": "TX00 current audit check OK: files=47 functions=712 historical=692 retained_unchanged=679 retained_changed=13 added=20 removed=0 direct_calls=459 candidate_inputs=510 changed_source_files=3\n",
+  "stderr": "",
+  "evidence_outputs_unchanged": true,
+  "credential_free_home": true,
+  "os_network_isolated": true,
+  "product_modules_imported": false
+}

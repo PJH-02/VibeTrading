@@ -1,0 +1,35 @@
+{
+  "mode": "baseline",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/vn17-baseline-f9lwitmk",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/vn17-baseline-f9lwitmk/work",
+  "exit_code": 0,
+  "elapsed_seconds": 2.9814296060067136,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "........................................................................ [ 34%]\n........................................................................ [ 68%]\n...................................................................      [100%]\n211 passed in 2.53s\n",
+  "tests": {
+    "passed": 211,
+    "failed": 0,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_local_runtime.py",
+    "tests/refactoring/test_runtime_mounts.py",
+    "tests/refactoring/test_shared_runtime_wiring.py",
+    "tests/refactoring/test_tx04b_continuous.py",
+    "tests/test_local_snapshot.py",
+    "tests/test_dual_mock_and_assumed.py",
+    "tests/refactoring/test_kr_strategy_extraction.py"
+  ]
+}

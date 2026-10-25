@@ -1,0 +1,11 @@
+{
+  "private_work": "/home/pjh/.local/state/codex-opencode/runs/vn17-worker-z1tc42gb/work",
+  "changed_files": [
+    " M docs/refactoring/vnext/reuse_audit/local_paper_assembly.md",
+    " M src/vibetrading/local_runtime.py",
+    " M tests/refactoring/test_vn17_role_assembly.py"
+  ],
+  "model": "freellmapi/glm-4.5-flash",
+  "acceptance": "NOT_ACCEPTED",
+  "reason": "HTTP429 model pool exhausted/cooldown; VN17 real-assembly requirements not met by mock-only tests; inspect source before bounded correction."
+}

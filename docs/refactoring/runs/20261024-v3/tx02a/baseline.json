@@ -1,0 +1,37 @@
+{
+  "mode": "baseline",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx02a-baseline-utsbcpa_",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/tx02a-baseline-utsbcpa_/work",
+  "exit_code": 0,
+  "elapsed_seconds": 9.467332439991878,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "........................................................................ [ 24%]\n........................................................................ [ 49%]\n........................................................................ [ 74%]\n........................................................................ [ 99%]\n.                                                                        [100%]\n289 passed in 7.62s\n",
+  "tests": {
+    "passed": 289,
+    "failed": 0,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_vnext_vn10.py",
+    "tests/refactoring/test_portfolio_ledger.py",
+    "tests/refactoring/test_paper_execution.py",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/refactoring/test_tx01_signal_binding.py",
+    "tests/refactoring/test_tx00_toss_data_only.py",
+    "tests/refactoring/test_kr_strategy_extraction.py"
+  ],
+  "host_command_record": "/home/pjh/.local/state/codex-opencode/runs/tx02a-baseline-utsbcpa_/metadata.json"
+}

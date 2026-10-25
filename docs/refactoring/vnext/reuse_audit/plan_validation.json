@@ -1,0 +1,17 @@
+{
+  "decision": "PASS",
+  "baseline_head": "4977ab509490173e312183f32d47f862d94ee0bf",
+  "product_code_changes": 0,
+  "product_deletions": 0,
+  "completed_vn_rows_preserved": 14,
+  "historical_statuses_and_counts_preserved": true,
+  "model_profiles_unchanged": true,
+  "source_files_indexed": 47,
+  "function_definitions_indexed": 692,
+  "functions_grounded_in_actual_ast": true,
+  "canonical_dag_cycle_free": true,
+  "all_requested_venues_and_capabilities_documented": true,
+  "new_order_code_written": false,
+  "live_exchange_or_cloud_calls": false,
+  "implementation_started": false
+}

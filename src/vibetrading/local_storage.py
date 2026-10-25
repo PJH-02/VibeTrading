@@ -10,8 +10,10 @@ from __future__ import annotations
 import base64
 import binascii
 from collections import OrderedDict
+from collections.abc import Mapping
 from dataclasses import dataclass
 import hashlib
+import itertools
 import json
 import logging
 import os
@@ -23,7 +25,8 @@ import threading
 import time
 import uuid
 
-from .market_spool import SpoolCorruption, SpoolCursor, SpoolReader
+from .market_spool import (RetainedPrefix, SpoolCorruption, SpoolCursor,
+                           SpoolReader, SpoolRecord)
 from .models import AssetClass, EventType, event_from_dict
 from .hot_path import _event_fingerprint
 from .parquet_store import ParquetBatchWriter
@@ -307,11 +310,22 @@ class _FactLedger:
         if row is None or row[0] != hashlib.sha256(record.payload).hexdigest() or bytes(row[1]) != record.payload:
             raise LocalStorageError("confirmed control/observation fact is missing or corrupt")
 
+    def verify_fact_cursor(self, producer, incarnation, sequence, payload_sha256, receipt_kind):
+        """Verify a trimmed-base fact without fabricating a SpoolRecord."""
+        row = self.connection.execute(
+            "SELECT kind,payload_sha256,raw_payload FROM local_fact "
+            "WHERE producer=? AND incarnation=? AND sequence=?",
+            (producer, incarnation, sequence)).fetchone()
+        if (row is None or row[0] != receipt_kind or row[1] != payload_sha256
+                or hashlib.sha256(bytes(row[2])).hexdigest() != payload_sha256):
+            raise LocalStorageError("confirmed control/observation fact is missing or corrupt at retained base")
+
 
 class LocalSpoolStorage:
     """Use only from one dedicated process/thread; step processes one source."""
 
-    def __init__(self, plan, settings, budgets: StorageBudgets | None = None, *, writer=None, store=None):
+    def __init__(self, plan, settings, budgets: StorageBudgets | None = None, *, writer=None,
+                 store=None, retained_prefixes=None):
         self.plan, self.settings = plan, settings
         self.budgets = budgets or StorageBudgets(**plan.storage)
         self._thread = threading.get_ident()
@@ -328,6 +342,30 @@ class LocalSpoolStorage:
         # A cache miss for a committed ID/new cursor fails closed; no history
         # scan or identity-only alias is allowed to invent content coverage.
         self._fingerprints=OrderedDict()
+        items = [(item, False) for item in plan.producers]
+        if plan.observation is not None:
+            items.append((plan.observation, True))
+        if not 0 < len(items) <= 17 or len({item.producer for item, _ in items}) != len(items):
+            raise LocalStorageError("bounded unique local storage producers required")
+        for item, _observation in items:
+            _text(item.producer,"producer")
+            _text(item.incarnation,"incarnation")
+        if retained_prefixes is None:
+            retained_prefixes = {}
+        elif not isinstance(retained_prefixes, Mapping):
+            raise ValueError("retained_prefixes must be an explicit producer mapping")
+        else:
+            retained_prefixes = dict(retained_prefixes)
+        selected = {item.producer: item for item, _ in items}
+        if set(retained_prefixes) - set(selected):
+            raise ValueError("retained_prefixes contains an unselected producer")
+        for producer, proof in retained_prefixes.items():
+            if not isinstance(proof, RetainedPrefix):
+                raise ValueError("retained_prefixes values must be validated RetainedPrefix proofs")
+            item = selected[producer]
+            if proof.producer_id != item.producer or proof.incarnation != item.incarnation:
+                raise ValueError("retained prefix identity does not match the selected source")
+        self._retained_prefixes = dict(retained_prefixes)
         try:
             # Claim the role before opening the shared Parquet catalogue for
             # writing. A second local-storage process cannot race startup.
@@ -337,35 +375,55 @@ class LocalSpoolStorage:
             self.writer = writer or ParquetBatchWriter(settings, self.store)
             if self.writer.buffer_bytes:
                 raise LocalStorageError("storage writer must start without caller-owned pending buffers")
-            items = [(item, False) for item in plan.producers]
-            if plan.observation is not None:
-                items.append((plan.observation, True))
-            if not 0 < len(items) <= 17 or len({item.producer for item, _ in items}) != len(items):
-                raise LocalStorageError("bounded unique local storage producers required")
             for item, observation in items:
-                _text(item.producer,"producer")
-                _text(item.incarnation,"incarnation")
+                proof = retained_prefixes.get(item.producer)
                 progress = self._ledger.progress(item.producer, item.incarnation)
                 sequence = int(progress["sequence"]) if progress is not None else 0
-                before = SpoolCursor(item.producer, item.incarnation, max(0, sequence - 1))
+                if proof is not None:
+                    base = proof.base_sequence
+                    if progress is None or sequence < base:
+                        raise LocalStorageError(
+                            "retained source has no persisted progress at/above its base")
+                    after = SpoolCursor(item.producer, item.incarnation,
+                                        base if sequence == base else sequence - 1)
+                else:
+                    after = SpoolCursor(item.producer, item.incarnation, max(0, sequence - 1))
                 try:
                     reader = SpoolReader(item.spool_root, item.producer, item.incarnation,
-                                         after=before, **item.limits.reader_kwargs)
+                                         after=after, retained_prefix=proof,
+                                         **item.limits.reader_kwargs)
                 except SpoolCorruption as exc:
                     if sequence or not _source_only(exc): raise
                     self._quarantine(item,'open',exc)
                     self._sources.append((item,None,observation))
                     continue
                 if sequence:
-                    rows = reader.read_batch(max_records=1, max_bytes=self.budgets.batch_bytes)
-                    if (len(rows) != 1 or rows[0].cursor.sequence != sequence
-                            or hashlib.sha256(rows[0].payload).hexdigest() != progress["payload_sha256"]):
-                        raise LocalStorageError("consumer checkpoint does not match source spool")
-                    if progress["receipt_kind"] == "market":
-                        if not self.store.delivery_committed("LOCAL:" + item.producer, item.incarnation, sequence):
-                            raise LocalStorageError("consumer checkpoint lacks committed manifest delivery coverage")
+                    if proof is not None and sequence == proof.base_sequence:
+                        # The base record is physically absent from the trimmed
+                        # spool. Verify the persisted consumer proof and its
+                        # independent durable coverage; never synthesize input.
+                        if progress["payload_sha256"] != proof.base_payload_sha256:
+                            raise LocalStorageError(
+                                "consumer checkpoint digest does not match retained base")
+                        if progress["receipt_kind"] == "market":
+                            if not self.store.delivery_committed(
+                                    "LOCAL:" + item.producer, item.incarnation, sequence):
+                                raise LocalStorageError(
+                                    "retained base lacks committed manifest delivery coverage")
+                        else:
+                            self._ledger.verify_fact_cursor(
+                                item.producer, item.incarnation, sequence,
+                                progress["payload_sha256"], progress["receipt_kind"])
                     else:
-                        self._ledger.verify_fact(rows[0])
+                        rows = reader.read_batch(max_records=1, max_bytes=self.budgets.batch_bytes)
+                        if (len(rows) != 1 or rows[0].cursor.sequence != sequence
+                                or hashlib.sha256(rows[0].payload).hexdigest() != progress["payload_sha256"]):
+                            raise LocalStorageError("consumer checkpoint does not match source spool")
+                        if progress["receipt_kind"] == "market":
+                            if not self.store.delivery_committed("LOCAL:" + item.producer, item.incarnation, sequence):
+                                raise LocalStorageError("consumer checkpoint lacks committed manifest delivery coverage")
+                        else:
+                            self._ledger.verify_fact(rows[0])
                 self._sources.append((item, reader, observation))
         except BaseException:
             self.close()
@@ -374,6 +432,10 @@ class LocalSpoolStorage:
     @property
     def source_failures(self):
         return {producer:dict(fault) for producer,fault in self._source_failures.items()}
+
+    @property
+    def retained_prefixes(self):
+        return dict(self._retained_prefixes)
 
     def _quarantine(self, item, stage, exc):
         if item.producer not in self._source_failures:
@@ -512,6 +574,168 @@ class LocalSpoolStorage:
     def progress(self, producer, incarnation):
         self._check()
         return self._ledger.progress(producer, incarnation)
+
+    @staticmethod
+    def _gc_fact_row(row, record, kind, subject, message_id):
+        payload_sha256 = hashlib.sha256(record.payload).hexdigest()
+        decoded = row["decoded_payload"]
+        decoded_bytes = None if decoded is None else bytes(decoded)
+        return {
+            "fact_id": int(row["fact_id"]),
+            "kind": str(row["kind"]),
+            "subject": str(row["subject"]),
+            "msg_id": "" if row["msg_id"] is None else str(row["msg_id"]),
+            "payload_sha256": str(row["payload_sha256"]),
+            "raw_sha256": hashlib.sha256(bytes(row["raw_payload"])).hexdigest(),
+            "decoded_sha256": (None if decoded_bytes is None
+                               else hashlib.sha256(decoded_bytes).hexdigest()),
+        }
+
+    def spool_gc_evidence(self, producer, records):
+        """Return detached exact delivery/provenance evidence for a spool cut.
+
+        Read-only: bounded SELECTs only. It never flushes, opens a writer,
+        advances a cursor, repairs progress or trusts a cached boolean. Every
+        supplied record must already be covered by this owner's durable
+        consumer progress and by the exact downstream fact/manifest row.
+        """
+        self._check()
+        if not isinstance(producer, str) or not producer:
+            raise ValueError("producer identity is required")
+        if producer in self._source_failures:
+            raise LocalStorageError("requested producer is quarantined")
+        items = [(item, False) for item in self.plan.producers]
+        if self.plan.observation is not None:
+            items.append((self.plan.observation, True))
+        matches = [(item, observation) for item, observation in items
+                   if item.producer == producer]
+        if len(matches) != 1:
+            raise LocalStorageError("requested producer is not the selected source")
+        item, observation = matches[0]
+        try:
+            # Consume at most one beyond the public bound so an unbounded
+            # iterable is rejected before it can be fully materialized.
+            records = tuple(itertools.islice(records, 501))
+        except TypeError as exc:
+            raise LocalStorageError("spool GC evidence requires iterable records") from exc
+        if len(records) > 500:
+            raise LocalStorageError("spool GC evidence record bound exceeded")
+        total_bytes = 0
+        previous = None
+        for record in records:
+            if not isinstance(record, SpoolRecord):
+                raise LocalStorageError("spool GC evidence requires real records")
+            if (record.cursor.producer != producer
+                    or record.cursor.incarnation != item.incarnation):
+                raise LocalStorageError("spool GC evidence identity mismatch")
+            if (previous is not None
+                    and record.cursor.sequence != previous + 1):
+                raise LocalStorageError("spool GC evidence batch is not contiguous")
+            previous = record.cursor.sequence
+            if (not record.payload
+                    or len(record.payload) > self.budgets.max_payload_bytes):
+                raise LocalStorageError("spool GC evidence payload budget exceeded")
+            total_bytes += len(record.payload)
+        if total_bytes > self.budgets.batch_bytes:
+            raise LocalStorageError("spool GC evidence aggregate byte budget exceeded")
+        ledger = self._ledger
+        if ledger is None or ledger.connection is None:
+            raise LocalStorageError("local fact ledger is unavailable")
+        if ledger.connection.in_transaction or self.store._conn.in_transaction:
+            raise LocalStorageError("spool GC evidence cannot read a pending transaction")
+        progress = ledger.progress(producer, item.incarnation)
+        if progress is None:
+            raise LocalStorageError("requested producer has no durable local progress")
+        progress_row = {
+            "producer": str(progress["producer"]),
+            "incarnation": str(progress["incarnation"]),
+            "sequence": int(progress["sequence"]),
+            "payload_sha256": str(progress["payload_sha256"]),
+            "receipt_kind": str(progress["receipt_kind"]),
+            "event_id": str(progress["event_id"]),
+        }
+        if records and progress_row["sequence"] < records[-1].cursor.sequence:
+            raise LocalStorageError("local progress does not cover the requested cut")
+        fact_generation = ledger.connection.execute(
+            "SELECT value FROM facts_metadata WHERE key='generation'").fetchone()
+        catalogue_generation = self.store._conn.execute(
+            "SELECT value FROM runtime_metadata WHERE key='collection_generation'").fetchone()
+        if fact_generation is None or catalogue_generation is None:
+            raise LocalStorageError("durable generation evidence is missing")
+        evidence = {
+            "producer": producer,
+            "incarnation": item.incarnation,
+            "progress": progress_row,
+            "facts_generation": str(fact_generation[0]),
+            "catalogue_generation": str(catalogue_generation[0]),
+            "record_count": len(records),
+            "record_bytes": total_bytes,
+            "records": [],
+        }
+        for record in records:
+            digest = hashlib.sha256(record.payload).hexdigest()
+            common = {"sequence": record.cursor.sequence,
+                      "segment_id": record.segment_id,
+                      "offset": record.offset,
+                      "frame_bytes": record.frame_bytes,
+                      "payload_sha256": digest}
+            if observation:
+                subject, message_id, decoded = _observation(
+                    record.payload, self.budgets.max_payload_bytes)
+                row = ledger.connection.execute(
+                    "SELECT fact_id,kind,subject,msg_id,payload_sha256,raw_payload,"
+                    "decoded_payload FROM local_fact "
+                    "WHERE producer=? AND incarnation=? AND sequence=?",
+                    (producer, item.incarnation, record.cursor.sequence)).fetchone()
+                if (row is None or row["kind"] != "observation"
+                        or row["subject"] != subject
+                        or ("" if row["msg_id"] is None else row["msg_id"]) != message_id
+                        or row["payload_sha256"] != digest
+                        or bytes(row["raw_payload"]) != record.payload
+                        or (None if row["decoded_payload"] is None
+                            else bytes(row["decoded_payload"])) != decoded):
+                    raise LocalStorageError(
+                        "confirmed observation fact is missing or corrupt")
+                evidence["records"].append(dict(
+                    common, kind="observation", event_id="",
+                    manifest=None, fact=self._gc_fact_row(row, record, "observation",
+                                                          subject, message_id)))
+                continue
+            event = _market(record.payload)
+            if event.event_type == EventType.DATA_GAP:
+                symbol = re.sub(r"[^A-Z0-9_]+", "_",
+                                event.instrument.std_symbol.upper()).strip("_") or "UNKNOWN"
+                prefix = ("crypto" if event.instrument.asset_class == AssetClass.CRYPTO_PERP
+                          else "md")
+                subject = ".".join((prefix, "data_gap", event.venue.value,
+                                    event.instrument.asset_class.value, symbol))
+                row = ledger.connection.execute(
+                    "SELECT fact_id,kind,subject,msg_id,payload_sha256,raw_payload,"
+                    "decoded_payload FROM local_fact "
+                    "WHERE producer=? AND incarnation=? AND sequence=?",
+                    (producer, item.incarnation, record.cursor.sequence)).fetchone()
+                if (row is None or row["kind"] != "control"
+                        or row["subject"] != subject
+                        or row["payload_sha256"] != digest
+                        or bytes(row["raw_payload"]) != record.payload
+                        or row["decoded_payload"] is not None):
+                    raise LocalStorageError(
+                        "confirmed DATA_GAP fact is missing or corrupt")
+                evidence["records"].append(dict(
+                    common, kind="control", event_id=event.event_id,
+                    manifest=None, fact=self._gc_fact_row(row, record, "control",
+                                                          subject, event.event_id)))
+                continue
+            manifest = self.store.delivery_manifest(
+                "LOCAL:" + producer, item.incarnation, record.cursor.sequence,
+                event.event_id)
+            if manifest is None:
+                raise LocalStorageError(
+                    "market delivery has no exact source manifest")
+            evidence["records"].append(dict(
+                common, kind="market", event_id=event.event_id,
+                manifest=dict(manifest), fact=None))
+        return evidence
 
     def close(self):
         if self._closed:

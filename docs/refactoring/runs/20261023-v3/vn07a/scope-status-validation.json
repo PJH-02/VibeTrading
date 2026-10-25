@@ -1,0 +1,27 @@
+{
+  "tickets_production.json": {
+    "task_ids_preserved": 51,
+    "only_changed_parent": "VN07",
+    "completed_tasks_preserved": true
+  },
+  "stage_counts": {
+    "COMPLETE_LOCAL_IMPLEMENTATION": 14,
+    "INCOMPLETE": 23,
+    "NOT_STARTED": 14
+  },
+  "stage_status.json": {
+    "task_ids_preserved": 51,
+    "only_changed_parent": "VN07",
+    "completed_tasks_preserved": true
+  },
+  "decision": "PASS",
+  "parent_complete": false,
+  "product_paths": [
+    "src/vibetrading/portfolio_ledger.py",
+    "src/vibetrading/strategy_runtime.py"
+  ],
+  "existing_tests_modified": false,
+  "protected_deploy_sha_unchanged": true,
+  "canonical_status_exit": 0,
+  "final_metadata_tests_passed": 20
+}

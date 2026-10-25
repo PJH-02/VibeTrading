@@ -218,3 +218,27 @@ VN14A-1: selected-scope resume와 상위 halt/다른 전략 보존, 명시 paren
 정리 수치는 최초 계획30772 + raw 중복37 = 휴지통 이동30809다. 그중 필수 도구1개를 Git에서 복원했으므로 현재 부재 파일은30808개, 마지막 검증 사본555개는 trashbin에 있다. 계획/실행/복원 차이를 cleanup_summary.json에 명시했다.
 
 미착수 리뷰 후속은 ingest의 읽기 전 UTF-8 byte 상한, Paper strategy pause/halt의 자동 취소 의미, dashboard 계정 수 제한의 원자성, 미사용 UI catalog 축소다. 보고서는 Python1532 PASS가 dashboard 검증이나 운영 승인이 아니라고 명시하며, checkpoint frame-budget 지적은 철회했다. 이 후속 제품 변경은 착수하지 않았다.
+
+## 2026-10-24 현재 — TX02B/TX02/TX04A 배치 수락
+
+이전 날짜의 상태는 역사 기록이다. 현재 canonical 집계는 **23 완료 / 16 미완료 / 12 미착수**다. 이번 요청의 연속3개만 로컬 완료했고 전체2266 PASS/외부2건 제외를 확인했다. TX04B와 나머지 티켓은 추가 구현하지 않았다. [전체 티켓 분류·수락 증거](../runs/20261024-v3/batch-tx02b-tx04a/README.md).
+
+## 2026-10-24 후속 현재 — TX04B/TX04/VN13 수락
+
+최신 canonical 상태는 **26 완료 / 13 미완료 / 12 미착수**, 전체2322 PASS/외부2건 제외다. 이번 연속3개만 개발했고 TX05는 착수하지 않았다. [전체 완료/미완료/미착수·증거](../runs/20261024-v3/batch-tx04b-vn13/README.md).
+
+## 2026-10-24 현재 — TX05 로컬 수락
+
+최신 canonical 집계는 **27 완료 / 12 미완료 / 12 미착수**다. 기존 파일 전략/Paper 경제 checkpoint E2E 검증을 마감했고 전체2325 PASS/외부2건 제외다. 이번에는 TX05 하나만 진행했다. [전체 분류와 증거](../runs/20261024-v3/tx05/README.md).
+
+## 2026-10-24 최신 — TX07A/TX08A/TX08 수락
+
+최신 canonical 집계는 **30 완료 / 10 미완료 / 11 미착수**다. 기존 fact 계약, 동일 계좌 한도 일관성, 두 파일 전략의 공동 Paper/복구 gate를 완료했다. 전체 2348 PASS/외부2건 제외. 이번 연속3개 뒤 dispatch를 중지했다. [전체 분류와 증거](../runs/20261024-v3/batch-tx07a-tx08/README.md).
+
+## 2026-10-25 최신 — VN15/TX09/TX10 수락
+
+현재 **33 완료 / 10 미완료 / 8 미착수**. 전체 2438 PASS/외부2건 제외. 다음 후보 VN17→VN18은 이번에 착수하지 않았다. [전체 분류와 증거](../runs/20261025-v3/batch-vn15-tx10/README.md).
+
+## 2026-10-25 최신 — VN17/VN18/VN19/TX11/TX12 수락
+
+**38 완료 / 10 미완료 / 3 미착수**. 전체 2480 PASS/외부2건 제외, local core matrix 수락. VN20_APPLIED=false, 운영/image/account/capacity 외부 gate는 미수행이며 여섯 번째 티켓은 착수하지 않았다. [전체 내역](../runs/20261025-v3/core5/batch-vn17-tx12/README.md).

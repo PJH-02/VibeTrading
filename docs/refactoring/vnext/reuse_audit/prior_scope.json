@@ -1,0 +1,1263 @@
+{
+  "authority": "FROZEN_AUDIT_INPUT_NOT_STATUS_DATABASE",
+  "source_sha": "4977ab509490173e312183f32d47f862d94ee0bf",
+  "superseded_future_instructions": {
+    "VN07": {
+      "goal_and_acceptance": "Checkpoint+delta+live handoff validates native state; stale timestamps remain stale; bad checkpoint fails closed or restores a proven retained prefix; zero replay orders.",
+      "depends_on": [
+        "VN06",
+        "VN04B"
+      ],
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/refactoring/test_local_runtime.py",
+        "tests/refactoring/test_replay_handoff.py",
+        "tests/test_etf_outage_recovery.py",
+        "vibetrading/feed_recovery.py",
+        "vibetrading/hot_path.py",
+        "vibetrading/local_engine.py",
+        "vibetrading/local_runtime.py",
+        "vibetrading/local_snapshot.py",
+        "vibetrading/local_storage.py",
+        "vibetrading/market_spool.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/local_runtime.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/local_engine.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_local_runtime.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_replay_handoff.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_vnext_vn07.py",
+          "action": "ADD"
+        },
+        {
+          "path": "vibetrading/market_checkpoint.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_checkpoint_runtime.py",
+          "action": "ADD"
+        },
+        {
+          "path": "tests/refactoring/test_checkpoint_startup.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/local_runtime.py::replay_startup",
+          "vibetrading/local_runtime.py::restore_etf_startup",
+          "vibetrading/local_engine.py::LocalMarketEngine.begin_recovery",
+          "vibetrading/local_engine.py::LocalMarketEngine.handoff"
+        ],
+        "ADD_PROPOSED": []
+      },
+      "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
+      "stage_status_detail": "완료: market 다중 producer 내구 순서 증명, 세대별 checkpoint/journal 생성·교체·복원·종료 및 runtime 통합. 미완료: ETF/Paper account/strategy/pending-action 원자 복구와 운영 검증",
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ]
+    },
+    "VN08": {
+      "goal_and_acceptance": "New reader validates a retained prefix base and v1 data; corrupt/missing segments never become a valid start; GC still disabled.",
+      "depends_on": [
+        "VN07"
+      ],
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/refactoring/test_local_storage.py",
+        "tests/refactoring/test_spool_recovery.py",
+        "vibetrading/feed_recovery.py",
+        "vibetrading/hot_path.py",
+        "vibetrading/local_snapshot.py",
+        "vibetrading/local_storage.py",
+        "vibetrading/market_spool.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/market_spool.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/local_storage.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_spool_recovery.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_local_storage.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_vnext_vn08.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/market_spool.py::_inventory",
+          "vibetrading/market_spool.py::scan_spool",
+          "vibetrading/market_spool.py::SpoolReader._locate_start",
+          "vibetrading/local_storage.py::LocalSpoolStorage.__init__"
+        ],
+        "ADD_PROPOSED": [
+          "retained-base cursor/first-segment format and validation"
+        ]
+      },
+      "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
+      "stage_status_detail": "New reader validates a retained prefix base and v1 data; corrupt/missing segments never become a valid start; GC still disabled.",
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ]
+    },
+    "VN09": {
+      "goal_and_acceptance": "Only checkpoint+consumer+manifest/facts+remote/lease/retention proven segments eligible; unique copy deletion count=0 under injected crashes.",
+      "depends_on": [
+        "VN08",
+        "VN16"
+      ],
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/refactoring/test_archive_integrity.py",
+        "tests/refactoring/test_local_storage.py",
+        "tests/refactoring/test_spool_recovery.py",
+        "vibetrading/archive.py",
+        "vibetrading/feed_recovery.py",
+        "vibetrading/hot_path.py",
+        "vibetrading/local_snapshot.py",
+        "vibetrading/local_storage.py",
+        "vibetrading/market_spool.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/market_spool.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/local_storage.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/archive.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_spool_recovery.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_archive_integrity.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_vnext_vn09.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/market_spool.py::MarketSpool.gc_disabled",
+          "vibetrading/local_storage.py::_FactLedger.commit_batch",
+          "vibetrading/archive.py::ArchiveMaintenance.run_once"
+        ],
+        "ADD_PROPOSED": [
+          "proof-only segment GC planner and fixture executor; production default remains no deletion"
+        ]
+      },
+      "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
+      "stage_status_detail": "Only checkpoint+consumer+manifest/facts+remote/lease/retention proven segments eligible; unique copy deletion count=0 under injected crashes.",
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ]
+    },
+    "VN13": {
+      "goal_and_acceptance": "Single state apply, shared feature input, isolated callback faults, no NATS construction and no live order activation.",
+      "depends_on": [
+        "VN03",
+        "TX01",
+        "TX04B"
+      ],
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/refactoring/test_local_runtime.py",
+        "tests/refactoring/test_shared_runtime_wiring.py",
+        "tests/refactoring/test_strategy_dispatch.py",
+        "vibetrading/local_runtime.py",
+        "vibetrading/strategy_contract.py",
+        "vibetrading/strategy_runner.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/strategy_runner.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/strategy_contract.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/local_runtime.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_strategy_dispatch.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_shared_runtime_wiring.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_vnext_vn13.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/strategy_runner.py::SharedStrategyRunner.prepare",
+          "vibetrading/strategy_runner.py::SharedStrategyRunner.process_event",
+          "vibetrading/strategy_runner.py::SharedStrategyRunner.run",
+          "vibetrading/local_runtime.py::run_engine"
+        ],
+        "ADD_PROPOSED": [
+          "already-applied immutable snapshot consumption (shadow only)"
+        ]
+      },
+      "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
+      "stage_status_detail": "단일 apply/shared snapshot Paper fixture 연결만 구현. lifecycle·강한 격리·실제 지속 운용 미완료",
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ]
+    },
+    "VN15": {
+      "goal_and_acceptance": "Actual/assumed/recovery separated; missing valuation/currency/cashflow evidence shown unavailable; no reporting IO on submit path.",
+      "depends_on": [
+        "VN14B"
+      ],
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/test_dashboard.py",
+        "tests/test_dual_mock_and_assumed.py",
+        "tests/test_telegram_status.py",
+        "tests/test_trade_exclusions.py",
+        "vibetrading/dashboard/bridge.py",
+        "vibetrading/telegram.py",
+        "vibetrading/telegram_trade.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/telegram_trade.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/telegram.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/dashboard/bridge.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/test_trade_exclusions.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/test_dual_mock_and_assumed.py",
+          "action": "MODIFY"
+        }
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/telegram_trade.py::trade_report",
+          "vibetrading/telegram_trade.py::summary",
+          "vibetrading/telegram.py::TelegramController._compact_status",
+          "vibetrading/dashboard/bridge.py::run"
+        ],
+        "ADD_PROPOSED": [
+          "read-only per-strategy PnL/Return projection and UI bindings"
+        ]
+      },
+      "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
+      "stage_status_detail": "Actual/assumed/recovery separated; missing valuation/currency/cashflow evidence shown unavailable; no reporting IO on submit path.",
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ]
+    },
+    "VN17": {
+      "goal_and_acceptance": "Per-role exact digest/mount/config contract with finite combined CPU/RAM/physical-volume budgets, no secret render and no activation.",
+      "depends_on": [
+        "VN09",
+        "VN15",
+        "VN16",
+        "VN13"
+      ],
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "scripts/refactoring/build_release_manifest.py",
+        "tests/refactoring/test_local_runtime.py",
+        "tests/refactoring/test_runtime_mounts.py",
+        "tests/test_crypto_release.py",
+        "vibetrading/local_config.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/local_config.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "scripts/refactoring/build_release_manifest.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "deploy/local-runtime.yml",
+          "action": "ADD"
+        },
+        {
+          "path": "tests/refactoring/test_local_runtime.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_runtime_mounts.py",
+          "action": "MODIFY"
+        }
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "vibetrading/local_config.py::CapacityContract.required",
+          "vibetrading/local_config.py::CapacityContract.verify_evidence",
+          "scripts/refactoring/build_release_manifest.py::build"
+        ],
+        "ADD_PROPOSED": [
+          "deploy/local-runtime.yml candidate overlay"
+        ]
+      },
+      "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
+      "stage_status_detail": "Per-role exact digest/mount/config contract with finite combined CPU/RAM/physical-volume budgets, no secret render and no activation.",
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ]
+    },
+    "VN18": {
+      "goal_and_acceptance": "Execute validation matrix with raw sample counts and source hashes; 30m wall clock/24h cloud/15m Parquet/72h representative coverage never substituted by fixtures.",
+      "depends_on": [
+        "VN17",
+        "VN05"
+      ],
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "tests/refactoring/test_local_runtime.py",
+        "tests/test_crypto_replay_integrity.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "scripts/refactoring/benchmark_vnext.py",
+          "action": "ADD"
+        },
+        {
+          "path": "tests/refactoring/test_local_runtime.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/test_crypto_replay_integrity.py",
+          "action": "MODIFY"
+        }
+      ],
+      "target_symbols": {
+        "EXISTING": [],
+        "ADD_PROPOSED": [
+          "small pinned trace A/B driver; CLI fixed and tested in this ticket"
+        ]
+      },
+      "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
+      "stage_status_detail": "Execute validation matrix with raw sample counts and source hashes; 30m wall clock/24h cloud/15m Parquet/72h representative coverage never substituted by fixtures.",
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ]
+    },
+    "VN19": {
+      "goal_and_acceptance": "Reviewable per-role cutover/rollback package with exact commands/digests/accounts/current-ledger compatibility; separate execution authorization.",
+      "depends_on": [
+        "VN18"
+      ],
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "scripts/refactoring/build_release_manifest.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "docs/refactoring/runs/20261020-vnext/vn19-package/",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "EXISTING": [
+          "scripts/refactoring/build_release_manifest.py::build"
+        ],
+        "ADD_PROPOSED": []
+      },
+      "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
+      "stage_status_detail": "Reviewable per-role cutover/rollback package with exact commands/digests/accounts/current-ledger compatibility; separate execution authorization.",
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived"
+      ]
+    },
+    "VN20": {
+      "goal_and_acceptance": "After actual cutover stabilization, archived legacy backlog and rollback proof, pin remaining callers and split exact retire paths before dispatch; no automatic deletion.",
+      "depends_on": [
+        "VN19"
+      ],
+      "read_paths": [
+        "docs/refactoring/vnext/03_contract_delta.md",
+        "docs/refactoring/vnext/05_validation_and_cutover.md",
+        "requirements.txt",
+        "vibetrading/bus.py",
+        "vibetrading/market_fanout.py",
+        "vibetrading/runtime.py"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/bus.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/runtime.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/market_fanout.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "requirements.txt",
+          "action": "MODIFY"
+        }
+      ],
+      "target_symbols": {
+        "EXISTING": [],
+        "ADD_PROPOSED": []
+      },
+      "authorization": "Local implementation and isolated tests only; no server/external mutation/deletion/live promotion",
+      "stage_status_detail": "After actual cutover stabilization, archived legacy backlog and rollback proof, pin remaining callers and split exact retire paths before dispatch; no automatic deletion.",
+      "predecessor_gates": [
+        "VN-G0 source/contract/fixture pin",
+        "Scoped predecessor ticket regression/review; original applicable G00-G12 not waived",
+        "Actual G11 cutover stabilization plus backlog/rollback/retention proof; split exact retire child tickets before editing"
+      ]
+    },
+    "TX00": {
+      "goal": "Venue/product/environment/account audit, TOSS DATA_ONLY, collection universe not trading capability",
+      "depends_on": [
+        "VN00"
+      ],
+      "read_paths": [
+        "vibetrading/brokers.py",
+        "vibetrading/extended_brokers.py",
+        "vibetrading/fv_mm/venues.py",
+        "vibetrading/fv_mm/private.py",
+        "vibetrading/bybit_execution.py",
+        "vibetrading/kis_execution.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/brokers.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/providers/toss.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/test_collector_recovery_20261007.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_tx00_toss_data_only.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "product/environment별 매핑 조사. 실제 계좌·margin·capability 확인 미완료"
+    },
+    "TX01": {
+      "goal": "Explicit mode/action/product contracts; preserve Signal/OrderIntent wire; reject TOSS execution scopes",
+      "depends_on": [
+        "TX00"
+      ],
+      "read_paths": [
+        "vibetrading/models.py",
+        "vibetrading/strategy_contract.py",
+        "vibetrading/execution_ledger.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/trading_contracts.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_portfolio_ledger.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "공통 mode/action/product 초안과 Paper 범위. 미완성 TX 구현과 함께 커밋 제외"
+    },
+    "TX02A": {
+      "goal": "Canonical account authority/lease and physically separated PAPER ledger; alternate DBpath cannot duplicate owner",
+      "depends_on": [
+        "TX01",
+        "VN10"
+      ],
+      "read_paths": [
+        "vibetrading/process_lease.py",
+        "vibetrading/execution_ledger.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/portfolio_ledger.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_portfolio_ledger.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "Paper scope owner lease만 구현. 기존 ETF journal/전체 계좌 fencing 미완료"
+    },
+    "TX02B": {
+      "goal": "Virtual strategy attribution and physical account positions with exact-once fill identity and external-gap classification",
+      "depends_on": [
+        "TX02A"
+      ],
+      "read_paths": [
+        "vibetrading/etf_journal.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/portfolio_ledger.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_portfolio_ledger.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "Paper virtual/physical 귀속 fixture만 구현"
+    },
+    "TX02": {
+      "goal": "Account owner/attribution acceptance aggregate, not repeated implementation",
+      "depends_on": [
+        "TX02A",
+        "TX02B"
+      ],
+      "read_paths": [
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "하위 작업이 진행 중인 집계 단계; 별도 완료로 계산하지 않음"
+    },
+    "TX03A": {
+      "goal": "Contract multiplier/currency/position-mode and cash vs Perp economics; unknown/inverse unsupported explicit",
+      "depends_on": [
+        "TX01"
+      ],
+      "read_paths": [
+        "vibetrading/models.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/trading_contracts.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_portfolio_ledger.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "cash/isolated-linear Paper만 구현. inverse/hedge/cross-currency/실제 margin 미지원"
+    },
+    "TX03B": {
+      "goal": "Transactional margin/reservations, fee/rebate/funding and equity; authoritative live margin unavailable blocks live",
+      "depends_on": [
+        "TX02B",
+        "TX03A"
+      ],
+      "read_paths": [
+        "vibetrading/execution_ledger.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/portfolio_ledger.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_portfolio_ledger.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "Paper fee/rebate/funding 회계. 실제 margin/equity 대조 미완료"
+    },
+    "TX03": {
+      "goal": "Perp portfolio acceptance aggregate",
+      "depends_on": [
+        "TX03A",
+        "TX03B"
+      ],
+      "read_paths": [
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "하위 작업이 진행 중인 집계 단계; 별도 완료로 계산하지 않음"
+    },
+    "TX04A": {
+      "goal": "Durable Paper order/matching checkpoint/input/fill dedup in one transaction; restart/capacity limits",
+      "depends_on": [
+        "TX02B",
+        "TX03B"
+      ],
+      "read_paths": [
+        "vibetrading/local_events.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/portfolio_ledger.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_portfolio_ledger.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "matcher durable state/fill dedup 구현. 전체 입력 C/H 연속 복구 미완료"
+    },
+    "TX04B": {
+      "goal": "Causal arrival/cancel/queue/depth matching with bounded active orders and zero venue mutation",
+      "depends_on": [
+        "TX04A"
+      ],
+      "read_paths": [
+        "vibetrading/fv_pilot/simulation.py",
+        "vibetrading/fv_mm/legacy/paper_simulation.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/paper_execution.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_paper_execution.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "인과적 matcher fixture. 실제 live-input Paper/continuous input 복구 미완료"
+    },
+    "TX04": {
+      "goal": "Paper lifecycle/accounting acceptance aggregate",
+      "depends_on": [
+        "TX04A",
+        "TX04B"
+      ],
+      "read_paths": [
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "하위 작업이 진행 중인 집계 단계; 별도 완료로 계산하지 않음"
+    },
+    "TX05": {
+      "goal": "Register old-contract DummyStrategy; single MarketState apply to common owner/Paper/portfolio with lifecycle/fairness",
+      "depends_on": [
+        "TX04B",
+        "TX07A",
+        "VN13"
+      ],
+      "read_paths": [
+        "vibetrading/strategy_runner.py",
+        "vibetrading/hot_path.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/strategy_runtime.py",
+          "action": "ADD"
+        },
+        {
+          "path": "vibetrading/strategy_contract.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_strategy_runtime.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "공유 state Paper runtime fixture. callback hard isolation/전체 lifecycle 미완료"
+    },
+    "TX07A": {
+      "goal": "Canonical acceptance/fill/cancel/funding/account facts and UNKNOWN/reconciliation contract",
+      "depends_on": [
+        "TX01"
+      ],
+      "read_paths": [
+        "vibetrading/execution_ledger.py",
+        "vibetrading/etf_journal.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/trading_contracts.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_tx07a.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "Canonical acceptance/fill/cancel/funding/account facts and UNKNOWN/reconciliation contract"
+    },
+    "TX06A": {
+      "goal": "Binance explicit USDⓈM Perp signed submit/cancel/status/private/history/margin/funding; Spot cannot route",
+      "depends_on": [
+        "TX01",
+        "TX03B",
+        "TX07A"
+      ],
+      "read_paths": [
+        "vibetrading/brokers.py",
+        "vibetrading/providers/crypto_perp.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/perp_execution.py",
+          "action": "ADD"
+        },
+        {
+          "path": "tests/refactoring/test_perp_execution.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "Binance Perp request/sign/query 매핑만 구현. transport/private lifecycle/실계좌 미완료"
+    },
+    "TX06B": {
+      "goal": "Arcus Perp exact Ed25519 ct/goodTilTime/clientcase and cancel/fills/margin/funding recovery",
+      "depends_on": [
+        "TX01",
+        "TX03B",
+        "TX07A"
+      ],
+      "read_paths": [
+        "vibetrading/extended_brokers.py",
+        "vibetrading/providers/extended_perp.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/perp_execution.py",
+          "action": "ADD"
+        },
+        {
+          "path": "tests/refactoring/test_perp_execution.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "Arcus Perp request/sign/query 매핑만 구현. transport/private lifecycle/실계좌 미완료"
+    },
+    "TX06C": {
+      "goal": "GRVT explicit environment/domain native clientID/nonce, lifecycle/account/private/funding and paging",
+      "depends_on": [
+        "TX01",
+        "TX03B",
+        "TX07A"
+      ],
+      "read_paths": [
+        "vibetrading/extended_brokers.py",
+        "vibetrading/fv_mm/venues.py",
+        "vibetrading/fv_mm/private.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/perp_execution.py",
+          "action": "ADD"
+        },
+        {
+          "path": "tests/refactoring/test_perp_execution.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "GRVT Perp request/sign/query 매핑만 구현. transport/private lifecycle/실계좌 미완료"
+    },
+    "TX06D": {
+      "goal": "Bybit explicit linear-perpetual/category/positionIdx, V5 lifecycle/account/fills/funding; old testnet guards unchanged",
+      "depends_on": [
+        "TX01",
+        "TX03B",
+        "TX07A"
+      ],
+      "read_paths": [
+        "vibetrading/bybit_execution.py",
+        "vibetrading/fv_mm/venues.py",
+        "vibetrading/liquidity_mm/exchange.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/perp_execution.py",
+          "action": "ADD"
+        },
+        {
+          "path": "tests/refactoring/test_perp_execution.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "Bybit Perp request/sign/query 매핑만 구현. transport/private lifecycle/실계좌 미완료"
+    },
+    "TX06E": {
+      "goal": "Hyperliquid official SDK signing, signer nonce vs actualaccount, assetID/cloid, lifecycle/funding/private recovery",
+      "depends_on": [
+        "TX01",
+        "TX03B",
+        "TX07A"
+      ],
+      "read_paths": [
+        "vibetrading/brokers.py",
+        "vibetrading/providers/hyperliquid.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/perp_execution.py",
+          "action": "ADD"
+        },
+        {
+          "path": "tests/refactoring/test_perp_execution.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "Hyperliquid request/sign/query 매핑만 구현. 독립 signer nonce 저장소만 완료·선별 커밋"
+    },
+    "TX06": {
+      "goal": "Five separate connector code capabilities, sandbox/live verification independent",
+      "depends_on": [
+        "TX06A",
+        "TX06B",
+        "TX06C",
+        "TX06D",
+        "TX06E"
+      ],
+      "read_paths": [
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "하위 작업이 진행 중인 집계 단계; 별도 완료로 계산하지 않음"
+    },
+    "TX07B": {
+      "goal": "Per-venue paginated query/private gap/timeout/cancel reconciliation with UNKNOWN reservations; no absence inference",
+      "depends_on": [
+        "TX06",
+        "TX07A"
+      ],
+      "read_paths": [
+        "vibetrading/execution_owner.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/perp_execution.py",
+          "action": "ADD"
+        },
+        {
+          "path": "tests/refactoring/test_tx07b.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "Per-venue paginated query/private gap/timeout/cancel reconciliation with UNKNOWN reservations; no absence inference"
+    },
+    "TX07": {
+      "goal": "Order lifecycle/reconciliation acceptance aggregate",
+      "depends_on": [
+        "TX07A",
+        "TX07B"
+      ],
+      "read_paths": [
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "Order lifecycle/reconciliation acceptance aggregate"
+    },
+    "TX08A": {
+      "goal": "Shared account opposite strategy intents, atomic reservation/risk/virtual and physical reconciliation, no optimistic netting",
+      "depends_on": [
+        "TX02",
+        "TX03",
+        "TX07A",
+        "TX05"
+      ],
+      "read_paths": [
+        "vibetrading/execution_owner.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/portfolio_ledger.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_tx08a.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "Paper shared-account fixture만 구현. 실제 canonical owner/권위 통합 미완료"
+    },
+    "TX08B": {
+      "goal": "Narrow cross-venue child group/deadline/residual exposure tracking; no distributed transaction or automatic retry/unwind",
+      "depends_on": [
+        "TX08A",
+        "TX07A"
+      ],
+      "read_paths": [
+        "vibetrading/portfolio_ledger.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/execution_groups.py",
+          "action": "ADD"
+        },
+        {
+          "path": "tests/refactoring/test_tx08b.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "Paper 관측 group facts만 구현. 선행 owner/lifecycle 통합 미완료"
+    },
+    "TX08": {
+      "goal": "Multi-strategy/cross-exchange aggregate",
+      "depends_on": [
+        "TX08A",
+        "TX08B"
+      ],
+      "read_paths": [
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "하위 작업이 진행 중인 집계 단계; 별도 완료로 계산하지 않음"
+    },
+    "TX09": {
+      "goal": "Single actual/Paper PnL-position projection, owner-scoped control and promotion permissions",
+      "depends_on": [
+        "TX08",
+        "VN14B",
+        "VN15"
+      ],
+      "read_paths": [
+        "vibetrading/local_events.py",
+        "vibetrading/runtime_control.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/telegram.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/telegram_trade.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "vibetrading/dashboard/bridge.py",
+          "action": "MODIFY"
+        },
+        {
+          "path": "tests/refactoring/test_tx09.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "Single actual/Paper PnL-position projection, owner-scoped control and promotion permissions"
+    },
+    "TX10": {
+      "goal": "Off-server backtest export manifest/metadata and strategy registration/promotion gate; no server research",
+      "depends_on": [
+        "TX01"
+      ],
+      "read_paths": [
+        "scripts/export_market_snapshot.py",
+        "vibetrading/parquet_store.py",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [
+        {
+          "path": "vibetrading/strategy_registry.py",
+          "action": "ADD"
+        },
+        {
+          "path": "tests/refactoring/test_tx10.py",
+          "action": "ADD"
+        }
+      ],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "Off-server backtest export manifest/metadata and strategy registration/promotion gate; no server research"
+    },
+    "TX11": {
+      "goal": "Scenarios A-F, exact candidate regression, live-market Paper mutation0, 2vCPU resources and >30m/72h/outage evidence",
+      "depends_on": [
+        "TX05",
+        "TX06",
+        "TX07",
+        "TX08",
+        "TX09",
+        "TX10",
+        "VN18"
+      ],
+      "read_paths": [
+        "docs/refactoring/vnext/12_production_acceptance_matrix.md",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "Scenarios A-F, exact candidate regression, live-market Paper mutation0, 2vCPU resources and >30m/72h/outage evidence"
+    },
+    "TX12": {
+      "goal": "Separate readiness states and reviewable local release/cutover/promotion package; no server deployment or LIVE_ACTIVE",
+      "depends_on": [
+        "TX11",
+        "VN19"
+      ],
+      "read_paths": [
+        "docs/refactoring/vnext/12_production_acceptance_matrix.md",
+        "docs/refactoring/vnext/13_strategy_deployment_lifecycle.md",
+        "docs/refactoring/vnext/08_execution_and_portfolio_contracts.md"
+      ],
+      "edit_paths": [],
+      "target_symbols": {
+        "VERIFIED_CURRENT": [],
+        "PROPOSED_ADD_OR_MODIFY": [
+          "See bounded goal and implementation API receipt; never describe planned symbol as present"
+        ]
+      },
+      "authorization": "LOCAL_CODE_AND_ISOLATED_TESTS_ONLY",
+      "stage_status_detail": "Separate readiness states and reviewable local release/cutover/promotion package; no server deployment or LIVE_ACTIVE"
+    }
+  }
+}
