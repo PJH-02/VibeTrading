@@ -8,9 +8,9 @@
   ],
   "definition": "완성은 로컬 기능 수락 범위. 운영/배포/장기 성능 완료와 별개. 부분 단계의 닫힌 하위 기능만 선별 커밋 가능",
   "counts": {
-    "COMPLETE_LOCAL_IMPLEMENTATION": 30,
+    "COMPLETE_LOCAL_IMPLEMENTATION": 33,
     "INCOMPLETE": 10,
-    "NOT_STARTED": 11
+    "NOT_STARTED": 8
   },
   "tasks": [
     {
@@ -143,9 +143,9 @@
     },
     {
       "task_id": "VN15",
-      "category": "NOT_STARTED",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
       "existing_phase": "P08/P09",
-      "detail": "[Reuse-first scope; prior completion category preserved] One actual/assumed/Paper/recovery projection workstream, no reporting IO in submit path or redundant dashboard platform.",
+      "detail": "VN15: Reuse existing bounded readonly Paper ledger projection in the existing local dashboard cold scan; separate PAPER_SIMULATION, UNKNOWN/unreconciled and unavailable marks/timestamps from actual venue evidence. Independent 77 scoped PASS; final full 2438 PASS / 2 live-data deselected. Local acceptance only.",
       "production_ready": false,
       "scope_disposition": "MERGE_WITH_TX09"
     },
@@ -382,17 +382,17 @@
     },
     {
       "task_id": "TX09",
-      "category": "NOT_STARTED",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
       "existing_phase": null,
-      "detail": "[Reuse-first scope; prior completion category preserved] One read-only projection/control workstream with VN15. Preserve existing Telegram/trade/reporting; only missing Paper/actual/strategy labels and safe existing command bridges.",
+      "detail": "TX09: Reuse existing Telegram numeric ACL/outbox and opt-in authoritative owner command bridge; add bounded cold Paper queries and existing local feed snapshot reads without affecting trade/status legacy or submit path. Independent 106 scoped PASS; final full 2438 PASS / 2 live-data deselected. Local acceptance only.",
       "production_ready": false,
       "scope_disposition": "MERGE_WITH_VN15"
     },
     {
       "task_id": "TX10",
-      "category": "NOT_STARTED",
+      "category": "COMPLETE_LOCAL_IMPLEMENTATION",
       "existing_phase": null,
-      "detail": "[Reuse-first scope; prior completion category preserved] Keep current Ncloud/S3 upload/download/verify and export path unchanged; add only missing data-manifest-to-strategy-file/Paper registration linkage. No new uploader/backtest platform.",
+      "detail": "TX10: Optional bounded data_manifest provenance in existing explicit strategy/Paper registration; validate manifest and referenced object hashes and availability before import/claims; preserve existing export/Ncloud clients unchanged. Independent 146 scoped PASS; final full 2438 PASS / 2 live-data deselected. Local acceptance only.",
       "production_ready": false,
       "scope_disposition": "KEEP_CLOUD_ADAPT_PLUGIN_METADATA"
     },
@@ -436,9 +436,9 @@
   "next_steps": [
     {
       "order": 1,
-      "stage": "Remaining revised DAG",
-      "work": "Select a bounded remaining NATS-free storage/recovery, reporting or operator-control gap from the preserved reuse plan.",
-      "gate": "Not dispatched; current batch stopped after TX08. Optional native-venue/reconciliation/cross-venue audits are not mandatory platform build prerequisites."
+      "stage": "VN17 then VN18",
+      "work": "Reuse accepted local data/storage/recovery, file/Paper and cold reporting in bounded existing process wiring, then selected fault regression.",
+      "gate": "Not dispatched; this batch stops after TX10. No generic venue/platform rebuild."
     }
   ],
   "commit_candidate_source_set_sha256": "1ab8d78dc9a968f1febf7c877177b6007cf6155a1af72c6bf8a4ff8652d31b64",
@@ -478,30 +478,30 @@
   },
   "execution_control": {
     "status": "LOCAL_BATCH_ACCEPTED",
-    "last_completed_ticket": "TX08",
+    "last_completed_ticket": "TX10",
     "last_completed_tooling_ticket": "R05",
     "active_ticket": null,
     "start_next_ticket": false,
-    "stop_after_ticket": "TX08",
+    "stop_after_ticket": "TX10",
     "server_deploy_authorized": false,
     "live_mutation_authorized": false,
-    "current_source_sha": "04c9f576925c4ad4c8b559501e09055e52201b83",
+    "current_source_sha": "b74e22d443aff428e7971d1695cf00ecd9553818",
     "active_tooling_tickets": [],
     "active_parallel_tickets": [],
-    "last_completed_subunit": "TX08",
+    "last_completed_subunit": "TX10",
     "authorized_batch_tickets": [
-      "TX07A",
-      "TX08A",
-      "TX08"
+      "VN15",
+      "TX09",
+      "TX10"
     ],
     "batch_completed_tickets": [
-      "TX07A",
-      "TX08A",
-      "TX08"
+      "VN15",
+      "TX09",
+      "TX10"
     ]
   },
   "current_wip": null,
-  "last_completed_ticket": "TX08",
+  "last_completed_ticket": "TX10",
   "work_in_progress_commit_policy": "All 11 former excluded source/test files included as unfinished snapshot; exclusions apply only to older completed-feature validation",
   "legacy_completed_commit": {
     "head": "90847f84243d01ec98c9815216c96c8f2749028b",
@@ -509,11 +509,11 @@
   },
   "current_snapshot_validation": {
     "status": "FULL_LOCAL_REGRESSION_PASS",
-    "source_sha": "04c9f576925c4ad4c8b559501e09055e52201b83",
-    "receipt": "docs/refactoring/runs/20261024-v3/batch-tx07a-tx08/acceptance.json",
-    "passed": 2348,
+    "source_sha": "b74e22d443aff428e7971d1695cf00ecd9553818",
+    "receipt": "docs/refactoring/runs/20261025-v3/batch-vn15-tx10/acceptance.json",
+    "passed": 2438,
     "deselected_live_data": 2,
-    "scope": "LOCAL_EXISTING_FACT_AND_SAME_ACCOUNT_PAPER_CONTRACT",
+    "scope": "LOCAL_COLD_PAPER_REPORTING_AND_MANIFEST_PROVENANCE",
     "production_ready": false
   },
   "execution_history": [
@@ -566,7 +566,7 @@
     }
   ],
   "historical_snapshot_validation": "docs/refactoring/runs/20261020-production/worktree-snapshot-validation.json",
-  "updated_local": "2026-10-24T22:40:54.858795+09:00",
+  "updated_local": "2026-10-25T11:46:42.100732+09:00",
   "snapshot_validation_history": [
     "docs/refactoring/runs/20261023-v3/baseline/result.json",
     {
@@ -631,6 +631,15 @@
       "passed": 2325,
       "deselected_live_data": 2,
       "scope": "LOCAL_FILE_PAPER_ECONOMIC_CHECKPOINT_E2E",
+      "production_ready": false
+    },
+    {
+      "status": "FULL_LOCAL_REGRESSION_PASS",
+      "source_sha": "04c9f576925c4ad4c8b559501e09055e52201b83",
+      "receipt": "docs/refactoring/runs/20261024-v3/batch-tx07a-tx08/acceptance.json",
+      "passed": 2348,
+      "deselected_live_data": 2,
+      "scope": "LOCAL_EXISTING_FACT_AND_SAME_ACCOUNT_PAPER_CONTRACT",
       "production_ready": false
     }
   ],
@@ -711,15 +720,15 @@
     "R05_calculators_are_not_plugin_completion": true,
     "authorized_bounded_ticket": null,
     "unselected_implementation_dispatch_authorized": false,
-    "last_accepted_bounded_ticket": "docs/tickets/TX08-existing-same-account-gate.md",
-    "last_accepted_receipt": "docs/refactoring/runs/20261024-v3/tx08/acceptance.json",
+    "last_accepted_bounded_ticket": "docs/tickets/TX10-existing-export-registration-link.md",
+    "last_accepted_receipt": "docs/refactoring/runs/20261025-v3/tx10/acceptance.json",
     "authorized_batch_tickets": [
-      "TX07A",
-      "TX08A",
-      "TX08"
+      "VN15",
+      "TX09",
+      "TX10"
     ]
   },
-  "user_request_latest": "Execute exactly the next three bounded local tickets TX07A, TX08A, TX08. Stop after TX08; no fourth ticket or remote publication in this batch.",
+  "user_request_latest": "Execute next three bounded local tickets VN15, TX09, TX10; stop after this batch.",
   "vn07a_validation": {
     "status": "ACCEPTED_LOCAL_SUBUNIT",
     "source_sha": "60d763209134527e289d3760ec55be9ea9ec6b37",
@@ -819,12 +828,12 @@
   },
   "current_batch_commit_scope": {
     "tickets": [
-      "TX07A",
-      "TX08A",
-      "TX08"
+      "VN15",
+      "TX09",
+      "TX10"
     ],
-    "source_sha": "04c9f576925c4ad4c8b559501e09055e52201b83",
-    "authorization": "Local task implementation, review, status receipts and local candidate commits/application. No remote push; existing 174 dirty user entries preserved and excluded."
+    "source_sha": "b74e22d443aff428e7971d1695cf00ecd9553818",
+    "authorization": "Local implementation, acceptance/status receipts and local candidate commits/application; no remote push. Preserve existing user dirty174 entries."
   },
   "legacy_work_in_progress_note": "excluded_work_in_progress and legacy commit/source path lists describe earlier snapshots; current tasks/categories/counts and current batch receipts are the current status and commit boundary.",
   "batch_tx04b_vn13_validation": {
@@ -873,6 +882,15 @@
       ],
       "source_sha": "1d39a44779ff67f39e9ba9217d9e70a9498979cd",
       "scope": "Local accepted TX05 test/receipt only; existing174 dirty entries excluded/preserved. No current remote push authority."
+    },
+    {
+      "tickets": [
+        "TX07A",
+        "TX08A",
+        "TX08"
+      ],
+      "source_sha": "04c9f576925c4ad4c8b559501e09055e52201b83",
+      "authorization": "Local task implementation, review, status receipts and local candidate commits/application. No remote push; existing 174 dirty user entries preserved and excluded."
     }
   ],
   "batch_tx07a_tx08_validation": {
@@ -892,6 +910,25 @@
       "docs/refactoring/runs/20261024-v3/tx07a/acceptance.json",
       "docs/refactoring/runs/20261024-v3/tx08a/acceptance.json",
       "docs/refactoring/runs/20261024-v3/tx08/acceptance.json"
+    ]
+  },
+  "batch_vn15_tx10_validation": {
+    "status": "FULL_LOCAL_REGRESSION_PASS",
+    "source_sha": "b74e22d443aff428e7971d1695cf00ecd9553818",
+    "receipt": "docs/refactoring/runs/20261025-v3/batch-vn15-tx10/acceptance.json",
+    "passed": 2438,
+    "deselected_live_data": 2,
+    "scope": "LOCAL_COLD_PAPER_REPORTING_AND_MANIFEST_PROVENANCE",
+    "production_ready": false,
+    "batch_tickets": [
+      "VN15",
+      "TX09",
+      "TX10"
+    ],
+    "stage_receipts": [
+      "docs/refactoring/runs/20261025-v3/vn15/acceptance.json",
+      "docs/refactoring/runs/20261025-v3/tx09/acceptance.json",
+      "docs/refactoring/runs/20261025-v3/tx10/acceptance.json"
     ]
   }
 }

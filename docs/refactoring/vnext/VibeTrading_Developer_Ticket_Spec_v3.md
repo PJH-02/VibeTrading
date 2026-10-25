@@ -193,6 +193,8 @@ DONE의 상태표가 서버 운영 수락을 의미하지는 않는다. **구현
 - **최소 구현:** `actual`, `assumed/PAPER`, `recovery/unreconciled` label 분리. `PnL=realized/unrealized/fees/funding`과 통화·기준가격·timestamp·freshness; 근거 불명은 `UNAVAILABLE`. cold read only, submit hot path reporting I/O 0. `/pause,/halt,/resume`은 기존 권위 Owner로 전달.
 - **테스트:** missing FX/stale mark/incomplete fill/Telegram outage/restart stale snapshot. 기존 `/trade`, Mock2 보고 회귀.
 
+- **현재 로컬 수락(2026-10-25):** Reuse existing bounded readonly Paper ledger projection in the existing local dashboard cold scan; separate PAPER_SIMULATION, UNKNOWN/unreconciled and unavailable marks/timestamps from actual venue evidence. 독립 77 PASS. [증거](../runs/20261025-v3/vn15/acceptance.json).
+
 ### VN17 — 기존 runtime의 최소 local wiring
 
 - **소유:** `local_config.py`, `scripts/refactoring/build_release_manifest.py`, 기존 runtime mount tests. 새 topology가 필요하면 별도 Tech Lead ticket.
@@ -394,11 +396,15 @@ DONE의 상태표가 서버 운영 수락을 의미하지는 않는다. **구현
 - **선행:** VN15. **구현:** VN15의 actual/assumed/PAPER/recovery label을 `/status,/feeds,/strategies,/orders,/positions,/pnl`에 투영한다. 기존 `/trade`와 Mock2 보고를 보존하고, `/pause,/halt,/resume`은 기존 권위 Owner로 전달한다. 새 dashboard platform·submit-path reporting I/O 금지.
 - **수락:** numeric ACL/TTL/dedup, Telegram 장애에서 account mutation 1회 이하, cold read가 hot path를 막지 않음, unknown fail-visible.
 
+- **현재 로컬 수락(2026-10-25):** Reuse existing Telegram numeric ACL/outbox and opt-in authoritative owner command bridge; add bounded cold Paper queries and existing local feed snapshot reads without affecting trade/status legacy or submit path. 독립 106 PASS. [증거](../runs/20261025-v3/tx09/acceptance.json).
+
 ### TX10 — 기존 Ncloud/Export 보존 + plugin metadata 연결
 
 - **소유:** 기존 `storage_backend.archive_backend`/`NcloudStorageBackend`, `ParquetHistoryReader`, 기존 registry seam.
 - **선행:** TX01. **구현(REUSE):** working Ncloud put/verify/download와 기존 export/manifest를 **변경 없이 보존**한다. 누락된 data-manifest→strategy file/Paper registration linkage만 최소 추가한다. 새 uploader/backtest platform/SDK client 금지.
 - **수락:** 기존 upload/download/checksum 회귀, timestamp/available-at/ffill invariant, `PAPER→LIVE` config toggle만으로 real API 0.
+
+- **현재 로컬 수락(2026-10-25):** Optional bounded data_manifest provenance in existing explicit strategy/Paper registration; validate manifest and referenced object hashes and availability before import/claims; preserve existing export/Ncloud clients unchanged. 독립 146 PASS. [증거](../runs/20261025-v3/tx10/acceptance.json).
 
 ### TX11 — 좁은 NATS-free core E2E
 

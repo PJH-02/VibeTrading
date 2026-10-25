@@ -1,0 +1,36 @@
+{
+  "mode": "independent",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx09-independent-fxytycsd",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/tx09-independent-fxytycsd/work",
+  "exit_code": 1,
+  "elapsed_seconds": 2.0366804680088535,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "........................................................................ [ 67%]\n................................FF                                       [100%]\n=================================== FAILURES ===================================\n________ test_missing_configured_source_is_not_reported_as_ok_empty_pnl ________\n\ntmp_path = PosixPath('/tmp/pytest/test_missing_configured_source0')\n\n    @pytest.mark.asyncio\n    async def test_missing_configured_source_is_not_reported_as_ok_empty_pnl(tmp_path):\n        import json\n        settings=_controller(tmp_path).settings\n        settings=replace(settings,env={**settings.env,\"PAPER_PROJECTION_DATABASES\":json.dumps([str(tmp_path/\"absent.sqlite\")])})\n        bot=TelegramController(settings)\n        result=json.loads(await bot._projection_reply(\"pnl\"))\n>       assert result[\"status\"]==\"UNAVAILABLE\" and result[\"errors\"]\nE       AssertionError: assert ('OK' == 'UNAVAILABLE'\nE         \nE         - UNAVAILABLE\nE         + OK)\n\ndocs/tickets/TX09-reviewer-counterexamples.py:45: AssertionError\n_____________ test_known_account_gap_remains_visible_in_pnl_header _____________\n\ntmp_path = PosixPath('/tmp/pytest/test_known_account_gap_remains0')\n\n    @pytest.mark.asyncio\n    async def test_known_account_gap_remains_visible_in_pnl_header(tmp_path):\n        import json\n        from test_strategy_runtime import ledger_at\n        ledger=ledger_at(tmp_path)\n        try:\n            ledger._db.execute(\"INSERT INTO portfolio_gaps VALUES(?,?)\",(\"@review_gap\",'{}'))\n            settings=_controller(tmp_path).settings\n            settings=replace(settings,env={**settings.env,\"PAPER_PROJECTION_DATABASES\":json.dumps([str(ledger.path)])})\n            before=tuple(ledger._db.iterdump())\n            bot=TelegramController(settings)\n            result=json.loads(await bot._projection_reply(\"pnl\"))\n>           assert result.get(\"recovery\")==\"UNRECONCILED\"\nE           AssertionError: assert None == 'UNRECONCILED'\nE            +  where None = <built-in method get of dict object at 0x71d323fc6980>('recovery')\nE            +    where <built-in method get of dict object at 0x71d323fc6980> = {'command': 'pnl', 'errors': [], 'evidence': 'PAPER_SIMULATION', 'fact_asof_ns': None, ...}.get\n\ndocs/tickets/TX09-reviewer-counterexamples.py:59: AssertionError\n=========================== short test summary info ============================\nFAILED docs/tickets/TX09-reviewer-counterexamples.py::test_missing_configured_source_is_not_reported_as_ok_empty_pnl\nFAILED docs/tickets/TX09-reviewer-counterexamples.py::test_known_account_gap_remains_visible_in_pnl_header\n2 failed, 104 passed in 1.64s\n",
+  "tests": {
+    "passed": 104,
+    "failed": 2,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_vn15_paper_projection.py",
+    "tests/refactoring/test_vnext_vn14b.py",
+    "tests/refactoring/test_control_inbox.py",
+    "tests/refactoring/test_outbox_isolation.py",
+    "tests/test_telegram_status.py",
+    "tests/test_dual_mock_and_assumed.py",
+    "tests/refactoring/test_tx09_paper_queries.py",
+    "docs/tickets/TX09-reviewer-counterexamples.py"
+  ]
+}

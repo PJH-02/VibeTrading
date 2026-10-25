@@ -1,0 +1,73 @@
+{
+  "decision": "PASS",
+  "base_sha": "9c3d71043a2b85bdf2adbbf002d6dec2f43b982d",
+  "source_sha": "b74e22d443aff428e7971d1695cf00ecd9553818",
+  "non_document_paths": [
+    "src/vibetrading/dashboard/bridge.py",
+    "src/vibetrading/dashboard/projection.py",
+    "src/vibetrading/strategy_runtime.py",
+    "src/vibetrading/telegram.py",
+    "tests/refactoring/test_tx09_paper_queries.py",
+    "tests/refactoring/test_tx10_manifest_registration.py",
+    "tests/refactoring/test_vn15_paper_projection.py"
+  ],
+  "existing_tests_and_goldens_changed": false,
+  "existing_exchange_and_cloud_paths_changed": false,
+  "new_runtime_or_owner_or_sdk": false,
+  "worker_provider": "opencode",
+  "worker_model": "opencode/deepseek-v4.1-flash-free",
+  "scope": "Cold existing Paper projection/Telegram queries and bounded optional export provenance registration; no live/account/deploy authority.",
+  "product_symbol_review": {
+    "src/vibetrading/dashboard/projection.py": {
+      "changed_existing_symbols": [],
+      "unchanged_existing_symbols": 10,
+      "new_symbols": [
+        "_PaperUnavailable.__init__",
+        "_paper_config_error",
+        "_paper_decimal",
+        "_paper_id",
+        "_paper_instrument_parts",
+        "_paper_json_object",
+        "_paper_order_facts",
+        "_paper_rows",
+        "_paper_schema",
+        "_paper_source",
+        "_paper_text",
+        "paper_projection",
+        "paper_projection_paths"
+      ]
+    },
+    "src/vibetrading/dashboard/bridge.py": {
+      "changed_existing_symbols": [
+        "run"
+      ],
+      "unchanged_existing_symbols": 5,
+      "new_symbols": []
+    },
+    "src/vibetrading/telegram.py": {
+      "changed_existing_symbols": [
+        "TelegramController.__init__",
+        "TelegramController._handle"
+      ],
+      "unchanged_existing_symbols": 30,
+      "new_symbols": [
+        "TelegramController._projection_reply",
+        "TelegramController._read_projection"
+      ]
+    },
+    "src/vibetrading/strategy_runtime.py": {
+      "changed_existing_symbols": [
+        "PaperStrategyRuntime.register_configured"
+      ],
+      "unchanged_existing_symbols": 39,
+      "new_symbols": [
+        "PaperStrategyRuntime._validate_data_manifest"
+      ]
+    }
+  },
+  "owner_small_review_fixes": [
+    "docs/refactoring/runs/20261025-v3/vn15/owner-review.json",
+    "docs/refactoring/runs/20261025-v3/tx09/owner-review.json",
+    "docs/refactoring/runs/20261025-v3/tx10/owner-review.json"
+  ]
+}

@@ -234,3 +234,7 @@ VN14A-1: selected-scope resume와 상위 halt/다른 전략 보존, 명시 paren
 ## 2026-10-24 최신 — TX07A/TX08A/TX08 수락
 
 최신 canonical 집계는 **30 완료 / 10 미완료 / 11 미착수**다. 기존 fact 계약, 동일 계좌 한도 일관성, 두 파일 전략의 공동 Paper/복구 gate를 완료했다. 전체 2348 PASS/외부2건 제외. 이번 연속3개 뒤 dispatch를 중지했다. [전체 분류와 증거](../runs/20261024-v3/batch-tx07a-tx08/README.md).
+
+## 2026-10-25 최신 — VN15/TX09/TX10 수락
+
+현재 **33 완료 / 10 미완료 / 8 미착수**. 전체 2438 PASS/외부2건 제외. 다음 후보 VN17→VN18은 이번에 착수하지 않았다. [전체 분류와 증거](../runs/20261025-v3/batch-vn15-tx10/README.md).

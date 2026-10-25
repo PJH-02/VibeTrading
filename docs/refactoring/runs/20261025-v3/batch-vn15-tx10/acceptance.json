@@ -1,0 +1,81 @@
+{
+  "decision": "PASS",
+  "batch_tickets": [
+    "VN15",
+    "TX09",
+    "TX10"
+  ],
+  "base_sha": "9c3d71043a2b85bdf2adbbf002d6dec2f43b982d",
+  "source_sha": "b74e22d443aff428e7971d1695cf00ecd9553818",
+  "stages": [
+    {
+      "task_id": "VN15",
+      "source_sha": "32459273714852c398b7cc1a0e8a5b41774751e9",
+      "receipt": "docs/refactoring/runs/20261025-v3/vn15/acceptance.json",
+      "scoped_passed": 77,
+      "repair_delegations": 0,
+      "changed_product_symbols": [
+        "_PaperUnavailable.__init__",
+        "_paper_config_error",
+        "paper_projection_paths",
+        "_paper_json_object",
+        "_paper_text",
+        "_paper_decimal",
+        "_paper_instrument_parts",
+        "_paper_order_facts",
+        "_paper_schema",
+        "_paper_rows",
+        "_paper_id",
+        "_paper_source",
+        "paper_projection",
+        "run"
+      ]
+    },
+    {
+      "task_id": "TX09",
+      "source_sha": "f3ab055f34de1806fa00ba478a03d70ce87cc93c",
+      "receipt": "docs/refactoring/runs/20261025-v3/tx09/acceptance.json",
+      "scoped_passed": 106,
+      "repair_delegations": 0,
+      "changed_product_symbols": [
+        "TelegramController.__init__",
+        "TelegramController._handle",
+        "TelegramController._read_projection",
+        "TelegramController._projection_reply"
+      ]
+    },
+    {
+      "task_id": "TX10",
+      "source_sha": "b74e22d443aff428e7971d1695cf00ecd9553818",
+      "receipt": "docs/refactoring/runs/20261025-v3/tx10/acceptance.json",
+      "scoped_passed": 146,
+      "repair_delegations": 0,
+      "changed_product_symbols": [
+        "PaperStrategyRuntime._validate_data_manifest",
+        "PaperStrategyRuntime.register_configured"
+      ]
+    }
+  ],
+  "full_regression_passed": 2438,
+  "deselected_live_data": 2,
+  "metadata_verification": "PASS",
+  "worker_provider": "opencode",
+  "worker_model": "opencode/deepseek-v4.1-flash-free",
+  "worker_role": "refactor",
+  "independent_acceptance_owner": "Codex",
+  "upstream_weight_identity": "UNKNOWN",
+  "fourth_ticket_started": false,
+  "live_readiness": false,
+  "production_accounts_accessed": false,
+  "server_deployed": false,
+  "original_data_deleted": false,
+  "remote_push_performed": false,
+  "free_llm_api_configuration_changed": false,
+  "final_metadata_verification": {
+    "receipt": "docs/refactoring/runs/20261025-v3/batch-vn15-tx10/final-scope-status-validation.json",
+    "passed": 20,
+    "exit_code": 0,
+    "canonical_cli_exit": 0,
+    "other_48_task_objects_preserved": true
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "mode": "independent",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx10-independent-zrhpjjop",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/tx10-independent-zrhpjjop/work",
+  "exit_code": 0,
+  "elapsed_seconds": 3.1354448859929107,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "........................................................................ [ 49%]\n........................................................................ [ 98%]\n..                                                                       [100%]\n146 passed in 2.58s\n",
+  "tests": {
+    "passed": 146,
+    "failed": 0,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_vn13_file_registration.py",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/test_market_export_analysis.py",
+    "tests/test_export_duplicate_reclaim.py",
+    "tests/test_storage_pipeline.py",
+    "tests/refactoring/test_tx10_manifest_registration.py",
+    "docs/tickets/TX10-reviewer-counterexamples.py"
+  ]
+}

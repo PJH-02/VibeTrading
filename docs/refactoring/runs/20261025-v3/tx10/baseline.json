@@ -1,0 +1,34 @@
+{
+  "mode": "baseline",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx10-baseline-7lmcplbu",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/tx10-baseline-7lmcplbu/work",
+  "exit_code": 0,
+  "elapsed_seconds": 2.98298658899148,
+  "read_only_inputs_changed": [],
+  "stdout_tail": "........................................................................ [ 81%]\n................                                                         [100%]\n88 passed in 2.44s\n",
+  "tests": {
+    "passed": 88,
+    "failed": 0,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_vn13_file_registration.py",
+    "tests/refactoring/test_strategy_runtime.py",
+    "tests/refactoring/test_strategy_restart_barrier.py",
+    "tests/test_market_export_analysis.py",
+    "tests/test_export_duplicate_reclaim.py",
+    "tests/test_storage_pipeline.py"
+  ]
+}
