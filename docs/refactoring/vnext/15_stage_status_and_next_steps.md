@@ -238,3 +238,7 @@ VN14A-1: selected-scope resume와 상위 halt/다른 전략 보존, 명시 paren
 ## 2026-10-25 최신 — VN15/TX09/TX10 수락
 
 현재 **33 완료 / 10 미완료 / 8 미착수**. 전체 2438 PASS/외부2건 제외. 다음 후보 VN17→VN18은 이번에 착수하지 않았다. [전체 분류와 증거](../runs/20261025-v3/batch-vn15-tx10/README.md).
+
+## 2026-10-25 최신 — VN17/VN18/VN19/TX11/TX12 수락
+
+**38 완료 / 10 미완료 / 3 미착수**. 전체 2480 PASS/외부2건 제외, local core matrix 수락. VN20_APPLIED=false, 운영/image/account/capacity 외부 gate는 미수행이며 여섯 번째 티켓은 착수하지 않았다. [전체 내역](../runs/20261025-v3/core5/batch-vn17-tx12/README.md).

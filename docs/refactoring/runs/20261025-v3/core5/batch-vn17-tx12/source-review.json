@@ -1,0 +1,34 @@
+{
+  "decision": "PASS",
+  "source_sha": "001d10d20f1dce58fcb0349983f368af10a2bdc1",
+  "base_sha": "dbd2ba077a24e61e9967d99e49f47cd7d743259f",
+  "non_document_paths": [
+    "scripts/refactoring/build_release_manifest.py",
+    "src/vibetrading/local_runtime.py",
+    "tests/refactoring/test_tx11_core_e2e.py",
+    "tests/refactoring/test_tx12_local_acceptance.py",
+    "tests/refactoring/test_vn17_role_assembly.py",
+    "tests/refactoring/test_vn18_local_fault_gate.py",
+    "tests/refactoring/test_vn19_local_release.py"
+  ],
+  "product_symbol_review": {
+    "src/vibetrading/local_runtime.py": {
+      "changed_existing_symbols": [
+        "main"
+      ],
+      "unchanged_existing_symbols": 15,
+      "new_symbols": []
+    },
+    "scripts/refactoring/build_release_manifest.py": {
+      "changed_existing_symbols": [],
+      "unchanged_existing_symbols": 3,
+      "new_symbols": [
+        "build_local"
+      ]
+    }
+  },
+  "existing_tests_and_goldens_changed": false,
+  "exchange_cloud_owner_strategy_economics_changed": false,
+  "new_universal_runtime_or_platform": false,
+  "source_or_data_deletion": false
+}

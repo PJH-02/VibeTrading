@@ -1,0 +1,33 @@
+{
+  "mode": "independent",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/vn19-independent-van974ko",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/vn19-independent-van974ko/work",
+  "exit_code": 0,
+  "elapsed_seconds": 1.1729188699973747,
+  "read_only_inputs_changed": [],
+  "relay_evidence": null,
+  "stdout_tail": "..................................................................       [100%]\n66 passed in 0.93s\n",
+  "tests": {
+    "passed": 66,
+    "failed": 0,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_src_release_paths.py",
+    "tests/test_crypto_release.py",
+    "tests/refactoring/test_runtime_mounts.py",
+    "tests/refactoring/test_vn19_local_release.py"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "decision": "PASS",
+  "task_id": "VN17",
+  "source_sha": "b91b8aaf81f8bb938d9db3f2f20538b0ba0eaa30",
+  "selected_provider": "freellmapi",
+  "selected_model": "freellmapi/glm-4.5-flash",
+  "worker_acceptance": "FAILED_PARTIAL_NOT_ACCEPTED",
+  "worker_exit": 1,
+  "delegate_exit": 1,
+  "repair_delegations": 2,
+  "owner_product_edits": 1,
+  "acceptance_basis": "Codex critical review and actual independent isolated execution; worker statements/failing attempts are NOT acceptance evidence.",
+  "changed_product_symbols": [
+    "main"
+  ],
+  "other_product_methods_ast_unchanged": 15,
+  "product_paths": [
+    "src/vibetrading/local_runtime.py"
+  ],
+  "scoped_test_passed": 221,
+  "independent_exit": 0,
+  "product_and_test_sha256": {
+    "src/vibetrading/local_runtime.py": "354efb65a1ee79735bfd9c5642c6cfe1cd501e73f35be35f66c47c57934f167f",
+    "tests/refactoring/test_vn17_role_assembly.py": "ce684f34dc031ac288aa1afe445f3bd8067ec0aa79ddbc45e05c5c59dddd0024",
+    "docs/tickets/VN17-reviewer-counterexamples.py": "f584611b4a4e132d4a475265a15dfd80fe514c9c1c0d6d49064a01a3bebbc395"
+  },
+  "full_batch_validation": {
+    "receipt": "docs/refactoring/runs/20261025-v3/core5/batch-vn17-tx12/full-regression.json",
+    "source_sha": "001d10d20f1dce58fcb0349983f368af10a2bdc1",
+    "passed": 2480,
+    "exit_codes": [
+      0,
+      0
+    ],
+    "deselected_live_data": 2
+  },
+  "live_readiness": false,
+  "scope": "Selected local contract only. No live/accounts/remote/deploy/deletion or new universal platform.",
+  "final_batch_sha256": {
+    "src/vibetrading/local_runtime.py": "354efb65a1ee79735bfd9c5642c6cfe1cd501e73f35be35f66c47c57934f167f",
+    "tests/refactoring/test_vn17_role_assembly.py": "ce684f34dc031ac288aa1afe445f3bd8067ec0aa79ddbc45e05c5c59dddd0024",
+    "docs/tickets/VN17-reviewer-counterexamples.py": "f584611b4a4e132d4a475265a15dfd80fe514c9c1c0d6d49064a01a3bebbc395"
+  }
+}

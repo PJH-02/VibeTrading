@@ -1,0 +1,35 @@
+{
+  "mode": "baseline",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/tx11-baseline-sj47rs_e",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/tx11-baseline-sj47rs_e/work",
+  "exit_code": 0,
+  "elapsed_seconds": 1.9739550609956495,
+  "read_only_inputs_changed": [],
+  "relay_evidence": null,
+  "stdout_tail": "........................................................................ [ 85%]\n............                                                             [100%]\n84 passed in 1.66s\n",
+  "tests": {
+    "passed": 84,
+    "failed": 0,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_tx08_same_account_gate.py",
+    "tests/refactoring/test_tx05_file_paper_e2e.py",
+    "tests/refactoring/test_tx10_manifest_registration.py",
+    "tests/refactoring/test_vn15_paper_projection.py",
+    "tests/refactoring/test_tx09_paper_queries.py",
+    "tests/refactoring/test_vn18_local_fault_gate.py"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "model": "opencode/glm-5.3-flash-free",
+  "exit_code": -15,
+  "reason": "Same confirmed direct-provider free usage limit; no tool/source output; scoped supervisor stopped",
+  "source_changes": [],
+  "private_run": "/home/pjh/.local/state/codex-opencode/runs/vn17-worker-a21tni46"
+}

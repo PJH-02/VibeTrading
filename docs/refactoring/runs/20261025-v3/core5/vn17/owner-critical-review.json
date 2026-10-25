@@ -1,0 +1,9 @@
+{
+  "decision": "PASS_AFTER_INDEPENDENT",
+  "worker_implementation_status": "PARTIAL_UNACCEPTED",
+  "owner_scope": "Small main-only type/role/phase/orphan/dependency guard correction and compatibility forwarding; all other product functions unchanged. Codex authors independent critical acceptance tests, not approving mock-only worker tests.",
+  "before_sha256": "635d0190cc00d048e752e3b472882e6341eb73b50d9b6edb73aedcda052d8a05",
+  "reviewed_sha256": "354efb65a1ee79735bfd9c5642c6cfe1cd501e73f35be35f66c47c57934f167f",
+  "owner_product_edits": 1,
+  "provider_retries_exhausted": true
+}

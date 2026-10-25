@@ -1,0 +1,49 @@
+{
+  "mode": "worker",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/vn17-worker-z1tc42gb",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/vn17-worker-z1tc42gb/work",
+  "exit_code": 1,
+  "elapsed_seconds": 579.9181049760082,
+  "read_only_inputs_changed": [],
+  "relay_evidence": {
+    "statuses": [
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      429,
+      429,
+      429,
+      429,
+      429,
+      429
+    ],
+    "served_models": [
+      "glm-4.5-flash"
+    ],
+    "safety_blocker": false,
+    "redirects_blocked": 0,
+    "redactions": 0
+  },
+  "stdout_tail": "ROLE=implement\nMODEL=freellmapi/glm-4.5-flash\nARTIFACTS=/home/pjh/.local/state/codex-opencode/runs/implement.eUPpJtkh\nWORKER_EXIT=1\nBASELINE_DIFF_CHECK_EXIT=0\nDIFF_CHECK_EXIT=2\nARTIFACTS=/home/pjh/.local/state/codex-opencode/runs/implement.eUPpJtkh\nWorker failed or timed out. Do NOT automatically retry after possible partial edits.\n"
+}

@@ -202,6 +202,8 @@ DONE의 상태표가 서버 운영 수락을 의미하지는 않는다. **구현
 - **최소 구현:** NATS-free selected data path와 strategy-file/Paper/projection을 기존 runtime에 연결. 운영 server config 자동 수정 금지, universal execution deployment topology 금지.
 - **테스트:** 기존 role import/compose config 유지, bounded queue/resource, stale source SHA. 합산 CPU/RSS/PSS는 기존 profile로 평가.
 
+- **현재 로컬 수락(2026-10-25):** Minimum existing local role assembly: explicit borrowed Paper main API forwards the same owner/runtime to run_engine; local Telegram/dashboard share plan-derived snapshot configuration; no new auto-loader/topology. 독립 221 PASS. [증거](../runs/20261025-v3/core5/vn17/acceptance.json). 운영/삭제 승인이 아니다.
+
 ### VN18 — 기존 Golden + 선택 local fault gate
 
 - **소유:** 기존 test runner, smallest existing runtime mocks/transport fixtures, `docs/refactoring/runs/<new-run>/` 요약.
@@ -209,12 +211,16 @@ DONE의 상태표가 서버 운영 수락을 의미하지는 않는다. **구현
 - **최소 테스트:** **unchanged Golden first**; selected data/storage recovery, strategy file/Paper restart/dedup, same-account reservation/cancel/restart fault. 새 테스트는 누락 local gap에만. live operation은 외부 gate이며 자동 재실행하지 않는다.
 - **수락:** 기존 runtime behavior equivalence, mutation 0, unknown reservation 유지. 과거 HEAD 1961 pass는 과거 사실이며 이 문서 단계의 새 PASS가 아니다.
 
+- **현재 로컬 수락(2026-10-25):** Existing Golden and selected real local assembly/startup/recovery faults, preserving newest ledger/UNKNOWN and fail-closed callback/socket publication. 독립 372 PASS. [증거](../runs/20261025-v3/core5/vn18/acceptance.json). 운영/삭제 승인이 아니다.
+
 ### VN19 — 기존 packaging/export/rollback 재사용
 
 - **소유:** 기존 release manifest, `cutover_runbook.md`, `rollback_runbook.md`, hash scripts.
 - **재사용:** 기존 packaging/export/rollback, `deploy_p02_schema.py`, Ncloud archive 경로. 새 uploader/backtest platform 없음.
 - **최소 구현:** 정확 SHA, 기존 image/volume/schema 호환, selected local data-path 전환 절차와 중단 조건. 명령은 승인 전 실행 금지.
 - **수락:** 기존 image import/entrypoint와 Compose config, rollback 보존, 원장 과거 이미지 덮어쓰기 0.
+
+- **현재 로컬 수락(2026-10-25):** Readonly committed-source local review package with expected Git SHA and source-drift/secret/path rejection; existing builders and latest-ledger rollback preserved; no image/server operation. 독립 66 PASS. [증거](../runs/20261025-v3/core5/vn19/acceptance.json). 운영/삭제 승인이 아니다.
 
 ### VN20 — 외부 proof 이후 legacy 정리 (삭제 금지)
 
@@ -412,11 +418,15 @@ DONE의 상태표가 서버 운영 수락을 의미하지는 않는다. **구현
 - **선행:** TX05, TX08A, TX10, VN15, VN18. **구현:** `data→strategy file→existing Paper→same-account attribution→report/restart` 한 줄과 보존된 legacy Golden을 검증한다. **five-venue/arbitrage platform scenario는 제거**한다. 새 state machine/engine 없음.
 - **수락:** deterministic local E2E, restart continuity, mutation 0, 기존 runtime behavior 동등. 2vCPU/3.8GiB 측정은 기존 profile로 수행하되 새 제품 요구가 아니다.
 
+- **현재 로컬 수락(2026-10-25):** Joint owned data-manifest/two-real-file/Paper/same-account/cold report/outbox/exact-cut recovery E2E using existing authoritative components and manual Decimal facts. 독립 85 PASS. [증거](../runs/20261025-v3/core5/tx11/acceptance.json). 운영/삭제 승인이 아니다.
+
 ### TX12 — 최소 local acceptance
 
 - **소유:** 기존 release candidate/runner gate, `docs/refactoring/vnext` status, secret-free runbook/manifest.
 - **선행:** TX11, VN19. **구현:** 선택된 local scope(data/storage/recovery/plugins/Paper/same-account)와 unchanged legacy runtime을 matrix에 연결한다. 실제 서버/실계좌 항목만 External Gate로 남긴다.
 - **수락:** 선택 scope 미구현 0, scoped test PASS(또는 NOT_RUN 명시), Paper 외부 mutation 0, source/build hash 고정, `server_deployed=false`, `live_active=false`. **generic Trading Platform 완성 badge 없음.** 소스 삭제 0/제품 변경 0은 owner 검증 전 self-acceptance가 아니다.
+
+- **현재 로컬 수락(2026-10-25):** Final minimal local acceptance matrix: source/receipt/package proof for selected core; external server/image/account/capacity gates explicit, optional venue/platform work and VN20 deletion unperformed. 독립 53 PASS. [증거](../runs/20261025-v3/core5/tx12/acceptance.json). 운영/삭제 승인이 아니다.
 
 ## E. 파일/함수 소유권 및 합치면 안 되는 경계
 

@@ -1,6 +1,6 @@
 {
   "authority": "DERIVED_FROM_CANONICAL_TICKETS_NOT_NEW_STATUS_DATABASE",
-  "source_sha": "b74e22d443aff428e7971d1695cf00ecd9553818",
+  "source_sha": "001d10d20f1dce58fcb0349983f368af10a2bdc1",
   "cycle_free": true,
   "completed_task_ids_preserved": [
     "VN00",
@@ -195,7 +195,9 @@
         "VN13"
       ],
       "historical_status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
-      "scope_disposition": "MINIMAL_RUNTIME_WIRING"
+      "scope_disposition": "MINIMAL_RUNTIME_WIRING",
+      "current_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "receipt": "docs/refactoring/runs/20261025-v3/core5/vn17/acceptance.json"
     },
     {
       "task_id": "VN18",
@@ -204,7 +206,9 @@
         "VN05"
       ],
       "historical_status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
-      "scope_disposition": "CORE_REGRESSION_FAULT_GATE"
+      "scope_disposition": "CORE_REGRESSION_FAULT_GATE",
+      "current_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "receipt": "docs/refactoring/runs/20261025-v3/core5/vn18/acceptance.json"
     },
     {
       "task_id": "VN19",
@@ -212,7 +216,9 @@
         "VN18"
       ],
       "historical_status": "PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES",
-      "scope_disposition": "KEEP_RELEASE_ROLLBACK"
+      "scope_disposition": "KEEP_RELEASE_ROLLBACK",
+      "current_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "receipt": "docs/refactoring/runs/20261025-v3/core5/vn19/acceptance.json"
     },
     {
       "task_id": "VN20",
@@ -479,7 +485,9 @@
         "VN18"
       ],
       "historical_status": "PLANNED",
-      "scope_disposition": "NARROW_CORE_E2E"
+      "scope_disposition": "NARROW_CORE_E2E",
+      "current_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "receipt": "docs/refactoring/runs/20261025-v3/core5/tx11/acceptance.json"
     },
     {
       "task_id": "TX12",
@@ -488,7 +496,9 @@
         "VN19"
       ],
       "historical_status": "PLANNED",
-      "scope_disposition": "NARROW_LOCAL_ACCEPTANCE"
+      "scope_disposition": "NARROW_LOCAL_ACCEPTANCE",
+      "current_status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "receipt": "docs/refactoring/runs/20261025-v3/core5/tx12/acceptance.json"
     }
   ],
   "completed_since_scope_revision": [
@@ -622,6 +632,41 @@
       "receipt": "docs/refactoring/runs/20261025-v3/tx10/acceptance.json",
       "status": "COMPLETE_LOCAL_IMPLEMENTATION",
       "scope": "LOCAL_COLD_PAPER_REPORTING_MANIFEST"
+    },
+    {
+      "task_id": "VN17",
+      "source_sha": "b91b8aaf81f8bb938d9db3f2f20538b0ba0eaa30",
+      "receipt": "docs/refactoring/runs/20261025-v3/core5/vn17/acceptance.json",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "scope": "MINIMAL_LOCAL_CORE_CONTRACT"
+    },
+    {
+      "task_id": "VN18",
+      "source_sha": "1a4d840a9d8db11dd4bc5932967b27e287bd42b4",
+      "receipt": "docs/refactoring/runs/20261025-v3/core5/vn18/acceptance.json",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "scope": "MINIMAL_LOCAL_CORE_CONTRACT"
+    },
+    {
+      "task_id": "VN19",
+      "source_sha": "278b9efd3bcf98a4d8458e54aa761d0cbe4142ea",
+      "receipt": "docs/refactoring/runs/20261025-v3/core5/vn19/acceptance.json",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "scope": "MINIMAL_LOCAL_CORE_CONTRACT"
+    },
+    {
+      "task_id": "TX11",
+      "source_sha": "e75bf3aef2c693a900884f1cae8de38df5bc73ff",
+      "receipt": "docs/refactoring/runs/20261025-v3/core5/tx11/acceptance.json",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "scope": "MINIMAL_LOCAL_CORE_CONTRACT"
+    },
+    {
+      "task_id": "TX12",
+      "source_sha": "001d10d20f1dce58fcb0349983f368af10a2bdc1",
+      "receipt": "docs/refactoring/runs/20261025-v3/core5/tx12/acceptance.json",
+      "status": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "scope": "MINIMAL_LOCAL_CORE_CONTRACT"
     }
   ]
 }

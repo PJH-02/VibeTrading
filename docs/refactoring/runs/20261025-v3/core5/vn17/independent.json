@@ -1,0 +1,38 @@
+{
+  "mode": "independent",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/vn17-independent-e43xyy6v",
+  "work": "/home/pjh/.local/state/codex-opencode/runs/vn17-independent-e43xyy6v/work",
+  "exit_code": 0,
+  "elapsed_seconds": 2.7866900310036726,
+  "read_only_inputs_changed": [],
+  "relay_evidence": null,
+  "stdout_tail": "........................................................................ [ 32%]\n........................................................................ [ 65%]\n........................................................................ [ 97%]\n.....                                                                    [100%]\n221 passed in 2.35s\n",
+  "tests": {
+    "passed": 221,
+    "failed": 0,
+    "skipped": 0
+  },
+  "argv": [
+    "python3",
+    "-m",
+    "pytest",
+    "-p",
+    "pytest_asyncio.plugin",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp",
+    "/tmp/pytest",
+    "--junitxml",
+    "/evidence/junit.xml",
+    "tests/refactoring/test_local_runtime.py",
+    "tests/refactoring/test_runtime_mounts.py",
+    "tests/refactoring/test_shared_runtime_wiring.py",
+    "tests/refactoring/test_tx04b_continuous.py",
+    "tests/test_local_snapshot.py",
+    "tests/test_dual_mock_and_assumed.py",
+    "tests/refactoring/test_kr_strategy_extraction.py",
+    "tests/refactoring/test_vn17_role_assembly.py",
+    "docs/tickets/VN17-reviewer-counterexamples.py"
+  ]
+}

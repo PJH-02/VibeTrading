@@ -1,0 +1,58 @@
+{
+  "source_sha": "001d10d20f1dce58fcb0349983f368af10a2bdc1",
+  "base": "/home/pjh/.local/state/codex-opencode/runs/core-five-full-yeo7a0q_",
+  "status": "PASS",
+  "profiles": [
+    {
+      "profile": "product-guarded",
+      "source_sha": "001d10d20f1dce58fcb0349983f368af10a2bdc1",
+      "exit_code": 0,
+      "local_test_resource_observation": {
+        "cpu_user_seconds": 0.0020930000000000115,
+        "cpu_system_seconds": 0.0,
+        "children_cumulative_peak_rss_kib": 30456,
+        "product_cpu_affinity_count": 2,
+        "production_capacity_verified": false,
+        "memory_3_8gib_limit_enforced": false,
+        "measurement_scope": "Host bwrap subprocess accounting only; sandbox workload CPU/RSS is not measured. CPU affinity count is independently asserted inside product process."
+      },
+      "elapsed_seconds": 34.31058695001411,
+      "tests": {
+        "passed": 2283,
+        "failed": 0,
+        "skipped": 0
+      },
+      "source_files_changed": [],
+      "stdout_tail": ".................................................. [ 78%]\n........................................................................ [ 81%]\n........................................................................ [ 85%]\n........................................................................ [ 88%]\n........................................................................ [ 91%]\n........................................................................ [ 94%]\n........................................................................ [ 97%]\n...................................................                      [100%]\n=============================== warnings summary ===============================\ntests/refactoring/test_src_packaging.py::test_setuptools_metadata_discovers_canonical_and_legacy_packages\n  /usr/lib/python3/dist-packages/babel/messages/catalog.py:13: DeprecationWarning: 'cgi' is deprecated and slated for removal in Python 3.13\n    from cgi import parse_header\n\ntests/refactoring/test_src_packaging.py::test_setuptools_metadata_discovers_canonical_and_legacy_packages\n  /usr/lib/python3/dist-packages/setuptools/sandbox.py:13: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html\n    import pkg_resources\n\ntests/refactoring/test_src_packaging.py::test_setuptools_metadata_discovers_canonical_and_legacy_packages\n  /usr/lib/python3/dist-packages/pkg_resources/__init__.py:2871: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('google')`.\n  Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages\n    declare_namespace(pkg)\n\ntests/refactoring/test_src_packaging.py::test_setuptools_metadata_discovers_canonical_and_legacy_packages\n  /usr/lib/python3/dist-packages/pkg_resources/__init__.py:2871: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('zope')`.\n  Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages\n    declare_namespace(pkg)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n2283 passed, 2 deselected, 4 warnings in 33.12s\n"
+    },
+    {
+      "profile": "tooling-os",
+      "source_sha": "001d10d20f1dce58fcb0349983f368af10a2bdc1",
+      "exit_code": 0,
+      "local_test_resource_observation": {
+        "cpu_user_seconds": 0.001535000000000064,
+        "cpu_system_seconds": 0.0,
+        "children_cumulative_peak_rss_kib": 30456,
+        "product_cpu_affinity_count": null,
+        "production_capacity_verified": false,
+        "memory_3_8gib_limit_enforced": false,
+        "measurement_scope": "Host bwrap subprocess accounting only; sandbox workload CPU/RSS is not measured. CPU affinity count is independently asserted inside product process."
+      },
+      "elapsed_seconds": 5.383670607989188,
+      "tests": {
+        "passed": 197,
+        "failed": 0,
+        "skipped": 0
+      },
+      "source_files_changed": [],
+      "stdout_tail": "........................................................................ [ 36%]\n........................................................................ [ 73%]\n.....................................................                    [100%]\n197 passed in 5.06s\n"
+    }
+  ],
+  "frozen_oracle_sha256": {
+    "docs/refactoring/runs/20261018-stage-assignment/schema_oracle.json": "028d9166533d077aacf03cd9c74adb563a2601e0aeb1333029c7fcb8a7e0625c",
+    "docs/refactoring/runs/20261018-stage-assignment/encoding_oracle.json": "1bb9e0d00e2cbb1110e25cf85e5ac94fc97aeb42604c7ff658b2934f99bed513"
+  },
+  "legacy_guard_sha256": "eb34edb62d47e484d6d7bf5fb6572750c8cbfa0ac5a4abd40bc1fbd9d3e130b9",
+  "preexisting_tests_and_goldens_modified": false,
+  "source_inputs_changed_by_tests": false
+}
