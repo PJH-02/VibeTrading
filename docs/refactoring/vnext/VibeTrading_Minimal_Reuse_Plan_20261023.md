@@ -84,9 +84,9 @@
 | VN09 | 로컬 완료 | COMPLETE_LOCAL_IMPLEMENTATION (dry-run only) | VN08, VN16 | 실제 증거 교집합·비실행 제안서; 삭제/자동 전환 없음 |
 | VN13 | 핵심 | COMPLETE_LOCAL_IMPLEMENTATION | VN03, TX01, TX04B | 전략별 Python file + 기존 contract + shared data/Paper |
 | VN15 | 핵심 | COMPLETE_LOCAL_IMPLEMENTATION | VN14B | TX09와 한 projection workstream |
-| VN17 | 핵심 | PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES | VN09, VN15, VN16, VN13 | 기존 runtime local wiring/bounded resources |
-| VN18 | 핵심 | PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES | VN17, VN05 | Golden + data recovery + 선택 plugin/Paper/same-account fault |
-| VN19 | 핵심 | PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES | VN18 | 기존 packaging/export/rollback, 선택 data-path 전환 |
+| VN17 | 핵심 | COMPLETE_LOCAL_IMPLEMENTATION | VN09, VN15, VN16, VN13 | 기존 runtime local wiring/bounded resources |
+| VN18 | 핵심 | COMPLETE_LOCAL_IMPLEMENTATION | VN17, VN05 | Golden + data recovery + 선택 plugin/Paper/same-account fault |
+| VN19 | 핵심 | COMPLETE_LOCAL_IMPLEMENTATION | VN18 | 기존 packaging/export/rollback, 선택 data-path 전환 |
 | VN20 | 외부 | PLANNED_LOCAL_AUTHORIZED_SUBJECT_TO_PREREQUISITES | VN19 | proof 이후 외부 작업; 삭제 0 |
 | TX00 | 정적 감사 완료 | COMPLETE_LOCAL_IMPLEMENTATION (제품 구현 아님) | VN00 | 현재 함수·caller·환경 증거 마감; connector 변경0 |
 | TX01 | 로컬 완료 | COMPLETE_LOCAL_IMPLEMENTATION (PAPER 계약) | TX00 | 기존 연결 재사용; 전체 identity/causal NEW 검사 완료 |
@@ -114,8 +114,8 @@
 | TX08 | 집계 | COMPLETE_LOCAL_IMPLEMENTATION | TX08A | same-account evidence만 |
 | TX09 | 핵심 | COMPLETE_LOCAL_IMPLEMENTATION | VN15 | VN15와 동일 read-only projection/control |
 | TX10 | 핵심 | COMPLETE_LOCAL_IMPLEMENTATION | TX01 | 기존 Ncloud 유지; manifest→plugin/Paper metadata만 |
-| TX11 | 집계 | PLANNED | TX05, TX08A, TX10, VN15, VN18 | 좁은 NATS-free E2E, five-venue/arb 제외 |
-| TX12 | 집계 | PLANNED | TX11, VN19 | 최소 local acceptance; 범용 완성 badge 없음 |
+| TX11 | 집계 | COMPLETE_LOCAL_IMPLEMENTATION | TX05, TX08A, TX10, VN15, VN18 | 좁은 NATS-free E2E, five-venue/arb 제외 |
+| TX12 | 집계 | COMPLETE_LOCAL_IMPLEMENTATION | TX11, VN19 | 최소 local acceptance; 범용 완성 badge 없음 |
 
 **DAG 요약(cycle-free):** `VN07→VN08→VN09`; `VN03/TX01/TX04B→VN13→TX05`; `VN14B→VN15→TX09`; `VN09/VN15/VN16/VN13→VN17→VN18→VN19→VN20`; `TX00→TX01→TX02A→TX02B→TX02`; `TX02B→TX04A→TX04B→TX04`; `TX01→TX03A→TX03B→TX03`; `TX01→TX07A→TX07B→TX07`; `TX02/TX05/TX07A→TX08A`; `TX08A→TX08`; `TX08A/TX07A→TX08B`; `TX05/TX08A/TX10/VN15/VN18→TX11`; `TX11/VN19→TX12`. TX08 aggregate는 TX08A만 의존하고, TX11 core는 all-five/cross-venue를 선행으로 갖지 않는다.
 
@@ -187,4 +187,8 @@ TX07A/TX08A/TX08 수락 당시 **30 완료 / 10 미완료 / 11 미착수**였다
 
 ## 19. VN15 → TX09 / TX10 로컬 수락 (2026-10-25)
 
-현재 **33 완료 / 10 미완료 / 8 미착수**다. Paper cold projection과 기존 Telegram/owner 명령을 연결하고 export manifest provenance를 기존 전략 등록에 추가했다. 전체 2438 PASS/외부2건 제외. 기존 완료30개·비선택48개 task 객체와 DAG 간선을 보존했다. 거래소/cloud/기존 전략 경제 경로 보존, 네 번째 티켓/배포/실계좌 접근0. [전체 상태](../runs/20261025-v3/batch-vn15-tx10/README.md).
+VN15/TX09/TX10 수락 당시 **33 완료 / 10 미완료 / 8 미착수**였다. Paper cold projection과 기존 Telegram/owner 명령을 연결하고 export manifest provenance를 기존 전략 등록에 추가했다. 전체 2438 PASS/외부2건 제외. 기존 완료30개·비선택48개 task 객체와 DAG 간선을 보존했다. 거래소/cloud/기존 전략 경제 경로 보존, 네 번째 티켓/배포/실계좌 접근0. [전체 상태](../runs/20261025-v3/batch-vn15-tx10/README.md).
+
+## 20. VN17 → VN18 → VN19/TX11 → TX12 로컬 수락 (2026-10-25)
+
+현재 **38 완료 / 10 미완료 / 3 미착수**다. 최소 local core의 조립·fault·source package/rollback·joint E2E·local matrix를 검증했다. 전체 2480 PASS/외부2건 제외. 기존 완료33개/비선택46개 task 객체·DAG 간선 보존, VN20 실제 삭제0. 서버/실계좌/image/capacity는 로컬 수락과 별도이며 optional generic venue/platform 개발은 필수 core가 아니다. [전체 상태](../runs/20261025-v3/core5/batch-vn17-tx12/README.md).

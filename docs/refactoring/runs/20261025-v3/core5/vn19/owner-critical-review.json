@@ -1,0 +1,14 @@
+{
+  "owner": "Codex",
+  "worker_exit": 1,
+  "worker_partial_not_accepted": true,
+  "before_sha256": "174a915a641da881286c68511325df0e8c6d1a57dc6b31e570c9308366ba3963",
+  "after_sha256": "568f568307357f665828ff39452f780f5f9e64a26111b452e48cf7270c219ee5",
+  "corrections": [
+    "duplicate inventory rejection",
+    "ancestor/root symlink rejection",
+    "fail closed on ambiguous/missing source root",
+    "schema version"
+  ],
+  "decision": "PASS_AFTER_INDEPENDENT"
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "public_relative": "docs/refactoring/runs/20261025-v3/core5/vn17/failed-test_vn17_role_assembly.py.txt",
+    "private_path": "/home/pjh/.local/state/codex-opencode/runs/core-five-rejected-artifacts/docs/refactoring/runs/20261025-v3/core5/vn17/failed-test_vn17_role_assembly.py.txt",
+    "sha256": "482a969e3c8ae48797e5d706825dd8dc6fbaad348377505e6985e91203d4ebe7",
+    "reason": "Rejected partial worker artifact; original bytes retained privately, not executable or accepted code"
+  },
+  {
+    "public_relative": "docs/refactoring/runs/20261025-v3/core5/vn17/failed-local_paper_assembly.md.txt",
+    "private_path": "/home/pjh/.local/state/codex-opencode/runs/core-five-rejected-artifacts/docs/refactoring/runs/20261025-v3/core5/vn17/failed-local_paper_assembly.md.txt",
+    "sha256": "b18515e15a14d337a9cca53f774fdb855cd4929ee45f4db18983cf50cfe4d7bd",
+    "reason": "Rejected partial worker artifact; original bytes retained privately, not executable or accepted code"
+  },
+  {
+    "public_relative": "docs/refactoring/runs/20261025-v3/core5/vn19/glm45-partial/failed-test_vn19_local_release.py.txt",
+    "private_path": "/home/pjh/.local/state/codex-opencode/runs/core-five-rejected-artifacts/docs/refactoring/runs/20261025-v3/core5/vn19/glm45-partial/failed-test_vn19_local_release.py.txt",
+    "sha256": "f22c1c10bb5f245b76f0f81b558d29577edf9b043533ac8d066b8940b3f43e6d",
+    "reason": "Rejected partial worker artifact; original bytes retained privately, not executable or accepted code"
+  }
+]

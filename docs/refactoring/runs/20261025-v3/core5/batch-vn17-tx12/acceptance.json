@@ -1,0 +1,101 @@
+{
+  "decision": "PASS",
+  "batch_tickets": [
+    "VN17",
+    "VN18",
+    "VN19",
+    "TX11",
+    "TX12"
+  ],
+  "base_sha": "dbd2ba077a24e61e9967d99e49f47cd7d743259f",
+  "source_sha": "001d10d20f1dce58fcb0349983f368af10a2bdc1",
+  "stages": [
+    {
+      "task_id": "VN17",
+      "source_sha": "b91b8aaf81f8bb938d9db3f2f20538b0ba0eaa30",
+      "receipt": "docs/refactoring/runs/20261025-v3/core5/vn17/acceptance.json",
+      "scoped_passed": 221,
+      "repair_delegations": 2,
+      "selected_provider": "freellmapi",
+      "selected_model": "freellmapi/glm-4.5-flash",
+      "worker_acceptance": "FAILED_PARTIAL_NOT_ACCEPTED",
+      "worker_exit": 1,
+      "independent_exit": 0
+    },
+    {
+      "task_id": "VN18",
+      "source_sha": "1a4d840a9d8db11dd4bc5932967b27e287bd42b4",
+      "receipt": "docs/refactoring/runs/20261025-v3/core5/vn18/acceptance.json",
+      "scoped_passed": 372,
+      "repair_delegations": 0,
+      "selected_provider": "Codex critical verification",
+      "selected_model": "Unchanged configured Codex model",
+      "worker_acceptance": "NOT_DISPATCHED_AFTER_PROVIDER_LIMITS",
+      "worker_exit": null,
+      "independent_exit": 0
+    },
+    {
+      "task_id": "VN19",
+      "source_sha": "278b9efd3bcf98a4d8458e54aa761d0cbe4142ea",
+      "receipt": "docs/refactoring/runs/20261025-v3/core5/vn19/acceptance.json",
+      "scoped_passed": 66,
+      "repair_delegations": 1,
+      "selected_provider": "freellmapi",
+      "selected_model": "freellmapi/gemini-2.5-flash",
+      "worker_acceptance": "FAILED_PARTIAL_NOT_ACCEPTED",
+      "worker_exit": 1,
+      "independent_exit": 0
+    },
+    {
+      "task_id": "TX11",
+      "source_sha": "e75bf3aef2c693a900884f1cae8de38df5bc73ff",
+      "receipt": "docs/refactoring/runs/20261025-v3/core5/tx11/acceptance.json",
+      "scoped_passed": 85,
+      "repair_delegations": 0,
+      "selected_provider": "Codex critical verification",
+      "selected_model": "Unchanged configured Codex model",
+      "worker_acceptance": "NOT_DISPATCHED_AFTER_PROVIDER_LIMITS",
+      "worker_exit": null,
+      "independent_exit": 0
+    },
+    {
+      "task_id": "TX12",
+      "source_sha": "001d10d20f1dce58fcb0349983f368af10a2bdc1",
+      "receipt": "docs/refactoring/runs/20261025-v3/core5/tx12/acceptance.json",
+      "scoped_passed": 53,
+      "repair_delegations": 0,
+      "selected_provider": "Codex critical verification",
+      "selected_model": "Unchanged configured Codex model",
+      "worker_acceptance": "NOT_DISPATCHED_AFTER_PROVIDER_LIMITS",
+      "worker_exit": null,
+      "independent_exit": 0
+    }
+  ],
+  "full_regression_passed": 2480,
+  "deselected_live_data": 2,
+  "metadata_verification": "PASS",
+  "worker_provider": "opencode / freellmapi attempted",
+  "worker_model": "opencode/deepseek-v4.1-flash-free; freellmapi/glm-4.5-flash; opencode/glm-5.3-flash-free; freellmapi/gemini-2.5-flash",
+  "worker_role": "implement / test attempted",
+  "worker_acceptance": "NO_SUCCESSFUL_WORKER_COMPLETION",
+  "recovery_ownership": "Partial worker implementation retained; Codex small critical main/release safety corrections and owner-authored critical tests/document acceptance after disclosed provider limits",
+  "independent_acceptance_owner": "Codex",
+  "upstream_weight_identity": "UNKNOWN",
+  "provider_switch_reason": "Direct OpenCode DeepSeek free usage limit before any edits; explicitly announced switch to existing validated free GLM implementation route; private relay setup corrected using existing FreeLLMRelay.",
+  "sixth_ticket_started": false,
+  "VN20_APPLIED": false,
+  "server_deployed": false,
+  "live_active": false,
+  "production_accounts_accessed": false,
+  "original_data_deleted": false,
+  "remote_push_performed": false,
+  "user_model_profiles_and_auth_changed": false,
+  "production_capacity_verified": false,
+  "final_metadata_verification": {
+    "receipt": "docs/refactoring/runs/20261025-v3/core5/batch-vn17-tx12/final-scope-status-validation.json",
+    "passed": 20,
+    "exit_code": 0,
+    "canonical_cli_exit": 0,
+    "other_46_task_objects_preserved": true
+  }
+}

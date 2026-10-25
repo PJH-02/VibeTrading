@@ -1,0 +1,12 @@
+{
+  "private_work": "/home/pjh/.local/state/codex-opencode/runs/vn19-worker-dntg3na_/work",
+  "changed_files": [
+    " M docs/refactoring/vnext/reuse_audit/local_cutover_vn19.md",
+    " M docs/refactoring/vnext/reuse_audit/local_rollback_vn19.md",
+    " M scripts/refactoring/build_release_manifest.py",
+    " M tests/refactoring/test_vn19_local_release.py"
+  ],
+  "model": "freellmapi/glm-4.5-flash",
+  "acceptance": "NOT_ACCEPTED",
+  "reason": "HTTP429 model pool exhausted/cooldown; VN17 real-assembly requirements not met by mock-only tests; inspect source before bounded correction."
+}
