@@ -3,14 +3,14 @@ from pathlib import Path
 
 import pyarrow.parquet as pq
 
-from vibetrading.collection_timing import MINUTE_NS, CollectionContext, next_utc_minute_ns
+from feeds.collection_timing import MINUTE_NS, CollectionContext, next_utc_minute_ns
 from core.models import OpenInterestEvent, Venue
 from vibetrading.parquet_store import ParquetBatchWriter
-from vibetrading.providers.binance import BinanceCollector
-from vibetrading.providers.hyperliquid import HyperliquidCollector
+from feeds.providers.binance import BinanceCollector
+from feeds.providers.hyperliquid import HyperliquidCollector
 from vibetrading.settings import RuntimeSettings
 from vibetrading.sqlite_store import RuntimeStore
-from vibetrading.universe_config import BinanceSecurity, HyperliquidSecurity
+from feeds.universe_config import BinanceSecurity, HyperliquidSecurity
 from core.models import AssetClass
 
 

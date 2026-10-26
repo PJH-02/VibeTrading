@@ -12,14 +12,14 @@ from eth_account import Account
 from eth_account.messages import encode_typed_data
 
 from vibetrading.bus import InMemoryEventBus
-from vibetrading.collection_timing import CollectionContext
+from feeds.collection_timing import CollectionContext
 from vibetrading.extended_brokers import ArcusBrokerAdapter, GrvtBrokerAdapter, GRVT_ORDER_TYPES, OrderOutcomeUnknown
-from vibetrading.hot_path import HotPathStore
-from vibetrading.market_policy import MarketDataPolicyBus
+from market.hot_path import HotPathStore
+from market.market_policy import MarketDataPolicyBus
 from core.models import OrderIntent, OrderDestination, Side, Venue
-from vibetrading.providers.crypto_perp import _instrument
-from vibetrading.providers.extended_perp import ExtendedPerpCollector
-from vibetrading.providers.hyperliquid import HyperliquidCollector
+from feeds.providers.crypto_perp import _instrument
+from feeds.providers.extended_perp import ExtendedPerpCollector
+from feeds.providers.hyperliquid import HyperliquidCollector
 from vibetrading.runtime import _CollectorReadinessBus
 from vibetrading.settings import RuntimeSettings
 

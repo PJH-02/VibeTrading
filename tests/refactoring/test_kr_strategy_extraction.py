@@ -224,7 +224,7 @@ def test_etf_history_c3_delegates_exact_inputs_to_pure_open_decision(monkeypatch
         return real_open_decision(z, mis, sigma)
 
     monkeypatch.setattr(etf_history_module, 'open_decision', spy)
-    monkeypatch.setattr('vibetrading.etf_csv_sync.latest_completed_session',
+    monkeypatch.setattr("feeds.etf_csv_sync.latest_completed_session",
                         lambda name, now, grace_minutes=10: str(history.us.index.max().date()))
     leverage, detail = history.c3(100., 200.)
     assert set(captured) == {'z', 'mis', 'sigma'}

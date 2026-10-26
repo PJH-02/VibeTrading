@@ -15,7 +15,7 @@ import math
 import time
 from typing import Callable
 
-from .bus import MarketEventPacket, prepare_market_event, resolve_market_publication
+from vibetrading.bus import MarketEventPacket, prepare_market_event, resolve_market_publication
 from .feed_recovery import EngineCursor, RecoveryFrame
 
 
@@ -428,7 +428,7 @@ class SpoolingMarketPublisher:
         self._settled.clear()
 
     def _persist(self, batch):
-        from .market_spool import SpoolRotateRequired
+        from vibetrading.market_spool import SpoolRotateRequired
         receipts=[]
         for item in batch:
             try:

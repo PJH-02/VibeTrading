@@ -2,7 +2,7 @@ from decimal import Decimal
 
 import pytest
 
-from vibetrading.hot_path import HistoryNotPrepared, HotPathStore, PreparedHistory, StrategyDataView
+from market.hot_path import HistoryNotPrepared, HotPathStore, PreparedHistory, StrategyDataView
 from core.models import AssetClass, Bar1mEvent, InstrumentId, Venue
 
 BASE = 1_792_281_600_000_000_000

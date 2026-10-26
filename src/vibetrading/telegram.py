@@ -23,7 +23,7 @@ from .bus import NatsJetStreamBus
 from .dashboard.projection import paper_projection, paper_projection_paths
 from .health import check as health_check
 from .health import configured_crypto_providers
-from .local_snapshot import local_snapshot_config, read_market_snapshot
+from market.local_snapshot import local_snapshot_config, read_market_snapshot
 from .session_alerts import SESSIONS, session_state
 from .settings import RuntimeSettings, get_settings
 from .telegram_trade import trade_report
@@ -478,7 +478,7 @@ class TelegramController:
             venue_lines.append(f"{venue}: {label}")
         overall = "정상" if healthy == 3 and available_gib >= 0.5 and crypto_services_ok and (not crypto_expected or (profile_running and all_venues_collecting)) else "주의"
         domestic_lines=[]
-        from .universe_config import configured_symbols
+        from feeds.universe_config import configured_symbols
         for provider,label in [('kis','KIS'),('kiwoom','Kiwoom'),('toss','TOSS')]:
             worker=health_check(self.settings,'collectors-'+provider,120)
             phase=worker.get('phase','')

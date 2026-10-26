@@ -1,7 +1,7 @@
 import os
 import pytest
 
-from vibetrading import universe_config as universe
+from feeds import universe_config as universe
 from vibetrading.health import touch
 from test_telegram_status import _controller
 
@@ -57,7 +57,7 @@ async def test_repeated_rest_page_skips_old_and_accepted_rows_before_normalizati
     import asyncio
     from datetime import datetime
     from types import SimpleNamespace
-    from vibetrading.providers import kiwoom
+    from feeds.providers import kiwoom
     from core.models import AssetClass
     class Clock(datetime):
         @classmethod

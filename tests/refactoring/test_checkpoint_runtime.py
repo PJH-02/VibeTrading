@@ -8,8 +8,8 @@ from types import SimpleNamespace
 import pytest
 
 from vibetrading import local_runtime
-from vibetrading.hot_path import HotPathStore
-from vibetrading.local_engine import EngineBudgets, LocalMarketEngine
+from market.hot_path import HotPathStore
+from market.local_engine import EngineBudgets, LocalMarketEngine
 from vibetrading.market_checkpoint import CheckpointCodec
 from vibetrading.market_spool import MarketSpool
 
@@ -255,7 +255,7 @@ async def test_managed_journal_option_conflicts_reject_before_initialization(tmp
 @pytest.mark.asyncio
 @pytest.mark.parametrize('scenario',['periodic_failure','headroom','readiness','corrupt'])
 async def test_managed_failure_stops_before_listen_or_propagates_cadence(tmp_path,monkeypatch,scenario):
-    import vibetrading.local_snapshot as snapshots
+    import market.local_snapshot as snapshots
     from test_checkpoint_startup import capture,producer
     from test_checkpoint_journal import journal
     item=producer(tmp_path);item.delivery=None

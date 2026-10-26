@@ -10,7 +10,7 @@ import pandas as pd
 import pyarrow.dataset as ds
 from vibetrading.etf_history import EtfHistory
 from vibetrading.etf_trading import intraday_decision
-from vibetrading.providers.kiwoom import KiwoomAuthClient
+from feeds.providers.kiwoom import KiwoomAuthClient
 from vibetrading.settings import get_settings
 
 async def main():

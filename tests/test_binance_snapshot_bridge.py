@@ -5,9 +5,9 @@ from decimal import Decimal
 import pytest
 
 from vibetrading.bus import InMemoryEventBus
-from vibetrading.hot_path import HotPathStore
+from market.hot_path import HotPathStore
 from core.models import BookUpdateType, Venue
-from vibetrading.providers.crypto_perp import CryptoPerpCollector, _instrument
+from feeds.providers.crypto_perp import CryptoPerpCollector, _instrument
 
 
 async def snapshot():

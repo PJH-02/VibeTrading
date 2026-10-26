@@ -6,7 +6,7 @@ from types import SimpleNamespace
 import aiohttp
 import pytest
 
-from vibetrading.providers.kiwoom import _raise_websocket_closed
+from feeds.providers.kiwoom import _raise_websocket_closed
 from vibetrading.runtime import _collector_error_details
 from vibetrading.settings import RuntimeSettings
 from vibetrading.telegram import TelegramController

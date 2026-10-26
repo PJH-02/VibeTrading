@@ -25,7 +25,7 @@ from types import MappingProxyType
 from typing import Any, Callable, Mapping
 
 from .execution_ledger import positive_decimal
-from .hot_path import ApplyResult, DecisionSnapshot, HotPathStore, StrategyDataView, _freeze
+from market.hot_path import ApplyResult, DecisionSnapshot, HotPathStore, StrategyDataView, _freeze
 from core.models import AssetClass, BaseMarketEvent, EventType, OrderBookEvent, Signal, TradeEvent, Venue, event_from_dict, stable_hash
 from .paper_execution import PaperExecution
 from .strategies import StrategyModule, compile_subscriptions, compile_warmup, load_strategy

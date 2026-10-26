@@ -12,9 +12,9 @@ import aiohttp
 import websockets
 
 from vibetrading.bus import EventBus
-from vibetrading.collection_timing import CollectionContext, MINUTE_NS, next_utc_minute_ns, receipt_clock
+from feeds.collection_timing import CollectionContext, MINUTE_NS, next_utc_minute_ns, receipt_clock
 from core.models import Bar1mEvent, BookUpdateType, FundingRateEvent, InstrumentId, OpenInterestEvent, OrderBookEvent, OrderBookLevel, Venue, stable_hash
-from vibetrading.universe_config import HyperliquidSecurity
+from feeds.universe_config import HyperliquidSecurity
 
 logger = logging.getLogger(__name__)
 

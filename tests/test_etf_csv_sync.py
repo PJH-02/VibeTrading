@@ -8,7 +8,7 @@ import pytest
 
 from test_etf_execution_update import make_references
 from vibetrading.etf_csv_history import CsvStrategyHistory, CSV_FILES, digest_file
-from vibetrading.etf_csv_sync import completed_sp500_rows, latest_completed_session, session_minute_rows, EtfCsvSync
+from feeds.etf_csv_sync import completed_sp500_rows, latest_completed_session, session_minute_rows, EtfCsvSync
 from vibetrading.etf_history import EtfHistory
 
 

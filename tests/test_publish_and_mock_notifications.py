@@ -13,7 +13,7 @@ from vibetrading.bus import NatsJetStreamBus, NatsPublishError
 from vibetrading.etf_journal import EtfJournal
 from vibetrading.etf_trading import EtfTradingLoop
 from core.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, TradeEvent, Venue
-from vibetrading.providers.universe import InstrumentUniverseResolver
+from feeds.providers.universe import InstrumentUniverseResolver
 from vibetrading.runtime import _CollectorReadinessBus
 from vibetrading.settings import RuntimeSettings
 from vibetrading.telegram import TelegramController
@@ -29,7 +29,7 @@ def settings(tmp_path):
 def test_universe_refresh_does_not_open_shared_database(tmp_path,monkeypatch):
     def blocked(*args,**kwargs):
         raise AssertionError('Collector attempted shared SQLite write')
-    monkeypatch.setattr('vibetrading.providers.universe.RuntimeStore',blocked)
+    monkeypatch.setattr("feeds.providers.universe.RuntimeStore",blocked)
     resolver = InstrumentUniverseResolver(settings=settings(tmp_path))
     resolver._persist('kis_futures',{'front':'101V12'})
     data = json.loads((tmp_path/'state/universe_cache/kis_futures.json').read_text())
@@ -143,7 +143,7 @@ def test_restart_restores_today_opening_minutes_without_replaying_signals(tmp_pa
 async def test_close_report_uses_broker_costs_and_is_once_per_trading_day(tmp_path,monkeypatch):
     loop=EtfTradingLoop.__new__(EtfTradingLoop); loop.journal=staged_journal(tmp_path)
     calls=[]; closed=[False]
-    monkeypatch.setattr('vibetrading.etf_csv_sync.completed_session',lambda *args:closed[0])
+    monkeypatch.setattr("feeds.etf_csv_sync.completed_session",lambda *args:closed[0])
     async def account():
         calls.append(True)
         return {'summary':{'tot_evlu_amt':'6100','bfdy_tot_asst_evlu_amt':'6000','thdt_tlex_amt':'23'},'positions':[]}

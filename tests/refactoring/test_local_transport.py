@@ -11,7 +11,7 @@ import sys
 
 import pytest
 
-from vibetrading.feed_recovery import EngineCursor, RecoveryFrame
+from feeds.feed_recovery import EngineCursor, RecoveryFrame
 from vibetrading.local_transport import (
     AppliedReceipt, LocalTransportClient, LocalTransportServer, TransportBudgets,
     TransportError, encode_frame, read_frame,

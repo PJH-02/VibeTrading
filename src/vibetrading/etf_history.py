@@ -14,7 +14,7 @@ import pandas as pd
 from .etf_reference import make_features, rolling_z1
 from .etf_csv_history import CsvStrategyHistory, ETF_HISTORY_ROLES
 from .strategies.kr.c3 import open_decision
-from .providers.kiwoom import KiwoomAuthClient, KST, _abs_decimal
+from feeds.providers.kiwoom import KiwoomAuthClient, KST, _abs_decimal
 
 
 def native_frame(rows: list[dict], symbol: str, *, minute: bool = False, index: bool = False) -> pd.DataFrame:
@@ -123,7 +123,7 @@ class EtfHistory:
         etf, ix = etf.loc[keep].tail(252), ix.loc[keep].tail(252)
         calendar = etf.index.append(pd.DatetimeIndex([pd.Timestamp(self.day)]))
         # An incomplete US tail cannot be replaced with a stale last price.
-        from .etf_csv_sync import latest_completed_session
+        from feeds.etf_csv_sync import latest_completed_session
         latest = self.us.index.max()
         instant = pd.Timestamp(self.day,tz='Asia/Seoul') + pd.Timedelta(hours=9)
         required = latest_completed_session('XNYS',instant.to_pydatetime(),grace_minutes=10)

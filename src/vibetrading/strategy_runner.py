@@ -10,7 +10,7 @@ from typing import Any, Callable, Iterable
 from .bus import EventBus, NatsJetStreamBus
 from .dashboard.telemetry import heartbeat
 from core.dedup import BoundedDedup
-from .hot_path import DecisionSnapshot, HotPathStore, StrategyDataView
+from market.hot_path import DecisionSnapshot, HotPathStore, StrategyDataView
 from core.models import AssetClass, BaseMarketEvent, EventType, InstrumentId, Signal, event_from_dict
 from .parquet_store import ParquetHistoryReader
 from .settings import get_settings

@@ -1,8 +1,8 @@
 from decimal import Decimal
 
 from core.models import AssetClass, Venue
-from vibetrading.providers.coingecko import CoinGeckoClient, CoinMarket
-from vibetrading.providers.universe import ListedContract, select_near_next_futures, select_option_atm_band
+from feeds.providers.coingecko import CoinGeckoClient, CoinMarket
+from feeds.providers.universe import ListedContract, select_near_next_futures, select_option_atm_band
 
 
 def test_select_near_next_futures() -> None:

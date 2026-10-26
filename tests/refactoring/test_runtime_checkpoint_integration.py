@@ -7,10 +7,10 @@ from types import ModuleType, SimpleNamespace
 import pytest
 
 from vibetrading.execution_ledger import AccountScope
-from vibetrading.feed_recovery import EngineCursor, RecoveryFrame
-from vibetrading.hot_path import HotPathStore
-from vibetrading.local_engine import EngineBudgets, LocalMarketEngine
-from vibetrading.local_pipeline import PipelineBudgets
+from feeds.feed_recovery import EngineCursor, RecoveryFrame
+from market.hot_path import HotPathStore
+from market.local_engine import EngineBudgets, LocalMarketEngine
+from feeds.local_pipeline import PipelineBudgets
 from vibetrading.market_checkpoint import CheckpointCodec
 from vibetrading.market_spool import MarketSpool
 from core.models import AssetClass, InstrumentId, OrderBookEvent, OrderBookLevel, OrderDestination, OrderIntent, Side, Signal, SignalAction, TradeEvent, Venue

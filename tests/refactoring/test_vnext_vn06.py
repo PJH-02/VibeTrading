@@ -7,8 +7,8 @@ import os
 import pytest
 
 from core.dedup import BoundedDedup
-from vibetrading.feed_recovery import EngineCursor
-from vibetrading.hot_path import HotPathStore, PreparedHistory
+from feeds.feed_recovery import EngineCursor
+from market.hot_path import HotPathStore, PreparedHistory
 from vibetrading.market_checkpoint import CheckpointCodec, CheckpointError, CheckpointProducer
 from core.models import AssetClass, Bar1mEvent, BookUpdateType, IndexQuoteEvent, InstrumentId, OrderBookEvent, OrderBookLevel, TradeEvent, Venue
 

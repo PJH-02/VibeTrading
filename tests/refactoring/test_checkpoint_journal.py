@@ -9,7 +9,7 @@ import pytest
 
 from vibetrading.checkpoint_journal import CheckpointJournal
 from vibetrading.local_config import SpoolLimits
-from vibetrading.local_pipeline import PipelineBudgets
+from feeds.local_pipeline import PipelineBudgets
 from test_checkpoint_startup import LIMITS, append, capture, engine, event, producer, read_order
 
 

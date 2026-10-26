@@ -8,7 +8,7 @@ import pytest
 
 from test_telegram_status import _controller
 from vibetrading.health import touch
-from vibetrading.providers.kiwoom import KiwoomAuthClient, KiwoomCollector
+from feeds.providers.kiwoom import KiwoomAuthClient, KiwoomCollector
 
 
 def client(tmp_path):

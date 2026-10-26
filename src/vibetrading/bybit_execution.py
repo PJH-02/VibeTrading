@@ -16,7 +16,7 @@ from urllib.parse import urlencode
 import aiohttp
 import websockets
 
-from .providers.crypto_perp import SYMBOLS
+from feeds.providers.crypto_perp import SYMBOLS
 from .settings import RuntimeSettings, get_settings
 
 

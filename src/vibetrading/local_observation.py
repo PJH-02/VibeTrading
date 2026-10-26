@@ -19,8 +19,8 @@ import time
 import uuid
 
 from .bus import dumps, subject_for_signal
-from .feed_recovery import EngineCursor
-from .local_pipeline import PipelineBudgets, SpoolingMarketPublisher
+from feeds.feed_recovery import EngineCursor
+from feeds.local_pipeline import PipelineBudgets, SpoolingMarketPublisher
 
 
 ObservationBudgets = PipelineBudgets

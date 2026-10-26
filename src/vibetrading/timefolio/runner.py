@@ -9,7 +9,7 @@ from typing import Any
 
 from vibetrading.bus import EventBus, NatsJetStreamBus
 from vibetrading.execution import AccountExecutionConfig, ExecutionSafetyGate, OrderIntentFactory
-from vibetrading.hot_path import HotPathStore, StrategyDataView
+from market.hot_path import HotPathStore, StrategyDataView
 from core.models import BaseMarketEvent, EventType, OrderDestination, OrderIntentStatus, Side, Signal, SignalAction, event_from_dict
 from vibetrading.parquet_store import ParquetHistoryReader
 from vibetrading.settings import get_settings

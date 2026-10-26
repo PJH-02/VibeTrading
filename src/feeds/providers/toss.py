@@ -415,7 +415,7 @@ class TossCollector:
             except asyncio.CancelledError:
                 raise
             except Exception as exc:
-                from vibetrading.market_policy import CollectionPaused
+                from market.market_policy import CollectionPaused
                 if isinstance(exc, CollectionPaused):
                     raise
                 failures += 1

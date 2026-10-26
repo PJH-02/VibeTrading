@@ -10,7 +10,7 @@ from zipfile import ZipFile
 import aiohttp
 
 from core.models import AssetClass, Venue
-from vibetrading.providers.universe import ListedContract
+from feeds.providers.universe import ListedContract
 
 
 INDEX_DERIVATIVE_MASTER_URL = "https://new.real.download.dws.co.kr/common/master/fo_idx_code_mts.mst.zip"

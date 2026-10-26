@@ -6,10 +6,10 @@ import pytest
 
 from vibetrading.bus import InMemoryEventBus, subject_for_event
 from vibetrading.bybit_execution import BybitAudit, BybitExecutionProbe, _market_trigger_price
-from vibetrading.hot_path import HotPathStore
-from vibetrading.market_source_status import source_status
+from market.hot_path import HotPathStore
+from market.market_source_status import source_status
 from core.models import BookUpdateType, OrderBookEvent, OrderBookLevel, Venue
-from vibetrading.providers.crypto_perp import CryptoPerpCollector, _instrument
+from feeds.providers.crypto_perp import CryptoPerpCollector, _instrument
 
 
 def test_market_trigger_quote_keeps_postonly_buy_non_crossing():

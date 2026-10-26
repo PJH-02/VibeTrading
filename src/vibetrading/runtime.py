@@ -17,14 +17,14 @@ from .archive import ArchiveMaintenance
 from .storage_worker import StorageWorker
 from .strategy_runner import SharedStrategyRunner
 from .session_alerts import session_state
-from .market_policy import MarketDataPolicyBus
+from market.market_policy import MarketDataPolicyBus
 from .storage_guard import StorageGuard
 from .maintenance_gate import maintenance_lock
 from .health import touch as health_touch
 from .gap_ledger import CollectionGapLedger
 from .settings import get_settings
 from core.models import AssetClass, DataGapEvent, EventType, InstrumentId, Venue
-from .providers.crypto_perp import SYMBOLS as CRYPTO_SYMBOLS
+from feeds.providers.crypto_perp import SYMBOLS as CRYPTO_SYMBOLS
 
 logger = logging.getLogger(__name__)
 
@@ -212,7 +212,7 @@ async def _collector_loop(job: RuntimeJob, bus: NatsJetStreamBus) -> None:
         current: BaseException | None = exc
         while current is not None and id(current) not in seen:
             seen.add(id(current))
-            from .market_policy import CollectionPaused
+            from market.market_policy import CollectionPaused
             if isinstance(current, CollectionPaused):
                 return True
             next_exc = current.__cause__ or current.__context__
@@ -224,7 +224,7 @@ async def _collector_loop(job: RuntimeJob, bus: NatsJetStreamBus) -> None:
         current: BaseException | None = exc
         while current is not None and id(current) not in seen:
             seen.add(id(current))
-            from .market_policy import CollectionPaused
+            from market.market_policy import CollectionPaused
             if isinstance(current, CollectionPaused):
                 return current
             next_exc = current.__cause__ or current.__context__
@@ -245,7 +245,7 @@ async def _collector_loop(job: RuntimeJob, bus: NatsJetStreamBus) -> None:
 
     def provider_open() -> bool:
         if job.provider == "ls-kospi200-foreign":
-            from .providers.ls_market import krx_futures_session
+            from feeds.providers.ls_market import krx_futures_session
             return krx_futures_session() is not None
         if job.provider == "ls-overseas-delayed":
             return session_state("US_FUTURES")[0]
@@ -323,7 +323,7 @@ async def _collector_loop(job: RuntimeJob, bus: NatsJetStreamBus) -> None:
 
             readiness_bus = _CollectorReadinessBus(bus, mark_ready, job.provider)
             if bus.settings.env.get("COLLECTOR_SPLIT_FANOUT", "false").lower() == "true":
-                from .market_fanout import SplitMarketEventBus
+                from market.market_fanout import SplitMarketEventBus
                 def invalidate_feed(reason: str) -> None:
                     if job.provider.endswith("-perp"):
                         MarketDataPolicyBus.pause_crypto_collection("fanout_" + reason)
@@ -400,7 +400,7 @@ async def _collector_loop(job: RuntimeJob, bus: NatsJetStreamBus) -> None:
                     MarketDataPolicyBus.pause_crypto_collection(publish_error.reason)
                 else:
                     MarketDataPolicyBus.pause_market_collection(publish_error.reason)
-                from .market_policy import CollectionPaused
+                from market.market_policy import CollectionPaused
                 pause = CollectionPaused(publish_error.reason, primary_reason=publish_error.reason,
                                          blocking_reasons=(publish_error.reason,))
             if intentional_pause or nats_backpressure:

@@ -230,7 +230,7 @@ async def test_kp_leverage_and_kd_short_route_to_actual_vehicles(tmp_path,strate
 @pytest.mark.parametrize('symbol',['122630','251340'])
 async def test_live_vehicle_minutes_are_kept_without_changing_base_signals(symbol):
     from core.models import Bar1mEvent
-    from vibetrading.providers.kiwoom import KST
+    from feeds.providers.kiwoom import KST
     from datetime import datetime
     now = datetime.now(KST)
     close = now.replace(hour=9,minute=30,second=0,microsecond=0)

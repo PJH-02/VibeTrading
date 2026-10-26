@@ -8,9 +8,9 @@ from concurrent.futures import ThreadPoolExecutor
 
 import pytest
 
-from vibetrading.feed_recovery import EngineCursor, RecoveryFrame
-from vibetrading.hot_path import HotPathStore
-from vibetrading.local_engine import EngineBudgets, EngineError, LocalMarketEngine
+from feeds.feed_recovery import EngineCursor, RecoveryFrame
+from market.hot_path import HotPathStore
+from market.local_engine import EngineBudgets, EngineError, LocalMarketEngine
 from vibetrading.local_transport import AppliedReceipt
 from vibetrading.market_checkpoint import CheckpointCodec
 from core.models import AssetClass, InstrumentId, OrderBookEvent, OrderBookLevel, TradeEvent, Venue

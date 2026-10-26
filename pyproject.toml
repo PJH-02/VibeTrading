@@ -39,6 +39,10 @@ include = [
     "backtest.*",
     "core",
     "core.*",
+    "feeds",
+    "feeds.*",
+    "market",
+    "market.*",
 ]
 exclude = [
     "src",

@@ -7,7 +7,7 @@ from websockets.exceptions import ConnectionClosedOK, ConnectionClosedError
 from websockets.frames import Close
 
 from vibetrading.bus import NatsJetStreamBus
-from vibetrading.providers.toss import TossAuthClient, TossCollector, TossUnauthorized, parse_toss_symbols
+from feeds.providers.toss import TossAuthClient, TossCollector, TossUnauthorized, parse_toss_symbols
 from vibetrading.runtime import _collector_error_details
 from vibetrading.settings import RuntimeSettings
 

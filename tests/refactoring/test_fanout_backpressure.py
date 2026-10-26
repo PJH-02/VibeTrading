@@ -9,7 +9,7 @@ import time
 import pytest
 
 from vibetrading.bus import MarketPublication, prepare_market_event
-from vibetrading.market_fanout import SplitMarketEventBus
+from market.market_fanout import SplitMarketEventBus
 from core.models import AssetClass, BookUpdateType, DataGapEvent, InstrumentId, OrderBookEvent, OrderBookLevel, TradeEvent, Venue
 
 

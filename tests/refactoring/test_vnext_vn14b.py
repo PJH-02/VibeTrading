@@ -11,7 +11,7 @@ import pytest
 from test_execution_owner import build_owner
 from test_local_transport import budgets
 from test_outbox_isolation import _controller
-from vibetrading.feed_recovery import EngineCursor
+from feeds.feed_recovery import EngineCursor
 from vibetrading.local_transport import (LocalTransportServer, TransportError, encode_frame,
     read_frame, request_command, LocalTransportClient)
 from vibetrading.telegram import TelegramController, TelegramRateLimit

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from decimal import Decimal
 
-from vibetrading.hot_path import StrategyDataView
+from market.hot_path import StrategyDataView
 from core.models import Bar1mEvent, BaseMarketEvent, EventType, Signal, SignalAction, utc_now_ns
 
 

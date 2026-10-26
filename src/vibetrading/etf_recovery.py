@@ -14,10 +14,10 @@ import pandas as pd
 import numpy as np
 
 from core.models import AssetClass, InstrumentId, Venue, Bar1mEvent
-from .providers.toss import TossAuthClient
-from .providers.kiwoom import KiwoomAuthClient, KST
-from .providers.kis_client import KisAuthClient
-from .kis_index import index_snapshot, normalize_index_minutes, index_bar
+from feeds.providers.toss import TossAuthClient
+from feeds.providers.kiwoom import KiwoomAuthClient, KST
+from feeds.providers.kis_client import KisAuthClient
+from feeds.kis_index import index_snapshot, normalize_index_minutes, index_bar
 from .etf_csv_history import CsvStrategyHistory, ETF_HISTORY_ROLES, atomic_json
 from .etf_history import EtfHistory
 from .etf_reference import weights

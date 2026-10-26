@@ -6,9 +6,9 @@ import json
 
 import pytest
 
-from vibetrading.feed_recovery import EngineCursor, FeedMode, RecoveryFrame
-from vibetrading.hot_path import HotPathStore
-from vibetrading.local_engine import EngineBudgets, EngineError, LocalMarketEngine
+from feeds.feed_recovery import EngineCursor, FeedMode, RecoveryFrame
+from market.hot_path import HotPathStore
+from market.local_engine import EngineBudgets, EngineError, LocalMarketEngine
 from vibetrading.local_transport import AppliedReceipt
 from core.models import AssetClass, DataGapEvent, InstrumentId, TradeEvent, Venue
 

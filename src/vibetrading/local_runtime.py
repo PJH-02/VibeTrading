@@ -19,13 +19,13 @@ import sys
 import time
 from types import SimpleNamespace
 
-from .feed_recovery import EngineCursor, RecoveryFrame
-from .hot_path import HotPathStore
+from feeds.feed_recovery import EngineCursor, RecoveryFrame
+from market.hot_path import HotPathStore
 from .local_config import LocalRuntimePlan
-from .local_engine import EngineBudgets, LocalMarketEngine
-from .local_pipeline import SpoolingMarketPublisher
+from market.local_engine import EngineBudgets, LocalMarketEngine
+from feeds.local_pipeline import SpoolingMarketPublisher
 from .local_transport import AppliedReceipt, LocalTransportClient, LocalTransportServer
-from .market_apply_order import ApplyOrder
+from market.market_apply_order import ApplyOrder
 from .checkpoint_journal import CheckpointJournal
 from .market_spool import MarketSpool, SpoolCorruption, SpoolCursor, SpoolReader, scan_spool
 from .settings import RuntimeSettings
@@ -38,7 +38,7 @@ def validate_runtime(plan,settings):
     from .runtime_paths import validate_runtime_paths
     from .local_storage import StorageBudgets, fact_storage_reserve
     from .local_events import FactsEventBudgets, checkpoint_storage_reserve
-    from .local_snapshot import SnapshotBudgets
+    from market.local_snapshot import SnapshotBudgets
     storage=StorageBudgets(**plan.storage)
     events=FactsEventBudgets(**plan.events)
     snapshot=SnapshotBudgets(**plan.snapshot)
@@ -565,7 +565,7 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
         if checkpoint_journal is not None:await checkpoint_journal.rotate(engine)
         await server.start()
         await engine.start()
-        from .local_snapshot import LocalSnapshotWriter, SnapshotBudgets
+        from market.local_snapshot import LocalSnapshotWriter, SnapshotBudgets
         snapshot_writer=LocalSnapshotWriter(engine,settings.state_dir/'local-market.json',SnapshotBudgets(**plan.snapshot))
         await snapshot_writer.start()
         if etf is not None:task=asyncio.create_task(etf.run(initialized=True),name='local-etf')

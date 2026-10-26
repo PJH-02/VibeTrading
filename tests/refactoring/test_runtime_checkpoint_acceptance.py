@@ -8,8 +8,8 @@ import pytest
 
 from test_checkpoint_startup import producer, append
 from test_strategy_runtime import (T, BTC, ledger_at, matcher_for, runtime, registration, book)
-from vibetrading.hot_path import HotPathStore
-from vibetrading.local_engine import LocalMarketEngine, EngineBudgets
+from market.hot_path import HotPathStore
+from market.local_engine import LocalMarketEngine, EngineBudgets
 from vibetrading.market_checkpoint import CheckpointCodec
 from vibetrading.runtime_checkpoint import RuntimeCheckpoint
 from vibetrading.etf_trading import EtfTradingLoop, EtfDispatchBlocked
@@ -350,7 +350,7 @@ async def test_real_driver_starts_transport_and_etf_only_after_group_ready(tmp_p
     from dataclasses import asdict
     import vibetrading.local_runtime as driver
     import vibetrading.local_observation as observations
-    import vibetrading.local_snapshot as snapshots
+    import market.local_snapshot as snapshots
     source = fixture(tmp_path, fresh=True)
     etf_source = legacy_etf(tmp_path, [])
     input_book(source, 1)
@@ -500,7 +500,7 @@ async def test_two_real_account_journals_restore_together_or_fence_together(tmp_
                 await target.manager.restore(target.engine, [target.item], paper_runtime=target.host,
                                              readiness=lambda *args: True)
             assert target.manager.state == "QUARANTINED"
-            from vibetrading.local_engine import EngineError
+            from market.local_engine import EngineError
             with pytest.raises(EngineError, match="engine_closed"):
                 input_book(target, 2)
             target.host.advance(T+100)

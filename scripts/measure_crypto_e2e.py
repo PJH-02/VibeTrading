@@ -17,7 +17,7 @@ import websockets
 
 from vibetrading.extended_brokers import GrvtBrokerAdapter, OrderOutcomeUnknown
 from core.models import InstrumentId, OrderDestination, OrderIntent, Side, Venue
-from vibetrading.providers.extended_perp import ExtendedPerpCollector
+from feeds.providers.extended_perp import ExtendedPerpCollector
 from vibetrading.settings import get_settings
 
 D=Decimal
@@ -340,7 +340,7 @@ async def main(args):
                     symbol=row['instrument'].split('_')[0]+'USDT'
                     if baseline or symbol not in ASSETS: raise RuntimeError('Unexpected position: manual reconciliation required')
                     identity='cleanup-'+uuid.uuid4().hex
-                    from vibetrading.providers.crypto_perp import _instrument
+                    from feeds.providers.crypto_perp import _instrument
                     intent=OrderIntent(intent_id=identity,client_order_id=identity,job_id='latency-cleanup',signal_id=identity,
                         destination=OrderDestination.REAL,instrument=_instrument(Venue.GRVT,symbol),side=Side.SELL if size>0 else Side.BUY,
                         quantity=abs(size),metadata={'reduce_only':True,'time_in_force':'IMMEDIATE_OR_CANCEL','testnet':True})

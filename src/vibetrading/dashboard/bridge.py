@@ -14,7 +14,7 @@ from cryptography.hazmat.primitives import serialization
 from vibetrading.dashboard.projection import (MarketProjection, mm_projection, paper_projection,
                                               paper_projection_paths, runtime_orders)
 from vibetrading.dashboard.accounts import bybit_account
-from vibetrading.local_snapshot import SnapshotError, local_snapshot_config, read_market_snapshot
+from market.local_snapshot import SnapshotError, local_snapshot_config, read_market_snapshot
 
 log = logging.getLogger("dashboard.bridge")
 
@@ -43,8 +43,8 @@ async def observe_public(venue: str, symbols: tuple, bus: ProjectionBus, errors:
     # A separate public connection obtains its own initial snapshot. Joining a delta-only
     # live stream midway cannot safely reconstruct an order book.
     from core.models import Venue
-    from vibetrading.providers.crypto_perp import CryptoPerpCollector
-    from vibetrading.providers.extended_perp import ExtendedPerpCollector
+    from feeds.providers.crypto_perp import CryptoPerpCollector
+    from feeds.providers.extended_perp import ExtendedPerpCollector
     while True:
         try:
             collector = (ExtendedPerpCollector if venue in {"grvt", "arcus"} else CryptoPerpCollector)(Venue(venue), symbols)

@@ -6,7 +6,7 @@ from pathlib import Path
 
 from vibetrading.etf_history import EtfHistory
 from vibetrading.etf_csv_history import ETF_HISTORY_ROLES
-from vibetrading.providers.kiwoom import KiwoomAuthClient, KST
+from feeds.providers.kiwoom import KiwoomAuthClient, KST
 from vibetrading.settings import get_settings
 
 

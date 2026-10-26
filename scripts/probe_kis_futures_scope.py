@@ -2,8 +2,8 @@
 import asyncio
 import json
 
-from vibetrading.providers.kis import KisCollector
-from vibetrading.providers.kis_master import KisMasterDownloader
+from feeds.providers.kis import KisCollector
+from feeds.providers.kis_master import KisMasterDownloader
 from collections import Counter
 
 

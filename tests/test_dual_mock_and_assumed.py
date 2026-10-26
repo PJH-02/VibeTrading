@@ -127,7 +127,7 @@ def test_assumed_sell_offsets_real_holding_without_corrupting_broker_book(tmp_pa
 @pytest.mark.asyncio
 async def test_daily_report_sums_two_accounts_and_separates_counterfactual(tmp_path,monkeypatch,owned_loop):
     x=owned_loop(); x.today={}; x.history=SimpleNamespace(daily={})
-    monkeypatch.setattr('vibetrading.etf_csv_sync.completed_session',lambda *args:True)
+    monkeypatch.setattr("feeds.etf_csv_sync.completed_session",lambda *args:True)
     async def one(): return {'summary':{'tot_evlu_amt':'20100','bfdy_tot_asst_evlu_amt':'20000','thdt_tlex_amt':'23'},'positions':[]}
     async def two(): return {'summary':{'tot_evlu_amt':'10050','bfdy_tot_asst_evlu_amt':'10000','thdt_tlex_amt':'7'},'positions':[]}
     x.brokers['mock'].account_state=one; x.brokers['mock2'].account_state=two

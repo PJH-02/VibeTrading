@@ -8,10 +8,10 @@ import sys
 
 import pytest
 
-from vibetrading.hot_path import HotPathStore
+from market.hot_path import HotPathStore
 from vibetrading.local_config import LocalRuntimePlan
-from vibetrading.local_engine import EngineBudgets, LocalMarketEngine
-from vibetrading.local_pipeline import DeliveryBudgets, PipelineBudgets, SpoolingMarketPublisher
+from market.local_engine import EngineBudgets, LocalMarketEngine
+from feeds.local_pipeline import DeliveryBudgets, PipelineBudgets, SpoolingMarketPublisher
 from vibetrading.local_runtime import replay_startup
 from vibetrading.local_transport import LocalTransportClient, LocalTransportServer, TransportBudgets
 from vibetrading.market_spool import MarketSpool, SpoolReader
@@ -153,7 +153,7 @@ def test_existing_observation_log_must_have_remaining_window_and_is_retained(tmp
 @pytest.mark.asyncio
 async def test_etf_disabled_runtime_does_not_build_an_unconsumed_trading_queue(tmp_path,monkeypatch):
     import vibetrading.local_runtime as runtime
-    from vibetrading.feed_recovery import EngineCursor, RecoveryFrame
+    from feeds.feed_recovery import EngineCursor, RecoveryFrame
     plan=LocalRuntimePlan.from_document(document(tmp_path))
     captured=[]
     def factory(**kwargs):
@@ -254,7 +254,7 @@ async def test_etf_wiring_does_not_promote_unrelated_collector_to_global_depende
 async def test_injected_paper_runtime_shares_state_authority_and_receives_replay_phase(tmp_path,monkeypatch):
     import vibetrading.local_runtime as runtime
     from types import SimpleNamespace
-    from vibetrading.feed_recovery import EngineCursor, RecoveryFrame
+    from feeds.feed_recovery import EngineCursor, RecoveryFrame
     plan=LocalRuntimePlan.from_document(document(tmp_path))
     item=plan.producers[0]
     spool=MarketSpool(item.spool_root,item.producer,item.incarnation,**asdict(item.limits))
@@ -306,7 +306,7 @@ async def test_startup_replay_restores_state_without_emitting_old_etf_orders(tmp
     try:
         await replay_startup(engine,(item,))
         assert engine.stats['replayed']==3 and engine.stats['queued_records']==0
-        from vibetrading.feed_recovery import EngineCursor
+        from feeds.feed_recovery import EngineCursor
         assert engine.request_resume(EngineCursor('kiwoom','run',3))
         assert not engine.request_resume(EngineCursor('kiwoom','run',0))
     finally:await engine.close()
@@ -329,7 +329,7 @@ async def test_startup_replay_cannot_relabel_preexisting_state_as_a_virgin_check
 @pytest.mark.asyncio
 async def test_cross_producer_bar_conflict_cannot_choose_an_economic_winner_by_config_order(tmp_path):
     from types import SimpleNamespace
-    from vibetrading.feed_recovery import EngineCursor
+    from feeds.feed_recovery import EngineCursor
     from vibetrading.local_runtime import restore_etf_startup
     doc=document(tmp_path)
     second=dict(doc['producers'][0],producer='toss',provider='toss',spool_root=str(tmp_path/'toss'))

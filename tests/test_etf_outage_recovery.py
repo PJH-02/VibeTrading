@@ -10,8 +10,8 @@ from vibetrading.etf_recovery import replay, start_books, apply_plan, digest, no
 from vibetrading.etf_recovery_ledger import record_fill, filter_account_report
 from core.models import OrderIntent, OrderDestination, InstrumentId, AssetClass, Venue, Side, EventType
 from vibetrading.bus import allowed_supplement
-from vibetrading.kis_index import normalize_index_minutes, index_bar
-from vibetrading.providers.kis import kis_row_to_event
+from feeds.kis_index import normalize_index_minutes, index_bar
+from feeds.providers.kis import kis_row_to_event
 from vibetrading.trade_reporting import report_policy, order_key
 
 DAY='2026-10-15'

@@ -9,8 +9,8 @@ from collections import Counter
 from pathlib import Path
 
 from core.models import Venue
-from vibetrading.hot_path import HotPathStore
-from vibetrading.providers.crypto_perp import CryptoPerpCollector
+from market.hot_path import HotPathStore
+from feeds.providers.crypto_perp import CryptoPerpCollector
 
 
 class CountingBus:

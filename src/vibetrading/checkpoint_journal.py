@@ -10,7 +10,7 @@ import stat
 from pathlib import Path
 import uuid
 
-from .market_apply_order import ApplyOrder, ApplyOrderWriter
+from market.market_apply_order import ApplyOrder, ApplyOrderWriter
 from .market_checkpoint import _canonical, _write_checkpoint_file
 from .market_spool import MarketSpool, SpoolReader, _sync_directory
 

@@ -15,8 +15,8 @@ import aiohttp
 
 from vibetrading.execution import BrokerAdapter
 from core.models import AssetClass, OrderIntent, Side
-from vibetrading.providers.kis_client import KisAuthClient
-from vibetrading.providers.toss import TossAuthClient
+from feeds.providers.kis_client import KisAuthClient
+from feeds.providers.toss import TossAuthClient
 from vibetrading.settings import RuntimeSettings, get_settings
 
 

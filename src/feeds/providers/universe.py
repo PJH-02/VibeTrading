@@ -7,8 +7,8 @@ from decimal import Decimal
 from typing import Iterable
 
 from core.models import AssetClass, InstrumentId, Venue, stable_hash
-from vibetrading.providers.hyperliquid import HyperliquidCatalog, load_hyperliquid_tokenized_symbols
-from vibetrading.universe_config import configured_symbols as load_configured_symbols, load_universe_config
+from feeds.providers.hyperliquid import HyperliquidCatalog, load_hyperliquid_tokenized_symbols
+from feeds.universe_config import configured_symbols as load_configured_symbols, load_universe_config
 from vibetrading.settings import RuntimeSettings, get_settings
 from vibetrading.sqlite_store import RuntimeStore
 
@@ -208,7 +208,7 @@ class InstrumentUniverseResolver:
         underlying_price: Decimal | None = None,
         strikes_each_side: int = 1,
     ) -> dict[str, list[InstrumentId]]:
-        from vibetrading.providers.kis_master import KisMasterDownloader, filter_underlying
+        from feeds.providers.kis_master import KisMasterDownloader, filter_underlying
 
         contracts = await KisMasterDownloader().index_derivatives()
         selected_contracts = filter_underlying(contracts, underlying)
@@ -241,7 +241,7 @@ class InstrumentUniverseResolver:
         The master is refreshed by the caller at boot/pre-open/rollover.  The
         selection itself is deterministic and never embeds a contract code.
         """
-        from vibetrading.providers.kis_master import KisMasterDownloader
+        from feeds.providers.kis_master import KisMasterDownloader
 
         contracts = await KisMasterDownloader().commodity_futures(products)
         selected: dict[str, list[InstrumentId]] = {}
@@ -265,7 +265,7 @@ class InstrumentUniverseResolver:
         products: Iterable[str] = ("NQ",),
     ) -> dict[str, list[InstrumentId]]:
         """Resolve KIS overseas futures front/next contracts from ffcode.mst."""
-        from vibetrading.providers.kis_master import KisMasterDownloader
+        from feeds.providers.kis_master import KisMasterDownloader
 
         contracts = await KisMasterDownloader().overseas_futures(products)
         selected: dict[str, list[InstrumentId]] = {}

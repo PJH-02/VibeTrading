@@ -22,7 +22,7 @@ import sys
 import time
 import uuid
 
-from .feed_recovery import EngineCursor, RecoveryFrame
+from feeds.feed_recovery import EngineCursor, RecoveryFrame
 from .process_lease import ProcessLease
 
 

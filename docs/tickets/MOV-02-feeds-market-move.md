@@ -1,8 +1,11 @@
 # MOV-02 — Feeds/Market mechanical move and native wire verification
 
 Base source HEAD ec08b222642b2f64cc43a528327b513c112bcf0e, branch codex/move-core-feeds.
-MOV-00/01 accepted. Exact worker model freellmapi/glm-4.5-flash, role test.
-GLM actual smoke HTTP200; Gemini HTTP502. No model switches or recursive agents.
+MOV-00/01 accepted. Initial worker freellmapi/glm-4.5-flash failed stream before edits, exit1.
+Current exact worker model opencode/deepseek-v4.1-flash-free, role test (repair1).
+GLM smoke HTTP200 but coding stream interrupted; Gemini HTTP502. Transition
+explicitly approved by existing priority policy after checking changed paths0.
+No worker-side model switches or recursive agents.
 Codex applies the reviewed MOV-01 worker-built deterministic move tool and owns
 all Git moves, review, authority/status and independent acceptance. Worker sees
 an isolated credential-free snapshot AFTER mechanical application.
@@ -16,11 +19,20 @@ kis,kis_client,kis_master,kiwoom,ls_market,toss,universe}.py. Targets frozen by
 scripts/refactoring/final_path_map.json. Exact AST import and dynamic literal
 callers only. Empty feeds/market package init, packaging include addition only.
 No business/schema/economic/time/sequence/queue changes; no new old-path shims.
-Core models/dedup identity aliases remain until MOV-07. No deployment/rollback
-helpers, authority/historical docs or unrelated rewrites. Do not activate KR-DATA.
+Core models/dedup identity aliases remain until MOV-07. Protected deploy/rollback
+helpers and historical overlays remain unchanged; active Dockerfile.crypto COPY
+coverage is explicitly allowed below. No authority/historical docs or unrelated rewrites. Do not activate KR-DATA.
 
 ## Worker bounded implementation
-Only editable file: tests/refactoring/test_mov02_native_golden.py (new).
+Only editable files:
+ tests/refactoring/test_mov02_native_golden.py (new)
+ Dockerfile.crypto (3 COPY lines only).
+Docker packaging correction: directly after existing src/vibetrading COPY, add
+COPY --chown=10001:10001 src/core /app/src/core
+COPY --chown=10001:10001 src/feeds /app/src/feeds
+COPY --chown=10001:10001 src/market /app/src/market
+No other Docker line changes. This is local source packaging only; do not build,
+pull or run Docker, install packages, change images or touch deploy/ overlays.
 Read directly this ticket and these source files only as needed:
  src/feeds/providers/crypto_perp.py, src/feeds/providers/extended_perp.py,
  src/vibetrading/bus.py, src/core/models.py,

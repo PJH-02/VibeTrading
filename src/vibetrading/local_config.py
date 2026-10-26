@@ -11,7 +11,7 @@ import json
 import math
 from pathlib import Path
 
-from .local_pipeline import DeliveryBudgets, PipelineBudgets
+from feeds.local_pipeline import DeliveryBudgets, PipelineBudgets
 from .local_transport import TransportBudgets
 
 

@@ -5,8 +5,8 @@ import os
 
 import pytest
 
-from vibetrading.feed_recovery import EngineCursor
-from vibetrading.hot_path import HotPathStore
+from feeds.feed_recovery import EngineCursor
+from market.hot_path import HotPathStore
 from vibetrading.market_checkpoint import CheckpointCodec, CheckpointError, CheckpointProducer
 
 

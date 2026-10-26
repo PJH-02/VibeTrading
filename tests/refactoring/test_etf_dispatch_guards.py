@@ -12,7 +12,7 @@ from vibetrading.etf_journal import EtfJournal
 from vibetrading.etf_trading import EtfDispatchBlocked, EtfTradingLoop
 from vibetrading.kis_execution import KisCashBroker
 from core.models import AssetClass, Bar1mEvent, BookUpdateType, DataGapEvent, InstrumentId, OrderBookEvent, OrderBookLevel, OrderDestination, OrderIntent, Side, TradeEvent, Venue
-from vibetrading.providers.kiwoom import KST
+from feeds.providers.kiwoom import KST
 
 
 class Broker:

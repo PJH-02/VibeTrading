@@ -15,7 +15,7 @@ from typing import Any
 import aiohttp
 
 from core.models import AssetClass, OrderIntent, Side
-from .providers.kis_client import KisAuthClient
+from feeds.providers.kis_client import KisAuthClient
 from .settings import RuntimeSettings
 
 KST = timezone(timedelta(hours=9))

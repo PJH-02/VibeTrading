@@ -11,10 +11,10 @@ from vibetrading.kis_execution import KisCashBroker
 from core.models import AssetClass, EtfNavEvent, InstrumentId, OrderDestination, OrderIntent, Side, Venue, event_from_dict
 from vibetrading.parquet_store import _schema, flatten_event, ParquetBatchWriter
 from vibetrading.sqlite_store import RuntimeStore
-from vibetrading.providers.kiwoom import KST, KiwoomCollector, parse_kiwoom_symbols
-from vibetrading.providers.kis_client import KisAuthClient
+from feeds.providers.kiwoom import KST, KiwoomCollector, parse_kiwoom_symbols
+from feeds.providers.kis_client import KisAuthClient
 from vibetrading.settings import RuntimeSettings
-from vibetrading.universe_config import configured_symbols
+from feeds.universe_config import configured_symbols
 
 
 def settings(tmp_path):
@@ -147,10 +147,10 @@ def test_collection_scope_contains_all_seven_etfs_and_no_retired_symbols():
 
 @pytest.mark.asyncio
 async def test_kosdaq_master_alias_uses_index_future_trs_not_night_options(tmp_path,monkeypatch):
-    from vibetrading.providers.kis import KisCollector
-    from vibetrading.providers.kis_master import KisMasterDownloader
-    from vibetrading.providers.universe import ListedContract, InstrumentUniverseResolver
-    from vibetrading.providers import universe
+    from feeds.providers.kis import KisCollector
+    from feeds.providers.kis_master import KisMasterDownloader
+    from feeds.providers.universe import ListedContract, InstrumentUniverseResolver
+    from feeds.providers import universe
     contracts = [ListedContract('F'+month,'F'+month,AssetClass.FUTURE,Venue.KIS,
         month[:4]+'-'+month[4:],month,underlying='KSQ150') for month in ('209912','210003')]
     contracts.append(ListedContract('OPTION','OPTION',AssetClass.OPTION,Venue.KIS,

@@ -4,11 +4,11 @@ import asyncio
 import hashlib
 import json
 
-from .feed_recovery import EngineCursor
-from .local_transport import AppliedReceipt
-from .market_checkpoint import _canonical
-from .market_spool import SpoolCursor, SpoolReader, scan_spool
-from .local_observation import LocalObservationBus
+from feeds.feed_recovery import EngineCursor
+from vibetrading.local_transport import AppliedReceipt
+from vibetrading.market_checkpoint import _canonical
+from vibetrading.market_spool import SpoolCursor, SpoolReader, scan_spool
+from vibetrading.local_observation import LocalObservationBus
 
 
 def order_anchor(payload):

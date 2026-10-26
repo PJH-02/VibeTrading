@@ -19,12 +19,12 @@ import threading
 import time
 from typing import Callable, Mapping
 
-from .feed_recovery import EngineCursor, FeedMode, RecoveryFrame
+from feeds.feed_recovery import EngineCursor, FeedMode, RecoveryFrame
 from .hot_path import ApplyResult, DecisionSnapshot, HotPathStore, freeze_market_event
-from .local_transport import AppliedReceipt
-from .market_checkpoint import CheckpointCodec, CheckpointProducer, _canonical
+from vibetrading.local_transport import AppliedReceipt
+from vibetrading.market_checkpoint import CheckpointCodec, CheckpointProducer, _canonical
 from .market_apply_order import ApplyOrder, ApplyOrderWriter, order_anchor, order_record
-from .market_spool import MarketSpool
+from vibetrading.market_spool import MarketSpool
 from core.models import AssetClass, BaseMarketEvent, EventType, SCHEMA_VERSION, event_from_dict
 
 

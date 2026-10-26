@@ -14,8 +14,8 @@ import pytest
 
 from test_strategy_runtime import (T, BTC, book, deliver, ledger_at, matcher_for,
                                    registration, runtime, trade)
-from vibetrading.feed_recovery import EngineCursor, RecoveryFrame
-from vibetrading.local_engine import EngineBudgets, LocalMarketEngine
+from feeds.feed_recovery import EngineCursor, RecoveryFrame
+from market.local_engine import EngineBudgets, LocalMarketEngine
 from core.models import Side
 
 PRODUCER = "btc-source"

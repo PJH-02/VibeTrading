@@ -11,7 +11,7 @@ from types import ModuleType, SimpleNamespace
 import pytest
 
 from vibetrading.execution_ledger import AccountScope
-from vibetrading.hot_path import HotPathStore
+from market.hot_path import HotPathStore
 from core.models import AssetClass, InstrumentId, OrderBookEvent, OrderBookLevel, Side, Signal, SignalAction, Venue
 from vibetrading.paper_execution import PaperExecution
 from vibetrading.portfolio_ledger import PortfolioLedger

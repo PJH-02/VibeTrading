@@ -5,7 +5,7 @@ from types import SimpleNamespace
 
 import pytest
 import vibetrading.local_runtime as local
-from vibetrading.feed_recovery import EngineCursor, RecoveryFrame
+from feeds.feed_recovery import EngineCursor, RecoveryFrame
 from vibetrading.local_config import LocalRuntimePlan
 from vibetrading.runtime_checkpoint import RuntimeCheckpoint
 from test_local_runtime import document

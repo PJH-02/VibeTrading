@@ -4,8 +4,8 @@ import json
 from pathlib import Path
 
 from vibetrading.health import check, touch
-from vibetrading.providers import universe
-from vibetrading.providers.universe import InstrumentUniverseResolver
+from feeds.providers import universe
+from feeds.providers.universe import InstrumentUniverseResolver
 from vibetrading.settings import RuntimeSettings
 
 

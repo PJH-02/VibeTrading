@@ -12,7 +12,7 @@ import pytest
 
 import vibetrading.local_runtime as local
 from vibetrading.dashboard.projection import paper_projection
-from vibetrading.feed_recovery import EngineCursor, RecoveryFrame
+from feeds.feed_recovery import EngineCursor, RecoveryFrame
 from vibetrading.local_config import LocalRuntimePlan
 from vibetrading.local_transport import LocalTransportClient
 from vibetrading.market_spool import MarketSpool

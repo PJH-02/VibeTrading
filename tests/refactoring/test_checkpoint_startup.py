@@ -8,13 +8,13 @@ from types import SimpleNamespace
 
 import pytest
 
-from vibetrading.feed_recovery import EngineCursor, RecoveryFrame
-from vibetrading.hot_path import HotPathStore
-from vibetrading.local_engine import EngineBudgets, LocalMarketEngine
-from vibetrading.local_pipeline import PipelineBudgets
+from feeds.feed_recovery import EngineCursor, RecoveryFrame
+from market.hot_path import HotPathStore
+from market.local_engine import EngineBudgets, LocalMarketEngine
+from feeds.local_pipeline import PipelineBudgets
 from vibetrading.local_runtime import replay_checkpoint_startup, replay_startup
 from vibetrading.market_checkpoint import CheckpointCodec, _canonical
-from vibetrading.market_apply_order import ApplyOrder
+from market.market_apply_order import ApplyOrder
 from vibetrading.market_spool import MarketSpool, SpoolReader
 from core.models import AssetClass, BaseMarketEvent, InstrumentId, OrderBookEvent, TradeEvent, Venue
 
@@ -222,7 +222,7 @@ async def test_order_write_failure_closes_all_feeds_and_cannot_certify_state(tmp
     frames=[append(p,[event(p.producer,2)])[0] for p in items]
     def fail(_):raise OSError('injected order write failure')
     if fault=='write':monkeypatch.setattr(journal,'append',fail)
-    else:monkeypatch.setattr('vibetrading.local_engine.order_record',lambda frame:object())
+    else:monkeypatch.setattr("market.local_engine.order_record",lambda frame:object())
     try:
         with pytest.raises((OSError,ValueError)):source.on_frame(frames[0])
         assert all(f['mode']=='INVALID' for f in source.stats['feeds'].values())

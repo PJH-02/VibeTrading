@@ -1,6 +1,6 @@
 import pytest
 
-from vibetrading.feed_recovery import EngineCursor, FeedMode, FeedRecovery, RecoveryError, RecoveryFrame
+from feeds.feed_recovery import EngineCursor, FeedMode, FeedRecovery, RecoveryError, RecoveryFrame
 
 
 def frame(sequence, payload=None, incarnation="run1"):

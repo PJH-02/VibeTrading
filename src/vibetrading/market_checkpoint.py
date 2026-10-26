@@ -20,8 +20,8 @@ import sys
 import tempfile
 import time
 
-from .feed_recovery import EngineCursor
-from .hot_path import HotPathStore, PreparedHistory, _event_fingerprint, freeze_market_event
+from feeds.feed_recovery import EngineCursor
+from market.hot_path import HotPathStore, PreparedHistory, _event_fingerprint, freeze_market_event
 from core.models import AssetClass, Bar1mEvent, BaseMarketEvent, IndexQuoteEvent, InstrumentId, OrderBookEvent, OrderBookLevel, TradeEvent, event_from_dict
 
 

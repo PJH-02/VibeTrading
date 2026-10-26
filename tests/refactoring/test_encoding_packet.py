@@ -13,7 +13,7 @@ import pytest
 from scripts.refactoring.encoding_probe import NOW, cases, collect_transcript
 from vibetrading import bus as module
 from vibetrading.bus import BufferedMarketEventBus, NatsJetStreamBus, prepare_market_event, publish_prepared_market_event
-from vibetrading.market_policy import MarketDataPolicyBus
+from market.market_policy import MarketDataPolicyBus
 from vibetrading.runtime import _CollectorReadinessBus
 
 

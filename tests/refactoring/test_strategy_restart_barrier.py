@@ -8,7 +8,7 @@ import pytest
 from test_strategy_runtime import (T, BTC, budget, book, deliver, ledger_at, matcher_for,
                                    registration, runtime, spec)
 from vibetrading.execution_ledger import AccountScope
-from vibetrading.hot_path import HotPathStore
+from market.hot_path import HotPathStore
 from vibetrading.portfolio_ledger import PortfolioLedger
 from vibetrading.strategy_runtime import PaperStrategyRuntime, StrategyRisk
 from vibetrading.trading_contracts import TradingMode

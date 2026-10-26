@@ -17,8 +17,8 @@ from typing import Any, Mapping
 import aiohttp
 
 from core.models import AssetClass, InstrumentId, ParticipantFlowEvent, TradeEvent, Venue, stable_hash
-from ..session_alerts import KST, _calendar, session_state
-from ..settings import RuntimeSettings, get_settings
+from vibetrading.session_alerts import KST, _calendar, session_state
+from vibetrading.settings import RuntimeSettings, get_settings
 
 
 REST_URL = "https://openapi.ls-sec.co.kr:8080"

@@ -13,7 +13,7 @@ import websockets
 
 from vibetrading.bus import EventBus
 from core.models import AssetClass, BookUpdateType, InstrumentId, IndexQuoteEvent, OrderBookEvent, OrderBookLevel, ParticipantFlowEvent, Side, TradeEvent, Venue, utc_now_ns
-from vibetrading.providers.kis_client import KisAuthClient
+from feeds.providers.kis_client import KisAuthClient
 
 
 logger = logging.getLogger(__name__)
@@ -888,7 +888,7 @@ class KisCollector:
         self.auto_overseas_futures = auto_overseas_futures
         self.overseas_future_products = overseas_future_products
         self.participant_flow_enabled = participant_flow_enabled
-        from vibetrading.universe_config import load_universe_config
+        from feeds.universe_config import load_universe_config
         self.cash_index_enabled = bool(auto_index_derivatives and
             load_universe_config().get('dynamic',{}).get('kis_cash_index',{}).get('enabled',False))
 
@@ -906,7 +906,7 @@ class KisCollector:
         participant_task: asyncio.Task[None] | None = None
         index_task = None
         if self.cash_index_enabled:
-            from vibetrading.kis_index import KisIndexFeed
+            from feeds.kis_index import KisIndexFeed
             index_task = asyncio.create_task(KisIndexFeed(client,client.settings).run(bus),name='kis-cash-index')
         if self.participant_flow_enabled and self._participant_flow_config() is not None:
             participant_task = asyncio.create_task(
@@ -987,7 +987,7 @@ class KisCollector:
                 await asyncio.gather(participant_task, return_exceptions=True)
 
     def _participant_flow_config(self) -> dict[str, Any] | None:
-        from vibetrading.universe_config import load_universe_config
+        from feeds.universe_config import load_universe_config
 
         config = load_universe_config().get("dynamic", {}).get("kis_participant_flow", {})
         if not isinstance(config, dict) or not bool(config.get("enabled", False)):
@@ -1106,7 +1106,7 @@ class KisCollector:
         await asyncio.gather(*(consume(items, index) for index, items in enumerate(shards)))
 
     async def _resolve_commodity_subscriptions(self) -> set[KisSubscription]:
-        from vibetrading.providers.universe import InstrumentUniverseResolver
+        from feeds.providers.universe import InstrumentUniverseResolver
 
         resolved = await InstrumentUniverseResolver().resolve_kis_commodity_futures(products=self.commodity_products)
         subscriptions: set[KisSubscription] = set()
@@ -1119,7 +1119,7 @@ class KisCollector:
         return subscriptions
 
     async def _resolve_overseas_future_subscriptions(self) -> set[KisSubscription]:
-        from vibetrading.providers.universe import InstrumentUniverseResolver
+        from feeds.providers.universe import InstrumentUniverseResolver
 
         resolved = await InstrumentUniverseResolver().resolve_kis_overseas_futures(products=self.overseas_future_products)
         subscriptions: set[KisSubscription] = set()
@@ -1132,8 +1132,8 @@ class KisCollector:
         return subscriptions
 
     async def _resolve_index_derivative_subscriptions(self) -> set[KisSubscription]:
-        from vibetrading.providers.universe import InstrumentUniverseResolver
-        from vibetrading.universe_config import load_universe_config
+        from feeds.providers.universe import InstrumentUniverseResolver
+        from feeds.universe_config import load_universe_config
 
         resolver = InstrumentUniverseResolver()
         policy = load_universe_config().get("dynamic", {}).get("kis_index_derivatives", {})

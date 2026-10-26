@@ -13,10 +13,10 @@ from test_local_runtime import document, event as runtime_event
 from test_paper_execution import submit as paper_submit
 from test_strategy_runtime import (T, BTC, book, budget, deliver, ledger_at, matcher_for,
                                    registration, runtime, spec, trade)
-from vibetrading.feed_recovery import EngineCursor, RecoveryFrame
-from vibetrading.hot_path import HotPathStore
+from feeds.feed_recovery import EngineCursor, RecoveryFrame
+from market.hot_path import HotPathStore
 from vibetrading.local_config import LocalRuntimePlan
-from vibetrading.local_engine import EngineBudgets, EngineError, LocalMarketEngine
+from market.local_engine import EngineBudgets, EngineError, LocalMarketEngine
 from core.models import OrderDestination, OrderIntent, Side
 from vibetrading.strategy_runtime import PaperStrategyRuntime
 from vibetrading.trading_contracts import ActionKind, ExecutionAction, TradingMode

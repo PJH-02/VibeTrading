@@ -5,7 +5,7 @@ from types import ModuleType, SimpleNamespace
 import pytest
 
 from vibetrading.bus import BusMessage
-from vibetrading.hot_path import HotPathStore
+from market.hot_path import HotPathStore
 from core.models import AssetClass, Bar1mEvent, InstrumentId, Side, Signal, SignalAction, TradeEvent, Venue
 from vibetrading.strategy_contract import StrategyModule, compile_subscriptions, compile_warmup, load_strategy
 from vibetrading.strategy_runner import SharedStrategyRunner

@@ -3,7 +3,7 @@ from __future__ import annotations
 from decimal import Decimal
 from pathlib import Path
 
-from vibetrading.providers.universe import ListedContract, select_option_atm_band
+from feeds.providers.universe import ListedContract, select_option_atm_band
 from core.models import AssetClass, Venue
 from vibetrading.settings import RuntimeSettings
 from vibetrading.storage_guard import StorageGuard

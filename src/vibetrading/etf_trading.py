@@ -35,8 +35,8 @@ from .etf_reference import weights
 from .health import touch
 from .kis_execution import KisCashBroker, KisOrderRejected, account_permission_rejection
 from core.models import AssetClass, Bar1mEvent, BookUpdateType, EventType, InstrumentId, OrderDestination, OrderIntent, Side, Signal, SignalAction, Venue, event_from_dict
-from .providers.kiwoom import KiwoomAuthClient, KST
-from .providers.kis_client import KisAuthClient
+from feeds.providers.kiwoom import KiwoomAuthClient, KST
+from feeds.providers.kis_client import KisAuthClient
 from .settings import get_settings
 
 log = logging.getLogger(__name__)
@@ -740,7 +740,7 @@ class EtfTradingLoop:
                 await self.exit(strategy,identity)
 
     async def report_daily(self, day, now):
-        from .etf_csv_sync import completed_session
+        from feeds.etf_csv_sync import completed_session
         identity = 'daily:'+day
         if self.journal.db.execute('SELECT 1 FROM notifications WHERE id=?',(identity,)).fetchone():
             return

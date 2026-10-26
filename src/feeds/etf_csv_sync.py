@@ -12,13 +12,13 @@ import aiohttp
 import nats
 import pandas as pd
 
-from .etf_csv_history import CsvStrategyHistory, ETF_HISTORY_ROLES, atomic_json
-from .etf_history import native_frame
-from .health import touch
+from vibetrading.etf_csv_history import CsvStrategyHistory, ETF_HISTORY_ROLES, atomic_json
+from vibetrading.etf_history import native_frame
+from vibetrading.health import touch
 from core.models import EventType, event_from_dict
 from .providers.kiwoom import KiwoomAuthClient, KST
-from .session_alerts import _calendar
-from .settings import get_settings
+from vibetrading.session_alerts import _calendar
+from vibetrading.settings import get_settings
 
 log = logging.getLogger(__name__)
 
@@ -89,7 +89,7 @@ class EtfCsvSync:
         row = {'timestamp':str(stamp),'date':event.trading_date,'symbol':symbol,'source':event.provider.upper(),
             'timestamp_semantics':'bar_end','trading_value':'',
             **{k:float(getattr(event,k)) for k in ('open','high','low','close','volume')}}
-        from .etf_intraday_store import merge_session_rows
+        from vibetrading.etf_intraday_store import merge_session_rows
         merge_session_rows(self.spool,event.trading_date,symbol,[row],replace=True)
 
     def captured(self, symbol, day):

@@ -4,9 +4,9 @@ import threading
 
 import pytest
 
-from vibetrading.market_apply_order import ApplyOrderWriter
+from market.market_apply_order import ApplyOrderWriter
 from vibetrading.market_spool import MarketSpool
-from vibetrading.local_pipeline import PipelineBudgets
+from feeds.local_pipeline import PipelineBudgets
 from test_checkpoint_startup import LIMITS, append, capture, engine, event, producer, read_order
 
 
