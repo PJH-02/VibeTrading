@@ -38,10 +38,10 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 2,
+    "accepted": 3,
     "in_progress": 1,
     "blocked": 0,
-    "not_started": 30,
+    "not_started": 29,
     "external_not_authorized": 2
   },
   "next_ready_candidate": [],
@@ -361,8 +361,8 @@
       "scope": "KOSPI200+KOSDAQ150 minute/daily, max 350"
     }
   },
-  "active_task_id": "MOV-00",
-  "last_accepted_task_id": "OPS-01",
+  "active_task_id": "MOV-01",
+  "last_accepted_task_id": "MOV-00",
   "stop_requested": false,
   "tickets": [
     {
@@ -416,42 +416,46 @@
     {
       "task_id": "MOV-00",
       "wave": "W1",
-      "status": "IN_PROGRESS",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "GOV-01"
       ],
       "risk_review": "CRITICAL_CODEX",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": "9ab1d7f9899179c442eaa533353c8ee552f88b79",
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "base_sha": "dd2e776c35ca18523546a2491213e7c3026505c4",
+      "actual_commit_sha": "7c595d1a33c5ddb7aded82d6fec86439bc2b7d2d",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-00.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "MOV-00",
       "implementation_packet": "docs/tickets/MOV-00-repair-1.md",
       "selected_worker_model": "opencode/deepseek-v4.1-flash-free",
       "resume_artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z",
-      "repair_delegations": 1
+      "repair_delegations": 1,
+      "acceptance_receipt_sha256": "9bcab53771223914c4666163bf458cd6ad072f170019408f4c224ae7609b1e06"
     },
     {
       "task_id": "MOV-01",
       "wave": "W1",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "depends_on": [
         "MOV-00"
       ],
       "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
+      "base_sha": "7c595d1a33c5ddb7aded82d6fec86439bc2b7d2d",
       "actual_commit_sha": null,
       "acceptance_receipt": null,
       "test_exit": null,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
-      "definition_heading_id": "MOV-01"
+      "definition_heading_id": "MOV-01",
+      "implementation_packet": "docs/tickets/MOV-01-core-move.md",
+      "selected_worker_model": "opencode/deepseek-v4.1-flash-free",
+      "resume_artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z"
     },
     {
       "task_id": "MOV-02",
@@ -1221,6 +1225,11 @@
       "date": "2026-10-26",
       "reason": "User requested3 sequential tickets; selected MOV-00 -> MOV-01 -> MOV-02; MOV-00 ownership inventory dispatched. Trading contract ownership override based on actual execution-ledger dependency.",
       "artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "MOV-00 independently accepted; original dirty checkout preserved; all source ownership and explicit deferred exceptions frozen in codegen map.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-00.acceptance.json"
     }
   ],
   "requirements_revision": {
@@ -1271,5 +1280,23 @@
       "freellmapi_gemini": "SAME_GATEWAY_UNREACHABLE_QUOTA_UNKNOWN",
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/recheck-20261026T033056Z/freellmapi-connectivity.json"
     }
+  },
+  "execution_checkout": {
+    "root": "/home/pjh/.codex/worktrees/move-core-feeds/vibetrading",
+    "branch": "codex/move-core-feeds",
+    "original_checkout": "/mnt/c/users/박제형/desktop/vibetrading",
+    "snapshot_baseline_sha": "dd2e776c35ca18523546a2491213e7c3026505c4"
+  },
+  "active_batch": {
+    "requested_tasks": 3,
+    "tasks": [
+      "MOV-00",
+      "MOV-01",
+      "MOV-02"
+    ],
+    "accepted": [
+      "MOV-00"
+    ],
+    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z"
   }
 }
