@@ -6,6 +6,6 @@ classes, functions, caches, and monkeypatched globals keep their identity.
 
 import sys
 
-from vibetrading.strategies import contract as _canonical
+from strategies import contract as _canonical
 
 sys.modules[__name__] = _canonical

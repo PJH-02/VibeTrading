@@ -21,7 +21,7 @@ class Markets:
         self.quote_observers=[];self.gap_observers=[]
         for venue in self.dirty:
             for sid,(module,asset) in ROUTES.items():
-                self.models[venue,asset]=importlib.import_module("vibetrading.strategies.research.state."+module).Strategy(mode=strategy_mode)
+                self.models[venue,asset]=importlib.import_module("strategies.research.state."+module).Strategy(mode=strategy_mode)
 
     def external(self,venue,asset,q):
         # Confirmed resting size only; pending/unknown never fabricated as depth.

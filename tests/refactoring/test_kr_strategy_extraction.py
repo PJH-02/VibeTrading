@@ -7,12 +7,12 @@ import numpy as np
 import pandas as pd
 import pytest
 
-import vibetrading.etf_history as etf_history_module
-from vibetrading.etf_history import EtfHistory
+import strategies.kr.etf_history as etf_history_module
+from strategies.kr.etf_history import EtfHistory
 from vibetrading.etf_trading import intraday_decision as legacy_intraday_decision
-from vibetrading.strategies.kr import kd, kp
-from vibetrading.strategies.kr._intraday import intraday_decision as pure_intraday_decision
-from vibetrading.strategies.kr.c3 import open_decision
+from strategies.kr import kd, kp
+from strategies.kr._intraday import intraday_decision as pure_intraday_decision
+from strategies.kr.c3 import open_decision
 
 
 ORACLE = runpy.run_path(

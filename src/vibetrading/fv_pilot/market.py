@@ -9,7 +9,7 @@ class PilotMarkets(Markets):
     def __init__(self,journal,strategy_mode="state"):
         super().__init__(journal,strategy_mode)
         self.dirty={v:False for v in VENUES}
-        self.models={(v,a):importlib.import_module("vibetrading.strategies.research.state."+module).Strategy(mode=strategy_mode) for v in VENUES for _,(module,a) in ROUTES.items()}
+        self.models={(v,a):importlib.import_module("strategies.research.state."+module).Strategy(mode=strategy_mode) for v in VENUES for _,(module,a) in ROUTES.items()}
         journal.db.executescript("""
         CREATE TABLE IF NOT EXISTS public_frames(t REAL,wall_ns INTEGER,venue TEXT,asset TEXT,kind TEXT,source_ns INTEGER,raw TEXT);
         CREATE TABLE IF NOT EXISTS public_trades(t REAL,wall_ns INTEGER,venue TEXT,asset TEXT,source_ns INTEGER,side TEXT,qty TEXT,price TEXT,trade_id TEXT);

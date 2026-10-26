@@ -26,7 +26,7 @@ from shared.models import (
     TeamType,
 )
 
-from vibetrading.strategies.legacy.candle_loader import StrategyWrapper, get_strategy
+from strategies.legacy.candle_loader import StrategyWrapper, get_strategy
 
 logger = logging.getLogger(__name__)
 

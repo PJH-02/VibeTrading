@@ -49,6 +49,10 @@ include = [
     "execution.*",
     "portfolio",
     "portfolio.*",
+    "operations",
+    "operations.*",
+    "timefolio",
+    "timefolio.*",
 ]
 exclude = [
     "src",

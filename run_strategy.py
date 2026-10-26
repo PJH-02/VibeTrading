@@ -1,6 +1,6 @@
 """
 VibeTrading Historical Candle Strategy Runner
-vibetrading/strategies/legacy/candle/ 패키지의 전략을 선택하여 전체 파이프라인을 실행합니다.
+src/strategies/legacy/candle/ 패키지의 전략을 선택하여 전체 파이프라인을 실행합니다.
 Usage:
     python run_strategy.py                     # 대화형 메뉴
     python run_strategy.py --strategy turtle_breakout   # 바로 실행
@@ -54,7 +54,7 @@ def scan_strategies() -> dict[str, dict]:
     Returns:
         {전략이름: STRATEGY_CONFIG dict} 매핑
     """
-    candle_package = importlib.import_module("vibetrading.strategies.legacy.candle")
+    candle_package = importlib.import_module("strategies.legacy.candle")
     strategies_dir = Path(candle_package.__file__).resolve().parent
     found: dict[str, dict] = {}
 
@@ -62,7 +62,7 @@ def scan_strategies() -> dict[str, dict]:
         if py_file.name.startswith("_"):
             continue
 
-        module_name = f"vibetrading.strategies.legacy.candle.{py_file.stem}"
+        module_name = f"strategies.legacy.candle.{py_file.stem}"
         try:
             mod: ModuleType = importlib.import_module(module_name)
             config = getattr(mod, "STRATEGY_CONFIG", None)
@@ -272,7 +272,7 @@ def main() -> int:
     # 전략 스캔
     strategies = scan_strategies()
     if not strategies:
-        print("vibetrading/strategies/legacy/candle/ 패키지에 STRATEGY_CONFIG가 있는 전략이 없습니다.")
+        print("src/strategies/legacy/candle/ 패키지에 STRATEGY_CONFIG가 있는 전략이 없습니다.")
         return 1
 
     # --list: 목록만 출력

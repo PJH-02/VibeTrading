@@ -120,7 +120,7 @@ def create_strategy():
 
 
 def loaded(name):
-    return importlib.import_module("vibetrading.strategies." + name)
+    return importlib.import_module("strategies." + name)
 
 
 def actions_for(ledger, *, job_id=JOB_ID):

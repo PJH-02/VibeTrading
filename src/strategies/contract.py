@@ -106,7 +106,7 @@ def _canonical_module_name(module_name: str) -> str:
         raise ValueError(f"Invalid modern strategy module name: {module_name!r}")
     if components[0] in {"legacy", "research"}:
         raise ValueError("Legacy candle and research modules are not modern event strategies")
-    return f"vibetrading.strategies.{relative}"
+    return f"strategies.{relative}"
 
 
 def load_strategy(module_name: str) -> StrategyModule:

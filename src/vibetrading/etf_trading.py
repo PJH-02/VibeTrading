@@ -20,18 +20,18 @@ from contextlib import closing
 from pathlib import Path
 
 from execution.process_lease import ProcessLease
-from .strategies.kr import kd as _kd, kp as _kp
-from .strategies.kr._intraday import intraday_decision as _intraday_decision
+from strategies.kr import kd as _kd, kp as _kp
+from strategies.kr._intraday import intraday_decision as _intraday_decision
 
 import numpy as np
 import pandas as pd
 import nats
 
 from .bus import NatsJetStreamBus
-from .etf_history import EtfHistory
+from strategies.kr.etf_history import EtfHistory
 from storage.etf_csv_history import ETF_HISTORY_ROLES
 from portfolio.etf_journal import EtfJournal
-from .etf_reference import weights
+from strategies.kr.etf_reference import weights
 from .health import touch
 from execution.kis_execution import KisCashBroker, KisOrderRejected, account_permission_rejection
 from core.models import AssetClass, Bar1mEvent, BookUpdateType, EventType, InstrumentId, OrderDestination, OrderIntent, Side, Signal, SignalAction, Venue, event_from_dict

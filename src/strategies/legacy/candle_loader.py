@@ -31,7 +31,7 @@ def _canonical_candle_module(strategy_name: str) -> str:
         raise ValueError(f"Invalid legacy candle strategy name: {strategy_name!r}")
     if "." in name:
         raise ValueError(f"Invalid legacy candle strategy name: {strategy_name!r}")
-    return f"vibetrading.strategies.legacy.candle.{name}"
+    return f"strategies.legacy.candle.{name}"
 
 
 class StrategyProtocol(Protocol):

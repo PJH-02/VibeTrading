@@ -19,8 +19,8 @@ from feeds.providers.kiwoom import KiwoomAuthClient, KST
 from feeds.providers.kis_client import KisAuthClient
 from feeds.kis_index import index_snapshot, normalize_index_minutes, index_bar
 from storage.etf_csv_history import CsvStrategyHistory, ETF_HISTORY_ROLES, atomic_json
-from .etf_history import EtfHistory
-from .etf_reference import weights
+from strategies.kr.etf_history import EtfHistory
+from strategies.kr.etf_reference import weights
 from storage.etf_intraday_store import merge_session_rows
 from portfolio.etf_recovery_ledger import exclude, record_fill
 from .settings import get_settings

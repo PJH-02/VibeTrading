@@ -8,8 +8,8 @@ ROOT=Path(__file__).resolve().parents[1]
 
 
 def strategy_source_files():
-    state=ROOT/'src/vibetrading/strategies/research/state'
-    fair_value=ROOT/'src/vibetrading/strategies/legacy/fair_value'
+    state=ROOT/'src/strategies/research/state'
+    fair_value=ROOT/'src/strategies/legacy/fair_value'
     legacy=ROOT/'src/vibetrading/fv_mm/legacy'
     if state.is_dir() and fair_value.is_dir():
         adapters={'s1_net_liquidity.py','s2_external_anchor.py','s3_aggressive_flow.py','s4_obi.py'}

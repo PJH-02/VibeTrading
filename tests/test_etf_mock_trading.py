@@ -184,7 +184,7 @@ def test_nav_is_committed_as_decimal_parquet(tmp_path):
 
 def test_native_history_features_exclude_future_prices_and_incomplete_windows(tmp_path):
     import pandas as pd
-    from vibetrading.etf_history import EtfHistory
+    from strategies.kr.etf_history import EtfHistory
     history = EtfHistory(None,tmp_path/'history')
     dates = pd.bdate_range('2026-08-01',periods=25)
     history.day = str(dates[-1].date())

@@ -13,7 +13,7 @@ import nats
 import pandas as pd
 
 from storage.etf_csv_history import CsvStrategyHistory, ETF_HISTORY_ROLES, atomic_json
-from vibetrading.etf_history import native_frame
+from strategies.kr.etf_history import native_frame
 from vibetrading.health import touch
 from core.models import EventType, event_from_dict
 from .providers.kiwoom import KiwoomAuthClient, KST

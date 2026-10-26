@@ -8,7 +8,7 @@ from decimal import Decimal
 sys.path.insert(0,'/app')
 import pandas as pd
 import pyarrow.dataset as ds
-from vibetrading.etf_history import EtfHistory
+from strategies.kr.etf_history import EtfHistory
 from vibetrading.etf_trading import intraday_decision
 from feeds.providers.kiwoom import KiwoomAuthClient
 from vibetrading.settings import get_settings

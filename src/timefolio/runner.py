@@ -14,13 +14,8 @@ from core.models import BaseMarketEvent, EventType, OrderDestination, OrderInten
 from storage.parquet_store import ParquetHistoryReader
 from vibetrading.settings import get_settings
 from storage.sqlite_store import RuntimeStore
-from vibetrading.strategies import load_strategy
-from vibetrading.timefolio.client import (
-    AsyncTimefolioBrowserManager,
-    TimefolioCredentials,
-    TimefolioOrderIntent,
-    TimefolioOrderResult,
-)
+from strategies import load_strategy
+from timefolio.client import AsyncTimefolioBrowserManager, TimefolioCredentials, TimefolioOrderIntent, TimefolioOrderResult
 from core.dedup import BoundedDedup
 from vibetrading.dashboard.telemetry import heartbeat
 

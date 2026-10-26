@@ -169,7 +169,7 @@ def test_missing_leverage_or_inverse_history_is_not_a_complete_reference_bundle(
 
 
 def test_execution_vehicles_have_independent_prior_prices_and_cannot_drive_signals(tmp_path):
-    from vibetrading.etf_history import EtfHistory
+    from strategies.kr.etf_history import EtfHistory
     reference = make_references(tmp_path/'history')
     history = EtfHistory(None,tmp_path/'warmup')
     history.day = '2026-09-30'
@@ -193,7 +193,7 @@ def test_execution_vehicles_have_independent_prior_prices_and_cannot_drive_signa
     ('KD',1,1.,{'229200'}),('KD',-1,1.,{'251340'}),
 ])
 async def test_kp_leverage_and_kd_short_route_to_actual_vehicles(tmp_path,strategy,direction,leverage,expected,acquire_owner):
-    from vibetrading.etf_history import EtfHistory
+    from strategies.kr.etf_history import EtfHistory
     reference = make_references(tmp_path/'history')
     history = EtfHistory(None,tmp_path/'warmup')
     history.day = '2026-09-30'

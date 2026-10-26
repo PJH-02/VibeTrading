@@ -2,6 +2,6 @@
 
 import sys
 
-from vibetrading.strategies.research.state import s4_obi as _canonical
+from strategies.research.state import s4_obi as _canonical
 
 sys.modules[__name__] = _canonical

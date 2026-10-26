@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 
-from vibetrading.etf_history import EtfHistory
+from strategies.kr.etf_history import EtfHistory
 from storage.etf_csv_history import ETF_HISTORY_ROLES
 from feeds.providers.kiwoom import KiwoomAuthClient, KST
 from vibetrading.settings import get_settings
@@ -24,7 +24,7 @@ async def main():
     # close. This read-only probe never publishes signals or submits orders.
     for symbol in ETF_HISTORY_ROLES:
         data = await client.post_api('/api/dostk/chart','ka10080',{'stk_cd':symbol,'tic_scope':'1','upd_stkpc_tp':'1','base_dt':day.replace('-','')})
-        from vibetrading.etf_history import native_frame
+        from strategies.kr.etf_history import native_frame
         today = native_frame(data.get('stk_min_pole_chart_qry') or [],symbol,minute=True)
         today = today[today.date.eq(day)]
         today = today[today.timestamp.dt.strftime('%H:%M').between('09:01','15:20')]

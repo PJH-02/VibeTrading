@@ -5,7 +5,7 @@ import time
 from decimal import Decimal
 
 from portfolio.etf_journal import EtfJournal
-from vibetrading.etf_reference import weights
+from strategies.kr.etf_reference import weights
 from vibetrading.settings import get_settings
 from vibetrading.trade_reporting import order_key
 

@@ -12,7 +12,7 @@ from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from vibetrading.dashboard.bridge import write_json
 from vibetrading.dashboard.projection import timefolio_metrics
-from vibetrading.timefolio.client import AsyncTimefolioBrowserManager, TimefolioCredentials
+from timefolio.client import AsyncTimefolioBrowserManager, TimefolioCredentials
 
 
 def decrypt(envelope: dict, key) -> dict:

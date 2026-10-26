@@ -28,7 +28,7 @@ from execution.execution_ledger import positive_decimal
 from market.hot_path import ApplyResult, DecisionSnapshot, HotPathStore, StrategyDataView, _freeze
 from core.models import AssetClass, BaseMarketEvent, EventType, OrderBookEvent, Signal, TradeEvent, Venue, event_from_dict, stable_hash
 from execution.paper_execution import PaperExecution
-from .strategies import StrategyModule, compile_subscriptions, compile_warmup, load_strategy
+from strategies import StrategyModule, compile_subscriptions, compile_warmup, load_strategy
 from execution.trading_contracts import ActionKind, ExecutionAction, ProductSpec, TradingMode, bounded_identity
 
 

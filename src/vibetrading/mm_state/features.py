@@ -197,6 +197,6 @@ def direction_score(value, calibration, key, fallback):
 def legacy_instance(module, coefficient, mode, kwargs):
     if mode == "legacy_fv" or (mode is None and coefficient is not None):
         import importlib
-        return importlib.import_module("vibetrading.strategies.legacy.fair_value."+module).Strategy(coefficient=coefficient, **kwargs)
+        return importlib.import_module("strategies.legacy.fair_value."+module).Strategy(coefficient=coefficient, **kwargs)
     if mode not in (None, "state"):
         raise ValueError("Unknown strategy mode")

@@ -17,19 +17,19 @@ RELATIVE = "market_data/event_type=trade/trading_date=2027-01-15/part-1.parquet"
 
 @pytest.fixture
 def strategy_files(tmp_path, monkeypatch):
-    package = importlib.import_module("vibetrading.strategies")
+    package = importlib.import_module("strategies")
     monkeypatch.setattr(package, "__path__", [*package.__path__, str(tmp_path)])
     created = []
 
     def write(name, source):
         (tmp_path / (name + ".py")).write_text(source, encoding="utf-8")
-        monkeypatch.delitem(sys.modules, "vibetrading.strategies." + name, raising=False)
+        monkeypatch.delitem(sys.modules, "strategies." + name, raising=False)
         created.append(name)
         return name
 
     yield write
     for name in created:
-        sys.modules.pop("vibetrading.strategies." + name, None)
+        sys.modules.pop("strategies." + name, None)
 
 
 def export_row(root, relative, content, file_id, **changes):

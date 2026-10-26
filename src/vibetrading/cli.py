@@ -31,7 +31,7 @@ from .status import runtime_status
 from storage.storage_guard import StorageGuard
 from storage.storage_worker import StorageWorker
 from .strategy_runner import LiveStrategyRunner
-from .timefolio import AsyncTimefolioBrowserManager, TimefolioCredentials, TimefolioStrategyRunner, TimefolioStrategyRunnerConfig
+from timefolio import AsyncTimefolioBrowserManager, TimefolioCredentials, TimefolioStrategyRunner, TimefolioStrategyRunnerConfig
 from .runtime import run_runtime
 from execution.bybit_execution import BybitAudit, BybitExecutionProbe
 from market.market_source_status import source_status

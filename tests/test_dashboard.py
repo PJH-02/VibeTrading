@@ -10,7 +10,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding, rsa
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from vibetrading.dashboard.projection import MarketProjection, probe_orders, runtime_orders, timefolio_metrics
-from vibetrading.dashboard.timefolio_monitor import decrypt
+from operations.dashboard.timefolio_monitor import decrypt
 from core.models import AssetClass, BookUpdateType, DataGapEvent, InstrumentId, OrderBookEvent, OrderBookLevel, TradeEvent, Venue
 
 

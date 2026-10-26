@@ -13,7 +13,7 @@ import pandas as pd
 
 from .etf_reference import make_features, rolling_z1
 from storage.etf_csv_history import CsvStrategyHistory, ETF_HISTORY_ROLES
-from .strategies.kr.c3 import open_decision
+from .c3 import open_decision
 from feeds.providers.kiwoom import KiwoomAuthClient, KST, _abs_decimal
 
 

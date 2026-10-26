@@ -5,14 +5,7 @@ packages are explicitly imported by their owners and are never discovered or
 registered as a side effect of importing this package.
 """
 
-from .contract import (
-    CompiledSubscription,
-    StrategyInstance,
-    StrategyModule,
-    compile_subscriptions,
-    compile_warmup,
-    load_strategy,
-)
+from .contract import CompiledSubscription, StrategyInstance, StrategyModule, compile_subscriptions, compile_warmup, load_strategy
 
 __all__ = [
     "CompiledSubscription",
