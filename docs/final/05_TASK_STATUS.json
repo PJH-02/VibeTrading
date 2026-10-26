@@ -40,13 +40,11 @@
     "total": 35,
     "accepted": 8,
     "in_progress": 0,
-    "blocked": 0,
-    "not_started": 25,
+    "blocked": 1,
+    "not_started": 24,
     "external_not_authorized": 2
   },
-  "next_ready_candidate": [
-    "MOV-06"
-  ],
+  "next_ready_candidate": [],
   "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
   "gate_results": {
     "REPOSITORY_CONSOLIDATED": "NOT_VERIFIED_FOR_NEW_RELEASE",
@@ -363,7 +361,7 @@
       "scope": "KOSPI200+KOSDAQ150 minute/daily, max 350"
     }
   },
-  "active_task_id": null,
+  "active_task_id": "MOV-06",
   "last_accepted_task_id": "MOV-05",
   "stop_requested": false,
   "tickets": [
@@ -674,7 +672,7 @@
     {
       "task_id": "MOV-06",
       "wave": "W1",
-      "status": "NOT_STARTED",
+      "status": "BLOCKED",
       "depends_on": [
         "MOV-02",
         "MOV-03",
@@ -684,11 +682,21 @@
       "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
-      "blocking_reasons": [],
+      "base_sha": "9478c02a39ff85bc527fa7fe32f2f2508a59dcc0",
+      "actual_commit_sha": "2d671e2f771b1d1cba1793295f5ed7fbbffac003",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/MOV-06-20261026T100253Z/MOV-06.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [
+        {
+          "id": "DOCKER_IMAGE_BUILD_IMPORT_UNAVAILABLE",
+          "evidence": "/home/pjh/.local/state/codex-opencode/runs/MOV-06-20261026T100253Z/docker-build.result.json",
+          "details": "Actual docker build --network=none --pull=false exited1: /var/run/docker.sock missing. No built image or container import proof; mandatory MOV-06 acceptance remains unsatisfied."
+        },
+        {
+          "id": "PRIMARY_EXTERNAL_STARTUP_INPUTS_PENDING",
+          "details": "Local primary requires reviewed LocalRuntimePlan + capacity evidence + mount contract. Only synthetic/local tests and fake-env Compose parsing ran; no production plan/mount/capacity files, image startup or production roles verified."
+        }
+      ],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "MOV-06",
       "follow_up_findings": [
@@ -708,7 +716,11 @@
           "details": "Use accepted MOV-05 supplemental map so already-moved monitor is not selected twice; operations/dashboard empty seed init exists. Prove source/target init identity before any resolution; never overwrite existing target."
         }
       ],
-      "resume_move_map": "scripts/refactoring/MOV-05-path-resolution.json"
+      "resume_move_map": "scripts/refactoring/MOV-06-path-resolution.json",
+      "acceptance_receipt_sha256": "9c1bf20873bd71ab4a7cdbb7033828d2d1a8f3a754a039efabc6175dd1539f4d",
+      "source_diff_sha256": "31a7d6c5850b1f5345b0bdd302be04745e01998a3ab7e1d6161c5f9544e392df",
+      "local_implementation": "IMPLEMENTED_LOCAL_TESTED_IMAGE_GATE_PENDING",
+      "resume_instructions": "Resume exact MOV-06 HEAD and receipt. Do not repeat moves or worker repairs (two used). Reuse reviewed code, verify supplied local plan/mount/capacity inputs, actual Docker build/import gate when daemon available. No server/live/deploy actions authorized."
     },
     {
       "task_id": "MOV-07",
@@ -1492,6 +1504,12 @@
       "date": "2026-10-26",
       "reason": "MOV-05 accepted after30 source moves, root collision0,507 product regressions+22 tool tests, Timefolio fake before/after hash equality, 286 function dispositions preserved, wheel root/outside import and static packaging; requested MOV03-05 batch complete, MOV06 ready not started.",
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-05.acceptance.json"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "MOV-06 implementation committed with separate mechanical/packaging/functional changes. Independent668 regression group + final49 runtime/Timefolio tests, wheel42 imports/131 canonical file hashes, Compose7 passed; actual Docker build1/socket absent. BLOCKED, not accepted; MOV-07 not advanced. Worker GLM interrupted, DeepSeek timeout, Gemini429; two repairs exhausted and reviewed worker draft adopted after independent tests.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/MOV-06-20261026T100253Z/MOV-06.acceptance.json",
+      "receipt_sha256": "9c1bf20873bd71ab4a7cdbb7033828d2d1a8f3a754a039efabc6175dd1539f4d"
     }
   ],
   "requirements_revision": {
@@ -1579,21 +1597,35 @@
     "snapshot_baseline_sha": "dd2e776c35ca18523546a2491213e7c3026505c4"
   },
   "active_batch": {
-    "requested_tasks": 3,
+    "requested_tasks": 1,
     "tasks": [
-      "MOV-03",
-      "MOV-04",
-      "MOV-05"
+      "MOV-06"
     ],
-    "accepted": [
-      "MOV-03",
-      "MOV-04",
-      "MOV-05"
-    ],
-    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z",
-    "started_utc": "2026-10-26T06:46:53.308401+00:00",
-    "status": "COMPLETED_REQUESTED_THREE_TICKETS",
-    "completed_utc": "2026-10-26T09:11:16.039979+00:00",
-    "next_not_started": "MOV-06"
-  }
+    "accepted": [],
+    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/MOV-06-20261026T100253Z",
+    "status": "BLOCKED_MANDATORY_IMAGE_GATE",
+    "code_commit": "2d671e2f771b1d1cba1793295f5ed7fbbffac003",
+    "receipt": "/home/pjh/.local/state/codex-opencode/runs/MOV-06-20261026T100253Z/MOV-06.acceptance.json",
+    "next_not_started": "MOV-07"
+  },
+  "completed_batches": [
+    {
+      "requested_tasks": 3,
+      "tasks": [
+        "MOV-03",
+        "MOV-04",
+        "MOV-05"
+      ],
+      "accepted": [
+        "MOV-03",
+        "MOV-04",
+        "MOV-05"
+      ],
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z",
+      "started_utc": "2026-10-26T06:46:53.308401+00:00",
+      "status": "COMPLETED_REQUESTED_THREE_TICKETS",
+      "completed_utc": "2026-10-26T09:11:16.039979+00:00",
+      "next_not_started": "MOV-06"
+    }
+  ]
 }
