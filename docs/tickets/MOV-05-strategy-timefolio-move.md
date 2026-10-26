@@ -2,7 +2,10 @@
 
 Origin HEAD 7f0814f864325f4a1fe2ff3361cf9dbc6c250207, prior MOV-03/04 independently accepted. Final third requested
 ticket, no MOV-06 implementation in this batch. Worker exact model
-opencode/flint-40b-free, role debug. Verified OpenCode free catalog ID. No paid
+Initial Flint attempt exited1 without edits after tool errors.
+Current exact model opencode/deepseek-v4.1-flash-free, role debug, repair1.
+Other free alternatives were actively attempted; use validated direct route for
+the small codemod correction after inspecting zero Flint partial edits. No paid
 routes/account changes/Codex model changes. Workers cannot switch providers.
 
 Codex owns final ownership choices, source moves, audit/authority/status/acceptance.
@@ -71,3 +74,9 @@ Static active imported retired strategies/timefolio paths0 with named compatibil
 alias and protected-history exceptions. Default configs strategies=[] unchanged.
 Original manifest04 and historical receipts unchanged. Record exact provider/model,
 real exits, failed partial drafts, independent tests, source/diff/hash provenance.
+
+## Repair1: exact minimal patch only, no setup probes
+Flint ran disallowed pwd/python -c probes and failed with no source edits. Those
+probes are unnecessary. Start by reading the two allowed source/test files,
+implement the TWO requested dynamic-prefix cases, add focused fixture tests, run
+ONLY exact pytest command and stop. No repo exploration or setup smoke commands.

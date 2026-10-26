@@ -616,12 +616,39 @@
       "definition_heading_id": "MOV-05",
       "resume_artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z",
       "implementation_packet": "docs/tickets/MOV-05-strategy-timefolio-move.md",
-      "selected_worker_model": "opencode/flint-40b-free",
+      "selected_worker_model": "opencode/deepseek-v4.1-flash-free",
       "ownership_exceptions": {
         "mm_state": "All286 four-bundle functions audited; preserve mixed/inactive source namespace until STR/CAP/CLN reuse gates, no blanket whole bundle move",
         "root_strategies": "2 inert exact alias archives + existing turtle identity alias moves; canonical implementation sole source"
       },
-      "supplemental_map": "scripts/refactoring/MOV-05-path-resolution.json"
+      "supplemental_map": "scripts/refactoring/MOV-05-path-resolution.json",
+      "worker_route_attempts": [
+        {
+          "model": "opencode/flint-40b-free",
+          "role": "debug",
+          "launcher_exit": 1,
+          "real_exits": {
+            "diff-check-before-exit.txt": 0,
+            "worker-exit.txt": 1,
+            "diff-check-exit.txt": 0
+          },
+          "changed_paths": [],
+          "scope_pass": true,
+          "relay": null,
+          "applied_to_active_repo": false,
+          "error_summary": [
+            {
+              "name": "APIError",
+              "http_status_tokens": [
+                "503"
+              ],
+              "message_sha256": "9eec5832b8a3be9a2d14c0a33de797534fcdd88895f6b17e0fd833cf5abe22c8",
+              "category": "tool_permission_errors_then_provider_error"
+            }
+          ],
+          "test_run_completed": false
+        }
+      ]
     },
     {
       "task_id": "MOV-06",

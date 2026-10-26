@@ -569,6 +569,169 @@ def test_nonconstant_dynamic_import_argument_is_not_dereferenced(tmp_path):
     assert plan["summary"]["moves"] == 2
 
 
+def test_fstring_module_name_prefix_and_live_import(tmp_path):
+    root = init_repo(tmp_path)
+    write(root, "src/vibetrading/__init__.py", "")
+    write(root, "src/vibetrading/legacy/__init__.py", "")
+    write(root, "src/vibetrading/legacy/candle/__init__.py", "")
+    write(root, "src/vibetrading/legacy/candle/thing.py", "VALUE = 'thing'\n")
+    write(
+        root, "src/vibetrading/consumer.py",
+        "import importlib\n\n"
+        "def module_name(name):\n"
+        "    return f\"vibetrading.legacy.candle.{name}\"\n\n"
+        "def load(name):\n"
+        "    return importlib.import_module(module_name(name))\n",
+    )
+    write(root, "pyproject.toml", pyproject_text())
+    commit(root)
+    map_path = make_map(tmp_path, root, [
+        ("src/vibetrading/legacy/__init__.py", "src/mov05/legacy/__init__.py", "mov05"),
+        ("src/vibetrading/legacy/candle/__init__.py",
+         "src/mov05/legacy/candle/__init__.py", "mov05"),
+        ("src/vibetrading/legacy/candle/thing.py",
+         "src/mov05/legacy/candle/thing.py", "mov05"),
+    ])
+    apply(root, map_path, "mov05")
+
+    consumer = (root / "src/vibetrading/consumer.py").read_text()
+    assert 'f"mov05.legacy.candle.{name}"' in consumer
+    joined = next(n for n in ast.walk(ast.parse(consumer)) if isinstance(n, ast.JoinedStr))
+    assert len(joined.values) == 2
+    assert joined.values[0].value == "mov05.legacy.candle."
+    assert isinstance(joined.values[1], ast.FormattedValue)
+    assert isinstance(joined.values[1].value, ast.Name)
+    assert joined.values[1].value.id == "name"
+    assert python(
+        root,
+        "from vibetrading.consumer import load\n"
+        "assert load('thing').VALUE == 'thing'\n",
+    ) == b""
+
+
+def test_binop_module_prefix_keeps_dynamic_right_operand(tmp_path):
+    root = init_repo(tmp_path)
+    write(root, "src/vibetrading/__init__.py", "")
+    write(root, "src/vibetrading/research/__init__.py", "")
+    write(root, "src/vibetrading/research/state/__init__.py", "")
+    write(root, "src/vibetrading/research/state/thing.py", "VALUE = 'thing'\n")
+    write(
+        root, "src/vibetrading/consumer.py",
+        "import importlib\n\n"
+        "def load(key):\n"
+        "    return importlib.import_module(\"vibetrading.research.state.\" + key)\n",
+    )
+    write(root, "pyproject.toml", pyproject_text())
+    commit(root)
+    map_path = make_map(tmp_path, root, [
+        ("src/vibetrading/research/state/__init__.py",
+         "src/mov05/research/state/__init__.py", "mov05"),
+        ("src/vibetrading/research/state/thing.py",
+         "src/mov05/research/state/thing.py", "mov05"),
+    ])
+    apply(root, map_path, "mov05")
+
+    consumer = (root / "src/vibetrading/consumer.py").read_text()
+    assert 'import_module("mov05.research.state." + key)' in consumer
+    binop = next(n for n in ast.walk(ast.parse(consumer)) if isinstance(n, ast.BinOp))
+    assert isinstance(binop.op, ast.Add)
+    assert binop.left.value == "mov05.research.state."
+    assert isinstance(binop.right, ast.Name) and binop.right.id == "key"
+    assert python(
+        root,
+        "from vibetrading.consumer import load\n"
+        "assert load('thing').VALUE == 'thing'\n",
+    ) == b""
+
+
+def test_prefix_edits_preserve_utf8_crlf_bytes(tmp_path):
+    root = init_repo(tmp_path)
+    write(root, "src/vibetrading/__init__.py", "")
+    for package in ("legacy/candle", "research/state"):
+        write(root, f"src/vibetrading/{package}/__init__.py", "")
+        write(root, f"src/vibetrading/{package}/thing.py", "VALUE = 'thing'\n")
+    original = (
+        b"\xef\xbb\xbf# caf\xc3\xa9\r\n"
+        b"import importlib\r\n"
+        b"\r\n"
+        b"def fstring_name(name):\r\n"
+        b"    return f\"vibetrading.legacy.candle.{name}\"  # na\xc3\xafve\r\n"
+        b"\r\n"
+        b"def binop_name(key):\r\n"
+        b"    return importlib.import_module(\"vibetrading.research.state.\" + key)  # \xc3\xa9\r\n"
+    )
+    write(root, "src/vibetrading/consumer.py", original)
+    write(root, "pyproject.toml", pyproject_text())
+    commit(root)
+    map_path = make_map(tmp_path, root, [
+        ("src/vibetrading/legacy/candle/__init__.py",
+         "src/mov05/legacy/candle/__init__.py", "mov05"),
+        ("src/vibetrading/legacy/candle/thing.py",
+         "src/mov05/legacy/candle/thing.py", "mov05"),
+        ("src/vibetrading/research/state/__init__.py",
+         "src/mov05/research/state/__init__.py", "mov05"),
+        ("src/vibetrading/research/state/thing.py",
+         "src/mov05/research/state/thing.py", "mov05"),
+    ])
+    apply(root, map_path, "mov05")
+
+    after = (root / "src/vibetrading/consumer.py").read_bytes()
+    assert after.startswith(b"\xef\xbb\xbf# caf\xc3\xa9\r\n")
+    assert b'f"mov05.legacy.candle.{name}"' in after
+    assert b'"mov05.research.state." + key' in after
+    assert b"# na\xc3\xafve\r\n" in after
+    assert after.count(b"\r\n") == original.count(b"\r\n")
+    assert after.count(b"\n") == original.count(b"\n")
+    assert b"vibetrading.legacy.candle." not in after
+    assert b"vibetrading.research.state." not in after
+
+
+def test_unmapped_dynamic_arguments_and_unsafe_prefixes(tmp_path):
+    root = init_repo(tmp_path / "unmapped")
+    write(root, "src/vibetrading/__init__.py", "")
+    write(root, "src/vibetrading/models.py", "class Model:\n    pass\n")
+    unchanged = (
+        "import importlib\n\n"
+        "def by_variable(name):\n"
+        "    return importlib.import_module(name)\n\n"
+        "def unmapped_fstring(name):\n"
+        "    return f\"other.pkg.{name}\"\n\n"
+        "def unmapped_binop(name):\n"
+        "    return importlib.import_module(\"other.pkg.\" + name)\n"
+    )
+    write(root, "src/vibetrading/consumer.py", unchanged)
+    commit(root)
+    map_path = make_map(tmp_path, root, [
+        ("src/vibetrading/models.py", "src/core/models.py", "core"),
+    ])
+    apply(root, map_path, "core")
+    assert (root / "src/vibetrading/consumer.py").read_text() == unchanged
+
+    escaped = init_repo(tmp_path / "escaped")
+    write(escaped, "src/vibetrading/__init__.py", "")
+    write(escaped, "src/vibetrading/models.py", "class Model:\n    pass\n")
+    write(
+        escaped, "src/vibetrading/consumer.py",
+        "import importlib\n"
+        "def fstring_name(name):\n"
+        "    return f\"\\x76ibetrading.models.{name}\"\n"
+        "def binop_name(name):\n"
+        "    return importlib.import_module(\"\\x76ibetrading.models.\" + name)\n",
+    )
+    commit(escaped)
+    escaped_map = make_map(tmp_path / "escaped", escaped, [
+        ("src/vibetrading/models.py", "src/core/models.py", "core"),
+    ])
+    original = (escaped / "src/vibetrading/consumer.py").read_bytes()
+    with pytest.raises(fdm.UnsupportedSyntax):
+        fdm.build_plan(escaped, escaped_map, "core")
+    assert (escaped / "src/vibetrading/consumer.py").read_bytes() == original
+    assert not (escaped / "src/core/models.py").exists()
+
+    with pytest.raises(fdm.MoveError, match="overlapping"):
+        fdm._apply_edits(b"abcdef", [(1, 4, "x"), (3, 5, "y")])
+
+
 def test_caller_symlink_is_rejected_before_content_read(tmp_path, monkeypatch):
     root = core_repo(tmp_path)
     outside = tmp_path / "external.py"

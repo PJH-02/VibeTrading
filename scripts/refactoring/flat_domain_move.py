@@ -188,8 +188,30 @@ def _call_kind(node):
     if name in {"patch", "setattr"}:
         return "target"
     return "assert" if name and name.startswith("assert") else None
-def _literal_edits(tree, moved, paths, starts, size):
+_STRING_HEAD = re.compile(rb"([rRuUbBfF]*)('''|\"\"\"|'|\")")
+def _literal_content_start(token, require_f=False):
+    match = _STRING_HEAD.match(token)
+    if not match:
+        raise UnsupportedSyntax("unsupported string token")
+    if require_f and b"f" not in match.group(1).lower():
+        raise UnsupportedSyntax("expected an f-string token")
+    return match.end()
+def _module_prefix(value, moved):
+    if not isinstance(value, str) or not value:
+        return None
+    if value in moved and moved[value] != value:
+        return value, moved[value]
+    for old in sorted(moved, key=len, reverse=True):
+        if moved[old] != old and value.startswith(old + "."):
+            return old, moved[old]
+    return None
+def _literal_edits(tree, moved, paths, starts, size, raw):
     edits, pairs, seen, dynamic_moved = [], {}, set(), False
+    joined_constants = {
+        id(value)
+        for node in ast.walk(tree) if isinstance(node, ast.JoinedStr)
+        for value in node.values if isinstance(value, ast.Constant)
+    }
     def add(const, new_value):
         if id(const) in seen or not isinstance(const.value, str):
             return
@@ -198,6 +220,30 @@ def _literal_edits(tree, moved, paths, starts, size):
         edits.append((start, end, json.dumps(new_value, ensure_ascii=False)))
         pairs[const.value] = const.value
         pairs[new_value] = const.value
+    def prefix_edit(const, span, require_f):
+        nonlocal dynamic_moved
+        if id(const) in seen or not isinstance(const.value, str):
+            return
+        matched = _module_prefix(const.value, moved)
+        if not matched:
+            return
+        old_prefix, new_prefix = matched
+        start, end = span
+        token = raw[start:end]
+        content = _literal_content_start(token, require_f=require_f)
+        old_bytes = old_prefix.encode("utf-8")
+        if token[content:content + len(old_bytes)] != old_bytes:
+            raise UnsupportedSyntax("escaped or unsupported module prefix")
+        new_value = new_prefix + const.value[len(old_prefix):]
+        seen.add(id(const))
+        edits.append((start + content, start + content + len(old_bytes), new_prefix))
+        pairs[const.value] = const.value
+        pairs[new_value] = const.value
+        dynamic_moved = True
+    for node in ast.walk(tree):
+        if isinstance(node, ast.JoinedStr) and node.values and isinstance(
+                node.values[0], ast.Constant):
+            prefix_edit(node.values[0], _span(node, starts, size), True)
     for node in ast.walk(tree):
         kind = _call_kind(node) if isinstance(node, ast.Call) else None
         if kind:
@@ -209,7 +255,15 @@ def _literal_edits(tree, moved, paths, starts, size):
                     kw.value for kw in node.keywords
                     if kw.arg in {"name", "target"} and isinstance(kw.value, ast.Constant)][:1]
             for const in consts:
+                if (kind == "module" and isinstance(const, ast.BinOp)
+                        and isinstance(const.op, ast.Add)
+                        and isinstance(const.left, ast.Constant)
+                        and isinstance(const.left.value, str)):
+                    prefix_edit(const.left, _span(const.left, starts, size), False)
+                    continue
                 if isinstance(const, ast.Constant) and isinstance(const.value, str):
+                    if id(const) in joined_constants:
+                        continue
                     new_value = _map_literal(const.value, moved, paths)
                     if new_value:
                         if kind != "assert":
@@ -218,6 +272,8 @@ def _literal_edits(tree, moved, paths, starts, size):
         elif isinstance(node, (ast.Compare, ast.Assert)):
             for sub in ast.walk(node):
                 if isinstance(sub, ast.Constant) and isinstance(sub.value, str):
+                    if id(sub) in joined_constants:
+                        continue
                     new_value = _map_literal(sub.value, moved, paths)
                     if new_value:
                         add(sub, new_value)
@@ -265,7 +321,8 @@ def _rewrite_source(raw, old_path, new_path, moved, paths):
                 edits.append((start, end, replacement))
     pairs = {}
     if "final_move_inventory" not in old_path:
-        literal_edits, pairs, dynamic_moved = _literal_edits(tree, moved, paths, starts, len(raw))
+        literal_edits, pairs, dynamic_moved = _literal_edits(
+            tree, moved, paths, starts, len(raw), raw)
         if is_moved or imports_moved or dynamic_moved:
             edits.extend(literal_edits)
         else:
