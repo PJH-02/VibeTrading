@@ -38,13 +38,15 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 8,
+    "accepted": 9,
     "in_progress": 0,
-    "blocked": 1,
+    "blocked": 0,
     "not_started": 24,
     "external_not_authorized": 2
   },
-  "next_ready_candidate": [],
+  "next_ready_candidate": [
+    "MOV-07"
+  ],
   "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
   "gate_results": {
     "REPOSITORY_CONSOLIDATED": "NOT_VERIFIED_FOR_NEW_RELEASE",
@@ -361,8 +363,8 @@
       "scope": "KOSPI200+KOSDAQ150 minute/daily, max 350"
     }
   },
-  "active_task_id": "MOV-06",
-  "last_accepted_task_id": "MOV-05",
+  "active_task_id": null,
+  "last_accepted_task_id": "MOV-06",
   "stop_requested": false,
   "tickets": [
     {
@@ -672,7 +674,7 @@
     {
       "task_id": "MOV-06",
       "wave": "W1",
-      "status": "BLOCKED",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "MOV-02",
         "MOV-03",
@@ -683,44 +685,37 @@
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
       "base_sha": "9478c02a39ff85bc527fa7fe32f2f2508a59dcc0",
-      "actual_commit_sha": "2d671e2f771b1d1cba1793295f5ed7fbbffac003",
-      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/MOV-06-20261026T100253Z/MOV-06.acceptance.json",
+      "actual_commit_sha": "38e38aa78dbc08bac0bc3ffca980da10b9f5f836",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/MOV-06-image-completion-20261026T153318Z/MOV-06.complete.acceptance.json",
       "test_exit": 0,
-      "blocking_reasons": [
-        {
-          "id": "OFFLINE_APPLICATION_IMAGE_BUILD_DEPENDENCIES_UNAVAILABLE",
-          "evidence": "/home/pjh/.local/state/codex-opencode/runs/docker-wsl-repair-20261026T150735Z/MOV-06.app-build.result.json",
-          "details": "2026-10-27: Docker Desktop/Ubuntu connectivity repaired and scratch offline build/readback PASS. Actual MOV-06 Dockerfile with cached app-reuse base and --network=none now reaches PEP517 editable build, then exits1 because setuptools>=68 is unavailable in offline build isolation. Crypto/browser image import gates remain unverified. This is no longer a missing-daemon/socket blocker."
-        },
-        {
-          "id": "PRIMARY_EXTERNAL_STARTUP_INPUTS_PENDING",
-          "details": "Local primary requires reviewed LocalRuntimePlan + capacity evidence + mount contract. Only synthetic/local tests and fake-env Compose parsing ran; no production plan/mount/capacity files, image startup or production roles verified."
-        }
-      ],
+      "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "MOV-06",
       "follow_up_findings": [
         {
           "id": "HISTORICAL-RELEASE-INPUTS",
           "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.acceptance.json",
-          "evidence": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.domain-evidence.json"
+          "evidence": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.domain-evidence.json",
+          "resolution": "Resolved for local MOV-06; see complete acceptance receipt. Global MOV-07 gate remains required."
         },
         {
           "id": "TIMEFOLIO_NATS_FREE_PENDING",
           "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-05.acceptance.json",
-          "details": "Timefolio runner NatsJetStreamBus/default md.> source retained move-only; separate NATS-free data integration gates and real browser/live activation remain unverified."
+          "details": "Timefolio runner NatsJetStreamBus/default md.> source retained move-only; separate NATS-free data integration gates and real browser/live activation remain unverified.",
+          "resolution": "Resolved for local MOV-06; see complete acceptance receipt. Global MOV-07 gate remains required."
         },
         {
           "id": "CURRENT_MOVE_MAP_INIT_COLLISIONS",
           "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-05.acceptance.json",
-          "details": "Use accepted MOV-05 supplemental map so already-moved monitor is not selected twice; operations/dashboard empty seed init exists. Prove source/target init identity before any resolution; never overwrite existing target."
+          "details": "Use accepted MOV-05 supplemental map so already-moved monitor is not selected twice; operations/dashboard empty seed init exists. Prove source/target init identity before any resolution; never overwrite existing target.",
+          "resolution": "Resolved for local MOV-06; see complete acceptance receipt. Global MOV-07 gate remains required."
         }
       ],
       "resume_move_map": "scripts/refactoring/MOV-06-path-resolution.json",
-      "acceptance_receipt_sha256": "9c1bf20873bd71ab4a7cdbb7033828d2d1a8f3a754a039efabc6175dd1539f4d",
+      "acceptance_receipt_sha256": "0c4cb53c973825bb2804f6e3cbab51d2cc8920f3f70b9ecd2c0c123ea85dc141",
       "source_diff_sha256": "31a7d6c5850b1f5345b0bdd302be04745e01998a3ab7e1d6161c5f9544e392df",
-      "local_implementation": "IMPLEMENTED_LOCAL_TESTED_IMAGE_GATE_PENDING",
-      "resume_instructions": "Docker Desktop/Ubuntu WSL connection is repaired; native default context and fresh WSL process reach the existing Linux engine. Do not repeat moves or worker repairs (two used). Prepare approved offline image build dependencies/cached base, then rerun actual app/crypto/browser Docker build/import gates and reviewed local startup inputs. No host package installation, live/server/deploy actions authorized.",
+      "local_implementation": "LOCAL_INTEGRATION_VERIFIED",
+      "resume_instructions": "MOV-06 locally complete. Resume MOV-07 at current HEAD; no repeat of moves or worker repairs. Production/live/server actions remain unapproved.",
       "environment_repairs": [
         {
           "date": "2026-10-27",
@@ -731,7 +726,8 @@
           "daemon_connection": "RESOLVED",
           "full_application_image_gate": "BLOCKED_OFFLINE_BUILD_DEPENDENCY_CACHE"
         }
-      ]
+      ],
+      "local_ticket_completion_percent": 100
     },
     {
       "task_id": "MOV-07",
@@ -1527,6 +1523,12 @@
       "reason": "Docker Desktop was running; Ubuntu integration was disabled. Backed up settings-store.json, changed only EnableIntegrationWithDefaultWslDistro false->true, stopped/started Desktop, verified native default socket, fresh WSL, same Windows/Linux engine and existing containers restored. Offline scratch build/readback passed; actual MOV06 app image reached editable build and failed missing offline setuptools build dependency. Corrected obsolete missing-daemon blocker; MOV06 remains BLOCKED, MOV07 not advanced.",
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/docker-wsl-repair-20261026T150735Z/docker-wsl-repair.acceptance.json",
       "receipt_sha256": "05ce7e640675255c8c7f003623654d6701472c923b07f054f40ba52e98afbf58"
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "MOV-06 ACCEPTED_LOCAL 100% local criteria:2495 local tests,4 actual images/8x131 canonical imports, wheel131, Compose7, actual separate-process no-network spool/engine/Parquet startup and credential-disabled roles, local Chromium DOM, Timefolio oracle equality; frozen bytes/04 preserved. Production capacity/mount inputs are external gates, never claimed from synthetic fixtures. MOV-07 ready.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/MOV-06-image-completion-20261026T153318Z/MOV-06.complete.acceptance.json",
+      "receipt_sha256": "0c4cb53c973825bb2804f6e3cbab51d2cc8920f3f70b9ecd2c0c123ea85dc141"
     }
   ],
   "requirements_revision": {
@@ -1614,15 +1616,16 @@
     "snapshot_baseline_sha": "dd2e776c35ca18523546a2491213e7c3026505c4"
   },
   "active_batch": {
-    "requested_tasks": 1,
+    "requested_tasks": 2,
     "tasks": [
+      "MOV-06",
+      "MOV-07"
+    ],
+    "accepted": [
       "MOV-06"
     ],
-    "accepted": [],
-    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/MOV-06-20261026T100253Z",
-    "status": "BLOCKED_MANDATORY_IMAGE_GATE",
-    "code_commit": "2d671e2f771b1d1cba1793295f5ed7fbbffac003",
-    "receipt": "/home/pjh/.local/state/codex-opencode/runs/MOV-06-20261026T100253Z/MOV-06.acceptance.json",
+    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/MOV-06-image-completion-20261026T153318Z",
+    "status": "MOV06_ACCEPTED_MOV07_READY",
     "next_not_started": "MOV-07"
   },
   "completed_batches": [
