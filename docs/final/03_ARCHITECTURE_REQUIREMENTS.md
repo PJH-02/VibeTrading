@@ -15,26 +15,60 @@
 - **UNSUPPORTED_BLOCKED**: 지원하지 않는 inverse/margin/position-mode/venue, 미완성 Private WS·시그널 인과·owner transport는 명시 reject. `CODE_MAPPING_ONLY`를 Order Live 가능으로 보고하지 않는다.
 - **EXTERNAL_ONLY**: 인터넷/API 인증·실계좌 조회·서버 mount/자원/장중 feed/72시간 soak 같은 환경 증거. 오프라인 구현 가능한 코드·스크립트·fixture가 없다면 External-only로 분류 불가.
 
-### ARCH-00A. 1차 Capability Matrix (CAP-00가 검증·확정)
+### ARCH-00A. Required Capability Matrix — CAP-00 확정 계약
 
-현재 *관련 코드의 존재 수준*만 표시한다. 아래 `PENDING_SELECTION`은 PM이 원래 사용 목표를 보존해 support set을 확인해야 한다는 의미이며 자동 신규 개발 승인이나 선택 해제가 아니다.
+**2026-10-27 CAP-00:** 기존 03의 기본 Required 범위를 유지해 코드 계약을 동결한다.
+실제 계좌·전략·live 활성화 선택이나 실운영 검증을 승인하는 표가 아니다.
+구체적인 `venue/product/environment/order_mode/strategy/account_scope` **35개 튜플**과
+함수·직접 Caller·테스트·외부 게이트·간극은 [고정 근거표](../tickets/CAP-00-capability-matrix.json)에 있다.
+29개 Required 행은 기존 동작의 보존 및 명시한 새 공통 연결의 로컬 코드 목표다.
+이 JSON은 문서 검증용 증거이며 Runtime Registry·설정·자동 활성화 파일이 아니다.
+상태의 유일한 쓰기 원천은 05다. CAP-00 완료가 아래 미구현 기능의 완료를 뜻하지 않는다.
 
-| 대상 | Product·환경 | 현재 증거 (코드 경로) | 현 판정 | 필수 완료 방식 |
-|---|---|---|---|---|
-| KIS | ETF, MOCK/MOCK2 | `etf_trading.py`, `kis_execution.py`, `etf_journal.py` | EXISTING_LOCAL_REGRESSION; 서버 불명 | C3/KP/KD Golden, 실제 계좌별 Mock/Mock2, feed/order/reconcile 유지, deployed check external |
-| 신규 국내주식 Broker (예: NH투자증권/나무) | 미래 국내주식/ETF Spot | 실제 Adapter 코드 없음, 이 릴리스에서 API 지원 구현 아님 | EXTENSION_POINT_ONLY | **Dummy Broker만 Local Add/Disable/Remove 수락**; 실제 NH 선택 시 별도 API 계약·인증·주문·취소·조회·체결·잔고·복구 구현/검증 후에야 TESTNET/LIVE 지원 선언 |
-| Kiwoom | 국내주식/ETF Data + 주문 API | `providers/kiwoom.py`, `brokers.py::KiwoomBrokerAdapter.submit_order` (현재 `order_status` 미구현), 구 `services/execution/kiwoom_broker.py`의 COM legacy 여부 조사 | EXISTING_ORDER_SUBMIT_PARTIAL; full owner/reconcile 미완성 | 기존 REST 구현 재사용, **선택 KR cash route의 submit/cancel/query/open/fills/account/reconcile**를 제품별 capability와 credential-free scripted transport로 연결·검증. COM은 별도 OS/실행조건; real 인증/거래는 EXTERNAL_ONLY |
-| TOSS | ETF/index Data 수집, 주문 미사용 | `providers/toss.py`, `brokers.py` | DATA_ONLY_FEED_REQUIRED | 설정된 Data 수집은 정상 지원, 주문 Mutation 금지. 기존 timestamp/Golden·rollback 보존 |
-| Binance | Spot historical | `services/execution/crypto_binance.py`, `brokers.py` `/api/v3` | EXISTING_SPOT | Spot≠Perp, 기존 Spot API/client 유지·검증 |
-| Binance | USDⓈ-M Linear Perp | `perp_execution.py::BinancePerpAdapter`, `/fapi` | REQUEST_MAPPING_ONLY/Owner wiring 미확인 | 선택 route에서 transport/private/reconcile/permit/funding code, fake integration; actual API external |
-| Bybit | Linear USDT Testnet | `fv_mm/venues.py::Bybit`, `fv_mm/private.py`, `liquidity_mm`, `bybit_execution.py` | EXISTING_TESTNET_EXECUTION | 기존 create/cancel/fill/reconcile 그대로 재사용하고 selected integration만 추가 |
-| Bybit | Linear USDT Live | `perp_execution.py::BybitPerpAdapter`, 기존 testnet client | LIVE_OPERATION_UNVERIFIED | 테스트넷 경로를 그대로 Live 입증으로 간주하지 않음, env/permissions/owner 검증 |
-| GRVT | Perp Testnet | `fv_mm/venues.py::Grvt`, `fv_mm/private.py`, `extended_brokers.py` | EXISTING_TESTNET_EXECUTION | signed submit/cancel/order/fill/funding/protocol shape 보존, selected bridge |
-| GRVT | Perp Live | `perp_execution.py::GrvtPerpAdapter` mapping/signing, existing testnet routes | LIVE_OPERATION_UNVERIFIED | 실제 환경의 identity/scope, private, owner, signature protocol proof |
-| Arcus | Perp | `extended_brokers.py::ArcusBrokerAdapter`, `perp_execution.py::ArcusPerpAdapter` | PARTIAL_PROTOTYPE | 기존 WS/order signature 우선, 실제 selected cancel/fill/reconcile gap만 |
-| Hyperliquid | First-dex Perp USDC | `providers/hyperliquid.py` read path, `perp_execution.py::HyperliquidPerpAdapter` SDK/nonce | REQUEST_MAPPING/SDK_COMPOSITION | 선택된 Signing/Transport/nonce durable/query/fill/funding integration; unsupported HIP-3/Spot 차단 |
-| 범용 PAPER | ETF/Crypto 선택 선물/현물 | `strategy_runtime.py`, `paper_execution.py`, `portfolio_ledger.py`, VN13/TX05/TX08 | SELECTED_LOCAL_PASS | 외부 Mutation 0, 파일별 전략, 재시작 정합, 실제 market data input, 모드 분리 |
-| **Cross-venue Execution Group (코드 필수)** | **선택 가능한 서로 다른 두 지원 Venue의 Perp**; 실제 pair 활성화는 별도 | `execution_groups.py::PaperExecutionGroups`는 관측 전용, 기존 MM runner 주문 경로·Owner는 별도 | **EXECUTION_NOT_COMPLETE** | **CAP-05 필수**: 단일 Group Intent → A BUY/B SELL 두 주문의 `CONCURRENT/SEQUENTIAL` 전송, leg별 실제 Owner/Adapter 매핑·ACK/Fill/UNKNOWN·부분 체결·대조·위험·재시작. 최소 서로 다른 두 실제 Adapter 코드 경로를 fake transport로 통합 검증. 실제 계좌 pair 설정은 opt-in |
+**근거 경계:** MOV 경로를 적용한 source snapshot `6789d51d119ade81de8768c18ba23a611da42e84`의
+함수 AST/파일 해시와 현재 직접 Caller 1-hop을 고정했다. 기존 TX00 JSON은 47개 경로,
+692개 함수 항목(601 core-audited +91 namespace)을 실제로 포함한다. 예전 티켓의 712라는
+수치를 근거 없이 재사용하지 않으며 전체 재감사를 반복하지 않는다. 기존 수락 테스트는
+구체적인 로컬 범위만 증명하고 새 Owner 연결이나 외부 API 작동을 증명하지 않는다.
+
+| 대상·명시 환경/상품 | Required 계약·전략/계좌 범위 | 재사용할 현 소유자·함수 | 현재 코드/로컬 근거와 남은 간극 | 외부 게이트 |
+| --- | --- | --- | --- | --- |
+| KIS 국내 현금 주식/ETF `mock`, `mock2` | 계좌 namespace 분리. C3/KP/KD는 기존 ETF 경제 규칙 유지; 주식은 기존 cash broker 계약 fixture, 새 알파 요구 없음 | `execution.kis_execution.KisCashBroker`; `runtime.etf_trading.EtfTradingLoop`의 두 Broker·lease·journal·reconcile | **REUSE**. 요청 매핑/namespace/계산 Golden과 fake 단계별 안전 테스트 보존. 후자는 synthetic Broker seam이며 실제 KIS 전체 Owner E2E 아님. STR-01/02·EXEC-01 파일/콜백 연결 필요. `BrokerStub`로 대체 금지 | 실제 MOCK/MOCK2 계좌별 인증·권한·체결/잔고 증거 별도; 내부 PAPER나 CEX TESTNET으로 치환 금지 |
+| Binance Spot `sandbox`, `live` | 기존 `/api/v3`와 Spot 환경 선택 코드 **보존**. 선택 route의 로컬 연결·정상/취소/불명 상태 fixture 필요 | `execution.brokers.BinanceBrokerAdapter`; 기존 `services/execution/crypto_binance.py` cancel/open/status 재사용 근거 | **REUSE/ADAPT**. Perp 음성 테스트는 Spot 양성 실행 증거 아님. 기존 native client 대신 새 client를 일괄 만들지 않음 | 기존 Spot testnet와 Live 계좌/URL/권한 각각 검증; 실제 활성 계좌는 미선택 |
+| Binance USDⓈ-M linear Perp `sandbox`, `live` | Required code, USDT 선택·계좌/명시 전략 파일; source의 USDC가 자동 선택되는 것은 아님 | `execution.perp_execution.BinancePerpAdapter`, `make_perp_adapter` | **ADAPT**. `/fapi` scripted 매핑/서명 테스트만 있음. concrete transport·private lifecycle·단일 factual Owner 연결 누락 | 환경별 인증/선물 권한·실계좌 reconciliation 별도 |
+| Bybit USDT linear Perp `sandbox`, `live` | Required code; 기존 testnet 경제 규칙/보호 보존 | `BybitPerpAdapter`, `bybit_execution` testnet probe; archived `fv_mm/venues.Bybit`/private 및 liquidity 원본 | **ADAPT/REUSE**. 정상/취소/체결 parser·서명 재사용. archived bundle은 shipped namespace나 새로운 runtime/apps로 복귀하지 않음 | probe/testnet 성공을 Live로 승격 금지; 각 계좌/환경 외부 증거 |
+| GRVT USDT linear Perp `sandbox`, `live` | Required code; subaccount·환경·서명 계약 유지 | `GrvtPerpAdapter`, `extended_brokers.GrvtBrokerAdapter`, archived native Grvt/private | **ADAPT/REUSE**. 기존 signed submit/private mapping을 유지하고 필요한 transport/Owner 간극만 연결. native ID 결함은 재현 없이 확정하지 않음 | subaccount·signer·세션/체결/Funding·프로토콜 외부 검증 |
+| Arcus USDG linear Perp `sandbox`, `live` | Required code; 실제 환경 지원을 generic sandbox 문자열만으로 주장하지 않음 | `ArcusPerpAdapter`, `ArcusSigningComposition`, 기존 `extended_brokers.ArcusBrokerAdapter` | **ADAPT**. 기존 Ed25519/WS 요청 우선 재사용; injected transport나 frame normalizer만으로 private 연결·Owner 완료 판정 금지 | 실제 문서화된 환경·계좌·서명/전송/체결·재접속 증거 |
+| Hyperliquid first-dex USDC Perp `sandbox`, `live` | Required code; SDK signer/account·durable nonce 분리 | `HyperliquidPerpAdapter`, `HyperliquidSdkSigningComposition` | **ADAPT**. nonce/SDK composition scripted 증거 유지; transport/private/Owner 연결 누락. HIP-3·HL Spot은 이 계약 밖 | 실제 wallet/권한/계좌·환경·Funding/recovery 검증 |
+| **Kiwoom REST 국내주식/ETF `mock`, `live`** | **Required Local Route**. 시장 DataSource와 주문 Broker는 독립 선택 | `execution.brokers.KiwoomBrokerAdapter.submit_order/account_state/order_status`; 기존 `KiwoomAuthClient` 계약 참고 | **ADAPT/MISSING**. submit 매핑 존재, account_state는 count 요약, order_status는 NOT_IMPLEMENTED. cancel/query/open/fills/full account/reconcile·common owner 로컬 구현 누락. 외부 인증 탓으로 숨기지 않음 | 실제 계좌 인증/권한은 별도. 상세 API schema를 고정하기 전 새 URL/TR/payload 생성 금지 |
+| Kiwoom Windows COM legacy | REST와 별도 기능/OS 보존, Linux Required REST 대체 아님 | `services/execution/kiwoom_broker.py` | **KEEP**, OS-별 미완성 구간 명시: cache status/open map·placeholder balance는 온전한 복구 증거 아님 | Windows control 설치·로그인·cache/fill/balance 검증 별도 |
+| **TOSS ETF/index Data** | **Data 수집 Required**, 명시적 전략 구독. 주문만 **DATA_ONLY** | `feeds.providers.toss.TossCollector/TossAuthClient`; `TossBrokerAdapter.submit_order` 거절 | **REUSE**. GET·파서/시각/Golden 보존, mutation은 auth/transport 전 차단. 기존 collector의 누락/재작성 요구 아님 | 실제 장중 feed/token/지연은 외부; 주문 API 추가 요구 없음 |
+| 내부 PAPER | 선택 KR cash/Spot/linear 입력의 명시 파일 전략/계좌 | `PaperStrategyRuntime`, `PaperExecution`, 기존 portfolio ledger/recovery | **REUSE/ADAPT**. 파일/Paper 기존 수락 보존. 새로운 NEW/CANCEL/REPLACE·원 전략 callback/factual context는 STR-02·EXEC-01로 연결 | 외부 mutation 0; Broker Mock/Mock2나 실제 testnet/live와 구분 |
+| **서로 다른 두 Venue 실행 Group** | **REQUIRED_CORE_CODE**, CONCURRENT/SEQUENTIAL·부분 체결/UNKNOWN/잔여 위험·재시작. 실제 pair·새 알파 선택은 조건부 | 기존 `PaperExecutionGroups`는 child facts 관측, 구체 Adapter/Owner는 후속 연결 | **MISSING** 실제 두 adapter 전송·leg lifecycle은 CAP-05/EXEC-01/QA-01. 실제 pair 미선택으로 코드·로컬 E2E를 optional화 금지. 경제적 hedge 결정은 전략 소유 | 실 pair/계좌·권한·노출 정책은 별도 명시 승인 |
+| Timefolio competition dry-run / Live 코드 보존 | 별도 browser 경로, 기본 submit=false, live-enable+계좌 arm, monitor 유지 | `timefolio.client.AsyncTimefolioBrowserManager`, `TimefolioStrategyRunner` | **REUSE**. no-network local consumer/browser/fake 주문 근거만 수락. dry-run의 내부 ACCEPTED 문자열은 `accepted=false/filled=false`와 함께 읽으며 실계좌 ACK/체결이 아님. Golden 재기준화 없음 | 실제 대회 로그인·폼·제출·체결·monitor는 별도 외부 게이트 |
+| NH/나무 및 새로운 CEX | **미래 API 확장만**. 이번 릴리스에는 Dummy Add/Disable/Remove seam이 VEN-01 필수 | 현 `broker_for_name`/`make_perp_adapter` 확장 경계 | **EXTENSION_FIXTURE_ONLY/MISSING seam**, 실제 NH/새 CEX API 구현·Live 요구 없음. Config 선언만으로 지원 주장 금지 | 실제 선택 시 새 API·인증/상품/체결/복구 계약·승인 필요 |
+| inverse/COIN-M/portfolio·cross margin/hedge mode/HIP-3/HL Spot | 명시 **UNSUPPORTED_BLOCKED**, 대상/모드/정책/네이티브 TIF를 전송 전 검증 | `PerpScope` 및 선택 Adapter guard | 기본 linear product 음성 근거만 전 모드의 완성 증거로 확대하지 않음; 필요한 guard는 CAP-02/VEN-01에 지정 | 지원 승격 시 별도 계약·로컬+외부 수락 |
+| KR350 분/일 Data | KR-DATA-01 **opt-in 미선택**, base release 필수 아님 | 기존 feed/storage 보존 | 활성화하지 않음 | 사용자 선택 후 provider/soak 게이트 |
+
+**키움 REST 함수 수준 계약/출처·간극**
+
+- 현재 source에 존재하는 submit의 `/api/dostk/ordr`, `kt10000/kt10001` 및 account 요약의
+  `/api/dostk/acnt`, `kt00018`만 기존 매핑으로 기록한다. 이것이 전체 주문 lifecycle 증명은 아니다.
+- [키움 공식 가이드](https://openapi.kiwoom.com/m/guide/apiguide)의 공개 목록에서 취소 `kt10002`,
+  미체결 `ka10075`, 체결 `ka10076`을 확인했다. **목록 이름/ID 확인과 상세 request/response,
+  pagination/order/fill identity fixture 검증은 다르다.** 이 표는 새 endpoint나 payload를 추정하지 않는다.
+- `order_status`의 NOT_IMPLEMENTED와 미존재 cancel/open/fills/reconcile, account count-only를 각각
+  `KIWOOM-LOCAL-LIFECYCLE`로, 미고정 상세 schema를 `BLOCKED_API_SPEC_REQUIRED`로 기록했다.
+  VEN-01/CAP-01/EXEC-01에서 기존 REST 소유자에 최소 연결·scripted E2E를 추가하기 전에는 기능 완료 아님.
+- KIS는 [공식 국내주식 주문 예제](https://github.com/koreainvestment/open-trading-api/blob/main/examples_llm/domestic_stock/order_cash/order_cash.py)를
+  참고 출처로 유지한다. 이 조회에서 인증·계좌·실주문·서버 작업은 실행하지 않았다.
+- token cache의 명시 권한/fingerprint/schema/KST/refresh serialization 차이는 source-only 검토 후보로
+  VEN-01/FEED-01에 넘긴다. 실제 token/cache/umask를 읽거나 정보 노출이 일어났다고 주장하지 않는다.
+
+**보존과 수락 해석:** source/함수 해시와 관련 accepted test nodeid를 별도 기록한다.
+`KEEP/REUSE/ADAPT/MISSING`은 로컬 코드 분류이며 외부 검증과 혼동하지 않는다.
+로컬 구현 누락을 blanket EXTERNAL_ONLY로 숨기지 않고 15개 함수 수준 gap을 기존 티켓에 배정한다.
+범위·계약 동결만 완료했으며 `ORIGINAL_PLATFORM_REQUIRED_FEATURES_COMPLETE`는 아직 성립하지 않는다.
 
 ### ARCH-00B. 최초 범위의 기본값 — 승인 없는 목표 축소 금지
 
@@ -48,7 +82,7 @@ CAP-00에서 별도 사용자 변경 승인 근거를 찾지 못하면 다음을
 
 이 목록은 최초 v3 목표의 venue 집합과 원래 사용자 제약을 합쳐 정한 **요구 계약**이지 최신 GitHub 코드에 이미 구현된 기능이라는 주장이 아니다. 특정 Venue가 규정/접근 제한으로 지원할 수 없으면 CAP-00에 정확한 blocker를 기록해 **전체 기능 완료를 보류**하고 사용자 승인으로만 범위 수정한다.
 
-**선택 범위 결정 레코드(요구)**: `venue`, `market_segment`, `product`, `environment`, `account_scope`, `strategy_id`, `execution_mode`, `claim`(`DATA_ONLY|PAPER|TESTNET|LIVE`), `required_mutations`, `source_functions`, `transport_owner`, `private_stream`, `reconcile_path`, `local_tests`, `external_gate`, `decision_owner`, `decision_status`. `DECISION_REQUIRED` 상태에서 전역 `ORIGINAL_PLATFORM_REQUIRED_FEATURES_COMPLETE`를 true로 둘 수 없다.
+**선택 범위 결정 레코드(요구)**: `venue`, `market_segment`, `product`, `environment`, `account_scope`, `strategy_id`, `execution_mode`, `claim`(`DATA_ONLY|PAPER|MOCK|MOCK2|TESTNET|LIVE|CONTEST_DRY_RUN|EXTENSION_FIXTURE_ONLY|UNSUPPORTED`), `required_mutations`, `source_functions`, `transport_owner`, `private_stream`, `reconcile_path`, `local_tests`, `external_gate`, `decision_owner`, `decision_status`. `DECISION_REQUIRED` 상태에서 전역 `ORIGINAL_PLATFORM_REQUIRED_FEATURES_COMPLETE`를 true로 둘 수 없다.
 
 ## ARCH-MOD. `src/` Direct Domain Packages — 최종 Authority 불변조건
 
