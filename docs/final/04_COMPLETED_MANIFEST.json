@@ -1,0 +1,511 @@
+{
+  "schema_version": 1,
+  "purpose": "Immutable historical completed-work references only; no mutable ticket state.",
+  "baseline": {
+    "repository": "PJH-02/VibeTrading",
+    "branch": "main",
+    "observed_head": "2c1a82a52a6a2eed0c304f324f6c49e2987edfac",
+    "observed_on": "2026-10-25",
+    "last_selected_local_candidate_source_sha": "001d10d20f1dce58fcb0349983f368af10a2bdc1",
+    "historical_status_path": "docs/refactoring/vnext/stage_status.json",
+    "historical_ticket_path": "docs/refactoring/vnext/tickets_production.json",
+    "latest_batch_receipt": "docs/refactoring/runs/20261025-v3/core5/batch-vn17-tx12/acceptance.json"
+  },
+  "counts": {
+    "historical_vn_tx_total": 51,
+    "historical_vn_tx_accepted_local": 38,
+    "historical_vn_tx_incomplete": 10,
+    "historical_vn_tx_not_started": 3,
+    "tooling_accepted": 7,
+    "source_regression_last_passed": 2480,
+    "live_data_deselected": 2
+  },
+  "important_limits": [
+    "LOCAL acceptance on prior SHA is not a pass for revised package HEAD",
+    "TX12 does not certify full five-venue trading platform",
+    "R05 only extracts economic helper functions; C3/KP/KD full file plugin is separate",
+    "VN09 is dry-run GC; original records retained",
+    "No server deploy/production account mutation or VN20 retirement is evidenced"
+  ],
+  "completed_tasks": [
+    {
+      "task_id": "O00",
+      "track": "HISTORICAL_TOOLING",
+      "classification": "ACCEPTED_LOCALLY",
+      "basis": "docs/status.md / existing R-O acceptance logs",
+      "receipt_path": "docs/refactoring/runs/20261023-v3/o00/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "R00",
+      "track": "HISTORICAL_TOOLING",
+      "classification": "ACCEPTED_LOCALLY",
+      "basis": "docs/status.md / existing R-O acceptance logs",
+      "receipt_path": null,
+      "receipt_sha256": null,
+      "receipt_validation": "CANONICAL_STATUS_ONLY_EXACT_RECEIPT_NOT_GROUNDED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "R01",
+      "track": "HISTORICAL_TOOLING",
+      "classification": "ACCEPTED_LOCALLY",
+      "basis": "docs/status.md / existing R-O acceptance logs",
+      "receipt_path": "docs/refactoring/runs/20261023-v3/r01/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "R02",
+      "track": "HISTORICAL_TOOLING",
+      "classification": "ACCEPTED_LOCALLY",
+      "basis": "docs/status.md / existing R-O acceptance logs",
+      "receipt_path": "docs/refactoring/runs/20261023-v3/r02/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "R03",
+      "track": "HISTORICAL_TOOLING",
+      "classification": "ACCEPTED_LOCALLY",
+      "basis": "docs/status.md / existing R-O acceptance logs",
+      "receipt_path": "docs/refactoring/runs/20261023-v3/r03/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "R04",
+      "track": "HISTORICAL_TOOLING",
+      "classification": "ACCEPTED_LOCALLY",
+      "basis": "docs/status.md / existing R-O acceptance logs",
+      "receipt_path": "docs/refactoring/runs/20261023-v3/r04/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "R05",
+      "track": "HISTORICAL_TOOLING",
+      "classification": "ACCEPTED_LOCALLY",
+      "basis": "docs/status.md / existing R-O acceptance logs",
+      "receipt_path": "docs/refactoring/runs/20261023-v3/r05/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "C3/KP/KD calculation helpers extracted, NOT independent strategy plugins"
+    },
+    {
+      "task_id": "TX00",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261023-v3/tx00-current/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "TX01",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261024-v3/tx01/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "TX02",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261024-v3/tx02/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "TX02A",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261024-v3/tx02a/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "cooperative local Paper owner scope, not global live account fencing"
+    },
+    {
+      "task_id": "TX02B",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261024-v3/tx02b/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "TX04",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261024-v3/tx04/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "TX04A",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261024-v3/tx04a/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "TX04B",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261024-v3/tx04b/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "TX05",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261024-v3/tx05/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "selected plugin->existing PAPER matcher->PnL->restart"
+    },
+    {
+      "task_id": "TX07A",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261024-v3/tx07a/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "TX08",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261024-v3/tx08/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "selected same-Paper-account safety only, not TX08B cross-venue"
+    },
+    {
+      "task_id": "TX08A",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261024-v3/tx08a/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "TX09",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261025-v3/tx09/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "TX10",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261025-v3/tx10/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "TX11",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261025-v3/core5/tx11/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "TX12",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261025-v3/core5/tx12/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "selected minimal local core acceptance, not original all-Venue LIVE platform"
+    },
+    {
+      "task_id": "VN00",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": null,
+      "receipt_sha256": null,
+      "receipt_validation": "CANONICAL_STATUS_ONLY_EXACT_RECEIPT_NOT_GROUNDED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "VN01",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": null,
+      "receipt_sha256": null,
+      "receipt_validation": "CANONICAL_STATUS_ONLY_EXACT_RECEIPT_NOT_GROUNDED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "VN02",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": null,
+      "receipt_sha256": null,
+      "receipt_validation": "CANONICAL_STATUS_ONLY_EXACT_RECEIPT_NOT_GROUNDED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "VN03",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": null,
+      "receipt_sha256": null,
+      "receipt_validation": "CANONICAL_STATUS_ONLY_EXACT_RECEIPT_NOT_GROUNDED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "VN04A",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": null,
+      "receipt_sha256": null,
+      "receipt_validation": "CANONICAL_STATUS_ONLY_EXACT_RECEIPT_NOT_GROUNDED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "VN04B",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": null,
+      "receipt_sha256": null,
+      "receipt_validation": "CANONICAL_STATUS_ONLY_EXACT_RECEIPT_NOT_GROUNDED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "VN05",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": null,
+      "receipt_sha256": null,
+      "receipt_validation": "CANONICAL_STATUS_ONLY_EXACT_RECEIPT_NOT_GROUNDED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "VN06",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": null,
+      "receipt_sha256": null,
+      "receipt_validation": "CANONICAL_STATUS_ONLY_EXACT_RECEIPT_NOT_GROUNDED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "VN07",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261023-v3/vn07b/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "same-cut market/strategy/paper/ETF recovery locally; no server adoption"
+    },
+    {
+      "task_id": "VN08",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261023-v3/vn08/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "retained-prefix reader local proof"
+    },
+    {
+      "task_id": "VN09",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261023-v3/vn09/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "GC proposal only / real deletion NOT authorized"
+    },
+    {
+      "task_id": "VN10",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": null,
+      "receipt_sha256": null,
+      "receipt_validation": "CANONICAL_STATUS_ONLY_EXACT_RECEIPT_NOT_GROUNDED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "VN11",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": null,
+      "receipt_sha256": null,
+      "receipt_validation": "CANONICAL_STATUS_ONLY_EXACT_RECEIPT_NOT_GROUNDED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "VN12",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": null,
+      "receipt_sha256": null,
+      "receipt_validation": "CANONICAL_STATUS_ONLY_EXACT_RECEIPT_NOT_GROUNDED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "VN13",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261024-v3/vn13/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "independent file plugin for selected PAPER, not C3/KP/KD full plugin"
+    },
+    {
+      "task_id": "VN14A",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": null,
+      "receipt_sha256": null,
+      "receipt_validation": "CANONICAL_STATUS_ONLY_EXACT_RECEIPT_NOT_GROUNDED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "VN14B",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": null,
+      "receipt_sha256": null,
+      "receipt_validation": "CANONICAL_STATUS_ONLY_EXACT_RECEIPT_NOT_GROUNDED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "VN15",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261025-v3/vn15/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "VN16",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": null,
+      "receipt_sha256": null,
+      "receipt_validation": "CANONICAL_STATUS_ONLY_EXACT_RECEIPT_NOT_GROUNDED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "VN17",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261025-v3/core5/vn17/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "VN18",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261025-v3/core5/vn18/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    },
+    {
+      "task_id": "VN19",
+      "track": "HISTORICAL_VN_TX",
+      "classification": "COMPLETE_LOCAL_IMPLEMENTATION",
+      "basis": "docs/refactoring/vnext/stage_status.json",
+      "receipt_path": "docs/refactoring/runs/20261025-v3/core5/vn19/acceptance.json",
+      "receipt_sha256": null,
+      "receipt_validation": "CURRENT_GIT_TREE_PATH_OBSERVED_NOT_FILE_HASH_VERIFIED",
+      "notes": "Prior local acceptance preserved; no automatic operational readiness or reimplementation."
+    }
+  ],
+  "historical_unfinished_snapshot": {
+    "incomplete": [
+      "TX03A",
+      "TX03B",
+      "TX03",
+      "TX06A",
+      "TX06B",
+      "TX06C",
+      "TX06D",
+      "TX06E",
+      "TX06",
+      "TX08B"
+    ],
+    "not_started": [
+      "TX07B",
+      "TX07",
+      "VN20"
+    ],
+    "mapping": "See 02_DEVELOPER_TICKETS.md section D and 05_TASK_STATUS.json legacy_gap_coverage"
+  },
+  "candidate_new_task_completion_policy": {
+    "append_only_after_independent_acceptance": true,
+    "change_history": "Do not rewrite historical status; new completed tickets may be appended to a distinct accepted_new_tasks array when accepted",
+    "accepted_new_tasks": []
+  },
+  "provenance_notes": [
+    "Source Git tree was checked for specific 2026-10-23..25 receipts; older VN tickets may only have canonical stage status and older evidence not enumerated here. Do not invent a receipt SHA.",
+    "receipt_sha256:null explicitly means not verified at creation; before deleting/moving originals, calculate checksum and ensure a retrievable preserved artifact."
+  ]
+}

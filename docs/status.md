@@ -1,8 +1,22 @@
-# v3 local execution status
+# Final refactoring status index
 
-2026-10-23 현재 단계: [최소 재사용 계획](refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md) 확정. 기존 거래소/주문/클라우드 코드는 변경·삭제하지 않았습니다. 47개 파일·692개 함수의 정적 인벤토리, 37개 미래 VN/TX 범위 축소, 14개 완료 VN 근거 보존. 아래 R05 결과는 제품 기준선이며, 이번 단계는 STATIC/DOC입니다. 신규 구현은 착수하지 않습니다.
+현재 실행 권위는 다음 다섯 문서뿐입니다.
 
-Authority: [tickets](refactoring/vnext/tickets_production.json), [stages](refactoring/vnext/stage_status.json). `python3 scripts/dev/status.py --root . --json` derives current readiness.
+- [최종 계획](final/01_FINAL_PLAN.md)
+- [개발 티켓](final/02_DEVELOPER_TICKETS.md)
+- [아키텍처 요구사항](final/03_ARCHITECTURE_REQUIREMENTS.md)
+- [과거 완료 manifest — 불변](final/04_COMPLETED_MANIFEST.json)
+- [현재 작업 상태와 DAG — 단일 쓰기 원천](final/05_TASK_STATUS.json)
+
+기존 [tickets](refactoring/vnext/tickets_production.json)와
+[stages](refactoring/vnext/stage_status.json)는 읽기 전용 역사 근거입니다.
+OPS-01 전환 전 `scripts/dev/status.py`는 구 v3 투영이며 신규 READY 권위가 아닙니다.
+현재 코드 기준선·진행·수락 Receipt는 05를 확인합니다. 실서버·실주문 승인은 없습니다.
+최종 목표는 Flat `src/`이며 실제 이동·수락 여부는 MOV 티켓 근거를 따릅니다.
+
+## Historical snapshot — 2026-10-23, read-only
+
+아래 수치와 패키지 설명은 과거 기록이며 현재 상태나 실행 지시가 아닙니다.
 
 - R00/R01/R02/O00/R03/R04/R05 accepted locally. O01 remains REWORK_REQUIRED for its previously recorded baseline/snapshot bug.
 - Current product source `2b85c95a4e7951ac2a7590db24416e5b5f76d958`: **1961 passed** (1792 guarded product + 169 isolated tooling, including 8 prior review probes); 2 live-data cases deselected. [R05 acceptance](refactoring/runs/20261023-v3/r05/acceptance.json).

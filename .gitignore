@@ -21,3 +21,6 @@ __pycache__/
 /tmp/
 /trashbin/
 *.tsbuildinfo
+
+.omx
+.aws

@@ -1,0 +1,1275 @@
+{
+  "schema_version": 1,
+  "purpose": "Only mutable status and DAG for newly defined not-yet-executed tasks; no historical state mutation.",
+  "authority_docs": [
+    "01_FINAL_PLAN.md",
+    "02_DEVELOPER_TICKETS.md",
+    "03_ARCHITECTURE_REQUIREMENTS.md",
+    "04_COMPLETED_MANIFEST.json",
+    "05_TASK_STATUS.json"
+  ],
+  "baseline": {
+    "repository": "PJH-02/VibeTrading",
+    "branch": "main",
+    "observed_head": "2c1a82a52a6a2eed0c304f324f6c49e2987edfac",
+    "observed_on": "2026-10-25",
+    "installation_in_repo": "PRESENT_USER_SUPPLIED_UNTRACKED_DOCS_FINAL",
+    "remote_server_changed": false,
+    "user_deploy_authorization": false,
+    "old_status_reconciliation_required": false,
+    "target_package_layout": "src/{core,feeds,market,storage,strategies,execution,portfolio,runtime,operations,timefolio}/",
+    "prior_code_head_only_not_modified": true,
+    "execution_baseline": {
+      "head": "2ddaf81eff6612d673dd264a3b3b8a9e2992fe19",
+      "branch": "codex/v3-local-candidate",
+      "worktree_dirty": true,
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z",
+      "historical_main_object_available": false,
+      "last_local_candidate_is_ancestor": true
+    }
+  },
+  "historical_work": {
+    "accepted_local_vn_tx": 38,
+    "incomplete_vn_tx": 10,
+    "not_started_vn_tx": 3,
+    "accepted_r_o": 7,
+    "last_local_regression_passed": 2480,
+    "source_manifest": "04_COMPLETED_MANIFEST.json"
+  },
+  "new_task_counts": {
+    "total": 35,
+    "accepted": 2,
+    "in_progress": 1,
+    "blocked": 0,
+    "not_started": 30,
+    "external_not_authorized": 2
+  },
+  "next_ready_candidate": [],
+  "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
+  "gate_results": {
+    "REPOSITORY_CONSOLIDATED": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "NATS_FREE_LOCAL_CORE_COMPLETE_ON_NEW_SHA": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "ORIGINAL_PLATFORM_REQUIRED_FEATURES_COMPLETE": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "FULL_LOCAL_REGRESSION_PASS": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "SINGLE_RELEASE_PACKAGE_READY": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "SERVER_DEPLOYED": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "OPERATIONAL_VALIDATION_PASS": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "LEGACY_RETIRE_COMPLETE": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "STRATEGY_FILE_FULL_ORDER_ACTION_FEEDBACK": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "EXTENSIBLE_VENUE_LIFECYCLE": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "PONYTAIL_SIMPLIFICATION_COMPLETE": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "PYTHON_FEW_MS_END_TO_END_LOCAL": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "FLAT_SRC_DIRECT_IMPORTS": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "SINGLE_CANONICAL_ADAPTER_OWNERS": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "TIMEFOLIO_CONTEST_ORDER_PRESERVED": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "DOCKER_ALL_ROLES_FLAT_SRC_PACKAGING": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "LEGACY_BUNDLE_RETIRED_OR_EVIDENCED": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "VENUE_OWNED_FEED_COLLECTORS": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "TOSS_DATA_ONLY_COLLECTOR_RETAINED": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "PER_STRATEGY_PNL_DASHBOARD": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "REALTIME_LATENCY_DASHBOARD": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "SECURE_REMOTE_DASHBOARD": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "ORDER_ONLY_BROKER_ROUTE": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "KR350_STAGED_OPTIONAL": "NOT_VERIFIED_FOR_NEW_RELEASE"
+  },
+  "legacy_gap_coverage": {
+    "TX03A": [
+      "CAP-03"
+    ],
+    "TX03B": [
+      "CAP-03"
+    ],
+    "TX03": [
+      "CAP-03"
+    ],
+    "TX06A": [
+      "CAP-01"
+    ],
+    "TX06B": [
+      "CAP-01"
+    ],
+    "TX06C": [
+      "CAP-01",
+      "CAP-02"
+    ],
+    "TX06D": [
+      "CAP-01",
+      "CAP-02"
+    ],
+    "TX06E": [
+      "CAP-01"
+    ],
+    "TX06": [
+      "CAP-00",
+      "CAP-01"
+    ],
+    "TX07B": [
+      "CAP-02"
+    ],
+    "TX07": [
+      "CAP-02"
+    ],
+    "TX08B": [
+      "CAP-05"
+    ],
+    "VN20": [
+      "RET-01"
+    ],
+    "O01": [
+      "OPS-01"
+    ],
+    "R06": [
+      "CLN-01",
+      "CLN-02",
+      "CLN-03"
+    ]
+  },
+  "capability_scope_decisions": {
+    "source_of_truth": "03_ARCHITECTURE_REQUIREMENTS.md ARCH-00A",
+    "status": "DECISION_REQUIRED",
+    "selected_required_routes": [],
+    "explicitly_unsupported_routes": [],
+    "user_approved_exclusions": [],
+    "note": "Do not silently downgrade initial user goals to OPTIONAL. Configure chosen routes and mark missing implementation as BLOCKED; no automatic live activation.",
+    "default_required_code_targets": [
+      {
+        "venue": "binance",
+        "product": "USD-M linear perpetual",
+        "code_requirement": "submit_cancel_query_fills_positions_funding_private_reconcile_owner",
+        "activation": "BLOCKED_PENDING_EXTERNAL_APPROVAL"
+      },
+      {
+        "venue": "bybit",
+        "product": "USDT linear perpetual",
+        "code_requirement": "submit_cancel_query_fills_positions_funding_private_reconcile_owner",
+        "activation": "BLOCKED_PENDING_EXTERNAL_APPROVAL"
+      },
+      {
+        "venue": "grvt",
+        "product": "perpetual",
+        "code_requirement": "submit_cancel_query_fills_positions_funding_private_reconcile_owner",
+        "activation": "BLOCKED_PENDING_EXTERNAL_APPROVAL"
+      },
+      {
+        "venue": "arcus",
+        "product": "perpetual",
+        "code_requirement": "submit_cancel_query_fills_positions_funding_private_reconcile_owner",
+        "activation": "BLOCKED_PENDING_EXTERNAL_APPROVAL"
+      },
+      {
+        "venue": "hyperliquid",
+        "product": "first-dex USDC perpetual",
+        "code_requirement": "submit_cancel_query_fills_positions_funding_private_reconcile_owner",
+        "activation": "BLOCKED_PENDING_EXTERNAL_APPROVAL"
+      }
+    ],
+    "cross_venue_default": "REQUIRED_CORE_CODE_AND_LOCAL_E2E; pair_activation_is_opt_in_external; no strategy-selection prerequisite; no NOT_APPLICABLE_APPROVED for CAP-05",
+    "source_ref": "03_ARCHITECTURE_REQUIREMENTS.md ARCH-00B",
+    "cross_venue_execution": {
+      "code_implementation": "REQUIRED_FOR_OFFLINE_RELEASE",
+      "local_verification": "REQUIRED",
+      "supported_direction": "VENUE_A_BUY_VENUE_B_SELL_AND_REVERSE",
+      "submit_modes_required": [
+        "CONCURRENT",
+        "SEQUENTIAL"
+      ],
+      "minimum_local_adapter_routes": 2,
+      "adapter_test_policy": "TWO_DISTINCT_CONCRETE_SUPPORTED_VENUE_ADAPTER_CODE_PATHS_WITH_CREDENTIAL_FREE_SCRIPTED_TRANSPORT",
+      "mandatory_faults": [
+        "A_FILLED_B_REJECTED",
+        "PARTIAL_BOTH",
+        "ACK_LOSS_UNKNOWN",
+        "PRIVATE_GAP",
+        "STALE_FEED",
+        "CANCEL_LATE_FILL",
+        "CRASH_RESTART",
+        "HEDGE_LIMIT_FAIL_CLOSED"
+      ],
+      "specific_venue_pair_activation": "OPT_IN_EXTERNAL_APPROVAL_ONLY",
+      "configured_live_pairs": [],
+      "no_live_mutation_without_explicit_approval": true,
+      "skip_or_not_applicable_without_implementation": false,
+      "implementation_acceptance": "CAP-05 ACCEPTED_LOCAL requires executable two-leg dispatch + persistence/reconcile + independent fault tests; not paper observation only"
+    },
+    "strategy_action_routing": {
+      "code_requirement": "REQUIRED_FOR_OFFLINE_RELEASE",
+      "policy_owner": "STRATEGY_FILE_ONLY",
+      "execution_owner": "COMMON_RISK_AND_ORDER_OWNER",
+      "order_modes": [
+        "NEW",
+        "CANCEL",
+        "REPLACE",
+        "MAKER_POST_ONLY",
+        "TAKER",
+        "FOK",
+        "IOC",
+        "PARK_GTC"
+      ],
+      "failure_response": "STRATEGY_FILE_ON_ORDER_EVENT",
+      "feedback": [
+        "REJECTED",
+        "ACK",
+        "PARTIAL_FILL",
+        "FILLED",
+        "CANCELLED",
+        "UNKNOWN"
+      ],
+      "required_modes": [
+        "PAPER",
+        "KIS_MOCK_AND_MOCK2",
+        "CRYPTO_SCRIPTED_VENUE_ADAPTER"
+      ],
+      "live_activation": "USER_APPROVAL_ONLY",
+      "tickets": [
+        "STR-01",
+        "STR-02",
+        "EXEC-01",
+        "CAP-06"
+      ]
+    },
+    "venue_registry": {
+      "code_requirement": "REQUIRED_FOR_OFFLINE_RELEASE",
+      "new_perp_venue": "ADD_MODULE_AND_CONFIG_WITHOUT_CORE_STRATEGY_PATCH",
+      "disable": "NO_NEW_RISK_BUT_KEEP_RECONCILE",
+      "remove": "ONLY_WITH_NO_ORDERS_DEPENDENCIES_ROLLBACK",
+      "tickets": [
+        "VEN-01",
+        "CAP-01"
+      ],
+      "stock_broker_extension": "DUMMY_STOCK_NOW_KIS_KIWOOM_SELECTED_NH_FUTURE",
+      "adapter_dedup": "SINGLE_CANONICAL_MUTATION_OWNER_PER_ROUTE",
+      "feed_registration": "SEPARATE_FROM_EXECUTION_REGISTRATION"
+    },
+    "ponytail_review": {
+      "ticket": "SIM-01",
+      "skill": "DietrichGebert/ponytail",
+      "skill_installed_here": false,
+      "required_to_pass": true,
+      "require_actual_skill_load_receipt": true,
+      "manual_review_is_not_ponytail": true
+    },
+    "python_low_latency": {
+      "ticket": "PERF-01",
+      "local_chain": "T0_PROVIDER_CALLBACK_TO_T5_ADAPTER_SEND_INVOCATION",
+      "p50_ms_max": 2,
+      "p95_ms_max": 5,
+      "p99_ms_max": 10,
+      "same_monotonic_clock_only": true,
+      "host": "2vCPU_3.8GiB representative candidate",
+      "include": [
+        "strategy_cb",
+        "dispatch",
+        "journal_commit",
+        "venue_router",
+        "concurrent_spool_storage_load",
+        "python_provider_ingress_to_normalization_and_A1_durable_spool"
+      ],
+      "exclude": [
+        "external_wan_rtt",
+        "exchange_ack",
+        "exchange_fill"
+      ],
+      "not_measured_status": "NOT_RUN_OR_NOT_VERIFIED",
+      "secondary_trace": "T1_NORMALIZED_AVAILABLE_TO_T5_ADAPTER_SEND_INVOCATION",
+      "gate_type": "MEASUREMENT_REQUIRED_NUMERIC_TARGET_NON_BLOCKING",
+      "numeric_exceedance_causes_ticket_failure": false,
+      "numeric_exceedance_causes_release_block": false,
+      "acceptance_condition": "REPRODUCIBLE_PROFILE_AND_STRUCTURAL_NONBLOCKING_REVIEW_WITH_DURABILITY_AND_QUEUE_SAFETY",
+      "legacy_gate_key_policy": "PYTHON_FEW_MS_END_TO_END_LOCAL is observational only; numeric threshold not a release gate",
+      "numeric_target_fields_are_reference_only": true
+    },
+    "strategy_policy_ownership": {
+      "policy_owner": "STRATEGY_FILE_ONLY",
+      "crossvenue_economic_equivalence_and_leg_size": "STRATEGY_ONLY",
+      "crossvenue_inventory_and_hedge_order": "STRATEGY_ONLY",
+      "mm_fair_value_quote_cancel_reprice_target_inventory_hedge": "STRATEGY_ONLY",
+      "execution_owner": "ORDER_AND_FILL_FACTS_ACCOUNT_POSITION_BALANCE_RESERVATION_PRETRADE_SAFETY",
+      "feedback": "ORDER_EVENT_PLUS_READ_ONLY_ACCOUNT_AND_STRATEGY_ATTRIBUTION_FACTS",
+      "instrument_resolution": "STRATEGY_CONFIG_ALIAS_TO_VENUE_MARKET_SEGMENT_SYMBOL_ACCOUNT_VIA_EXISTING_ADAPTER",
+      "new_mm_ticket_or_service": false,
+      "coverage_tickets": [
+        "STR-02",
+        "VEN-01",
+        "EXEC-01",
+        "CAP-02",
+        "CAP-03",
+        "CAP-05",
+        "QA-01"
+      ]
+    },
+    "repo_layout": {
+      "target": "DIRECT_SRC_DOMAIN_PACKAGES",
+      "old_import_namespace": "vibetrading.*",
+      "final_import_namespace": "{core,feeds,market,storage,strategies,execution,portfolio,runtime,operations,timefolio}.*",
+      "old_root_strategies_collision": "MUST_RESOLVE",
+      "keep_compat_namespace_in_release": false
+    },
+    "legacy_policy": {
+      "keep": [
+        "C3/KP/KD valid strategies",
+        "Timefolio browser contest submission/monitor",
+        "verified reusable API source functions",
+        "necessary golden oracle/rollback immutable evidence"
+      ],
+      "retire_when_unreferenced": [
+        "fv_mm",
+        "liquidity_mm",
+        "fv_pilot",
+        "mm_state",
+        "bybit_execution independent probe wrapper",
+        "kis_execution independent wrapper"
+      ]
+    },
+    "deployment_inputs": [
+      "Dockerfile",
+      "Dockerfile.crypto",
+      "docker-compose.yml",
+      "pyproject.toml",
+      "scripts/build_release_images.py",
+      "deploy/crypto-profile.yml",
+      "deploy/dashboard-compose.yml",
+      "deploy/ls-market-profile.yml",
+      "deploy/release1-overlay.yml",
+      "deploy/Dockerfile.dashboard-timefolio",
+      "deploy/Dockerfile.crypto-ledger",
+      "deploy/vibetrading.service"
+    ],
+    "toss_market_data": "REQUIRED_ACTIVE_CAPABLE_FEED_ORDER_BLOCKED",
+    "independent_feed_execution": {
+      "data_only": "toss",
+      "execution_only": "dummy_nh_offline",
+      "both": [
+        "kis_selected",
+        "kiwoom_selected"
+      ],
+      "future_nh_real": "UNVERIFIED_EXTERNAL",
+      "provider_venue_files": "REQUIRED_FEED-01"
+    },
+    "dashboard": {
+      "latency_per_stage": "REQUIRED_OBS-01",
+      "strategy_pnl_tabs": "REQUIRED_OBS-01",
+      "public_https_readonly": "REQUIRED_WEB-01",
+      "production_external_access": "EXTERNAL_APPROVAL_CUT-01",
+      "new_order_api_exposure": "FORBIDDEN"
+    },
+    "kr350": {
+      "required_for_base_release": false,
+      "implementation": "CONDITIONAL_IF_SELECTED",
+      "default": "DISABLED",
+      "offline_ticket": "KR-DATA-01",
+      "live_activation": "EXTERNAL_PROVIDER_API_AND_CAPACITY_EVIDENCE_REQUIRED",
+      "scope": "KOSPI200+KOSDAQ150 minute/daily, max 350"
+    }
+  },
+  "active_task_id": "MOV-00",
+  "last_accepted_task_id": "OPS-01",
+  "stop_requested": false,
+  "tickets": [
+    {
+      "task_id": "GOV-01",
+      "wave": "W0",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "2ddaf81eff6612d673dd264a3b3b8a9e2992fe19",
+      "actual_commit_sha": null,
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/GOV-01.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "GOV-01",
+      "acceptance_receipt_sha256": "c00eb3af0baa4c6f79909d568daee3245a3ecb359943416e99132b8cc9e6ffb9",
+      "worktree_delta_sha256": "7d0f8225c19a765c34e9019852135b3418797e3f9685a15f0f5ffb7df9dd680e"
+    },
+    {
+      "task_id": "OPS-01",
+      "wave": "W0",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "GOV-01"
+      ],
+      "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "2ddaf81eff6612d673dd264a3b3b8a9e2992fe19",
+      "actual_commit_sha": "9ab1d7f9899179c442eaa533353c8ee552f88b79",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/recheck-20261026T033056Z/OPS-01.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "OPS-01",
+      "implementation_packet": "docs/tickets/OPS-01-repair-1.md",
+      "execution_receipt": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/recheck-20261026T033056Z/OPS-01.acceptance.json",
+      "execution_receipt_sha256": "43a3359ad70ea8dec310a477d1f98cd7ec8b8fcb3ffcd96e8c97d9d8132d1133",
+      "selected_worker_model": "opencode/deepseek-v4.1-flash-free",
+      "resume_artifacts": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/recheck-20261026T033056Z",
+      "worker_attempt_receipts": [
+        "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/OPS-01.blocked.json",
+        "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/resume-20261025T172041Z/OPS-01.deepseek-failure.json",
+        "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/resume-20261025T172041Z/OPS-01.gemini-failure.json"
+      ],
+      "repair_delegations": 1,
+      "acceptance_receipt_sha256": "43a3359ad70ea8dec310a477d1f98cd7ec8b8fcb3ffcd96e8c97d9d8132d1133"
+    },
+    {
+      "task_id": "MOV-00",
+      "wave": "W1",
+      "status": "IN_PROGRESS",
+      "depends_on": [
+        "GOV-01"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "9ab1d7f9899179c442eaa533353c8ee552f88b79",
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "MOV-00",
+      "implementation_packet": "docs/tickets/MOV-00-repair-1.md",
+      "selected_worker_model": "opencode/deepseek-v4.1-flash-free",
+      "resume_artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z",
+      "repair_delegations": 1
+    },
+    {
+      "task_id": "MOV-01",
+      "wave": "W1",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "MOV-00"
+      ],
+      "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "MOV-01"
+    },
+    {
+      "task_id": "MOV-02",
+      "wave": "W1",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "MOV-01"
+      ],
+      "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "MOV-02"
+    },
+    {
+      "task_id": "MOV-03",
+      "wave": "W1",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "MOV-02"
+      ],
+      "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "MOV-03"
+    },
+    {
+      "task_id": "MOV-04",
+      "wave": "W1",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "MOV-01",
+        "MOV-03"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "MOV-04"
+    },
+    {
+      "task_id": "MOV-05",
+      "wave": "W1",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "MOV-02",
+        "MOV-04"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "MOV-05"
+    },
+    {
+      "task_id": "MOV-06",
+      "wave": "W1",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "MOV-02",
+        "MOV-03",
+        "MOV-04",
+        "MOV-05"
+      ],
+      "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "MOV-06"
+    },
+    {
+      "task_id": "MOV-07",
+      "wave": "W1",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "MOV-01",
+        "MOV-02",
+        "MOV-03",
+        "MOV-04",
+        "MOV-05",
+        "MOV-06"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "MOV-07"
+    },
+    {
+      "task_id": "CLN-01",
+      "wave": "W2",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "GOV-01",
+        "MOV-07"
+      ],
+      "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "CLN-01"
+    },
+    {
+      "task_id": "CLN-02",
+      "wave": "W4",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "MOV-07",
+        "CAP-00"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "CLN-02"
+    },
+    {
+      "task_id": "CLN-03",
+      "wave": "W4",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "CLN-01",
+        "CLN-02",
+        "MOV-07",
+        "SIM-01",
+        "FEED-01",
+        "OBS-01",
+        "WEB-01"
+      ],
+      "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "CLN-03"
+    },
+    {
+      "task_id": "CAP-00",
+      "wave": "W2",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "GOV-01",
+        "MOV-07"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": true,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "CAP-00"
+    },
+    {
+      "task_id": "STR-01",
+      "wave": "W3",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "MOV-05",
+        "CAP-00"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "STR-01"
+    },
+    {
+      "task_id": "CAP-01",
+      "wave": "W3",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "CAP-00",
+        "MOV-04"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "CAP-01"
+    },
+    {
+      "task_id": "CAP-02",
+      "wave": "W3",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "CAP-01"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "CAP-02"
+    },
+    {
+      "task_id": "CAP-03",
+      "wave": "W3",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "CAP-00",
+        "CAP-01",
+        "CAP-02"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": true,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "CAP-03"
+    },
+    {
+      "task_id": "CAP-04",
+      "wave": "W3",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "STR-01",
+        "CAP-03",
+        "MOV-06"
+      ],
+      "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": true,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "CAP-04"
+    },
+    {
+      "task_id": "CAP-05",
+      "wave": "W3",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "CAP-01",
+        "CAP-02",
+        "CAP-03",
+        "STR-02",
+        "VEN-01",
+        "EXEC-01"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "CAP-05",
+      "requirement": "REQUIRED_CORE_CODE; pair activation only opt-in; no NOT_APPLICABLE_APPROVED for task acceptance",
+      "acceptance_requirements": [
+        "TWO_LEG_BUY_SELL_DISPATCH",
+        "CONCURRENT_NON_ACK_BLOCKING_AND_SEQUENTIAL",
+        "TWO_REAL_VENUE_ADAPTER_MAPPING_ROUTES_SCRIPTED_OFFLINE",
+        "DURABLE_GROUP_AND_LEG_RESTART_RECONCILIATION",
+        "PARTIAL_FILL_UNKNOWN_CANCEL_HEDGE_BOUNDS",
+        "OTHER_STRATEGY_ISOLATION_AND_ZERO_LIVE_MUTATION"
+      ]
+    },
+    {
+      "task_id": "CAP-06",
+      "wave": "W3",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "STR-01",
+        "CAP-01",
+        "CAP-02",
+        "CAP-03",
+        "CAP-04",
+        "CAP-05",
+        "STR-02",
+        "VEN-01",
+        "EXEC-01"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": true,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "CAP-06"
+    },
+    {
+      "task_id": "QA-01",
+      "wave": "W5",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "MOV-07",
+        "CLN-02",
+        "STR-01",
+        "CAP-00",
+        "CAP-01",
+        "CAP-02",
+        "CAP-03",
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "STR-02",
+        "VEN-01",
+        "EXEC-01",
+        "SIM-01",
+        "FEED-01",
+        "OBS-01",
+        "WEB-01"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "QA-01"
+    },
+    {
+      "task_id": "PERF-01",
+      "wave": "W5",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "QA-01"
+      ],
+      "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "PERF-01"
+    },
+    {
+      "task_id": "REL-01",
+      "wave": "W6",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "QA-01",
+        "PERF-01",
+        "CLN-03",
+        "SIM-01"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "REL-01"
+    },
+    {
+      "task_id": "DEP-01",
+      "wave": "W6",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "REL-01"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "DEP-01"
+    },
+    {
+      "task_id": "CUT-01",
+      "wave": "W7",
+      "status": "EXTERNAL_NOT_AUTHORIZED",
+      "depends_on": [
+        "DEP-01"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": false,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "CUT-01"
+    },
+    {
+      "task_id": "RET-01",
+      "wave": "W7",
+      "status": "EXTERNAL_NOT_AUTHORIZED",
+      "depends_on": [
+        "CUT-01"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": false,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "RET-01"
+    },
+    {
+      "task_id": "STR-02",
+      "wave": "W3",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "STR-01",
+        "MOV-05",
+        "CAP-00"
+      ],
+      "risk_review": "HIGH",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "STR-02"
+    },
+    {
+      "task_id": "VEN-01",
+      "wave": "W3",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "MOV-04",
+        "CAP-00"
+      ],
+      "risk_review": "HIGH",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "VEN-01"
+    },
+    {
+      "task_id": "EXEC-01",
+      "wave": "W3",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "STR-02",
+        "VEN-01",
+        "CAP-01",
+        "CAP-02",
+        "CAP-03"
+      ],
+      "risk_review": "CRITICAL",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "EXEC-01"
+    },
+    {
+      "task_id": "SIM-01",
+      "wave": "W4",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "CLN-02",
+        "STR-02",
+        "EXEC-01",
+        "VEN-01",
+        "CAP-05"
+      ],
+      "risk_review": "HIGH",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "SIM-01"
+    },
+    {
+      "task_id": "FEED-01",
+      "wave": "W3",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "MOV-07",
+        "CAP-00"
+      ],
+      "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "FEED-01"
+    },
+    {
+      "task_id": "OBS-01",
+      "wave": "W3",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "MOV-07",
+        "STR-02",
+        "CAP-03",
+        "FEED-01"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "OBS-01"
+    },
+    {
+      "task_id": "WEB-01",
+      "wave": "W4",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "OBS-01",
+        "MOV-06"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "WEB-01"
+    },
+    {
+      "task_id": "KR-DATA-01",
+      "wave": "W5",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "FEED-01",
+        "MOV-07",
+        "CAP-00"
+      ],
+      "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
+      "required_for_offline_release": false,
+      "may_need_scope_decision": true,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "KR-DATA-01"
+    }
+  ],
+  "acceptance_rule": {
+    "allowed_states": [
+      "NOT_STARTED",
+      "IN_PROGRESS",
+      "BLOCKED",
+      "ACCEPTED_LOCAL",
+      "EXTERNAL_NOT_AUTHORIZED",
+      "EXTERNAL_VERIFICATION_PENDING",
+      "OPERATIONAL_ACCEPTED",
+      "NOT_APPLICABLE_APPROVED"
+    ],
+    "independent_verification_required": true,
+    "test_and_diff_provenance_required": true,
+    "no_self_approval": true,
+    "no_server_mutation_without_user_approval": true
+  },
+  "edit_history": [
+    {
+      "date": "2026-10-25",
+      "reason": "Explicit user correction: CAP-05 mandatory code implementation and offline E2E regardless of selected strategy; live venue-pair activation opt-in",
+      "changed_docs": [
+        "01_FINAL_PLAN.md",
+        "02_DEVELOPER_TICKETS.md",
+        "03_ARCHITECTURE_REQUIREMENTS.md",
+        "05_TASK_STATUS.json"
+      ],
+      "unchanged_docs": [
+        "04_COMPLETED_MANIFEST.json"
+      ],
+      "status_changes": "none; CAP-05 remains NOT_STARTED, no testing or acceptance claimed"
+    },
+    {
+      "date": "2026-10-25",
+      "revision": "v2-strategy-owned-actions-venue-extensibility-ponytail-lowms",
+      "note": "Added four required tickets STR-02 VEN-01 EXEC-01 SIM-01, retained 45 historical accepted as is; all new tickets remain NOT_STARTED and external activation unapproved."
+    },
+    {
+      "date": "2026-10-25",
+      "revision": "minimal-policy-ownership-and-nonblocking-latency",
+      "reason": "User directive: strategy owns economic equivalence/inventory/MM quote and hedging; execution returns order/account facts; config instrument aliases; latency targets observational not blocking",
+      "changed_docs": [
+        "01_FINAL_PLAN.md",
+        "02_DEVELOPER_TICKETS.md",
+        "03_ARCHITECTURE_REQUIREMENTS.md",
+        "05_TASK_STATUS.json"
+      ],
+      "unchanged_docs": [
+        "04_COMPLETED_MANIFEST.json"
+      ],
+      "status_changes": "none; 31 ticket identities, statuses and dependencies unchanged; no implementation or test receipt claimed"
+    },
+    {
+      "date": "2026-10-25",
+      "revision": "multisource-no-barrier-domestic-broker-extension",
+      "reason": "Explicit follow-up: independent data ingress/normalization without cross-venue wait; all new Crypto venues and domestic stock brokers share extensional Adapter/Owner contract",
+      "changed_docs": [
+        "01_FINAL_PLAN.md",
+        "02_DEVELOPER_TICKETS.md",
+        "03_ARCHITECTURE_REQUIREMENTS.md",
+        "05_TASK_STATUS.json"
+      ],
+      "unchanged_docs": [
+        "04_COMPLETED_MANIFEST.json"
+      ],
+      "status_changes": "none; 31 task IDs, statuses, waves, and edges unchanged",
+      "external_actions": "none"
+    },
+    {
+      "date": "2026-10-25",
+      "revision": "2026-10-25-venue-feed-split-pnl-latency-https-orderonly-kr350",
+      "reason": "venue-specific collector files; TOSS collection; live latency and per-strategy PnL; secure mobile URL; order-only broker; optional 350-minute/daily capacity",
+      "added_tickets": [
+        "FEED-01",
+        "OBS-01",
+        "WEB-01",
+        "KR-DATA-01"
+      ],
+      "historical_completed_unchanged": true,
+      "server_or_repo_modified": false
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "GOV-01 independently accepted: installed authority docs/final, legacy authority read-only, DAG and historical38 verified, manifest bytes unchanged",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/GOV-01.acceptance.json"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "OPS-01 BLOCKED on selected GLM provider HTTP 429; actual worker exit 1, zero partial edits, no retry delegation/fallback",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/OPS-01.blocked.json"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "User authorized worker priority GLM > OpenCode DeepSeek > FreeLLMAPI Gemini etc; resume OPS-01 with tier2 after verifying tier1 made no edits",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/resume-20261025T172041Z"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "Inspected DeepSeek quota failure and worker exit143; no partial edits. Advance to authorized tier3 Gemini 2.5 Flash.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/resume-20261025T172041Z/OPS-01.deepseek-failure.json"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "Authorized priority routes inspected; DeepSeek/Gemini unavailable and no partial edits. OPS-01 remains BLOCKED; worker priority persisted.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/resume-20261025T172041Z/OPS-01.blocked.json"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "Explicit user request: live recheck worker routes and implement/independently verify OPS-01 if available. Prior receipt hashes/partial work checked.",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/recheck-20261026T033056Z"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "DeepSeek implementation received; independent exact tests170 PASS, six independent corner-case probes failed; bounded repair1 dispatched without acceptance.",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/recheck-20261026T033056Z"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "OPS-01 independently ACCEPTED_LOCAL after worker implementation, bounded repair, six adverse probes, small root-path fix,180 committed-source tests and214 netless tests.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/recheck-20261026T033056Z/OPS-01.acceptance.json",
+      "source_sha": "9ab1d7f9899179c442eaa533353c8ee552f88b79"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "User requested3 sequential tickets; selected MOV-00 -> MOV-01 -> MOV-02; MOV-00 ownership inventory dispatched. Trading contract ownership override based on actual execution-ledger dependency.",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z"
+    }
+  ],
+  "requirements_revision": {
+    "revision": "2026-10-25-venue-feed-split-pnl-latency-https-orderonly-kr350",
+    "base_document": "VibeTrading_FlatSrc_Lean_20261025",
+    "new_ticket_count": 4,
+    "original_ticket_count": 31,
+    "new_tickets": [
+      "FEED-01",
+      "OBS-01",
+      "WEB-01",
+      "KR-DATA-01"
+    ],
+    "original_ticket_statuses_preserved": true,
+    "required_offline_new_tickets": [
+      "FEED-01",
+      "OBS-01",
+      "WEB-01"
+    ],
+    "conditional_new_tickets": [
+      "KR-DATA-01"
+    ],
+    "cut_approval_unchanged": true,
+    "toss": "FEED_REQUIRED_OPERABLE_WHEN_CONFIGURED_ORDER_BLOCKED",
+    "dashboard": "REUSE_EXISTING_READONLY_UI_NO_EXPOSED_ORDER_API",
+    "client": "GLM_DeepSeek_must_follow_ticket_G_and_existing_A1_protocol",
+    "known_gaps": [
+      "production gateway and real server host resources unverified",
+      "KIS 350 WS direct unsupported current quota",
+      "NH real API unverified"
+    ]
+  },
+  "worker_routing_policy": {
+    "user_authorized_on": "2026-10-26",
+    "priority": [
+      "freellmapi/glm-4.5-flash",
+      "opencode/deepseek-v4.1-flash-free",
+      "freellmapi/gemini-2.5-flash"
+    ],
+    "third_tier": "FreeLLMAPI Gemini etc; exact catalog ID pinned per invocation",
+    "switch_owner": "Codex after failure/partial-diff review and disclosure",
+    "worker_auto_fallback": false,
+    "paid_routes_authorized": false,
+    "last_observation": {
+      "at_kst": "2026-10-26T12:54:48.235411+09:00",
+      "freellmapi_glm": "GATEWAY_UNREACHABLE_QUOTA_UNKNOWN",
+      "opencode_deepseek": "AVAILABLE_CONFIRMED_IMPLEMENTED_AND_TESTED",
+      "freellmapi_gemini": "SAME_GATEWAY_UNREACHABLE_QUOTA_UNKNOWN",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/recheck-20261026T033056Z/freellmapi-connectivity.json"
+    }
+  }
+}

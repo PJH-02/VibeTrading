@@ -20,32 +20,19 @@ R03에서 패키지 루트를 이동했고, R04에서 전략 로딩을 `vibetrad
 R05에서 선택된 C3/KP/KD 순수 판단 계산을 `strategies/kr/`로 분리했습니다.
 데이터 준비·계좌·주문 처리는 기존 ETF Runtime에 유지하며, 다른 도메인은 해당 VN/TX 티켓 범위입니다.
 
-## 현재 상태 (v3 리팩토링 기준)
+## 현재 리팩토링 권위
 
-2026-10-23 범위 수정: 기존 거래소 실행·주문·계좌·클라우드 전송을 보존하면서 NATS-free 데이터/저장/복구와 전략 파일별 Signal·기존 Paper·동일 계좌 안전성만 보완합니다. [최소 재사용 계획](docs/refactoring/vnext/VibeTrading_Minimal_Reuse_Plan_20261023.md)이 기존 범용 Trading Platform 확대 요구보다 우선합니다. 이 단계는 제품 변경 없이 조사·계획만 수행했습니다.
+실행 계획과 범위는 [최종 계획](docs/final/01_FINAL_PLAN.md), 구현·테스트는
+[개발 티켓](docs/final/02_DEVELOPER_TICKETS.md), 안전 계약은
+[아키텍처 요구사항](docs/final/03_ARCHITECTURE_REQUIREMENTS.md)을 따릅니다.
+과거 완료 사실은 [불변 manifest](docs/final/04_COMPLETED_MANIFEST.json), 현재 상태와
+의존성은 [작업 상태](docs/final/05_TASK_STATUS.json)가 소유합니다.
+[상태 안내](docs/status.md)는 이 다섯 문서로 연결하는 색인입니다.
 
-상태의 유일한 요약은 [v3 local execution status](docs/status.md)입니다. 유지보수용 계층 결과는
-아래 명령으로 다시 만듭니다.
-
-```bash
-python3 scripts/dev/status.py --root . --json
-```
-
-- 스냅샷 기준: 2026-10-23, 소스 99f25957(이 티켓 base). 아래 수치는 스냅샷 값입니다.
-  변하는 READY/현재 카운트는 [tickets_production.json](docs/refactoring/vnext/tickets_production.json),
-  [stage_status.json](docs/refactoring/vnext/stage_status.json)과
-  파생 요약 [v3 local execution status](docs/status.md)를 따르며, 이 README는 티켓 상태를 복제하지 않습니다.
-- R00 저장소 인벤토리는 이미 존재하며 수락되었습니다: [repo_inventory.json](docs/refactoring/vnext/repo_inventory.json) —
-  파싱된 Python 파일 504개, 다이내믹 임포트 지점 24개. 미해결 지점의 의미는 **UNKNOWN**입니다
-  (인벤토리나 소스 파일 지도가 없다는 뜻이 아닙니다). 문서·상태 색인은 R01의 권위 산출물인
-  [R01 권위 상태 색인](docs/tickets/R01-authority-status.md)을 참고하세요.
-- 신규 제품 기준선(격리 리눅스): **1531 passed / 1 failed / 2 deselected**. 전체 회귀 PASS가 아닙니다.
-  알려진 실패는 체크포인트 이후 아직 열리지 않은 스풀 세그먼트를 교체해도 복구가 진행되는 결함이며,
-  감사로 확인되었습니다. 준비 완료로 읽지 마세요.
-- VN/TX 라인 진행 요약은 [아키텍처 지도](docs/architecture.md)의 스냅샷을 참고하고,
-  세부 계획은 [11 통합 VN/TX 실행 계획](docs/refactoring/vnext/11_integrated_vn_tx_plan.md)을 따릅니다.
-- VN20 실서버 전환·삭제는 외부 실행입니다. 이 리포 내부 티켓·에이전트가 수행 대상이 아닙니다.
-- 현재 서버에는 접촉 기록이 없고, 실서버 현재 상태는 UNKNOWN입니다.
+기존 v3/Minimal Reuse 및 VN/TX/R/O 문서·상태는 읽기 전용 역사 자료입니다.
+`python3 scripts/dev/status.py --root . --json`은 OPS-01 전환 전까지 구 v3 투영이므로
+신규 티켓 READY 판단에 사용하지 않습니다. 기존 수락 코드를 재개발하지 않습니다.
+최종 목표는 역할별 Flat `src/`이며 현재 패키지 이동 완료를 뜻하지 않습니다.
 
 ## 배포 이력과 로컬 후보
 
@@ -60,7 +47,7 @@ python3 scripts/dev/status.py --root . --json
 - 출시 경계 기록은 [운영 전환 패키지](docs/refactoring/cutover.md)와
   [production_source_manifest.json](docs/refactoring/vnext/production_source_manifest.json)을 참고하세요.
 - 아키텍처 소유권 자체는 [docs/architecture.md](docs/architecture.md)로 분리했습니다.
-- 문서·코드·증거 충돌은 [conflict_register.md](docs/refactoring/vnext/conflict_register.md)에 등록됩니다.
+- 과거 충돌 기록은 [conflict_register.md](docs/refactoring/vnext/conflict_register.md)에 보존되며, 현재 충돌 처리는 최종 5문서를 따릅니다.
 
 ## 현행 전략·모의 운용 (변경 없음)
 
@@ -96,22 +83,16 @@ python3 scripts/dev/status.py --root . --json
   [실거래 호가 기반 모의 거래 이력](docs/FV_PILOT_MAINNET.md)으로 이력만 남깁니다.
 - 시장 데이터 어댑터 통합 가이드는 [데이터 피드 가이드](docs/DATA_FEED_API_GUIDE.md).
 
-## v3 리팩토링 진입점
+## 과거 v3 근거 (읽기 전용)
 
-세 개의 v3 권위 문서는 이번 티켓에서 건드리지 않으며(untouched), 계약·수락 기준의 원천입니다.
+아래 문서는 과거 수락·복구 증거이며 현재 계약이나 상태 권위가 아닙니다.
 
-- [v3 아키텍처·불변조건 명세](docs/refactoring/vnext/VibeTrading_Architecture_Requirements_v3.md)
-- [v3 개발자 구현 명세·티켓 수락 기준](docs/refactoring/vnext/VibeTrading_Developer_Ticket_Spec_v3.md)
-- [v3 최종 리팩토링 실행 계획](docs/refactoring/vnext/VibeTrading_Refactoring_Final_Plan_v3.md)
-
-머신이 읽는 권위 상태(canonical JSON):
-
-- [tickets_production.json](docs/refactoring/vnext/tickets_production.json)
-- [stage_status.json](docs/refactoring/vnext/stage_status.json)
-
-단계 문서: [01 현재 상태·기준선 차이](docs/refactoring/vnext/01_current_state_delta.md),
-[02 아키텍처 검토](docs/refactoring/vnext/02_architecture_review.md),
-[15 단계별 상태와 다음 작업](docs/refactoring/vnext/15_stage_status_and_next_steps.md).
+- [v3 아키텍처 이력](docs/refactoring/vnext/VibeTrading_Architecture_Requirements_v3.md)
+- [v3 개발 티켓 이력](docs/refactoring/vnext/VibeTrading_Developer_Ticket_Spec_v3.md)
+- [v3 실행 계획 이력](docs/refactoring/vnext/VibeTrading_Refactoring_Final_Plan_v3.md)
+- [과거 VN/TX 및 R/O 상태](docs/refactoring/vnext/tickets_production.json)
+- [과거 단계 분류](docs/refactoring/vnext/stage_status.json)
+- [R00 소스 인벤토리](docs/refactoring/vnext/repo_inventory.json)
 
 복귀 경계는 [복귀 절차 문서](docs/refactoring/rollback.md)와 활성 P02 롤백 스크립트
 [scripts/refactoring/deploy_p02_schema.py](scripts/refactoring/deploy_p02_schema.py)가 유지됩니다.
