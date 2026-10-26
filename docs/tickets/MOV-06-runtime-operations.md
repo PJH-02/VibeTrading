@@ -96,3 +96,19 @@ there is no built image or container import evidence. Reviewed production local
 plan/capacity/mount inputs are not supplied; profiles are static candidates only.
 BLOCKED is required, not ACCEPTED_LOCAL. No MOV-07 advancement, global release,
 browser login, live order, production/server/account change, push or deployment.
+
+## Environment repair — 2026-10-27
+
+Docker Desktop's Linux engine was running; Ubuntu's default WSL integration was
+disabled. After a private settings backup, Codex changed only
+EnableIntegrationWithDefaultWslDistro false to true and stopped/started Desktop.
+The standard /var/run/docker.sock now works in the existing and fresh WSL
+processes, reaches the same Windows engine, and passes a scratch offline build
+plus container file readback. Existing FreeLLMAPI and BuildKit were restored.
+
+The earlier missing-daemon blocker is resolved. A new actual root Dockerfile
+attempt using the existing app-reuse base with --network=none reached editable
+installation, then failed because isolated setuptools build dependencies were
+unavailable offline. No new packages were installed. Full app/crypto/browser
+image verification remains pending; 05 holds the current blocker and repair
+receipt. Historical receipts remain unchanged. No product source was modified.

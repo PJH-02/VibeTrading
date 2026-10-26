@@ -688,9 +688,9 @@
       "test_exit": 0,
       "blocking_reasons": [
         {
-          "id": "DOCKER_IMAGE_BUILD_IMPORT_UNAVAILABLE",
-          "evidence": "/home/pjh/.local/state/codex-opencode/runs/MOV-06-20261026T100253Z/docker-build.result.json",
-          "details": "Actual docker build --network=none --pull=false exited1: /var/run/docker.sock missing. No built image or container import proof; mandatory MOV-06 acceptance remains unsatisfied."
+          "id": "OFFLINE_APPLICATION_IMAGE_BUILD_DEPENDENCIES_UNAVAILABLE",
+          "evidence": "/home/pjh/.local/state/codex-opencode/runs/docker-wsl-repair-20261026T150735Z/MOV-06.app-build.result.json",
+          "details": "2026-10-27: Docker Desktop/Ubuntu connectivity repaired and scratch offline build/readback PASS. Actual MOV-06 Dockerfile with cached app-reuse base and --network=none now reaches PEP517 editable build, then exits1 because setuptools>=68 is unavailable in offline build isolation. Crypto/browser image import gates remain unverified. This is no longer a missing-daemon/socket blocker."
         },
         {
           "id": "PRIMARY_EXTERNAL_STARTUP_INPUTS_PENDING",
@@ -720,7 +720,18 @@
       "acceptance_receipt_sha256": "9c1bf20873bd71ab4a7cdbb7033828d2d1a8f3a754a039efabc6175dd1539f4d",
       "source_diff_sha256": "31a7d6c5850b1f5345b0bdd302be04745e01998a3ab7e1d6161c5f9544e392df",
       "local_implementation": "IMPLEMENTED_LOCAL_TESTED_IMAGE_GATE_PENDING",
-      "resume_instructions": "Resume exact MOV-06 HEAD and receipt. Do not repeat moves or worker repairs (two used). Reuse reviewed code, verify supplied local plan/mount/capacity inputs, actual Docker build/import gate when daemon available. No server/live/deploy actions authorized."
+      "resume_instructions": "Docker Desktop/Ubuntu WSL connection is repaired; native default context and fresh WSL process reach the existing Linux engine. Do not repeat moves or worker repairs (two used). Prepare approved offline image build dependencies/cached base, then rerun actual app/crypto/browser Docker build/import gates and reviewed local startup inputs. No host package installation, live/server/deploy actions authorized.",
+      "environment_repairs": [
+        {
+          "date": "2026-10-27",
+          "status": "PASS_LOCAL",
+          "issue": "Docker Desktop default Ubuntu WSL integration disabled",
+          "receipt": "/home/pjh/.local/state/codex-opencode/runs/docker-wsl-repair-20261026T150735Z/docker-wsl-repair.acceptance.json",
+          "receipt_sha256": "05ce7e640675255c8c7f003623654d6701472c923b07f054f40ba52e98afbf58",
+          "daemon_connection": "RESOLVED",
+          "full_application_image_gate": "BLOCKED_OFFLINE_BUILD_DEPENDENCY_CACHE"
+        }
+      ]
     },
     {
       "task_id": "MOV-07",
@@ -1510,6 +1521,12 @@
       "reason": "MOV-06 implementation committed with separate mechanical/packaging/functional changes. Independent668 regression group + final49 runtime/Timefolio tests, wheel42 imports/131 canonical file hashes, Compose7 passed; actual Docker build1/socket absent. BLOCKED, not accepted; MOV-07 not advanced. Worker GLM interrupted, DeepSeek timeout, Gemini429; two repairs exhausted and reviewed worker draft adopted after independent tests.",
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/MOV-06-20261026T100253Z/MOV-06.acceptance.json",
       "receipt_sha256": "9c1bf20873bd71ab4a7cdbb7033828d2d1a8f3a754a039efabc6175dd1539f4d"
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "Docker Desktop was running; Ubuntu integration was disabled. Backed up settings-store.json, changed only EnableIntegrationWithDefaultWslDistro false->true, stopped/started Desktop, verified native default socket, fresh WSL, same Windows/Linux engine and existing containers restored. Offline scratch build/readback passed; actual MOV06 app image reached editable build and failed missing offline setuptools build dependency. Corrected obsolete missing-daemon blocker; MOV06 remains BLOCKED, MOV07 not advanced.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/docker-wsl-repair-20261026T150735Z/docker-wsl-repair.acceptance.json",
+      "receipt_sha256": "05ce7e640675255c8c7f003623654d6701472c923b07f054f40ba52e98afbf58"
     }
   ],
   "requirements_revision": {
