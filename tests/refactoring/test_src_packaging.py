@@ -1,4 +1,4 @@
-"""Focused packaging checks for the canonical src/vibetrading layout.
+"""Focused packaging checks for the canonical flat domain packages.
 
 These tests stay inside the R03B1 packaging subunit: import origin,
 setuptools metadata discovery, live-data exclusion retention, and
@@ -18,9 +18,10 @@ PYTEST_INI = ROOT / "pytest.ini"
 DOCKERFILE = ROOT / "Dockerfile"
 DOCKERFILE_CRYPTO = ROOT / "Dockerfile.crypto"
 REQUIREMENTS = ROOT / "requirements.txt"
-CANONICAL_INIT = ROOT / "src" / "vibetrading" / "__init__.py"
+CANONICAL_NAMESPACES = ("core", "feeds", "market", "storage", "strategies", "execution",
+                        "portfolio", "runtime", "operations", "timefolio")
 
-LEGACY_NAMESPACES = ("strategy", "strategies", "shared", "services", "backtest")
+LEGACY_NAMESPACES = ("strategy", "shared", "services", "backtest")
 
 
 def _load_pyproject() -> dict:
@@ -31,13 +32,11 @@ def _load_pyproject() -> dict:
 def test_import_discovery_prefers_src_package_without_root_alias() -> None:
     import importlib.util
 
-    spec = importlib.util.find_spec("vibetrading")
-    assert spec is not None and spec.origin, "vibetrading must be import-discoverable"
-    origin = Path(spec.origin).resolve()
-    assert origin == CANONICAL_INIT.resolve()
-    # No top-level compatibility wrapper/alias package at the repository root.
-    assert not (ROOT / "vibetrading" / "__init__.py").exists()
-    assert CANONICAL_INIT.is_file()
+    for name in CANONICAL_NAMESPACES:
+        spec = importlib.util.find_spec(name)
+        assert spec is not None and spec.origin
+        assert Path(spec.origin).resolve() == (ROOT / "src" / name / "__init__.py").resolve()
+        assert not (ROOT / name / "__init__.py").exists()
 
 
 def test_setuptools_metadata_discovers_canonical_and_legacy_packages(monkeypatch) -> None:
@@ -58,14 +57,14 @@ def test_setuptools_metadata_discovers_canonical_and_legacy_packages(monkeypatch
     assert "dependencies" not in project, "dependencies must stay dynamic from requirements.txt"
 
     setuptools_cfg = data["tool"]["setuptools"]
-    package_dir = setuptools_cfg["package-dir"]
-    assert package_dir["vibetrading"].replace("\\", "/").rstrip("/") == "src/vibetrading"
+    assert "package-dir" not in setuptools_cfg
 
     find_cfg = setuptools_cfg["packages"]["find"]
-    assert find_cfg["where"] == ["src", "."]
+    assert find_cfg["where"] == ["src"]
     include = set(find_cfg["include"])
-    for name in ("vibetrading", "vibetrading.*", *LEGACY_NAMESPACES):
-        assert name in include
+    for name in CANONICAL_NAMESPACES:
+        assert name in include and name + ".*" in include
+    assert not set(LEGACY_NAMESPACES) & include
     exclude = set(find_cfg["exclude"])
     for blocked in (
         "src",
@@ -97,18 +96,16 @@ def test_setuptools_metadata_discovers_canonical_and_legacy_packages(monkeypatch
                 exclude=find_cfg["exclude"],
             )
         )
-    assert "vibetrading" in discovered
-    for namespace in LEGACY_NAMESPACES:
-        assert namespace in discovered, f"legacy namespace {namespace} must remain discoverable"
+    assert set(CANONICAL_NAMESPACES) <= discovered
+    assert not set(LEGACY_NAMESPACES) & discovered
 
     # Execute setuptools' supported pyproject configuration expansion. This
     # resolves [tool.setuptools.packages.find] for real; no swallowed skip.
     dist = Distribution()
     apply_configuration(dist, str(PYPROJECT))
     expanded = set(dist.packages or ())
-    assert "vibetrading" in expanded, "canonical package must expand from pyproject.toml"
-    for namespace in LEGACY_NAMESPACES:
-        assert namespace in expanded, f"legacy namespace {namespace} must expand from pyproject.toml"
+    assert set(CANONICAL_NAMESPACES) <= expanded
+    assert not set(LEGACY_NAMESPACES) & expanded
 
     # requirements.txt remains the authoritative, unchanged dependency source.
     req_text = REQUIREMENTS.read_text(encoding="utf-8")
@@ -128,34 +125,24 @@ def test_pytest_ini_retains_live_exclusion_and_adds_pythonpath() -> None:
 
 
 def test_dockerfiles_structurally_support_src_entrypoint() -> None:
+    import json
+    import shlex
     docker = DOCKERFILE.read_text(encoding="utf-8")
-    assert "COPY . ." in docker
-    # A stale flat package from a reused app base must be removed before the
-    # editable install so /app does not shadow /app/src on sys.path.
-    assert "rm -rf /app/vibetrading" in docker
-    assert docker.index("rm -rf /app/vibetrading") < docker.index(
-        "pip install --no-deps -e ."
-    )
-    assert "pip install --no-deps -e ." in docker
-    assert "PYTHONPATH" in docker and "/app/src" in docker
-    # Existing base/dependency/build-label/UID/CMD behavior preserved.
-    assert "requirements.txt" in docker
-    assert "VIBETRADING_BUILD_REVISION" in docker
-    assert "useradd --uid 10001" in docker
-    assert 'CMD ["python", "main.py", "status"]' in docker
-
     crypto = DOCKERFILE_CRYPTO.read_text(encoding="utf-8")
-    assert "COPY --chown=10001:10001 src/vibetrading /app/src/vibetrading" in crypto
-    assert "COPY --chown=10001:10001 pyproject.toml /app/pyproject.toml" in crypto
-    assert "COPY --chown=10001:10001 requirements.txt /app/requirements.txt" in crypto
-    # Stale flat base package is removed; root alias is not re-copied.
-    assert "rm -rf /app/vibetrading" in crypto
-    assert "COPY --chown=10001:10001 vibetrading /app/vibetrading" not in crypto
-    assert "pip install --no-deps -e" in crypto
-    # Config/strategies/main copies and UID behavior preserved.
-    assert "config /app/config" in crypto
-    assert "strategies /app/strategies" in crypto
-    assert "main.py /app/main.py" in crypto
-    assert "USER vibetrading" in crypto
-    # Never touches /data.
+    for recipe in (docker, crypto):
+        copies = [line.split() for line in recipe.splitlines() if line.startswith("COPY ")]
+        assert any(parts[-2:] == ["src", "/app/src"] for parts in copies)
+        assert all("src/vibetrading" not in part for parts in copies for part in parts)
+        assert recipe.index("rm -rf /app/src") < next(recipe.index(" ".join(parts)) for parts in copies if parts[-2:] == ["src", "/app/src"])
+        cleanup = shlex.split(next(line for line in recipe.splitlines() if "rm -rf /app/src" in line))
+        for old in ("vibetrading", "strategies", "services", "shared", "strategy", "backtest"):
+            assert "/app/" + old in cleanup
+        assert "PYTHONPATH=/app/src" in recipe
+        assert "pip install --no-deps -e" not in recipe
+        assert "requirements.txt" in recipe and "VIBETRADING_BUILD_REVISION" in recipe
+    assert "useradd --uid 10001" in docker
+    command = next(line[4:] for line in docker.splitlines() if line.startswith("CMD "))
+    assert json.loads(command) == ["python", "-m", "runtime.cli", "status"]
+    assert "config /app/config" in crypto and "main.py /app/main.py" in crypto
+    assert "USER 10001:10001" in crypto
     assert "/data" not in crypto

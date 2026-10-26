@@ -161,9 +161,9 @@ def test_process_exit_during_retirement_is_atomic(tmp_path, monkeypatch, commit)
     code = '''
 import os,sys,time
 from pathlib import Path
-from vibetrading.settings import RuntimeSettings
-from vibetrading.sqlite_store import RuntimeStore
-from vibetrading.delivery_recovery import retire_runs
+from runtime.settings import RuntimeSettings
+from storage.sqlite_store import RuntimeStore
+from storage.delivery_recovery import retire_runs
 s=RuntimeStore(RuntimeSettings.from_env(Path(sys.argv[1])))
 s._conn.execute('BEGIN IMMEDIATE')
 assert retire_runs(s._conn,now_ns=time.time_ns(),max_age_seconds=172800,limit=4)['retired_runs']==2

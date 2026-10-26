@@ -135,3 +135,25 @@ Production inputs and all live gates remain separate and unverified.
 Accept only once all MOV-06 local criteria pass; then execute MOV-07 as a separate
 read-only gate. Return any gate findings to the owning move ticket, no silent
 waiver or weakening of authority requirements.
+
+Independent full-suite follow-up found narrowly scoped move/fixture repairs:
+three embedded crash-process scripts still imported old module paths; resource
+and packaging tests still asserted the retired layout; historical TX12 checks
+incorrectly compared frozen receipts with today's modified callers. Update those
+test references to current owners, while verifying old receipt hashes against
+their exact pinned completed Git batch and resolving old runbook roles through
+the immutable MOV-00 map. Never rewrite historical receipts or runbooks.
+The two 20261018 frozen oracles had checkout-normalized LF: restore original
+CRLF bytes from the original checkout only after exact expected SHA256 and JSON
+equality proof; mark only those oracle files -text in .gitattributes. Expected
+test hashes and oracle JSON values remain unchanged. This is byte preservation,
+not rebaselining or unrelated whitespace cleanup.
+
+Actual separate-process startup exposed run_collector's orderly-close callback:
+LocalTransportClient.close emits client_closed even after all work is confirmed.
+Codex's bounded runtime-only fix ignores that reason only while publisher close
+is underway, failed==0 and accepted==durable==applied. Early client shutdown and
+other lease/gap failures still invalidate and fail closed. Three real-UDS tests
+cover successful drain, early close and lease failure during close. No economic
+function, spool durability protocol, safety gate or source dependency changed.
+After the fix, rebuild all images and repeat the real no-network startup matrix.

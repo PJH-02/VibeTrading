@@ -434,3 +434,50 @@ async def test_1801_virtual_seconds_with_no_nats_durable_spool_uds_and_local_dec
             except RuntimeError:pass
         await server.close()
         await engine.close()
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize('fault', [None, 'early_client_close', 'lease_gap_during_close'])
+async def test_collector_orderly_close_requires_complete_durable_and_applied_progress(tmp_path, fault):
+    from dataclasses import replace
+    from types import SimpleNamespace
+    import time
+    from runtime.local_runtime import run_collector
+    plan = replace(LocalRuntimePlan.from_document(document(tmp_path)), allowed_uid=os.getuid())
+    engine = LocalMarketEngine(producer_providers={'kiwoom': 'kiwoom'},
+        budgets=EngineBudgets(**plan.engine), on_invalidate=lambda *args: None,
+        hot_path=HotPathStore(), fresh_starts={'kiwoom': 'run'}, verified_fresh_start=True)
+    server = LocalTransportServer(plan.endpoint, budgets=plan.transport,
+        on_frame=engine.on_frame, on_gap=engine.on_gap, on_resume=engine.request_resume,
+        allowed_uid=os.getuid())
+    await server.start()
+    captured = []
+    class Collector:
+        async def run(self, publisher, *, duration_sec):
+            captured.append(publisher)
+            now = time.time_ns()
+            await publisher.publish_market_event(event(1).model_copy(
+                update={'source_ts_ns': now, 'receive_ts_ns': now}))
+            async with asyncio.timeout(5):
+                while publisher.stats['applied'] != 1:
+                    await asyncio.sleep(.001)
+            if fault == 'early_client_close':
+                await publisher.transport.close()
+            elif fault == 'lease_gap_during_close':
+                publisher._closing = True
+                publisher.transport.on_gap(publisher.transport.cursor, 'control_lease_expired')
+    try:
+        if fault is None:
+            await run_collector(plan, plan.producers[0], SimpleNamespace(env={}), collector=Collector())
+        else:
+            with pytest.raises(RuntimeError, match='closed with unconfirmed work'):
+                await run_collector(plan, plan.producers[0], SimpleNamespace(env={}), collector=Collector())
+        stats = captured[0].stats
+        assert stats['accepted'] == stats['durable'] == stats['applied'] == 1
+        assert stats['invalid'] is (fault is not None)
+        item = plan.producers[0]
+        reader = SpoolReader(item.spool_root, 'kiwoom', 'run', **item.limits.reader_kwargs)
+        assert [row.cursor.sequence for row in reader.read_batch(max_records=1, max_bytes=8192)] == [1]
+    finally:
+        await server.close()
+        await engine.close()

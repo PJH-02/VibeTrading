@@ -72,7 +72,7 @@ def test_process_exit_respects_run_transaction_boundary(tmp_path, commit):
     path = tmp_path / 'crash.db'
     code = '''
 import sqlite3,sys,os
-from vibetrading.event_index_runs import ensure_schema,append_runs
+from storage.event_index_runs import ensure_schema,append_runs
 c=sqlite3.connect(sys.argv[1],isolation_level=None)
 c.execute('PRAGMA journal_mode=WAL');c.execute('PRAGMA synchronous=FULL')
 ensure_schema(c);c.execute('BEGIN IMMEDIATE');append_runs(c,[(b'x'*32,7)])

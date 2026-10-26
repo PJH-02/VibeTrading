@@ -2,3 +2,5 @@
 docs/refactoring/runs/20261020-production/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 docs/refactoring/runs/20261020-vnext/vn00-package/*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 docs/refactoring/vnext/*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+docs/refactoring/runs/20261018-stage-assignment/*_oracle.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

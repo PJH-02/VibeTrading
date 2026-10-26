@@ -186,11 +186,16 @@ async def run_collector(plan,item,settings,*,collector=None):
         collector=_collector_for_args(SimpleNamespace(provider=item.provider,symbols=item.symbols))
     failures=[]
     def invalid(reason):failures.append(reason)
+    def transport_gap(cursor,reason):
+        progress=publisher.stats
+        orderly=(reason=='client_closed' and publisher._closing and progress['failed']==0
+            and progress['accepted']==progress['durable']==progress['applied'])
+        if not orderly:publisher._invalidate(RuntimeError(reason))
     def transport_factory():
         return LocalTransportClient(plan.endpoint,producer=item.producer,incarnation=item.incarnation,
             budgets=plan.transport,
             on_gap=(lambda cursor,reason:None) if item.delivery is not None else
-                lambda cursor,reason:publisher._invalidate(RuntimeError(reason)),
+                transport_gap,
             allowed_uid=plan.allowed_uid)
     delivery={}
     if item.delivery is not None:
