@@ -39,14 +39,12 @@
   "new_task_counts": {
     "total": 35,
     "accepted": 9,
-    "in_progress": 0,
+    "in_progress": 1,
     "blocked": 0,
-    "not_started": 24,
+    "not_started": 23,
     "external_not_authorized": 2
   },
-  "next_ready_candidate": [
-    "MOV-07"
-  ],
+  "next_ready_candidate": [],
   "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
   "gate_results": {
     "REPOSITORY_CONSOLIDATED": "NOT_VERIFIED_FOR_NEW_RELEASE",
@@ -363,7 +361,7 @@
       "scope": "KOSPI200+KOSDAQ150 minute/daily, max 350"
     }
   },
-  "active_task_id": null,
+  "active_task_id": "MOV-07",
   "last_accepted_task_id": "MOV-06",
   "stop_requested": false,
   "tickets": [
@@ -732,7 +730,7 @@
     {
       "task_id": "MOV-07",
       "wave": "W1",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "depends_on": [
         "MOV-01",
         "MOV-02",
@@ -744,7 +742,7 @@
       "risk_review": "CRITICAL_CODEX",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
+      "base_sha": "7dfbbc9d5834603a3c565dcd70d98da5cbed8172",
       "actual_commit_sha": null,
       "acceptance_receipt": null,
       "test_exit": null,
@@ -763,7 +761,8 @@
           "details": "Use accepted MOV-05 supplemental map so already-moved monitor is not selected twice; operations/dashboard empty seed init exists. Prove source/target init identity before any resolution; never overwrite existing target."
         }
       ],
-      "resume_move_map": "scripts/refactoring/MOV-05-path-resolution.json"
+      "resume_move_map": "scripts/refactoring/MOV-05-path-resolution.json",
+      "bounded_packet": "docs/tickets/MOV-07-flat-gate.md"
     },
     {
       "task_id": "CLN-01",
@@ -1529,6 +1528,10 @@
       "reason": "MOV-06 ACCEPTED_LOCAL 100% local criteria:2495 local tests,4 actual images/8x131 canonical imports, wheel131, Compose7, actual separate-process no-network spool/engine/Parquet startup and credential-disabled roles, local Chromium DOM, Timefolio oracle equality; frozen bytes/04 preserved. Production capacity/mount inputs are external gates, never claimed from synthetic fixtures. MOV-07 ready.",
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/MOV-06-image-completion-20261026T153318Z/MOV-06.complete.acceptance.json",
       "receipt_sha256": "0c4cb53c973825bb2804f6e3cbab51d2cc8920f3f70b9ecd2c0c123ea85dc141"
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "MOV-06 accepted; MOV-07 independent final flat-source/image gate started with read-only GLM audit and Codex deterministic verification."
     }
   ],
   "requirements_revision": {
@@ -1625,7 +1628,7 @@
       "MOV-06"
     ],
     "artifacts": "/home/pjh/.local/state/codex-opencode/runs/MOV-06-image-completion-20261026T153318Z",
-    "status": "MOV06_ACCEPTED_MOV07_READY",
+    "status": "MOV07_IN_PROGRESS",
     "next_not_started": "MOV-07"
   },
   "completed_batches": [
