@@ -38,15 +38,13 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 10,
+    "accepted": 11,
     "in_progress": 1,
     "blocked": 0,
-    "not_started": 22,
+    "not_started": 21,
     "external_not_authorized": 2
   },
-  "next_ready_candidate": [
-    "CAP-00"
-  ],
+  "next_ready_candidate": [],
   "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
   "gate_results": {
     "REPOSITORY_CONSOLIDATED": "NOT_VERIFIED_FOR_NEW_RELEASE",
@@ -363,8 +361,8 @@
       "scope": "KOSPI200+KOSDAQ150 minute/daily, max 350"
     }
   },
-  "active_task_id": "CLN-01",
-  "last_accepted_task_id": "MOV-07",
+  "active_task_id": "CAP-00",
+  "last_accepted_task_id": "CLN-01",
   "stop_requested": false,
   "tickets": [
     {
@@ -784,7 +782,7 @@
     {
       "task_id": "CLN-01",
       "wave": "W2",
-      "status": "IN_PROGRESS",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "GOV-01",
         "MOV-07"
@@ -793,13 +791,16 @@
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
       "base_sha": "271a72f9d8544e9a3ca7432e08194b4dad167d55",
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "actual_commit_sha": "6789d51d119ade81de8768c18ba23a611da42e84",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN-01-CAP-00-20261026T173148Z/CLN-01.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "CLN-01",
-      "bounded_packet": "docs/tickets/CLN-01-doc-hygiene.md"
+      "bounded_packet": "docs/tickets/CLN-01-doc-hygiene.md",
+      "acceptance_receipt_sha256": "fb9d1b8f62f2ffd67e29ce0e1fdf093adc9f08839332b179ca193a1b5942abbd",
+      "local_ticket_completion_percent": 100,
+      "source_diff_sha256": "be2e9536f8b63a23c93da8afb3e7039a72568d950e29e2062cc223928d972179"
     },
     {
       "task_id": "CLN-02",
@@ -859,7 +860,7 @@
     {
       "task_id": "CAP-00",
       "wave": "W2",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "depends_on": [
         "GOV-01",
         "MOV-07"
@@ -867,13 +868,14 @@
       "risk_review": "CRITICAL_CODEX",
       "required_for_offline_release": true,
       "may_need_scope_decision": true,
-      "base_sha": null,
+      "base_sha": "6789d51d119ade81de8768c18ba23a611da42e84",
       "actual_commit_sha": null,
       "acceptance_receipt": null,
       "test_exit": null,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
-      "definition_heading_id": "CAP-00"
+      "definition_heading_id": "CAP-00",
+      "bounded_packet": "docs/tickets/CAP-00-capability-contract.md"
     },
     {
       "task_id": "STR-01",
@@ -1561,6 +1563,12 @@
     {
       "date": "2026-10-27",
       "reason": "User requested next two tickets CLN-01/CAP-00 to completion, then commit and push current branch. MOV-06/07 receipts reverified. CLN-01 starts; immutable historical04 and production gates preserved."
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "CLN-01 accepted100%:1062 retention entries,30 immutable04 receipt hashes,104 byte-exact historical moves,166 recoverable raw untracks,133 required links, fresh-clone2542 tests. CAP-00 starts from unchanged product source; no live/release promotion.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN-01-CAP-00-20261026T173148Z/CLN-01.acceptance.json",
+      "receipt_sha256": "fb9d1b8f62f2ffd67e29ce0e1fdf093adc9f08839332b179ca193a1b5942abbd"
     }
   ],
   "requirements_revision": {
@@ -1655,9 +1663,11 @@
       "CLN-01",
       "CAP-00"
     ],
-    "accepted": [],
+    "accepted": [
+      "CLN-01"
+    ],
     "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN-01-CAP-00-20261026T173148Z",
-    "status": "CLN01_IN_PROGRESS",
+    "status": "CAP00_IN_PROGRESS",
     "push_authorized": true,
     "push_target": "origin codex/move-core-feeds"
   },
