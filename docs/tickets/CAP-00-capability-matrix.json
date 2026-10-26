@@ -19,7 +19,8 @@
     "LIVE",
     "CONTEST_DRY_RUN",
     "EXTENSION_FIXTURE_ONLY",
-    "UNSUPPORTED"
+    "UNSUPPORTED",
+    "LEGACY_UNVERIFIED"
   ],
   "prior_reuse_audit": {
     "path": "docs/refactoring/vnext/reuse_audit/function_inventory.json",
@@ -2812,7 +2813,7 @@
       "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
       "decision_status": "LEGACY_SEPARATE_OS_NOT_REST_SUBSTITUTE",
       "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
-      "claim": "MOCK",
+      "claim": "LEGACY_UNVERIFIED",
       "required_mutations": [
         "submit",
         "cancel",
@@ -2857,7 +2858,8 @@
       "private_stream": "Native private event or bounded polling; current scope stated in source evidence",
       "reconcile_path": "Existing path only; gaps must be implemented before route completion",
       "classification": "KEEP",
-      "evidence_limit": "Cache-only order status/open-orders and placeholder balance are not a full reconciliation implementation; Linux does not validate COM"
+      "evidence_limit": "Cache-only order status/open-orders and placeholder balance are not a full reconciliation implementation; Linux does not validate COM",
+      "claim_scope": "Windows COM historical code only; actual account environment not verified; no MOCK/REST/Linux substitution"
     },
     {
       "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",

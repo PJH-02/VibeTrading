@@ -82,7 +82,7 @@ CAP-00에서 별도 사용자 변경 승인 근거를 찾지 못하면 다음을
 
 이 목록은 최초 v3 목표의 venue 집합과 원래 사용자 제약을 합쳐 정한 **요구 계약**이지 최신 GitHub 코드에 이미 구현된 기능이라는 주장이 아니다. 특정 Venue가 규정/접근 제한으로 지원할 수 없으면 CAP-00에 정확한 blocker를 기록해 **전체 기능 완료를 보류**하고 사용자 승인으로만 범위 수정한다.
 
-**선택 범위 결정 레코드(요구)**: `venue`, `market_segment`, `product`, `environment`, `account_scope`, `strategy_id`, `execution_mode`, `claim`(`DATA_ONLY|PAPER|MOCK|MOCK2|TESTNET|LIVE|CONTEST_DRY_RUN|EXTENSION_FIXTURE_ONLY|UNSUPPORTED`), `required_mutations`, `source_functions`, `transport_owner`, `private_stream`, `reconcile_path`, `local_tests`, `external_gate`, `decision_owner`, `decision_status`. `DECISION_REQUIRED` 상태에서 전역 `ORIGINAL_PLATFORM_REQUIRED_FEATURES_COMPLETE`를 true로 둘 수 없다.
+**선택 범위 결정 레코드(요구)**: `venue`, `market_segment`, `product`, `environment`, `account_scope`, `strategy_id`, `execution_mode`, `claim`(`DATA_ONLY|PAPER|MOCK|MOCK2|TESTNET|LIVE|CONTEST_DRY_RUN|EXTENSION_FIXTURE_ONLY|LEGACY_UNVERIFIED|UNSUPPORTED`), `required_mutations`, `source_functions`, `transport_owner`, `private_stream`, `reconcile_path`, `local_tests`, `external_gate`, `decision_owner`, `decision_status`. `DECISION_REQUIRED` 상태에서 전역 `ORIGINAL_PLATFORM_REQUIRED_FEATURES_COMPLETE`를 true로 둘 수 없다.
 
 ## ARCH-MOD. `src/` Direct Domain Packages — 최종 Authority 불변조건
 

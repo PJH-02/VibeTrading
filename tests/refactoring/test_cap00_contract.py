@@ -109,6 +109,7 @@ def test_kiwoom_contract_freezes_missing_lifecycle_without_com_substitution():
     assert all('BLOCKED_API_SPEC_REQUIRED' in r['api_contract_status'] for r in rest)
     com = next(r for r in m['capabilities'] if r['id'] == 'KIWOOM-WINDOWS-COM')
     assert com['environment'] == 'windows_com' and not com['code_required']
+    assert com['claim'] == 'LEGACY_UNVERIFIED'
     assert com['decision_status'] == 'LEGACY_SEPARATE_OS_NOT_REST_SUBSTITUTE'
 
 
