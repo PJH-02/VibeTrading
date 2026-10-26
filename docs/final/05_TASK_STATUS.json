@@ -38,10 +38,10 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 3,
+    "accepted": 4,
     "in_progress": 1,
     "blocked": 0,
-    "not_started": 29,
+    "not_started": 28,
     "external_not_authorized": 2
   },
   "next_ready_candidate": [],
@@ -361,8 +361,8 @@
       "scope": "KOSPI200+KOSDAQ150 minute/daily, max 350"
     }
   },
-  "active_task_id": "MOV-01",
-  "last_accepted_task_id": "MOV-00",
+  "active_task_id": "MOV-02",
+  "last_accepted_task_id": "MOV-01",
   "stop_requested": false,
   "tickets": [
     {
@@ -439,17 +439,17 @@
     {
       "task_id": "MOV-01",
       "wave": "W1",
-      "status": "IN_PROGRESS",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "MOV-00"
       ],
       "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": "7c595d1a33c5ddb7aded82d6fec86439bc2b7d2d",
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "base_sha": "c9e9a8dc3ecaaa6dcb235ac56c8083aba2a80eff",
+      "actual_commit_sha": "ec08b222642b2f64cc43a528327b513c112bcf0e",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-01.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "MOV-01",
@@ -460,20 +460,23 @@
     {
       "task_id": "MOV-02",
       "wave": "W1",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "depends_on": [
         "MOV-01"
       ],
       "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
+      "base_sha": "ec08b222642b2f64cc43a528327b513c112bcf0e",
       "actual_commit_sha": null,
       "acceptance_receipt": null,
       "test_exit": null,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
-      "definition_heading_id": "MOV-02"
+      "definition_heading_id": "MOV-02",
+      "implementation_packet": "docs/tickets/MOV-02-feeds-market-move.md",
+      "resume_artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z",
+      "selected_worker_model": "freellmapi/glm-4.5-flash"
     },
     {
       "task_id": "MOV-03",
@@ -1230,6 +1233,11 @@
       "date": "2026-10-26",
       "reason": "MOV-00 independently accepted; original dirty checkout preserved; all source ownership and explicit deferred exceptions frozen in codegen map.",
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-00.acceptance.json"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "MOV-01 accepted after exact-plan/AST review, wire and old pickle identity, 131 tests and offline wheel import outside repository; advance third requested ticket MOV-02.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-01.acceptance.json"
     }
   ],
   "requirements_revision": {
@@ -1279,6 +1287,13 @@
       "opencode_deepseek": "AVAILABLE_CONFIRMED_IMPLEMENTED_AND_TESTED",
       "freellmapi_gemini": "SAME_GATEWAY_UNREACHABLE_QUOTA_UNKNOWN",
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/recheck-20261026T033056Z/freellmapi-connectivity.json"
+    },
+    "last_live_check": {
+      "date": "2026-10-26",
+      "evidence": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.provider-smoke.json",
+      "glm": "HTTP_200_nonempty",
+      "gemini": "HTTP_502",
+      "selected": "freellmapi/glm-4.5-flash"
     }
   },
   "execution_checkout": {
@@ -1295,7 +1310,8 @@
       "MOV-02"
     ],
     "accepted": [
-      "MOV-00"
+      "MOV-00",
+      "MOV-01"
     ],
     "artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z"
   }
