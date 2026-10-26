@@ -38,13 +38,19 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 11,
-    "in_progress": 1,
+    "accepted": 12,
+    "in_progress": 0,
     "blocked": 0,
     "not_started": 21,
     "external_not_authorized": 2
   },
-  "next_ready_candidate": [],
+  "next_ready_candidate": [
+    "CLN-02",
+    "STR-01",
+    "CAP-01",
+    "VEN-01",
+    "FEED-01"
+  ],
   "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
   "gate_results": {
     "REPOSITORY_CONSOLIDATED": "NOT_VERIFIED_FOR_NEW_RELEASE",
@@ -126,11 +132,47 @@
   },
   "capability_scope_decisions": {
     "source_of_truth": "03_ARCHITECTURE_REQUIREMENTS.md ARCH-00A",
-    "status": "DECISION_REQUIRED",
-    "selected_required_routes": [],
-    "explicitly_unsupported_routes": [],
+    "status": "DEFAULT_REQUIRED_CODE_SCOPE_FROZEN",
+    "selected_required_routes": [
+      "KIS-ETF-MOCK-C3",
+      "KIS-ETF-MOCK-KP",
+      "KIS-ETF-MOCK-KD",
+      "KIS-STOCK-MOCK",
+      "KIS-ETF-MOCK2-C3",
+      "KIS-ETF-MOCK2-KP",
+      "KIS-ETF-MOCK2-KD",
+      "KIS-STOCK-MOCK2",
+      "BINANCE-PERP-SANDBOX",
+      "BINANCE-PERP-LIVE",
+      "BYBIT-PERP-SANDBOX",
+      "BYBIT-PERP-LIVE",
+      "GRVT-PERP-SANDBOX",
+      "GRVT-PERP-LIVE",
+      "ARCUS-PERP-SANDBOX",
+      "ARCUS-PERP-LIVE",
+      "HYPERLIQUID-PERP-SANDBOX",
+      "HYPERLIQUID-PERP-LIVE",
+      "BINANCE-SPOT-SANDBOX",
+      "BINANCE-SPOT-LIVE",
+      "KIWOOM-REST-KR_CASH_STOCK-MOCK",
+      "KIWOOM-REST-KR_CASH_STOCK-LIVE",
+      "KIWOOM-REST-KR_CASH_ETF-MOCK",
+      "KIWOOM-REST-KR_CASH_ETF-LIVE",
+      "TOSS-DATA",
+      "GENERIC-PAPER",
+      "CROSS-VENUE-REQUIRED-CODE",
+      "TIMEFOLIO-LOCAL_DRY_RUN",
+      "TIMEFOLIO-LIVE"
+    ],
+    "explicitly_unsupported_routes": [
+      "TOSS_ORDER_MUTATION",
+      "INVERSE_COIN_M",
+      "UNSELECTED_MARGIN_OR_HEDGE_MODES",
+      "HIP3",
+      "HYPERLIQUID_SPOT"
+    ],
     "user_approved_exclusions": [],
-    "note": "Do not silently downgrade initial user goals to OPTIONAL. Configure chosen routes and mark missing implementation as BLOCKED; no automatic live activation.",
+    "note": "Default required scope frozen without exclusions; proof/source gaps assigned to existing tickets. This is no production/route activation or blanket external-only waiver. No new alpha/NH real API requirement or KR350 activation.",
     "default_required_code_targets": [
       {
         "venue": "binance",
@@ -359,10 +401,34 @@
       "offline_ticket": "KR-DATA-01",
       "live_activation": "EXTERNAL_PROVIDER_API_AND_CAPACITY_EVIDENCE_REQUIRED",
       "scope": "KOSPI200+KOSDAQ150 minute/daily, max 350"
-    }
+    },
+    "selected_required_routes_meaning": "Required local-code contract IDs only, not activated deployment routes",
+    "activated_deployment_routes": [],
+    "actual_account_strategy_activation": "NOT_SELECTED_NOT_AUTHORIZED",
+    "matrix_evidence": "docs/tickets/CAP-00-capability-matrix.json",
+    "matrix_evidence_sha256": "7a76ec2e186b01e361fb5865eb7daae4d56bb6abdf8cdd17532e8075650acbb6",
+    "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN-01-CAP-00-20261026T173148Z/CAP-00.acceptance.json",
+    "implementation_gap_ids": [
+      "CONCRETE-TRANSPORT",
+      "PRIVATE-LIFECYCLE",
+      "COMMON-OWNER-BRIDGE",
+      "KIWOOM-LOCAL-LIFECYCLE",
+      "KIWOOM-API-SCHEMAS",
+      "TOKEN-CACHE-REVIEW",
+      "KIS-FILE-BRIDGE",
+      "SPOT-ROUTE-INTEGRATION",
+      "COM-LOCAL-CACHE",
+      "FEED-ORDER-SEPARATION",
+      "STRATEGY-ACTION-FEEDBACK",
+      "CROSS-VENUE-EXECUTION",
+      "TIMEFOLIO-STATUS-INTERPRETATION",
+      "EXTENSION-FIXTURE-SEAM",
+      "UNSUPPORTED-PRODUCT-MODES"
+    ],
+    "missing_required_local_code_blocks_feature_release": true
   },
-  "active_task_id": "CAP-00",
-  "last_accepted_task_id": "CLN-01",
+  "active_task_id": null,
+  "last_accepted_task_id": "CAP-00",
   "stop_requested": false,
   "tickets": [
     {
@@ -860,7 +926,7 @@
     {
       "task_id": "CAP-00",
       "wave": "W2",
-      "status": "IN_PROGRESS",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "GOV-01",
         "MOV-07"
@@ -869,13 +935,19 @@
       "required_for_offline_release": true,
       "may_need_scope_decision": true,
       "base_sha": "6789d51d119ade81de8768c18ba23a611da42e84",
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "actual_commit_sha": "6a914585e503ca8e0b1f2ebe297fe16d0693c448",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN-01-CAP-00-20261026T173148Z/CAP-00.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "CAP-00",
-      "bounded_packet": "docs/tickets/CAP-00-capability-contract.md"
+      "bounded_packet": "docs/tickets/CAP-00-capability-contract.md",
+      "acceptance_receipt_sha256": "f7198d6864afb40a14976f5daa4be81dff34dc930cd5a69f9a7ecf55e6947b5d",
+      "source_diff_sha256": "aefad909e255b16e9c52443c579f582047117748dfa68d75e9410bdcc09b3f7a",
+      "local_ticket_completion_percent": 100,
+      "capability_contract_evidence": "docs/tickets/CAP-00-capability-matrix.json",
+      "capability_contract_evidence_sha256": "7a76ec2e186b01e361fb5865eb7daae4d56bb6abdf8cdd17532e8075650acbb6",
+      "resume_instructions": "CAP00 local contract/gap freeze complete. Preserve required goals and source reuse; implement only the next ready ticket. Missing local route functions remain explicit, no external/live/global feature promotion."
     },
     {
       "task_id": "STR-01",
@@ -1569,6 +1641,13 @@
       "reason": "CLN-01 accepted100%:1062 retention entries,30 immutable04 receipt hashes,104 byte-exact historical moves,166 recoverable raw untracks,133 required links, fresh-clone2542 tests. CAP-00 starts from unchanged product source; no live/release promotion.",
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN-01-CAP-00-20261026T173148Z/CLN-01.acceptance.json",
       "receipt_sha256": "fb9d1b8f62f2ffd67e29ce0e1fdf093adc9f08839332b179ca193a1b5942abbd"
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "CAP00 ACCEPTED_LOCAL100%:35 exact scope tuples,29 required local rows,110 source functions/18 files,19 scoped witnesses,15 assigned local implementation gaps; no trading code/activation changes. Final fresh-checkout2523+25=2548 tests; prior retention1062 entries/30 named04 receipts reverified. Requested CLN01/CAP00 batch complete; commit and authorized current-branch push follow.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN-01-CAP-00-20261026T173148Z/CAP-00.acceptance.json",
+      "receipt_sha256": "f7198d6864afb40a14976f5daa4be81dff34dc930cd5a69f9a7ecf55e6947b5d",
+      "actual_commit_sha": "6a914585e503ca8e0b1f2ebe297fe16d0693c448"
     }
   ],
   "requirements_revision": {
@@ -1613,11 +1692,11 @@
     "worker_auto_fallback": false,
     "paid_routes_authorized": false,
     "last_observation": {
-      "at_kst": "2026-10-27T02:27:24.726895+09:00",
-      "freellmapi_glm": "HTTP200 reads then HTTP429 Retry-After90/600; timeout124; changed paths0",
-      "opencode_deepseek": "AVAILABLE_CONFIRMED_AUDIT_IMPLEMENT_AND_REPAIR_WORKER_EXIT0",
-      "freellmapi_gemini": "NOT_RECHECKED_THIS_TICKET; working second-priority route required no third-tier fallback",
-      "receipt": "/home/pjh/.local/state/codex-opencode/runs/MOV-07-flat-gate-20261026T163740Z/MOV-07.acceptance.json"
+      "at_kst": "2026-10-27T03:35:25.957176+09:00",
+      "freellmapi_glm": "HTTP429 initial request repeated; timeout124; no changed files",
+      "opencode_deepseek": "CLN verifier implementation + CAP source audit EXIT0; Codex independent acceptance",
+      "freellmapi_gemini": "NOT_NEEDED_AFTER_WORKING_SECOND_PRIORITY_ROUTE",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN-01-CAP-00-20261026T173148Z/CAP-00.acceptance.json"
     },
     "last_live_check": {
       "date": "2026-10-27",
@@ -1628,19 +1707,14 @@
       "selected": "opencode/deepseek-v4.1-flash-free"
     },
     "last_worker_result": {
-      "task_id": "MOV-07",
+      "task_id": "CAP-00",
       "model": "opencode/deepseek-v4.1-flash-free",
+      "role": "audit",
       "worker_exit": 0,
       "launcher_exit": 0,
-      "independent_local_tests": 2509,
-      "worker_packets": [
-        "MOV-07 read-only audit",
-        "MOV-05/06 namespace follow-up",
-        "historical crypto inventory scoped repair1"
-      ],
-      "scope_pass": true,
-      "no_paid_route": true,
-      "evidence": "/home/pjh/.local/state/codex-opencode/runs/MOV-07-flat-gate-20261026T163740Z/MOV-07.acceptance.json"
+      "independent_final_tests": 2548,
+      "source_edits": [],
+      "evidence": "/home/pjh/.local/state/codex-opencode/runs/CLN-01-CAP-00-20261026T173148Z/CAP-00.acceptance.json"
     },
     "current_batch_alternatives": {
       "gemini_minimax_kimi_requested": true,
@@ -1664,12 +1738,15 @@
       "CAP-00"
     ],
     "accepted": [
-      "CLN-01"
+      "CLN-01",
+      "CAP-00"
     ],
     "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN-01-CAP-00-20261026T173148Z",
-    "status": "CAP00_IN_PROGRESS",
+    "status": "COMPLETED_REQUESTED_TWO_TICKETS",
     "push_authorized": true,
-    "push_target": "origin codex/move-core-feeds"
+    "push_target": "origin codex/move-core-feeds",
+    "completed_utc": "2026-10-26T18:35:25.957176+00:00",
+    "next_not_started": "CLN-02"
   },
   "completed_batches": [
     {
@@ -1704,6 +1781,23 @@
       "status": "COMPLETED_REQUESTED_TWO_TICKETS",
       "next_not_started": "CLN-01",
       "completed_utc": "2026-10-26T17:27:24.726895+00:00"
+    },
+    {
+      "requested_tasks": 2,
+      "tasks": [
+        "CLN-01",
+        "CAP-00"
+      ],
+      "accepted": [
+        "CLN-01",
+        "CAP-00"
+      ],
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN-01-CAP-00-20261026T173148Z",
+      "status": "COMPLETED_REQUESTED_TWO_TICKETS",
+      "push_authorized": true,
+      "push_target": "origin codex/move-core-feeds",
+      "completed_utc": "2026-10-26T18:35:25.957176+00:00",
+      "next_not_started": "CLN-02"
     }
   ]
 }
