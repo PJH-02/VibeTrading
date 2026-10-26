@@ -17,11 +17,10 @@ RUN if [ "$VIBETRADING_REUSE_APP_BASE" = "1" ]; then \
     else \
         pip install --no-cache-dir -r requirements.txt; \
     fi
-RUN rm -rf /app/src /app/vibetrading
+RUN rm -rf /app/src /app/vibetrading /app/strategies /app/services /app/shared /app/strategy /app/backtest
 COPY src /app/src
 COPY pyproject.toml main.py /app/
 COPY config /app/config
-RUN pip install --no-deps -e .
 ENV PYTHONPATH=/app/src
 RUN if ! id -u vibetrading >/dev/null 2>&1; then \
         useradd --uid 10001 --create-home --shell /usr/sbin/nologin vibetrading; \

@@ -112,3 +112,26 @@ installation, then failed because isolated setuptools build dependencies were
 unavailable offline. No new packages were installed. Full app/crypto/browser
 image verification remains pending; 05 holds the current blocker and repair
 receipt. Historical receipts remain unchanged. No product source was modified.
+
+## Completion packet — 2026-10-27
+
+User explicitly requested resolving the blocker, fully accepting MOV-06, then
+executing MOV-07. Reuse prior worker code and receipts; two repair delegations
+remain exhausted, so no further MOV-06 worker implementation. Codex owns the
+small build/path correction and independent image acceptance.
+Allowed correction: Dockerfile and Dockerfile.crypto only, remove redundant
+editable project installation (runtime already uses declared PYTHONPATH=/app/src,
+no distribution-metadata/entrypoint consumers); remove stale root legacy source
+directories inside reused images. No host dependency changes, Python economic
+changes, original source/data removal, account/service activation or deployment.
+Wheel metadata/build remains independently checked with existing bundled tools.
+Build actual app/crypto/ledger/browser images, resolve canonical paths from root
+and /tmp, compare image source hashes, test uid10001, real local-only browser
+launch and fake submit=false/arm cases. Existing browser Dockerfile dependencies
+are confined to the browser image; never install host packages or use accounts.
+Run no-network fake startup/disabled-role matrix with synthetic local fixtures;
+do not require or invent production ingress/mount capacity to claim LOCAL proof.
+Production inputs and all live gates remain separate and unverified.
+Accept only once all MOV-06 local criteria pass; then execute MOV-07 as a separate
+read-only gate. Return any gate findings to the owning move ticket, no silent
+waiver or weakening of authority requirements.
