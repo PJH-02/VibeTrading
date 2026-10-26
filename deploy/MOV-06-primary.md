@@ -19,8 +19,9 @@ Default configs/runtime.yaml and crypto_runtime.yaml remain historical collector
 inputs; they are not valid LocalRuntimePlan documents and are not substituted.
 
 Disabled until separately configured: Paper strategies (explicit borrowed runtime
-only), Timefolio order runner (needs local adapter plus dedicated consumer wiring
-and fake acceptance), Timefolio monitor (separate verified browser image and
+only), Timefolio order runner (explicit timefolio-order-compose.yml override of the single
+engine, ETF/Paper disabled, observation spool and exact producer dependencies required;
+--no-submit is fixed in the opt-in command), Timefolio monitor (separate verified browser image and
 credentials), maintenance (no automatic deletion/backup or remote activity),
 external/public dashboard publishing (not authorized). No nats-init dependency.
 Timefolio submit remains false even in the primary environment. A browser image's

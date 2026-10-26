@@ -2,12 +2,13 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import math
 from collections import deque
 from dataclasses import dataclass
 from decimal import Decimal
 from typing import Any
 
-from runtime.bus import EventBus, NatsJetStreamBus
+from runtime.bus import EventBus
 from execution.contracts import AccountExecutionConfig, ExecutionSafetyGate, OrderIntentFactory
 from market.hot_path import HotPathStore, StrategyDataView
 from core.models import BaseMarketEvent, EventType, OrderDestination, OrderIntentStatus, Side, Signal, SignalAction, event_from_dict
@@ -21,6 +22,7 @@ from operations.dashboard.telemetry import heartbeat
 
 
 logger = logging.getLogger(__name__)
+_POLL_INTERVAL_SECONDS = 1.0
 
 
 @dataclass(frozen=True)
@@ -57,11 +59,19 @@ def timefolio_ticker_from_signal(signal: Signal) -> str:
 
 
 class TimefolioStrategyRunner:
-    def __init__(self, config: TimefolioStrategyRunnerConfig, bus: EventBus | None = None, store: RuntimeStore | None = None) -> None:
+    def __init__(
+        self,
+        config: TimefolioStrategyRunnerConfig,
+        bus: EventBus | None = None,
+        store: RuntimeStore | None = None,
+        *,
+        event_source: Any = None,
+    ) -> None:
         self.config = config
         self.settings = get_settings()
         self.store = store or RuntimeStore(self.settings)
-        self.bus = bus or NatsJetStreamBus(self.settings)
+        self.bus = bus
+        self._event_source = event_source
         self.strategy_module = load_strategy(config.strategy_module)
         self.strategy = self.strategy_module.create()
         self.hot_path = HotPathStore()
@@ -76,53 +86,80 @@ class TimefolioStrategyRunner:
             return [{"status": "BLOCKED", "reason": "TIMEFOLIO_LIVE_SUBMIT_ENABLED is false"}]
         if self.config.submit and self.settings.env.get(f"TIMEFOLIO_ORDER_ARMED_{self.config.account_id.upper()}") != "1":
             return [{"status": "BLOCKED", "reason": "account arm token is not enabled"}]
+        if self._event_source is None or self.bus is None:
+            return [{"status": "BLOCKED", "reason": "local market event source and observation bus are required"}]
+        if duration_sec is not None and not math.isfinite(duration_sec):
+            raise ValueError("duration_sec must be finite")
         account = self.settings.timefolio_account(self.config.account_id)
         if not account.has_credentials:
             return [{"status": "SKIPPED_MISSING_CREDENTIALS", "account": self.config.account_id}]
+        if duration_sec is not None and duration_sec <= 0:
+            return []
 
-        await self.bus.connect()
-        deadline = asyncio.get_running_loop().time() + duration_sec if duration_sec else None
+        source = self._event_source
         results: deque[dict[str, Any]] = deque(maxlen=1000)
-        async with AsyncTimefolioBrowserManager(
-            headless=not self.config.show_browser,
-            live_submit_enabled=self.settings.timefolio_live_submit_enabled,
-        ) as manager:
-            login_status = await manager.login(
-                self.config.account_id,
-                TimefolioCredentials(account.username or "", account.password or ""),
-            )
-            if not login_status.logged_in:
-                await self.bus.close()
-                return [{"status": "LOGIN_FAILED", "login": login_status.__dict__}]
-            messages = self.bus.subscribe("md.>", durable=f"timefolio-{self.config.job_id}", batch=128)
-            monitor = asyncio.create_task(heartbeat(self.bus, job_id=self.config.job_id,
-                name=self.config.strategy_module, account=self.config.account_id, section="timefolio",
-                mode="timefolio" if self.config.submit else "paper", currency="KRW"))
-            try:
+        next_task: asyncio.Task[dict[str, Any]] | None = None
+        monitor: asyncio.Task[Any] | None = None
+        connected = False
+        try:
+            await self.bus.connect()
+            connected = True
+            async with AsyncTimefolioBrowserManager(
+                headless=not self.config.show_browser,
+                live_submit_enabled=self.settings.timefolio_live_submit_enabled,
+            ) as manager:
+                login_status = await manager.login(
+                    self.config.account_id,
+                    TimefolioCredentials(account.username or "", account.password or ""),
+                )
+                if not login_status.logged_in:
+                    return [{"status": "LOGIN_FAILED", "login": login_status.__dict__}]
+                monitor = asyncio.create_task(heartbeat(
+                    self.bus, job_id=self.config.job_id, name=self.config.strategy_module,
+                    account=self.config.account_id, section="timefolio",
+                    mode="timefolio" if self.config.submit else "paper", currency="KRW",
+                ))
+                deadline = (
+                    asyncio.get_running_loop().time() + duration_sec
+                    if duration_sec is not None
+                    else None
+                )
                 while True:
-                    if deadline and asyncio.get_running_loop().time() >= deadline:
-                        break
-                    timeout = min(1.0, max(0.05, deadline - asyncio.get_running_loop().time())) if deadline else 1.0
-                    try:
-                        message = await asyncio.wait_for(anext(messages), timeout=timeout)
-                    except asyncio.TimeoutError:
+                    timeout = _POLL_INTERVAL_SECONDS
+                    if deadline is not None:
+                        remaining = deadline - asyncio.get_running_loop().time()
+                        if remaining <= 0:
+                            break
+                        timeout = min(timeout, max(0.001, remaining))
+                    if next_task is None:
+                        next_task = asyncio.create_task(anext(source))
+                    done, _ = await asyncio.wait({next_task}, timeout=timeout)
+                    if not done:
                         continue
-                    except StopAsyncIteration:
-                        break
                     try:
-                        event = event_from_dict(message.data)
-                        if self.hot_path.apply(event):
-                            for signal in self.strategy.on_event(event, self.view):
-                                result = await self._handle_signal(signal, manager)
-                                results.append(result)
-                        await message.ack()
-                    except Exception:
-                        logger.exception("Timefolio strategy runner failed to process message")
-                        await message.nak(delay=5)
-            finally:
+                        payload = next_task.result()
+                    except StopAsyncIteration:
+                        next_task = None
+                        break
+                    next_task = None
+                    event = event_from_dict(payload)
+                    if self.hot_path.apply(event):
+                        for signal in self.strategy.on_event(event, self.view):
+                            results.append(await self._handle_signal(signal, manager))
+        finally:
+            if next_task is not None:
+                next_task.cancel()
+                await asyncio.gather(next_task, return_exceptions=True)
+            if monitor is not None:
                 monitor.cancel()
                 await asyncio.gather(monitor, return_exceptions=True)
-                await self.bus.close()
+            try:
+                aclose = getattr(source, "aclose", None)
+                if callable(aclose):
+                    await aclose()
+            finally:
+                if connected:
+                    await self.bus.close()
         return list(results)
 
     async def _handle_signal(self, signal: Signal, manager: AsyncTimefolioBrowserManager) -> dict[str, Any]:

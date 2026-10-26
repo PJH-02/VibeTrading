@@ -56,3 +56,43 @@ merge, deploy, credentials, browser login, live order/cancel or new service.
 Known preflight blocker: Docker client/Compose installed but /var/run/docker.sock
 absent; image build/import gate cannot currently pass. Preserve this blocker in
 status; do not accept MOV-06 or advance MOV-07 on static checks alone.
+
+## Execution and bounded follow-up
+
+Mechanical move committed separately (a6b3505); source/wheel/Compose wiring
+committed separately (ebfef03). Timefolio runtime changes are a third commit.
+Initial freellmapi/glm-4.5-flash received HTTP200 x8 then stream_error, worker1,
+one partial source, no tests. Snapshot also predated runtime moves; this setup
+fault was corrected in repair1. No GLM partial code applied.
+Repair1 opencode/deepseek-v4.1-flash-free wrote runner + fake tests, ran11 tests
+(1 failed due helper's None/default ambiguity,10 passed), fixed fixture, then
+outer timeout124 without final worker exit. Repair2 freellmapi/gemini-3.1-flash-lite
+received200 then429 x6, worker1, zero changes. Two repairs exhausted; no new worker
+delegation. Private logs retain actual exits and absent exit receipts explicitly.
+
+Codex independently compared five economic/helper function ASTs unchanged and ran
+the corrected DeepSeek draft in a read-only snapshot:11 passed. Adopted worker
+implementation after review; Codex changes only unused NATS import removal,
+finite-duration guard/tests and existing EOL preservation. No rewrite/takeover of
+the delegated implementation. Fake tests never open an actual browser or account.
+
+Codex-owned composition adds an explicit Timefolio consumer to the existing
+engine, with configured producer dependencies and LocalObservationBus. ETF/Paper
+and checkpoint injections are mutually exclusive; no new fanout/queue. The CLI
+requires --local-config and repeated --local-producer. The optional Compose
+override replaces the single engine and fixes --no-submit; default config never
+enables orders. Existing ETF engine return semantics stay unchanged.
+
+Exact additional acceptance commands:
+python3 -m pytest -q -p no:cacheprovider -p pytest_asyncio.plugin tests/test_timefolio.py tests/refactoring/test_timefolio_local_source.py tests/refactoring/test_mov06_timefolio_wiring.py
+python3 -m pytest -q -p no:cacheprovider tests/refactoring/test_mov06_source_manifest.py tests/refactoring/test_flat_domain_move.py
+The private combined argv (668 tests), command exits, old/new fake browser oracle,
+real spool-fsync-before-strategy/UDS/engine-to-fake-browser test, seven Compose
+combinations, wheel provenance and immutable manifest hash are in the run receipt.
+Compile bytecode goes to private /tmp; no pyc or data writes to product sources.
+
+Remaining mandatory gate: Docker build exited1 due absent /var/run/docker.sock;
+there is no built image or container import evidence. Reviewed production local
+plan/capacity/mount inputs are not supplied; profiles are static candidates only.
+BLOCKED is required, not ACCEPTED_LOCAL. No MOV-07 advancement, global release,
+browser login, live order, production/server/account change, push or deployment.

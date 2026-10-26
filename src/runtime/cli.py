@@ -6,6 +6,7 @@ import json
 import logging
 import sys
 from decimal import Decimal
+from pathlib import Path
 from typing import Any
 
 from .bus import BufferedMarketEventBus, InMemoryEventBus, NatsJetStreamBus
@@ -244,7 +245,17 @@ async def _cmd_timefolio_strategy(args: argparse.Namespace) -> int:
         submit=submit,
         show_browser=args.show_browser,
     )
-    results = await TimefolioStrategyRunner(config).run(duration_sec=args.duration_sec)
+    if args.local_config is None or not args.local_producer:
+        _print_json({"account": args.account, "status": "BLOCKED",
+                     "reason": "explicit local config and producer dependencies are required"})
+        return 2
+    from runtime.local_config import LocalRuntimePlan
+    from runtime.local_runtime import run_engine, validate_runtime
+    plan = LocalRuntimePlan.load(args.local_config)
+    validate_runtime(plan, settings)
+    results = await run_engine(plan, settings, timefolio_config=config,
+                               timefolio_producers=tuple(args.local_producer),
+                               timefolio_duration=args.duration_sec)
     _print_json({"job": args.job, "account": args.account, "results": results, "count": len(results)})
     return 0
 
@@ -504,6 +515,8 @@ def build_parser() -> argparse.ArgumentParser:
     tf_strategy.add_argument("--no-submit", action="store_true")
     tf_strategy.add_argument("--submit", action="store_true")
     tf_strategy.add_argument("--show-browser", action="store_true")
+    tf_strategy.add_argument("--local-config", type=Path)
+    tf_strategy.add_argument("--local-producer", action="append", default=[])
 
     real_exec = sub.add_parser("real-exec")
     real_exec.add_argument("--job", required=True)

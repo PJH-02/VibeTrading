@@ -1,6 +1,6 @@
 """NATS-free roles: collector -> local spool -> UDS engine, spool -> Parquet.
 
-Invoke explicitly with ``python -m vibetrading.local_runtime``. Legacy CLI and
+Invoke explicitly with ``python -m runtime.local_runtime``. Legacy CLI and
 deployed services are not silently switched. Each storage role is a separate
 process so Arrow/catalog/disk stalls cannot monopolize the trading loop.
 """
@@ -412,10 +412,25 @@ def etf_feed_dependencies(plan, producer):
 async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_feed_dependencies=None,
                      recovery_readiness=None,checkpoint_path=None,checkpoint_codec=None,
                      checkpoint_engine_incarnation=None,checkpoint_readiness=None,checkpoint_apply_order=None,
-                     checkpoint_journal=None,runtime_checkpoint=None,on_command=None):
+                     checkpoint_journal=None,runtime_checkpoint=None,on_command=None,
+                     timefolio_config=None,timefolio_producers=None,timefolio_duration=None):
     checkpoint_enabled=any(value is not None for value in (
         checkpoint_path,checkpoint_codec,checkpoint_engine_incarnation,checkpoint_apply_order)) or (
             checkpoint_readiness is not None and checkpoint_journal is None)
+    if timefolio_config is not None:
+        from timefolio.runner import TimefolioStrategyRunnerConfig
+        if type(timefolio_config) is not TimefolioStrategyRunnerConfig:
+            raise TypeError('Timefolio requires its explicit runner configuration')
+        if (plan.etf_enabled or paper_runtime is not None or checkpoint_enabled
+                or checkpoint_journal is not None or runtime_checkpoint is not None):
+            raise ValueError('Timefolio requires a dedicated engine consumer, without ETF/Paper/checkpoint injection')
+        names={item.producer for item in plan.producers}
+        if (not isinstance(timefolio_producers,tuple) or not timefolio_producers
+                or len(set(timefolio_producers))!=len(timefolio_producers)
+                or not set(timefolio_producers)<=names or plan.observation is None):
+            raise ValueError('Timefolio requires explicit configured producers and a local observation spool')
+    elif timefolio_producers is not None or timefolio_duration is not None:
+        raise ValueError('Timefolio source/duration requires an explicit runner configuration')
     if runtime_checkpoint is not None:
         from .runtime_checkpoint import RuntimeCheckpoint
         if type(runtime_checkpoint) is not RuntimeCheckpoint:
@@ -476,6 +491,8 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
                 keys=tuple(key for key in keys if key in paper_runtime.known) or tuple(paper_runtime.known)
             if keys:paper_runtime.invalidate_inputs(keys,'local_source_invalid',time.time_ns())
     from core.models import AssetClass
+    timefolio_providers={item.provider for item in plan.producers
+        if timefolio_producers is not None and item.producer in timefolio_producers}
     engine=LocalMarketEngine(producer_providers={p.producer:p.provider for p in plan.producers},
         budgets=EngineBudgets(**plan.engine),on_invalidate=invalid,
         hot_path=paper_runtime.hot_path if paper_runtime is not None else HotPathStore(),
@@ -486,7 +503,9 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
         on_tick=(getattr(paper_runtime,"advance",None) if paper_runtime is not None else None),
         snapshot_clock=time.time_ns,
         trading_filter=(lambda event:event.provider=='kiwoom' and event.instrument.asset_class==AssetClass.ETF)
-            if plan.etf_enabled else lambda event:False)
+            if plan.etf_enabled else (lambda event:event.provider in timefolio_providers
+                and event.instrument.asset_class!=AssetClass.CRYPTO_PERP)
+            if timefolio_config is not None else lambda event:False)
     def recovery_commit(high_water,digest):
         if checkpoint_enabled or journal_restored:
             receipt=engine.query_cursor(high_water.producer)
@@ -563,13 +582,27 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
             for initial,high in handoffs:
                 engine.arm_initial_resume(initial,high)
         if checkpoint_journal is not None:await checkpoint_journal.rotate(engine)
+        timefolio=None
+        if timefolio_config is not None:
+            from operations.local_observation import LocalObservationBus
+            from timefolio.runner import TimefolioStrategyRunner
+            item=plan.observation
+            observation=LocalObservationBus(producer=item.producer,incarnation=item.incarnation,
+                spool_factory=lambda:create_spool(item),budgets=item.pipeline,
+                on_invalid=lambda reason:invalid(item.producer,reason))
+            timefolio=TimefolioStrategyRunner(timefolio_config,bus=observation,
+                event_source=engine.event_source(required_producers=timefolio_producers))
         await server.start()
         await engine.start()
         from market.local_snapshot import LocalSnapshotWriter, SnapshotBudgets
         snapshot_writer=LocalSnapshotWriter(engine,settings.state_dir/'local-market.json',SnapshotBudgets(**plan.snapshot))
         await snapshot_writer.start()
         if etf is not None:task=asyncio.create_task(etf.run(initialized=True),name='local-etf')
-        if task is not None:await task
+        if timefolio is not None:
+            task=asyncio.create_task(timefolio.run(duration_sec=timefolio_duration),name='local-timefolio')
+        if task is not None:
+            results=await task
+            if timefolio is not None:return results
         elif checkpoint_journal is not None:await checkpoint_journal.run()
         else:await asyncio.Event().wait()
     finally:
