@@ -38,10 +38,10 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 6,
+    "accepted": 7,
     "in_progress": 1,
     "blocked": 0,
-    "not_started": 26,
+    "not_started": 25,
     "external_not_authorized": 2
   },
   "next_ready_candidate": [],
@@ -361,8 +361,8 @@
       "scope": "KOSPI200+KOSDAQ150 minute/daily, max 350"
     }
   },
-  "active_task_id": "MOV-04",
-  "last_accepted_task_id": "MOV-03",
+  "active_task_id": "MOV-05",
+  "last_accepted_task_id": "MOV-04",
   "stop_requested": false,
   "tickets": [
     {
@@ -523,7 +523,7 @@
     {
       "task_id": "MOV-04",
       "wave": "W1",
-      "status": "IN_PROGRESS",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "MOV-01",
         "MOV-03"
@@ -531,10 +531,10 @@
       "risk_review": "CRITICAL_CODEX",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": "f49d97da8f4e07edc74fe61b8654e5136666d513",
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "base_sha": "c5ace70c159eb9206ea5e7ff23a79552d1a5b3b7",
+      "actual_commit_sha": "7f0814f864325f4a1fe2ff3361cf9dbc6c250207",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-04.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "MOV-04",
@@ -577,13 +577,29 @@
           "scope_pass": true,
           "relay": null,
           "applied_to_active_repo": false
+        },
+        {
+          "model": "opencode/glm-5.3-flash-free",
+          "role": "test",
+          "launcher_exit": 124,
+          "real_exits": {
+            "diff-check-before-exit.txt": 0,
+            "worker-exit.txt": 124,
+            "diff-check-exit.txt": 0
+          },
+          "changed_paths": [],
+          "scope_pass": true,
+          "relay": null,
+          "applied_to_active_repo": false
         }
-      ]
+      ],
+      "worker_helper_status": "NOT_DELIVERED_NOT_APPLIED",
+      "independent_acceptance": "279 existing tests plus complete unmasked SQLite/economic oracle, wheel16/canonical62 imports passed"
     },
     {
       "task_id": "MOV-05",
       "wave": "W1",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "depends_on": [
         "MOV-02",
         "MOV-04"
@@ -591,13 +607,21 @@
       "risk_review": "CRITICAL_CODEX",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
+      "base_sha": "7f0814f864325f4a1fe2ff3361cf9dbc6c250207",
       "actual_commit_sha": null,
       "acceptance_receipt": null,
       "test_exit": null,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
-      "definition_heading_id": "MOV-05"
+      "definition_heading_id": "MOV-05",
+      "resume_artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z",
+      "implementation_packet": "docs/tickets/MOV-05-strategy-timefolio-move.md",
+      "selected_worker_model": "opencode/flint-40b-free",
+      "ownership_exceptions": {
+        "mm_state": "All286 four-bundle functions audited; preserve mixed/inactive source namespace until STR/CAP/CLN reuse gates, no blanket whole bundle move",
+        "root_strategies": "2 inert exact alias archives + existing turtle identity alias moves; canonical implementation sole source"
+      },
+      "supplemental_map": "scripts/refactoring/MOV-05-path-resolution.json"
     },
     {
       "task_id": "MOV-06",
@@ -1362,6 +1386,11 @@
       "date": "2026-10-26",
       "reason": "MOV-03 accepted after 303 tests, persisted spool/archive golden, schema21 and wheel17 import equality; continue MOV-04.",
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-03.acceptance.json"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "MOV-04 move accepted from independent279 tests, complete3DB16-table economic/nonce/mutation oracle without masking, AST84, nested-import correction proofs, wheel16/canonical62 imports. All three optional helper worker failures recorded and drafts unapplied; no whole failed product rewrite. Continue final requested ticket MOV-05.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-04.acceptance.json"
     }
   ],
   "requirements_revision": {
@@ -1449,7 +1478,8 @@
       "MOV-05"
     ],
     "accepted": [
-      "MOV-03"
+      "MOV-03",
+      "MOV-04"
     ],
     "artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z",
     "started_utc": "2026-10-26T06:46:53.308401+00:00",
