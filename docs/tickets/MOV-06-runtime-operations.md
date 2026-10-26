@@ -161,3 +161,7 @@ After the fix, rebuild all images and repeat the real no-network startup matrix.
 Release config hashing also covers every top-level active deploy YAML, including
 primary, Timefolio override, dashboard and LS profiles; rollback snapshots are
 not active config inputs. Source hash already covers all included files.
+
+Final parsed Compose audit also resolves the root historical topology's Telegram
+bind mount to operations/telegram.py. The original root Compose snapshot remains
+byte-exact in rollback/MOV-06; do not apply this source change to any server.
