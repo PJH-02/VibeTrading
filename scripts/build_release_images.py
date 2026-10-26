@@ -174,6 +174,11 @@ def main() -> int:
         "build_revision": revision,
         "config_hash": config_hash,
         "source_hash": source_hash,
+        "source_hashes": {
+            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in files if path.relative_to(ROOT).parts[0] == "src"
+        },
+        "primary_compose": "deploy/primary-compose.yml",
         "base_images": {
             "app": {"tag": app_base, "id": app_base_id},
             "crypto": {"tag": crypto_base, "id": crypto_base_id},

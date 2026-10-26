@@ -1,0 +1,165 @@
+# Add to the existing server Compose file with -f deploy/crypto-profile.yml.
+# Only these services use the new crypto image; existing market services stay pinned.
+services:
+  telegram:
+    environment:
+      CRYPTO_COLLECTOR_PROVIDERS: binance-perp,arcus-perp,grvt-perp
+    volumes:
+      - "${VIBETRADING_HOST_DATA_ROOT:?set in compose.env}:/data"
+      - "${VIBETRADING_HOST_CRYPTO_STATE_ROOT:?set in compose.env}:/data/crypto_state:ro"
+      - "./src/vibetrading/telegram.py:/app/src/vibetrading/telegram.py:ro"
+      - "./src/vibetrading/health.py:/app/src/vibetrading/health.py:ro"
+
+  crypto-storage:
+    image: ${VIBETRADING_CRYPTO_IMAGE:?run scripts/build_release_images.py first}
+    env_file: ["${VIBETRADING_APP_ENV_FILE:-.env}", "${VIBETRADING_CRYPTO_RELEASE_ENV_FILE:-deploy/crypto-release.env}"]
+    command: ["python", "main.py", "run", "--role", "crypto-storage"]
+    environment:
+      NATS_URL: nats://nats:4222
+      VIBETRADING_DATA_ROOT: /data
+      VIBETRADING_STATE_DIR: /data/crypto_state
+      PARQUET_DATA_ROOT: /data/crypto_market_data
+      VIBETRADING_LOG_DIR: /tmp/logs
+      ARCHIVE_WORKER_ENABLED: "true"
+      CRYPTO_NATS_MAX_BYTES: "134217728"
+      NATS_FILE_STORE_MAX_BYTES: "${NATS_FILE_STORE_MAX_BYTES:-2415919104}"
+      STORAGE_RESERVE_GB: "4.0"
+      STORAGE_STATE_DISK_ROOT: /data/crypto_state
+      STORAGE_STATE_RESERVE_BYTES: "1073741824"
+      DELIVERY_LEDGER_FORMAT: compact
+      SQLITE_CACHE_KIB: "131072"
+      SQLITE_WAL_AUTOCHECKPOINT_PAGES: "1000"
+      STORAGE_MAX_PENDING_BEFORE_FLUSH: "8192"
+      STORAGE_FLUSH_BUFFER_BYTES: "33554432"
+      STORAGE_FLUSH_SECONDS: "60"
+      PARQUET_ARROW_BATCH_ROWS: "2048"
+      PARQUET_FLUSH_BYTES: "16777216"
+      PARQUET_RSS_FLUSH_BYTES: "419430400"
+      PARQUET_RSS_PAUSE_BYTES: "629145600"
+    volumes: ["${VIBETRADING_HOST_DATA_ROOT:?set in compose.env}:/data", "${VIBETRADING_HOST_CRYPTO_STATE_ROOT:?set in compose.env}:/data/crypto_state"]
+    mem_limit: 1024m
+    stop_grace_period: 90s
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "main.py", "health-check", "--component", "crypto-storage", "--max-age-seconds", "120"]
+      interval: 30s
+      timeout: 10s
+      retries: 4
+
+  crypto-maintenance:
+    image: ${VIBETRADING_CRYPTO_IMAGE:?run scripts/build_release_images.py first}
+    env_file: ["${VIBETRADING_APP_ENV_FILE:-.env}", "${VIBETRADING_CRYPTO_RELEASE_ENV_FILE:-deploy/crypto-release.env}"]
+    command: ["ionice", "-c2", "-n7", "nice", "-n", "10", "python", "main.py", "run", "--role", "crypto-maintenance"]
+    environment:
+      NATS_URL: nats://nats:4222
+      VIBETRADING_DATA_ROOT: /data
+      VIBETRADING_STATE_DIR: /data/crypto_state
+      PARQUET_DATA_ROOT: /data/crypto_market_data
+      ARCHIVE_PREFIX: vibetrading/crypto
+      ARCHIVE_LOCAL_RETENTION_SECONDS: "1800"
+      ARCHIVE_UPLOAD_AFTER_SECONDS: "60"
+      ARCHIVE_IDLE_SECONDS: "30"
+      ARCHIVE_UPLOAD_BATCH: "8"
+      ARCHIVE_BACKLOG_IDLE_SECONDS: "5"
+      ARCHIVE_RECLAIM_BATCH: "256"
+      ARCHIVE_RELIEF_MAX_IO_PRESSURE: "90.0"
+      ARCHIVE_BACKUP_MAX_IO_PRESSURE: "5.0"
+      ARCHIVE_ORPHAN_MAX_IO_PRESSURE: "5.0"
+      ARCHIVE_SQLITE_BACKUP_INTERVAL_SECONDS: "86400"
+      NATS_FILE_STORE_MAX_BYTES: "${NATS_FILE_STORE_MAX_BYTES:-2415919104}"
+      STORAGE_RESERVE_GB: "4.0"
+      STORAGE_STATE_DISK_ROOT: /data/crypto_state
+      STORAGE_STATE_RESERVE_BYTES: "1073741824"
+      CRYPTO_NATS_MAX_BYTES: "134217728"
+      # The legacy ACK floor mixes local ACK-send and server-confirmed state.
+      # Keep pruning off until Release 2 migrates its provenance safely.
+      ARCHIVE_DELIVERY_HISTORY_PRUNE_ENABLED: "false"
+      ARCHIVE_DELIVERY_HISTORY_RETENTION_SECONDS: "21600"
+      ARCHIVE_DELIVERY_HISTORY_PRUNE_LIMIT: "8192"
+      ARCHIVE_DELIVERY_PRUNE_MAX_PENDING: "8192"
+      CRYPTO_RECOVERY_PRUNE_SCAN_BATCH: "64"
+      CRYPTO_RECOVERY_ARCHIVE_BATCH: "8"
+      CRYPTO_EVENT_RUN_RETIRE_BATCH: "8"
+      ARCHIVE_DELIVERY_PRUNE_MAX_IO_PRESSURE: "70.0"
+      DELIVERY_LEDGER_FORMAT: compact
+      SQLITE_CACHE_KIB: "131072"
+      SQLITE_WAL_AUTOCHECKPOINT_PAGES: "1000"
+      COMPACTOR_JOBS_PER_CYCLE: "0"
+      VIBETRADING_LOG_DIR: /tmp/logs
+      ARROW_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      ARCHIVE_WORKER_ENABLED: "true"
+      ARCHIVE_ACCESS_KEY_FILE: /run/secrets/archive_access_key
+      ARCHIVE_SECRET_KEY_FILE: /run/secrets/archive_secret_key
+    volumes: ["${VIBETRADING_HOST_DATA_ROOT:?set in compose.env}:/data", "${VIBETRADING_HOST_CRYPTO_STATE_ROOT:?set in compose.env}:/data/crypto_state"]
+    secrets: [archive_access_key, archive_secret_key]
+    mem_limit: 512m
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "main.py", "health-check", "--component", "maintenance", "--max-age-seconds", "420"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+
+  crypto-collector-binance:
+    image: ${VIBETRADING_CRYPTO_IMAGE:?run scripts/build_release_images.py first}
+    env_file: ["${VIBETRADING_APP_ENV_FILE:-.env}", "${VIBETRADING_CRYPTO_RELEASE_ENV_FILE:-deploy/crypto-release.env}"]
+    command: ["python", "main.py", "run", "--config", "/app/config/crypto_runtime.yaml", "--role", "crypto-collectors", "--provider", "binance-perp"]
+    environment:
+      NATS_URL: nats://nats:4222
+      VIBETRADING_DATA_ROOT: /data
+      VIBETRADING_LOG_DIR: /tmp/logs
+      ARCHIVE_WORKER_ENABLED: "true"
+      CRYPTO_NATS_MAX_BYTES: "134217728"
+      NATS_FILE_STORE_MAX_BYTES: "${NATS_FILE_STORE_MAX_BYTES:-2415919104}"
+      STORAGE_RESERVE_GB: "4.0"
+      STORAGE_STATE_DISK_ROOT: /data/crypto_state
+      STORAGE_STATE_RESERVE_BYTES: "1073741824"
+      STORAGE_RESUME_USED_RATIO: "0.75"
+    volumes:
+      - "${VIBETRADING_HOST_DATA_ROOT:?set in compose.env}:/data"
+      - "${VIBETRADING_HOST_CRYPTO_STATE_ROOT:?set in compose.env}:/data/crypto_state"
+      - "./config/crypto_runtime.yaml:/app/config/crypto_runtime.yaml:ro"
+    mem_limit: 512m
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "main.py", "health-check", "--component", "collectors-binance-perp", "--max-age-seconds", "120"]
+      interval: 30s
+      timeout: 10s
+      retries: 4
+
+  crypto-collector-bitget:
+    profiles: [retired]
+    restart: "no"
+    extends:
+      service: crypto-collector-binance
+    command: ["python", "main.py", "run", "--config", "/app/config/crypto_runtime.yaml", "--role", "crypto-collectors", "--provider", "bitget-perp"]
+    healthcheck:
+      test: ["CMD", "python", "main.py", "health-check", "--component", "collectors-bitget-perp", "--max-age-seconds", "120"]
+
+  crypto-collector-bybit:
+    profiles: [retired]
+    restart: "no"
+    extends:
+      service: crypto-collector-binance
+    command: ["python", "main.py", "run", "--config", "/app/config/crypto_runtime.yaml", "--role", "crypto-collectors", "--provider", "bybit-perp"]
+    healthcheck:
+      test: ["CMD", "python", "main.py", "health-check", "--component", "collectors-bybit-perp", "--max-age-seconds", "120"]
+
+  crypto-collector-arcus:
+    extends:
+      service: crypto-collector-binance
+    command: ["python", "main.py", "run", "--config", "/app/config/crypto_runtime.yaml", "--role", "crypto-collectors", "--provider", "arcus-perp"]
+    healthcheck:
+      test: ["CMD", "python", "main.py", "health-check", "--component", "collectors-arcus-perp", "--max-age-seconds", "120"]
+
+  crypto-collector-grvt:
+    extends:
+      service: crypto-collector-binance
+    command: ["python", "main.py", "run", "--config", "/app/config/crypto_runtime.yaml", "--role", "crypto-collectors", "--provider", "grvt-perp"]
+    healthcheck:
+      test: ["CMD", "python", "main.py", "health-check", "--component", "collectors-grvt-perp", "--max-age-seconds", "120"]
+
+secrets:
+  archive_access_key: {file: "${ARCHIVE_ACCESS_KEY_FILE:?set in compose.env}"}
+  archive_secret_key: {file: "${ARCHIVE_SECRET_KEY_FILE:?set in compose.env}"}

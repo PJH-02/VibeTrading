@@ -5,7 +5,7 @@ services:
     profiles: ["ls-market"]
     image: vibetrading-app:latest
     env_file: ["${VIBETRADING_APP_ENV_FILE:-.env}"]
-    command: ["python", "main.py", "run", "--config", "/app/config/ls_market_runtime.yaml", "--role", "ls-collectors"]
+    command: ["python", "-m", "runtime.cli", "run", "--config", "/app/config/ls_market_runtime.yaml", "--role", "ls-collectors"]
     environment:
       NATS_URL: nats://nats:4222
       VIBETRADING_DATA_ROOT: /data
@@ -16,7 +16,7 @@ services:
     mem_limit: 256m
     restart: on-failure:3
     healthcheck:
-      test: ["CMD", "python", "main.py", "health-check", "--component", "ls-collectors", "--max-age-seconds", "120"]
+      test: ["CMD", "python", "-m", "runtime.cli", "health-check", "--component", "ls-collectors", "--max-age-seconds", "120"]
       interval: 30s
       timeout: 10s
       retries: 4

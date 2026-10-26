@@ -17,8 +17,10 @@ RUN if [ "$VIBETRADING_REUSE_APP_BASE" = "1" ]; then \
     else \
         pip install --no-cache-dir -r requirements.txt; \
     fi
-COPY . .
-RUN rm -rf /app/vibetrading
+RUN rm -rf /app/src /app/vibetrading
+COPY src /app/src
+COPY pyproject.toml main.py /app/
+COPY config /app/config
 RUN pip install --no-deps -e .
 ENV PYTHONPATH=/app/src
 RUN if ! id -u vibetrading >/dev/null 2>&1; then \
@@ -27,5 +29,5 @@ RUN if ! id -u vibetrading >/dev/null 2>&1; then \
     && mkdir -p /data \
     && chown -R vibetrading:vibetrading /app /data
 USER vibetrading
-CMD ["python", "main.py", "status"]
+CMD ["python", "-m", "runtime.cli", "status"]
 

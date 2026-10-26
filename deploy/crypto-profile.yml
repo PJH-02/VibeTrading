@@ -7,13 +7,13 @@ services:
     volumes:
       - "${VIBETRADING_HOST_DATA_ROOT:?set in compose.env}:/data"
       - "${VIBETRADING_HOST_CRYPTO_STATE_ROOT:?set in compose.env}:/data/crypto_state:ro"
-      - "./src/vibetrading/telegram.py:/app/src/vibetrading/telegram.py:ro"
-      - "./src/vibetrading/health.py:/app/src/vibetrading/health.py:ro"
+      - "./src/operations/telegram.py:/app/src/operations/telegram.py:ro"
+      - "./src/operations/health.py:/app/src/operations/health.py:ro"
 
   crypto-storage:
     image: ${VIBETRADING_CRYPTO_IMAGE:?run scripts/build_release_images.py first}
     env_file: ["${VIBETRADING_APP_ENV_FILE:-.env}", "${VIBETRADING_CRYPTO_RELEASE_ENV_FILE:-deploy/crypto-release.env}"]
-    command: ["python", "main.py", "run", "--role", "crypto-storage"]
+    command: ["python", "-m", "runtime.cli", "run", "--role", "crypto-storage"]
     environment:
       NATS_URL: nats://nats:4222
       VIBETRADING_DATA_ROOT: /data
@@ -41,7 +41,7 @@ services:
     stop_grace_period: 90s
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "python", "main.py", "health-check", "--component", "crypto-storage", "--max-age-seconds", "120"]
+      test: ["CMD", "python", "-m", "runtime.cli", "health-check", "--component", "crypto-storage", "--max-age-seconds", "120"]
       interval: 30s
       timeout: 10s
       retries: 4
@@ -49,7 +49,7 @@ services:
   crypto-maintenance:
     image: ${VIBETRADING_CRYPTO_IMAGE:?run scripts/build_release_images.py first}
     env_file: ["${VIBETRADING_APP_ENV_FILE:-.env}", "${VIBETRADING_CRYPTO_RELEASE_ENV_FILE:-deploy/crypto-release.env}"]
-    command: ["ionice", "-c2", "-n7", "nice", "-n", "10", "python", "main.py", "run", "--role", "crypto-maintenance"]
+    command: ["ionice", "-c2", "-n7", "nice", "-n", "10", "python", "-m", "runtime.cli", "run", "--role", "crypto-maintenance"]
     environment:
       NATS_URL: nats://nats:4222
       VIBETRADING_DATA_ROOT: /data
@@ -96,7 +96,7 @@ services:
     mem_limit: 512m
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "python", "main.py", "health-check", "--component", "maintenance", "--max-age-seconds", "420"]
+      test: ["CMD", "python", "-m", "runtime.cli", "health-check", "--component", "maintenance", "--max-age-seconds", "420"]
       interval: 60s
       timeout: 10s
       retries: 3
@@ -104,7 +104,7 @@ services:
   crypto-collector-binance:
     image: ${VIBETRADING_CRYPTO_IMAGE:?run scripts/build_release_images.py first}
     env_file: ["${VIBETRADING_APP_ENV_FILE:-.env}", "${VIBETRADING_CRYPTO_RELEASE_ENV_FILE:-deploy/crypto-release.env}"]
-    command: ["python", "main.py", "run", "--config", "/app/config/crypto_runtime.yaml", "--role", "crypto-collectors", "--provider", "binance-perp"]
+    command: ["python", "-m", "runtime.cli", "run", "--config", "/app/config/crypto_runtime.yaml", "--role", "crypto-collectors", "--provider", "binance-perp"]
     environment:
       NATS_URL: nats://nats:4222
       VIBETRADING_DATA_ROOT: /data
@@ -123,7 +123,7 @@ services:
     mem_limit: 512m
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "python", "main.py", "health-check", "--component", "collectors-binance-perp", "--max-age-seconds", "120"]
+      test: ["CMD", "python", "-m", "runtime.cli", "health-check", "--component", "collectors-binance-perp", "--max-age-seconds", "120"]
       interval: 30s
       timeout: 10s
       retries: 4
@@ -133,32 +133,32 @@ services:
     restart: "no"
     extends:
       service: crypto-collector-binance
-    command: ["python", "main.py", "run", "--config", "/app/config/crypto_runtime.yaml", "--role", "crypto-collectors", "--provider", "bitget-perp"]
+    command: ["python", "-m", "runtime.cli", "run", "--config", "/app/config/crypto_runtime.yaml", "--role", "crypto-collectors", "--provider", "bitget-perp"]
     healthcheck:
-      test: ["CMD", "python", "main.py", "health-check", "--component", "collectors-bitget-perp", "--max-age-seconds", "120"]
+      test: ["CMD", "python", "-m", "runtime.cli", "health-check", "--component", "collectors-bitget-perp", "--max-age-seconds", "120"]
 
   crypto-collector-bybit:
     profiles: [retired]
     restart: "no"
     extends:
       service: crypto-collector-binance
-    command: ["python", "main.py", "run", "--config", "/app/config/crypto_runtime.yaml", "--role", "crypto-collectors", "--provider", "bybit-perp"]
+    command: ["python", "-m", "runtime.cli", "run", "--config", "/app/config/crypto_runtime.yaml", "--role", "crypto-collectors", "--provider", "bybit-perp"]
     healthcheck:
-      test: ["CMD", "python", "main.py", "health-check", "--component", "collectors-bybit-perp", "--max-age-seconds", "120"]
+      test: ["CMD", "python", "-m", "runtime.cli", "health-check", "--component", "collectors-bybit-perp", "--max-age-seconds", "120"]
 
   crypto-collector-arcus:
     extends:
       service: crypto-collector-binance
-    command: ["python", "main.py", "run", "--config", "/app/config/crypto_runtime.yaml", "--role", "crypto-collectors", "--provider", "arcus-perp"]
+    command: ["python", "-m", "runtime.cli", "run", "--config", "/app/config/crypto_runtime.yaml", "--role", "crypto-collectors", "--provider", "arcus-perp"]
     healthcheck:
-      test: ["CMD", "python", "main.py", "health-check", "--component", "collectors-arcus-perp", "--max-age-seconds", "120"]
+      test: ["CMD", "python", "-m", "runtime.cli", "health-check", "--component", "collectors-arcus-perp", "--max-age-seconds", "120"]
 
   crypto-collector-grvt:
     extends:
       service: crypto-collector-binance
-    command: ["python", "main.py", "run", "--config", "/app/config/crypto_runtime.yaml", "--role", "crypto-collectors", "--provider", "grvt-perp"]
+    command: ["python", "-m", "runtime.cli", "run", "--config", "/app/config/crypto_runtime.yaml", "--role", "crypto-collectors", "--provider", "grvt-perp"]
     healthcheck:
-      test: ["CMD", "python", "main.py", "health-check", "--component", "collectors-grvt-perp", "--max-age-seconds", "120"]
+      test: ["CMD", "python", "-m", "runtime.cli", "health-check", "--component", "collectors-grvt-perp", "--max-age-seconds", "120"]
 
 secrets:
   archive_access_key: {file: "${ARCHIVE_ACCESS_KEY_FILE:?set in compose.env}"}

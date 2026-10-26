@@ -2,7 +2,7 @@ name: vibetrading-monitor
 services:
   bridge:
     image: ${DASHBOARD_APP_IMAGE:?set app image}
-    command: ["python", "-m", "vibetrading.dashboard.bridge"]
+    command: ["python", "-m", "operations.dashboard.bridge"]
     env_file: ["/root/vibetrading/.env", "/etc/vibetrading/dashboard.env"]
     environment:
       NATS_URL: nats://nats:4222
@@ -14,7 +14,6 @@ services:
     volumes:
       - /srv/vibetrading-data/runtime_data:/data:ro
       - /opt/vibetrading/dashboard/monitor:/monitor
-      - /opt/vibetrading/dashboard/vibetrading/dashboard:/app/vibetrading/dashboard:ro
       - /root/vibetrading/runtime_data/liquidity_mm:/pilot:ro
     networks: [pipeline]
     mem_limit: 192m
@@ -29,7 +28,7 @@ services:
       retries: 3
     logging: {driver: json-file, options: {max-size: 2m, max-file: "2"}}
   timefolio:
-    image: vibetrading-dashboard-timefolio:20261004
+    image: ${DASHBOARD_TIMEFOLIO_IMAGE:?set verified canonical browser image}
     command: ["python", "-m", "operations.dashboard.timefolio_monitor"]
     env_file: ["/root/vibetrading/.env", "/etc/vibetrading/dashboard.env"]
     environment:
@@ -39,7 +38,6 @@ services:
       PYTHONDONTWRITEBYTECODE: "1"
     volumes:
       - /opt/vibetrading/dashboard/monitor:/monitor
-      - /opt/vibetrading/dashboard/vibetrading/dashboard:/app/vibetrading/dashboard:ro
     shm_size: 64m
     mem_limit: 384m
     cpus: 0.5

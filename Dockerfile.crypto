@@ -10,21 +10,12 @@ ENV VIBETRADING_BUILD_REVISION=${VIBETRADING_BUILD_REVISION} \
 
 USER root
 RUN pip install --no-cache-dir exchange-calendars==4.13.2 \
-    && rm -rf /app/vibetrading
-COPY --chown=10001:10001 src/vibetrading /app/src/vibetrading
-COPY --chown=10001:10001 src/core /app/src/core
-COPY --chown=10001:10001 src/feeds /app/src/feeds
-COPY --chown=10001:10001 src/market /app/src/market
-COPY --chown=10001:10001 src/storage /app/src/storage
-COPY --chown=10001:10001 src/execution /app/src/execution
-COPY --chown=10001:10001 src/portfolio /app/src/portfolio
-COPY --chown=10001:10001 src/timefolio /app/src/timefolio
-COPY --chown=10001:10001 src/operations /app/src/operations
+    && rm -rf /app/src /app/vibetrading
+COPY --chown=10001:10001 src /app/src
 COPY --chown=10001:10001 pyproject.toml /app/pyproject.toml
 COPY --chown=10001:10001 requirements.txt /app/requirements.txt
 RUN pip install --no-deps -e /app
 ENV PYTHONPATH=/app/src
 COPY --chown=10001:10001 config /app/config
-COPY --chown=10001:10001 src/strategies /app/src/strategies
 COPY --chown=10001:10001 main.py /app/main.py
-USER vibetrading
+USER 10001:10001

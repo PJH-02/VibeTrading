@@ -1,0 +1,56 @@
+# Explicit NATS-free primary. Historical root docker-compose.yml is rollback only.
+# No up/build/pull has been authorized or executed. All operational roles opt in.
+name: vibetrading-local
+x-local: &local
+  image: ${VIBETRADING_APP_IMAGE:?select verified canonical image}
+  user: "10001:10001"
+  env_file: ["${VIBETRADING_LOCAL_ENV_FILE:?select reviewed local environment}"]
+  environment:
+    VIBETRADING_RUNTIME: local
+    VIBETRADING_DATA_ROOT: /data
+    VIBETRADING_STATE_DIR: /data/state
+    PARQUET_DATA_ROOT: /data/market_data
+    VIBETRADING_LOG_DIR: /tmp/logs
+    VIBETRADING_ENFORCE_MOUNTS: "true"
+    VIBETRADING_STORAGE_MOUNTS_FILE: /run/config/mounts.json
+    TIMEFOLIO_LIVE_SUBMIT_ENABLED: "false"
+  volumes:
+    - "${VIBETRADING_HOST_DATA_ROOT:?select reviewed data volume}:/data"
+    - "${VIBETRADING_LOCAL_PLAN_FILE:?measured local plan required}:/run/config/local.json:ro"
+    - "${VIBETRADING_LOCAL_MOUNTS_FILE:?verified mount contract required}:/run/config/mounts.json:ro"
+    - "${VIBETRADING_CAPACITY_ROOT:?measured capacity evidence required}:/run/capacity:ro"
+  stop_grace_period: 90s
+  init: true
+  read_only: true
+  tmpfs: ["/tmp:size=64m"]
+  restart: "no"
+services:
+  runtime-check:
+    <<: *local
+    command: ["python", "-m", "runtime.local_runtime", "check", "--config", "/run/config/local.json"]
+  engine:
+    <<: *local
+    profiles: ["engine"]
+    command: ["python", "-m", "runtime.local_runtime", "engine", "--config", "/run/config/local.json"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "from pathlib import Path; from runtime.local_config import LocalRuntimePlan; from market.local_snapshot import SnapshotBudgets,read_market_snapshot; p=LocalRuntimePlan.load(Path('/run/config/local.json')); read_market_snapshot(Path('/data/state/local-market.json'),SnapshotBudgets(**p.snapshot))"]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+  collector:
+    <<: *local
+    profiles: ["collector"]
+    command: ["python", "-m", "runtime.local_runtime", "collector", "--config", "/run/config/local.json", "--producer", "${VIBETRADING_LOCAL_PRODUCER:?select one measured producer}"]
+  storage:
+    <<: *local
+    profiles: ["storage"]
+    command: ["python", "-m", "runtime.local_runtime", "storage", "--config", "/run/config/local.json"]
+  telegram:
+    <<: *local
+    profiles: ["telegram"]
+    command: ["python", "-m", "runtime.local_runtime", "telegram", "--config", "/run/config/local.json"]
+  dashboard:
+    <<: *local
+    profiles: ["dashboard"]
+    command: ["python", "-m", "runtime.local_runtime", "dashboard", "--config", "/run/config/local.json"]
