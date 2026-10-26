@@ -67,7 +67,7 @@ next_read_paths: [...]
 | `cli.py` | `runtime/cli.py` | `runtime` | `MOVE_ONLY_CANDIDATE` |
 | `dedup.py` | `core/dedup.py` | `core` | `MOVE_ONLY_CANDIDATE` |
 | `models.py` | `core/models.py` | `core` | `MOVE_ONLY_CANDIDATE` |
-| `trading_contracts.py` | `core/trading_contracts.py` | `core` | `MOVE_ONLY_CANDIDATE` |
+| `trading_contracts.py` | `execution/trading_contracts.py` | `execution` | `MOV00_OWNERSHIP_EXCEPTION` |
 | `brokers.py` | `execution/brokers.py` | `execution` | `MOVE_ONLY_CANDIDATE` |
 | `bybit_execution.py` | `execution/bybit_execution.py` | `execution` | `MOVE_ONLY_CANDIDATE` |
 | `execution.py` | `execution/contracts.py` | `execution` | `MOVE_ONLY_CANDIDATE` |
