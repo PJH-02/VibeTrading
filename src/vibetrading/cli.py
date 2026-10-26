@@ -23,7 +23,7 @@ from .providers.binance import BinanceCollector
 from .providers.crypto_perp import CryptoPerpCollector, SYMBOLS as CRYPTO_SYMBOLS
 from .providers.extended_perp import ExtendedPerpCollector
 from .providers.ls_market import LSKospi200ForeignCollector, LSOverseasDelayedCollector
-from .models import Venue
+from core.models import Venue
 from .providers.universe import InstrumentUniverseResolver
 from .real_runner import RealExecutionRunner, RealExecutionRunnerConfig
 from .settings import get_settings

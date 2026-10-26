@@ -37,6 +37,8 @@ include = [
     "services.*",
     "backtest",
     "backtest.*",
+    "core",
+    "core.*",
 ]
 exclude = [
     "src",

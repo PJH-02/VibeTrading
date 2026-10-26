@@ -16,7 +16,7 @@ import nats
 import websockets
 
 from vibetrading.extended_brokers import GrvtBrokerAdapter, OrderOutcomeUnknown
-from vibetrading.models import InstrumentId, OrderDestination, OrderIntent, Side, Venue
+from core.models import InstrumentId, OrderDestination, OrderIntent, Side, Venue
 from vibetrading.providers.extended_perp import ExtendedPerpCollector
 from vibetrading.settings import get_settings
 

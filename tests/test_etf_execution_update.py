@@ -10,7 +10,7 @@ import pytest
 from vibetrading.etf_csv_history import CsvStrategyHistory, ETF_HISTORY_ROLES, CSV_FILES
 from vibetrading.etf_journal import EtfJournal
 from vibetrading.etf_trading import EtfTradingLoop
-from vibetrading.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
+from core.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
 
 
 class AccountBroker:
@@ -229,7 +229,7 @@ async def test_kp_leverage_and_kd_short_route_to_actual_vehicles(tmp_path,strate
 @pytest.mark.asyncio
 @pytest.mark.parametrize('symbol',['122630','251340'])
 async def test_live_vehicle_minutes_are_kept_without_changing_base_signals(symbol):
-    from vibetrading.models import Bar1mEvent
+    from core.models import Bar1mEvent
     from vibetrading.providers.kiwoom import KST
     from datetime import datetime
     now = datetime.now(KST)

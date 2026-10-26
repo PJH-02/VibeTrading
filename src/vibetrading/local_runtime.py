@@ -475,7 +475,7 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
                     p.producer for p in plan.producers} else ()
                 keys=tuple(key for key in keys if key in paper_runtime.known) or tuple(paper_runtime.known)
             if keys:paper_runtime.invalidate_inputs(keys,'local_source_invalid',time.time_ns())
-    from .models import AssetClass
+    from core.models import AssetClass
     engine=LocalMarketEngine(producer_providers={p.producer:p.provider for p in plan.producers},
         budgets=EngineBudgets(**plan.engine),on_invalidate=invalid,
         hot_path=paper_runtime.hot_path if paper_runtime is not None else HotPathStore(),

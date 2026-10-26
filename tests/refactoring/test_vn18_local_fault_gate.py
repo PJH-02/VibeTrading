@@ -14,7 +14,7 @@ from test_vn13_file_registration import strategy_files
 from test_vn17_role_assembly import real_assembly
 from test_tx05_file_paper_e2e import wait_until
 from test_runtime_checkpoint_integration import save_exact_cut, target_runtime
-from vibetrading.models import Side
+from core.models import Side
 
 
 @pytest.mark.asyncio

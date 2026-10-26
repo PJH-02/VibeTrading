@@ -6,7 +6,7 @@ import pytest
 
 from vibetrading.bus import InMemoryEventBus
 from vibetrading.hot_path import HotPathStore
-from vibetrading.models import BookUpdateType, Venue
+from core.models import BookUpdateType, Venue
 from vibetrading.providers.crypto_perp import CryptoPerpCollector, _instrument
 
 

@@ -12,8 +12,7 @@ import pytest
 
 from vibetrading.execution_ledger import AccountScope
 from vibetrading.hot_path import HotPathStore
-from vibetrading.models import (AssetClass, InstrumentId, OrderBookEvent, OrderBookLevel,
-    Side, Signal, SignalAction, Venue)
+from core.models import AssetClass, InstrumentId, OrderBookEvent, OrderBookLevel, Side, Signal, SignalAction, Venue
 from vibetrading.paper_execution import PaperExecution
 from vibetrading.portfolio_ledger import PortfolioLedger
 from vibetrading.runtime_checkpoint import (FORMAT, VERSION, RuntimeCheckpoint,

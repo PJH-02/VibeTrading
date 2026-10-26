@@ -7,7 +7,7 @@ import sys
 import pytest
 
 from test_strategy_runtime import T, BTC, book, deliver, ledger_at, matcher_for, runtime
-from vibetrading.models import Bar1mEvent, OrderDestination, OrderIntent, Side
+from core.models import Bar1mEvent, OrderDestination, OrderIntent, Side
 from vibetrading.trading_contracts import ActionKind, ExecutionAction, TradingMode
 
 

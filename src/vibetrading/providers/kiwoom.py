@@ -16,19 +16,7 @@ from typing import Any
 import aiohttp
 
 from vibetrading.bus import EventBus
-from vibetrading.models import (
-    AssetClass,
-    Bar1mEvent,
-    EtfNavEvent,
-    BookUpdateType,
-    InstrumentId,
-    OrderBookEvent,
-    OrderBookLevel,
-    Side,
-    TradeEvent,
-    Venue,
-    utc_now_ns,
-)
+from core.models import AssetClass, Bar1mEvent, EtfNavEvent, BookUpdateType, InstrumentId, OrderBookEvent, OrderBookLevel, Side, TradeEvent, Venue, utc_now_ns
 from vibetrading.settings import RuntimeSettings, get_settings
 from vibetrading.universe_config import configured_instrument
 

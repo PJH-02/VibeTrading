@@ -16,7 +16,7 @@ from vibetrading.local_runtime import replay_checkpoint_startup, replay_startup
 from vibetrading.market_checkpoint import CheckpointCodec, _canonical
 from vibetrading.market_apply_order import ApplyOrder
 from vibetrading.market_spool import MarketSpool, SpoolReader
-from vibetrading.models import AssetClass, BaseMarketEvent, InstrumentId, OrderBookEvent, TradeEvent, Venue
+from core.models import AssetClass, BaseMarketEvent, InstrumentId, OrderBookEvent, TradeEvent, Venue
 
 
 LIMITS = dict(max_disk_bytes=1_048_576, max_records=128, max_frame_bytes=4096,

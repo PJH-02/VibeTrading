@@ -15,7 +15,7 @@ from vibetrading import parquet_store, storage_backend
 from vibetrading.archive import ArchiveMaintenance
 from vibetrading.bus import BusMessage, ConfirmedAckFloor, InMemoryEventBus
 from vibetrading.compactor import ParquetCompactor
-from vibetrading.models import AssetClass, InstrumentId, TradeEvent, Venue
+from core.models import AssetClass, InstrumentId, TradeEvent, Venue
 from vibetrading.parquet_store import ParquetBatchWriter, ParquetHistoryReader, file_sha256
 from vibetrading.settings import RuntimeSettings
 from vibetrading.sqlite_store import RuntimeStore

@@ -4,7 +4,7 @@ from decimal import Decimal
 import pytest
 
 from vibetrading.etf_journal import EtfJournal
-from vibetrading.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
+from core.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
 
 
 @pytest.fixture

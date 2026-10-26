@@ -15,7 +15,7 @@ import time
 from typing import Any, Callable
 
 from .bus import MarketEventPacket, MarketPublication, prepare_market_event
-from .models import BaseMarketEvent
+from core.models import BaseMarketEvent
 
 
 def _packet_bounds(packet: MarketEventPacket, accepted_seq: int, cause: str) -> dict[str, Any]:

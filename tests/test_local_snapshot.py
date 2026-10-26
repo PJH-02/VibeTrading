@@ -14,7 +14,7 @@ from vibetrading.local_snapshot import (
     LocalSnapshotWriter, SnapshotBudgets, SnapshotError, atomic_write_snapshot,
     capture_market_snapshot, local_snapshot_config, read_market_snapshot,
 )
-from vibetrading.models import AssetClass, BookUpdateType, DataGapEvent, InstrumentId, OrderBookEvent, OrderBookLevel, TradeEvent, Venue
+from core.models import AssetClass, BookUpdateType, DataGapEvent, InstrumentId, OrderBookEvent, OrderBookLevel, TradeEvent, Venue
 
 
 def budgets(**updates):

@@ -13,7 +13,7 @@ from pathlib import Path
 import pandas as pd
 import numpy as np
 
-from .models import AssetClass, InstrumentId, Venue, Bar1mEvent
+from core.models import AssetClass, InstrumentId, Venue, Bar1mEvent
 from .providers.toss import TossAuthClient
 from .providers.kiwoom import KiwoomAuthClient, KST
 from .providers.kis_client import KisAuthClient

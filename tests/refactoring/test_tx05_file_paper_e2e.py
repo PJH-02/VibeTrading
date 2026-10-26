@@ -19,7 +19,7 @@ from test_vn13_file_registration import configured, strategy_files
 from test_runtime_checkpoint_integration import append, codec, producer
 from vibetrading.feed_recovery import EngineCursor, RecoveryFrame
 from vibetrading.local_engine import EngineBudgets, LocalMarketEngine
-from vibetrading.models import OrderDestination, OrderIntent, Side, SignalAction
+from core.models import OrderDestination, OrderIntent, Side, SignalAction
 from vibetrading.runtime_checkpoint import RuntimeCheckpoint
 from vibetrading.trading_contracts import (ActionKind, ExecutionAction,
                                            TradingMode)

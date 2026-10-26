@@ -7,7 +7,7 @@ import pytest
 
 from vibetrading.execution_ledger import AccountScope, ExecutionLedger
 from vibetrading.execution_owner import ExecutionBudgets, ExecutionOwner, ExecutionReadiness
-from vibetrading.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
+from core.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
 from vibetrading.runtime_control import GateBlocked, RuntimeControl
 
 

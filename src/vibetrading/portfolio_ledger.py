@@ -13,7 +13,7 @@ import time
 
 from .execution_ledger import (AccountScope, canonical, exact_difference,
                                exact_product, exact_sum, positive_decimal as _positive_decimal)
-from .models import OrderIntent, Side
+from core.models import OrderIntent, Side
 from .process_lease import ProcessLease
 from .trading_contracts import ProductKind, ProductSpec, TradingMode, bounded_identity, validate_scope
 

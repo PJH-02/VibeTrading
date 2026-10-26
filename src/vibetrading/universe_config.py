@@ -12,7 +12,7 @@ except ImportError:  # pragma: no cover
     yaml = None
 
 from .settings import PROJECT_ROOT
-from .models import AssetClass
+from core.models import AssetClass
 
 
 @dataclass(frozen=True)

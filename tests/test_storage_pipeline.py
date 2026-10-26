@@ -6,7 +6,7 @@ from pathlib import Path
 
 from vibetrading.archive import ArchiveMaintenance
 from vibetrading.bus import BusMessage, InMemoryEventBus
-from vibetrading.models import AssetClass, InstrumentId, TradeEvent, Venue
+from core.models import AssetClass, InstrumentId, TradeEvent, Venue
 from vibetrading.parquet_store import ParquetBatchWriter
 from vibetrading.settings import RuntimeSettings
 from vibetrading.storage_backend import LocalStorageBackend

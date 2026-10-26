@@ -10,7 +10,7 @@ import pytest
 from test_strategy_runtime import T, book, deliver, ledger_at, matcher_for, runtime
 from test_vn13_file_registration import (actions_for, configured, loaded, strategy_receipts,
                                          strategy_source)
-from vibetrading.models import Side
+from core.models import Side
 
 RELATIVE = "market_data/event_type=trade/trading_date=2027-01-15/part-1.parquet"
 

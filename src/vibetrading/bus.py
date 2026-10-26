@@ -12,7 +12,7 @@ from typing import Any, AsyncIterator, Protocol
 
 from pydantic import BaseModel
 
-from .models import AssetClass, BaseMarketEvent, DataGapEvent, EventType, InstrumentId, Signal, Venue, event_from_dict, utc_now_ns
+from core.models import AssetClass, BaseMarketEvent, DataGapEvent, EventType, InstrumentId, Signal, Venue, event_from_dict, utc_now_ns
 from .settings import RuntimeSettings, get_settings
 
 logger = logging.getLogger(__name__)

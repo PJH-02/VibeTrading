@@ -10,16 +10,7 @@ from typing import Any
 from vibetrading.bus import EventBus, NatsJetStreamBus
 from vibetrading.execution import AccountExecutionConfig, ExecutionSafetyGate, OrderIntentFactory
 from vibetrading.hot_path import HotPathStore, StrategyDataView
-from vibetrading.models import (
-    BaseMarketEvent,
-    EventType,
-    OrderDestination,
-    OrderIntentStatus,
-    Side,
-    Signal,
-    SignalAction,
-    event_from_dict,
-)
+from core.models import BaseMarketEvent, EventType, OrderDestination, OrderIntentStatus, Side, Signal, SignalAction, event_from_dict
 from vibetrading.parquet_store import ParquetHistoryReader
 from vibetrading.settings import get_settings
 from vibetrading.sqlite_store import RuntimeStore
@@ -30,7 +21,7 @@ from vibetrading.timefolio.client import (
     TimefolioOrderIntent,
     TimefolioOrderResult,
 )
-from vibetrading.dedup import BoundedDedup
+from core.dedup import BoundedDedup
 from vibetrading.dashboard.telemetry import heartbeat
 
 

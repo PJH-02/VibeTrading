@@ -3,7 +3,7 @@ from __future__ import annotations
 from decimal import Decimal
 
 from vibetrading.hot_path import StrategyDataView
-from vibetrading.models import Bar1mEvent, BaseMarketEvent, EventType, Signal, SignalAction, utc_now_ns
+from core.models import Bar1mEvent, BaseMarketEvent, EventType, Signal, SignalAction, utc_now_ns
 
 
 STRATEGY_ID = "example_signal"

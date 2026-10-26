@@ -7,7 +7,7 @@ import pytest
 import pyarrow.parquet as pq
 
 from vibetrading.market_policy import MarketDataPolicyBus
-from vibetrading.models import EventType, Venue
+from core.models import EventType, Venue
 from vibetrading.parquet_store import ParquetBatchWriter
 from vibetrading.providers.ls_market import (
     LSReadOnlyClient, krx_futures_session, parse_dbt_foreign,

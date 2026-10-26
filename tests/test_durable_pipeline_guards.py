@@ -8,7 +8,7 @@ from types import SimpleNamespace
 
 from vibetrading.bus import BufferedMarketEventBus, BusMessage, InMemoryEventBus, NatsJetStreamBus, StreamProbeResult
 from vibetrading.market_policy import CollectionPaused, MarketDataPolicyBus, _CollectionPressureLatch
-from vibetrading.models import AssetClass, BookUpdateType, InstrumentId, OrderBookEvent, OrderBookLevel, TradeEvent, Venue
+from core.models import AssetClass, BookUpdateType, InstrumentId, OrderBookEvent, OrderBookLevel, TradeEvent, Venue
 from vibetrading.parquet_store import ParquetBatchWriter
 from vibetrading.settings import RuntimeSettings
 from vibetrading.sqlite_store import RuntimeStore

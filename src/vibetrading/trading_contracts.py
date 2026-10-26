@@ -6,7 +6,7 @@ from decimal import Decimal
 from enum import Enum
 
 from .execution_ledger import AccountScope, positive_decimal
-from .models import AssetClass, InstrumentId, OrderIntent
+from core.models import AssetClass, InstrumentId, OrderIntent
 
 
 class TradingMode(str, Enum):

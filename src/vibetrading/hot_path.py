@@ -10,8 +10,8 @@ import json
 
 import time
 from decimal import Decimal
-from .models import AssetClass, Bar1mEvent, BaseMarketEvent, BookUpdateType, EventType, IndexQuoteEvent, InstrumentId, OrderBookEvent, OrderBookLevel, TradeEvent, Venue, event_from_dict
-from .dedup import BoundedDedup
+from core.models import AssetClass, Bar1mEvent, BaseMarketEvent, BookUpdateType, EventType, IndexQuoteEvent, InstrumentId, OrderBookEvent, OrderBookLevel, TradeEvent, Venue, event_from_dict
+from core.dedup import BoundedDedup
 
 
 class HistoryNotPrepared(RuntimeError):

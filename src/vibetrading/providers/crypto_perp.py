@@ -11,10 +11,7 @@ from typing import Any
 import aiohttp
 import websockets
 
-from vibetrading.models import (
-    AssetClass, BookUpdateType, DataGapEvent, FundingRateEvent, InstrumentId,
-    OpenInterestEvent, OrderBookEvent, OrderBookLevel, Side, TradeEvent, Venue,
-)
+from core.models import AssetClass, BookUpdateType, DataGapEvent, FundingRateEvent, InstrumentId, OpenInterestEvent, OrderBookEvent, OrderBookLevel, Side, TradeEvent, Venue
 
 SYMBOLS = ("BTCUSDT", "ETHUSDT", "SOLUSDT")
 

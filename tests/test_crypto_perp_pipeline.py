@@ -8,7 +8,7 @@ from vibetrading.bus import InMemoryEventBus, subject_for_event
 from vibetrading.bybit_execution import BybitAudit, BybitExecutionProbe, _market_trigger_price
 from vibetrading.hot_path import HotPathStore
 from vibetrading.market_source_status import source_status
-from vibetrading.models import BookUpdateType, OrderBookEvent, OrderBookLevel, Venue
+from core.models import BookUpdateType, OrderBookEvent, OrderBookLevel, Venue
 from vibetrading.providers.crypto_perp import CryptoPerpCollector, _instrument
 
 

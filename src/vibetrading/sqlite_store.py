@@ -11,7 +11,7 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Callable, Iterable, Iterator
 
-from .models import OrderIntent
+from core.models import OrderIntent
 from .settings import RuntimeSettings, get_settings
 
 

@@ -16,7 +16,7 @@ from typing import Any
 import aiohttp
 import websockets
 
-from .models import AssetClass, OrderIntent, Side, Venue
+from core.models import AssetClass, OrderIntent, Side, Venue
 from .providers.crypto_perp import SYMBOLS, _instrument
 from .settings import RuntimeSettings, get_settings
 

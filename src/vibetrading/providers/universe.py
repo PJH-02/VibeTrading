@@ -6,7 +6,7 @@ from datetime import datetime, timezone, timedelta
 from decimal import Decimal
 from typing import Iterable
 
-from vibetrading.models import AssetClass, InstrumentId, Venue, stable_hash
+from core.models import AssetClass, InstrumentId, Venue, stable_hash
 from vibetrading.providers.hyperliquid import HyperliquidCatalog, load_hyperliquid_tokenized_symbols
 from vibetrading.universe_config import configured_symbols as load_configured_symbols, load_universe_config
 from vibetrading.settings import RuntimeSettings, get_settings

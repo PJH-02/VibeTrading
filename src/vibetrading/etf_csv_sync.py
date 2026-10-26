@@ -15,7 +15,7 @@ import pandas as pd
 from .etf_csv_history import CsvStrategyHistory, ETF_HISTORY_ROLES, atomic_json
 from .etf_history import native_frame
 from .health import touch
-from .models import EventType, event_from_dict
+from core.models import EventType, event_from_dict
 from .providers.kiwoom import KiwoomAuthClient, KST
 from .session_alerts import _calendar
 from .settings import get_settings

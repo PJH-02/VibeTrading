@@ -17,7 +17,7 @@ from vibetrading.feed_recovery import EngineCursor, RecoveryFrame
 from vibetrading.hot_path import HotPathStore
 from vibetrading.local_config import LocalRuntimePlan
 from vibetrading.local_engine import EngineBudgets, EngineError, LocalMarketEngine
-from vibetrading.models import OrderDestination, OrderIntent, Side
+from core.models import OrderDestination, OrderIntent, Side
 from vibetrading.strategy_runtime import PaperStrategyRuntime
 from vibetrading.trading_contracts import ActionKind, ExecutionAction, TradingMode
 

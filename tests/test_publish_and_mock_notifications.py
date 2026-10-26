@@ -12,7 +12,7 @@ import pytest
 from vibetrading.bus import NatsJetStreamBus, NatsPublishError
 from vibetrading.etf_journal import EtfJournal
 from vibetrading.etf_trading import EtfTradingLoop
-from vibetrading.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, TradeEvent, Venue
+from core.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, TradeEvent, Venue
 from vibetrading.providers.universe import InstrumentUniverseResolver
 from vibetrading.runtime import _CollectorReadinessBus
 from vibetrading.settings import RuntimeSettings

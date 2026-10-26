@@ -4,7 +4,7 @@ from decimal import Decimal
 import pytest
 
 from vibetrading.execution_ledger import AccountScope
-from vibetrading.models import (AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue)
+from core.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
 from vibetrading.portfolio_ledger import PortfolioLedger
 from vibetrading.trading_contracts import ProductKind, ProductSpec
 

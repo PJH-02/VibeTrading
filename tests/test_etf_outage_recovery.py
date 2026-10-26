@@ -8,7 +8,7 @@ import pytest
 from vibetrading.etf_journal import EtfJournal
 from vibetrading.etf_recovery import replay, start_books, apply_plan, digest, normalized_toss
 from vibetrading.etf_recovery_ledger import record_fill, filter_account_report
-from vibetrading.models import OrderIntent, OrderDestination, InstrumentId, AssetClass, Venue, Side, EventType
+from core.models import OrderIntent, OrderDestination, InstrumentId, AssetClass, Venue, Side, EventType
 from vibetrading.bus import allowed_supplement
 from vibetrading.kis_index import normalize_index_minutes, index_bar
 from vibetrading.providers.kis import kis_row_to_event

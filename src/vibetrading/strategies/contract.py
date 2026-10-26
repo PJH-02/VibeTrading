@@ -7,7 +7,7 @@ from types import ModuleType
 from typing import Any, Protocol
 
 from vibetrading.hot_path import StrategyDataView
-from vibetrading.models import BaseMarketEvent, EventType, InstrumentId, Signal, Venue
+from core.models import BaseMarketEvent, EventType, InstrumentId, Signal, Venue
 
 _MODERN_STRATEGY_NAME = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 

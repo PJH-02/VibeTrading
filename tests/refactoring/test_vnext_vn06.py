@@ -6,12 +6,11 @@ import os
 
 import pytest
 
-from vibetrading.dedup import BoundedDedup
+from core.dedup import BoundedDedup
 from vibetrading.feed_recovery import EngineCursor
 from vibetrading.hot_path import HotPathStore, PreparedHistory
 from vibetrading.market_checkpoint import CheckpointCodec, CheckpointError, CheckpointProducer
-from vibetrading.models import (AssetClass, Bar1mEvent, BookUpdateType, IndexQuoteEvent,
-                               InstrumentId, OrderBookEvent, OrderBookLevel, TradeEvent, Venue)
+from core.models import AssetClass, Bar1mEvent, BookUpdateType, IndexQuoteEvent, InstrumentId, OrderBookEvent, OrderBookLevel, TradeEvent, Venue
 
 
 NOW = 1_792_281_600_000_000_000
@@ -86,7 +85,7 @@ def rewrite(payload, change):
 @pytest.fixture
 def frozen_clock(monkeypatch):
     clock = [MONOTONIC/1_000_000_000]
-    monkeypatch.setattr('vibetrading.dedup.monotonic', lambda:clock[0])
+    monkeypatch.setattr("core.dedup.monotonic", lambda:clock[0])
     return clock
 
 

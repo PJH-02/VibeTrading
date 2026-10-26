@@ -23,7 +23,7 @@ from .maintenance_gate import maintenance_lock
 from .health import touch as health_touch
 from .gap_ledger import CollectionGapLedger
 from .settings import get_settings
-from .models import AssetClass, DataGapEvent, EventType, InstrumentId, Venue
+from core.models import AssetClass, DataGapEvent, EventType, InstrumentId, Venue
 from .providers.crypto_perp import SYMBOLS as CRYPTO_SYMBOLS
 
 logger = logging.getLogger(__name__)

@@ -343,7 +343,7 @@ def arcus_signer():
     from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
     from cryptography.hazmat.primitives import serialization
     from vibetrading.extended_brokers import ArcusBrokerAdapter
-    from vibetrading.models import AssetClass, Side, Venue
+    from core.models import AssetClass, Side, Venue
 
     existing = ArcusBrokerAdapter.__new__(ArcusBrokerAdapter)
     existing.use_testnet, existing.address, existing.env = True, ADDRESS, {"ARCUS_ACCOUNT_INDEX": "2"}

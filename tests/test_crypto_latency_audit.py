@@ -9,7 +9,7 @@ import pytest
 
 from scripts.measure_crypto_e2e import distribution, Audit, order_state
 from vibetrading.bus import NatsJetStreamBus
-from vibetrading.models import BaseMarketEvent, TradeEvent, Venue, Side
+from core.models import BaseMarketEvent, TradeEvent, Venue, Side
 from vibetrading.providers.crypto_perp import _instrument
 
 

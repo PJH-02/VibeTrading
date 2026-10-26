@@ -10,10 +10,7 @@ import pytest
 
 from vibetrading.bus import MarketPublication, prepare_market_event
 from vibetrading.market_fanout import SplitMarketEventBus
-from vibetrading.models import (
-    AssetClass, BookUpdateType, DataGapEvent, InstrumentId, OrderBookEvent,
-    OrderBookLevel, TradeEvent, Venue,
-)
+from core.models import AssetClass, BookUpdateType, DataGapEvent, InstrumentId, OrderBookEvent, OrderBookLevel, TradeEvent, Venue
 
 
 def trade(sequence=1):

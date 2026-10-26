@@ -9,7 +9,7 @@ from zipfile import ZipFile
 
 import aiohttp
 
-from vibetrading.models import AssetClass, Venue
+from core.models import AssetClass, Venue
 from vibetrading.providers.universe import ListedContract
 
 

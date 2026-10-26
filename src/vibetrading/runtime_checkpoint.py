@@ -22,7 +22,7 @@ import time
 
 from .market_checkpoint import (CheckpointError, _canonical, _read_checkpoint_file,
                                 _write_checkpoint_file)
-from .models import OrderIntent
+from core.models import OrderIntent
 
 
 FORMAT = "vibetrading-runtime-checkpoint"

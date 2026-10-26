@@ -11,10 +11,10 @@ from typing import Any
 from vibetrading.bus import EventBus, NatsJetStreamBus
 from vibetrading.brokers import broker_for_name
 from vibetrading.execution import AccountExecutionConfig, BrokerAdapter, ExecutionSafetyGate, OrderIntentFactory
-from vibetrading.models import OrderDestination, OrderIntentStatus, Side, Signal, SignalAction
+from core.models import OrderDestination, OrderIntentStatus, Side, Signal, SignalAction
 from vibetrading.settings import get_settings
 from vibetrading.sqlite_store import RuntimeStore
-from vibetrading.dedup import BoundedDedup
+from core.dedup import BoundedDedup
 from vibetrading.execution_owner import ExecutionOwner
 from vibetrading.runtime_control import GateBlocked
 from vibetrading.execution_ledger import exact_product
@@ -162,7 +162,7 @@ class RealExecutionRunner:
             return {"status": "DRY_RUN", "signal_id": signal.signal_id, "intent_id": intent.intent_id}
         known = self.owner.ledger.existing(intent)
         if legacy is not None and known is None:
-            from vibetrading.models import OrderIntent
+            from core.models import OrderIntent
             try:
                 prior = OrderIntent.model_validate_json(legacy[1])
                 if self.owner.ledger.fingerprint(prior) != self.owner.ledger.fingerprint(intent):

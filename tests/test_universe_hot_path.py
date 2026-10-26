@@ -58,7 +58,7 @@ async def test_repeated_rest_page_skips_old_and_accepted_rows_before_normalizati
     from datetime import datetime
     from types import SimpleNamespace
     from vibetrading.providers import kiwoom
-    from vibetrading.models import AssetClass
+    from core.models import AssetClass
     class Clock(datetime):
         @classmethod
         def now(cls, tz=None): return cls(2026, 10, 15, 10, 45, tzinfo=tz)

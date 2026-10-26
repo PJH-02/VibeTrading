@@ -13,7 +13,7 @@ import pytest
 
 from vibetrading.local_storage import LocalSourceError, LocalSpoolStorage, LocalStorageError, StorageBudgets, fact_storage_reserve
 from vibetrading.market_spool import MarketSpool, SpoolCorruption, SpoolCursor, SpoolRecord
-from vibetrading.models import AssetClass, DataGapEvent, InstrumentId, TradeEvent, Venue
+from core.models import AssetClass, DataGapEvent, InstrumentId, TradeEvent, Venue
 from vibetrading.sqlite_store import RuntimeStore
 from vibetrading.settings import RuntimeSettings
 

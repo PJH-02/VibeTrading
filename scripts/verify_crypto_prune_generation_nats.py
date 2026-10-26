@@ -11,7 +11,7 @@ import time
 from vibetrading.archive import ArchiveMaintenance
 from vibetrading.bus import NatsJetStreamBus, dumps, subject_for_event
 from vibetrading.delivery_recovery import prune_verified
-from vibetrading.models import AssetClass, InstrumentId, TradeEvent, Venue
+from core.models import AssetClass, InstrumentId, TradeEvent, Venue
 from vibetrading.parquet_store import ParquetBatchWriter
 from vibetrading.settings import RuntimeSettings
 from vibetrading.sqlite_store import RuntimeStore

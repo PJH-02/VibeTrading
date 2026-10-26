@@ -4,7 +4,7 @@ from pathlib import Path
 import pyarrow.parquet as pq
 
 from vibetrading.bus import InMemoryEventBus
-from vibetrading.models import EventType
+from core.models import EventType
 from vibetrading.parquet_store import ParquetBatchWriter
 from vibetrading.providers.kis import kis_participant_flow_events
 from vibetrading.settings import RuntimeSettings

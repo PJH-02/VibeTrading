@@ -14,7 +14,7 @@ import nats
 import websockets
 
 from vibetrading.bybit_execution import BybitCredentials, BybitOrderClient
-from vibetrading.models import InstrumentId, OrderDestination, OrderIntent, Side
+from core.models import InstrumentId, OrderDestination, OrderIntent, Side
 from vibetrading.settings import get_settings
 
 

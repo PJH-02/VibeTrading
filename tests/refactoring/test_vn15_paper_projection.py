@@ -17,8 +17,7 @@ from vibetrading.execution_ledger import AccountScope
 from vibetrading.hot_path import HotPathStore
 from vibetrading.local_snapshot import (SnapshotBudgets, atomic_write_snapshot,
                                         capture_market_snapshot)
-from vibetrading.models import (AssetClass, InstrumentId, OrderBookEvent, OrderBookLevel,
-                                OrderDestination, OrderIntent, Side, TradeEvent, Venue)
+from core.models import AssetClass, InstrumentId, OrderBookEvent, OrderBookLevel, OrderDestination, OrderIntent, Side, TradeEvent, Venue
 from vibetrading.paper_execution import PaperExecution
 from vibetrading.portfolio_ledger import PortfolioLedger
 from vibetrading.trading_contracts import ProductKind, ProductSpec

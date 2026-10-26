@@ -4,7 +4,7 @@ import os
 
 import pytest
 
-from vibetrading.models import AssetClass, InstrumentId, Side, TradeEvent, Venue
+from core.models import AssetClass, InstrumentId, Side, TradeEvent, Venue
 from vibetrading.parquet_store import ParquetBatchWriter
 from vibetrading.settings import RuntimeSettings
 from vibetrading.sqlite_store import RuntimeStore

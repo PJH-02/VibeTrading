@@ -8,7 +8,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-from vibetrading.models import Venue
+from core.models import Venue
 from vibetrading.hot_path import HotPathStore
 from vibetrading.providers.crypto_perp import CryptoPerpCollector
 

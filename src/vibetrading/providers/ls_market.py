@@ -16,7 +16,7 @@ from typing import Any, Mapping
 
 import aiohttp
 
-from ..models import AssetClass, InstrumentId, ParticipantFlowEvent, TradeEvent, Venue, stable_hash
+from core.models import AssetClass, InstrumentId, ParticipantFlowEvent, TradeEvent, Venue, stable_hash
 from ..session_alerts import KST, _calendar, session_state
 from ..settings import RuntimeSettings, get_settings
 

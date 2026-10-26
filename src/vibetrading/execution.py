@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from decimal import Decimal
 from typing import Protocol
 
-from .models import InstrumentId, OrderDestination, OrderIntent, OrderIntentStatus, Side, Signal, stable_hash, utc_now_ns
+from core.models import InstrumentId, OrderDestination, OrderIntent, OrderIntentStatus, Side, Signal, stable_hash, utc_now_ns
 from .sqlite_store import RuntimeStore
 
 

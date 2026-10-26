@@ -13,8 +13,7 @@ from vibetrading.local_engine import EngineBudgets, LocalMarketEngine
 from vibetrading.local_pipeline import PipelineBudgets
 from vibetrading.market_checkpoint import CheckpointCodec
 from vibetrading.market_spool import MarketSpool
-from vibetrading.models import (AssetClass, InstrumentId, OrderBookEvent, OrderBookLevel,
-    OrderDestination, OrderIntent, Side, Signal, SignalAction, TradeEvent, Venue)
+from core.models import AssetClass, InstrumentId, OrderBookEvent, OrderBookLevel, OrderDestination, OrderIntent, Side, Signal, SignalAction, TradeEvent, Venue
 from vibetrading.paper_execution import PaperExecution
 from vibetrading.portfolio_ledger import PortfolioLedger
 from vibetrading.runtime_checkpoint import RuntimeCheckpoint, RuntimeCheckpointError

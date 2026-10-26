@@ -15,7 +15,7 @@ from vibetrading.local_pipeline import DeliveryBudgets, PipelineBudgets, Spoolin
 from vibetrading.local_runtime import replay_startup
 from vibetrading.local_transport import LocalTransportClient, LocalTransportServer, TransportBudgets
 from vibetrading.market_spool import MarketSpool, SpoolReader
-from vibetrading.models import AssetClass, Bar1mEvent, InstrumentId, TradeEvent, Venue
+from core.models import AssetClass, Bar1mEvent, InstrumentId, TradeEvent, Venue
 
 
 def document(tmp_path):

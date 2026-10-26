@@ -6,7 +6,7 @@ import time
 from pathlib import Path
 from typing import Any
 
-from .models import AssetClass, EventType, Venue
+from core.models import AssetClass, EventType, Venue
 from .bus import allowed_supplement
 from .storage_guard import StorageGuard
 from .universe_config import configured_binance_securities, configured_hyperliquid_securities

@@ -11,7 +11,7 @@ from copy import deepcopy
 from decimal import Decimal, ROUND_FLOOR, localcontext
 import json
 
-from .models import BookUpdateType, OrderBookEvent, OrderIntent, Side, TradeEvent, stable_hash
+from core.models import BookUpdateType, OrderBookEvent, OrderIntent, Side, TradeEvent, stable_hash
 from .trading_contracts import ProductSpec, TradingMode
 
 D = Decimal

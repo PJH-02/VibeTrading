@@ -15,7 +15,7 @@ import aiohttp
 import websockets
 
 from .crypto_perp import CryptoPerpCollector, SYMBOLS, _instrument
-from vibetrading.models import BookUpdateType, Side, TradeEvent, Venue
+from core.models import BookUpdateType, Side, TradeEvent, Venue
 
 
 class ExtendedPerpCollector(CryptoPerpCollector):

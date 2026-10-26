@@ -3,7 +3,7 @@ from decimal import Decimal
 import pytest
 
 from vibetrading.hot_path import HistoryNotPrepared, HotPathStore, PreparedHistory, StrategyDataView
-from vibetrading.models import AssetClass, Bar1mEvent, InstrumentId, Venue
+from core.models import AssetClass, Bar1mEvent, InstrumentId, Venue
 
 BASE = 1_792_281_600_000_000_000
 MINUTE = 60_000_000_000

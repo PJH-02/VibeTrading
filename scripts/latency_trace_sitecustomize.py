@@ -7,7 +7,7 @@ from collections import OrderedDict
 
 if os.environ.get('LATENCY_AUDIT_ID'):
     import websockets
-    from vibetrading.models import BaseMarketEvent
+    from core.models import BaseMarketEvent
     from vibetrading.bus import NatsJetStreamBus
 
     AUDIT = os.environ['LATENCY_AUDIT_ID']

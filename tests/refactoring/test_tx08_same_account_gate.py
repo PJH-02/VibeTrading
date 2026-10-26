@@ -16,7 +16,7 @@ from test_tx05_file_paper_e2e import (feed_new, live_engine, repeated_frame,
                                       restore_engine, wait_until)
 from test_vn13_file_registration import configured, strategy_files
 from vibetrading.feed_recovery import EngineCursor, RecoveryFrame
-from vibetrading.models import OrderDestination, OrderIntent, Side, SignalAction
+from core.models import OrderDestination, OrderIntent, Side, SignalAction
 from vibetrading.runtime_checkpoint import RuntimeCheckpoint
 from vibetrading.trading_contracts import ActionKind, ExecutionAction, TradingMode
 

@@ -16,7 +16,7 @@ from vibetrading.collection_timing import CollectionContext
 from vibetrading.extended_brokers import ArcusBrokerAdapter, GrvtBrokerAdapter, GRVT_ORDER_TYPES, OrderOutcomeUnknown
 from vibetrading.hot_path import HotPathStore
 from vibetrading.market_policy import MarketDataPolicyBus
-from vibetrading.models import OrderIntent, OrderDestination, Side, Venue
+from core.models import OrderIntent, OrderDestination, Side, Venue
 from vibetrading.providers.crypto_perp import _instrument
 from vibetrading.providers.extended_perp import ExtendedPerpCollector
 from vibetrading.providers.hyperliquid import HyperliquidCollector
@@ -120,8 +120,8 @@ def test_new_venues_pass_explicit_policy(venue):
     c=ExtendedPerpCollector(venue)
     async def scenario():
         b=InMemoryEventBus()
-        await c._book(b,'BTCUSDT',None,[['100','1']],[['101','1']],__import__('vibetrading.models',fromlist=['BookUpdateType']).BookUpdateType.SNAPSHOT,1)
-        from vibetrading.models import event_from_dict
+        await c._book(b,'BTCUSDT',None,[['100','1']],[['101','1']],__import__("core.models",fromlist=['BookUpdateType']).BookUpdateType.SNAPSHOT,1)
+        from core.models import event_from_dict
         assert MarketDataPolicyBus(b)._allowed(event_from_dict(b.messages[0].data))
     asyncio.run(scenario())
 

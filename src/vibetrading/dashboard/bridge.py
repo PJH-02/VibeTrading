@@ -42,7 +42,7 @@ class ProjectionBus:
 async def observe_public(venue: str, symbols: tuple, bus: ProjectionBus, errors: dict) -> None:
     # A separate public connection obtains its own initial snapshot. Joining a delta-only
     # live stream midway cannot safely reconstruct an order book.
-    from vibetrading.models import Venue
+    from core.models import Venue
     from vibetrading.providers.crypto_perp import CryptoPerpCollector
     from vibetrading.providers.extended_perp import ExtendedPerpCollector
     while True:

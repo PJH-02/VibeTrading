@@ -22,8 +22,7 @@ import time
 
 from .feed_recovery import EngineCursor
 from .hot_path import HotPathStore, PreparedHistory, _event_fingerprint, freeze_market_event
-from .models import (AssetClass, Bar1mEvent, BaseMarketEvent, IndexQuoteEvent,
-                     InstrumentId, OrderBookEvent, OrderBookLevel, TradeEvent, event_from_dict)
+from core.models import AssetClass, Bar1mEvent, BaseMarketEvent, IndexQuoteEvent, InstrumentId, OrderBookEvent, OrderBookLevel, TradeEvent, event_from_dict
 
 
 class CheckpointError(ValueError):

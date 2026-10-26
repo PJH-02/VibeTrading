@@ -10,7 +10,7 @@ import pytest
 from vibetrading.bus import dumps, subject_for_signal
 from vibetrading.local_observation import LocalObservationBus, ObservationBudgets, encode_observation
 from vibetrading.market_spool import MarketSpool, SpoolReader
-from vibetrading.models import AssetClass, InstrumentId, Signal, SignalAction, Venue
+from core.models import AssetClass, InstrumentId, Signal, SignalAction, Venue
 
 
 LIMITS=dict(max_disk_bytes=131072,max_records=64,max_frame_bytes=8192,max_header_bytes=512,

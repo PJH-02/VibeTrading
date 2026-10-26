@@ -25,7 +25,7 @@ from .local_transport import AppliedReceipt
 from .market_checkpoint import CheckpointCodec, CheckpointProducer, _canonical
 from .market_apply_order import ApplyOrder, ApplyOrderWriter, order_anchor, order_record
 from .market_spool import MarketSpool
-from .models import AssetClass, BaseMarketEvent, EventType, SCHEMA_VERSION, event_from_dict
+from core.models import AssetClass, BaseMarketEvent, EventType, SCHEMA_VERSION, event_from_dict
 
 
 class EngineError(RuntimeError):

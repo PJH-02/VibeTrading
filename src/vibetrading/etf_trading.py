@@ -34,7 +34,7 @@ from .etf_journal import EtfJournal
 from .etf_reference import weights
 from .health import touch
 from .kis_execution import KisCashBroker, KisOrderRejected, account_permission_rejection
-from .models import AssetClass, Bar1mEvent, BookUpdateType, EventType, InstrumentId, OrderDestination, OrderIntent, Side, Signal, SignalAction, Venue, event_from_dict
+from core.models import AssetClass, Bar1mEvent, BookUpdateType, EventType, InstrumentId, OrderDestination, OrderIntent, Side, Signal, SignalAction, Venue, event_from_dict
 from .providers.kiwoom import KiwoomAuthClient, KST
 from .providers.kis_client import KisAuthClient
 from .settings import get_settings

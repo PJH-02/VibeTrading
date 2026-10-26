@@ -8,7 +8,7 @@ from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 from pathlib import Path
 
-from .models import AssetClass, InstrumentId, Venue, Bar1mEvent
+from core.models import AssetClass, InstrumentId, Venue, Bar1mEvent
 from .etf_csv_history import atomic_json
 from .etf_intraday_store import merge_session_rows
 

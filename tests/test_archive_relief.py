@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from vibetrading.archive import ArchiveMaintenance
-from vibetrading.models import AssetClass, InstrumentId, TradeEvent, Venue
+from core.models import AssetClass, InstrumentId, TradeEvent, Venue
 from vibetrading.parquet_store import ParquetBatchWriter
 from vibetrading.settings import RuntimeSettings
 from vibetrading.sqlite_store import RuntimeStore

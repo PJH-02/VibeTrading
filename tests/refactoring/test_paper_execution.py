@@ -4,8 +4,7 @@ from decimal import Decimal as D
 import pytest
 
 from vibetrading.execution_ledger import AccountScope
-from vibetrading.models import (AssetClass, BookUpdateType, InstrumentId, OrderBookEvent,
-                               OrderBookLevel, OrderDestination, OrderIntent, Side, TradeEvent, Venue)
+from core.models import AssetClass, BookUpdateType, InstrumentId, OrderBookEvent, OrderBookLevel, OrderDestination, OrderIntent, Side, TradeEvent, Venue
 from vibetrading.paper_execution import PaperExecution
 from vibetrading.portfolio_ledger import PortfolioLedger
 from vibetrading.trading_contracts import ProductKind, ProductSpec, TradingMode

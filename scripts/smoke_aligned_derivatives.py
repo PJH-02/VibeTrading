@@ -5,7 +5,7 @@ import asyncio
 from collections import Counter
 
 from vibetrading.collection_timing import MINUTE_NS
-from vibetrading.models import EventType
+from core.models import EventType
 from vibetrading.providers.binance import BinanceCollector
 from vibetrading.providers.hyperliquid import HyperliquidCollector
 from vibetrading.universe_config import configured_binance_securities, configured_hyperliquid_securities

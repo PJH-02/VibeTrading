@@ -15,7 +15,7 @@ from test_tx08_same_account_gate import spooled_frame
 from test_tx10_manifest_registration import export_row, export_manifest, descriptor, RELATIVE
 from test_tx09_paper_queries import paper_bot, query_update
 from vibetrading.dashboard.projection import paper_projection
-from vibetrading.models import Side
+from core.models import Side
 from vibetrading.runtime_checkpoint import RuntimeCheckpoint
 
 

@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from vibetrading.models import AssetClass, InstrumentId, Side, TradeEvent, Venue
+from core.models import AssetClass, InstrumentId, Side, TradeEvent, Venue
 
 
 def test_trade_event_id_is_stable_for_duplicate_delivery() -> None:

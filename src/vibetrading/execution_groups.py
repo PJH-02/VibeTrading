@@ -7,7 +7,7 @@ import json
 from types import MappingProxyType
 
 from .execution_ledger import AccountScope, canonical, exact_difference, exact_product, exact_sum, positive_decimal
-from .models import Side
+from core.models import Side
 from .trading_contracts import ProductSpec, TradingMode, bounded_identity, validate_scope
 
 
