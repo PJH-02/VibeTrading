@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from vibetrading.settings import RuntimeSettings
+from runtime.settings import RuntimeSettings
 
 
 def test_kiwoon_secret_alias_warns(tmp_path: Path) -> None:

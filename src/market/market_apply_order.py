@@ -5,10 +5,10 @@ import hashlib
 import json
 
 from feeds.feed_recovery import EngineCursor
-from vibetrading.local_transport import AppliedReceipt
+from runtime.local_transport import AppliedReceipt
 from storage.market_checkpoint import _canonical
 from storage.market_spool import SpoolCursor, SpoolReader, scan_spool
-from vibetrading.local_observation import LocalObservationBus
+from operations.local_observation import LocalObservationBus
 
 
 def order_anchor(payload):

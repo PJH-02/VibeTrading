@@ -513,7 +513,7 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
     try:
         if runtime_checkpoint is not None:
             if plan.etf_enabled:
-                from .local_observation import LocalObservationBus
+                from operations.local_observation import LocalObservationBus
                 item=plan.observation
                 observation=LocalObservationBus(producer=item.producer,incarnation=item.incarnation,
                     spool_factory=lambda:create_spool(item),
@@ -539,7 +539,7 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
         else:
             handoffs=await replay_startup(engine,plan.producers,promote=False)
         if plan.etf_enabled and etf is None:
-            from .local_observation import LocalObservationBus
+            from operations.local_observation import LocalObservationBus
             item=plan.observation
             observation=LocalObservationBus(producer=item.producer,incarnation=item.incarnation,
                 spool_factory=lambda:create_spool(item),
@@ -650,13 +650,13 @@ def main(argv=None, *, paper_runtime=None, paper_feed_dependencies=None):
 
     if args.role=='telegram':
         from storage.local_events import FactsEventBudgets, LocalFactsEventBus
-        from .telegram import TelegramController
+        from operations.telegram import TelegramController
         factory=lambda:LocalFactsEventBus(settings.state_dir/'local_storage_facts.sqlite3',
             settings.state_dir/'telegram'/'local-facts.sqlite3',budgets=FactsEventBudgets(**plan.events))
         asyncio.run(TelegramController(settings,bus_factory=factory).run())
         return 0
     if args.role=='dashboard':
-        from .dashboard.bridge import run
+        from operations.dashboard.bridge import run
         asyncio.run(run())
         return 0
     if args.role=='collector':

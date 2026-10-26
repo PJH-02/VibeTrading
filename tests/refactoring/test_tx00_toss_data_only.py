@@ -14,7 +14,7 @@ import pytest
 
 from execution.brokers import TossBrokerAdapter
 from feeds.providers.toss import TossAuthClient, TossUnauthorized
-from vibetrading.settings import RuntimeSettings
+from runtime.settings import RuntimeSettings
 
 
 MUTATING_METHODS = ["POST", "PUT", "PATCH", "DELETE", "HEAD", "post", "Put", "PaTcH"]

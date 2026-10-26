@@ -3,10 +3,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from vibetrading.health import check, touch
+from operations.health import check, touch
 from feeds.providers import universe
 from feeds.providers.universe import InstrumentUniverseResolver
-from vibetrading.settings import RuntimeSettings
+from runtime.settings import RuntimeSettings
 
 
 def _settings(tmp_path: Path) -> RuntimeSettings:
@@ -46,7 +46,7 @@ def test_connecting_and_retrying_collectors_are_not_healthy(tmp_path: Path) -> N
 
 
 def test_health_reports_image_and_configuration_provenance(tmp_path: Path, monkeypatch) -> None:
-    from vibetrading import health
+    from operations import health
 
     monkeypatch.setenv("VIBETRADING_BUILD_REVISION", "r1-abc")
     monkeypatch.setenv("VIBETRADING_BUILD_CONFIG_HASH", "config-hash")

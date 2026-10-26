@@ -5,7 +5,7 @@ import time
 import pytest
 
 from test_execution_owner import build_owner
-from vibetrading.runtime_control import GateBlocked
+from runtime.runtime_control import GateBlocked
 
 
 @pytest.mark.asyncio
@@ -67,7 +67,7 @@ async def test_exact_retry_after_resume_expiry_and_restart_is_only_a_receipt(tmp
                       'scope': 'strategy:strategy', 'epoch': 2, 'duplicate': False}
     owner.resume('strategy', expected_epochs=owner.control.snapshot('strategy')['epochs'], readiness=ready)
     before = owner.control.snapshot('strategy')
-    monkeypatch.setattr('vibetrading.runtime_control.time.time_ns', lambda: request['expires_ns'] + 1)
+    monkeypatch.setattr("runtime.runtime_control.time.time_ns", lambda: request['expires_ns'] + 1)
     assert owner.control.apply_command(**request) == {**result, 'duplicate': True}
     assert owner.control.snapshot('strategy') == before
     assert adapter.connects == 0 and adapter.mutations == []

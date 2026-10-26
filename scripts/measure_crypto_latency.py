@@ -15,7 +15,7 @@ import websockets
 
 from execution.bybit_execution import BybitCredentials, BybitOrderClient
 from core.models import InstrumentId, OrderDestination, OrderIntent, Side
-from vibetrading.settings import get_settings
+from runtime.settings import get_settings
 
 
 def distribution(values):

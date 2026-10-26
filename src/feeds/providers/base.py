@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Protocol
 
-from vibetrading.bus import EventBus
+from runtime.bus import EventBus
 
 
 class MarketDataCollector(Protocol):

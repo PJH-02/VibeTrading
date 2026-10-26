@@ -1,7 +1,7 @@
 import asyncio
 from datetime import datetime, timedelta, timezone
 
-from vibetrading.bus import InMemoryEventBus
+from runtime.bus import InMemoryEventBus
 from market.market_policy import MarketDataPolicyBus
 from feeds.providers.toss import TossCollector, parse_toss_symbols
 

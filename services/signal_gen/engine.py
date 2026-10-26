@@ -16,15 +16,7 @@ except ImportError:
 
 from shared.config import get_settings
 from shared.database import get_postgres
-from shared.models import (
-    Candle,
-    Market,
-    Position,
-    Signal,
-    StrategyContext,
-    TradingMode,
-    TeamType,
-)
+from strategies.legacy.models import Candle, Market, Position, Signal, StrategyContext, TradingMode, TeamType
 
 from strategies.legacy.candle_loader import StrategyWrapper, get_strategy
 

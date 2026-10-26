@@ -18,7 +18,7 @@ import websockets
 from execution.extended_brokers import GrvtBrokerAdapter, OrderOutcomeUnknown
 from core.models import InstrumentId, OrderDestination, OrderIntent, Side, Venue
 from feeds.providers.extended_perp import ExtendedPerpCollector
-from vibetrading.settings import get_settings
+from runtime.settings import get_settings
 
 D=Decimal
 ASSETS=('BTCUSDT','ETHUSDT','SOLUSDT')

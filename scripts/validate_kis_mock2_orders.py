@@ -9,7 +9,7 @@ from pathlib import Path
 import nats
 from execution.kis_execution import KisCashBroker
 from core.models import AssetClass, InstrumentId, OrderIntent, OrderDestination, Side, Venue
-from vibetrading.settings import get_settings
+from runtime.settings import get_settings
 
 async def main():
     settings=get_settings(); broker=KisCashBroker(settings,mode='mock2')

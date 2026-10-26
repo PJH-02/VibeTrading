@@ -17,7 +17,7 @@ import aiohttp
 import websockets
 
 from feeds.providers.crypto_perp import SYMBOLS
-from vibetrading.settings import RuntimeSettings, get_settings
+from runtime.settings import RuntimeSettings, get_settings
 
 
 def _market_trigger_price(mode: str, side: str, bid: Decimal, ask: Decimal) -> Decimal:

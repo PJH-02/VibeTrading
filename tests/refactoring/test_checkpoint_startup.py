@@ -12,7 +12,7 @@ from feeds.feed_recovery import EngineCursor, RecoveryFrame
 from market.hot_path import HotPathStore
 from market.local_engine import EngineBudgets, LocalMarketEngine
 from feeds.local_pipeline import PipelineBudgets
-from vibetrading.local_runtime import replay_checkpoint_startup, replay_startup
+from runtime.local_runtime import replay_checkpoint_startup, replay_startup
 from storage.market_checkpoint import CheckpointCodec, _canonical
 from market.market_apply_order import ApplyOrder
 from storage.market_spool import MarketSpool, SpoolReader
@@ -328,7 +328,7 @@ async def test_bad_retained_checkpoint_prefix_rejects_before_install(tmp_path,fa
 @pytest.mark.asyncio
 @pytest.mark.parametrize('checkpoint',[False,True])
 async def test_normal_append_beyond_frozen_h_is_left_for_live_delivery(tmp_path,monkeypatch,checkpoint):
-    import vibetrading.local_runtime as runtime
+    import runtime.local_runtime as runtime
     item=producer(tmp_path)
     source,codec,payload=capture([item])
     append(item,[event('a',2)])
@@ -486,7 +486,7 @@ async def test_sealed_inplace_or_missing_retained_segment_fails_closed(
 @pytest.mark.asyncio
 async def test_active_growth_then_same_inode_seal_after_freeze_leaves_later_record_live(
         tmp_path,monkeypatch):
-    import vibetrading.local_runtime as runtime
+    import runtime.local_runtime as runtime
     item=producer(tmp_path)
     source=engine([item],fresh=True)
     writer=MarketSpool(item.spool_root,item.producer,item.incarnation,**LIMITS)
@@ -522,7 +522,7 @@ async def test_active_growth_then_same_inode_seal_after_freeze_leaves_later_reco
 
 @pytest.mark.asyncio
 async def test_sealed_active_segment_cannot_regress_to_active_after_restore(tmp_path,monkeypatch):
-    import vibetrading.local_runtime as runtime
+    import runtime.local_runtime as runtime
     item=producer(tmp_path)
     source=engine([item],fresh=True)
     writer=MarketSpool(item.spool_root,item.producer,item.incarnation,**LIMITS)

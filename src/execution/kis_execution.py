@@ -16,7 +16,7 @@ import aiohttp
 
 from core.models import AssetClass, OrderIntent, Side
 from feeds.providers.kis_client import KisAuthClient
-from vibetrading.settings import RuntimeSettings
+from runtime.settings import RuntimeSettings
 
 KST = timezone(timedelta(hours=9))
 

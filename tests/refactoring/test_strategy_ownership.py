@@ -226,7 +226,7 @@ def test_legacy_instance_selects_canonical_frozen_fair_value_module():
 
 
 def test_legacy_candle_loader_keeps_team_cache_and_backtest_api():
-    from shared.models import TeamType
+    from strategies.legacy.models import TeamType
 
     candle_loader.clear_strategy_cache()
     first = candle_loader.get_strategy("turtle_breakout")

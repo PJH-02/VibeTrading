@@ -15,7 +15,7 @@ from storage.local_storage import LocalSourceError, LocalSpoolStorage, LocalStor
 from storage.market_spool import MarketSpool, SpoolCorruption, SpoolCursor, SpoolRecord
 from core.models import AssetClass, DataGapEvent, InstrumentId, TradeEvent, Venue
 from storage.sqlite_store import RuntimeStore
-from vibetrading.settings import RuntimeSettings
+from runtime.settings import RuntimeSettings
 
 
 SPOOL = dict(max_disk_bytes=1024 * 1024, max_records=100, max_frame_bytes=16384,

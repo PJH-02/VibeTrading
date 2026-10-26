@@ -12,7 +12,7 @@ from typing import AsyncIterator, Dict, List, Optional, cast
 
 from shared.config import get_settings
 from shared.database import get_questdb
-from shared.models import Candle, Market
+from strategies.legacy.models import Candle, Market
 
 from .base import DataFeedError, DataFeedProvider
 

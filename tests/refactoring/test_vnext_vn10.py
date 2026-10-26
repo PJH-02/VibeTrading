@@ -11,7 +11,7 @@ import pytest
 
 from execution.execution_ledger import AccountScope, ExecutionLedger
 from execution.process_lease import ProcessLease
-from vibetrading.etf_trading import EtfDispatchBlocked, EtfTradingLoop
+from runtime.etf_trading import EtfDispatchBlocked, EtfTradingLoop
 
 
 SCOPE = AccountScope('binance', '001-physical-parent', 'spot', 'offline')
@@ -164,9 +164,9 @@ def etf_factory(tmp_path, monkeypatch):
             raise RuntimeError('offline startup failure')
     class Bus:
         async def close(self): pass
-    monkeypatch.setattr('vibetrading.etf_trading.KisCashBroker',Broker)
-    monkeypatch.setattr('vibetrading.etf_trading.KiwoomAuthClient',lambda *a,**k:None)
-    monkeypatch.setattr('vibetrading.etf_trading.KisAuthClient',lambda *a,**k:None)
+    monkeypatch.setattr("runtime.etf_trading.KisCashBroker",Broker)
+    monkeypatch.setattr("runtime.etf_trading.KiwoomAuthClient",lambda *a,**k:None)
+    monkeypatch.setattr("runtime.etf_trading.KisAuthClient",lambda *a,**k:None)
     owners = []
     def create(name='one', accounts=None, bus=None, root=None):
         settings = SimpleNamespace(state_dir=tmp_path/name,env={},

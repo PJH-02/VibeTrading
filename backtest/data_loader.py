@@ -9,7 +9,7 @@ from decimal import Decimal
 from typing import Iterator, List, Optional
 
 from shared.database import get_questdb
-from shared.models import Candle, Market
+from strategies.legacy.models import Candle, Market
 
 logger = logging.getLogger(__name__)
 

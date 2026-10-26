@@ -22,7 +22,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from vibetrading.settings import get_settings
+from runtime.settings import get_settings
 from storage.sqlite_store import RuntimeStore
 from storage.storage_backend import archive_backend
 

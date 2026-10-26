@@ -32,7 +32,7 @@ from strategies.kr.etf_history import EtfHistory
 from storage.etf_csv_history import ETF_HISTORY_ROLES
 from portfolio.etf_journal import EtfJournal
 from strategies.kr.etf_reference import weights
-from .health import touch
+from operations.health import touch
 from execution.kis_execution import KisCashBroker, KisOrderRejected, account_permission_rejection
 from core.models import AssetClass, Bar1mEvent, BookUpdateType, EventType, InstrumentId, OrderDestination, OrderIntent, Side, Signal, SignalAction, Venue, event_from_dict
 from feeds.providers.kiwoom import KiwoomAuthClient, KST

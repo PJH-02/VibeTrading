@@ -9,7 +9,7 @@ from datetime import datetime
 import pytest
 
 from portfolio.etf_journal import EtfJournal
-from vibetrading.etf_trading import EtfDispatchBlocked, EtfTradingLoop
+from runtime.etf_trading import EtfDispatchBlocked, EtfTradingLoop
 from execution.kis_execution import KisCashBroker
 from core.models import AssetClass, Bar1mEvent, BookUpdateType, DataGapEvent, InstrumentId, OrderBookEvent, OrderBookLevel, OrderDestination, OrderIntent, Side, TradeEvent, Venue
 from feeds.providers.kiwoom import KST
@@ -496,8 +496,8 @@ async def test_injected_source_never_connects_nats_and_failure_invalidates_quote
     loop._event_source = source()
     loop.initialize, loop.timer, loop.event = initialize,timer,event
     loop.bus.close = close
-    monkeypatch.setattr('vibetrading.etf_trading.nats.connect',forbidden)
-    monkeypatch.setattr('vibetrading.etf_trading.asyncio.Queue',queue_forbidden)
+    monkeypatch.setattr("runtime.etf_trading.nats.connect",forbidden)
+    monkeypatch.setattr("runtime.etf_trading.asyncio.Queue",queue_forbidden)
     with pytest.raises(RuntimeError,match='source failed'):
         await asyncio.wait_for(loop.run(initialized=initialized),timeout=3)
     assert len(initializations) == (0 if initialized else 1)

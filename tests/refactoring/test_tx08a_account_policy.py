@@ -15,7 +15,7 @@ from execution.execution_ledger import AccountScope
 from market.hot_path import HotPathStore
 from core.models import OrderDestination, OrderIntent, Side
 from portfolio.portfolio_ledger import PortfolioLedger
-from vibetrading.strategy_runtime import (PaperStrategyRuntime, StrategyRisk)
+from runtime.strategy_runtime import PaperStrategyRuntime, StrategyRisk
 from execution.trading_contracts import TradingMode
 
 

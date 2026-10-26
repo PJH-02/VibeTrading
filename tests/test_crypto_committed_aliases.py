@@ -3,7 +3,7 @@ import sqlite3
 
 import pytest
 
-from vibetrading.bus import BusMessage, InMemoryEventBus
+from runtime.bus import BusMessage, InMemoryEventBus
 from storage.parquet_store import ParquetBatchWriter
 from storage.sqlite_store import RuntimeStore
 from storage.storage_worker import StorageWorker

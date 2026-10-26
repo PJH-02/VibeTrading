@@ -7,7 +7,7 @@ import time
 from pathlib import Path
 from typing import Any
 
-from .settings import RuntimeSettings
+from runtime.settings import RuntimeSettings
 
 
 def _path(settings: RuntimeSettings, component: str) -> Path:

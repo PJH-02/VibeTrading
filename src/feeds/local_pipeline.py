@@ -15,7 +15,7 @@ import math
 import time
 from typing import Callable
 
-from vibetrading.bus import MarketEventPacket, prepare_market_event, resolve_market_publication
+from runtime.bus import MarketEventPacket, prepare_market_event, resolve_market_publication
 from .feed_recovery import EngineCursor, RecoveryFrame
 
 

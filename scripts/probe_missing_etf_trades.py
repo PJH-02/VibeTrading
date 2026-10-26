@@ -5,7 +5,7 @@ import sqlite3
 from contextlib import closing
 
 from execution.kis_execution import KisCashBroker
-from vibetrading.settings import get_settings
+from runtime.settings import get_settings
 
 DAY='2026-10-14'
 

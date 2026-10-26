@@ -7,7 +7,7 @@ from typing import Any
 
 import aiohttp
 
-from vibetrading.settings import ProviderSettings, RuntimeSettings, get_settings
+from runtime.settings import ProviderSettings, RuntimeSettings, get_settings
 
 
 def _as_bool(value: str | None, *, default: bool = False) -> bool:

@@ -12,7 +12,7 @@ from typing import Optional
 from uuid import UUID, uuid4
 
 from shared.config import get_settings
-from shared.models import Fill, Market, Order, OrderSide, OrderType, TradingMode
+from strategies.legacy.models import Fill, Market, Order, OrderSide, OrderType, TradingMode
 
 
 @dataclass

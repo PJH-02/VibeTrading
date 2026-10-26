@@ -5,7 +5,7 @@ from typing import Type
 from backtest.engine import BacktestEngine
 from backtest.engines.arbitrage_engine import ArbitrageBacktestEngine
 from backtest.engines.portfolio_engine import PortfolioBacktestEngine
-from shared.models import TeamType
+from strategies.legacy.models import TeamType
 
 
 def resolve_backtest_engine(team: TeamType) -> Type[BacktestEngine]:

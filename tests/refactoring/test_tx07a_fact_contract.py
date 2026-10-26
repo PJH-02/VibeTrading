@@ -14,7 +14,7 @@ from execution.execution_ledger import AccountScope, ExecutionLedger
 from execution.execution_owner import ExecutionBudgets, ExecutionOwner, ExecutionReadiness
 from core.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
 from portfolio.portfolio_ledger import PortfolioLedger
-from vibetrading.runtime_control import RuntimeControl
+from runtime.runtime_control import RuntimeControl
 from execution.trading_contracts import ProductKind, ProductSpec
 
 D = Decimal

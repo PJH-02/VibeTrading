@@ -6,14 +6,14 @@ from decimal import Decimal
 import pytest
 
 from portfolio.etf_journal import EtfJournal
-from vibetrading.etf_trading import intraday_decision
+from runtime.etf_trading import intraday_decision
 from execution.kis_execution import KisCashBroker
 from core.models import AssetClass, EtfNavEvent, InstrumentId, OrderDestination, OrderIntent, Side, Venue, event_from_dict
 from storage.parquet_store import _schema, flatten_event, ParquetBatchWriter
 from storage.sqlite_store import RuntimeStore
 from feeds.providers.kiwoom import KST, KiwoomCollector, parse_kiwoom_symbols
 from feeds.providers.kis_client import KisAuthClient
-from vibetrading.settings import RuntimeSettings
+from runtime.settings import RuntimeSettings
 from feeds.universe_config import configured_symbols
 
 
@@ -210,7 +210,7 @@ def test_native_history_features_exclude_future_prices_and_incomplete_windows(tm
 
 @pytest.mark.asyncio
 async def test_bus_blocks_retired_events_and_publishes_etf_live_copy(tmp_path):
-    from vibetrading.bus import NatsJetStreamBus
+    from runtime.bus import NatsJetStreamBus
     from core.models import TradeEvent, utc_now_ns
     bus = NatsJetStreamBus(settings(tmp_path))
     published = []

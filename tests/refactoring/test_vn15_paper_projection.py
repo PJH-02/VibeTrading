@@ -11,8 +11,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from vibetrading.dashboard import bridge
-from vibetrading.dashboard.projection import paper_projection, paper_projection_paths
+from operations.dashboard import bridge
+from operations.dashboard.projection import paper_projection, paper_projection_paths
 from execution.execution_ledger import AccountScope
 from market.hot_path import HotPathStore
 from market.local_snapshot import SnapshotBudgets, atomic_write_snapshot, capture_market_snapshot

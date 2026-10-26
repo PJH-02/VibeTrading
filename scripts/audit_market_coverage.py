@@ -25,7 +25,7 @@ from typing import Any, Iterable
 
 import pyarrow.parquet as pq
 
-from vibetrading.settings import get_settings
+from runtime.settings import get_settings
 from storage.storage_backend import archive_backend
 
 

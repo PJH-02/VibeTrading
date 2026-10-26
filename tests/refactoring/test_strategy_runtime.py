@@ -14,8 +14,7 @@ from core.models import AssetClass, Bar1mEvent, InstrumentId, OrderBookEvent, Or
 from execution.paper_execution import PaperExecution
 from portfolio.portfolio_ledger import PortfolioLedger
 from vibetrading.strategy_contract import StrategyModule
-from vibetrading.strategy_runtime import (PaperStrategyRuntime, RuntimeBudgets, StrategyRegistration,
-                                         StrategyRisk)
+from runtime.strategy_runtime import PaperStrategyRuntime, RuntimeBudgets, StrategyRegistration, StrategyRisk
 from execution.trading_contracts import ActionKind, ExecutionAction, ProductKind, ProductSpec, TradingMode
 
 T = 1_800_000_000_000_000_000

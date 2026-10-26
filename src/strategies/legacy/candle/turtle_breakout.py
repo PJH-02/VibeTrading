@@ -16,14 +16,7 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Deque, Dict, List, Optional
 
-from shared.models import (
-    Candle,
-    Signal,
-    SignalAction,
-    StrategyContext,
-    StrategyResult,
-    TeamType,
-)
+from strategies.legacy.models import Candle, Signal, SignalAction, StrategyContext, StrategyResult, TeamType
 
 logger = logging.getLogger(__name__)
 

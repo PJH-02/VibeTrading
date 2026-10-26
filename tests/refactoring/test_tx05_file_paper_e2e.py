@@ -20,7 +20,7 @@ from test_runtime_checkpoint_integration import append, codec, producer
 from feeds.feed_recovery import EngineCursor, RecoveryFrame
 from market.local_engine import EngineBudgets, LocalMarketEngine
 from core.models import OrderDestination, OrderIntent, Side, SignalAction
-from vibetrading.runtime_checkpoint import RuntimeCheckpoint
+from runtime.runtime_checkpoint import RuntimeCheckpoint
 from execution.trading_contracts import ActionKind, ExecutionAction, TradingMode
 
 SID = "tx05_e2e_strategy"

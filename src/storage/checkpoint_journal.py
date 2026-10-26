@@ -169,7 +169,7 @@ class CheckpointJournal:
             bundle = await asyncio.to_thread(self._read_bundle)
             self._check()
             if bundle is None:return False
-            from vibetrading.local_runtime import replay_checkpoint_startup
+            from runtime.local_runtime import replay_checkpoint_startup
             point,payload,proof = bundle
             await replay_checkpoint_startup(self._engine,producers,codec=self.codec,payload=payload,
                 expected_engine_incarnation=point['engine_incarnation'],apply_order=proof)

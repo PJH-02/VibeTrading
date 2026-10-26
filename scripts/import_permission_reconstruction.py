@@ -2,7 +2,7 @@
 import json
 from pathlib import Path
 from portfolio.etf_journal import EtfJournal
-from vibetrading.settings import get_settings
+from runtime.settings import get_settings
 
 root=get_settings().state_dir/'etf-mock'
 records=json.loads((root/'permission-reconstruction.json').read_text())

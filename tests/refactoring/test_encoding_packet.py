@@ -11,10 +11,10 @@ from unittest.mock import patch
 import pytest
 
 from scripts.refactoring.encoding_probe import NOW, cases, collect_transcript
-from vibetrading import bus as module
-from vibetrading.bus import BufferedMarketEventBus, NatsJetStreamBus, prepare_market_event, publish_prepared_market_event
+from runtime import bus as module
+from runtime.bus import BufferedMarketEventBus, NatsJetStreamBus, prepare_market_event, publish_prepared_market_event
 from market.market_policy import MarketDataPolicyBus
-from vibetrading.runtime import _CollectorReadinessBus
+from runtime.runtime import _CollectorReadinessBus
 
 
 @pytest.mark.asyncio
@@ -124,7 +124,7 @@ async def test_production_chain_encodes_once_and_reuses_bytes_on_retry(name, exp
     readiness = _CollectorReadinessBus(terminal, None, "binance-perp")
     buffered = BufferedMarketEventBus(readiness, shards=1)
     event = cases()[name]
-    with patch.object(module, "dumps", wraps=module.dumps) as encoder, patch.object(module.time, "time_ns", return_value=NOW), patch("vibetrading.runtime.health_touch"):
+    with patch.object(module, "dumps", wraps=module.dumps) as encoder, patch.object(module.time, "time_ns", return_value=NOW), patch("runtime.runtime.health_touch"):
         await buffered.publish_market_event(event)
         event.bids.clear() if hasattr(event, "bids") else None
         await buffered.close()

@@ -7,7 +7,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from vibetrading import local_runtime
+from runtime import local_runtime
 from market.hot_path import HotPathStore
 from market.local_engine import EngineBudgets, LocalMarketEngine
 from storage.market_checkpoint import CheckpointCodec

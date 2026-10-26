@@ -6,7 +6,7 @@ import hashlib
 import pytest
 
 from scripts.refactoring.encoding_probe import cases
-from vibetrading.bus import BufferedMarketEventBus, prepare_market_event
+from runtime.bus import BufferedMarketEventBus, prepare_market_event
 
 
 class BlockedSink:

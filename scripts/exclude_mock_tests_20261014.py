@@ -6,8 +6,8 @@ from decimal import Decimal
 
 from portfolio.etf_journal import EtfJournal
 from strategies.kr.etf_reference import weights
-from vibetrading.settings import get_settings
-from vibetrading.trade_reporting import order_key
+from runtime.settings import get_settings
+from operations.trade_reporting import order_key
 
 day='2026-10-14'
 expected={'40004','40009','42621','42625','42631','42633'}

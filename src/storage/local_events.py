@@ -18,7 +18,7 @@ import shutil
 import sqlite3
 import time
 
-from vibetrading.bus import BusMessage
+from runtime.bus import BusMessage
 from execution.process_lease import ProcessLease
 
 

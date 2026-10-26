@@ -3,11 +3,11 @@ from pathlib import Path
 
 import pyarrow.parquet as pq
 
-from vibetrading.bus import InMemoryEventBus
+from runtime.bus import InMemoryEventBus
 from core.models import EventType
 from storage.parquet_store import ParquetBatchWriter
 from feeds.providers.kis import kis_participant_flow_events
-from vibetrading.settings import RuntimeSettings
+from runtime.settings import RuntimeSettings
 from storage.sqlite_store import RuntimeStore
 
 

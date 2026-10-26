@@ -10,7 +10,7 @@ from market.market_policy import MarketDataPolicyBus
 from core.models import EventType, Venue
 from storage.parquet_store import ParquetBatchWriter
 from feeds.providers.ls_market import LSReadOnlyClient, krx_futures_session, parse_dbt_foreign, parse_delayed_future_trade
-from vibetrading.settings import RuntimeSettings
+from runtime.settings import RuntimeSettings
 from storage.sqlite_store import RuntimeStore
 
 

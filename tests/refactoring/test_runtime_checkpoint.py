@@ -15,12 +15,9 @@ from market.hot_path import HotPathStore
 from core.models import AssetClass, InstrumentId, OrderBookEvent, OrderBookLevel, Side, Signal, SignalAction, Venue
 from execution.paper_execution import PaperExecution
 from portfolio.portfolio_ledger import PortfolioLedger
-from vibetrading.runtime_checkpoint import (FORMAT, VERSION, RuntimeCheckpoint,
-                                             RuntimeCheckpointError, _canonical, _etf_evidence,
-                                             _load, _verify_evidence, journal_evidence)
+from runtime.runtime_checkpoint import FORMAT, VERSION, RuntimeCheckpoint, RuntimeCheckpointError, _canonical, _etf_evidence, _load, _verify_evidence, journal_evidence
 from vibetrading.strategy_contract import StrategyModule
-from vibetrading.strategy_runtime import (PaperStrategyRuntime, RuntimeBudgets,
-                                          StrategyRegistration, StrategyRisk)
+from runtime.strategy_runtime import PaperStrategyRuntime, RuntimeBudgets, StrategyRegistration, StrategyRisk
 from execution.trading_contracts import ProductKind, ProductSpec, TradingMode
 
 T = 1_800_000_000_000_000_000
@@ -376,7 +373,7 @@ def test_etf_malformed_pending_intent_is_rejected_even_with_pending_status(tmp_p
 @pytest.mark.asyncio
 async def test_async_save_is_single_flight_and_shielded_from_caller_cancellation(
         tmp_path, monkeypatch):
-    import vibetrading.runtime_checkpoint as module_under_test
+    import runtime.runtime_checkpoint as module_under_test
     payload = valid_payload()
     codec = type("Codec", (), {"max_bytes": 262144, "capacity": 1})()
     checkpoint = RuntimeCheckpoint(tmp_path/"runtime.json", codec,

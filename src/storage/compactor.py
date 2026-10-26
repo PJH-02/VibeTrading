@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from .parquet_store import _canon, _catalogued_file_sha256, _fsync_dir, _require_pyarrow, file_sha256
-from vibetrading.settings import RuntimeSettings, get_settings
+from runtime.settings import RuntimeSettings, get_settings
 from .sqlite_store import RuntimeStore
 
 

@@ -5,7 +5,7 @@ from decimal import Decimal
 import pytest
 
 from test_execution_owner import build_owner, evidence, intent
-from vibetrading.runtime_control import GateBlocked
+from runtime.runtime_control import GateBlocked
 
 
 @pytest.mark.asyncio

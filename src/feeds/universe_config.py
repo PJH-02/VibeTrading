@@ -11,7 +11,7 @@ try:
 except ImportError:  # pragma: no cover
     yaml = None
 
-from vibetrading.settings import PROJECT_ROOT
+from runtime.settings import PROJECT_ROOT
 from core.models import AssetClass
 
 

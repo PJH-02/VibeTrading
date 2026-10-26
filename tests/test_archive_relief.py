@@ -8,7 +8,7 @@ import pytest
 from storage.archive import ArchiveMaintenance
 from core.models import AssetClass, InstrumentId, TradeEvent, Venue
 from storage.parquet_store import ParquetBatchWriter
-from vibetrading.settings import RuntimeSettings
+from runtime.settings import RuntimeSettings
 from storage.sqlite_store import RuntimeStore
 from storage.storage_backend import archive_backend, sha256_file
 

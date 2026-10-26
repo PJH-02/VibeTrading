@@ -176,7 +176,7 @@ def main():
     os.environ['ARCHIVE_WORKER_ENABLED']='true'
     os.environ['ARCHIVE_ACCESS_KEY_FILE']='/run/secrets/archive_access_key'
     os.environ['ARCHIVE_SECRET_KEY_FILE']='/run/secrets/archive_secret_key'
-    from vibetrading.settings import get_settings
+    from runtime.settings import get_settings
     from storage.storage_backend import archive_backend
     root=Path('/research');catalogue=json.loads((root/'catalogue.json').read_text())
     backend=archive_backend(get_settings());audit={'files':[],'series':{},'started':time.time(),'catalogue_sha256':sha(root/'catalogue.json')}

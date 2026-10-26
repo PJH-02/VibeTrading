@@ -12,7 +12,7 @@ from types import SimpleNamespace
 import pytest
 
 from storage.local_events import FactsEventBudgets, LocalFactsEventBus
-from vibetrading.telegram import TelegramController
+from operations.telegram import TelegramController
 
 
 def budgets(**updates):
@@ -112,7 +112,7 @@ def no_nats(monkeypatch):
     def unavailable(*args,**kwargs):
         raise AssertionError('local facts cannot construct or connect NATS')
     monkeypatch.setattr('nats.connect',unavailable)
-    monkeypatch.setattr('vibetrading.telegram.NatsJetStreamBus',unavailable)
+    monkeypatch.setattr("operations.telegram.NatsJetStreamBus",unavailable)
 
 
 @pytest.mark.asyncio
@@ -321,7 +321,7 @@ async def test_telegram_run_uses_injected_bus_without_nats_constructor(tmp_path,
     async def wait(*args):await asyncio.Event().wait()
     bot._poll_loop=stop
     bot._event_bridge_loop=bot._crypto_health_loop=bot._market_health_loop=bot._mock_notifications_loop=bot._sender_loop=wait
-    monkeypatch.setattr('vibetrading.telegram.aiohttp.ClientSession',Session)
+    monkeypatch.setattr("operations.telegram.aiohttp.ClientSession",Session)
     with pytest.raises(RuntimeError,match='fixture shutdown'):
         await bot.run()
     assert event_bus.closed
@@ -449,7 +449,7 @@ async def test_bus_factory_recovers_when_facts_appear_after_missing_source_start
     async def short_sleep(seconds):
         await original_sleep(min(seconds,.01))
     monkeypatch.setattr(bot,'_event_bridge',bridge)
-    monkeypatch.setattr('vibetrading.telegram.asyncio.sleep',short_sleep)
+    monkeypatch.setattr("operations.telegram.asyncio.sleep",short_sleep)
     task=asyncio.create_task(bot._event_bridge_loop(None))
     try:
         await asyncio.wait_for(ready.wait(),timeout=2)

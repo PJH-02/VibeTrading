@@ -3,8 +3,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from vibetrading.runtime_paths import linux_mounts, validate_runtime_paths
-from vibetrading.settings import RuntimeSettings
+from runtime.runtime_paths import linux_mounts, validate_runtime_paths
+from runtime.settings import RuntimeSettings
 
 
 def profile(tmp_path, entry):

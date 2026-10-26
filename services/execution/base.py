@@ -12,7 +12,7 @@ from abc import ABC, abstractmethod
 from decimal import Decimal
 from typing import Callable, List, Optional
 
-from shared.models import Fill, Market, Order, OrderStatus
+from strategies.legacy.models import Fill, Market, Order, OrderStatus
 
 
 class BrokerAdapter(ABC):

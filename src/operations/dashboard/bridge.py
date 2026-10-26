@@ -11,9 +11,8 @@ from pathlib import Path
 
 import aiohttp
 from cryptography.hazmat.primitives import serialization
-from vibetrading.dashboard.projection import (MarketProjection, mm_projection, paper_projection,
-                                              paper_projection_paths, runtime_orders)
-from vibetrading.dashboard.accounts import bybit_account
+from operations.dashboard.projection import MarketProjection, mm_projection, paper_projection, paper_projection_paths, runtime_orders
+from operations.dashboard.accounts import bybit_account
 from market.local_snapshot import SnapshotError, local_snapshot_config, read_market_snapshot
 
 log = logging.getLogger("dashboard.bridge")

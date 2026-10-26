@@ -1,7 +1,7 @@
 import io
 import logging
 
-from vibetrading.logging_utils import configure_logging
+from operations.logging_utils import configure_logging
 
 
 def test_child_logger_redacts_handler_output() -> None:

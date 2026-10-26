@@ -4,10 +4,10 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-import vibetrading.local_runtime as local
+import runtime.local_runtime as local
 from feeds.feed_recovery import EngineCursor, RecoveryFrame
-from vibetrading.local_config import LocalRuntimePlan
-from vibetrading.runtime_checkpoint import RuntimeCheckpoint
+from runtime.local_config import LocalRuntimePlan
+from runtime.runtime_checkpoint import RuntimeCheckpoint
 from test_local_runtime import document
 from test_strategy_runtime import T, book, trade
 from test_vn13_file_registration import strategy_files

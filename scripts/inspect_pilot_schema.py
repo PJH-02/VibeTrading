@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from vibetrading.dashboard.projection import readonly_db
+from operations.dashboard.projection import readonly_db
 
 for path in Path("/audits").glob("bybit_*.sqlite3"):
     with readonly_db(path, immutable=True) as db:

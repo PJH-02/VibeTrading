@@ -13,7 +13,7 @@ from typing import AsyncIterator, Dict, List, Optional
 import aiohttp
 import websockets
 from shared.config import get_settings
-from shared.models import Candle, Market
+from strategies.legacy.models import Candle, Market
 
 from .base import DataFeedError, DataFeedProvider
 

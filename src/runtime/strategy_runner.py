@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from typing import Any, Callable, Iterable
 
 from .bus import EventBus, NatsJetStreamBus
-from .dashboard.telemetry import heartbeat
+from operations.dashboard.telemetry import heartbeat
 from core.dedup import BoundedDedup
 from market.hot_path import DecisionSnapshot, HotPathStore, StrategyDataView
 from core.models import AssetClass, BaseMarketEvent, EventType, InstrumentId, Signal, event_from_dict

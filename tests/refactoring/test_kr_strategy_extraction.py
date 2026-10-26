@@ -9,7 +9,7 @@ import pytest
 
 import strategies.kr.etf_history as etf_history_module
 from strategies.kr.etf_history import EtfHistory
-from vibetrading.etf_trading import intraday_decision as legacy_intraday_decision
+from runtime.etf_trading import intraday_decision as legacy_intraday_decision
 from strategies.kr import kd, kp
 from strategies.kr._intraday import intraday_decision as pure_intraday_decision
 from strategies.kr.c3 import open_decision

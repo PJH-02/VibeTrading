@@ -18,7 +18,7 @@ import importlib
 import logging
 from typing import Any, Callable, Dict, Optional, Protocol
 
-from shared.models import Candle, Position, Signal, StrategyContext, StrategyResult, TeamType
+from strategies.legacy.models import Candle, Position, Signal, StrategyContext, StrategyResult, TeamType
 
 logger = logging.getLogger(__name__)
 

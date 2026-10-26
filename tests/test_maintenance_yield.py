@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from storage.archive import ArchiveMaintenance
-from vibetrading.settings import RuntimeSettings
+from runtime.settings import RuntimeSettings
 from storage.sqlite_store import MaintenanceDeferred, RuntimeStore
 
 

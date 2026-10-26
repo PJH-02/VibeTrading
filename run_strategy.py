@@ -30,7 +30,7 @@ for anchor in (PACKAGE_ROOT, PROJECT_ROOT):
 os.environ["STANDALONE_MODE"] = "true"
 
 from shared.config import apply_strategy_config, get_settings
-from shared.models import Market, TeamType, TradingMode
+from strategies.legacy.models import Market, TeamType, TradingMode
 from services.broker_factory import create_broker, create_data_feed
 from services.signal_gen.engine import SignalGenerationEngine
 from services.execution.order_manager import OrderManager

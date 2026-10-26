@@ -2,7 +2,7 @@ import os
 import pytest
 
 from feeds import universe_config as universe
-from vibetrading.health import touch
+from operations.health import touch
 from test_telegram_status import _controller
 
 

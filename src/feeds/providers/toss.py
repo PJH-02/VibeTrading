@@ -13,9 +13,9 @@ from typing import Any
 
 import aiohttp
 
-from vibetrading.bus import EventBus
+from runtime.bus import EventBus
 from core.models import AssetClass, Bar1mEvent, BookUpdateType, InstrumentId, OrderBookEvent, OrderBookLevel, Side, TradeEvent, Venue, utc_now_ns
-from vibetrading.settings import RuntimeSettings, get_settings
+from runtime.settings import RuntimeSettings, get_settings
 
 
 KST = timezone(timedelta(hours=9))

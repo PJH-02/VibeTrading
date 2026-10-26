@@ -7,17 +7,17 @@ from dataclasses import dataclass
 from decimal import Decimal
 from typing import Any
 
-from vibetrading.bus import EventBus, NatsJetStreamBus
+from runtime.bus import EventBus, NatsJetStreamBus
 from execution.contracts import AccountExecutionConfig, ExecutionSafetyGate, OrderIntentFactory
 from market.hot_path import HotPathStore, StrategyDataView
 from core.models import BaseMarketEvent, EventType, OrderDestination, OrderIntentStatus, Side, Signal, SignalAction, event_from_dict
 from storage.parquet_store import ParquetHistoryReader
-from vibetrading.settings import get_settings
+from runtime.settings import get_settings
 from storage.sqlite_store import RuntimeStore
 from strategies import load_strategy
 from timefolio.client import AsyncTimefolioBrowserManager, TimefolioCredentials, TimefolioOrderIntent, TimefolioOrderResult
 from core.dedup import BoundedDedup
-from vibetrading.dashboard.telemetry import heartbeat
+from operations.dashboard.telemetry import heartbeat
 
 
 logger = logging.getLogger(__name__)

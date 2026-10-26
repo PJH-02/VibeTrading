@@ -17,7 +17,7 @@ import shutil
 import sqlite3
 import time
 
-from vibetrading.settings import get_settings
+from runtime.settings import get_settings
 from storage.storage_backend import archive_backend
 
 SOURCE = Path('/source/vibetrading.sqlite3')

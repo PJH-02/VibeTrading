@@ -7,7 +7,7 @@ import zlib
 import pytest
 
 from storage.archive import ArchiveMaintenance
-from vibetrading.bus import ConfirmedAckFloor
+from runtime.bus import ConfirmedAckFloor
 from storage.delivery_recovery import read_document, restore_document
 from storage.parquet_store import ParquetBatchWriter
 from storage.sqlite_store import RuntimeStore

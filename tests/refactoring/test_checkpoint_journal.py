@@ -8,7 +8,7 @@ import threading
 import pytest
 
 from storage.checkpoint_journal import CheckpointJournal
-from vibetrading.local_config import SpoolLimits
+from runtime.local_config import SpoolLimits
 from feeds.local_pipeline import PipelineBudgets
 from test_checkpoint_startup import LIMITS, append, capture, engine, event, producer, read_order
 

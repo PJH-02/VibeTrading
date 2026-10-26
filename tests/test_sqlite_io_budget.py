@@ -4,7 +4,7 @@ import sys
 
 import pytest
 
-from vibetrading.settings import RuntimeSettings
+from runtime.settings import RuntimeSettings
 from storage.sqlite_store import RuntimeStore
 
 

@@ -4,7 +4,7 @@ import sqlite3
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from vibetrading.settings import get_settings
+from runtime.settings import get_settings
 from storage.gap_ledger import CollectionGapLedger
 
 settings=get_settings()

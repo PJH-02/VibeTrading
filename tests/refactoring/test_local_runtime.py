@@ -9,11 +9,11 @@ import sys
 import pytest
 
 from market.hot_path import HotPathStore
-from vibetrading.local_config import LocalRuntimePlan
+from runtime.local_config import LocalRuntimePlan
 from market.local_engine import EngineBudgets, LocalMarketEngine
 from feeds.local_pipeline import DeliveryBudgets, PipelineBudgets, SpoolingMarketPublisher
-from vibetrading.local_runtime import replay_startup
-from vibetrading.local_transport import LocalTransportClient, LocalTransportServer, TransportBudgets
+from runtime.local_runtime import replay_startup
+from runtime.local_transport import LocalTransportClient, LocalTransportServer, TransportBudgets
 from storage.market_spool import MarketSpool, SpoolReader
 from core.models import AssetClass, Bar1mEvent, InstrumentId, TradeEvent, Venue
 
@@ -101,7 +101,7 @@ def test_durable_delivery_is_explicit_and_bounded_by_producer_capacity(tmp_path)
 
 @pytest.mark.asyncio
 async def test_collector_delivery_outage_keeps_durable_records_beyond_ram_capacity(tmp_path,monkeypatch):
-    import vibetrading.local_runtime as runtime
+    import runtime.local_runtime as runtime
     from types import SimpleNamespace
     from storage.market_spool import read_spool_records
     plan=LocalRuntimePlan.from_document(delivery_document(tmp_path))
@@ -136,8 +136,8 @@ async def test_collector_delivery_outage_keeps_durable_records_beyond_ram_capaci
 
 
 def test_existing_observation_log_must_have_remaining_window_and_is_retained(tmp_path):
-    from vibetrading.local_config import ObservationPlan
-    from vibetrading.local_runtime import create_spool
+    from runtime.local_config import ObservationPlan
+    from runtime.local_runtime import create_spool
     entry=document(tmp_path)['producers'][0]
     entry['spool']['max_records']=1802
     entry.pop('provider');entry.pop('symbols')
@@ -152,7 +152,7 @@ def test_existing_observation_log_must_have_remaining_window_and_is_retained(tmp
 
 @pytest.mark.asyncio
 async def test_etf_disabled_runtime_does_not_build_an_unconsumed_trading_queue(tmp_path,monkeypatch):
-    import vibetrading.local_runtime as runtime
+    import runtime.local_runtime as runtime
     from feeds.feed_recovery import EngineCursor, RecoveryFrame
     plan=LocalRuntimePlan.from_document(document(tmp_path))
     captured=[]
@@ -190,8 +190,8 @@ def event(number):
 
 def test_etf_invalidation_uses_live_provider_dependency_and_shared_authority(tmp_path):
     from types import SimpleNamespace
-    from vibetrading.local_runtime import etf_feed_dependencies
-    from vibetrading.etf_trading import SYMBOLS
+    from runtime.local_runtime import etf_feed_dependencies
+    from runtime.etf_trading import SYMBOLS
     plan=SimpleNamespace(producers=(
         SimpleNamespace(producer='kr',provider='kiwoom',symbols='A069500,122630'),
         SimpleNamespace(producer='crypto',provider='binance-perp',symbols='BTCUSDT'),
@@ -207,7 +207,7 @@ def test_etf_invalidation_uses_live_provider_dependency_and_shared_authority(tmp
 
 @pytest.mark.asyncio
 async def test_etf_wiring_does_not_promote_unrelated_collector_to_global_dependency(tmp_path,monkeypatch):
-    import vibetrading.local_runtime as runtime
+    import runtime.local_runtime as runtime
     from types import SimpleNamespace
     doc=document(tmp_path)
     doc['etf_enabled']=True
@@ -252,7 +252,7 @@ async def test_etf_wiring_does_not_promote_unrelated_collector_to_global_depende
 
 @pytest.mark.asyncio
 async def test_injected_paper_runtime_shares_state_authority_and_receives_replay_phase(tmp_path,monkeypatch):
-    import vibetrading.local_runtime as runtime
+    import runtime.local_runtime as runtime
     from types import SimpleNamespace
     from feeds.feed_recovery import EngineCursor, RecoveryFrame
     plan=LocalRuntimePlan.from_document(document(tmp_path))
@@ -330,7 +330,7 @@ async def test_startup_replay_cannot_relabel_preexisting_state_as_a_virgin_check
 async def test_cross_producer_bar_conflict_cannot_choose_an_economic_winner_by_config_order(tmp_path):
     from types import SimpleNamespace
     from feeds.feed_recovery import EngineCursor
-    from vibetrading.local_runtime import restore_etf_startup
+    from runtime.local_runtime import restore_etf_startup
     doc=document(tmp_path)
     second=dict(doc['producers'][0],producer='toss',provider='toss',spool_root=str(tmp_path/'toss'))
     doc['producers'].append(second)
@@ -360,12 +360,12 @@ async def test_cross_producer_bar_conflict_cannot_choose_an_economic_winner_by_c
 @pytest.mark.asyncio
 async def test_failed_etf_initialization_closes_journal_before_run_is_entered(tmp_path,monkeypatch):
     from types import SimpleNamespace
-    from vibetrading.local_runtime import run_engine
+    from runtime.local_runtime import run_engine
     class Server:
         def __init__(self,*args,**kwargs):pass
         async def start(self):raise AssertionError('must initialize ETF before listening')
         async def close(self):pass
-    monkeypatch.setattr('vibetrading.local_runtime.LocalTransportServer',Server)
+    monkeypatch.setattr("runtime.local_runtime.LocalTransportServer",Server)
     doc=document(tmp_path)
     entry={key:value for key,value in doc['producers'][0].items() if key not in {'provider','symbols'}}
     entry=entry|{'producer':'observations','spool_root':str(tmp_path/'observations')}

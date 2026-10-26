@@ -12,7 +12,7 @@ from .bus import BufferedMarketEventBus, InMemoryEventBus, NatsJetStreamBus
 from execution.brokers import broker_for_name
 from storage.compactor import ParquetCompactor
 from storage.archive import archive_check
-from .logging_utils import configure_logging
+from operations.logging_utils import configure_logging
 from storage.parquet_store import ParquetBatchWriter
 from feeds.providers.kiwoom import KiwoomAuthClient, KiwoomCollector, parse_kiwoom_symbols
 from feeds.providers.kis import KisCollector, KisParticipantFlowCollector, parse_kis_subscriptions
@@ -27,7 +27,7 @@ from core.models import Venue
 from feeds.providers.universe import InstrumentUniverseResolver
 from .real_runner import RealExecutionRunner, RealExecutionRunnerConfig
 from .settings import get_settings
-from .status import runtime_status
+from operations.status import runtime_status
 from storage.storage_guard import StorageGuard
 from storage.storage_worker import StorageWorker
 from .strategy_runner import LiveStrategyRunner
@@ -36,8 +36,8 @@ from .runtime import run_runtime
 from execution.bybit_execution import BybitAudit, BybitExecutionProbe
 from market.market_source_status import source_status
 from market.market_policy import MarketDataPolicyBus
-from .telegram import TelegramController
-from .health import check as health_check
+from operations.telegram import TelegramController
+from operations.health import check as health_check
 from feeds.universe_config import configured_binance_securities, configured_hyperliquid_securities
 
 

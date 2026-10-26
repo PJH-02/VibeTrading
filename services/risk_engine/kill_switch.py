@@ -7,7 +7,7 @@ import logging
 from datetime import datetime
 
 from shared.messaging import Subjects, ensure_connected
-from shared.models import KillSwitchEvent, Market, TradingMode
+from strategies.legacy.models import KillSwitchEvent, Market, TradingMode
 
 logger = logging.getLogger(__name__)
 

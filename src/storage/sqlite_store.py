@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any, Callable, Iterable, Iterator
 
 from core.models import OrderIntent
-from vibetrading.settings import RuntimeSettings, get_settings
+from runtime.settings import RuntimeSettings, get_settings
 
 
 class MaintenanceDeferred(RuntimeError):
@@ -591,7 +591,7 @@ class RuntimeStore:
             )
 
     def record_confirmed_ack_floor(self, receipt) -> None:
-        from vibetrading.bus import ConfirmedAckFloor
+        from runtime.bus import ConfirmedAckFloor
         if (not isinstance(receipt, ConfirmedAckFloor) or not receipt.generation
                 or not receipt.consumer_generation or receipt.sequence < 0
                 or receipt.observed_ts_ns <= 0 or receipt.stream != 'CRYPTO_DATA'

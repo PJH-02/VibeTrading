@@ -197,7 +197,7 @@ async def test_writer_has_one_io_inflight_and_close_keeps_late_cleanup_tracked(t
 @pytest.mark.asyncio
 @pytest.mark.parametrize("stale", [False, True])
 async def test_local_dashboard_uses_snapshot_with_zero_nats_or_duplicate_collectors(tmp_path, monkeypatch, stale):
-    import vibetrading.dashboard.bridge as bridge
+    import operations.dashboard.bridge as bridge
     owner, _, now = engine()
     path = tmp_path / "market.json"
     document = capture_market_snapshot(owner, budgets(), now_ns=now)

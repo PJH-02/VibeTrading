@@ -14,11 +14,11 @@ import pandas as pd
 
 from storage.etf_csv_history import CsvStrategyHistory, ETF_HISTORY_ROLES, atomic_json
 from strategies.kr.etf_history import native_frame
-from vibetrading.health import touch
+from operations.health import touch
 from core.models import EventType, event_from_dict
 from .providers.kiwoom import KiwoomAuthClient, KST
-from vibetrading.session_alerts import _calendar
-from vibetrading.settings import get_settings
+from operations.session_alerts import _calendar
+from runtime.settings import get_settings
 
 log = logging.getLogger(__name__)
 

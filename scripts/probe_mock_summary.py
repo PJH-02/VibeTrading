@@ -5,7 +5,7 @@ import sqlite3
 import sys
 sys.path.insert(0,'/app')
 from execution.kis_execution import KisCashBroker
-from vibetrading.settings import get_settings
+from runtime.settings import get_settings
 
 async def main():
     broker=KisCashBroker(get_settings(),mode='mock')

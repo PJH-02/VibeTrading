@@ -10,8 +10,8 @@ from pathlib import Path
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-from vibetrading.dashboard.bridge import write_json
-from vibetrading.dashboard.projection import timefolio_metrics
+from operations.dashboard.bridge import write_json
+from operations.dashboard.projection import timefolio_metrics
 from timefolio.client import AsyncTimefolioBrowserManager, TimefolioCredentials
 
 

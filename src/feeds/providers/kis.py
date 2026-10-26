@@ -11,7 +11,7 @@ from typing import Any
 
 import websockets
 
-from vibetrading.bus import EventBus
+from runtime.bus import EventBus
 from core.models import AssetClass, BookUpdateType, InstrumentId, IndexQuoteEvent, OrderBookEvent, OrderBookLevel, ParticipantFlowEvent, Side, TradeEvent, Venue, utc_now_ns
 from feeds.providers.kis_client import KisAuthClient
 

@@ -19,7 +19,7 @@ from storage.archive import ArchiveMaintenance  # noqa: E402
 from storage.compactor import ParquetCompactor  # noqa: E402
 from storage.local_storage import LocalSpoolStorage  # noqa: E402
 from storage.market_spool import MarketSpool, SpoolCursor, capture_retained_prefix
-from vibetrading.settings import RuntimeSettings  # noqa: E402
+from runtime.settings import RuntimeSettings  # noqa: E402
 from storage.sqlite_store import RuntimeStore  # noqa: E402
 from storage.storage_backend import LocalStorageBackend, sha256_file  # noqa: E402
 

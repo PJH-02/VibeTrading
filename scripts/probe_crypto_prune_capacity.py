@@ -14,8 +14,8 @@ import time
 
 
 async def main(args):
-    from vibetrading.bus import NatsJetStreamBus
-    from vibetrading.settings import RuntimeSettings
+    from runtime.bus import NatsJetStreamBus
+    from runtime.settings import RuntimeSettings
     from storage.sqlite_store import RuntimeStore
     import psutil
     root = args.root.resolve(strict=True)

@@ -3,8 +3,8 @@ import asyncio
 import json
 
 import aiohttp
-from vibetrading.telegram import TelegramController
-from vibetrading.telegram_trade import trade_report
+from operations.telegram import TelegramController
+from operations.telegram_trade import trade_report
 
 async def main():
     bot=TelegramController()

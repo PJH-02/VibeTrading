@@ -11,8 +11,8 @@ from test_strategy_runtime import (T, BTC, ledger_at, matcher_for, runtime, regi
 from market.hot_path import HotPathStore
 from market.local_engine import LocalMarketEngine, EngineBudgets
 from storage.market_checkpoint import CheckpointCodec
-from vibetrading.runtime_checkpoint import RuntimeCheckpoint
-from vibetrading.etf_trading import EtfTradingLoop, EtfDispatchBlocked
+from runtime.runtime_checkpoint import RuntimeCheckpoint
+from runtime.etf_trading import EtfTradingLoop, EtfDispatchBlocked
 
 
 def fixture(root, *, fresh, now=None, corrupt_restore=None, no_callback=False, two_accounts=False):
@@ -334,7 +334,7 @@ async def test_real_legacy_etf_journal_and_paper_share_recovery_boundary(tmp_pat
 
 @pytest.mark.asyncio
 async def test_real_driver_requires_explicit_readiness_before_setup(tmp_path):
-    from vibetrading.local_runtime import run_engine
+    from runtime.local_runtime import run_engine
     source = fixture(tmp_path, fresh=True)
     try:
         with pytest.raises(ValueError, match="(?i)readiness"):
@@ -348,8 +348,8 @@ async def test_real_driver_requires_explicit_readiness_before_setup(tmp_path):
 @pytest.mark.parametrize("corrupt", [False, True])
 async def test_real_driver_starts_transport_and_etf_only_after_group_ready(tmp_path, monkeypatch, corrupt):
     from dataclasses import asdict
-    import vibetrading.local_runtime as driver
-    import vibetrading.local_observation as observations
+    import runtime.local_runtime as driver
+    import operations.local_observation as observations
     import market.local_snapshot as snapshots
     source = fixture(tmp_path, fresh=True)
     etf_source = legacy_etf(tmp_path, [])

@@ -7,7 +7,7 @@ from typing import List, Protocol
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from shared.models import Candle, Signal, StrategyContext
+from strategies.legacy.models import Candle, Signal, StrategyContext
 
 
 class TeamPortfolioWeights(BaseModel):

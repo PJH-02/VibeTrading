@@ -9,10 +9,10 @@ from zoneinfo import ZoneInfo
 import pytest
 
 from portfolio.etf_journal import EtfJournal
-from vibetrading.etf_trading import EtfTradingLoop
+from runtime.etf_trading import EtfTradingLoop
 from execution.kis_execution import KisCashBroker, KisOrderRejected, account_permission_rejection
 from core.models import Side
-from vibetrading.settings import RuntimeSettings
+from runtime.settings import RuntimeSettings
 
 
 def settings(tmp_path):

@@ -15,9 +15,9 @@ from typing import Any
 import shutil
 
 from .storage_backend import archive_backend, sha256_file
-from vibetrading.settings import RuntimeSettings, get_settings
+from runtime.settings import RuntimeSettings, get_settings
 from .sqlite_store import MaintenanceDeferred, RuntimeStore
-from vibetrading.maintenance_gate import claim_backup_slot_locked, maintenance_lock
+from operations.maintenance_gate import claim_backup_slot_locked, maintenance_lock
 from .parquet_store import _catalogued_file_sha256
 from .storage_guard import StorageGuard
 

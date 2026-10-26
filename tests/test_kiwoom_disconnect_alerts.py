@@ -7,9 +7,9 @@ import aiohttp
 import pytest
 
 from feeds.providers.kiwoom import _raise_websocket_closed
-from vibetrading.runtime import _collector_error_details
-from vibetrading.settings import RuntimeSettings
-from vibetrading.telegram import TelegramController
+from runtime.runtime import _collector_error_details
+from runtime.settings import RuntimeSettings
+from operations.telegram import TelegramController
 
 
 @pytest.mark.parametrize('exc',[
@@ -46,8 +46,8 @@ async def test_restart_and_open_transition_never_send_market_open(tmp_path,monke
     settings=replace(RuntimeSettings.from_env(path),data_root=tmp_path,state_dir=tmp_path/'state',
         telegram_user_id='123',env={'TELEGRAM_BOT_TOKEN':'test','TELEGRAM_USER_ID':'123'})
     state=[False]; messages=[]
-    monkeypatch.setattr('vibetrading.telegram.SESSIONS',{'KR_EQUITY_ETF':()})
-    monkeypatch.setattr('vibetrading.telegram.session_state',lambda group:(state[0],'2026-10-14'))
+    monkeypatch.setattr("operations.telegram.SESSIONS",{'KR_EQUITY_ETF':()})
+    monkeypatch.setattr("operations.telegram.session_state",lambda group:(state[0],'2026-10-14'))
     for start_open in [False,True]:
         bot=TelegramController(settings)
         state[0]=start_open
@@ -58,6 +58,6 @@ async def test_restart_and_open_transition_never_send_market_open(tmp_path,monke
             passes[0]+=1
             state[0]={1:True,2:True,3:False}.get(passes[0],False)
             if passes[0]>=4: raise asyncio.CancelledError()
-        monkeypatch.setattr('vibetrading.telegram.asyncio.sleep',tick)
+        monkeypatch.setattr("operations.telegram.asyncio.sleep",tick)
         with pytest.raises(asyncio.CancelledError): await bot._session_loop(None)
     assert messages==[]

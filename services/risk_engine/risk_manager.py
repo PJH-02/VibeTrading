@@ -14,13 +14,7 @@ from nats.aio.msg import Msg
 from shared.config import get_settings
 from shared.database import get_postgres
 from shared.messaging import Subjects, deserialize_message, ensure_connected
-from shared.models import (
-    AccountSnapshot,
-    Fill,
-    Market,
-    RiskAlert,
-    TradingMode,
-)
+from strategies.legacy.models import AccountSnapshot, Fill, Market, RiskAlert, TradingMode
 
 from .kill_switch import KillSwitch
 

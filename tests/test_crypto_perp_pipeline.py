@@ -4,7 +4,7 @@ from decimal import Decimal
 
 import pytest
 
-from vibetrading.bus import InMemoryEventBus, subject_for_event
+from runtime.bus import InMemoryEventBus, subject_for_event
 from execution.bybit_execution import BybitAudit, BybitExecutionProbe, _market_trigger_price
 from market.hot_path import HotPathStore
 from market.market_source_status import source_status
@@ -22,7 +22,7 @@ def test_book_original_frame_reaches_parquet(tmp_path):
     import pyarrow.parquet as pq
 
     from storage.parquet_store import ParquetBatchWriter
-    from vibetrading.settings import RuntimeSettings
+    from runtime.settings import RuntimeSettings
     from storage.sqlite_store import RuntimeStore
 
     async def collect():

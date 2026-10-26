@@ -8,15 +8,15 @@ from collections import deque
 from decimal import Decimal
 from typing import Any
 
-from vibetrading.bus import EventBus, NatsJetStreamBus
+from runtime.bus import EventBus, NatsJetStreamBus
 from execution.brokers import broker_for_name
 from execution.contracts import AccountExecutionConfig, BrokerAdapter, ExecutionSafetyGate, OrderIntentFactory
 from core.models import OrderDestination, OrderIntentStatus, Side, Signal, SignalAction
-from vibetrading.settings import get_settings
+from runtime.settings import get_settings
 from storage.sqlite_store import RuntimeStore
 from core.dedup import BoundedDedup
 from execution.execution_owner import ExecutionOwner
-from vibetrading.runtime_control import GateBlocked
+from runtime.runtime_control import GateBlocked
 from execution.execution_ledger import exact_product
 
 

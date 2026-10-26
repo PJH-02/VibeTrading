@@ -17,7 +17,7 @@ from execution.contracts import BrokerAdapter
 from core.models import AssetClass, OrderIntent, Side
 from feeds.providers.kis_client import KisAuthClient
 from feeds.providers.toss import TossAuthClient
-from vibetrading.settings import RuntimeSettings, get_settings
+from runtime.settings import RuntimeSettings, get_settings
 
 
 def _bool(value: str | None, *, default: bool = False) -> bool:

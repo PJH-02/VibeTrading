@@ -8,7 +8,7 @@ from core.models import OpenInterestEvent, Venue
 from storage.parquet_store import ParquetBatchWriter
 from feeds.providers.binance import BinanceCollector
 from feeds.providers.hyperliquid import HyperliquidCollector
-from vibetrading.settings import RuntimeSettings
+from runtime.settings import RuntimeSettings
 from storage.sqlite_store import RuntimeStore
 from feeds.universe_config import BinanceSecurity, HyperliquidSecurity
 from core.models import AssetClass

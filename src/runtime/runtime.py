@@ -16,11 +16,11 @@ from storage.compactor import ParquetCompactor
 from storage.archive import ArchiveMaintenance
 from storage.storage_worker import StorageWorker
 from .strategy_runner import SharedStrategyRunner
-from .session_alerts import session_state
+from operations.session_alerts import session_state
 from market.market_policy import MarketDataPolicyBus
 from storage.storage_guard import StorageGuard
-from .maintenance_gate import maintenance_lock
-from .health import touch as health_touch
+from operations.maintenance_gate import maintenance_lock
+from operations.health import touch as health_touch
 from storage.gap_ledger import CollectionGapLedger
 from .settings import get_settings
 from core.models import AssetClass, DataGapEvent, EventType, InstrumentId, Venue

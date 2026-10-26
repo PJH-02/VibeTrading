@@ -8,7 +8,7 @@ import time
 
 import pytest
 
-from vibetrading.bus import BusMessage, InMemoryEventBus
+from runtime.bus import BusMessage, InMemoryEventBus
 from storage.delivery_recovery import restore_document
 from storage.event_index_runs import ExactEventRuns, append_runs, ensure_schema
 from storage.parquet_store import ParquetBatchWriter

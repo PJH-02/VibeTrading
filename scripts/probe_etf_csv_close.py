@@ -8,7 +8,7 @@ from types import SimpleNamespace
 from storage.etf_csv_history import CsvStrategyHistory, CSV_FILES, ETF_HISTORY_ROLES, digest_file
 from feeds.etf_csv_sync import EtfCsvSync
 from feeds.providers.kiwoom import KiwoomAuthClient
-from vibetrading.settings import get_settings
+from runtime.settings import get_settings
 
 
 async def main():

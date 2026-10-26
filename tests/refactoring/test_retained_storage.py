@@ -21,7 +21,7 @@ from test_local_storage import budgets, observation, trade, wire  # noqa: E402
 from storage.local_storage import LocalSpoolStorage, LocalStorageError  # noqa: E402
 from storage.market_spool import MarketSpool, RetainedPrefix, SpoolCursor, capture_retained_prefix
 from storage.sqlite_store import RuntimeStore  # noqa: E402
-from vibetrading.settings import RuntimeSettings  # noqa: E402
+from runtime.settings import RuntimeSettings  # noqa: E402
 
 
 SEGMENT = re.compile(r"([0-9]{20})\.(sealed|active)\Z")

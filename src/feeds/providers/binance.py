@@ -10,7 +10,7 @@ from typing import Any
 import aiohttp
 import websockets
 
-from vibetrading.bus import EventBus
+from runtime.bus import EventBus
 from feeds.collection_timing import CollectionContext, MINUTE_NS, next_utc_minute_ns, receipt_clock
 from core.models import Bar1mEvent, BookUpdateType, DataGapEvent, FundingRateEvent, InstrumentId, OpenInterestEvent, OrderBookEvent, OrderBookLevel, Venue
 from feeds.universe_config import BinanceSecurity

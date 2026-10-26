@@ -8,8 +8,8 @@ import time
 from pathlib import Path
 
 from storage.archive import ArchiveMaintenance
-from vibetrading.maintenance_gate import maintenance_lock
-from vibetrading.settings import get_settings
+from operations.maintenance_gate import maintenance_lock
+from runtime.settings import get_settings
 from storage.storage_backend import sha256_file
 
 settings = get_settings()

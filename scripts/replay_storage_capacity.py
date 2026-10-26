@@ -12,7 +12,7 @@ from dataclasses import replace
 from pathlib import Path
 
 from storage.parquet_store import ParquetBatchWriter
-from vibetrading.settings import get_settings
+from runtime.settings import get_settings
 from storage.sqlite_store import RuntimeStore
 
 

@@ -10,17 +10,7 @@ from datetime import datetime, timedelta
 from decimal import Decimal
 
 from shared.config import get_settings
-from shared.models import (
-    Candle,
-    Market,
-    Order,
-    OrderSide,
-    OrderType,
-    Signal,
-    SignalAction,
-    StrategyContext,
-    TradingMode,
-)
+from strategies.legacy.models import Candle, Market, Order, OrderSide, OrderType, Signal, SignalAction, StrategyContext, TradingMode
 
 from services.execution.broker_stub import BrokerStub
 from strategies.legacy.candle_loader import get_strategy, clear_strategy_cache

@@ -8,7 +8,7 @@ from types import SimpleNamespace
 import pytest
 
 from scripts.measure_crypto_e2e import distribution, Audit, order_state
-from vibetrading.bus import NatsJetStreamBus
+from runtime.bus import NatsJetStreamBus
 from core.models import BaseMarketEvent, TradeEvent, Venue, Side
 from feeds.providers.crypto_perp import _instrument
 

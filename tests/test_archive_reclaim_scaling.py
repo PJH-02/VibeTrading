@@ -2,7 +2,7 @@ import time
 from types import SimpleNamespace
 from unittest.mock import patch
 import pytest
-from vibetrading.settings import RuntimeSettings
+from runtime.settings import RuntimeSettings
 from storage.sqlite_store import RuntimeStore, MaintenanceDeferred
 from storage.archive import ArchiveMaintenance
 

@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from vibetrading.etf_trading import EtfTradingLoop
+from runtime.etf_trading import EtfTradingLoop
 
 async def main():
     loop=EtfTradingLoop()

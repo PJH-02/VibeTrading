@@ -7,7 +7,7 @@ import json
 import os
 import stat
 
-from vibetrading.maintenance_gate import _try_lock, _unlock
+from operations.maintenance_gate import _try_lock, _unlock
 
 
 class ProcessLease:

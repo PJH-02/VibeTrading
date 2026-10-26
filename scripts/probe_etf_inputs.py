@@ -7,7 +7,7 @@ from pathlib import Path
 from strategies.kr.etf_history import EtfHistory
 from storage.etf_csv_history import ETF_HISTORY_ROLES
 from feeds.providers.kiwoom import KiwoomAuthClient, KST
-from vibetrading.settings import get_settings
+from runtime.settings import get_settings
 
 
 async def main():

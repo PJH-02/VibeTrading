@@ -9,14 +9,14 @@ from zoneinfo import ZoneInfo
 
 import pytest
 
-from vibetrading.bus import NatsJetStreamBus, NatsPublishError
+from runtime.bus import NatsJetStreamBus, NatsPublishError
 from portfolio.etf_journal import EtfJournal
-from vibetrading.etf_trading import EtfTradingLoop
+from runtime.etf_trading import EtfTradingLoop
 from core.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, TradeEvent, Venue
 from feeds.providers.universe import InstrumentUniverseResolver
-from vibetrading.runtime import _CollectorReadinessBus
-from vibetrading.settings import RuntimeSettings
-from vibetrading.telegram import TelegramController
+from runtime.runtime import _CollectorReadinessBus
+from runtime.settings import RuntimeSettings
+from operations.telegram import TelegramController
 
 
 def settings(tmp_path):

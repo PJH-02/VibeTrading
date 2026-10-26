@@ -2,7 +2,7 @@
 import json
 import os
 from pathlib import Path
-from vibetrading.dashboard.projection import probe_orders
+from operations.dashboard.projection import probe_orders
 
 target = Path("/exports/pilot_orders.json")
 temporary = target.with_suffix(".tmp")

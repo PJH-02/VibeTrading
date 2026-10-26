@@ -4,7 +4,7 @@ from decimal import Decimal
 import pytest
 
 from test_execution_owner import build_owner, evidence, intent, send
-from vibetrading.runtime_control import GateBlocked
+from runtime.runtime_control import GateBlocked
 
 
 @pytest.mark.asyncio
@@ -76,8 +76,8 @@ async def test_cancellation_distinguishes_before_and_after_handoff(tmp_path, han
 
 @pytest.mark.asyncio
 async def test_observation_failure_before_owner_is_not_handoff(tmp_path, monkeypatch):
-    from vibetrading.real_runner import RealExecutionRunner, RealExecutionRunnerConfig
-    from vibetrading.settings import RuntimeSettings
+    from runtime.real_runner import RealExecutionRunner, RealExecutionRunnerConfig
+    from runtime.settings import RuntimeSettings
     from storage.sqlite_store import RuntimeStore
     from core.models import Signal, SignalAction
     owner, adapter, ready, now = build_owner(tmp_path / "owner")
@@ -110,9 +110,9 @@ async def test_observation_failure_before_owner_is_not_handoff(tmp_path, monkeyp
 @pytest.mark.asyncio
 @pytest.mark.parametrize("legacy_status", ["created", "submitted", "unknown"])
 async def test_dry_run_never_overwrites_legacy_execution_facts(tmp_path, monkeypatch, legacy_status):
-    from vibetrading.real_runner import RealExecutionRunner, RealExecutionRunnerConfig
+    from runtime.real_runner import RealExecutionRunner, RealExecutionRunnerConfig
     from execution.contracts import AccountExecutionConfig
-    from vibetrading.settings import RuntimeSettings
+    from runtime.settings import RuntimeSettings
     from storage.sqlite_store import RuntimeStore
     from core.models import Signal, SignalAction, OrderDestination, Side
     now = 1_000_000_000
@@ -142,8 +142,8 @@ async def test_dry_run_never_overwrites_legacy_execution_facts(tmp_path, monkeyp
 @pytest.mark.asyncio
 async def test_generic_runner_keeps_quiet_subscription_alive_and_zero_duration_is_finite(tmp_path, monkeypatch):
     from types import SimpleNamespace
-    from vibetrading.real_runner import RealExecutionRunner, RealExecutionRunnerConfig
-    from vibetrading.settings import RuntimeSettings
+    from runtime.real_runner import RealExecutionRunner, RealExecutionRunnerConfig
+    from runtime.settings import RuntimeSettings
     from storage.sqlite_store import RuntimeStore
     from core.models import Signal, SignalAction
     now = 1_000_000_000

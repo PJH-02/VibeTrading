@@ -21,7 +21,7 @@ from typing import Callable, Mapping
 
 from feeds.feed_recovery import EngineCursor, FeedMode, RecoveryFrame
 from .hot_path import ApplyResult, DecisionSnapshot, HotPathStore, freeze_market_event
-from vibetrading.local_transport import AppliedReceipt
+from runtime.local_transport import AppliedReceipt
 from storage.market_checkpoint import CheckpointCodec, CheckpointProducer, _canonical
 from .market_apply_order import ApplyOrder, ApplyOrderWriter, order_anchor, order_record
 from storage.market_spool import MarketSpool

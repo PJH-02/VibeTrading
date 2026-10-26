@@ -60,7 +60,7 @@ class AsyncTimefolioBrowserManager:
 
     async def __aenter__(self) -> "AsyncTimefolioBrowserManager":
         if "PLAYWRIGHT_BROWSERS_PATH" not in os.environ:
-            from vibetrading.settings import get_settings
+            from runtime.settings import get_settings
 
             browser_path = get_settings().data_root / "playwright-browsers"
             browser_path.mkdir(parents=True, exist_ok=True)

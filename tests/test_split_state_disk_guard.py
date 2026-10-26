@@ -2,7 +2,7 @@ from collections import namedtuple
 
 import pytest
 
-from vibetrading.settings import RuntimeSettings
+from runtime.settings import RuntimeSettings
 from storage.storage_guard import StorageGuard
 
 

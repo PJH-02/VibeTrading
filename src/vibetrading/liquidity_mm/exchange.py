@@ -10,7 +10,7 @@ import aiohttp
 import websockets
 
 from execution.bybit_execution import BybitCredentials, BybitOrderClient
-from vibetrading.settings import get_settings
+from runtime.settings import get_settings
 
 from .config import Config
 from .domain import Instrument, Order

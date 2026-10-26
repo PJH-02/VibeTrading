@@ -14,7 +14,7 @@ import hashlib
 import time
 from typing import Any, Callable
 
-from vibetrading.bus import MarketEventPacket, MarketPublication, prepare_market_event
+from runtime.bus import MarketEventPacket, MarketPublication, prepare_market_event
 from core.models import BaseMarketEvent
 
 

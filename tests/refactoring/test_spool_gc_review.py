@@ -11,7 +11,7 @@ from test_retained_storage import item, write_source, capture, budgets, observat
 from storage.archive import ArchiveMaintenance
 from storage.local_storage import LocalSpoolStorage
 from storage.market_spool import SpoolCursor
-from vibetrading.settings import RuntimeSettings
+from runtime.settings import RuntimeSettings
 from storage.sqlite_store import RuntimeStore
 from storage.storage_backend import LocalStorageBackend, sha256_file
 

@@ -12,7 +12,7 @@ from eth_account.messages import encode_typed_data
 
 from execution.extended_brokers import GRVT_ORDER_TYPES
 from vibetrading.liquidity_mm.exchange import TestnetClient
-from vibetrading.settings import get_settings
+from runtime.settings import get_settings
 
 D = Decimal
 ASSETS = ("BTC", "ETH", "SOL", "XRP")

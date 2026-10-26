@@ -1,9 +1,9 @@
 import asyncio
 import threading
 
-from vibetrading.bus import InMemoryEventBus
+from runtime.bus import InMemoryEventBus
 from storage.parquet_store import ParquetBatchWriter
-from vibetrading.settings import RuntimeSettings
+from runtime.settings import RuntimeSettings
 from storage.sqlite_store import RuntimeStore
 from storage.storage_worker import StorageWorker
 

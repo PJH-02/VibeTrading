@@ -10,7 +10,7 @@ from datetime import datetime
 from decimal import Decimal
 
 from shared.config import get_settings
-from shared.models import Market, TeamType
+from strategies.legacy.models import Market, TeamType
 
 from backtest.data_loader import BacktestDataLoader, create_candle_provider
 from backtest.engine import BacktestConfig, BacktestResult

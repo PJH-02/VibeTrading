@@ -11,7 +11,7 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from eth_account import Account
 from eth_account.messages import encode_typed_data
 
-from vibetrading.bus import InMemoryEventBus
+from runtime.bus import InMemoryEventBus
 from feeds.collection_timing import CollectionContext
 from execution.extended_brokers import ArcusBrokerAdapter, GrvtBrokerAdapter, GRVT_ORDER_TYPES, OrderOutcomeUnknown
 from market.hot_path import HotPathStore
@@ -20,8 +20,8 @@ from core.models import OrderIntent, OrderDestination, Side, Venue
 from feeds.providers.crypto_perp import _instrument
 from feeds.providers.extended_perp import ExtendedPerpCollector
 from feeds.providers.hyperliquid import HyperliquidCollector
-from vibetrading.runtime import _CollectorReadinessBus
-from vibetrading.settings import RuntimeSettings
+from runtime.runtime import _CollectorReadinessBus
+from runtime.settings import RuntimeSettings
 
 
 def settings(tmp_path, **env):

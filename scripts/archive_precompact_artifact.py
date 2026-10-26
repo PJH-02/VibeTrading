@@ -11,7 +11,7 @@ import os
 import time
 from pathlib import Path
 
-from vibetrading.settings import get_settings
+from runtime.settings import get_settings
 from storage.storage_backend import archive_backend
 
 

@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from typing import Iterable
 
-from .settings import mask_value
+from runtime.settings import mask_value
 
 
 class SecretRedactionFilter(logging.Filter):

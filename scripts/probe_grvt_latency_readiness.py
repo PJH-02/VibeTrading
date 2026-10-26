@@ -5,7 +5,7 @@ from dataclasses import replace
 
 import aiohttp
 from execution.extended_brokers import GrvtBrokerAdapter
-from vibetrading.settings import get_settings
+from runtime.settings import get_settings
 
 async def main():
     settings=get_settings()

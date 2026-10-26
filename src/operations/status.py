@@ -7,7 +7,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
-from .settings import RuntimeSettings, get_settings
+from runtime.settings import RuntimeSettings, get_settings
 from storage.sqlite_store import RuntimeStore
 from storage.storage_guard import StorageGuard
 from .health import check as health_check

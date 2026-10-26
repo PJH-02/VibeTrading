@@ -11,7 +11,7 @@ from decimal import Decimal
 from typing import Dict, List, Optional
 
 from shared.database import get_postgres, get_questdb
-from shared.models import Market, OrderStatus, Position, TradingMode
+from strategies.legacy.models import Market, OrderStatus, Position, TradingMode
 
 logger = logging.getLogger(__name__)
 
