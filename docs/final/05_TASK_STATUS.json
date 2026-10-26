@@ -38,13 +38,16 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 9,
-    "in_progress": 1,
+    "accepted": 10,
+    "in_progress": 0,
     "blocked": 0,
     "not_started": 23,
     "external_not_authorized": 2
   },
-  "next_ready_candidate": [],
+  "next_ready_candidate": [
+    "CLN-01",
+    "CAP-00"
+  ],
   "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
   "gate_results": {
     "REPOSITORY_CONSOLIDATED": "NOT_VERIFIED_FOR_NEW_RELEASE",
@@ -361,8 +364,8 @@
       "scope": "KOSPI200+KOSDAQ150 minute/daily, max 350"
     }
   },
-  "active_task_id": "MOV-07",
-  "last_accepted_task_id": "MOV-06",
+  "active_task_id": null,
+  "last_accepted_task_id": "MOV-07",
   "stop_requested": false,
   "tickets": [
     {
@@ -730,7 +733,7 @@
     {
       "task_id": "MOV-07",
       "wave": "W1",
-      "status": "IN_PROGRESS",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "MOV-01",
         "MOV-02",
@@ -743,9 +746,9 @@
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
       "base_sha": "7dfbbc9d5834603a3c565dcd70d98da5cbed8172",
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "actual_commit_sha": "4bb5e255920df1db6ce77298835f2588116c2609",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/MOV-07-flat-gate-20261026T163740Z/MOV-07.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "MOV-07",
@@ -753,16 +756,31 @@
         {
           "id": "HISTORICAL-RELEASE-INPUTS",
           "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.acceptance.json",
-          "evidence": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.domain-evidence.json"
+          "evidence": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.domain-evidence.json",
+          "resolution": "Resolved locally by accepted MOV-07 gate; complete 201-row mapping, 45-file archive/helper provenance and historical-builder fail-closed evidence in receipt."
         },
         {
           "id": "CURRENT_MOVE_MAP_INIT_COLLISIONS",
           "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-05.acceptance.json",
-          "details": "Use accepted MOV-05 supplemental map so already-moved monitor is not selected twice; operations/dashboard empty seed init exists. Prove source/target init identity before any resolution; never overwrite existing target."
+          "details": "Use accepted MOV-05 supplemental map so already-moved monitor is not selected twice; operations/dashboard empty seed init exists. Prove source/target init identity before any resolution; never overwrite existing target.",
+          "resolution": "Resolved locally by accepted MOV-07 gate; complete 201-row mapping, 45-file archive/helper provenance and historical-builder fail-closed evidence in receipt."
         }
       ],
-      "resume_move_map": "scripts/refactoring/MOV-05-path-resolution.json",
-      "bounded_packet": "docs/tickets/MOV-07-flat-gate.md"
+      "resume_move_map": "scripts/refactoring/MOV-07-resolved-paths.json",
+      "bounded_packet": "docs/tickets/MOV-07-flat-gate.md",
+      "acceptance_receipt_sha256": "d487a6d2564ead47324b129b5d018e918a01af2373f2e1adedd65d3e333099a6",
+      "local_ticket_completion_percent": 100,
+      "source_diff_sha256": "32d18da50d6c28f206882b3841d1ce477f6b9e91a9866e07d5c232227b0f2820",
+      "local_gate_results": {
+        "A": "PASS_LOCAL: zero retired src namespace/imports;201 original map rows resolved; source/wheel/editable134 outside imports and origins; compileall0; trusted old artifacts forward-converted",
+        "B": "PASS_LOCAL: no new active owner/signer/registration;9 non-strategy domains byte-identical;286 economic/helper function ASTs preserved; no runtime/apps bundles; frozen Golden unchanged; shared-account lease25 PASS; Timefolio fake oracle byte-identical",
+        "C": "PASS_LOCAL:4 final-SHA images,8x134 imports,UID10001,7 Compose combinations,primary NATS dependency0,default CMD/help and actual network-none startup; blank Chromium;8 rollback copies verified"
+      },
+      "resume_instructions": "MOV-07 complete locally. Resume next ready CLN-01 or CAP-00 from current HEAD/05 and receipt; no repeat moves or old namespace reintroduction. Semantic consolidation and production/external release gates remain separate.",
+      "owning_followup_packets": [
+        "docs/tickets/MOV-05-flat-namespace-resolution.md",
+        "docs/tickets/MOV-06-historical-crypto-inventory.md"
+      ]
     },
     {
       "task_id": "CLN-01",
@@ -1532,6 +1550,13 @@
     {
       "date": "2026-10-27",
       "reason": "MOV-06 accepted; MOV-07 independent final flat-source/image gate started with read-only GLM audit and Codex deterministic verification."
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "MOV-07 ACCEPTED_LOCAL100% after MOV-05/06 bounded follow-up: retired namespace removed from src/wheels/images,45 original files and286 functions preserved,201 map rows resolved,2509 local tests,4 final-SHA images/8x134 imports,Compose7,real network-none subprocess startup/blank Chromium,rollback8 hashes PASS. GLM429 with no edits; announced direct DeepSeek audit/implementation/repair succeeded. Global/production release gates unchanged. Requested MOV-06→MOV-07 batch complete.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/MOV-07-flat-gate-20261026T163740Z/MOV-07.acceptance.json",
+      "receipt_sha256": "d487a6d2564ead47324b129b5d018e918a01af2373f2e1adedd65d3e333099a6",
+      "actual_commit_sha": "4bb5e255920df1db6ce77298835f2588116c2609"
     }
   ],
   "requirements_revision": {
@@ -1576,32 +1601,34 @@
     "worker_auto_fallback": false,
     "paid_routes_authorized": false,
     "last_observation": {
-      "at_kst": "2026-10-26T12:54:48.235411+09:00",
-      "freellmapi_glm": "GATEWAY_UNREACHABLE_QUOTA_UNKNOWN",
-      "opencode_deepseek": "AVAILABLE_CONFIRMED_IMPLEMENTED_AND_TESTED",
-      "freellmapi_gemini": "SAME_GATEWAY_UNREACHABLE_QUOTA_UNKNOWN",
-      "receipt": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/recheck-20261026T033056Z/freellmapi-connectivity.json"
+      "at_kst": "2026-10-27T02:27:24.726895+09:00",
+      "freellmapi_glm": "HTTP200 reads then HTTP429 Retry-After90/600; timeout124; changed paths0",
+      "opencode_deepseek": "AVAILABLE_CONFIRMED_AUDIT_IMPLEMENT_AND_REPAIR_WORKER_EXIT0",
+      "freellmapi_gemini": "NOT_RECHECKED_THIS_TICKET; working second-priority route required no third-tier fallback",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/MOV-07-flat-gate-20261026T163740Z/MOV-07.acceptance.json"
     },
     "last_live_check": {
-      "date": "2026-10-26",
-      "evidence": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.provider-smoke.json",
-      "glm": "HTTP_200_nonempty",
-      "gemini": "HTTP_502",
-      "selected": "freellmapi/glm-4.5-flash"
+      "date": "2026-10-27",
+      "evidence": "/home/pjh/.local/state/codex-opencode/runs/MOV-07-flat-gate-20261026T163740Z/MOV-07-audit-glm/dispatch-result.json",
+      "glm": "HTTP429_AFTER_READS_NO_EDITS",
+      "deepseek": "AUDIT_AND_REFACTOR_WORKER_EXIT0",
+      "gemini": "NOT_RECHECKED",
+      "selected": "opencode/deepseek-v4.1-flash-free"
     },
     "last_worker_result": {
-      "task_id": "MOV-05",
+      "task_id": "MOV-07",
       "model": "opencode/deepseek-v4.1-flash-free",
       "worker_exit": 0,
       "launcher_exit": 0,
-      "independent_tool_tests": 22,
-      "alternatives_attempted": [
-        "opencode/mimo-v2.6-flash-free",
-        "freellmapi/gemini-3.1-flash-lite",
-        "opencode/glm-5.3-flash-free",
-        "opencode/flint-40b-free"
+      "independent_local_tests": 2509,
+      "worker_packets": [
+        "MOV-07 read-only audit",
+        "MOV-05/06 namespace follow-up",
+        "historical crypto inventory scoped repair1"
       ],
-      "evidence": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-05.acceptance.json"
+      "scope_pass": true,
+      "no_paid_route": true,
+      "evidence": "/home/pjh/.local/state/codex-opencode/runs/MOV-07-flat-gate-20261026T163740Z/MOV-07.acceptance.json"
     },
     "current_batch_alternatives": {
       "gemini_minimax_kimi_requested": true,
@@ -1625,11 +1652,13 @@
       "MOV-07"
     ],
     "accepted": [
-      "MOV-06"
+      "MOV-06",
+      "MOV-07"
     ],
-    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/MOV-06-image-completion-20261026T153318Z",
-    "status": "MOV07_IN_PROGRESS",
-    "next_not_started": "MOV-07"
+    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/MOV-07-flat-gate-20261026T163740Z",
+    "status": "COMPLETED_REQUESTED_TWO_TICKETS",
+    "next_not_started": "CLN-01",
+    "completed_utc": "2026-10-26T17:27:24.726895+00:00"
   },
   "completed_batches": [
     {
@@ -1649,6 +1678,21 @@
       "status": "COMPLETED_REQUESTED_THREE_TICKETS",
       "completed_utc": "2026-10-26T09:11:16.039979+00:00",
       "next_not_started": "MOV-06"
+    },
+    {
+      "requested_tasks": 2,
+      "tasks": [
+        "MOV-06",
+        "MOV-07"
+      ],
+      "accepted": [
+        "MOV-06",
+        "MOV-07"
+      ],
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/MOV-07-flat-gate-20261026T163740Z",
+      "status": "COMPLETED_REQUESTED_TWO_TICKETS",
+      "next_not_started": "CLN-01",
+      "completed_utc": "2026-10-26T17:27:24.726895+00:00"
     }
   ]
 }
