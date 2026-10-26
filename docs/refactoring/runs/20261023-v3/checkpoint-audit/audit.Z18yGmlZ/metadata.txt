@@ -1,5 +1,0 @@
-role=audit
-model=opencode/nemotron-3-ultra-free
-agent=plan
-repo=/work
-ticket=/work/audit.md

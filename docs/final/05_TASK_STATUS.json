@@ -39,13 +39,12 @@
   "new_task_counts": {
     "total": 35,
     "accepted": 10,
-    "in_progress": 0,
+    "in_progress": 1,
     "blocked": 0,
-    "not_started": 23,
+    "not_started": 22,
     "external_not_authorized": 2
   },
   "next_ready_candidate": [
-    "CLN-01",
     "CAP-00"
   ],
   "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
@@ -364,7 +363,7 @@
       "scope": "KOSPI200+KOSDAQ150 minute/daily, max 350"
     }
   },
-  "active_task_id": null,
+  "active_task_id": "CLN-01",
   "last_accepted_task_id": "MOV-07",
   "stop_requested": false,
   "tickets": [
@@ -785,7 +784,7 @@
     {
       "task_id": "CLN-01",
       "wave": "W2",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "depends_on": [
         "GOV-01",
         "MOV-07"
@@ -793,13 +792,14 @@
       "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
+      "base_sha": "271a72f9d8544e9a3ca7432e08194b4dad167d55",
       "actual_commit_sha": null,
       "acceptance_receipt": null,
       "test_exit": null,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
-      "definition_heading_id": "CLN-01"
+      "definition_heading_id": "CLN-01",
+      "bounded_packet": "docs/tickets/CLN-01-doc-hygiene.md"
     },
     {
       "task_id": "CLN-02",
@@ -1557,6 +1557,10 @@
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/MOV-07-flat-gate-20261026T163740Z/MOV-07.acceptance.json",
       "receipt_sha256": "d487a6d2564ead47324b129b5d018e918a01af2373f2e1adedd65d3e333099a6",
       "actual_commit_sha": "4bb5e255920df1db6ce77298835f2588116c2609"
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "User requested next two tickets CLN-01/CAP-00 to completion, then commit and push current branch. MOV-06/07 receipts reverified. CLN-01 starts; immutable historical04 and production gates preserved."
     }
   ],
   "requirements_revision": {
@@ -1648,17 +1652,14 @@
   "active_batch": {
     "requested_tasks": 2,
     "tasks": [
-      "MOV-06",
-      "MOV-07"
+      "CLN-01",
+      "CAP-00"
     ],
-    "accepted": [
-      "MOV-06",
-      "MOV-07"
-    ],
-    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/MOV-07-flat-gate-20261026T163740Z",
-    "status": "COMPLETED_REQUESTED_TWO_TICKETS",
-    "next_not_started": "CLN-01",
-    "completed_utc": "2026-10-26T17:27:24.726895+00:00"
+    "accepted": [],
+    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN-01-CAP-00-20261026T173148Z",
+    "status": "CLN01_IN_PROGRESS",
+    "push_authorized": true,
+    "push_target": "origin codex/move-core-feeds"
   },
   "completed_batches": [
     {

@@ -7,3 +7,6 @@ docs/refactoring/runs/20261018-stage-assignment/*_oracle.json -text whitespace=b
 # Historical oracle archives and a touched CRLF source retain exact source bytes.
 docs/archive/MOV-05-legacy-oracles/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 src/strategies/legacy/candle_loader.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Preserve historical documentation bytes, including original CRLF.
+docs/archive/CLN-01-history/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

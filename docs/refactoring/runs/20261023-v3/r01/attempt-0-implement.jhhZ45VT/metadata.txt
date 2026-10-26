@@ -1,5 +1,0 @@
-role=implement
-model=opencode/glm-5.3-flash-free
-agent=build
-repo=/work
-ticket=/work/docs/tickets/R01-authority-status.md

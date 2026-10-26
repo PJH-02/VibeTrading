@@ -1,7 +1,0 @@
-ROLE=audit
-MODEL=opencode/nemotron-3-ultra-free
-ARTIFACTS=/home/pjh/.local/state/codex-opencode/runs/audit.Z18yGmlZ
-WORKER_EXIT=0
-BASELINE_DIFF_CHECK_EXIT=0
-DIFF_CHECK_EXIT=0
-ARTIFACTS=/home/pjh/.local/state/codex-opencode/runs/audit.Z18yGmlZ
