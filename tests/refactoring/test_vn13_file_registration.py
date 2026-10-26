@@ -13,7 +13,7 @@ from execution.trading_contracts import ActionKind, ExecutionAction, TradingMode
 
 def strategy_source(strategy_id, *, warmup=0, action="ENTER_LONG", price="100", extra=""):
     return f'''from decimal import Decimal as D
-from vibetrading.models import Signal, SignalAction
+from core.models import Signal, SignalAction
 
 STRATEGY_ID = {strategy_id!r}
 SUBSCRIPTIONS = [{{"instrument_key": {BTC.key!r}, "event_type": "order_book"}}]

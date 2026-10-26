@@ -1,5 +1,5 @@
 """S4: L1 OBI core direction; L2 is an auxiliary diagnostic."""
-from vibetrading.mm_state.features import StateStrategy, direction_score, legacy_instance
+from strategies.research.state.features import StateStrategy, direction_score, legacy_instance
 STRATEGY_ID = "S4"
 
 class Strategy(StateStrategy):

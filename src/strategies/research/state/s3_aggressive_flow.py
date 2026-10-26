@@ -1,5 +1,5 @@
 """S3: flow/absorption -> exhaustion transition, not trade sign alone."""
-from vibetrading.mm_state.features import StateStrategy, legacy_instance
+from strategies.research.state.features import StateStrategy, legacy_instance
 STRATEGY_ID = "S3"
 
 class Strategy(StateStrategy):

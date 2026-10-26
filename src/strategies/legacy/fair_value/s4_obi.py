@@ -1,6 +1,6 @@
 """S4: current BBO imbalance only, with its own future-move coefficient."""
 from decimal import Decimal as D
-from vibetrading.fv_mm.types import Signal, quote_intents
+from strategies.legacy.fair_value.contracts import Signal, quote_intents
 
 STRATEGY_ID = "S4"
 

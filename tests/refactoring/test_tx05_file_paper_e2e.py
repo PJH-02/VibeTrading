@@ -34,7 +34,7 @@ CONFIG = {"quantity": "2", "limit_price": "99",
 def strategy_source(strategy_id=SID):
     """A real file-backed stateful strategy with an explicit checkpoint hook."""
     return f'''from decimal import Decimal as D
-from vibetrading.models import Signal, SignalAction
+from core.models import Signal, SignalAction
 
 STRATEGY_ID = {strategy_id!r}
 SUBSCRIPTIONS = [{{"instrument_key": {BTC.key!r}, "event_type": "order_book"}}]
@@ -83,7 +83,7 @@ def fault_source(strategy_id, failure):
                 '            valid_until_ts_ns=event.receive_ts_ns + 100_000,\n'
                 '            source_event_id=event.event_id)]')
     return f'''from decimal import Decimal as D
-from vibetrading.models import Signal, SignalAction
+from core.models import Signal, SignalAction
 
 STRATEGY_ID = {strategy_id!r}
 SUBSCRIPTIONS = [{{"instrument_key": {BTC.key!r}, "event_type": "order_book"}}]
@@ -100,7 +100,7 @@ def create_strategy():
 
 def healthy_source(strategy_id=GOOD_SID):
     return f'''from decimal import Decimal as D
-from vibetrading.models import Signal, SignalAction
+from core.models import Signal, SignalAction
 
 STRATEGY_ID = {strategy_id!r}
 SUBSCRIPTIONS = [{{"instrument_key": {BTC.key!r}, "event_type": "order_book"}}]

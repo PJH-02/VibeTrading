@@ -3,7 +3,7 @@ from collections import deque
 from dataclasses import dataclass
 import math
 
-from vibetrading.fv_mm.types import Signal
+from strategies.legacy.fair_value.contracts import Signal
 from decimal import Decimal as D
 
 

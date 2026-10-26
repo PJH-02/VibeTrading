@@ -50,21 +50,26 @@ def source_package(root: Path) -> Path:
 def build(root: Path, snapshot: dict) -> dict:
     baseline = json.loads((root/"docs/refactoring/baseline_manifest.json").read_text(encoding="utf-8"))
     before = baseline["files"]
-    package = source_package(root)
     sources = {}
     changed = {}
-    flat_sources = canonical_source_hashes(root) if (root / "src" / "runtime").is_dir() else {}
-    for path in sorted(package.rglob("*.py")):
-        if "__pycache__" in path.parts:
-            continue
-        name = (Path(PACKAGE)/path.relative_to(package)).as_posix()
-        digest = hashlib.sha256(path.read_bytes()).hexdigest()
-        sources[name] = digest
-        old = before.get(name)
-        if isinstance(old, dict):
-            old = old.get("sha256")
-        if old != digest:
-            changed[name] = {"before_sha256":old,"after_sha256":digest}
+    if (root / "src" / "runtime").is_dir():
+        # Canonical flat domains are the release inventory; a legacy
+        # vibetrading package is neither required nor consulted here.
+        flat_sources = canonical_source_hashes(root)
+    else:
+        flat_sources = {}
+        package = source_package(root)
+        for path in sorted(package.rglob("*.py")):
+            if "__pycache__" in path.parts:
+                continue
+            name = (Path(PACKAGE)/path.relative_to(package)).as_posix()
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+            sources[name] = digest
+            old = before.get(name)
+            if isinstance(old, dict):
+                old = old.get("sha256")
+            if old != digest:
+                changed[name] = {"before_sha256":old,"after_sha256":digest}
     for name, digest in flat_sources.items():
         sources[name] = digest
         old = before.get(name)

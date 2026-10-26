@@ -3,7 +3,7 @@ from collections import deque
 import math
 import statistics
 from decimal import Decimal as D, ROUND_FLOOR
-from vibetrading.mm_state.features import StateStrategy, legacy_instance
+from strategies.research.state.features import StateStrategy, legacy_instance
 STRATEGY_ID = "S2"
 
 class Strategy(StateStrategy):

@@ -1,6 +1,6 @@
 """S2: same-asset Binance USDT perpetual anchor with frozen log basis."""
 from decimal import Decimal as D
-from vibetrading.fv_mm.types import Signal, quote_intents
+from strategies.legacy.fair_value.contracts import Signal, quote_intents
 
 STRATEGY_ID = "S2"
 

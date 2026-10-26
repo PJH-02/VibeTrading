@@ -4,3 +4,6 @@ docs/refactoring/runs/20261020-vnext/vn00-package/*.json -text whitespace=blank-
 docs/refactoring/vnext/*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 
 docs/refactoring/runs/20261018-stage-assignment/*_oracle.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Historical oracle archives and a touched CRLF source retain exact source bytes.
+docs/archive/MOV-05-legacy-oracles/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/strategies/legacy/candle_loader.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

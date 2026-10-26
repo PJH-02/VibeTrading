@@ -41,7 +41,7 @@ RISK = {
 def strategy_source(strategy_id, action, price):
     """A real stateful file with explicit synchronous checkpoint hooks."""
     return f'''from decimal import Decimal as D
-from vibetrading.models import Signal, SignalAction
+from core.models import Signal, SignalAction
 
 STRATEGY_ID = {strategy_id!r}
 SUBSCRIPTIONS = [{{"instrument_key": {BTC.key!r}, "event_type": "order_book"}}]

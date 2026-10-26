@@ -9,7 +9,7 @@ Rules (from trading_spec.md):
 - Strategy import occurs at process start
 - Strategy change requires process restart
 
-Only ``vibetrading.strategies.legacy.candle.<name>`` modules are imported. This
+Only ``strategies.legacy.candle.<name>`` modules are imported. This
 API is explicitly the historical candle contract; it is never promoted into the
 modern event-strategy contract.
 """
@@ -152,7 +152,7 @@ def load_strategy(strategy_name: str, expected_team: TeamType | None = None) -> 
     Load a strategy by name via direct import.
     
     Strategy modules are expected at:
-    vibetrading/strategies/legacy/candle/<strategy_name>.py
+    strategies/legacy/candle/<strategy_name>.py
     
     Args:
         strategy_name: Name of the strategy module (without .py)

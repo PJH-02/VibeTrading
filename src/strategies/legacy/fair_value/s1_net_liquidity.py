@@ -1,6 +1,6 @@
 """S1: price-aware net BBO flow. No trade, OBI or anchor approval filter."""
 from decimal import Decimal as D
-from vibetrading.fv_mm.types import ActivityWindow, Signal, quote_intents
+from strategies.legacy.fair_value.contracts import ActivityWindow, Signal, quote_intents
 
 STRATEGY_ID = "S1"
 

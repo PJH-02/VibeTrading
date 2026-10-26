@@ -1,6 +1,6 @@
 """S3: signed actual aggressor quantity in a depth-scaled volume window."""
 from decimal import Decimal as D
-from vibetrading.fv_mm.types import ActivityWindow, Signal, quote_intents
+from strategies.legacy.fair_value.contracts import ActivityWindow, Signal, quote_intents
 
 STRATEGY_ID = "S3"
 

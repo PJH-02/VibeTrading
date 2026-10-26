@@ -15,14 +15,10 @@ dynamic = ["dependencies"]
 [tool.setuptools.dynamic]
 dependencies = { file = ["requirements.txt"] }
 
-# Historical vibetrading compatibility/research sources remain pending MOV-07
-# and CLN-02. Root standalone services/shared/strategy/backtest are source-only
-# historical tools; canonical strategies own the required candle model types.
+# Only the ten canonical domains ship. Historical test oracles live in docs/archive.
 [tool.setuptools.packages.find]
 where = ["src"]
 include = [
-    "vibetrading",
-    "vibetrading.*",
     "strategies",
     "strategies.*",
     "core",

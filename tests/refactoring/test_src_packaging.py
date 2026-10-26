@@ -9,6 +9,10 @@ packages, build images, or import the full product CLI.
 from __future__ import annotations
 
 import configparser
+import json
+import os
+import subprocess
+import sys
 import tomllib
 from pathlib import Path
 
@@ -21,7 +25,18 @@ REQUIREMENTS = ROOT / "requirements.txt"
 CANONICAL_NAMESPACES = ("core", "feeds", "market", "storage", "strategies", "execution",
                         "portfolio", "runtime", "operations", "timefolio")
 
-LEGACY_NAMESPACES = ("strategy", "shared", "services", "backtest")
+LEGACY_NAMESPACES = ("vibetrading", "strategy", "shared", "services", "backtest")
+
+IMPORT_PROBE = """
+import importlib.util
+import json
+names = %r
+result = {"legacy": importlib.util.find_spec("vibetrading") is not None, "domains": {}}
+for name in names:
+    spec = importlib.util.find_spec(name)
+    result["domains"][name] = spec.origin if spec is not None else None
+print(json.dumps(result))
+"""
 
 
 def _load_pyproject() -> dict:
@@ -32,6 +47,7 @@ def _load_pyproject() -> dict:
 def test_import_discovery_prefers_src_package_without_root_alias() -> None:
     import importlib.util
 
+    assert not (ROOT / "vibetrading").exists()
     for name in CANONICAL_NAMESPACES:
         spec = importlib.util.find_spec(name)
         assert spec is not None and spec.origin
@@ -64,6 +80,7 @@ def test_setuptools_metadata_discovers_canonical_and_legacy_packages(monkeypatch
     include = set(find_cfg["include"])
     for name in CANONICAL_NAMESPACES:
         assert name in include and name + ".*" in include
+    assert "vibetrading" not in include and "vibetrading.*" not in include
     assert not set(LEGACY_NAMESPACES) & include
     exclude = set(find_cfg["exclude"])
     for blocked in (
@@ -118,10 +135,32 @@ def test_pytest_ini_retains_live_exclusion_and_adds_pythonpath() -> None:
     read_ok = parser.read(PYTEST_INI)
     assert read_ok, "pytest.ini must remain readable"
     section = parser["pytest"]
-    assert section["pythonpath"].strip() == "src"
+    assert section["pythonpath"].split() == ["src", "docs/archive/MOV-05-legacy-oracles"]
     assert 'not live_data' in section["addopts"]
     assert "live_data" in section["markers"]
     assert section["testpaths"].strip() == "tests"
+
+
+def test_fresh_source_subprocess_only_src_resolves_canonical_domains(tmp_path) -> None:
+    env = {key: value for key, value in os.environ.items() if key != "PYTHONPATH"}
+    env["PYTHONPATH"] = str(ROOT / "src")
+    script = IMPORT_PROBE % (CANONICAL_NAMESPACES,)
+    for cwd in (ROOT, tmp_path):
+        completed = subprocess.run(
+            [sys.executable, "-c", script],
+            cwd=cwd,
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert completed.returncode == 0, completed.stderr
+        probe = json.loads(completed.stdout)
+        assert probe["legacy"] is False
+        assert set(probe["domains"]) == set(CANONICAL_NAMESPACES)
+        for name, origin in probe["domains"].items():
+            assert origin is not None
+            assert Path(origin).resolve() == (ROOT / "src" / name / "__init__.py").resolve()
 
 
 def test_dockerfiles_structurally_support_src_entrypoint() -> None:

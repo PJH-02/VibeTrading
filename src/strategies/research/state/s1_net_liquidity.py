@@ -1,5 +1,5 @@
 """S1: causal OFI onset/persistence direction; standalone entry point."""
-from vibetrading.mm_state.features import StateStrategy, direction_score, legacy_instance
+from strategies.research.state.features import StateStrategy, direction_score, legacy_instance
 STRATEGY_ID = "S1"
 
 class Strategy(StateStrategy):

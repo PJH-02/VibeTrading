@@ -1,0 +1,168 @@
+{
+  "task_id": "MOV-07",
+  "primary": "deploy/primary-compose.yml",
+  "historical_service_cron_source": "deploy/rollback/MOV-06/manifest.json",
+  "historical_namespace_tools": [
+    {
+      "path": "scripts/benchmark_mm_state.py",
+      "sha256": "6b02d44e69e389a327a05c2b146c50bac3ead5c0943777509c7c5be74713d9e7",
+      "old_imports": [
+        "vibetrading.fv_mm.types",
+        "vibetrading.fv_pilot.public",
+        "vibetrading.fv_pilot.simulation",
+        "vibetrading.mm_state.coordinator",
+        "vibetrading.mm_state.lifecycle",
+        "vibetrading.fv_mm.journal"
+      ],
+      "status": "HISTORICAL_RESEARCH_ROLLBACK_ONLY_NON_SHIPPING",
+      "retention_owner": "CLN-02",
+      "expiry": "After caller/rollback and semantic consolidation acceptance",
+      "activation": "Not a canonical entrypoint; manual execution requires explicit historical fixture path; live actions unauthorized"
+    },
+    {
+      "path": "scripts/cancel_fv_owned_order.py",
+      "sha256": "f9ef50b94781e0c8c967ae93845f404d0ff1248e4519f3d43a21cf6472fc878f",
+      "old_imports": [
+        "vibetrading.fv_mm.venues"
+      ],
+      "status": "HISTORICAL_RESEARCH_ROLLBACK_ONLY_NON_SHIPPING",
+      "retention_owner": "CLN-02",
+      "expiry": "After caller/rollback and semantic consolidation acceptance",
+      "activation": "Not a canonical entrypoint; manual execution requires explicit historical fixture path; live actions unauthorized"
+    },
+    {
+      "path": "scripts/check_fv_connections.py",
+      "sha256": "03a635be97442d72b2129bc9c301aeb14d7db6196b855b1e1e64636303449aa0",
+      "old_imports": [
+        "vibetrading.fv_mm.venues",
+        "vibetrading.fv_mm.journal",
+        "vibetrading.fv_mm.private"
+      ],
+      "status": "HISTORICAL_RESEARCH_ROLLBACK_ONLY_NON_SHIPPING",
+      "retention_owner": "CLN-02",
+      "expiry": "After caller/rollback and semantic consolidation acceptance",
+      "activation": "Not a canonical entrypoint; manual execution requires explicit historical fixture path; live actions unauthorized"
+    },
+    {
+      "path": "scripts/collect_fv_mainnet.py",
+      "sha256": "50bae68895f2a75df6d93330d2d765cc9238357a4af35254964ac5fcf36cef02",
+      "old_imports": [
+        "vibetrading.fv_mm.journal",
+        "vibetrading.fv_mm.market",
+        "vibetrading.fv_mm.calibration",
+        "vibetrading.mm_state.calibration",
+        "vibetrading.fv_pilot.market",
+        "vibetrading.fv_pilot.public"
+      ],
+      "status": "HISTORICAL_RESEARCH_ROLLBACK_ONLY_NON_SHIPPING",
+      "retention_owner": "CLN-02",
+      "expiry": "After caller/rollback and semantic consolidation acceptance",
+      "activation": "Not a canonical entrypoint; manual execution requires explicit historical fixture path; live actions unauthorized"
+    },
+    {
+      "path": "scripts/collect_fv_public.py",
+      "sha256": "72d7f9df0c5ec73ae46ec3211bd6e1fc9dd20dab0d83d5880e6646f527c424a4",
+      "old_imports": [
+        "vibetrading.fv_mm.feeds",
+        "vibetrading.fv_mm.journal",
+        "vibetrading.fv_mm.market",
+        "vibetrading.fv_mm.calibration",
+        "vibetrading.mm_state.calibration"
+      ],
+      "status": "HISTORICAL_RESEARCH_ROLLBACK_ONLY_NON_SHIPPING",
+      "retention_owner": "CLN-02",
+      "expiry": "After caller/rollback and semantic consolidation acceptance",
+      "activation": "Not a canonical entrypoint; manual execution requires explicit historical fixture path; live actions unauthorized"
+    },
+    {
+      "path": "scripts/diagnose_mm_state_no_intents.py",
+      "sha256": "70a4d20a74dfd0ce92777452226cc18b05bdbce876bf2321c33cc5f250d59afb",
+      "old_imports": [
+        "vibetrading.mm_state.replay",
+        "vibetrading.mm_state.policy",
+        "vibetrading.fv_pilot.public"
+      ],
+      "status": "HISTORICAL_RESEARCH_ROLLBACK_ONLY_NON_SHIPPING",
+      "retention_owner": "CLN-02",
+      "expiry": "After caller/rollback and semantic consolidation acceptance",
+      "activation": "Not a canonical entrypoint; manual execution requires explicit historical fixture path; live actions unauthorized"
+    },
+    {
+      "path": "scripts/probe_fv_testnets.py",
+      "sha256": "0e07c3cc373a5833fbfeea2d2238b2a4fbceab6faeddb7335d759d96c2f15e77",
+      "old_imports": [
+        "vibetrading.liquidity_mm.exchange"
+      ],
+      "status": "HISTORICAL_RESEARCH_ROLLBACK_ONLY_NON_SHIPPING",
+      "retention_owner": "CLN-02",
+      "expiry": "After caller/rollback and semantic consolidation acceptance",
+      "activation": "Not a canonical entrypoint; manual execution requires explicit historical fixture path; live actions unauthorized"
+    },
+    {
+      "path": "scripts/rebuild_fv_pilot_calibration.py",
+      "sha256": "79281dd590a93f0e714dce888601c30b01d2a596b9bd8612f4a8a4122ecf6737",
+      "old_imports": [
+        "vibetrading.fv_mm.types",
+        "vibetrading.fv_mm.calibration",
+        "vibetrading.fv_mm.market"
+      ],
+      "status": "HISTORICAL_RESEARCH_ROLLBACK_ONLY_NON_SHIPPING",
+      "retention_owner": "CLN-02",
+      "expiry": "After caller/rollback and semantic consolidation acceptance",
+      "activation": "Not a canonical entrypoint; manual execution requires explicit historical fixture path; live actions unauthorized"
+    },
+    {
+      "path": "scripts/replay_mm_state_revision.py",
+      "sha256": "02c9f7d5246b5f63e40d7d99041ac3a0976a31530ef8546f62ff1feead32b091",
+      "old_imports": [
+        "vibetrading.fv_mm.market",
+        "vibetrading.fv_mm.journal",
+        "vibetrading.fv_pilot.public",
+        "vibetrading.fv_pilot.simulation",
+        "vibetrading.mm_state.replay",
+        "vibetrading.mm_state.calibration",
+        "vibetrading.mm_state.coordinator",
+        "vibetrading.mm_state.lifecycle",
+        "vibetrading.mm_state.policy",
+        "vibetrading.fv_mm.types"
+      ],
+      "status": "HISTORICAL_RESEARCH_ROLLBACK_ONLY_NON_SHIPPING",
+      "retention_owner": "CLN-02",
+      "expiry": "After caller/rollback and semantic consolidation acceptance",
+      "activation": "Not a canonical entrypoint; manual execution requires explicit historical fixture path; live actions unauthorized"
+    },
+    {
+      "path": "scripts/run_fv_pilot.py",
+      "sha256": "5ef6c32b7c3467fe518b68e0ebee18fad3e8784012083de05c3cb559c79b8efb",
+      "old_imports": [
+        "vibetrading.fv_pilot.runner"
+      ],
+      "status": "HISTORICAL_RESEARCH_ROLLBACK_ONLY_NON_SHIPPING",
+      "retention_owner": "CLN-02",
+      "expiry": "After caller/rollback and semantic consolidation acceptance",
+      "activation": "Not a canonical entrypoint; manual execution requires explicit historical fixture path; live actions unauthorized"
+    },
+    {
+      "path": "scripts/run_fv_testnets.py",
+      "sha256": "4571e086fd854ea4af9da09df89c40562a31c63a2e4da2d86913f0c6031f4473",
+      "old_imports": [
+        "vibetrading.fv_mm.runner"
+      ],
+      "status": "HISTORICAL_RESEARCH_ROLLBACK_ONLY_NON_SHIPPING",
+      "retention_owner": "CLN-02",
+      "expiry": "After caller/rollback and semantic consolidation acceptance",
+      "activation": "Not a canonical entrypoint; manual execution requires explicit historical fixture path; live actions unauthorized"
+    }
+  ],
+  "normal_images_copy": [
+    "src",
+    "pyproject.toml",
+    "requirements.txt",
+    "main.py",
+    "config"
+  ],
+  "scripts_and_oracles_shipped": false,
+  "root_legacy_tools": "services/shared/strategy/backtest/run_strategy.py remain source-only historical tools pending CLN-02; excluded from wheels/images; no canonical imports",
+  "active_mutation_tuple_review": "All primary roles explicit profiles; strategies/execution default empty; Timefolio no-submit+account-arm+live-enabled fence; no archived runner automatically registered. Production account owner reconciliation stays EXTERNAL_ONLY.",
+  "canonical_strategy_legacy_spelling": "strategies.contract converts historical input dotted spellings to canonical strategies before import; never imports retired namespace"
+}

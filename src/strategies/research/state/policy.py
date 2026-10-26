@@ -1,6 +1,6 @@
 """Maker prices, asymmetric inventory control and explicit experimental state risk."""
 from decimal import Decimal as D, ROUND_FLOOR, ROUND_CEILING
-from vibetrading.fv_mm.types import Intent
+from strategies.legacy.fair_value.contracts import Intent
 
 
 def risk_state(signal):
