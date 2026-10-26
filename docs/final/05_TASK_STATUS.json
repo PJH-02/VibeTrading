@@ -39,14 +39,12 @@
   "new_task_counts": {
     "total": 35,
     "accepted": 5,
-    "in_progress": 0,
+    "in_progress": 1,
     "blocked": 0,
-    "not_started": 28,
+    "not_started": 27,
     "external_not_authorized": 2
   },
-  "next_ready_candidate": [
-    "MOV-03"
-  ],
+  "next_ready_candidate": [],
   "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
   "gate_results": {
     "REPOSITORY_CONSOLIDATED": "NOT_VERIFIED_FOR_NEW_RELEASE",
@@ -363,7 +361,7 @@
       "scope": "KOSPI200+KOSDAQ150 minute/daily, max 350"
     }
   },
-  "active_task_id": null,
+  "active_task_id": "MOV-03",
   "last_accepted_task_id": "MOV-02",
   "stop_requested": false,
   "tickets": [
@@ -504,20 +502,23 @@
     {
       "task_id": "MOV-03",
       "wave": "W1",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "depends_on": [
         "MOV-02"
       ],
       "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
+      "base_sha": "08619760bae73120c6a0bd291e6b992624901e80",
       "actual_commit_sha": null,
       "acceptance_receipt": null,
       "test_exit": null,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
-      "definition_heading_id": "MOV-03"
+      "definition_heading_id": "MOV-03",
+      "selected_worker_model": "opencode/mimo-v2.6-flash-free",
+      "implementation_packet": "docs/tickets/MOV-03-storage-move.md",
+      "resume_artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z"
     },
     {
       "task_id": "MOV-04",
@@ -1378,6 +1379,13 @@
       "glm": "HTTP200 smoke, stream interrupted during bounded worker, exit1 no edits",
       "gemini": "HTTP502 smoke",
       "evidence": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.acceptance.json"
+    },
+    "current_batch_alternatives": {
+      "gemini_minimax_kimi_requested": true,
+      "catalog": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/alternative-model-catalog.json",
+      "actual_request_results": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/alternative-provider-smoke.json",
+      "current_selected": "opencode/mimo-v2.6-flash-free",
+      "no_paid_routes": true
     }
   },
   "execution_checkout": {
@@ -1389,18 +1397,13 @@
   "active_batch": {
     "requested_tasks": 3,
     "tasks": [
-      "MOV-00",
-      "MOV-01",
-      "MOV-02"
+      "MOV-03",
+      "MOV-04",
+      "MOV-05"
     ],
-    "accepted": [
-      "MOV-00",
-      "MOV-01",
-      "MOV-02"
-    ],
-    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z",
-    "status": "COMPLETED_REQUESTED_THREE_TICKETS",
-    "completed_utc": "2026-10-26T06:06:49.380770+00:00",
-    "next_not_started": "MOV-03"
+    "accepted": [],
+    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z",
+    "started_utc": "2026-10-26T06:46:53.308401+00:00",
+    "status": "IN_PROGRESS"
   }
 }
