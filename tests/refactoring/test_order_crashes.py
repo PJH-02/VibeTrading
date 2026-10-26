@@ -78,7 +78,7 @@ async def test_cancellation_distinguishes_before_and_after_handoff(tmp_path, han
 async def test_observation_failure_before_owner_is_not_handoff(tmp_path, monkeypatch):
     from vibetrading.real_runner import RealExecutionRunner, RealExecutionRunnerConfig
     from vibetrading.settings import RuntimeSettings
-    from vibetrading.sqlite_store import RuntimeStore
+    from storage.sqlite_store import RuntimeStore
     from core.models import Signal, SignalAction
     owner, adapter, ready, now = build_owner(tmp_path / "owner")
     monkeypatch.setattr("vibetrading.execution.utc_now_ns", lambda: now[0])
@@ -113,7 +113,7 @@ async def test_dry_run_never_overwrites_legacy_execution_facts(tmp_path, monkeyp
     from vibetrading.real_runner import RealExecutionRunner, RealExecutionRunnerConfig
     from vibetrading.execution import AccountExecutionConfig
     from vibetrading.settings import RuntimeSettings
-    from vibetrading.sqlite_store import RuntimeStore
+    from storage.sqlite_store import RuntimeStore
     from core.models import Signal, SignalAction, OrderDestination, Side
     now = 1_000_000_000
     monkeypatch.setattr("vibetrading.execution.utc_now_ns", lambda: now)
@@ -144,7 +144,7 @@ async def test_generic_runner_keeps_quiet_subscription_alive_and_zero_duration_i
     from types import SimpleNamespace
     from vibetrading.real_runner import RealExecutionRunner, RealExecutionRunnerConfig
     from vibetrading.settings import RuntimeSettings
-    from vibetrading.sqlite_store import RuntimeStore
+    from storage.sqlite_store import RuntimeStore
     from core.models import Signal, SignalAction
     now = 1_000_000_000
     monkeypatch.setattr("vibetrading.execution.utc_now_ns", lambda: now)

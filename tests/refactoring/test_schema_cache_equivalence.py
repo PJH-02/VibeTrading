@@ -12,7 +12,7 @@ from pathlib import Path
 import pyarrow as pa
 import pytest
 
-from vibetrading import parquet_store as store
+from storage import parquet_store as store
 
 
 ORACLE_PATH = (

@@ -11,7 +11,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from vibetrading.local_events import FactsEventBudgets, LocalFactsEventBus
+from storage.local_events import FactsEventBudgets, LocalFactsEventBus
 from vibetrading.telegram import TelegramController
 
 
@@ -48,7 +48,7 @@ def cursor(path,durable='fixture'):
 
 
 def test_checkpoint_pin_blocks_new_writes_and_restarts_without_wal_growth(tmp_path):
-    from vibetrading.local_events import _FactsSession, checkpoint_storage_reserve
+    from storage.local_events import _FactsSession, checkpoint_storage_reserve
     source=tmp_path/'facts.sqlite3';checkpoint=tmp_path/'events.sqlite3'
     facts(source)
     session=_FactsSession(source,checkpoint,budgets())
@@ -81,7 +81,7 @@ def test_checkpoint_pin_blocks_new_writes_and_restarts_without_wal_growth(tmp_pa
 
 
 def test_checkpoint_oversize_wal_is_rejected_before_opening_writer(tmp_path):
-    from vibetrading.local_events import _FactsSession
+    from storage.local_events import _FactsSession
     source=tmp_path/'facts.sqlite3';checkpoint=tmp_path/'events.sqlite3'
     facts(source)
     wal=checkpoint.with_name(checkpoint.name+'-wal')
@@ -92,10 +92,10 @@ def test_checkpoint_oversize_wal_is_rejected_before_opening_writer(tmp_path):
 
 
 def test_checkpoint_space_reservation_precedes_database_creation(tmp_path,monkeypatch):
-    from vibetrading.local_events import _FactsSession
+    from storage.local_events import _FactsSession
     source=tmp_path/'facts.sqlite3';checkpoint=tmp_path/'events.sqlite3'
     facts(source)
-    monkeypatch.setattr('vibetrading.local_events.shutil.disk_usage',lambda _path:SimpleNamespace(free=1))
+    monkeypatch.setattr("storage.local_events.shutil.disk_usage",lambda _path:SimpleNamespace(free=1))
     with pytest.raises(RuntimeError,match='free space'):
         _FactsSession(source,checkpoint,budgets())
     assert not checkpoint.exists()

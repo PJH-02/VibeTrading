@@ -9,8 +9,8 @@ import time
 from pathlib import Path
 
 from scripts.compare_ledger_layouts import wal_state
-from vibetrading.event_index_runs import ExactEventRuns, append_runs
-from vibetrading.delivery_recovery import append_delivery_runs
+from storage.event_index_runs import ExactEventRuns, append_runs
+from storage.delivery_recovery import append_delivery_runs
 
 
 def compare(source: Path, destination: Path, *, runs: bool, incoming: int, recovery: bool = False) -> dict:

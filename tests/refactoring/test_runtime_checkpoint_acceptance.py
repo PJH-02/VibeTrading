@@ -10,7 +10,7 @@ from test_checkpoint_startup import producer, append
 from test_strategy_runtime import (T, BTC, ledger_at, matcher_for, runtime, registration, book)
 from market.hot_path import HotPathStore
 from market.local_engine import LocalMarketEngine, EngineBudgets
-from vibetrading.market_checkpoint import CheckpointCodec
+from storage.market_checkpoint import CheckpointCodec
 from vibetrading.runtime_checkpoint import RuntimeCheckpoint
 from vibetrading.etf_trading import EtfTradingLoop, EtfDispatchBlocked
 

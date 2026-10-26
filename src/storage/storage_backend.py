@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import BinaryIO, Protocol
 
-from .settings import RuntimeSettings
+from vibetrading.settings import RuntimeSettings
 
 
 @dataclass(frozen=True)

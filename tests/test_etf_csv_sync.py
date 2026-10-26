@@ -7,7 +7,7 @@ import pandas as pd
 import pytest
 
 from test_etf_execution_update import make_references
-from vibetrading.etf_csv_history import CsvStrategyHistory, CSV_FILES, digest_file
+from storage.etf_csv_history import CsvStrategyHistory, CSV_FILES, digest_file
 from feeds.etf_csv_sync import completed_sp500_rows, latest_completed_session, session_minute_rows, EtfCsvSync
 from vibetrading.etf_history import EtfHistory
 
@@ -44,7 +44,7 @@ def test_csv_append_preserves_history_and_is_idempotent(tmp_path):
 
 
 def test_csv_recovers_crash_between_file_and_manifest_replace(tmp_path,monkeypatch):
-    import vibetrading.etf_csv_history as module
+    import storage.etf_csv_history as module
     reference = make_references(tmp_path/'history')
     normal = module.atomic_json
     def fail_manifest(path,data):

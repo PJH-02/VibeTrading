@@ -1,9 +1,9 @@
 import hashlib
 import sqlite3
 import pytest
-from vibetrading.event_index_runs import ExactEventRuns,append_runs,ensure_schema
+from storage.event_index_runs import ExactEventRuns, append_runs, ensure_schema
 from vibetrading.settings import RuntimeSettings
-from vibetrading.sqlite_store import RuntimeStore
+from storage.sqlite_store import RuntimeStore
 
 def test_larger_negative_filter_avoids_scans_without_changing_exact_results(tmp_path):
     conn=sqlite3.connect(tmp_path/'runs.db',isolation_level=None)

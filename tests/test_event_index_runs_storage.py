@@ -6,8 +6,8 @@ import sys
 import pytest
 
 from scripts.prepare_crypto_event_index import prepare
-from vibetrading.parquet_store import ParquetBatchWriter
-from vibetrading.sqlite_store import RuntimeStore
+from storage.parquet_store import ParquetBatchWriter
+from storage.sqlite_store import RuntimeStore
 from test_storage_pipeline import _event, _settings
 
 
@@ -68,7 +68,7 @@ def test_run_failure_rolls_back_manifest_and_delivery(tmp_path):
 
 @pytest.mark.parametrize('commit', [False, True])
 def test_process_exit_respects_run_transaction_boundary(tmp_path, commit):
-    from vibetrading.event_index_runs import ExactEventRuns
+    from storage.event_index_runs import ExactEventRuns
     path = tmp_path / 'crash.db'
     code = '''
 import sqlite3,sys,os

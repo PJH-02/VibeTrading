@@ -192,7 +192,7 @@ def audit_catalogue(conn, coverage, baseline_manifest_rowid, receipt, backend, r
 async def main(args):
     from vibetrading.bus import NatsJetStreamBus
     from vibetrading.settings import RuntimeSettings
-    from vibetrading.storage_backend import archive_backend
+    from storage.storage_backend import archive_backend
 
     root = args.root.resolve(strict=True)
     if 'r2-load-gate' not in root.parts or root.name == 'r2-load-gate':

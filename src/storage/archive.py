@@ -15,9 +15,9 @@ from typing import Any
 import shutil
 
 from .storage_backend import archive_backend, sha256_file
-from .settings import RuntimeSettings, get_settings
+from vibetrading.settings import RuntimeSettings, get_settings
 from .sqlite_store import MaintenanceDeferred, RuntimeStore
-from .maintenance_gate import claim_backup_slot_locked, maintenance_lock
+from vibetrading.maintenance_gate import claim_backup_slot_locked, maintenance_lock
 from .parquet_store import _catalogued_file_sha256
 from .storage_guard import StorageGuard
 
@@ -700,8 +700,7 @@ class ArchiveMaintenance:
         if type(dry_run) is not bool or dry_run is not True:
             raise ValueError("spool GC plan requires dry_run exactly True")
         from .local_storage import LocalSpoolStorage
-        from .market_spool import (RetainedPrefix, SpoolCursor, capture_retained_prefix,
-                                   read_spool_records)
+        from .market_spool import RetainedPrefix, SpoolCursor, capture_retained_prefix, read_spool_records
         if not isinstance(storage, LocalSpoolStorage):
             raise ValueError("storage must be the open LocalSpoolStorage owner")
         if not isinstance(retained_prefix, RetainedPrefix):

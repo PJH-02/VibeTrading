@@ -21,9 +21,9 @@ def test_market_trigger_quote_keeps_postonly_buy_non_crossing():
 def test_book_original_frame_reaches_parquet(tmp_path):
     import pyarrow.parquet as pq
 
-    from vibetrading.parquet_store import ParquetBatchWriter
+    from storage.parquet_store import ParquetBatchWriter
     from vibetrading.settings import RuntimeSettings
-    from vibetrading.sqlite_store import RuntimeStore
+    from storage.sqlite_store import RuntimeStore
 
     async def collect():
         bus = InMemoryEventBus()

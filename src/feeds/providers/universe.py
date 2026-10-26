@@ -10,7 +10,7 @@ from core.models import AssetClass, InstrumentId, Venue, stable_hash
 from feeds.providers.hyperliquid import HyperliquidCatalog, load_hyperliquid_tokenized_symbols
 from feeds.universe_config import configured_symbols as load_configured_symbols, load_universe_config
 from vibetrading.settings import RuntimeSettings, get_settings
-from vibetrading.sqlite_store import RuntimeStore
+from storage.sqlite_store import RuntimeStore
 
 
 INDEX_PROXY_ETFS: dict[str, InstrumentId] = {

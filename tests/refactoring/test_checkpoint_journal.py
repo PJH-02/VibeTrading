@@ -7,7 +7,7 @@ import threading
 
 import pytest
 
-from vibetrading.checkpoint_journal import CheckpointJournal
+from storage.checkpoint_journal import CheckpointJournal
 from vibetrading.local_config import SpoolLimits
 from feeds.local_pipeline import PipelineBudgets
 from test_checkpoint_startup import LIMITS, append, capture, engine, event, producer, read_order
@@ -44,7 +44,7 @@ async def test_rotation_preserves_old_generation_and_exact_new_checkpoint(tmp_pa
 
 @pytest.mark.asyncio
 async def test_pointer_failure_never_reopens_old_authority(tmp_path,monkeypatch):
-    import vibetrading.checkpoint_journal as module
+    import storage.checkpoint_journal as module
     item=producer(tmp_path)
     source,codec,_=capture([item])
     manager=journal(tmp_path/'journal',codec)
@@ -67,7 +67,7 @@ async def test_pointer_failure_never_reopens_old_authority(tmp_path,monkeypatch)
 
 @pytest.mark.asyncio
 async def test_cancel_before_publication_fences_and_retains_operation(tmp_path,monkeypatch):
-    import vibetrading.checkpoint_journal as module
+    import storage.checkpoint_journal as module
     entered=threading.Event();release=threading.Event()
     item=producer(tmp_path)
     source,codec,_=capture([item])
@@ -111,7 +111,7 @@ async def test_root_lock_rejects_second_manager_until_workers_close(tmp_path):
 
 @pytest.mark.asyncio
 async def test_cancel_after_publication_authorization_may_commit_but_never_reopen(tmp_path,monkeypatch):
-    import vibetrading.checkpoint_journal as module
+    import storage.checkpoint_journal as module
     entered=threading.Event();release=threading.Event()
     item=producer(tmp_path)
     source,codec,_=capture([item])
@@ -152,7 +152,7 @@ async def test_root_byte_reservation_rejects_before_generation_creation(tmp_path
 
 @pytest.mark.asyncio
 async def test_close_timeout_retains_root_lock_until_actual_spool_cleanup(tmp_path,monkeypatch):
-    import vibetrading.checkpoint_journal as module
+    import storage.checkpoint_journal as module
     entered=threading.Event();release=threading.Event();blocked=[False]
     original=module.MarketSpool
     class Blocked(original):
@@ -240,7 +240,7 @@ async def test_published_interleaved_suffix_restores_and_moves_to_new_generation
 @pytest.mark.asyncio
 @pytest.mark.parametrize('fault',['missing_pointer','missing_checkpoint','digest','traversal','incarnation','version','unrecorded','readiness'])
 async def test_invalid_selected_generation_never_becomes_a_cold_fallback(tmp_path,fault):
-    from vibetrading.market_checkpoint import _canonical
+    from storage.market_checkpoint import _canonical
     item=producer(tmp_path)
     source,codec,_=capture([item])
     first=journal(tmp_path/'journal',codec)
@@ -269,7 +269,7 @@ async def test_invalid_selected_generation_never_becomes_a_cold_fallback(tmp_pat
 
 @pytest.mark.asyncio
 async def test_only_lock_only_root_is_virgin_and_fifo_metadata_cannot_block(tmp_path):
-    from vibetrading.checkpoint_journal import _read_regular
+    from storage.checkpoint_journal import _read_regular
     item=producer(tmp_path)
     source,codec,_=capture([item])
     target=engine([item]);manager=journal(tmp_path/'empty',codec)

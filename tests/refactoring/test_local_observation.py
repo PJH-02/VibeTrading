@@ -9,7 +9,7 @@ import pytest
 
 from vibetrading.bus import dumps, subject_for_signal
 from vibetrading.local_observation import LocalObservationBus, ObservationBudgets, encode_observation
-from vibetrading.market_spool import MarketSpool, SpoolReader
+from storage.market_spool import MarketSpool, SpoolReader
 from core.models import AssetClass, InstrumentId, Signal, SignalAction, Venue
 
 

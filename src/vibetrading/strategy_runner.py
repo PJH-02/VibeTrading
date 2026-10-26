@@ -12,7 +12,7 @@ from .dashboard.telemetry import heartbeat
 from core.dedup import BoundedDedup
 from market.hot_path import DecisionSnapshot, HotPathStore, StrategyDataView
 from core.models import AssetClass, BaseMarketEvent, EventType, InstrumentId, Signal, event_from_dict
-from .parquet_store import ParquetHistoryReader
+from storage.parquet_store import ParquetHistoryReader
 from .settings import get_settings
 from .strategies import CompiledSubscription, StrategyModule, compile_subscriptions, compile_warmup, load_strategy
 

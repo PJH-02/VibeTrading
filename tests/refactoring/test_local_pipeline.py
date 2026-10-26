@@ -10,7 +10,7 @@ from feeds.feed_recovery import EngineCursor
 from feeds.local_pipeline import DeliveryBudgets, PipelineBudgets, SpoolingMarketPublisher
 from vibetrading.local_transport import (AppliedReceipt, LocalTransportClient, LocalTransportServer,
                                          TransportAck, TransportBudgets)
-from vibetrading.market_spool import MarketSpool, SpoolCursor, SpoolReader, read_spool_records
+from storage.market_spool import MarketSpool, SpoolCursor, SpoolReader, read_spool_records
 
 
 def budgets(**updates):

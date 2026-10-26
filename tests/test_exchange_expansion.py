@@ -208,7 +208,7 @@ def test_ambiguous_order_transport_failure_never_retried(tmp_path):
 
 
 def test_split_disk_guard_checks_nats_even_with_free_300gb(tmp_path,monkeypatch):
-    import vibetrading.storage_guard as module
+    import storage.storage_guard as module
     env=settings(tmp_path,STORAGE_DATA_DISK_ROOT='/large',STORAGE_NATS_DISK_ROOT='/small',STORAGE_STATE_DISK_ROOT='/large')
     def usage(path): return SimpleNamespace(total=300*1024**3,free=(1 if str(path)=='/small' else 280)*1024**3)
     monkeypatch.setattr(module.shutil,'disk_usage',usage)

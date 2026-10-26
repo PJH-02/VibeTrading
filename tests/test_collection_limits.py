@@ -6,7 +6,7 @@ from pathlib import Path
 from feeds.providers.universe import ListedContract, select_option_atm_band
 from core.models import AssetClass, Venue
 from vibetrading.settings import RuntimeSettings
-from vibetrading.storage_guard import StorageGuard
+from storage.storage_guard import StorageGuard
 
 
 def test_option_default_is_atm_plus_minus_one() -> None:
@@ -28,7 +28,7 @@ def test_storage_guard_uses_byte_reserve_instead_of_used_percentage(tmp_path: Pa
     env.write_text(f"VIBETRADING_DATA_ROOT={tmp_path.as_posix()}\n", encoding="utf-8")
     settings = RuntimeSettings.from_env(env)
     usage = type("Usage", (), {"total": 20 * 1024**3, "used": 15 * 1024**3, "free": 5 * 1024**3})()
-    monkeypatch.setattr("vibetrading.storage_guard.shutil.disk_usage", lambda _: usage)
+    monkeypatch.setattr("storage.storage_guard.shutil.disk_usage", lambda _: usage)
 
     decision = StorageGuard(settings).evaluate()
 
@@ -46,7 +46,7 @@ def test_storage_guard_fails_closed_when_volume_probe_is_unavailable(tmp_path: P
     def unavailable(_):
         raise OSError("volume unavailable")
 
-    monkeypatch.setattr("vibetrading.storage_guard.shutil.disk_usage", unavailable)
+    monkeypatch.setattr("storage.storage_guard.shutil.disk_usage", unavailable)
     decision = StorageGuard(settings).evaluate()
 
     assert decision.fail_closed is True
@@ -64,7 +64,7 @@ def test_storage_reserve_includes_declared_nats_volume_and_resume_margin(tmp_pat
     settings = RuntimeSettings.from_env(env)
     usage = type("Usage", (), {"total": 20 * 1024**3, "used": 10 * 1024**3,
                                "free": 10 * 1024**3})()
-    monkeypatch.setattr("vibetrading.storage_guard.shutil.disk_usage", lambda _: usage)
+    monkeypatch.setattr("storage.storage_guard.shutil.disk_usage", lambda _: usage)
 
     decision = StorageGuard(settings).evaluate()
 

@@ -5,7 +5,7 @@ from decimal import Decimal
 from typing import Protocol
 
 from core.models import InstrumentId, OrderDestination, OrderIntent, OrderIntentStatus, Side, Signal, stable_hash, utc_now_ns
-from .sqlite_store import RuntimeStore
+from storage.sqlite_store import RuntimeStore
 
 
 class BrokerAdapter(Protocol):

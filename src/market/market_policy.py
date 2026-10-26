@@ -8,7 +8,7 @@ from typing import Any
 
 from core.models import AssetClass, EventType, Venue
 from vibetrading.bus import allowed_supplement
-from vibetrading.storage_guard import StorageGuard
+from storage.storage_guard import StorageGuard
 from feeds.universe_config import configured_binance_securities, configured_hyperliquid_securities
 
 

@@ -12,7 +12,7 @@ import aiohttp
 import nats
 import pandas as pd
 
-from vibetrading.etf_csv_history import CsvStrategyHistory, ETF_HISTORY_ROLES, atomic_json
+from storage.etf_csv_history import CsvStrategyHistory, ETF_HISTORY_ROLES, atomic_json
 from vibetrading.etf_history import native_frame
 from vibetrading.health import touch
 from core.models import EventType, event_from_dict
@@ -89,7 +89,7 @@ class EtfCsvSync:
         row = {'timestamp':str(stamp),'date':event.trading_date,'symbol':symbol,'source':event.provider.upper(),
             'timestamp_semantics':'bar_end','trading_value':'',
             **{k:float(getattr(event,k)) for k in ('open','high','low','close','volume')}}
-        from vibetrading.etf_intraday_store import merge_session_rows
+        from storage.etf_intraday_store import merge_session_rows
         merge_session_rows(self.spool,event.trading_date,symbol,[row],replace=True)
 
     def captured(self, symbol, day):

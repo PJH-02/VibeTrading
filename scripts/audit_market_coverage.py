@@ -26,7 +26,7 @@ from typing import Any, Iterable
 import pyarrow.parquet as pq
 
 from vibetrading.settings import get_settings
-from vibetrading.storage_backend import archive_backend
+from storage.storage_backend import archive_backend
 
 
 UTC = timezone.utc

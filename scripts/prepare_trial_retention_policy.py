@@ -4,7 +4,7 @@ from pathlib import Path
 import sqlite3
 import time
 
-from vibetrading.event_index_runs import ExactEventRuns
+from storage.event_index_runs import ExactEventRuns
 
 ROOT = Path('/srv/vibetrading-data/r2-load-gate/fullscale-20261001')
 

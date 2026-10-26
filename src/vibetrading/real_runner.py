@@ -13,7 +13,7 @@ from vibetrading.brokers import broker_for_name
 from vibetrading.execution import AccountExecutionConfig, BrokerAdapter, ExecutionSafetyGate, OrderIntentFactory
 from core.models import OrderDestination, OrderIntentStatus, Side, Signal, SignalAction
 from vibetrading.settings import get_settings
-from vibetrading.sqlite_store import RuntimeStore
+from storage.sqlite_store import RuntimeStore
 from core.dedup import BoundedDedup
 from vibetrading.execution_owner import ExecutionOwner
 from vibetrading.runtime_control import GateBlocked

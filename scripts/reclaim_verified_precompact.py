@@ -10,7 +10,7 @@ import time
 from pathlib import Path
 
 from vibetrading.settings import get_settings
-from vibetrading.storage_backend import archive_backend
+from storage.storage_backend import archive_backend
 
 
 NAME = 'vibetrading.sqlite3.precompact-20260928T021539Z'

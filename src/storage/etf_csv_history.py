@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from .maintenance_gate import _try_lock, _unlock
+from vibetrading.maintenance_gate import _try_lock, _unlock
 
 ETF_HISTORY_ROLES = {s:(s+'_daily',s+'_minute') for s in ('069500','122630','229200','251340')}
 CSV_FILES = {key:'raw/'+key+'.csv' for pair in ETF_HISTORY_ROLES.values() for key in pair}

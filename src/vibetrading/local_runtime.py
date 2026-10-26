@@ -26,8 +26,8 @@ from market.local_engine import EngineBudgets, LocalMarketEngine
 from feeds.local_pipeline import SpoolingMarketPublisher
 from .local_transport import AppliedReceipt, LocalTransportClient, LocalTransportServer
 from market.market_apply_order import ApplyOrder
-from .checkpoint_journal import CheckpointJournal
-from .market_spool import MarketSpool, SpoolCorruption, SpoolCursor, SpoolReader, scan_spool
+from storage.checkpoint_journal import CheckpointJournal
+from storage.market_spool import MarketSpool, SpoolCorruption, SpoolCursor, SpoolReader, scan_spool
 from .settings import RuntimeSettings
 
 
@@ -36,8 +36,8 @@ def validate_runtime(plan,settings):
     if settings.env.get('VIBETRADING_ENFORCE_MOUNTS','').lower()!='true':
         raise RuntimeError('local runtime requires enforced storage mount identities')
     from .runtime_paths import validate_runtime_paths
-    from .local_storage import StorageBudgets, fact_storage_reserve
-    from .local_events import FactsEventBudgets, checkpoint_storage_reserve
+    from storage.local_storage import StorageBudgets, fact_storage_reserve
+    from storage.local_events import FactsEventBudgets, checkpoint_storage_reserve
     from market.local_snapshot import SnapshotBudgets
     storage=StorageBudgets(**plan.storage)
     events=FactsEventBudgets(**plan.events)
@@ -243,7 +243,7 @@ async def save_engine_checkpoint(engine,codec,path,*,order_spool=None):
     Cancellation cannot overlap an older write with a newer capture. The
     single retained task owns the write until fsync/readback finishes.
     """
-    from .market_checkpoint import _write_checkpoint_file
+    from storage.market_checkpoint import _write_checkpoint_file
     pending=getattr(engine,'_checkpoint_file_task',None)
     if pending is not None and not pending.done():
         raise RuntimeError('checkpoint write already pending')
@@ -532,7 +532,7 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
             journal_restored=await checkpoint_journal.restore(engine,plan.producers,checkpoint_readiness)
             handoffs=() if journal_restored else await replay_startup(engine,plan.producers,promote=False)
         elif checkpoint_enabled:
-            from .market_checkpoint import _read_checkpoint_file
+            from storage.market_checkpoint import _read_checkpoint_file
             payload=await asyncio.to_thread(_read_checkpoint_file,checkpoint_path,checkpoint_codec.max_bytes)
             handoffs=await replay_checkpoint_startup(engine,plan.producers,codec=checkpoint_codec,
                 payload=payload,expected_engine_incarnation=checkpoint_engine_incarnation,apply_order=checkpoint_apply_order)
@@ -649,7 +649,7 @@ def main(argv=None, *, paper_runtime=None, paper_feed_dependencies=None):
         settings.env['LOCAL_SNAPSHOT_BUDGETS']=json.dumps(plan.snapshot)
 
     if args.role=='telegram':
-        from .local_events import FactsEventBudgets, LocalFactsEventBus
+        from storage.local_events import FactsEventBudgets, LocalFactsEventBus
         from .telegram import TelegramController
         factory=lambda:LocalFactsEventBus(settings.state_dir/'local_storage_facts.sqlite3',
             settings.state_dir/'telegram'/'local-facts.sqlite3',budgets=FactsEventBudgets(**plan.events))
@@ -670,7 +670,7 @@ def main(argv=None, *, paper_runtime=None, paper_feed_dependencies=None):
             asyncio.run(run_engine(plan,settings, paper_runtime=paper_runtime,
                                    paper_feed_dependencies=paper_feed_dependencies))
     else:
-        from .local_storage import run_local_storage
+        from storage.local_storage import run_local_storage
         run_local_storage(plan,settings)
     return 0
 

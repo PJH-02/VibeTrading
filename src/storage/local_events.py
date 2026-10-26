@@ -18,8 +18,8 @@ import shutil
 import sqlite3
 import time
 
-from .bus import BusMessage
-from .process_lease import ProcessLease
+from vibetrading.bus import BusMessage
+from vibetrading.process_lease import ProcessLease
 
 
 @dataclass(frozen=True)

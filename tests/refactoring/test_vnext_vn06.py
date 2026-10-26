@@ -9,7 +9,7 @@ import pytest
 from core.dedup import BoundedDedup
 from feeds.feed_recovery import EngineCursor
 from market.hot_path import HotPathStore, PreparedHistory
-from vibetrading.market_checkpoint import CheckpointCodec, CheckpointError, CheckpointProducer
+from storage.market_checkpoint import CheckpointCodec, CheckpointError, CheckpointProducer
 from core.models import AssetClass, Bar1mEvent, BookUpdateType, IndexQuoteEvent, InstrumentId, OrderBookEvent, OrderBookLevel, TradeEvent, Venue
 
 
@@ -282,7 +282,7 @@ def test_atomic_write_failure_does_not_report_success_or_leave_temporary_files(t
         calls.append(fd)
         if len(calls) == failed_sync:raise OSError('injected fsync failure')
         original(fd)
-    monkeypatch.setattr('vibetrading.market_checkpoint.os.fsync', fail)
+    monkeypatch.setattr("storage.market_checkpoint.os.fsync", fail)
     with pytest.raises(OSError):serializer.write(path, payload)
     assert path.read_bytes() == (payload if failed_sync == 3 else old)
     assert sorted(item.name for item in tmp_path.iterdir()) == ['checkpoint.json']

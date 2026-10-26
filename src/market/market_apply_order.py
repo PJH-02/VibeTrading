@@ -6,8 +6,8 @@ import json
 
 from feeds.feed_recovery import EngineCursor
 from vibetrading.local_transport import AppliedReceipt
-from vibetrading.market_checkpoint import _canonical
-from vibetrading.market_spool import SpoolCursor, SpoolReader, scan_spool
+from storage.market_checkpoint import _canonical
+from storage.market_spool import SpoolCursor, SpoolReader, scan_spool
 from vibetrading.local_observation import LocalObservationBus
 
 

@@ -20,8 +20,7 @@ import os
 from pathlib import Path
 import time
 
-from .market_checkpoint import (CheckpointError, _canonical, _read_checkpoint_file,
-                                _write_checkpoint_file)
+from storage.market_checkpoint import CheckpointError, _canonical, _read_checkpoint_file, _write_checkpoint_file
 from core.models import OrderIntent
 
 

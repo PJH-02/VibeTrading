@@ -25,8 +25,7 @@ import threading
 import time
 import uuid
 
-from .market_spool import (RetainedPrefix, SpoolCorruption, SpoolCursor,
-                           SpoolReader, SpoolRecord)
+from .market_spool import RetainedPrefix, SpoolCorruption, SpoolCursor, SpoolReader, SpoolRecord
 from core.models import AssetClass, EventType, event_from_dict
 from market.hot_path import _event_fingerprint
 from .parquet_store import ParquetBatchWriter

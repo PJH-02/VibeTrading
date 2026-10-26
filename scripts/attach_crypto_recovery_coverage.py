@@ -11,8 +11,8 @@ import sqlite3
 import time
 from pathlib import Path
 
-from vibetrading.delivery_recovery import attach_coverage, decode_records, ensure_schema
-from vibetrading.event_index_runs import MAX_RUN_ENTRIES, RECORD
+from storage.delivery_recovery import attach_coverage, decode_records, ensure_schema
+from storage.event_index_runs import MAX_RUN_ENTRIES, RECORD
 
 
 def attach(path: Path, progress=None) -> dict:

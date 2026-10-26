@@ -3,7 +3,7 @@ from __future__ import annotations
 import shutil
 from dataclasses import dataclass
 
-from .settings import RuntimeSettings, get_settings
+from vibetrading.settings import RuntimeSettings, get_settings
 
 
 @dataclass(frozen=True)

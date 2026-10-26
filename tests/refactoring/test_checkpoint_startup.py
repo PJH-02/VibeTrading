@@ -13,9 +13,9 @@ from market.hot_path import HotPathStore
 from market.local_engine import EngineBudgets, LocalMarketEngine
 from feeds.local_pipeline import PipelineBudgets
 from vibetrading.local_runtime import replay_checkpoint_startup, replay_startup
-from vibetrading.market_checkpoint import CheckpointCodec, _canonical
+from storage.market_checkpoint import CheckpointCodec, _canonical
 from market.market_apply_order import ApplyOrder
-from vibetrading.market_spool import MarketSpool, SpoolReader
+from storage.market_spool import MarketSpool, SpoolReader
 from core.models import AssetClass, BaseMarketEvent, InstrumentId, OrderBookEvent, TradeEvent, Venue
 
 

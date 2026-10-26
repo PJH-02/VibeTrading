@@ -3,7 +3,7 @@ from collections import namedtuple
 import pytest
 
 from vibetrading.settings import RuntimeSettings
-from vibetrading.storage_guard import StorageGuard
+from storage.storage_guard import StorageGuard
 
 
 @pytest.mark.parametrize('state_free,paused,resume', [

@@ -16,7 +16,7 @@ from typing import Any
 from pydantic import BaseModel
 
 from core.models import EventType
-from .settings import RuntimeSettings, get_settings
+from vibetrading.settings import RuntimeSettings, get_settings
 from .sqlite_store import RuntimeStore
 
 

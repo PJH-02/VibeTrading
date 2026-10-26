@@ -12,14 +12,14 @@ from pathlib import Path
 import pyarrow.parquet as pq
 
 from vibetrading.bus import BusMessage, NatsJetStreamBus, dumps, subject_for_event
-from vibetrading.archive import ArchiveMaintenance
-from vibetrading.delivery_recovery import prune_verified, restore_document, retire_runs
+from storage.archive import ArchiveMaintenance
+from storage.delivery_recovery import prune_verified, restore_document, retire_runs
 from core.models import AssetClass, InstrumentId, TradeEvent, Venue
-from vibetrading.parquet_store import ParquetBatchWriter
+from storage.parquet_store import ParquetBatchWriter
 from vibetrading.settings import RuntimeSettings
-from vibetrading.sqlite_store import RuntimeStore
-from vibetrading.storage_worker import StorageWorker
-from vibetrading.storage_backend import archive_backend
+from storage.sqlite_store import RuntimeStore
+from storage.storage_worker import StorageWorker
+from storage.storage_backend import archive_backend
 
 
 async def verify():

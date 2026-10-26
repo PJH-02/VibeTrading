@@ -18,7 +18,7 @@ import sqlite3
 import time
 
 from vibetrading.settings import get_settings
-from vibetrading.storage_backend import archive_backend
+from storage.storage_backend import archive_backend
 
 SOURCE = Path('/source/vibetrading.sqlite3')
 TARGET = Path('/backup/current-crypto-pre-r2.sqlite3')

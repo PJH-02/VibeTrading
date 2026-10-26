@@ -6,12 +6,12 @@ import zlib
 
 import pytest
 
-from vibetrading.archive import ArchiveMaintenance
+from storage.archive import ArchiveMaintenance
 from vibetrading.bus import ConfirmedAckFloor
-from vibetrading.delivery_recovery import read_document, restore_document
-from vibetrading.parquet_store import ParquetBatchWriter
-from vibetrading.sqlite_store import RuntimeStore
-from vibetrading.storage_backend import archive_backend
+from storage.delivery_recovery import read_document, restore_document
+from storage.parquet_store import ParquetBatchWriter
+from storage.sqlite_store import RuntimeStore
+from storage.storage_backend import archive_backend
 from test_storage_pipeline import _event, _settings
 
 
@@ -190,7 +190,7 @@ def test_unavailable_old_canonical_does_not_starve_later_recovery(tmp_path, monk
 
 
 def test_unavailable_canonical_cache_skips_payload_across_reopen_and_resumes(tmp_path, monkeypatch):
-    from vibetrading import delivery_recovery
+    from storage import delivery_recovery
     store, maintenance, _, _ = seeded(tmp_path, monkeypatch)
     original = delivery_recovery.decode_records
     decoded = []
@@ -260,7 +260,7 @@ def test_unconfirmed_old_generation_does_not_starve_verified_new_generation_prun
 
 
 def test_unconfirmed_blocks_skip_payload_after_reopen_but_revalidate_on_ack(tmp_path, monkeypatch):
-    from vibetrading import delivery_recovery
+    from storage import delivery_recovery
     store, maintenance, _, _ = seeded(tmp_path, monkeypatch)
     archive_all(store, maintenance)
     original = delivery_recovery.decode_records
@@ -300,7 +300,7 @@ def test_unconfirmed_blocks_skip_payload_after_reopen_but_revalidate_on_ack(tmp_
 
 
 def test_cached_block_still_checks_payload_checksum_before_deleting(tmp_path, monkeypatch):
-    from vibetrading import delivery_recovery
+    from storage import delivery_recovery
     store, maintenance, _, _ = seeded(tmp_path, monkeypatch)
     archive_all(store, maintenance)
     assert store.prune_delivery_history() == 0

@@ -428,7 +428,7 @@ class SpoolingMarketPublisher:
         self._settled.clear()
 
     def _persist(self, batch):
-        from vibetrading.market_spool import SpoolRotateRequired
+        from storage.market_spool import SpoolRotateRequired
         receipts=[]
         for item in batch:
             try:

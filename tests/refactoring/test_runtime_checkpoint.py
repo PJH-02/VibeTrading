@@ -405,7 +405,7 @@ async def test_async_save_is_single_flight_and_shielded_from_caller_cancellation
 
 def test_atomic_writer_failure_preserves_previous_bundle_and_removes_temporary(
         tmp_path, monkeypatch):
-    import vibetrading.market_checkpoint as market
+    import storage.market_checkpoint as market
     path = tmp_path/"market.json"
     path.write_bytes(b"previous")
     temporary = []

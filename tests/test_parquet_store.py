@@ -5,14 +5,14 @@ import os
 import pytest
 
 from core.models import AssetClass, InstrumentId, Side, TradeEvent, Venue
-from vibetrading.parquet_store import ParquetBatchWriter
+from storage.parquet_store import ParquetBatchWriter
 from vibetrading.settings import RuntimeSettings
-from vibetrading.sqlite_store import RuntimeStore
+from storage.sqlite_store import RuntimeStore
 
 
 @pytest.mark.skipif(os.name == "nt", reason="Windows does not support the production directory-fsync contract")
 def test_directory_fsync_failure_prevents_manifest_commit(tmp_path: Path, monkeypatch) -> None:
-    from vibetrading import parquet_store
+    from storage import parquet_store
 
     env_file = tmp_path / ".env"
     env_file.write_text(f"VIBETRADING_DATA_ROOT={tmp_path.as_posix()}\n", encoding="utf-8")

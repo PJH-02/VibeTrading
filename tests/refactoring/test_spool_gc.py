@@ -14,16 +14,14 @@ os.environ.pop("DELIVERY_LEDGER_FORMAT", None)
 
 from test_local_storage import budgets, gap, observation, trade, wire  # noqa: E402
 
-from vibetrading import market_checkpoint  # noqa: E402
-from vibetrading.archive import ArchiveMaintenance  # noqa: E402
-from vibetrading.compactor import ParquetCompactor  # noqa: E402
-from vibetrading.local_storage import LocalSpoolStorage  # noqa: E402
-from vibetrading.market_spool import (  # noqa: E402
-    MarketSpool, SpoolCursor, capture_retained_prefix,
-)
+from storage import market_checkpoint  # noqa: E402
+from storage.archive import ArchiveMaintenance  # noqa: E402
+from storage.compactor import ParquetCompactor  # noqa: E402
+from storage.local_storage import LocalSpoolStorage  # noqa: E402
+from storage.market_spool import MarketSpool, SpoolCursor, capture_retained_prefix
 from vibetrading.settings import RuntimeSettings  # noqa: E402
-from vibetrading.sqlite_store import RuntimeStore  # noqa: E402
-from vibetrading.storage_backend import LocalStorageBackend, sha256_file  # noqa: E402
+from storage.sqlite_store import RuntimeStore  # noqa: E402
+from storage.storage_backend import LocalStorageBackend, sha256_file  # noqa: E402
 
 
 PRODUCER = "collector"

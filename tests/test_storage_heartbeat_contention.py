@@ -2,10 +2,10 @@ import asyncio
 import threading
 
 from vibetrading.bus import InMemoryEventBus
-from vibetrading.parquet_store import ParquetBatchWriter
+from storage.parquet_store import ParquetBatchWriter
 from vibetrading.settings import RuntimeSettings
-from vibetrading.sqlite_store import RuntimeStore
-from vibetrading.storage_worker import StorageWorker
+from storage.sqlite_store import RuntimeStore
+from storage.storage_worker import StorageWorker
 
 
 def test_heartbeat_sqlite_lock_does_not_block_nats_event_loop(tmp_path):

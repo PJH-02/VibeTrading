@@ -29,7 +29,7 @@ import nats
 
 from .bus import NatsJetStreamBus
 from .etf_history import EtfHistory
-from .etf_csv_history import ETF_HISTORY_ROLES
+from storage.etf_csv_history import ETF_HISTORY_ROLES
 from .etf_journal import EtfJournal
 from .etf_reference import weights
 from .health import touch

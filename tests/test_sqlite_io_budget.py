@@ -5,7 +5,7 @@ import sys
 import pytest
 
 from vibetrading.settings import RuntimeSettings
-from vibetrading.sqlite_store import RuntimeStore
+from storage.sqlite_store import RuntimeStore
 
 
 def settings(tmp_path, extra=''):

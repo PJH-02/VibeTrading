@@ -9,12 +9,12 @@ import time
 import pytest
 
 from vibetrading.bus import BusMessage, InMemoryEventBus
-from vibetrading.delivery_recovery import restore_document
-from vibetrading.event_index_runs import ExactEventRuns, append_runs, ensure_schema
-from vibetrading.parquet_store import ParquetBatchWriter
-from vibetrading.sqlite_store import RuntimeStore
-from vibetrading.storage_backend import archive_backend
-from vibetrading.storage_worker import StorageWorker
+from storage.delivery_recovery import restore_document
+from storage.event_index_runs import ExactEventRuns, append_runs, ensure_schema
+from storage.parquet_store import ParquetBatchWriter
+from storage.sqlite_store import RuntimeStore
+from storage.storage_backend import archive_backend
+from storage.storage_worker import StorageWorker
 from test_crypto_delivery_recovery import ENV, archive_all, confirm, seeded
 from test_storage_pipeline import _event, _settings
 

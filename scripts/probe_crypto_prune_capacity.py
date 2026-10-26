@@ -16,7 +16,7 @@ import time
 async def main(args):
     from vibetrading.bus import NatsJetStreamBus
     from vibetrading.settings import RuntimeSettings
-    from vibetrading.sqlite_store import RuntimeStore
+    from storage.sqlite_store import RuntimeStore
     import psutil
     root = args.root.resolve(strict=True)
     proof = json.loads((root / 'evidence/integrity.json').read_text())

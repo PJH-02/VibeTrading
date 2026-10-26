@@ -5,7 +5,7 @@ import time
 from pathlib import Path
 from types import SimpleNamespace
 
-from vibetrading.etf_csv_history import CsvStrategyHistory, CSV_FILES, ETF_HISTORY_ROLES, digest_file
+from storage.etf_csv_history import CsvStrategyHistory, CSV_FILES, ETF_HISTORY_ROLES, digest_file
 from feeds.etf_csv_sync import EtfCsvSync
 from feeds.providers.kiwoom import KiwoomAuthClient
 from vibetrading.settings import get_settings

@@ -14,7 +14,7 @@ from market.local_engine import EngineBudgets, LocalMarketEngine
 from feeds.local_pipeline import DeliveryBudgets, PipelineBudgets, SpoolingMarketPublisher
 from vibetrading.local_runtime import replay_startup
 from vibetrading.local_transport import LocalTransportClient, LocalTransportServer, TransportBudgets
-from vibetrading.market_spool import MarketSpool, SpoolReader
+from storage.market_spool import MarketSpool, SpoolReader
 from core.models import AssetClass, Bar1mEvent, InstrumentId, TradeEvent, Venue
 
 
@@ -103,7 +103,7 @@ def test_durable_delivery_is_explicit_and_bounded_by_producer_capacity(tmp_path)
 async def test_collector_delivery_outage_keeps_durable_records_beyond_ram_capacity(tmp_path,monkeypatch):
     import vibetrading.local_runtime as runtime
     from types import SimpleNamespace
-    from vibetrading.market_spool import read_spool_records
+    from storage.market_spool import read_spool_records
     plan=LocalRuntimePlan.from_document(delivery_document(tmp_path))
     attempts=[];publishers=[]
     class Offline:

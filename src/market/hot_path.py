@@ -255,7 +255,7 @@ class HotPathStore:
 
     def export_checkpoint_state(self, *, capture_monotonic_ns: int, max_event_bytes: int, max_bytes: int) -> dict:
         """Synchronous owner-only capture; the caller must establish its cursor barrier."""
-        from vibetrading.market_checkpoint import _export_store
+        from storage.market_checkpoint import _export_store
         return _export_store(self, capture_monotonic_ns, max_event_bytes, max_bytes)
 
     @classmethod
@@ -263,7 +263,7 @@ class HotPathStore:
                                  elapsed_ns: int, restore_monotonic_ns: int,
                                  max_event_bytes: int, max_bytes: int) -> "HotPathStore":
         """Build a separate store. This does not recover an engine or enable LIVE."""
-        from vibetrading.market_checkpoint import _restore_store
+        from storage.market_checkpoint import _restore_store
         return _restore_store(cls, state, expected_capacity, elapsed_ns,
                               restore_monotonic_ns, max_event_bytes, max_bytes)
 

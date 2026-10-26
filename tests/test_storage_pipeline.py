@@ -4,14 +4,14 @@ import time
 from decimal import Decimal
 from pathlib import Path
 
-from vibetrading.archive import ArchiveMaintenance
+from storage.archive import ArchiveMaintenance
 from vibetrading.bus import BusMessage, InMemoryEventBus
 from core.models import AssetClass, InstrumentId, TradeEvent, Venue
-from vibetrading.parquet_store import ParquetBatchWriter
+from storage.parquet_store import ParquetBatchWriter
 from vibetrading.settings import RuntimeSettings
-from vibetrading.storage_backend import LocalStorageBackend
-from vibetrading.sqlite_store import RuntimeStore
-from vibetrading.storage_worker import StorageWorker
+from storage.storage_backend import LocalStorageBackend
+from storage.sqlite_store import RuntimeStore
+from storage.storage_worker import StorageWorker
 from vibetrading.maintenance_gate import maintenance_lock
 from scripts.migrate_crypto_delivery_ledger import migrate
 
@@ -330,7 +330,7 @@ def test_sqlite_backup_verifies_remote_object_once(tmp_path: Path, monkeypatch) 
             return super().verify(key, size_bytes=size_bytes, sha256=sha256)
 
     backend = CountingBackend(tmp_path / "archive")
-    monkeypatch.setattr("vibetrading.archive.archive_backend", lambda _settings: backend)
+    monkeypatch.setattr("storage.archive.archive_backend", lambda _settings: backend)
     result = ArchiveMaintenance(settings, store)._backup_sqlite_if_due(force=True)
     assert result["ran"] is True
     assert backend.calls == 1

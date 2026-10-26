@@ -3,7 +3,7 @@ import concurrent.futures
 import threading
 import time
 
-from vibetrading.gap_ledger import CollectionGapLedger
+from storage.gap_ledger import CollectionGapLedger
 
 
 def test_stalled_feed_gap_starts_at_last_published_event(tmp_path) -> None:
@@ -26,7 +26,7 @@ def test_concurrent_gap_updates_are_serialized_and_connections_close(tmp_path, m
     connect=sqlite3.connect
     def tracked(*args, **kwargs):
         db=connect(*args, **kwargs);opened.append(db);return db
-    monkeypatch.setattr('vibetrading.gap_ledger.sqlite3.connect', tracked)
+    monkeypatch.setattr("storage.gap_ledger.sqlite3.connect", tracked)
     ledger=CollectionGapLedger(path)
     ledger.start('bybit-perp','@crypto','original',123)
     barrier=threading.Barrier(3)

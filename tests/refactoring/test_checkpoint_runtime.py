@@ -10,8 +10,8 @@ import pytest
 from vibetrading import local_runtime
 from market.hot_path import HotPathStore
 from market.local_engine import EngineBudgets, LocalMarketEngine
-from vibetrading.market_checkpoint import CheckpointCodec
-from vibetrading.market_spool import MarketSpool
+from storage.market_checkpoint import CheckpointCodec
+from storage.market_spool import MarketSpool
 
 
 def checkpoint_options(tmp_path):
@@ -107,7 +107,7 @@ async def test_checkpoint_save_is_single_flight_until_thread_write_finishes(tmp_
             with lock:
                 active_writes -= 1
 
-    monkeypatch.setattr("vibetrading.market_checkpoint._write_checkpoint_file", blocked_write)
+    monkeypatch.setattr("storage.market_checkpoint._write_checkpoint_file", blocked_write)
     engine = FakeEngine()
     caller = asyncio.create_task(
         local_runtime.save_engine_checkpoint(engine, codec, tmp_path / "checkpoint.json")

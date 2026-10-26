@@ -15,7 +15,7 @@ from vibetrading.dashboard.projection import paper_projection
 from feeds.feed_recovery import EngineCursor, RecoveryFrame
 from vibetrading.local_config import LocalRuntimePlan
 from vibetrading.local_transport import LocalTransportClient
-from vibetrading.market_spool import MarketSpool
+from storage.market_spool import MarketSpool
 from core.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
 from vibetrading.trading_contracts import ActionKind, ExecutionAction, TradingMode
 from test_local_runtime import document

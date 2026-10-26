@@ -4,9 +4,9 @@ import sqlite3
 import pytest
 
 from vibetrading.bus import BusMessage, InMemoryEventBus
-from vibetrading.parquet_store import ParquetBatchWriter
-from vibetrading.sqlite_store import RuntimeStore
-from vibetrading.storage_worker import StorageWorker
+from storage.parquet_store import ParquetBatchWriter
+from storage.sqlite_store import RuntimeStore
+from storage.storage_worker import StorageWorker
 from test_storage_pipeline import _event, _settings
 
 

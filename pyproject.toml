@@ -43,6 +43,8 @@ include = [
     "feeds.*",
     "market",
     "market.*",
+    "storage",
+    "storage.*",
 ]
 exclude = [
     "src",
