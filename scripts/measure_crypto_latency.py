@@ -13,7 +13,7 @@ import aiohttp
 import nats
 import websockets
 
-from vibetrading.bybit_execution import BybitCredentials, BybitOrderClient
+from execution.bybit_execution import BybitCredentials, BybitOrderClient
 from core.models import InstrumentId, OrderDestination, OrderIntent, Side
 from vibetrading.settings import get_settings
 

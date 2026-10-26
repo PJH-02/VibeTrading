@@ -81,7 +81,7 @@ async def test_observation_failure_before_owner_is_not_handoff(tmp_path, monkeyp
     from storage.sqlite_store import RuntimeStore
     from core.models import Signal, SignalAction
     owner, adapter, ready, now = build_owner(tmp_path / "owner")
-    monkeypatch.setattr("vibetrading.execution.utc_now_ns", lambda: now[0])
+    monkeypatch.setattr("execution.contracts.utc_now_ns", lambda: now[0])
     env = tmp_path / ".env"
     env.write_text(f"VIBETRADING_DATA_ROOT={tmp_path.as_posix()}\nLIVE_ORDER_ENABLED=true\nLIVE_ORDER_ARMED_SYNTHETIC-ACCOUNT=1\n", encoding="utf-8")
     settings = RuntimeSettings.from_env(env)
@@ -111,12 +111,12 @@ async def test_observation_failure_before_owner_is_not_handoff(tmp_path, monkeyp
 @pytest.mark.parametrize("legacy_status", ["created", "submitted", "unknown"])
 async def test_dry_run_never_overwrites_legacy_execution_facts(tmp_path, monkeypatch, legacy_status):
     from vibetrading.real_runner import RealExecutionRunner, RealExecutionRunnerConfig
-    from vibetrading.execution import AccountExecutionConfig
+    from execution.contracts import AccountExecutionConfig
     from vibetrading.settings import RuntimeSettings
     from storage.sqlite_store import RuntimeStore
     from core.models import Signal, SignalAction, OrderDestination, Side
     now = 1_000_000_000
-    monkeypatch.setattr("vibetrading.execution.utc_now_ns", lambda: now)
+    monkeypatch.setattr("execution.contracts.utc_now_ns", lambda: now)
     env = tmp_path / ".env"
     env.write_text(f"VIBETRADING_DATA_ROOT={tmp_path.as_posix()}\n", encoding="utf-8")
     settings = RuntimeSettings.from_env(env)
@@ -147,7 +147,7 @@ async def test_generic_runner_keeps_quiet_subscription_alive_and_zero_duration_i
     from storage.sqlite_store import RuntimeStore
     from core.models import Signal, SignalAction
     now = 1_000_000_000
-    monkeypatch.setattr("vibetrading.execution.utc_now_ns", lambda: now)
+    monkeypatch.setattr("execution.contracts.utc_now_ns", lambda: now)
     env = tmp_path / ".env"
     env.write_text(f"VIBETRADING_DATA_ROOT={tmp_path.as_posix()}\n", encoding="utf-8")
     settings = RuntimeSettings.from_env(env)

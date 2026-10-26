@@ -3,7 +3,7 @@ import threading
 
 import pytest
 
-from vibetrading.execution_nonce import SignerNonceStore
+from execution.execution_nonce import SignerNonceStore
 
 
 KEY = "sandbox:0x" + "a" * 40

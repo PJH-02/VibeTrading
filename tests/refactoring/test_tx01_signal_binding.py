@@ -10,7 +10,7 @@ import json
 import pytest
 
 from core.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Signal, SignalAction, Venue
-from vibetrading.trading_contracts import ActionKind, ExecutionAction, TradingMode
+from execution.trading_contracts import ActionKind, ExecutionAction, TradingMode
 
 from test_strategy_runtime import (BTC, T, book, deliver, ledger_at, matcher_for,
                                    registration, runtime)

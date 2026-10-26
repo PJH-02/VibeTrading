@@ -8,9 +8,9 @@ from datetime import datetime
 
 import pytest
 
-from vibetrading.etf_journal import EtfJournal
+from portfolio.etf_journal import EtfJournal
 from vibetrading.etf_trading import EtfDispatchBlocked, EtfTradingLoop
-from vibetrading.kis_execution import KisCashBroker
+from execution.kis_execution import KisCashBroker
 from core.models import AssetClass, Bar1mEvent, BookUpdateType, DataGapEvent, InstrumentId, OrderBookEvent, OrderBookLevel, OrderDestination, OrderIntent, Side, TradeEvent, Venue
 from feeds.providers.kiwoom import KST
 
@@ -352,7 +352,7 @@ async def test_kis_permit_runs_after_token_and_session_enter_before_post(loop, m
         endpoints=SimpleNamespace(rest_base_url='https://invalid.example'),_safe_json=safe_json)
     loop.broker = loop.brokers['mock'] = broker
     broker.authority_check = loop._check_ownership
-    monkeypatch.setattr('vibetrading.kis_execution.aiohttp.ClientSession',Session)
+    monkeypatch.setattr("execution.kis_execution.aiohttp.ClientSession",Session)
     if expire:
         with pytest.raises(EtfDispatchBlocked,match='TTL'):
             await loop._submit_staged(broker,value)
@@ -383,7 +383,7 @@ async def test_kis_rechecks_owner_after_token_for_all_mutations(loop, monkeypatc
         async def __aenter__(self): return self
         async def __aexit__(self,*args): pass
         def post(self,*args,**kwargs): raise AssertionError('lost authority reached POST')
-    monkeypatch.setattr('vibetrading.kis_execution.aiohttp.ClientSession',Session)
+    monkeypatch.setattr("execution.kis_execution.aiohttp.ClientSession",Session)
     with pytest.raises(EtfDispatchBlocked, match='verification failed'):
         if operation == 'new':
             value = intent()

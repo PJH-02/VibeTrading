@@ -5,9 +5,9 @@ from decimal import Decimal
 
 import pytest
 
-from vibetrading.etf_journal import EtfJournal
+from portfolio.etf_journal import EtfJournal
 from vibetrading.etf_trading import intraday_decision
-from vibetrading.kis_execution import KisCashBroker
+from execution.kis_execution import KisCashBroker
 from core.models import AssetClass, EtfNavEvent, InstrumentId, OrderDestination, OrderIntent, Side, Venue, event_from_dict
 from storage.parquet_store import _schema, flatten_event, ParquetBatchWriter
 from storage.sqlite_store import RuntimeStore

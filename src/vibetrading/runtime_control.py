@@ -5,7 +5,7 @@ import json
 import inspect
 import time
 
-from .execution_ledger import ExecutionLedger
+from execution.execution_ledger import ExecutionLedger
 
 
 class GateBlocked(RuntimeError):

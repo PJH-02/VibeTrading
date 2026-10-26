@@ -13,7 +13,7 @@ from eth_account.messages import encode_typed_data
 
 from vibetrading.bus import InMemoryEventBus
 from feeds.collection_timing import CollectionContext
-from vibetrading.extended_brokers import ArcusBrokerAdapter, GrvtBrokerAdapter, GRVT_ORDER_TYPES, OrderOutcomeUnknown
+from execution.extended_brokers import ArcusBrokerAdapter, GrvtBrokerAdapter, GRVT_ORDER_TYPES, OrderOutcomeUnknown
 from market.hot_path import HotPathStore
 from market.market_policy import MarketDataPolicyBus
 from core.models import OrderIntent, OrderDestination, Side, Venue

@@ -9,15 +9,15 @@ from decimal import Decimal
 from typing import Any
 
 from vibetrading.bus import EventBus, NatsJetStreamBus
-from vibetrading.brokers import broker_for_name
-from vibetrading.execution import AccountExecutionConfig, BrokerAdapter, ExecutionSafetyGate, OrderIntentFactory
+from execution.brokers import broker_for_name
+from execution.contracts import AccountExecutionConfig, BrokerAdapter, ExecutionSafetyGate, OrderIntentFactory
 from core.models import OrderDestination, OrderIntentStatus, Side, Signal, SignalAction
 from vibetrading.settings import get_settings
 from storage.sqlite_store import RuntimeStore
 from core.dedup import BoundedDedup
-from vibetrading.execution_owner import ExecutionOwner
+from execution.execution_owner import ExecutionOwner
 from vibetrading.runtime_control import GateBlocked
-from vibetrading.execution_ledger import exact_product
+from execution.execution_ledger import exact_product
 
 
 logger = logging.getLogger(__name__)

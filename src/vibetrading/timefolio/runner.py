@@ -8,7 +8,7 @@ from decimal import Decimal
 from typing import Any
 
 from vibetrading.bus import EventBus, NatsJetStreamBus
-from vibetrading.execution import AccountExecutionConfig, ExecutionSafetyGate, OrderIntentFactory
+from execution.contracts import AccountExecutionConfig, ExecutionSafetyGate, OrderIntentFactory
 from market.hot_path import HotPathStore, StrategyDataView
 from core.models import BaseMarketEvent, EventType, OrderDestination, OrderIntentStatus, Side, Signal, SignalAction, event_from_dict
 from storage.parquet_store import ParquetHistoryReader

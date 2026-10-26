@@ -4,7 +4,7 @@ import json
 from dataclasses import replace
 
 import aiohttp
-from vibetrading.extended_brokers import GrvtBrokerAdapter
+from execution.extended_brokers import GrvtBrokerAdapter
 from vibetrading.settings import get_settings
 
 async def main():

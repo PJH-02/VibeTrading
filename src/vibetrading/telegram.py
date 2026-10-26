@@ -28,7 +28,7 @@ from .session_alerts import SESSIONS, session_state
 from .settings import RuntimeSettings, get_settings
 from .telegram_trade import trade_report
 from .trade_reporting import daily_report_view
-from .process_lease import ProcessLease
+from execution.process_lease import ProcessLease
 from .telegram_state import OutboxFull, TelegramState
 from .local_transport import TransportError, validate_command_result, _object_pairs
 

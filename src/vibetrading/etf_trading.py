@@ -19,7 +19,7 @@ from decimal import Decimal, ROUND_CEILING, ROUND_FLOOR
 from contextlib import closing
 from pathlib import Path
 
-from .process_lease import ProcessLease
+from execution.process_lease import ProcessLease
 from .strategies.kr import kd as _kd, kp as _kp
 from .strategies.kr._intraday import intraday_decision as _intraday_decision
 
@@ -30,10 +30,10 @@ import nats
 from .bus import NatsJetStreamBus
 from .etf_history import EtfHistory
 from storage.etf_csv_history import ETF_HISTORY_ROLES
-from .etf_journal import EtfJournal
+from portfolio.etf_journal import EtfJournal
 from .etf_reference import weights
 from .health import touch
-from .kis_execution import KisCashBroker, KisOrderRejected, account_permission_rejection
+from execution.kis_execution import KisCashBroker, KisOrderRejected, account_permission_rejection
 from core.models import AssetClass, Bar1mEvent, BookUpdateType, EventType, InstrumentId, OrderDestination, OrderIntent, Side, Signal, SignalAction, Venue, event_from_dict
 from feeds.providers.kiwoom import KiwoomAuthClient, KST
 from feeds.providers.kis_client import KisAuthClient
@@ -532,7 +532,7 @@ class EtfTradingLoop:
             bid,_=self.fresh_quote(symbol)
             key=hashlib.sha256((identity+':assumed:'+symbol).encode()).hexdigest()
             with self.journal.transaction():
-                from .etf_recovery_ledger import active,record_fill
+                from portfolio.etf_recovery_ledger import active, record_fill
                 fee=Decimal(self.settings.env.get('ETF_ASSUMED_FEE_RATE','.000148'))
                 if active(self.journal.db,strategy,self._day):
                     record_fill(self.journal,key,strategy,symbol,'sell',quantity,bid,self._day,time.time_ns(),
@@ -544,7 +544,7 @@ class EtfTradingLoop:
 
     async def settle_recovery_overhang(self):
         """Close only physical inventory absent from the corrected strategy book."""
-        from .etf_recovery_ledger import active
+        from portfolio.etf_recovery_ledger import active
         for strategy in ('C3','KP','KD'):
             if not active(self.journal.db,strategy,self._day) or self.journal.pending(strategy):
                 continue
@@ -770,7 +770,7 @@ class EtfTradingLoop:
             for symbol,frame in self.history.daily.items():
                 prior=frame[frame.date<day]
                 if len(prior): opening[symbol]=prior.iloc[-1]['close']
-        from .etf_recovery_ledger import excluded_orders
+        from portfolio.etf_recovery_ledger import excluded_orders
         excluded_symbols={r['symbol']for r in excluded_orders(self.journal.db,day=day)}
         for symbol in set(self.journal.assumed_positions())|excluded_symbols:
             client=self.market_client if hasattr(self,'market_client')else self.broker_for(symbol).client
@@ -800,7 +800,7 @@ class EtfTradingLoop:
                 self.journal.db.execute('DELETE FROM broker_trades WHERE day=?', (day,))
                 self.journal.db.executemany('INSERT OR REPLACE INTO broker_trades VALUES(?,?,?,?,?,?,?)', broker_fills)
                 data['broker_fills_complete'] = True
-        from .etf_recovery_ledger import filter_account_report
+        from portfolio.etf_recovery_ledger import filter_account_report
         marks={s:rows[max(rows)]['close']for s,rows in self.today.items()if rows}if hasattr(self,'today')else{}
         # account_report already obtained quotes for assumed/excluded positions;
         # use that exact valuation when supplied, otherwise the latest closed bar.

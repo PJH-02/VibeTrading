@@ -1,7 +1,7 @@
 """Import audited historical permission failures without changing real fills."""
 import json
 from pathlib import Path
-from vibetrading.etf_journal import EtfJournal
+from portfolio.etf_journal import EtfJournal
 from vibetrading.settings import get_settings
 
 root=get_settings().state_dir/'etf-mock'

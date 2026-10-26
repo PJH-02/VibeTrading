@@ -4,11 +4,11 @@ from decimal import Decimal as D
 
 import pytest
 
-from vibetrading.execution_groups import ExecutionGroupSpec, GroupLeg, PaperExecutionGroups
-from vibetrading.execution_ledger import AccountScope
+from execution.execution_groups import ExecutionGroupSpec, GroupLeg, PaperExecutionGroups
+from execution.execution_ledger import AccountScope
 from core.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
-from vibetrading.portfolio_ledger import PortfolioLedger
-from vibetrading.trading_contracts import ProductKind, ProductSpec
+from portfolio.portfolio_ledger import PortfolioLedger
+from execution.trading_contracts import ProductKind, ProductSpec
 
 
 def open_owner(root, venue):

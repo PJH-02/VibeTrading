@@ -45,6 +45,10 @@ include = [
     "market.*",
     "storage",
     "storage.*",
+    "execution",
+    "execution.*",
+    "portfolio",
+    "portfolio.*",
 ]
 exclude = [
     "src",

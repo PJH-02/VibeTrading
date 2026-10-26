@@ -9,8 +9,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from vibetrading.execution_ledger import AccountScope, ExecutionLedger
-from vibetrading.process_lease import ProcessLease
+from execution.execution_ledger import AccountScope, ExecutionLedger
+from execution.process_lease import ProcessLease
 from vibetrading.etf_trading import EtfDispatchBlocked, EtfTradingLoop
 
 
@@ -118,7 +118,7 @@ def test_fork_cannot_claim_or_unlock_parent_authority(tmp_path):
     script = """
 import os,sys
 from pathlib import Path
-from vibetrading.process_lease import ProcessLease
+from execution.process_lease import ProcessLease
 assert getattr(sys,'_vibetrading_offline_guard',False)
 lease=ProcessLease.account(Path(sys.argv[1]),'kis','001','mock');lease.acquire()
 pid=os.fork()

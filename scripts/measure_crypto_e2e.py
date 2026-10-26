@@ -15,7 +15,7 @@ import aiohttp
 import nats
 import websockets
 
-from vibetrading.extended_brokers import GrvtBrokerAdapter, OrderOutcomeUnknown
+from execution.extended_brokers import GrvtBrokerAdapter, OrderOutcomeUnknown
 from core.models import InstrumentId, OrderDestination, OrderIntent, Side, Venue
 from feeds.providers.extended_perp import ExtendedPerpCollector
 from vibetrading.settings import get_settings

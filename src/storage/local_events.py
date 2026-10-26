@@ -19,7 +19,7 @@ import sqlite3
 import time
 
 from vibetrading.bus import BusMessage
-from vibetrading.process_lease import ProcessLease
+from execution.process_lease import ProcessLease
 
 
 @dataclass(frozen=True)

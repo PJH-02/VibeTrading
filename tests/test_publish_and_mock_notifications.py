@@ -10,7 +10,7 @@ from zoneinfo import ZoneInfo
 import pytest
 
 from vibetrading.bus import NatsJetStreamBus, NatsPublishError
-from vibetrading.etf_journal import EtfJournal
+from portfolio.etf_journal import EtfJournal
 from vibetrading.etf_trading import EtfTradingLoop
 from core.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, TradeEvent, Venue
 from feeds.providers.universe import InstrumentUniverseResolver

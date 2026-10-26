@@ -3,7 +3,7 @@ import sqlite3
 
 import pytest
 
-from vibetrading.process_lease import ProcessLease
+from execution.process_lease import ProcessLease
 from vibetrading.telegram_state import OutboxFull, TelegramState
 
 

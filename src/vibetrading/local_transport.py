@@ -23,7 +23,7 @@ import time
 import uuid
 
 from feeds.feed_recovery import EngineCursor, RecoveryFrame
-from .process_lease import ProcessLease
+from execution.process_lease import ProcessLease
 
 
 class TransportError(RuntimeError):

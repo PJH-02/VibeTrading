@@ -6,7 +6,7 @@ from types import ModuleType, SimpleNamespace
 
 import pytest
 
-from vibetrading.execution_ledger import AccountScope
+from execution.execution_ledger import AccountScope
 from feeds.feed_recovery import EngineCursor, RecoveryFrame
 from market.hot_path import HotPathStore
 from market.local_engine import EngineBudgets, LocalMarketEngine
@@ -14,14 +14,13 @@ from feeds.local_pipeline import PipelineBudgets
 from storage.market_checkpoint import CheckpointCodec
 from storage.market_spool import MarketSpool
 from core.models import AssetClass, InstrumentId, OrderBookEvent, OrderBookLevel, OrderDestination, OrderIntent, Side, Signal, SignalAction, TradeEvent, Venue
-from vibetrading.paper_execution import PaperExecution
-from vibetrading.portfolio_ledger import PortfolioLedger
+from execution.paper_execution import PaperExecution
+from portfolio.portfolio_ledger import PortfolioLedger
 from vibetrading.runtime_checkpoint import RuntimeCheckpoint, RuntimeCheckpointError
 from vibetrading.strategy_contract import StrategyModule
 from vibetrading.strategy_runtime import (PaperStrategyRuntime, RuntimeBudgets,
                                           StrategyRegistration, StrategyRisk)
-from vibetrading.trading_contracts import (ActionKind, ExecutionAction, ProductKind,
-                                           ProductSpec, TradingMode)
+from execution.trading_contracts import ActionKind, ExecutionAction, ProductKind, ProductSpec, TradingMode
 
 T = 1_800_000_000_000_000_000
 BTC = InstrumentId(venue=Venue.BYBIT, asset_class=AssetClass.CRYPTO_PERP,

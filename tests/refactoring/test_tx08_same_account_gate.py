@@ -18,7 +18,7 @@ from test_vn13_file_registration import configured, strategy_files
 from feeds.feed_recovery import EngineCursor, RecoveryFrame
 from core.models import OrderDestination, OrderIntent, Side, SignalAction
 from vibetrading.runtime_checkpoint import RuntimeCheckpoint
-from vibetrading.trading_contracts import ActionKind, ExecutionAction, TradingMode
+from execution.trading_contracts import ActionKind, ExecutionAction, TradingMode
 
 ALPHA = "tx08_alpha_file"
 BETA = "tx08_beta_file"

@@ -9,7 +9,7 @@ from decimal import Decimal
 import aiohttp
 import websockets
 
-from vibetrading.bybit_execution import BybitCredentials, BybitOrderClient
+from execution.bybit_execution import BybitCredentials, BybitOrderClient
 from vibetrading.settings import get_settings
 
 from .config import Config

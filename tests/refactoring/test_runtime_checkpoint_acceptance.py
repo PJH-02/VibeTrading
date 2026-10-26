@@ -277,7 +277,7 @@ async def test_readiness_cannot_mutate_restored_plugin_behind_cached_proof(tmp_p
 
 def legacy_etf(root, initialization_calls):
     import asyncio
-    from vibetrading.etf_journal import EtfJournal
+    from portfolio.etf_journal import EtfJournal
     etf = EtfTradingLoop.__new__(EtfTradingLoop)
     etf.journal = EtfJournal(root / "legacy-etf.sqlite")
     etf.journal.initialize(Decimal(3000), "hashed-mock-identity")

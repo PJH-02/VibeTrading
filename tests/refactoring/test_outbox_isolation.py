@@ -4,7 +4,7 @@ from dataclasses import replace
 
 import pytest
 
-from vibetrading.etf_journal import EtfJournal
+from portfolio.etf_journal import EtfJournal
 from vibetrading.settings import RuntimeSettings
 from vibetrading.telegram import TelegramController
 from vibetrading.telegram_state import OutboxFull, TelegramState

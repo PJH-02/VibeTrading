@@ -19,7 +19,7 @@ from vibetrading.local_config import LocalRuntimePlan
 from market.local_engine import EngineBudgets, EngineError, LocalMarketEngine
 from core.models import OrderDestination, OrderIntent, Side
 from vibetrading.strategy_runtime import PaperStrategyRuntime
-from vibetrading.trading_contracts import ActionKind, ExecutionAction, TradingMode
+from execution.trading_contracts import ActionKind, ExecutionAction, TradingMode
 
 
 def engine_budgets():

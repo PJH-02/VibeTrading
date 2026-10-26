@@ -613,7 +613,7 @@ def main(argv=None, *, paper_runtime=None, paper_feed_dependencies=None):
         raise ValueError('Paper dependencies require an explicit Paper runtime')
     if paper_runtime is not None:
         from .strategy_runtime import PaperStrategyRuntime
-        from .trading_contracts import TradingMode
+        from execution.trading_contracts import TradingMode
         if args.role != 'engine':
             raise ValueError('Paper injection is supported only by the engine role')
         if not isinstance(paper_runtime, PaperStrategyRuntime):

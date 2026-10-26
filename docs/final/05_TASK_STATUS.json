@@ -538,9 +538,47 @@
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "MOV-04",
-      "selected_worker_model": "opencode/mimo-v2.6-flash-free",
+      "selected_worker_model": "opencode/glm-5.3-flash-free",
       "resume_artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z",
-      "implementation_packet": "docs/tickets/MOV-04-execution-portfolio-move.md"
+      "implementation_packet": "docs/tickets/MOV-04-execution-portfolio-move.md",
+      "worker_route_attempts": [
+        {
+          "model": "freellmapi/gemini-3.1-flash-lite",
+          "dispatcher_exit": 1,
+          "termination": "outer subprocess TimeoutExpired after645 seconds; bwrap terminated by subprocess.run",
+          "worker_exit": null,
+          "worker_exit_reason": "no worker-exit receipt was written",
+          "observed_test_exit": 1,
+          "test_failures": 1,
+          "changed_paths": [
+            "tests/refactoring/test_mov04_execution_golden.py"
+          ],
+          "partial_sha256": "f70acf83376303b87d68d71e4a28bce8675cb1e2a71f73c8081921c3ca140a8c",
+          "applied_to_active_repo": false,
+          "review_findings": [
+            "ExecutionOwner.close coroutine not awaited",
+            "NonceStore owner_root treated as a file; directory matched by sqlite glob",
+            "Only sqlite3 suffix captured; portfolio.sqlite omitted",
+            "Missing full SQL parity assertions and second safety test",
+            "Broad path masking helper violates bounded normalization; not used consistently",
+            "Docker copy additions missing"
+          ]
+        },
+        {
+          "model": "opencode/mimo-v2.6-flash-free",
+          "role": "test",
+          "launcher_exit": 124,
+          "real_exits": {
+            "diff-check-before-exit.txt": 0,
+            "worker-exit.txt": 124,
+            "diff-check-exit.txt": 0
+          },
+          "changed_paths": [],
+          "scope_pass": true,
+          "relay": null,
+          "applied_to_active_repo": false
+        }
+      ]
     },
     {
       "task_id": "MOV-05",
@@ -1392,8 +1430,9 @@
       "gemini_minimax_kimi_requested": true,
       "catalog": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/alternative-model-catalog.json",
       "actual_request_results": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/alternative-provider-smoke.json",
-      "current_selected": "opencode/mimo-v2.6-flash-free",
-      "no_paid_routes": true
+      "current_selected": "freellmapi/gemini-3.1-flash-lite",
+      "no_paid_routes": true,
+      "gemini_working_request": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/alternative-provider-smoke2.json"
     }
   },
   "execution_checkout": {

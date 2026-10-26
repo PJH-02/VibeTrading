@@ -9,9 +9,9 @@ from zoneinfo import ZoneInfo
 import aiohttp
 import pytest
 
-from vibetrading.etf_journal import EtfJournal
+from portfolio.etf_journal import EtfJournal
 from vibetrading.telegram_trade import trade_report
-from vibetrading.kis_execution import KisCashBroker
+from execution.kis_execution import KisCashBroker
 from test_telegram_status import _controller
 
 

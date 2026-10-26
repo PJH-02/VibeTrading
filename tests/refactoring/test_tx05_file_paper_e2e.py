@@ -21,8 +21,7 @@ from feeds.feed_recovery import EngineCursor, RecoveryFrame
 from market.local_engine import EngineBudgets, LocalMarketEngine
 from core.models import OrderDestination, OrderIntent, Side, SignalAction
 from vibetrading.runtime_checkpoint import RuntimeCheckpoint
-from vibetrading.trading_contracts import (ActionKind, ExecutionAction,
-                                           TradingMode)
+from execution.trading_contracts import ActionKind, ExecutionAction, TradingMode
 
 SID = "tx05_e2e_strategy"
 BAD_SID = "tx05_bad_file"

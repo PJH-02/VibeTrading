@@ -17,7 +17,7 @@ from vibetrading.local_config import LocalRuntimePlan
 from vibetrading.local_transport import LocalTransportClient
 from storage.market_spool import MarketSpool
 from core.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
-from vibetrading.trading_contracts import ActionKind, ExecutionAction, TradingMode
+from execution.trading_contracts import ActionKind, ExecutionAction, TradingMode
 from test_local_runtime import document
 from test_strategy_runtime import T, BTC, ledger_at, matcher_for, runtime, book, trade
 from test_vn13_file_registration import configured, strategy_files, strategy_source, loaded

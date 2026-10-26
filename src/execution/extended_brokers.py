@@ -18,7 +18,7 @@ import websockets
 
 from core.models import AssetClass, OrderIntent, Side, Venue
 from feeds.providers.crypto_perp import SYMBOLS, _instrument
-from .settings import RuntimeSettings, get_settings
+from vibetrading.settings import RuntimeSettings, get_settings
 
 
 class OrderOutcomeUnknown(RuntimeError):

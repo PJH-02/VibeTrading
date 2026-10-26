@@ -5,7 +5,7 @@ import os
 import time
 from decimal import Decimal
 
-from vibetrading.bybit_execution import BybitCredentials, BybitOrderClient
+from execution.bybit_execution import BybitCredentials, BybitOrderClient
 
 
 async def bybit_account(session, *, testnet: bool, symbols: tuple[str, ...]) -> tuple[list[dict], list[dict]]:

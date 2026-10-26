@@ -8,7 +8,7 @@ import pytest
 
 from test_strategy_runtime import T, BTC, book, deliver, ledger_at, matcher_for, runtime
 from core.models import Bar1mEvent, OrderDestination, OrderIntent, Side
-from vibetrading.trading_contracts import ActionKind, ExecutionAction, TradingMode
+from execution.trading_contracts import ActionKind, ExecutionAction, TradingMode
 
 
 def strategy_source(strategy_id, *, warmup=0, action="ENTER_LONG", price="100", extra=""):

@@ -8,9 +8,9 @@ from zoneinfo import ZoneInfo
 
 import pytest
 
-from vibetrading.etf_journal import EtfJournal
+from portfolio.etf_journal import EtfJournal
 from vibetrading.etf_trading import EtfTradingLoop
-from vibetrading.kis_execution import KisCashBroker,KisOrderRejected,account_permission_rejection
+from execution.kis_execution import KisCashBroker, KisOrderRejected, account_permission_rejection
 from core.models import Side
 from vibetrading.settings import RuntimeSettings
 

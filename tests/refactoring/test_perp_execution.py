@@ -10,12 +10,7 @@ from urllib.parse import urlencode
 
 import pytest
 
-from vibetrading.perp_execution import (
-    ArcusPerpAdapter, ArcusSigningComposition, BinancePerpAdapter, BybitPerpAdapter, CapabilityBlocked, GrvtPerpAdapter,
-    GrvtSigningComposition, HttpResponse, IncompleteHistory, OutcomeUnknown,
-    HyperliquidPerpAdapter, HyperliquidSdkSigningComposition,
-    PerpScope, capability_for, make_perp_adapter,
-)
+from execution.perp_execution import ArcusPerpAdapter, ArcusSigningComposition, BinancePerpAdapter, BybitPerpAdapter, CapabilityBlocked, GrvtPerpAdapter, GrvtSigningComposition, HttpResponse, IncompleteHistory, OutcomeUnknown, HyperliquidPerpAdapter, HyperliquidSdkSigningComposition, PerpScope, capability_for, make_perp_adapter
 
 
 class ScriptedTransport:
@@ -342,7 +337,7 @@ def arcus_signer():
     # settings discovery, auth session, or transport. This seed is synthetic.
     from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
     from cryptography.hazmat.primitives import serialization
-    from vibetrading.extended_brokers import ArcusBrokerAdapter
+    from execution.extended_brokers import ArcusBrokerAdapter
     from core.models import AssetClass, Side, Venue
 
     existing = ArcusBrokerAdapter.__new__(ArcusBrokerAdapter)
@@ -504,7 +499,7 @@ def hyperliquid_adapter(transport, nonce_source, *, alias="synthetic-account", a
 
 
 def nonce_store(tmp_path):
-    from vibetrading.execution_nonce import SignerNonceStore
+    from execution.execution_nonce import SignerNonceStore
     return SignerNonceStore(tmp_path, environment="sandbox", max_signers=8, max_db_bytes=1048576, max_wal_bytes=1048576)
 
 

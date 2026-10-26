@@ -12,7 +12,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from vibetrading.brokers import TossBrokerAdapter
+from execution.brokers import TossBrokerAdapter
 from feeds.providers.toss import TossAuthClient, TossUnauthorized
 from vibetrading.settings import RuntimeSettings
 

@@ -8,7 +8,7 @@ import pandas as pd
 import pytest
 
 from storage.etf_csv_history import CsvStrategyHistory, ETF_HISTORY_ROLES, CSV_FILES
-from vibetrading.etf_journal import EtfJournal
+from portfolio.etf_journal import EtfJournal
 from vibetrading.etf_trading import EtfTradingLoop
 from core.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
 

@@ -5,7 +5,7 @@ from decimal import Decimal
 
 import pytest
 
-from vibetrading.etf_journal import EtfJournal
+from portfolio.etf_journal import EtfJournal
 from core.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
 
 

@@ -88,7 +88,7 @@ def test_runtime_order_projection_is_read_only_and_allowlisted(tmp_path):
 
 
 def test_preserved_pilot_orders_convert_monotonic_time_to_wall_time(tmp_path):
-    from vibetrading.bybit_execution import BybitAudit
+    from execution.bybit_execution import BybitAudit
     audit = BybitAudit(tmp_path / "bybit_test.sqlite3")
     audit.create("client-1", "SOLUSDT", "Buy", "maker", "0.1", "100", 1_000_000_000)
     audit.transition("client-1", "FILLED", timestamp=1_200_000_000, order_id="exchange-1")

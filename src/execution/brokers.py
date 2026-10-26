@@ -13,7 +13,7 @@ from urllib.parse import urlencode
 
 import aiohttp
 
-from vibetrading.execution import BrokerAdapter
+from execution.contracts import BrokerAdapter
 from core.models import AssetClass, OrderIntent, Side
 from feeds.providers.kis_client import KisAuthClient
 from feeds.providers.toss import TossAuthClient
@@ -224,7 +224,7 @@ class KiwoomBrokerAdapter:
         tmp.replace(path)
 
 
-from vibetrading.kis_execution import KisCashBroker
+from execution.kis_execution import KisCashBroker
 
 
 class KisBrokerAdapter(KisCashBroker):

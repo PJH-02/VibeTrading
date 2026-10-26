@@ -1,8 +1,13 @@
 # MOV-04 Execution/Portfolio Move Only, fake-mutation and SQLite parity
 
-Origin source HEAD f49d97da8f4e07edc74fe61b8654e5136666d513. Exact worker opencode/mimo-v2.6-flash-free, role test.
-MiMo completed MOV-03 worker exit0. User requested other free models; Gemini
-actual timeout/502/404, MiniMax503, Kimi absent. No model switching by workers.
+Origin source HEAD f49d97da8f4e07edc74fe61b8654e5136666d513. Initial Gemini worker failed test and outer timeout before completion.
+Current exact worker opencode/glm-5.3-flash-free, role test, repair2 FINAL.
+Gemini initial failed; MiMo repair1 exited124 without any edits. Both drafts
+remain unapplied; current worker writes a fresh implementation, not a patch loop.
+MiMo completed MOV-03 worker exit0. User requested Gemini/MiniMax/Kimi.
+Additional Gemini3.1-Flash-Lite actual request HTTP200, exact served model. Other
+Gemini requests failed timeout/502/404; MiniMax503; Kimi absent. Codex selects
+Gemini BEFORE any MOV-04 worker starts. No worker-side model switching.
 
 Codex uses accepted map and flat_domain_move.py --owners execution portfolio.
 Exactly16 product sources: trading_contracts, brokers, bybit_execution,
@@ -69,3 +74,55 @@ python3 -m pytest -q -p no:cacheprovider -p pytest_asyncio.plugin tests/test_dua
 Plus canonical imports16, offline wheel/outside repo imports, Docker COPY static.
 No actual Broker/API/browser/production use. No push/merge/deploy. Codex final
 PASS/FAIL/BLOCKED with real exits/model/diff/hash/private acceptance receipt.
+
+## Repair1 — inspect/replace failed Gemini test draft, no product changes
+Gemini partial draft is seeded into only allowed test file. It was NOT applied
+or accepted. Replace it with correct <=160-line implementation, do not preserve
+its bugs: await owner.close INSIDE one asyncio.run scenario; no arbitrary sleeps.
+Reuse sibling helpers exactly as stated. Pass DIRECTORY root/'nonce' to
+SignerNonceStore and reopen same directory. Do not pass a *.sqlite3 pathname.
+Discover actual FILES for BOTH *.sqlite and *.sqlite3 (not directories, WAL, SHM).
+Use readonly SQLite connections URI mode=ro; include all schema/rows. Only the
+portfolio_metadata key='path' value may normalize its exact verified temp prefix.
+Do not broad-replace strings throughout the snapshot. Return/assert execution
+row/status/reserved/position, portfolio balance/position/cancel state, nonces,
+and full DB content. Two sends -> one fake mutation. Fill duplicate ->False.
+Portfolio cancellation must include confirmed terminal proof before late fill.
+Assert FULL golden equality in independent fresh root and expected constants;
+second test must prove fake ACK loss UNKNOWN retaining reserve/no retry.
+Add the TWO allowed Docker COPY lines (Gemini did not add them). Run exact
+new test command and stop. No product/authority/other files or self-approval.
+
+## Repair2 final — fresh, bounded implementation
+Discard the seeded Gemini draft; current new test file starts EMPTY. Implement
+from worker-context.txt helper APIs and the specification. Do not inspect any
+product source, pyproject, directories or unrelated files. Read tool access is
+restricted to this ticket/context, two editable files and explicit fixture tests.
+Start writing the allowed new test file after reading the context. Use sibling
+helper imports, async scenario with await owner.close, fixed clock enclosing
+ALL three fixture scenarios, readonly SQLite connections, BOTH .sqlite and
+.sqlite3 file types, single metadata-path normalization as specified. Capture
+all user tables/indices/schema and ALL sorted rows, return JSON-serializable
+values. Clock/order.created_ts_ns must be deterministic. Full golden equality
+and constants, second UNKNOWN/no retry safety test. No sleeps, package/runtime
+changes, helper framework or source probing. Add the two Docker COPY lines.
+Run the exact new test command; final report actual exit + count. Codex accepts.
+
+## Codex final validation disposition (supersedes optional helper-file delivery)
+The bounded additional persistent test-helper draft was not delivered after the
+initial attempt and two repairs; no draft was applied. There is no new test file
+in the active source tree. This does not weaken MOV-04's five-document acceptance:
+the product move is the accepted worker-authored deterministic codemod, not a new
+manual implementation. Codex independently executed existing254 owner/broker/
+ledger/Mock tests,25 inherited-lease tests, and a separate temporary oracle that
+compares all schema/rows of3 databases/16 tables, exact intent outcomes, late
+fill/cancel/reserve, fake mutation count1 and nonce[1000,1001,1002]. The oracle
+uses the same fresh tmpfs virtual root in separate before/after sandboxes and
+needs NO path/timestamp/value masking. Whole serialized outcomes are hash-equal.
+Artifacts: MOV-04.independent-golden-equality.json, MOV-04.independent-oracle.py,
+MOV-04.after-tests-corrected.result.json, MOV-04.inherited-lease-tests.result.json.
+All required acceptance commands exit0. Three embedded subprocess import paths
+were corrected with nested business AST equality proof. Two Docker COPY lines
+were added by Codex under the explicit small-edit allowance. No failed delegated
+product logic was taken over; no broker/network/signing/economic code rewritten.
+Private worker exits remain recorded as failures/timeouts, never as successes.

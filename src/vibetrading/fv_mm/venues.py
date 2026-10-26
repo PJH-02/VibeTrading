@@ -10,7 +10,7 @@ from decimal import Decimal, ROUND_FLOOR
 from eth_account import Account
 from eth_account.messages import encode_typed_data
 
-from vibetrading.extended_brokers import GRVT_ORDER_TYPES
+from execution.extended_brokers import GRVT_ORDER_TYPES
 from vibetrading.liquidity_mm.exchange import TestnetClient
 from vibetrading.settings import get_settings
 

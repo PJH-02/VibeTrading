@@ -13,13 +13,13 @@ import pytest
 
 from vibetrading.dashboard import bridge
 from vibetrading.dashboard.projection import paper_projection, paper_projection_paths
-from vibetrading.execution_ledger import AccountScope
+from execution.execution_ledger import AccountScope
 from market.hot_path import HotPathStore
 from market.local_snapshot import SnapshotBudgets, atomic_write_snapshot, capture_market_snapshot
 from core.models import AssetClass, InstrumentId, OrderBookEvent, OrderBookLevel, OrderDestination, OrderIntent, Side, TradeEvent, Venue
-from vibetrading.paper_execution import PaperExecution
-from vibetrading.portfolio_ledger import PortfolioLedger
-from vibetrading.trading_contracts import ProductKind, ProductSpec
+from execution.paper_execution import PaperExecution
+from portfolio.portfolio_ledger import PortfolioLedger
+from execution.trading_contracts import ProductKind, ProductSpec
 
 
 T = 1_800_000_000_000_000_000

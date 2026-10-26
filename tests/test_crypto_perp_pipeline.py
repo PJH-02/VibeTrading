@@ -5,7 +5,7 @@ from decimal import Decimal
 import pytest
 
 from vibetrading.bus import InMemoryEventBus, subject_for_event
-from vibetrading.bybit_execution import BybitAudit, BybitExecutionProbe, _market_trigger_price
+from execution.bybit_execution import BybitAudit, BybitExecutionProbe, _market_trigger_price
 from market.hot_path import HotPathStore
 from market.market_source_status import source_status
 from core.models import BookUpdateType, OrderBookEvent, OrderBookLevel, Venue
