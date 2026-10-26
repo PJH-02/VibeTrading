@@ -38,10 +38,10 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 5,
+    "accepted": 6,
     "in_progress": 1,
     "blocked": 0,
-    "not_started": 27,
+    "not_started": 26,
     "external_not_authorized": 2
   },
   "next_ready_candidate": [],
@@ -361,8 +361,8 @@
       "scope": "KOSPI200+KOSDAQ150 minute/daily, max 350"
     }
   },
-  "active_task_id": "MOV-03",
-  "last_accepted_task_id": "MOV-02",
+  "active_task_id": "MOV-04",
+  "last_accepted_task_id": "MOV-03",
   "stop_requested": false,
   "tickets": [
     {
@@ -502,17 +502,17 @@
     {
       "task_id": "MOV-03",
       "wave": "W1",
-      "status": "IN_PROGRESS",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "MOV-02"
       ],
       "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": "08619760bae73120c6a0bd291e6b992624901e80",
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "base_sha": "ad4454c172545ccfab5c174ec5a03887cebf7e6a",
+      "actual_commit_sha": "f49d97da8f4e07edc74fe61b8654e5136666d513",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-03.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "MOV-03",
@@ -523,7 +523,7 @@
     {
       "task_id": "MOV-04",
       "wave": "W1",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "depends_on": [
         "MOV-01",
         "MOV-03"
@@ -531,13 +531,16 @@
       "risk_review": "CRITICAL_CODEX",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
+      "base_sha": "f49d97da8f4e07edc74fe61b8654e5136666d513",
       "actual_commit_sha": null,
       "acceptance_receipt": null,
       "test_exit": null,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
-      "definition_heading_id": "MOV-04"
+      "definition_heading_id": "MOV-04",
+      "selected_worker_model": "opencode/mimo-v2.6-flash-free",
+      "resume_artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z",
+      "implementation_packet": "docs/tickets/MOV-04-execution-portfolio-move.md"
     },
     {
       "task_id": "MOV-05",
@@ -1316,6 +1319,11 @@
       "date": "2026-10-26",
       "reason": "MOV-02 accepted after 27 mechanical moves, AST review118 files, exact packet232 tests, prior Core regressions, native8 full event JSON equality, offline wheel27 imports and static packaging. Requested three-ticket batch complete; MOV-03 ready but not started.",
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.acceptance.json"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "MOV-03 accepted after 303 tests, persisted spool/archive golden, schema21 and wheel17 import equality; continue MOV-04.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-03.acceptance.json"
     }
   ],
   "requirements_revision": {
@@ -1401,7 +1409,9 @@
       "MOV-04",
       "MOV-05"
     ],
-    "accepted": [],
+    "accepted": [
+      "MOV-03"
+    ],
     "artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z",
     "started_utc": "2026-10-26T06:46:53.308401+00:00",
     "status": "IN_PROGRESS"
