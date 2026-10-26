@@ -10,10 +10,13 @@ substring of a status string.
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import subprocess
 import sys
 from pathlib import Path
+
+FINAL_DIR = Path("docs") / "final"
 
 VNEXT_DIR = Path("docs") / "refactoring" / "vnext"
 TICKETS_CANONICAL = VNEXT_DIR / "tickets_production.json"
@@ -381,18 +384,45 @@ def _git_head(root: Path) -> str:
     return completed.stdout.strip() or "UNKNOWN"
 
 
+def _load_final_module():
+    try:
+        from scripts.dev import final_task
+
+        return final_task
+    except Exception:
+        path = Path(__file__).resolve().with_name("final_task.py")
+        spec = importlib.util.spec_from_file_location("_dev_final_task", path)
+        if spec is None or spec.loader is None:
+            raise ImportError(f"cannot load final projection from {path}")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description="Read-only v3 status projection (stdlib only).")
     parser.add_argument("--root", default=".", help="repository root to read canonical JSON from")
     parser.add_argument("--json", action="store_true", help="emit JSON projection (default)")
     parser.add_argument("--markdown", action="store_true", help="render concise markdown status")
     args = parser.parse_args(argv)
+    root = Path(args.root)
     try:
-        status = load_status(Path(args.root))
-    except ValueError as exc:
+        final_dir = root / FINAL_DIR
+        if final_dir.is_symlink() or final_dir.exists():
+            final_task = _load_final_module()
+            projection = final_task.project_status(root)
+            git_head = _git_head(root)
+            if args.markdown:
+                print(final_task.render_markdown(projection, git_head), end="")
+            else:
+                projection["git_head"] = git_head
+                print(json.dumps(projection, ensure_ascii=False, indent=2))
+            return 0
+        status = load_status(root)
+    except (ValueError, OSError, ImportError) as exc:
         print(f"status error: {exc}", file=sys.stderr)
         return 2
-    git_head = _git_head(Path(args.root))
+    git_head = _git_head(root)
     if args.markdown:
         print(render_markdown(status, git_head), end="")
     else:

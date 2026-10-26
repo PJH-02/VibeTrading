@@ -1623,3 +1623,55 @@ def test_canonical_generation_drift_refuses_stale_ready(tmp_path, monkeypatch):
     monkeypatch.setattr(dev.status_mod, "load_status", read_then_revoke)
     with pytest.raises(ValueError, match="canonical metadata changed"):
         dev.make_packet(root, "VN01", _default_spec())
+
+
+def test_check_scope_allows_unchanged_protected_baseline_key():
+    changed = dev.check_scope(
+        {".env.example": "same", "src/target.py": "old"},
+        {".env.example": "same", "src/target.py": "new"},
+        ["src/target.py"],
+    )
+    assert changed == ["src/target.py"]
+
+
+def test_check_scope_allows_unchanged_protected_null_key():
+    changed = dev.check_scope(
+        {".env.example": None, "src/target.py": "old"},
+        {".env.example": None, "src/target.py": "new"},
+        ["src/target.py"],
+    )
+    assert changed == ["src/target.py"]
+
+
+@pytest.mark.parametrize(
+    "snapshot,after",
+    [
+        ({}, {".env.example": None}),
+        ({".env.example": None}, {}),
+    ],
+)
+def test_check_scope_rejects_protected_null_key_membership_change(snapshot, after):
+    with pytest.raises(ValueError, match="protected path changed"):
+        dev.check_scope(snapshot, after, [])
+
+
+@pytest.mark.parametrize(
+    "snapshot,after",
+    [
+        ({".env.example": "same"}, {".env.example": "changed"}),
+        ({}, {".env.example": "new"}),
+        ({".env.example": "same"}, {}),
+    ],
+)
+def test_check_scope_rejects_changed_protected_even_if_allowed(snapshot, after):
+    with pytest.raises(ValueError, match="protected path changed"):
+        dev.check_scope(snapshot, after, [".env.example"])
+
+
+def test_check_scope_still_validates_unchanged_key_structure_and_types():
+    with pytest.raises(ValueError, match="traversal"):
+        dev.check_scope({"../escape.py": "same"}, {"../escape.py": "same"}, [])
+    with pytest.raises(ValueError, match="string or null"):
+        dev.check_scope(
+            {"src/target.py": True}, {"src/target.py": True}, []
+        )
