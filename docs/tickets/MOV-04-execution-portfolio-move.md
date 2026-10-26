@@ -50,8 +50,10 @@ max_db_bytes=1048576,max_wal_bytes=1048576), signer key sandbox:0x +40 'a'; rese
 4. After closing, capture ALL SQLite schema and rows for fixture orders.sqlite3,
 portfolio.sqlite and nonce DB(s). Discover only root-owned *.sqlite*, exclude
 -wal/-shm/lock files; DBs readonly. Sort schema by type/name and rows by canonical
-JSON. Return paths relative to root, never absolute temp roots. No selective row
-filtering, UUID/path/timestamp masking or golden value rebaselining. Clock makes
+JSON. Return paths relative to root, never absolute temp roots. All rows must be retained. Only portfolio_metadata key=path has an absolute
+fixture path: assert it equals that DB absolute path, then normalize the exact
+fixture-root prefix to <FIXTURE_ROOT> in this one cell for cross-temp comparison.
+No other row filtering, UUID/timestamp masking or golden rebaselining. Clock makes
 all SQL outcomes deterministic; dump blobs as hex if any. Capture schema+all rows,
 not physical SQLite page bytes (WAL checkpoint layout is not an economic state).
 
