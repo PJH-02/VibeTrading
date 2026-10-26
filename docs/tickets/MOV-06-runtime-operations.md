@@ -157,3 +157,7 @@ other lease/gap failures still invalidate and fail closed. Three real-UDS tests
 cover successful drain, early close and lease failure during close. No economic
 function, spool durability protocol, safety gate or source dependency changed.
 After the fix, rebuild all images and repeat the real no-network startup matrix.
+
+Release config hashing also covers every top-level active deploy YAML, including
+primary, Timefolio override, dashboard and LS profiles; rollback snapshots are
+not active config inputs. Source hash already covers all included files.
