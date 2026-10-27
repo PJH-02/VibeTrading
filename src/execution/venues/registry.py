@@ -304,6 +304,7 @@ class _GuardedPermit:
                 raise PermitError("Route state no longer permits this mutation dispatch")
             if record.epoch != self._epoch:
                 raise PermitError("Registry epoch changed before mutation dispatch")
+            self._registry._validate_adapter_scope(record.binding.adapter, record.binding.route)
             try:
                 if self._source in self._registry._used_permit_sources:
                     raise PermitError("Owner permit source has already been consumed")
@@ -323,6 +324,7 @@ class _GuardedPermit:
                        (RouteState.DISABLED, RouteState.QUARANTINED)))
             if not allowed or record.epoch != self._epoch:
                 raise PermitError("Owner permit changed route lifecycle before adapter dispatch")
+            self._registry._validate_adapter_scope(record.binding.adapter, record.binding.route)
         self.dispatch_started = True
         return result
 
@@ -401,7 +403,6 @@ class VenueRegistry:
 
     @staticmethod
     def _validate_adapter_scope(adapter, route: RouteSpec):
-        scope = getattr(adapter, "scope", None)
         native_name = getattr(adapter, "name", None)
         if isinstance(native_name, str) and native_name.strip().casefold() != route.venue.casefold():
             raise ValueError("Native adapter venue name differs from the registered route")
@@ -427,6 +428,7 @@ class VenueRegistry:
             expected_testnet = route.environment == "sandbox"
             if type(use_testnet) is not bool or use_testnet is not expected_testnet:
                 raise ValueError("Native adapter testnet state differs from the registered route")
+        scope = getattr(adapter, "scope", None)
         if scope is None:
             return
         if isinstance(scope, AccountScope):
@@ -629,6 +631,7 @@ class VenueRegistry:
             if record.state is RouteState.REMOVED:
                 raise RouteStateError("Removed route cannot be invoked")
             binding = record.binding
+            self._validate_adapter_scope(binding.adapter, binding.route)
             if operation not in binding.operations:
                 raise UnsupportedOperation("Operation is unsupported by this binding: " + operation)
             mutation = operation in MUTATION_OPERATIONS
@@ -956,10 +959,20 @@ _KIS_OPERATIONS = {
     "account_state": "account_state",
 }
 _SPOT_OPERATIONS = {
-    "query_order": "order_status",
+    "submit": "submit_order_with_permit",
+    "cancel": "cancel_order_with_permit",
+    "query_order": "query_order",
+    "list_open_orders": "list_open_orders",
+    "get_fills": "fills",
     "account_state": "account_state",
+    "instrument_spec": "instrument_metadata",
 }
 _KIWOOM_OPERATIONS = {
+    "submit": "submit_order_with_permit",
+    "cancel": "cancel_order_with_permit",
+    "query_order": "query_order",
+    "list_open_orders": "list_open_orders",
+    "get_fills": "fills",
     "account_state": "account_state",
 }
 
@@ -978,13 +991,10 @@ EXISTING_ADAPTER_MAPS = {
         "list_open_orders, positions, reconcile, instrument_spec and private_or_poll are absent",
     )),
     "execution.brokers.BinanceBrokerAdapter": (_SPOT_OPERATIONS, (
-        "submit_order has no synchronous permit seam and is unsupported",
-        "cancel, list_open_orders, get_fills, positions, reconcile, instrument_spec and private_or_poll are absent",
+        "positions, reconcile and private_or_poll remain unsupported (CAP02/EXEC01)",
     )),
     "execution.brokers.KiwoomBrokerAdapter": (_KIWOOM_OPERATIONS, (
-        "submit_order has no synchronous permit seam and is unsupported",
-        "order_status returns NOT_IMPLEMENTED and is unsupported",
-        "cancel, list_open_orders, get_fills, positions, reconcile, instrument_spec and private_or_poll are absent",
+        "positions, reconcile, instrument_spec and private_or_poll remain unsupported (CAP02/EXEC01)",
     )),
 }
 

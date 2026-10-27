@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
+import inspect
 import json
 import re
 import time
@@ -67,7 +68,12 @@ class _WebSocketBroker:
         if ws is not None:
             await ws.close()
 
-    async def _rpc(self, message: dict[str,Any], *, headers: dict[str,str] | None = None, mutation: bool = False) -> dict[str,Any]:
+    async def _rpc(self, message: dict[str,Any], *, headers: dict[str,str] | None = None, mutation: bool = False,
+                   before_send: Any = None, raw_response: bool = False) -> dict[str,Any]:
+        if before_send is not None:
+            if not callable(before_send) or inspect.iscoroutinefunction(before_send) or inspect.iscoroutinefunction(
+                    getattr(before_send,'__call__',None)):
+                raise TypeError('before_send must be a synchronous callable')
         async with self._rpc_lock:
             if self._ws is None:
                 options={'ping_interval':20,'ping_timeout':20,'max_queue':8,'max_size':2*1024*1024}
@@ -80,7 +86,18 @@ class _WebSocketBroker:
             message={**message,'id':self._request_id}
             sent=False
             async def exchange():
-                nonlocal sent
+                nonlocal sent, before_send
+                # Owner permit is invoked after connection/lock waits and
+                # immediately before the existing ws.send.  It is one-use per
+                # dispatch; an exception prevents any send.
+                callback=before_send
+                before_send=None
+                if callback is not None:
+                    result=callback()
+                    if inspect.isawaitable(result):
+                        if inspect.iscoroutine(result):
+                            result.close()
+                        raise TypeError('before_send must not return an awaitable')
                 # Set before send: a send exception can still mean bytes left.
                 sent=True
                 await self._ws.send(json.dumps(message,separators=(',',':')))
@@ -98,6 +115,10 @@ class _WebSocketBroker:
                 if mutation and sent:
                     raise OrderOutcomeUnknown(f'{self.name} submission outcome unknown; query client order ID; do not retry automatically') from exc
                 raise RuntimeError(f'{self.name} WebSocket RPC unavailable') from exc
+            if raw_response:
+                # Return the actual original envelope even when it carries an
+                # error; the generic wrapper preserves it as an HttpResponse.
+                return response
             if response.get('error') or int(response.get('status',200))>=400:
                 # Do not echo signed requests, auth values, or arbitrary vendor
                 # response bodies into logs.
