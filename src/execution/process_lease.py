@@ -24,7 +24,7 @@ class ProcessLease:
         Callers supply canonical physical identities, never credential/route aliases.
         Every cooperating process must use the same protected shared root.
         """
-        if venue not in {'kis', 'binance', 'bitget', 'bybit', 'grvt', 'arcus', 'hyperliquid'}:
+        if venue not in {'kis', 'kiwoom', 'binance', 'bitget', 'bybit', 'grvt', 'arcus', 'hyperliquid'}:
             raise ValueError('Noncanonical execution venue')
         if environment not in {'offline', 'paper', 'mock', 'real', 'testnet'}:
             raise ValueError('Noncanonical execution environment')

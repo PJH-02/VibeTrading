@@ -230,6 +230,45 @@ class PortfolioLedger:
         row = self._db.execute("SELECT value FROM portfolio_metadata WHERE key='matcher'").fetchone()
         return json.loads(row[0]) if row else None
 
+    def load_reconciliation_state(self):
+        """Read the bounded CAP-02 state stored beside, not inside matcher state."""
+        self._check()
+        row = self._db.execute("SELECT value FROM portfolio_metadata WHERE key='reconciliation'").fetchone()
+        if row is None:
+            return {"revision": 0, "state": None}
+        value = json.loads(row[0])
+        if not isinstance(value, dict) or set(value) != {"revision", "state"}:
+            raise ValueError("Malformed reconciliation metadata")
+        return value
+
+    def save_reconciliation_state(self, state, expected_revision):
+        """CAS a reconciliation document; joins outer transactions atomically."""
+        self._check()
+        if self.mode != TradingMode.PAPER:
+            raise ValueError("Reconciliation projection requires paper mode")
+        if isinstance(expected_revision, bool) or not isinstance(expected_revision, int) or expected_revision < 0:
+            raise ValueError("Invalid reconciliation revision")
+        with self.transaction():
+            old = self.load_reconciliation_state()
+            if old["revision"] != expected_revision:
+                raise ValueError("Reconciliation state revision conflict")
+            value = {"revision": expected_revision + 1, "state": state}
+            document = self._document(value)
+            self._db.execute("INSERT OR REPLACE INTO portfolio_metadata VALUES('reconciliation',?)", (document,))
+        return expected_revision + 1
+
+    def set_reconciliation_gap(self, reason):
+        """Set or clear only the reserved private reconciliation gap."""
+        self._check()
+        if self.mode != TradingMode.PAPER:
+            raise ValueError("Reconciliation gap requires paper mode")
+        with self.transaction():
+            if reason is None:
+                self._db.execute("DELETE FROM portfolio_gaps WHERE instrument='@private'")
+            else:
+                self._db.execute("INSERT OR REPLACE INTO portfolio_gaps VALUES('@private',?)",
+                                 (self._document({"reason": str(reason)}),))
+
     def pragmas(self):
         self._check()
         return {"journal_mode": self._db.execute("PRAGMA journal_mode").fetchone()[0],

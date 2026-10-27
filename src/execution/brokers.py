@@ -578,6 +578,62 @@ class KiwoomBrokerAdapter:
             rows.append(fact)
         return {"provider":self.name,"rows":rows,"complete":result["complete"]}
 
+    async def execution_fills(self, symbol, day, order_id=None, *, max_pages=32, max_rows=4096):
+        """Read native per-execution rows from kt00009; this endpoint has no fee field."""
+        self._validate_scope_context()
+        symbol = self._kiwoom_symbol(symbol)
+        if not isinstance(day, str) or not re.fullmatch(r"[0-9]{8}", day):
+            raise ValueError("Kiwoom execution history requires YYYYMMDD")
+        if order_id is not None:
+            order_id = self._native_order_id(order_id)
+        if type(max_pages) is not int or not 1 <= max_pages <= 128 or type(max_rows) is not int or not 1 <= max_rows <= 10000:
+            raise ValueError("Invalid bounded Kiwoom history limits")
+        body = {"ord_dt": day, "stk_bond_tp": "1", "mrkt_tp": "0", "sell_tp": "0",
+                "qry_tp": "1", "dmst_stex_tp": "KRX", "stk_cd": symbol}
+        # kt00009 has no native order-number filter; query the complete day and filter locally.
+        result = await self._paged_post("kt00009", body, "acnt_ord_cntr_prst_array",
+                                        max_pages=max_pages, max_rows=max_rows)
+        rows = []
+        seen_executions = {}
+        for raw in result["rows"]:
+            raw_symbol = self._row_symbol(raw)
+            if raw_symbol != symbol:
+                continue
+            native_order = str(raw.get("ord_no", ""))
+            if not re.fullmatch(r"[0-9]{7}", native_order):
+                raise IncompleteHistory("Kiwoom row lacks a seven-digit native order ID")
+            if order_id is not None and native_order != order_id:
+                continue
+            if raw.get("io_tp_nm") not in {"현금매수", "현금매도"} or raw.get("mdfy_cncl_tp") not in (None, "", "0"):
+                continue
+            execution_id = str(raw.get("cntr_no", ""))
+            if not re.fullmatch(r"[0-9]{7}", execution_id) or execution_id == "0000000":
+                raise IncompleteHistory("Kiwoom cash execution row lacks a valid native execution ID")
+            try:
+                quantity, price = Decimal(str(raw.get("cntr_qty", ""))), Decimal(str(raw.get("cntr_uv", "")))
+            except (InvalidOperation, ValueError) as exc:
+                raise IncompleteHistory("Malformed Kiwoom execution quantity or price") from exc
+            if not quantity.is_finite() or not price.is_finite() or quantity <= 0 or price <= 0:
+                raise IncompleteHistory("Invalid Kiwoom execution quantity or price")
+            if quantity != quantity.to_integral_value() or price != price.to_integral_value():
+                raise IncompleteHistory("Kiwoom execution quantity and price must be whole units")
+            fact = {"kind": "fill", "scope_key": self.scope.key,
+                    "event_id": f"kiwoom:{day}:{native_order}:{execution_id}",
+                    "symbol": symbol, "order_id": native_order,
+                    "side": "buy" if raw["io_tp_nm"] == "현금매수" else "sell",
+                    "quantity": str(quantity), "price": str(price), "fee": None,
+                    "fee_known": False, "fee_currency": None,
+                    "exchange_time": raw.get("cntr_tm"), "exchange_time_precision": "1s", "raw": raw}
+            previous = seen_executions.get(fact["event_id"])
+            if previous is not None:
+                if previous != fact:
+                    raise IncompleteHistory("Conflicting Kiwoom facts share one native execution ID")
+                continue
+            seen_executions[fact["event_id"]] = fact
+            rows.append(fact)
+        return {"provider": self.name, "scope_key": self.scope.key, "symbol": symbol,
+                "day": day, "rows": rows, "complete": result["complete"]}
+
     async def _paged_post(self, api_id, body, row_key, *, max_pages=20, max_rows=5000):
         self._validate_scope_context()
         all_rows, seen = [], set(); cont, key = "N", ""; complete = False; top_level_facts = {}; total_bytes = 0
