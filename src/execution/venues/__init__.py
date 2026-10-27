@@ -1,0 +1,36 @@
+"""Explicit local venue registry surface; imports no venue client or SDK."""
+from .registry import (
+    AliasBinding,
+    Binding,
+    Capabilities,
+    ForeignOrderError,
+    MANDATORY_REMOVAL_FACTS,
+    PermitError,
+    RemovalBlocked,
+    RouteError,
+    RouteSpec,
+    RouteState,
+    RouteStateError,
+    SUPPORTED_OPERATIONS,
+    UnsupportedOperation,
+    VenueRegistry,
+    existing_adapter_contract,
+)
+
+__all__ = [
+    "AliasBinding",
+    "Binding",
+    "Capabilities",
+    "ForeignOrderError",
+    "MANDATORY_REMOVAL_FACTS",
+    "PermitError",
+    "RemovalBlocked",
+    "RouteError",
+    "RouteSpec",
+    "RouteState",
+    "RouteStateError",
+    "SUPPORTED_OPERATIONS",
+    "UnsupportedOperation",
+    "VenueRegistry",
+    "existing_adapter_contract",
+]

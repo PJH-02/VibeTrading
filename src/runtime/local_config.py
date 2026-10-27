@@ -230,3 +230,98 @@ class LocalRuntimePlan:
         return cls(endpoint,uid,positive(document['disk_reserve_bytes'],'disk_reserve_bytes'),transport,
                    document['engine'],tuple(producers),document['etf_enabled'],observed,document['storage'],
                    document['events'],document['snapshot'])
+
+
+def parse_execution_aliases(document, registry):
+    """Parse a strict bounded strategy/alias map against an explicit registry.
+
+    This is an added declarative parser.  It does not alter LocalRuntimePlan,
+    import a venue client/SDK/feed/auth module, load Python module names from
+    config, or auto-enroll Timefolio.  Validation completes before any alias is
+    installed in the registry.
+    """
+    from collections.abc import Mapping
+    from execution.execution_ledger import AccountScope
+    from execution.venues.registry import MAX_ALIAS_DOCUMENT_BYTES, AliasBinding
+
+    def text(value, name, limit=256):
+        if not isinstance(value, str) or not value.strip() or len(value.encode('utf-8')) > limit:
+            raise ValueError(name + ' requires a bounded explicit string')
+        return value
+
+    if isinstance(document, (str, bytes, bytearray)):
+        raw = document.encode('utf-8') if isinstance(document, str) else bytes(document)
+        if len(raw) > MAX_ALIAS_DOCUMENT_BYTES:
+            raise ValueError('execution alias config exceeds its explicit byte limit')
+
+        def pairs(values):
+            result = {}
+            for key, value in values:
+                if key in result:
+                    raise ValueError('duplicate execution alias/config key')
+                result[key] = value
+            return result
+
+        document = json.loads(raw, object_pairs_hook=pairs)
+    if not isinstance(document, Mapping):
+        raise ValueError('execution aliases require a strict mapping')
+    if len(document) > registry.max_aliases:
+        raise ValueError('execution alias document exceeds max_aliases')
+    try:
+        raw_document = json.dumps(document, sort_keys=True, separators=(',', ':'),
+                                  ensure_ascii=False, allow_nan=False).encode('utf-8')
+    except (TypeError, ValueError) as error:
+        raise ValueError('execution alias config is not bounded canonical JSON') from error
+    if len(raw_document) > MAX_ALIAS_DOCUMENT_BYTES:
+        raise ValueError('execution alias config exceeds its explicit byte limit')
+
+    required = {'route_id', 'symbol', 'market_segment', 'product', 'account_scope', 'environment'}
+    optional = {'required_feeds', 'execution_enabled'}
+    bindings = []
+    for strategy_id, aliases in document.items():
+        text(strategy_id, 'strategy_id', 128)
+        if not isinstance(aliases, Mapping) or not aliases:
+            raise ValueError('each strategy requires an explicit alias mapping')
+        for alias, spec in aliases.items():
+            text(alias, 'alias', 128)
+            if not isinstance(spec, Mapping):
+                raise ValueError('each alias requires an explicit mapping')
+            keys = set(spec)
+            if not required <= keys or keys - required - optional:
+                raise ValueError('invalid execution alias fields')
+            route = registry.route(text(spec['route_id'], 'route_id', 128))
+            symbol = text(spec['symbol'], 'symbol', 128)
+            segment = text(spec['market_segment'], 'market_segment', 128)
+            product = text(spec['product'], 'product', 128)
+            environment = text(spec['environment'], 'environment', 128)
+            scope_document = spec['account_scope']
+            if isinstance(scope_document, AccountScope):
+                scope = scope_document
+            elif isinstance(scope_document, Mapping):
+                if set(scope_document) != {'venue', 'account', 'product', 'environment'}:
+                    raise ValueError('account_scope requires exactly venue/account/product/environment')
+                scope = AccountScope(
+                    text(scope_document['venue'], 'account_scope.venue', 200),
+                    text(scope_document['account'], 'account_scope.account', 200),
+                    text(scope_document['product'], 'account_scope.product', 200),
+                    text(scope_document['environment'], 'account_scope.environment', 200))
+            else:
+                raise ValueError('account_scope requires an explicit bounded mapping')
+            if (segment != route.market_segment or product != route.product
+                    or environment != route.environment or scope.key != route.account_scope.key):
+                raise ValueError('alias does not match the registered exact route tuple')
+            feeds = spec.get('required_feeds', ())
+            if not isinstance(feeds, (list, tuple)) or len(feeds) > 16:
+                raise ValueError('required_feeds requires a bounded explicit list')
+            feeds = tuple(text(feed, 'required_feed', 128) for feed in feeds)
+            if len(set(feeds)) != len(feeds):
+                raise ValueError('required_feeds must be unique')
+            execution_enabled = spec.get('execution_enabled', True)
+            if type(execution_enabled) is not bool:
+                raise ValueError('execution_enabled requires an explicit boolean')
+            bindings.append(AliasBinding(
+                strategy_id=strategy_id, alias=alias, route_id=route.route_id,
+                symbol=symbol, market_segment=segment, product=product,
+                environment=environment, account_scope=scope,
+                required_feeds=feeds, execution_enabled=execution_enabled))
+    return tuple(registry.register_aliases(bindings))
