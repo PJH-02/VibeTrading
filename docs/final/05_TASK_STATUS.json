@@ -38,16 +38,16 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 12,
+    "accepted": 13,
     "in_progress": 0,
     "blocked": 0,
-    "not_started": 21,
+    "not_started": 20,
     "external_not_authorized": 2
   },
   "next_ready_candidate": [
     "CLN-02",
-    "STR-01",
     "CAP-01",
+    "STR-02",
     "VEN-01",
     "FEED-01"
   ],
@@ -428,7 +428,7 @@
     "missing_required_local_code_blocks_feature_release": true
   },
   "active_task_id": null,
-  "last_accepted_task_id": "CAP-00",
+  "last_accepted_task_id": "STR-01",
   "stop_requested": false,
   "tickets": [
     {
@@ -952,7 +952,7 @@
     {
       "task_id": "STR-01",
       "wave": "W3",
-      "status": "NOT_STARTED",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "MOV-05",
         "CAP-00"
@@ -960,13 +960,101 @@
       "risk_review": "CRITICAL_CODEX",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "base_sha": "af0210f71732d95c8224cce9912717b9fda75600",
+      "actual_commit_sha": "3f2b87fe2524ae73357245b10247a474c0936356",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/STR-01-luna-resume-20261027/STR-01.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
-      "definition_heading_id": "STR-01"
+      "definition_heading_id": "STR-01",
+      "bounded_packet": "docs/tickets/STR-01-file-plugins.md",
+      "worker_attempts": [
+        {
+          "phase": "design_audit",
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "exit": 0,
+          "scope_pass": true,
+          "source_changes": 0
+        },
+        {
+          "phase": "implementation",
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "exit": 143,
+          "scope_pass": true,
+          "acceptance": "FAIL_INITIAL_DRAFT_NOT_APPLIED",
+          "stop_reason": "Codex stopped isolated draft after review; missing test-only oracle environment and incomplete source-owned economic policies",
+          "independent_passed": 282,
+          "independent_failed": 9
+        },
+        {
+          "phase": "repair1",
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "state": "TIMEOUT_NOT_APPLIED",
+          "test_fixture_environment_corrected": true,
+          "exit": 124,
+          "independent_passed": 306,
+          "independent_failed": 1
+        },
+        {
+          "phase": "repair2",
+          "model": "freellmapi/glm-4.5-flash",
+          "state": "PROVIDER_FAILED_NO_EDITS",
+          "model_change_announced": true,
+          "reason": "GLM availability restored HTTP200; reviewed partial DeepSeek timeout and semantic defects",
+          "exit": 143,
+          "changed_paths": [],
+          "gateway_statuses": [
+            200,
+            429,
+            200,
+            429,
+            429,
+            429
+          ],
+          "invalid_tool_call": "ls/invalid unavailable; only bash/edit/read/write allowed"
+        },
+        {
+          "phase": "authorized_luna_owner",
+          "model": "gpt-6-luna",
+          "exit": 0,
+          "scoped_passed": 45,
+          "isolated": true
+        },
+        {
+          "phase": "authorized_luna_runtime",
+          "model": "gpt-6-luna",
+          "exit": 0,
+          "scoped_passed": 91,
+          "isolated": true
+        },
+        {
+          "phase": "authorized_luna_plugins",
+          "model": "gpt-6-luna",
+          "exit": 0,
+          "scoped_passed": 152,
+          "isolated": true
+        }
+      ],
+      "provider_observation": {
+        "priority1": "freellmapi/glm-4.5-flash",
+        "gateway": "CODING_REQUESTS_HTTP_429_AFTER_SMOKE_200",
+        "quota": "RATE_LIMITED_RETRY_AFTER_90_AND_600_SECONDS",
+        "selected": "freellmapi/glm-4.5-flash",
+        "no_paid_route": true,
+        "gemini": "HTTP_502",
+        "alternative": "opencode/glm-5.3-flash-free read-tool smoke passed exit0; not coding proof"
+      },
+      "review_receipt": "/home/pjh/.local/state/codex-opencode/runs/STR-01-20261027T022702Z/STR-01.review.json",
+      "candidate_source_manifest": "/home/pjh/.local/state/codex-opencode/runs/STR-01-20261027T022702Z/STR-01.partial-source-manifest.json",
+      "candidate_source_applied": true,
+      "worker_fallback_authorization": {
+        "date": "2026-10-27",
+        "model": "gpt-6-luna",
+        "trigger": "OpenCode repair allowance exhausted; prior partial work reviewed",
+        "scope": "STR-01 then next ready stage ticket; local only"
+      },
+      "prior_review_receipt": "/home/pjh/.local/state/codex-opencode/runs/STR-01-20261027T022702Z/STR-01.review.json",
+      "acceptance_receipt_sha256": "2e71507ee841f5b82daa6b0855fb16d25265157638fefc4a49c1e9977ffe4eb5"
     },
     {
       "task_id": "CAP-01",
@@ -1648,6 +1736,22 @@
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN-01-CAP-00-20261026T173148Z/CAP-00.acceptance.json",
       "receipt_sha256": "f7198d6864afb40a14976f5daa4be81dff34dc930cd5a69f9a7ecf55e6947b5d",
       "actual_commit_sha": "6a914585e503ca8e0b1f2ebe297fe16d0693c448"
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "User requested next ticket plus whole-plan remaining-work report. Select W3 STR-01 by final01 priority; predecessor receipts verified. Read-only DeepSeek design audit after GLM gateway unreachable; no quota claim."
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "User explicitly chose preserve current state and remaining-work report instead of an extra repair. STR-01 BLOCKED, no source adopted/accepted; only scoped status/report artifacts updated."
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "User authorized GPT-6 Luna fallback on provider unavailability or exhausted OpenCode delegation allowance, and resumed STR01 plus next stage."
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "STR01 accepted on independent2559 Linux+25 guarded lease+41 oracle cases, final offline wheel/removal imports. User-authorized Luna fallback; next stage STR02 now ready."
     }
   ],
   "requirements_revision": {
@@ -1723,6 +1827,12 @@
       "current_selected": null,
       "no_paid_routes": true,
       "gemini_working_request": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/alternative-provider-smoke2.json"
+    },
+    "user_authorized_native_fallback": {
+      "model": "gpt-6-luna",
+      "trigger": "OpenCode/FreeLLMAPI unavailable OR per-ticket delegation allowance exhausted",
+      "lead_model_unchanged": true,
+      "date": "2026-10-27"
     }
   },
   "execution_checkout": {
@@ -1734,19 +1844,15 @@
   "active_batch": {
     "requested_tasks": 2,
     "tasks": [
-      "CLN-01",
-      "CAP-00"
+      "STR-01",
+      "STR-02"
     ],
     "accepted": [
-      "CLN-01",
-      "CAP-00"
+      "STR-01"
     ],
-    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN-01-CAP-00-20261026T173148Z",
-    "status": "COMPLETED_REQUESTED_TWO_TICKETS",
-    "push_authorized": true,
-    "push_target": "origin codex/move-core-feeds",
-    "completed_utc": "2026-10-26T18:35:25.957176+00:00",
-    "next_not_started": "CLN-02"
+    "status": "STR01_ACCEPTED_STR02_NEXT",
+    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/STR-01-luna-resume-20261027",
+    "selection_reason": "User resumed STR01 and next stage; STR02 requires STR01 acceptance first"
   },
   "completed_batches": [
     {
