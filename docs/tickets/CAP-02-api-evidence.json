@@ -1,0 +1,791 @@
+{
+  "date": "2026-10-28",
+  "url": "https://openapi.kiwoom.com/m/guide/apiguide/08/kt00009",
+  "html_sha256": "bf27773a11898cdd2ce1323e17b87ac2bd8905908d7e5a3c934bdaeee401b258",
+  "tables": [
+    [
+      [
+        "Method",
+        "POST"
+      ],
+      [
+        "운영 도메인",
+        "https://api.kiwoom.com"
+      ],
+      [
+        "모의투자도메인",
+        "https://mockapi.kiwoom.com (KRX만 지원가능)"
+      ],
+      [
+        "URL",
+        "/api/dostk/acnt"
+      ],
+      [
+        "Format",
+        "JSON"
+      ],
+      [
+        "Content-Type",
+        "application/json;charset=UTF-8"
+      ]
+    ],
+    [
+      [
+        "Element",
+        "한글명",
+        "Type",
+        "Required",
+        "Length",
+        "Description"
+      ],
+      [
+        "authorization",
+        "접근토큰",
+        "String",
+        "Y",
+        "1000",
+        "토큰 지정시 토큰타입(\"Bearer\") 붙혀서 호출 <br/> 예) Bearer Egicyx..."
+      ],
+      [
+        "cont-yn",
+        "연속조회여부",
+        "String",
+        "N",
+        "1",
+        "응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅"
+      ],
+      [
+        "next-key",
+        "연속조회키",
+        "String",
+        "N",
+        "50",
+        "응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅"
+      ],
+      [
+        "api-id",
+        "TR명",
+        "String",
+        "Y",
+        "10",
+        "8자리 TR코드, ex) ka00001, usa10099"
+      ]
+    ],
+    [
+      [
+        "Element",
+        "한글명",
+        "type",
+        "Required",
+        "Length",
+        "Description"
+      ],
+      [
+        "ord_dt",
+        "주문일자",
+        "String",
+        "N",
+        "8",
+        "YYYYMMDD"
+      ],
+      [
+        "stk_bond_tp",
+        "주식채권구분",
+        "String",
+        "Y",
+        "1",
+        "0:전체, 1:주식, 2:채권"
+      ],
+      [
+        "mrkt_tp",
+        "시장구분",
+        "String",
+        "Y",
+        "1",
+        "0:전체, 1:코스피, 2:코스닥, 3:OTCBB, 4:ECN"
+      ],
+      [
+        "sell_tp",
+        "매도수구분",
+        "String",
+        "Y",
+        "1",
+        "0:전체, 1:매도, 2:매수"
+      ],
+      [
+        "qry_tp",
+        "조회구분",
+        "String",
+        "Y",
+        "1",
+        "0:전체, 1:체결"
+      ],
+      [
+        "stk_cd",
+        "종목코드",
+        "String",
+        "N",
+        "12",
+        "전문 조회할 종목코드"
+      ],
+      [
+        "fr_ord_no",
+        "시작주문번호",
+        "String",
+        "N",
+        "7",
+        "시작주문번호의 이전 주문은 조회 되지 않으며 약정금액에도 포함 되지 않음"
+      ],
+      [
+        "dmst_stex_tp",
+        "국내거래소구분",
+        "String",
+        "Y",
+        "6",
+        "%:(전체),KRX:한국거래소,NXT:넥스트트레이드,SOR:최선주문집행"
+      ]
+    ],
+    [
+      [
+        "Element",
+        "한글명",
+        "type",
+        "Required",
+        "Length",
+        "Description"
+      ],
+      [
+        "cont-yn",
+        "연속조회여부",
+        "다음 데이터가 있을시 Y값 전달",
+        "N",
+        "1",
+        "다음 데이터가 있을시 Y값 전달"
+      ],
+      [
+        "next-key",
+        "연속조회키",
+        "다음 데이터가 있을시 다음 키값 전달",
+        "N",
+        "50",
+        "다음 데이터가 있을시 다음 키값 전달"
+      ],
+      [
+        "api-id",
+        "TR명",
+        "8자리 TR코드, ex) ka00001, usa10099",
+        "Y",
+        "10",
+        "8자리 TR코드, ex) ka00001, usa10099"
+      ]
+    ],
+    [
+      [
+        "Element",
+        "한글명",
+        "type",
+        "Required",
+        "Length",
+        "Description"
+      ],
+      [
+        "sell_grntl_engg_amt",
+        "매도약정금액",
+        "단위: 원, 좌측 0-padding 처리된 부호 포함 12자리 숫자",
+        "N",
+        "12",
+        "단위: 원, 좌측 0-padding 처리된 부호 포함 12자리 숫자"
+      ],
+      [
+        "buy_engg_amt",
+        "매수약정금액",
+        "단위: 원, 좌측 0-padding 처리된 부호 포함 12자리 숫자",
+        "N",
+        "12",
+        "단위: 원, 좌측 0-padding 처리된 부호 포함 12자리 숫자"
+      ],
+      [
+        "engg_amt",
+        "약정금액",
+        "단위: 원, 좌측 0-padding 처리된 부호 포함 12자리 숫자",
+        "N",
+        "12",
+        "단위: 원, 좌측 0-padding 처리된 부호 포함 12자리 숫자"
+      ],
+      [
+        "acnt_ord_cntr_prst_array",
+        "계좌별주문체결현황배열",
+        "Data List (Array)",
+        "N",
+        "",
+        "Data List (Array)"
+      ],
+      [
+        "- stk_bond_tp",
+        "주식채권구분",
+        "1: 주식, 2: 채권",
+        "N",
+        "1",
+        "1: 주식, 2: 채권"
+      ],
+      [
+        "- ord_no",
+        "주문번호",
+        "고유 주문번호 7자리",
+        "N",
+        "7",
+        "고유 주문번호 7자리"
+      ],
+      [
+        "- stk_cd",
+        "종목번호",
+        "접두어 1자리 + 종목코드 6자리, 접두어(A: 주식 / J: ELW / Q: ETN)",
+        "N",
+        "12",
+        "접두어 1자리 + 종목코드 6자리, 접두어(A: 주식 / J: ELW / Q: ETN)"
+      ],
+      [
+        "- trde_tp",
+        "매매구분",
+        "지정가, 시장가, 조건부지정가, 장마감후시간외, 장시작전시간외, 최유리지정가, 최우선지정가, 지정가(IOC), 시장가(IOC), 최유리(IOC), 지정가(FOK), 시장가(FOK), 최유리(FOK), 스톱지정가, 중간가, 중간가(IOC), 중간가(FOK)",
+        "N",
+        "15",
+        "지정가, 시장가, 조건부지정가, 장마감후시간외, 장시작전시간외, 최유리지정가, 최우선지정가, 지정가(IOC), 시장가(IOC), 최유리(IOC), 지정가(FOK), 시장가(FOK), 최유리(FOK), 스톱지정가, 중간가, 중간가(IOC), 중간가(FOK)"
+      ],
+      [
+        "- io_tp_nm",
+        "주문유형구분",
+        "현금매수, 현금매도, 융자매수, 융자매도",
+        "N",
+        "20",
+        "현금매수, 현금매도, 융자매수, 융자매도"
+      ],
+      [
+        "- ord_qty",
+        "주문수량",
+        "단위: 1주, 좌측 0-padding 처리된 부호 포함 10자리 숫자",
+        "N",
+        "10",
+        "단위: 1주, 좌측 0-padding 처리된 부호 포함 10자리 숫자"
+      ],
+      [
+        "- ord_uv",
+        "주문단가",
+        "단위: 원, 좌측 0-padding 처리된 부호 포함 10자리 숫자",
+        "N",
+        "10",
+        "단위: 원, 좌측 0-padding 처리된 부호 포함 10자리 숫자"
+      ],
+      [
+        "- cnfm_qty",
+        "확인수량",
+        "단위: 1주, 좌측 0-padding 처리된 부호 포함 10자리 숫자",
+        "N",
+        "10",
+        "단위: 1주, 좌측 0-padding 처리된 부호 포함 10자리 숫자"
+      ],
+      [
+        "- rsrv_oppo",
+        "예약/반대",
+        "반대 매매인 경우 출력",
+        "N",
+        "4",
+        "반대 매매인 경우 출력"
+      ],
+      [
+        "- cntr_no",
+        "체결번호",
+        "체결번호 7자리",
+        "N",
+        "7",
+        "체결번호 7자리"
+      ],
+      [
+        "- acpt_tp",
+        "접수구분",
+        "접수",
+        "N",
+        "8",
+        "접수"
+      ],
+      [
+        "- orig_ord_no",
+        "원주문번호",
+        "원 주문이 없는 경우 '0000000'으로 출력",
+        "N",
+        "7",
+        "원 주문이 없는 경우 '0000000'으로 출력"
+      ],
+      [
+        "- stk_nm",
+        "종목명",
+        "stk_cd의 종목명",
+        "N",
+        "20",
+        "stk_cd의 종목명"
+      ],
+      [
+        "- setl_tp",
+        "결제구분",
+        "삼일결제: 3영업일 후 결제처리",
+        "N",
+        "8",
+        "삼일결제: 3영업일 후 결제처리"
+      ],
+      [
+        "- crd_deal_tp",
+        "신용거래구분",
+        "보통매매, 자기융자매수, 자기융자매도",
+        "N",
+        "20",
+        "보통매매, 자기융자매수, 자기융자매도"
+      ],
+      [
+        "- cntr_qty",
+        "체결수량",
+        "단위: 1주, 좌측 0-padding 처리된 부호 포함 10자리 숫자",
+        "N",
+        "10",
+        "단위: 1주, 좌측 0-padding 처리된 부호 포함 10자리 숫자"
+      ],
+      [
+        "- cntr_uv",
+        "체결단가",
+        "단위: 원, 좌측 0-padding 처리된 부호 포함 10자리 숫자",
+        "N",
+        "10",
+        "단위: 원, 좌측 0-padding 처리된 부호 포함 10자리 숫자"
+      ],
+      [
+        "- comm_ord_tp",
+        "통신구분",
+        "영웅문4, 영웅문S#, REST API",
+        "N",
+        "8",
+        "영웅문4, 영웅문S#, REST API"
+      ],
+      [
+        "- mdfy_cncl_tp",
+        "정정/취소구분",
+        "정정주문, 취소주문",
+        "N",
+        "12",
+        "정정주문, 취소주문"
+      ],
+      [
+        "- cntr_tm",
+        "체결시간",
+        "HH:mm:ss",
+        "N",
+        "8",
+        "HH:mm:ss"
+      ],
+      [
+        "- dmst_stex_tp",
+        "국내거래소구분",
+        "KRX, NXT, SOR",
+        "N",
+        "6",
+        "KRX, NXT, SOR"
+      ],
+      [
+        "- cond_uv",
+        "스톱가",
+        "단위: 원, 좌측 0-padding 처리된 부호 포함 10자리 숫자",
+        "N",
+        "10",
+        "단위: 원, 좌측 0-padding 처리된 부호 포함 10자리 숫자"
+      ]
+    ]
+  ],
+  "official_git_ref": "953e5dbff123f437ab4d11a78a95191a685eb51f",
+  "official_git_path": "examples/국내주식/계좌/get_domestic_account_order_fill_status.py",
+  "official_blob_sha": "f712c8153de3fdbd95c4aff5f99983b6f4a7a7c7",
+  "decisions": [
+    "kt00009 POST /api/dostk/acnt exposes cntr_no 7-digit native execution identity plus cntr_qty/cntr_uv in execution row. Unlike ka10076, it supports native ID dedup.",
+    "Request ord_dt explicitday, stk_bond_tp=1,mrkt_tp=0,sell_tp=0,qry_tp=1,dmst_stex_tp=KRX,optionalstk_cd. No reverse targetord_no cursor misuse.",
+    "Response acnt_ord_cntr_prst_array. Filter exact native ord_no+symbol; credit/cancel/modify/nonexecution rows must not become fill. Source exec ID namespaced day/order/cntr_no; NEVER invented timestamp fill ID.",
+    "No per-execution fee is declared. Missing fee remains unknown; do not convert vendor day aggregate ka10076 into perfill fee or infer notional from latest price. Unknown fee keeps economic readiness blocked for CAP03.",
+    "Kiwoom polling uses bounded complete day/history pages. Missing/invalid cont-yn,missing orcyclic nextkey/foreignsymbol/nativeID/nonfiniteqty/price/unknownhistory never permit baseline ready.",
+    "kt00007 mdfy_cncl=취소확인, ori_ord, cnfm_qty, ord_remnq are explicit native cancellation facts; match exact original order and complete kt00009 native execution sums before terminal cancellation. Cancel ACK alone remains pending."
+  ],
+  "kt00007_cancel_proof": {
+    "url": "https://openapi.kiwoom.com/m/guide/apiguide/08/kt00007",
+    "html_sha256": "8f34b3436becd02f43db8ddc8b9b24fee24fafc65c055ff7bbe0cab098702e64",
+    "tables": [
+      [
+        [
+          "Method",
+          "POST"
+        ],
+        [
+          "운영 도메인",
+          "https://api.kiwoom.com"
+        ],
+        [
+          "모의투자 도메인",
+          "https://mockapi.kiwoom.com\r\n                                \r\n                                    (KRX만 지원가능)"
+        ],
+        [
+          "URL",
+          "/api/dostk/acnt"
+        ],
+        [
+          "Format",
+          "JSON"
+        ],
+        [
+          "Content-Type",
+          "application/json;charset=UTF-8"
+        ]
+      ],
+      [
+        [
+          "Element",
+          "한글명",
+          "Type",
+          "Required",
+          "Length",
+          "Description"
+        ],
+        [
+          "authorization",
+          "접근토큰",
+          "String",
+          "Y",
+          "1000",
+          "토큰 지정시 토큰타입(\"Bearer\") 붙혀서 호출 <br/> 예) Bearer Egicyx..."
+        ],
+        [
+          "cont-yn",
+          "연속조회여부",
+          "String",
+          "N",
+          "1",
+          "응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅"
+        ],
+        [
+          "next-key",
+          "연속조회키",
+          "String",
+          "N",
+          "50",
+          "응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅"
+        ],
+        [
+          "api-id",
+          "TR명",
+          "String",
+          "Y",
+          "10",
+          "8자리 TR코드, ex) ka00001, usa10099"
+        ]
+      ],
+      [
+        [
+          "Element",
+          "한글명",
+          "type",
+          "Required",
+          "Length",
+          "Description"
+        ],
+        [
+          "ord_dt",
+          "주문일자",
+          "String",
+          "N",
+          "8",
+          "YYYYMMDD"
+        ],
+        [
+          "qry_tp",
+          "조회구분",
+          "String",
+          "Y",
+          "1",
+          "1:주문순, 2:역순, 3:미체결, 4:체결내역만"
+        ],
+        [
+          "stk_bond_tp",
+          "주식채권구분",
+          "String",
+          "Y",
+          "1",
+          "0:전체, 1:주식, 2:채권"
+        ],
+        [
+          "sell_tp",
+          "매도수구분",
+          "String",
+          "Y",
+          "1",
+          "0:전체, 1:매도, 2:매수"
+        ],
+        [
+          "stk_cd",
+          "종목코드",
+          "String",
+          "N",
+          "12",
+          "전체 종목 조회는 빈값('')으로 설정"
+        ],
+        [
+          "fr_ord_no",
+          "시작주문번호",
+          "String",
+          "N",
+          "7",
+          "시작주문번호 입력 시 이전 주문은 조회되지 않음, 전체 조회는 빈값('')으로 설정"
+        ],
+        [
+          "dmst_stex_tp",
+          "국내거래소구분",
+          "String",
+          "Y",
+          "6",
+          "%:(전체),KRX:한국거래소,NXT:넥스트트레이드,SOR:최선주문집행"
+        ]
+      ],
+      [
+        [
+          "Element",
+          "한글명",
+          "type",
+          "Required",
+          "Length",
+          "Description"
+        ],
+        [
+          "cont-yn",
+          "연속조회여부",
+          "다음 데이터가 있을시 Y값 전달",
+          "N",
+          "1",
+          "다음 데이터가 있을시 Y값 전달"
+        ],
+        [
+          "next-key",
+          "연속조회키",
+          "다음 데이터가 있을시 다음 키값 전달",
+          "N",
+          "50",
+          "다음 데이터가 있을시 다음 키값 전달"
+        ],
+        [
+          "api-id",
+          "TR명",
+          "8자리 TR코드, ex) ka00001, usa10099",
+          "Y",
+          "10",
+          "8자리 TR코드, ex) ka00001, usa10099"
+        ]
+      ],
+      [
+        [
+          "Element",
+          "한글명",
+          "type",
+          "Required",
+          "Length",
+          "Description"
+        ],
+        [
+          "acnt_ord_cntr_prps_dtl",
+          "계좌별주문체결내역상세",
+          "Data List (Array)",
+          "N",
+          "",
+          "Data List (Array)"
+        ],
+        [
+          "- ord_no",
+          "주문번호",
+          "고유 주문번호 7자리",
+          "N",
+          "7",
+          "고유 주문번호 7자리"
+        ],
+        [
+          "- stk_cd",
+          "종목번호",
+          "접두어 1자리 + 종목코드 6자리, 접두어(A: 주식 / J: ELW / Q: ETN)",
+          "N",
+          "12",
+          "접두어 1자리 + 종목코드 6자리, 접두어(A: 주식 / J: ELW / Q: ETN)"
+        ],
+        [
+          "- trde_tp",
+          "매매구분",
+          "지정가, 시장가, 조건부지정가, 장마감후시간외, 장시작전시간외, 최유리지정가, 최우선지정가, 지정가(IOC), 시장가(IOC), 최유리(IOC), 지정가(FOK), 시장가(FOK), 최유리(FOK), 스톱지정가, 중간가, 중간가(IOC), 중간가(FOK)",
+          "N",
+          "20",
+          "지정가, 시장가, 조건부지정가, 장마감후시간외, 장시작전시간외, 최유리지정가, 최우선지정가, 지정가(IOC), 시장가(IOC), 최유리(IOC), 지정가(FOK), 시장가(FOK), 최유리(FOK), 스톱지정가, 중간가, 중간가(IOC), 중간가(FOK)"
+        ],
+        [
+          "- crd_tp",
+          "신용구분",
+          "보통매매, 자기융자매수",
+          "N",
+          "20",
+          "보통매매, 자기융자매수"
+        ],
+        [
+          "- ord_qty",
+          "주문수량",
+          "단위: 1주, 좌측 0-padding 처리된 부호 포함 10자리 숫자",
+          "N",
+          "10",
+          "단위: 1주, 좌측 0-padding 처리된 부호 포함 10자리 숫자"
+        ],
+        [
+          "- ord_uv",
+          "주문단가",
+          "단위: 원, 좌측 0-padding 처리된 부호 포함 10자리 숫자",
+          "N",
+          "10",
+          "단위: 원, 좌측 0-padding 처리된 부호 포함 10자리 숫자"
+        ],
+        [
+          "- cnfm_qty",
+          "확인수량",
+          "단위: 1주, 좌측 0-padding 처리된 부호 포함 10자리 숫자",
+          "N",
+          "10",
+          "단위: 1주, 좌측 0-padding 처리된 부호 포함 10자리 숫자"
+        ],
+        [
+          "- acpt_tp",
+          "접수구분",
+          "접수",
+          "N",
+          "20",
+          "접수"
+        ],
+        [
+          "- rsrv_tp",
+          "반대여부",
+          "반대 매매인 경우 출력",
+          "N",
+          "20",
+          "반대 매매인 경우 출력"
+        ],
+        [
+          "- ord_tm",
+          "주문시간",
+          "HH:mm:ss",
+          "N",
+          "8",
+          "HH:mm:ss"
+        ],
+        [
+          "- ori_ord",
+          "원주문",
+          "원 주문이 없는 경우 '0000000'으로 출력",
+          "N",
+          "7",
+          "원 주문이 없는 경우 '0000000'으로 출력"
+        ],
+        [
+          "- stk_nm",
+          "종목명",
+          "stk_cd의 종목명",
+          "N",
+          "40",
+          "stk_cd의 종목명"
+        ],
+        [
+          "- io_tp_nm",
+          "주문구분",
+          "현금매수, 현금매도, 융자매수, 융자매도",
+          "N",
+          "20",
+          "현금매수, 현금매도, 융자매수, 융자매도"
+        ],
+        [
+          "- loan_dt",
+          "대출일",
+          "YYYYMMDD",
+          "N",
+          "8",
+          "YYYYMMDD"
+        ],
+        [
+          "- cntr_qty",
+          "체결수량",
+          "단위: 1주, 좌측 0-padding 처리된 부호 포함 10자리 숫자",
+          "N",
+          "10",
+          "단위: 1주, 좌측 0-padding 처리된 부호 포함 10자리 숫자"
+        ],
+        [
+          "- cntr_uv",
+          "체결단가",
+          "단위: 원, 좌측 0-padding 처리된 부호 포함 10자리 숫자",
+          "N",
+          "10",
+          "단위: 원, 좌측 0-padding 처리된 부호 포함 10자리 숫자"
+        ],
+        [
+          "- ord_remnq",
+          "주문잔량",
+          "단위: 1주, 좌측 0-padding 처리된 부호 포함 10자리 숫자",
+          "N",
+          "10",
+          "단위: 1주, 좌측 0-padding 처리된 부호 포함 10자리 숫자"
+        ],
+        [
+          "- comm_ord_tp",
+          "통신구분",
+          "영웅문4, 영웅문S#, REST API",
+          "N",
+          "20",
+          "영웅문4, 영웅문S#, REST API"
+        ],
+        [
+          "- mdfy_cncl",
+          "정정취소",
+          "정정확인, 취소확인",
+          "N",
+          "20",
+          "정정확인, 취소확인"
+        ],
+        [
+          "- cnfm_tm",
+          "확인시간",
+          "HH:mm:ss",
+          "N",
+          "8",
+          "HH:mm:ss"
+        ],
+        [
+          "- dmst_stex_tp",
+          "국내거래소구분",
+          "KRX, NXT, SOR",
+          "N",
+          "8",
+          "KRX, NXT, SOR"
+        ],
+        [
+          "- cond_uv",
+          "스톱가",
+          "스톱지정가주문 스톱가",
+          "N",
+          "10",
+          "스톱지정가주문 스톱가"
+        ]
+      ]
+    ]
+  },
+  "binance_spot_history": {
+    "url": "https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/account",
+    "checked_date": "2026-10-28",
+    "html_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "contract_summary": "GET /api/v3/myTrades supports symbol+fromId; results have IDs >= fromId, while omitted fromId returns recent trades. Limit <=1000. Explicit fromId=0 and exhausted pagination, strict native IDs, finite bounds and window filtering can prove source-owned from-origin rewind. A recent-only response is never sufficient."
+  },
+  "hyperliquid_order_quantity": {
+    "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/info-endpoint",
+    "checked_date": "2026-10-28",
+    "contract_summary": "Existing orderStatus raw inner order exposes origSz and sz. Source may compare finite original-minus-remaining cumulative against durable native execution history, never create fills from it. Missing size evidence is UNKNOWN. Known open-list hints lacking cumulative wait for mandatory per-bound-order positive query; unbound hints block."
+  }
+}

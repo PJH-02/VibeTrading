@@ -38,15 +38,15 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 16,
+    "accepted": 17,
     "in_progress": 1,
     "blocked": 0,
-    "not_started": 16,
+    "not_started": 15,
     "external_not_authorized": 2
   },
   "next_ready_candidate": [
-    "CLN-02",
-    "CAP-02"
+    "CAP-03",
+    "CLN-02"
   ],
   "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
   "gate_results": {
@@ -425,7 +425,7 @@
     "missing_required_local_code_blocks_feature_release": true
   },
   "active_task_id": null,
-  "last_accepted_task_id": "CAP-01",
+  "last_accepted_task_id": "CAP-02",
   "stop_requested": false,
   "tickets": [
     {
@@ -1164,17 +1164,17 @@
     {
       "task_id": "CAP-02",
       "wave": "W3",
-      "status": "NOT_STARTED",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "CAP-01"
       ],
       "risk_review": "CRITICAL_CODEX",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "base_sha": "514f9c1f1b7ebb94ced4310bbcecedb1f6a22e01",
+      "actual_commit_sha": "f4f7c51c91c421cab613d20e5df2bcefd5a4da29",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/CAP02.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "CAP-02",
@@ -1184,7 +1184,92 @@
           "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/CAP01.acceptance.json",
           "details": "Original broker auth/cache helpers remain unchanged. Private session/auth refresh, vendor aggregate fill identity/quantity and durable reconciliation remain this ticket; CAP01 raw facts are not normalized perfill events."
         }
-      ]
+      ],
+      "bounded_packet": "docs/tickets/CAP-02-reconciliation.md",
+      "worker_attempts": [
+        {
+          "model": "freellmapi/glm-4.5-flash",
+          "role": "implement",
+          "state": "FINISHED",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/CAP02-glm-core",
+          "worker_exit": 1,
+          "source_changes": [],
+          "error": [
+            {
+              "name": "APIError",
+              "status": 502,
+              "relay_unavailable": true
+            }
+          ]
+        },
+        {
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "role": "refactor",
+          "repair": 1,
+          "state": "FINISHED",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/CAP02-deepseek-core",
+          "worker_exit": 124,
+          "source_changes": []
+        },
+        {
+          "model": "freellmapi/gemini-2.5-flash",
+          "role": "implement",
+          "repair": 2,
+          "state": "FINISHED",
+          "scope": [
+            "src/execution/reconciliation_sources.py",
+            "src/execution/brokers.py",
+            "tests/refactoring/test_cap02_sources.py"
+          ],
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/CAP02-gemini-sources",
+          "worker_exit": 1,
+          "source_changes": [],
+          "error": "relay inference unavailable; inspect private error log"
+        },
+        {
+          "model": "gpt-6-luna",
+          "role": "core lifecycle and durable apply",
+          "state": "FINISHED",
+          "scope": [
+            "reconciliation.py",
+            "portfolio_ledger.py metadata methods only",
+            "test_cap02_reconciliation.py"
+          ],
+          "reason": "User-authorized fallback after external allowance allocated; inspected no-edit failures; sole writer in separate core clone",
+          "first_targeted_passed": 28,
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/core-luna",
+          "worker_test_exit": 0,
+          "independent_acceptance": "PASS"
+        },
+        {
+          "model": "gpt-6-luna",
+          "role": "native recovery sources and Kiwoom execution history",
+          "state": "FINISHED",
+          "scope": [
+            "reconciliation_sources.py",
+            "brokers.py Kiwoom execution_fills only",
+            "test_cap02_sources.py"
+          ],
+          "reason": "Gemini repair2 failed without edits; external allowance exhausted; separate isolated source writer",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/sources-luna",
+          "worker_test_exit": 0,
+          "independent_acceptance": "PASS"
+        }
+      ],
+      "independent_verification_progress": {
+        "state": "PASS",
+        "full_passed": 2688,
+        "leases_passed": 25,
+        "focused_passed": 136,
+        "all_test_exits": 0,
+        "wheel_build_exit": 0,
+        "wheel_import_exit": 0,
+        "source_bytes_equal": 145,
+        "status_docs_passed": 78
+      },
+      "receipt_sha256": "a042c3c27a67a30f35124833cfeaa25caa0d8ae527c4e6b296517cd0c8b5063f",
+      "public_acceptance": "docs/tickets/CAP-02-acceptance.md",
+      "acceptance_scope": "Ubuntu credential-free bounded private/poll recovery and durable PAPER projection; no native production activation"
     },
     {
       "task_id": "CAP-03",
@@ -1210,6 +1295,11 @@
           "id": "CAP01-EXPLICIT-REMAINING-SCOPE",
           "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/CAP01.acceptance.json",
           "details": "CAP01 account_identity_verified is caller attestation only; require actual account/permission/native identity and reservations. Spot MARKET with enabled notional rules needs a trusted owner/market reference fact before dispatch; current guard blocks it rather than inventing a price."
+        },
+        {
+          "id": "CAP02-KIWOOM-UNKNOWN-COST-AND-NATIVE-PERMISSIONS",
+          "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/CAP02.acceptance.json",
+          "details": "Kiwoom kt00009 native execution IDs/quantities and kt00007 cancellation proof are implemented, but per-execution fee is absent. fee=None/known=false stays unknown; labeled provisional PAPER fee zero never clears @private. CAP-03 cost attribution remains PAPER projection freshness only. Native account identity/permissions, private WS wire auth and production activation remain EXTERNAL_ONLY and EXEC-01/CAP-03"
         }
       ]
     },
@@ -1947,6 +2037,12 @@
       "reason": "CAP01 accepted after2643 Linux+25 final leases+192 independent focused;143 wheel bytes/source equality. Requested FEED01→VEN01→CAP01 Ubuntu bypass batch complete; STR02 preserved, no later-ticket implementation or server action.",
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/CAP01.acceptance.json",
       "actual_commit_sha": "82128a3a00d615421eaa43d87d0283426d26cb09"
+    },
+    {
+      "date": "2026-10-28",
+      "reason": "CAP-02 accepted after2688 Linux+25 final lease+136 focused tests; native adapter/real PAPER ledger restart recovery and145 wheel source equality. Original schema/math/protected tests preserved. No native account or server activation.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/CAP02.acceptance.json",
+      "actual_commit_sha": "f4f7c51c91c421cab613d20e5df2bcefd5a4da29"
     }
   ],
   "requirements_revision": {
@@ -1991,11 +2087,14 @@
     "worker_auto_fallback": false,
     "paid_routes_authorized": false,
     "last_observation": {
-      "at_kst": "2026-10-27T03:35:25.957176+09:00",
-      "freellmapi_glm": "HTTP429 initial request repeated; timeout124; no changed files",
-      "opencode_deepseek": "CLN verifier implementation + CAP source audit EXIT0; Codex independent acceptance",
-      "freellmapi_gemini": "NOT_NEEDED_AFTER_WORKING_SECOND_PRIORITY_ROUTE",
-      "receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN-01-CAP-00-20261026T173148Z/CAP-00.acceptance.json"
+      "date": "2026-10-28",
+      "task_id": "CAP-02",
+      "freellmapi_glm": "HTTP502 relay unavailable; worker1; no edits",
+      "opencode_deepseek": "timeout124; no edits",
+      "freellmapi_gemini": "relay inference unavailable; worker1; no edits",
+      "selected": "gpt-6-luna user-authorized native fallback",
+      "quota_claim": "No permanent quota inference from relay failure/timeout",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/CAP02.acceptance.json"
     },
     "last_live_check": {
       "date": "2026-10-27",
@@ -2006,14 +2105,14 @@
       "selected": "opencode/deepseek-v4.1-flash-free"
     },
     "last_worker_result": {
-      "task_id": "CAP-00",
-      "model": "opencode/deepseek-v4.1-flash-free",
-      "role": "audit",
-      "worker_exit": 0,
-      "launcher_exit": 0,
-      "independent_final_tests": 2548,
-      "source_edits": [],
-      "evidence": "/home/pjh/.local/state/codex-opencode/runs/CLN-01-CAP-00-20261026T173148Z/CAP-00.acceptance.json"
+      "task_id": "CAP-02",
+      "model": "gpt-6-luna",
+      "route": "Native child agents in isolated component clones",
+      "independent_final_tests": 2688,
+      "independent_leases": 25,
+      "independent_focused": 136,
+      "independent_test_exit": 0,
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/CAP02.acceptance.json"
     },
     "current_batch_alternatives": {
       "gemini_minimax_kimi_requested": true,
@@ -2037,25 +2136,19 @@
     "snapshot_baseline_sha": "dd2e776c35ca18523546a2491213e7c3026505c4"
   },
   "active_batch": {
-    "requested_tasks": 3,
+    "requested_tasks": 1,
     "tasks": [
-      "FEED-01",
-      "VEN-01",
-      "CAP-01"
+      "CAP-02"
     ],
     "accepted": [
-      "FEED-01",
-      "VEN-01",
-      "CAP-01"
+      "CAP-02"
     ],
     "status": "COMPLETE",
-    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027",
+    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028",
     "target_os": "Ubuntu Linux",
     "str02_preserved": true,
     "completion_receipts": [
-      "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/FEED01.acceptance.json",
-      "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/VEN01.acceptance.json",
-      "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/CAP01.acceptance.json"
+      "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/CAP02.acceptance.json"
     ]
   },
   "completed_batches": [
@@ -2126,6 +2219,28 @@
       "artifacts": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027",
       "str02_preserved_unfinished": true,
       "push_merge_deploy": false
+    },
+    {
+      "requested_tasks": 3,
+      "tasks": [
+        "FEED-01",
+        "VEN-01",
+        "CAP-01"
+      ],
+      "accepted": [
+        "FEED-01",
+        "VEN-01",
+        "CAP-01"
+      ],
+      "status": "COMPLETE",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027",
+      "target_os": "Ubuntu Linux",
+      "str02_preserved": true,
+      "completion_receipts": [
+        "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/FEED01.acceptance.json",
+        "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/VEN01.acceptance.json",
+        "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/CAP01.acceptance.json"
+      ]
     }
   ]
 }
