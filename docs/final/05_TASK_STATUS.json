@@ -38,16 +38,15 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 15,
-    "in_progress": 2,
+    "accepted": 16,
+    "in_progress": 1,
     "blocked": 0,
     "not_started": 16,
     "external_not_authorized": 2
   },
   "next_ready_candidate": [
     "CLN-02",
-    "CAP-01",
-    "STR-02"
+    "CAP-02"
   ],
   "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
   "gate_results": {
@@ -425,8 +424,8 @@
     ],
     "missing_required_local_code_blocks_feature_release": true
   },
-  "active_task_id": "CAP-01",
-  "last_accepted_task_id": "VEN-01",
+  "active_task_id": null,
+  "last_accepted_task_id": "CAP-01",
   "stop_requested": false,
   "tickets": [
     {
@@ -1057,7 +1056,7 @@
     {
       "task_id": "CAP-01",
       "wave": "W3",
-      "status": "IN_PROGRESS",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "CAP-00",
         "MOV-04"
@@ -1065,10 +1064,10 @@
       "risk_review": "CRITICAL_CODEX",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": "58545cbe6785507be7f4506bc6a32533dd0dc911",
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "base_sha": "6831db236248d8accdaf93c7d513ad4c647ffa14",
+      "actual_commit_sha": "82128a3a00d615421eaa43d87d0283426d26cb09",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/CAP01.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "CAP-01",
@@ -1079,7 +1078,88 @@
           "details": "286 function statuses remain DEFER; source evidence is not semantic consolidation/retirement."
         }
       ],
-      "bounded_packet": "docs/tickets/CAP-01-reuse-integration.md"
+      "bounded_packet": "docs/tickets/CAP-01-reuse-integration.md",
+      "worker_attempts": [
+        {
+          "model": "freellmapi/glm-4.5-flash",
+          "role": "implement",
+          "state": "FINISHED",
+          "artifacts": "CAP01-glm",
+          "worker_exit": 1,
+          "source_changes": [],
+          "error": "Temporary inference relay unavailable HTTP502; no quota conclusion"
+        },
+        {
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "role": "refactor",
+          "repair": 1,
+          "state": "FINISHED",
+          "artifacts": "CAP01-deepseek",
+          "worker_exit": 124,
+          "source_changes": [
+            "brokers.py bounded helpers",
+            "extended_brokers.py optional permit/raw",
+            "transports.py draft329lines"
+          ],
+          "accepted": false
+        },
+        {
+          "model": "opencode/mimo-v2.6-flash-free",
+          "role": "debug",
+          "repair": 2,
+          "state": "FINISHED",
+          "scope": [
+            "src/execution/transports.py",
+            "src/execution/extended_brokers.py",
+            "tests/refactoring/test_cap01_transports.py"
+          ],
+          "artifacts": "CAP01-mimo-transport-repair2",
+          "worker_exit": 124,
+          "source_changes": []
+        },
+        {
+          "model": "gpt-6-luna",
+          "role": "bounded broker implementation/test",
+          "state": "FINISHED",
+          "reason": "User-authorized fallback after external allowance allocated; inspected partial work; isolated sole writer with disjoint component files",
+          "scope": [
+            "brokers.py",
+            "registry.py native map only",
+            "test_cap01_brokers.py"
+          ],
+          "first_targeted_passed": 19,
+          "lead_review_packet": "docs/tickets/CAP-01-broker-review-repair.md",
+          "worker_test_exit": 0,
+          "public_plus_existing_etf_passed": 33
+        },
+        {
+          "model": "gpt-6-luna",
+          "role": "bounded transport implementation/test",
+          "state": "FINISHED",
+          "reason": "Final MiMo repair2 timedout124 with no edits; external allowance exhausted; DeepSeek draft preserved",
+          "scope": [
+            "transports.py",
+            "extended_brokers.py _rpc only",
+            "test_cap01_transports.py"
+          ],
+          "public_test_exit": 0,
+          "public_passed": 8,
+          "lead_additional_repairs": [
+            "Arcus post-callback scope recheck",
+            "Custom TLS must verify certificate+hostname"
+          ],
+          "worker_test_exit": 0
+        },
+        {
+          "model": "gpt-6-luna",
+          "role": "private adverse test author",
+          "state": "FINISHED",
+          "execution": "Parent independently executes and corrects harness",
+          "artifact": "test_cap01_independent.py",
+          "private_transport_passed": 5
+        }
+      ],
+      "receipt_sha256": "2f3466ea698ac861edcbf50e92007c3d4caf8a0ac78bfc91fcc3efc5db65be44"
     },
     {
       "task_id": "CAP-02",
@@ -1097,7 +1177,14 @@
       "test_exit": null,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
-      "definition_heading_id": "CAP-02"
+      "definition_heading_id": "CAP-02",
+      "follow_up_findings": [
+        {
+          "id": "CAP01-EXPLICIT-REMAINING-SCOPE",
+          "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/CAP01.acceptance.json",
+          "details": "Original broker auth/cache helpers remain unchanged. Private session/auth refresh, vendor aggregate fill identity/quantity and durable reconciliation remain this ticket; CAP01 raw facts are not normalized perfill events."
+        }
+      ]
     },
     {
       "task_id": "CAP-03",
@@ -1117,7 +1204,14 @@
       "test_exit": null,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
-      "definition_heading_id": "CAP-03"
+      "definition_heading_id": "CAP-03",
+      "follow_up_findings": [
+        {
+          "id": "CAP01-EXPLICIT-REMAINING-SCOPE",
+          "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/CAP01.acceptance.json",
+          "details": "CAP01 account_identity_verified is caller attestation only; require actual account/permission/native identity and reservations. Spot MARKET with enabled notional rules needs a trusted owner/market reference fact before dispatch; current guard blocks it rather than inventing a price."
+        }
+      ]
     },
     {
       "task_id": "CAP-04",
@@ -1847,6 +1941,12 @@
       "reason": "VEN01 accepted after independent2615 Linux+25 leases+185 focused; preserved native owners and Ubuntu config. Advance user batch CAP01, preserve STR02.",
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/VEN01.acceptance.json",
       "actual_commit_sha": "58545cbe6785507be7f4506bc6a32533dd0dc911"
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "CAP01 accepted after2643 Linux+25 final leases+192 independent focused;143 wheel bytes/source equality. Requested FEED01→VEN01→CAP01 Ubuntu bypass batch complete; STR02 preserved, no later-ticket implementation or server action.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/CAP01.acceptance.json",
+      "actual_commit_sha": "82128a3a00d615421eaa43d87d0283426d26cb09"
     }
   ],
   "requirements_revision": {
@@ -1945,12 +2045,18 @@
     ],
     "accepted": [
       "FEED-01",
-      "VEN-01"
+      "VEN-01",
+      "CAP-01"
     ],
-    "status": "CAP01_IN_PROGRESS",
+    "status": "COMPLETE",
     "artifacts": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027",
     "target_os": "Ubuntu Linux",
-    "str02_preserved": true
+    "str02_preserved": true,
+    "completion_receipts": [
+      "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/FEED01.acceptance.json",
+      "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/VEN01.acceptance.json",
+      "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/CAP01.acceptance.json"
+    ]
   },
   "completed_batches": [
     {
@@ -2002,6 +2108,24 @@
       "push_target": "origin codex/move-core-feeds",
       "completed_utc": "2026-10-26T18:35:25.957176+00:00",
       "next_not_started": "CLN-02"
+    },
+    {
+      "date": "2026-10-27",
+      "tasks": [
+        "FEED-01",
+        "VEN-01",
+        "CAP-01"
+      ],
+      "target_os": "Ubuntu Linux",
+      "status": "ACCEPTED_LOCAL",
+      "source_commits": [
+        "6eafe31edae8dfb19cde2a6fcab5a9ae33e1e493",
+        "58545cbe6785507be7f4506bc6a32533dd0dc911",
+        "82128a3a00d615421eaa43d87d0283426d26cb09"
+      ],
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027",
+      "str02_preserved_unfinished": true,
+      "push_merge_deploy": false
     }
   ]
 }

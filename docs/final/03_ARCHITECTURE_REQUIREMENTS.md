@@ -31,7 +31,7 @@
 수치를 근거 없이 재사용하지 않으며 전체 재감사를 반복하지 않는다. 기존 수락 테스트는
 구체적인 로컬 범위만 증명하고 새 Owner 연결이나 외부 API 작동을 증명하지 않는다.
 
-| 대상·명시 환경/상품 | Required 계약·전략/계좌 범위 | 재사용할 현 소유자·함수 | 현재 코드/로컬 근거와 남은 간극 | 외부 게이트 |
+| 대상·명시 환경/상품 | Required 계약·전략/계좌 범위 | 재사용할 현 소유자·함수 | CAP-00 동결 당시 로컬 근거·간극 (최신 수락은 05) | 외부 게이트 |
 | --- | --- | --- | --- | --- |
 | KIS 국내 현금 주식/ETF `mock`, `mock2` | 계좌 namespace 분리. C3/KP/KD는 기존 ETF 경제 규칙 유지; 주식은 기존 cash broker 계약 fixture, 새 알파 요구 없음 | `execution.kis_execution.KisCashBroker`; `runtime.etf_trading.EtfTradingLoop`의 두 Broker·lease·journal·reconcile | **REUSE**. 요청 매핑/namespace/계산 Golden과 fake 단계별 안전 테스트 보존. 후자는 synthetic Broker seam이며 실제 KIS 전체 Owner E2E 아님. STR-01/02·EXEC-01 파일/콜백 연결 필요. `BrokerStub`로 대체 금지 | 실제 MOCK/MOCK2 계좌별 인증·권한·체결/잔고 증거 별도; 내부 PAPER나 CEX TESTNET으로 치환 금지 |
 | Binance Spot `sandbox`, `live` | 기존 `/api/v3`와 Spot 환경 선택 코드 **보존**. 선택 route의 로컬 연결·정상/취소/불명 상태 fixture 필요 | `execution.brokers.BinanceBrokerAdapter`; 기존 `services/execution/crypto_binance.py` cancel/open/status 재사용 근거 | **REUSE/ADAPT**. Perp 음성 테스트는 Spot 양성 실행 증거 아님. 기존 native client 대신 새 client를 일괄 만들지 않음 | 기존 Spot testnet와 Live 계좌/URL/권한 각각 검증; 실제 활성 계좌는 미선택 |
@@ -50,20 +50,30 @@
 | inverse/COIN-M/portfolio·cross margin/hedge mode/HIP-3/HL Spot | 명시 **UNSUPPORTED_BLOCKED**, 대상/모드/정책/네이티브 TIF를 전송 전 검증 | `PerpScope` 및 선택 Adapter guard | 기본 linear product 음성 근거만 전 모드의 완성 증거로 확대하지 않음; 필요한 guard는 CAP-02/VEN-01에 지정 | 지원 승격 시 별도 계약·로컬+외부 수락 |
 | KR350 분/일 Data | KR-DATA-01 **opt-in 미선택**, base release 필수 아님 | 기존 feed/storage 보존 | 활성화하지 않음 | 사용자 선택 후 provider/soak 게이트 |
 
+**2026-10-27 로컬 수락 근거:** 위 표의 CAP-00 이력은 보존한다.
+FEED-01은 provider별 소유권, VEN-01은 명시 등록/차단/제거, CAP-01은 기존 Native
+Adapter와 bounded HTTP/기존 Arcus WS 전송·Kiwoom/Spot REST facts 연결을 수락했다.
+최신 상태와 정확한 수락 범위는 `05` 및 [CAP-01 receipt](../tickets/CAP-01-acceptance.md)를 따른다.
+Private fill identity/session/reconcile(CAP-02), 계좌 권위/예약·시장가 reference facts(CAP-03),
+실제 Strategy→CommonOwner 통합(EXEC-01)은 미수락이다. 이는 Required route 전체 완료나
+실제 sandbox/live 인증 증거가 아니며 runtime 기본값/활성 경로를 바꾸지 않는다.
+
 **키움 REST 함수 수준 계약/출처·간극**
 
-- 현재 source에 존재하는 submit의 `/api/dostk/ordr`, `kt10000/kt10001` 및 account 요약의
+- CAP-00 동결 감사 당시 존재한 submit의 `/api/dostk/ordr`, `kt10000/kt10001` 및 account 요약의
   `/api/dostk/acnt`, `kt00018`만 기존 매핑으로 기록한다. 이것이 전체 주문 lifecycle 증명은 아니다.
-- [키움 공식 가이드](https://openapi.kiwoom.com/m/guide/apiguide)의 공개 목록에서 취소 `kt10002`,
+- [키움 공식 취소 가이드](https://openapi.kiwoom.com/m/guide/apiguide/13/kt10003)의 취소는 `kt10003`,
+  [정정 가이드](https://openapi.kiwoom.com/m/guide/apiguide/13/kt10002)의 정정은 `kt10002`다. 2026-10-27 CAP-01 준비 검증에서 기존 취소 ID 오기를 정정했다. 불변 CAP-00 역사 증거는 보존한다.
   미체결 `ka10075`, 체결 `ka10076`을 확인했다. **목록 이름/ID 확인과 상세 request/response,
   pagination/order/fill identity fixture 검증은 다르다.** 이 표는 새 endpoint나 payload를 추정하지 않는다.
-- `order_status`의 NOT_IMPLEMENTED와 미존재 cancel/open/fills/reconcile, account count-only를 각각
+- CAP-00 당시 `order_status`의 NOT_IMPLEMENTED와 미존재 cancel/open/fills/reconcile, account count-only를 각각
   `KIWOOM-LOCAL-LIFECYCLE`로, 미고정 상세 schema를 `BLOCKED_API_SPEC_REQUIRED`로 기록했다.
   VEN-01/CAP-01/EXEC-01에서 기존 REST 소유자에 최소 연결·scripted E2E를 추가하기 전에는 기능 완료 아님.
 - KIS는 [공식 국내주식 주문 예제](https://github.com/koreainvestment/open-trading-api/blob/main/examples_llm/domestic_stock/order_cash/order_cash.py)를
   참고 출처로 유지한다. 이 조회에서 인증·계좌·실주문·서버 작업은 실행하지 않았다.
 - token cache의 명시 권한/fingerprint/schema/KST/refresh serialization 차이는 source-only 검토 후보로
-  VEN-01/FEED-01에 넘긴다. 실제 token/cache/umask를 읽거나 정보 노출이 일어났다고 주장하지 않는다.
+  CAP-02/03의 인증·계좌 권위 검토에 보존한다. VEN/FEED/CAP-01의 허용 범위 밖 auth/cache는
+  변경하지 않았다. 실제 token/cache/umask를 읽거나 정보 노출이 일어났다고 주장하지 않는다.
 
 **보존과 수락 해석:** source/함수 해시와 관련 accepted test nodeid를 별도 기록한다.
 `KEEP/REUSE/ADAPT/MISSING`은 로컬 코드 분류이며 외부 검증과 혼동하지 않는다.
