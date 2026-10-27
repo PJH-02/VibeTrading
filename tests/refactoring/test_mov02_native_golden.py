@@ -4,8 +4,7 @@ from decimal import Decimal
 from unittest.mock import patch
 import pytest
 from core.models import BookUpdateType, EventType, Venue
-from feeds.providers.crypto_perp import CryptoPerpCollector
-from feeds.providers.extended_perp import ExtendedPerpCollector
+from feeds.providers import create_perp_collector
 RECV = 1_700_000_123_456_789_012
 MONO = 9_876_543_210
 
@@ -24,7 +23,7 @@ def _patched():
 def test_bitget_snapshot_delta_then_previous_id_gap():
     async def scenario():
         bus = CaptureBus()
-        collector = CryptoPerpCollector(Venue.BITGET, ("BTCUSDT",))
+        collector = create_perp_collector(Venue.BITGET, ("BTCUSDT",))
         collector.connection_id = "conn-bitget"
         snap_raw = '{"action":"snapshot","arg":{"topic":"books","symbol":"BTCUSDT"}}'
         with _patched():
@@ -68,7 +67,7 @@ def test_bitget_snapshot_delta_then_previous_id_gap():
 def test_arcus_microseconds_native_sequence_and_raw_frame():
     async def scenario():
         bus = CaptureBus()
-        collector = ExtendedPerpCollector(Venue.ARCUS, ("BTCUSDT",))
+        collector = create_perp_collector(Venue.ARCUS, ("BTCUSDT",))
         collector.connection_id = "conn-arcus"
         raw = json.dumps({"type": "subscribed", "channel": "l2OrderbookUpdates", "id": "BTC-USD",
                           "contents": {"timestamp": 1_700_000_000_123_456, "lastSequenceId": 500,
@@ -105,7 +104,7 @@ def test_arcus_microseconds_native_sequence_and_raw_frame():
 def test_grvt_nanoseconds_ack_baseline_and_decimal_precision():
     async def scenario():
         bus = CaptureBus()
-        collector = ExtendedPerpCollector(Venue.GRVT, ("BTCUSDT",))
+        collector = create_perp_collector(Venue.GRVT, ("BTCUSDT",))
         collector.connection_id = "conn-grvt"
         ack_raw = json.dumps({"jsonrpc": "2.0", "result": {"stream": "v1.book.d",
                               "subs": ["BTC_USDT_Perp@100"],

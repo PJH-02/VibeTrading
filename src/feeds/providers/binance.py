@@ -12,8 +12,9 @@ import websockets
 
 from runtime.bus import EventBus
 from feeds.collection_timing import CollectionContext, MINUTE_NS, next_utc_minute_ns, receipt_clock
-from core.models import Bar1mEvent, BookUpdateType, DataGapEvent, FundingRateEvent, InstrumentId, OpenInterestEvent, OrderBookEvent, OrderBookLevel, Venue
+from core.models import Bar1mEvent, BookUpdateType, DataGapEvent, FundingRateEvent, InstrumentId, OpenInterestEvent, OrderBookEvent, OrderBookLevel, Side, TradeEvent, Venue
 from feeds.universe_config import BinanceSecurity
+from .perp_common import PerpCollectorBase, SYMBOLS
 
 logger = logging.getLogger(__name__)
 
@@ -252,3 +253,120 @@ class BinanceCollector:
     @staticmethod
     def _levels(rows: list[Any]) -> list[OrderBookLevel]:
         return [OrderBookLevel(price=Decimal(str(row[0])), quantity=Decimal(str(row[1]))) for row in rows]
+
+
+class BinancePerpCollector(PerpCollectorBase):
+    """Public Binance USDT perpetual feed; ordinary crypto only."""
+
+    def __init__(self, symbols: tuple[str, ...] = SYMBOLS) -> None:
+        super().__init__(Venue.BINANCE, symbols)
+        self.binance_ready: set[str] = set()
+
+    async def _binance_snapshot(self, session: aiohttp.ClientSession, bus: Any, symbol: str) -> int:
+        async with session.get("https://fapi.binance.com/fapi/v1/depth", params={"symbol": symbol, "limit": 1000}) as response:
+            response.raise_for_status()
+            row = await response.json()
+        seq = int(row["lastUpdateId"])
+        await self._book(bus, symbol, None, row.get("bids", []), row.get("asks", []),
+                         BookUpdateType.SNAPSHOT, seq, channel="depth1000_rest_snapshot",
+                         raw_payload=json.dumps(row,separators=(",",":")))
+        return seq
+
+    async def _binance(self, bus: Any, duration_sec: float | None) -> None:
+        public_streams = "/".join(f"{s.lower()}@depth@100ms" for s in self.symbols)
+        market_streams = "/".join(f"{s.lower()}@{topic}" for s in self.symbols
+                                  for topic in ("aggTrade", "markPrice@1s"))
+        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=10)) as session:
+            async with websockets.connect("wss://fstream.binance.com/public/stream?streams=" + public_streams,
+                                          ping_interval=20, ping_timeout=20, max_queue=8, max_size=2 * 1024 * 1024) as public_ws:
+              async with websockets.connect("wss://fstream.binance.com/market/stream?streams=" + market_streams,
+                                            ping_interval=20, ping_timeout=20, max_queue=8, max_size=2 * 1024 * 1024) as market_ws:
+                deadline = time.monotonic() + duration_sec if duration_sec else None
+                # Buffer WS depth frames while obtaining REST snapshots. The first
+                # eligible delta must bridge snapshot lastUpdateId.
+                snapshot_ids = await asyncio.gather(*(self._binance_snapshot(session,bus,s) for s in self.symbols))
+                snapshots = dict(zip(self.symbols,snapshot_ids))
+                oi_task = asyncio.create_task(self._binance_oi(session, bus, deadline))
+                market_task = asyncio.create_task(self._binance_market(market_ws, bus, deadline))
+                try:
+                    while deadline is None or time.monotonic() < deadline:
+                        if market_task.done():
+                            await market_task
+                        if oi_task.done():
+                            await oi_task
+                        raw = await asyncio.wait_for(public_ws.recv(), timeout=2)
+                        msg = json.loads(raw).get("data", {})
+                        await self._binance_message(bus, msg, snapshots, raw)
+                finally:
+                    oi_task.cancel(); market_task.cancel()
+                    await asyncio.gather(oi_task, market_task, return_exceptions=True)
+
+    async def _binance_market(self, ws: Any, bus: Any, deadline: float | None) -> None:
+        while deadline is None or time.monotonic() < deadline:
+            raw=await ws.recv()
+            msg=json.loads(raw).get("data",{})
+            symbol=str(msg.get("s") or "")
+            if symbol not in self.symbols:
+                continue
+            if msg.get("e") == "aggTrade":
+                await bus.publish_market_event(TradeEvent(**self._common(symbol,msg.get("T"),str(msg.get("a"))),
+                    price=Decimal(str(msg["p"])),quantity=Decimal(str(msg["q"])),
+                    aggressor_side=Side.SELL if msg.get("m") else Side.BUY,
+                    trade_id=str(msg.get("a")),source_timestamp_kind="aggregate_trade"))
+            elif msg.get("e") == "markPriceUpdate":
+                await self._ticker(bus,symbol,{"fundingRate":msg.get("r")},msg.get("E"),
+                                   "missing","fundingRate","base_asset")
+
+    async def _binance_oi(self, session: aiohttp.ClientSession, bus: Any, deadline: float | None) -> None:
+        while deadline is None or time.monotonic() < deadline:
+            for symbol in self.symbols:
+                async with session.get("https://fapi.binance.com/fapi/v1/openInterest", params={"symbol": symbol}) as response:
+                    response.raise_for_status()
+                    row = await response.json()
+                await bus.publish_market_event(OpenInterestEvent(**self._common(symbol, row.get("time")),
+                    open_interest=Decimal(str(row["openInterest"])), open_interest_unit="base_asset",
+                    observation_method="rest_poll"))
+            await asyncio.sleep(5)
+
+    async def _binance_message(self, bus: Any, msg: dict[str, Any], snapshots: dict[str, int],
+                               raw_payload: str | None = None) -> None:
+        symbol = str(msg.get("s") or "")
+        if symbol not in self.symbols or msg.get("e") != "depthUpdate":
+            return
+        first, last = int(msg["U"]), int(msg["u"])
+        snapshot = snapshots[symbol]
+        bridging = symbol not in self.binance_ready
+        # Binance's initial bridge is inclusive: U <= snapshot <= u.
+        # A boundary frame with u == snapshot proves the bridge even though
+        # its quantities are already represented by the REST snapshot.
+        if last < snapshot or (not bridging and last <= self.last_book[symbol]):
+            await self._unsynced_book(bus,symbol,msg.get("E"),msg.get("b",[]),msg.get("a",[]),
+                                       last,int(msg["pu"]) if msg.get("pu") is not None else None,
+                                       first,"depth@100ms_pre_snapshot" if bridging else "depth@100ms_stale",raw_payload)
+            return
+        if bridging:
+            if not first <= snapshot <= last:
+                await self._unsynced_book(bus,symbol,msg.get("E"),msg.get("b",[]),msg.get("a",[]),
+                                           last,int(msg["pu"]) if msg.get("pu") is not None else None,
+                                           first,"depth@100ms_unbridged",raw_payload)
+                await self._gap(bus, symbol, "initial depth delta does not bridge snapshot")
+                raise RuntimeError(f"Binance {symbol} snapshot bridge failure")
+            self.binance_ready.add(symbol)
+        previous = int(msg["pu"]) if msg.get("pu") is not None else None
+        if not bridging and previous is not None and previous != self.last_book[symbol]:
+            await self._unsynced_book(bus,symbol,msg.get("E"),msg.get("b",[]),msg.get("a",[]),
+                                       last,previous,first,"depth@100ms_sequence_gap",raw_payload)
+            await self._gap(bus, symbol, "depth pu gap")
+            raise RuntimeError(f"Binance {symbol} depth gap")
+        if last == snapshot:
+            # Keep the original boundary frame without applying the same
+            # sequence twice or invalidating the synchronized snapshot.
+            await self._unsynced_book(bus,symbol,msg.get("E"),msg.get("b",[]),msg.get("a",[]),
+                                       last,previous,first,"depth@100ms_snapshot_boundary",raw_payload)
+            return
+        await self._book(bus, symbol, msg.get("E"), msg.get("b", []), msg.get("a", []),
+                         BookUpdateType.DELTA, last, previous=None, first=first, channel="depth@100ms",
+                         raw_payload=raw_payload)
+
+    async def run(self, bus: Any, duration_sec: float | None = None) -> None:
+        await self._binance(bus, duration_sec)

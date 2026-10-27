@@ -21,8 +21,8 @@ from feeds.providers.kis_client import KisAuthClient
 from feeds.providers.toss import TossAuthClient, TossCollector, parse_toss_symbols
 from feeds.providers.hyperliquid import HyperliquidCatalog, HyperliquidCollector
 from feeds.providers.binance import BinanceCollector
-from feeds.providers.crypto_perp import CryptoPerpCollector, SYMBOLS as CRYPTO_SYMBOLS
-from feeds.providers.extended_perp import ExtendedPerpCollector
+from feeds.providers import create_perp_collector
+from feeds.providers.perp_common import SYMBOLS as CRYPTO_SYMBOLS
 from feeds.providers.ls_market import LSKospi200ForeignCollector, LSOverseasDelayedCollector
 from core.models import Venue
 from feeds.providers.universe import InstrumentUniverseResolver
@@ -89,8 +89,7 @@ def _collector_for_args(args: argparse.Namespace):
         return LSOverseasDelayedCollector()
     if args.provider in {"binance-perp", "bitget-perp", "bybit-perp", "arcus-perp", "grvt-perp"}:
         requested = tuple(x.strip().upper() for x in args.symbols.split(",") if x.strip()) if args.symbols and args.symbols != "@crypto" else CRYPTO_SYMBOLS
-        cls = ExtendedPerpCollector if args.provider in {"arcus-perp", "grvt-perp"} else CryptoPerpCollector
-        return cls(Venue(args.provider.split("-", 1)[0]), requested)
+        return create_perp_collector(Venue(args.provider.split("-", 1)[0]), requested)
     if args.provider == "kis-flow":
         raise RuntimeError("KIS domestic-stock participant flow is not verified KOSPI200 futures foreign flow")
     if args.provider == "kis":

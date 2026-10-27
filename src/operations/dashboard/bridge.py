@@ -42,11 +42,10 @@ async def observe_public(venue: str, symbols: tuple, bus: ProjectionBus, errors:
     # A separate public connection obtains its own initial snapshot. Joining a delta-only
     # live stream midway cannot safely reconstruct an order book.
     from core.models import Venue
-    from feeds.providers.crypto_perp import CryptoPerpCollector
-    from feeds.providers.extended_perp import ExtendedPerpCollector
+    from feeds.providers import create_perp_collector
     while True:
         try:
-            collector = (ExtendedPerpCollector if venue in {"grvt", "arcus"} else CryptoPerpCollector)(Venue(venue), symbols)
+            collector = create_perp_collector(Venue(venue), symbols)
             await collector.run(bus)
         except asyncio.CancelledError:
             raise

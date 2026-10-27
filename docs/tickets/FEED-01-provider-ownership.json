@@ -1,0 +1,71 @@
+{
+  "target_os": "Ubuntu Linux",
+  "no_windows_product_changes": true,
+  "providers": [
+    {
+      "venue": "binance",
+      "path": "src/feeds/providers/binance.py",
+      "class": "BinancePerpCollector",
+      "status": "EXTRACTED_EXISTING_NATIVE_PROTOCOL",
+      "configured": true
+    },
+    {
+      "venue": "bybit",
+      "path": "src/feeds/providers/bybit.py",
+      "class": "BybitPerpCollector",
+      "status": "EXTRACTED_EXISTING_NATIVE_PROTOCOL",
+      "configured": false
+    },
+    {
+      "venue": "bitget",
+      "path": "src/feeds/providers/bitget.py",
+      "class": "BitgetPerpCollector",
+      "status": "EXTRACTED_EXISTING_NATIVE_PROTOCOL",
+      "configured": false
+    },
+    {
+      "venue": "arcus",
+      "path": "src/feeds/providers/arcus.py",
+      "class": "ArcusPerpCollector",
+      "status": "EXTRACTED_EXISTING_NATIVE_PROTOCOL",
+      "configured": true
+    },
+    {
+      "venue": "grvt",
+      "path": "src/feeds/providers/grvt.py",
+      "class": "GrvtPerpCollector",
+      "status": "EXTRACTED_EXISTING_NATIVE_PROTOCOL",
+      "configured": true
+    },
+    {
+      "venue": "kis",
+      "path": "src/feeds/providers/kis.py",
+      "source_sha256": "56133c1e749ee473f1f2e529ffb52cc4140203852395d33dc798849363ea0eb2",
+      "unchanged": true
+    },
+    {
+      "venue": "kiwoom",
+      "path": "src/feeds/providers/kiwoom.py",
+      "source_sha256": "c02123763857404867f768ca0b37b4bf20b515e32b3fe4eb760a6e0f55a0adbe",
+      "unchanged": true
+    },
+    {
+      "venue": "toss",
+      "path": "src/feeds/providers/toss.py",
+      "source_sha256": "e3cadbe5738f25482f129e63cdeaf5bec2f591c2a471bade09983f262a3bf357",
+      "unchanged": true
+    },
+    {
+      "venue": "hyperliquid",
+      "path": "src/feeds/providers/hyperliquid.py",
+      "source_sha256": "9377c8bfd3f33cba3c2ba88a2cfea2faa438b6fbae8b1598b502f510a38fe0fe",
+      "unchanged": true
+    }
+  ],
+  "shared": "src/feeds/providers/perp_common.py",
+  "retired": [
+    "src/feeds/providers/crypto_perp.py",
+    "src/feeds/providers/extended_perp.py"
+  ],
+  "activation_changes": []
+}

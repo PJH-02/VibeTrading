@@ -24,7 +24,7 @@ from operations.health import touch as health_touch
 from storage.gap_ledger import CollectionGapLedger
 from .settings import get_settings
 from core.models import AssetClass, DataGapEvent, EventType, InstrumentId, Venue
-from feeds.providers.crypto_perp import SYMBOLS as CRYPTO_SYMBOLS
+from feeds.providers.perp_common import SYMBOLS as CRYPTO_SYMBOLS
 
 logger = logging.getLogger(__name__)
 

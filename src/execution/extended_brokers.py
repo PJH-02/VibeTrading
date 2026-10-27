@@ -17,7 +17,7 @@ import aiohttp
 import websockets
 
 from core.models import AssetClass, OrderIntent, Side, Venue
-from feeds.providers.crypto_perp import SYMBOLS, _instrument
+from feeds.providers.perp_common import SYMBOLS, _instrument
 from runtime.settings import RuntimeSettings, get_settings
 
 

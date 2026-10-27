@@ -17,7 +17,7 @@ import websockets
 
 from execution.extended_brokers import GrvtBrokerAdapter, OrderOutcomeUnknown
 from core.models import InstrumentId, OrderDestination, OrderIntent, Side, Venue
-from feeds.providers.extended_perp import ExtendedPerpCollector
+from feeds.providers import create_perp_collector
 from runtime.settings import get_settings
 
 D=Decimal
@@ -121,7 +121,7 @@ class Audit:
                 order['public_book_source_ns']=event.source_ts_ns
 
     async def testnet_public(self):
-        collector=ExtendedPerpCollector(Venue.GRVT)
+        collector=create_perp_collector(Venue.GRVT)
         async with websockets.connect('wss://market-data.testnet.grvt.io/ws/full',ping_interval=15,max_queue=16) as ws:
             await ws.send(json.dumps({'jsonrpc':'2.0','method':'subscribe','params':{'stream':'v1.book.d',
                 'selectors':[s.removesuffix('USDT')+'_USDT_Perp@100' for s in ASSETS]},'id':1}))
@@ -340,7 +340,7 @@ async def main(args):
                     symbol=row['instrument'].split('_')[0]+'USDT'
                     if baseline or symbol not in ASSETS: raise RuntimeError('Unexpected position: manual reconciliation required')
                     identity='cleanup-'+uuid.uuid4().hex
-                    from feeds.providers.crypto_perp import _instrument
+                    from feeds.providers.perp_common import _instrument
                     intent=OrderIntent(intent_id=identity,client_order_id=identity,job_id='latency-cleanup',signal_id=identity,
                         destination=OrderDestination.REAL,instrument=_instrument(Venue.GRVT,symbol),side=Side.SELL if size>0 else Side.BUY,
                         quantity=abs(size),metadata={'reduce_only':True,'time_in_force':'IMMEDIATE_OR_CANCEL','testnet':True})
