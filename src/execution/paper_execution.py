@@ -10,6 +10,7 @@ from __future__ import annotations
 from copy import deepcopy
 from decimal import Decimal, ROUND_FLOOR, localcontext
 import json
+from types import MappingProxyType
 
 from core.models import BookUpdateType, OrderBookEvent, OrderIntent, Side, TradeEvent, stable_hash
 from .trading_contracts import ProductSpec, TradingMode
@@ -20,7 +21,8 @@ D = Decimal
 class PaperExecution:
     def __init__(self, ledger, *, entry_latency_ns: int, cancel_latency_ns: int,
                  max_open_orders: int, max_depth: int, max_receipts: int,
-                 max_state_bytes: int, stale_after_ns: int):
+                 max_state_bytes: int, stale_after_ns: int,
+                 allow_taker_gtc: bool = False, allow_market_orders: bool = False):
         if ledger.mode != TradingMode.PAPER:
             raise ValueError("Paper matching requires a paper portfolio ledger")
         values = dict(entry_latency_ns=entry_latency_ns, cancel_latency_ns=cancel_latency_ns,
@@ -30,6 +32,15 @@ class PaperExecution:
         for name, value in values.items():
             if isinstance(value, bool) or not isinstance(value, int) or value < (0 if "latency" in name else 1):
                 raise ValueError(name + " requires an explicit bounded integer")
+        if type(allow_taker_gtc) is not bool or type(allow_market_orders) is not bool:
+            raise ValueError("Paper order capabilities require explicit booleans")
+        self.capabilities = MappingProxyType({"allow_taker_gtc": allow_taker_gtc,
+                                              "allow_market_orders": allow_market_orders})
+        # Omitting disabled flags preserves the version-2 default durable shape.
+        if allow_taker_gtc:
+            values["allow_taker_gtc"] = True
+        if allow_market_orders:
+            values["allow_market_orders"] = True
         self.ledger, self.config = ledger, values
         self._state = ledger.paper_state() or {
             "version": 2, "config": values, "clock": 0, "orders": {},
@@ -62,7 +73,19 @@ class PaperExecution:
                 if not isinstance(metadata, dict):
                     raise ValueError("Paper matcher order payload metadata is malformed")
                 saved_price, admitted_price = order.get("price"), payload.get("limit_price")
-                if not isinstance(saved_price, str) or not isinstance(admitted_price, str):
+                # Older version-2 default orders predate the explicit order-kind
+                # field; they are unambiguously limit orders because their
+                # durable payload always contains a limit price.
+                market = order.get("market", False)
+                if type(market) is not bool:
+                    raise ValueError("Paper matcher order kind is missing or malformed")
+                if market:
+                    reserve = metadata.get("reserve_unit_price")
+                    if (not self.capabilities["allow_market_orders"] or admitted_price is not None or
+                            not isinstance(saved_price, str) or not isinstance(reserve, str)):
+                        raise ValueError("Paper market order identity or reserve is malformed")
+                    admitted_price = reserve
+                elif not isinstance(saved_price, str) or not isinstance(admitted_price, str):
                     raise ValueError("Paper matcher protective price is missing or malformed")
                 try:
                     saved_price, admitted_price = D(saved_price), D(admitted_price)
@@ -70,8 +93,19 @@ class PaperExecution:
                     raise ValueError("Paper matcher protective price is missing or malformed") from exc
                 if not saved_price.is_finite() or not admitted_price.is_finite():
                     raise ValueError("Paper matcher protective price is missing or malformed")
+                rules = ProductSpec.from_document(order["rules"])
+                if saved_price <= 0 or saved_price % rules.tick_size != 0:
+                    raise ValueError("Paper matcher protective price is not positive and tick-aligned")
                 if saved_price != admitted_price:
                     raise ValueError("Paper matcher protective price differs from the admitted order")
+                try:
+                    ledger_reference = D(row["reference_price"])
+                except (ArithmeticError, KeyError, TypeError, ValueError) as exc:
+                    raise ValueError("Paper matcher reservation reference is missing or malformed") from exc
+                if not ledger_reference.is_finite() or ledger_reference != saved_price:
+                    raise ValueError("Paper matcher reservation reference differs from durable order facts")
+                if market and (order.get("post_only") is not False or order.get("time_in_force") != "IOC"):
+                    raise ValueError("Paper market order policy is malformed")
                 saved_expiry, durable_expiry = order.get("expiry_ns"), row["expiry_ns"]
                 if type(saved_expiry) is not int or type(durable_expiry) is not int:
                     raise ValueError("Paper matcher expiry is missing or malformed")
@@ -88,6 +122,9 @@ class PaperExecution:
                     raise ValueError("Paper matcher time_in_force is missing or malformed")
                 if saved_tif != admitted_tif:
                     raise ValueError("Paper matcher time_in_force differs from the admitted order")
+                if (not market and order.get("time_in_force") == "GTC" and
+                        order.get("post_only") is False and not self.capabilities["allow_taker_gtc"]):
+                    raise ValueError("Paper taker GTC capability differs from the admitted order")
                 if "group_id" not in order or "group_id" not in metadata:
                     raise ValueError("Paper matcher group_id is missing or malformed")
                 saved_group, admitted_group = order["group_id"], metadata["group_id"]
@@ -147,14 +184,37 @@ class PaperExecution:
                post_only: bool = True, reduce_only: bool = False,
                time_in_force: str = "GTC", group_id: str | None = None):
         rules.supported()
+        allow = self.capabilities["allow_taker_gtc"]
         if time_in_force not in {"GTC", "IOC"}:
             raise ValueError("Paper execution supports GTC/IOC; FOK requires a separate policy")
-        if not post_only and time_in_force != "IOC":
+        if type(post_only) is not bool or type(reduce_only) is not bool:
+            raise ValueError("Paper order policy flags must be booleans")
+        is_market = intent.limit_price is None
+        reserve_price = None
+        if is_market:
+            if not self.capabilities["allow_market_orders"]:
+                raise ValueError("Paper market orders are disabled")
+            if post_only or time_in_force != "IOC":
+                raise ValueError("Paper market orders require non-post-only IOC")
+            raw_reserve = intent.metadata.get("reserve_unit_price")
+            if not isinstance(raw_reserve, str):
+                raise ValueError("Paper market reserve_unit_price must be an explicit decimal string")
+            try:
+                reserve_price = D(raw_reserve)
+            except (ArithmeticError, TypeError, ValueError) as exc:
+                raise ValueError("Paper market order requires an explicit reserve_unit_price") from exc
+            if (not reserve_price.is_finite() or reserve_price <= 0 or
+                    reserve_price % rules.tick_size != 0):
+                raise ValueError("Paper market reserve must be positive, finite, and tick-aligned")
+        elif not post_only and time_in_force != "IOC" and not allow:
             raise ValueError("Paper taker admission requires explicit IOC protection")
         if post_only and time_in_force == "IOC":
             raise ValueError("Post-only IOC is contradictory")
-        if intent.limit_price is None or intent.quantity is None:
+        if intent.quantity is None:
             raise ValueError("Paper orders require explicit protective price and quantity")
+        if not is_market and (not intent.limit_price.is_finite() or intent.limit_price <= 0 or
+                              intent.limit_price % rules.tick_size != 0):
+            raise ValueError("Paper protective limit must be positive, finite, and tick-aligned")
         if intent.instrument != rules.instrument:
             raise ValueError("Paper rules must match the complete intent instrument")
         enriched = intent.model_copy(update={"metadata": {
@@ -166,7 +226,7 @@ class PaperExecution:
             if intent.intent_id in state["orders"]:
                 # The ledger verifies duplicate payload identity as well.
                 created, row = self.ledger.admit_order(enriched, strategy, evidence, expiry_ns, rules,
-                    reference_price=reference_price, margin_rate=margin_rate,
+                    reference_price=reserve_price if is_market else reference_price, margin_rate=margin_rate,
                     funding_buffer=funding_buffer, account_notional_limit=account_notional_limit,
                     strategy_notional_limit=strategy_notional_limit, account_capital_limit=account_capital_limit,
                     strategy_capital_limit=strategy_capital_limit, now_ns=now_ns)
@@ -178,14 +238,15 @@ class PaperExecution:
             if len(state["orders"]) >= self.config["max_open_orders"]:
                 raise ValueError("Paper open-order capacity exceeded")
             created, row = self.ledger.admit_order(enriched, strategy, evidence, expiry_ns, rules,
-                reference_price=reference_price, margin_rate=margin_rate,
+                reference_price=reserve_price if is_market else reference_price, margin_rate=margin_rate,
                 funding_buffer=funding_buffer, account_notional_limit=account_notional_limit,
                 strategy_notional_limit=strategy_notional_limit, account_capital_limit=account_capital_limit,
                 strategy_capital_limit=strategy_capital_limit, now_ns=now_ns)
             if created:
                 state["orders"][intent.intent_id] = {
                     "intent_id": intent.intent_id, "strategy": strategy, "instrument": intent.instrument.key,
-                    "side": intent.side.value, "price": self._price(intent.limit_price), "leaves": str(intent.quantity),
+                    "side": intent.side.value, "price": self._price(reserve_price if is_market else intent.limit_price),
+                    "market": is_market, "leaves": str(intent.quantity),
                     "rules": rules.to_document(), "born_ns": now_ns,
                     "arrival_ns": now_ns + self.config["entry_latency_ns"], "expiry_ns": expiry_ns,
                     "cancel_ns": None, "active": False, "queue": None,
@@ -276,9 +337,13 @@ class PaperExecution:
             return
         price = D(order["price"])
         crosses = price >= min(map(D, book["asks"])) if order["side"] == "buy" else price <= max(map(D, book["bids"]))
-        if crosses:
+        if crosses and order["post_only"]:
             self._terminal(state, order, "reject", now, "post_only_cross")
         else:
+            if not order["post_only"]:
+                self._sweep(state, order, book, now)
+                if order["intent_id"] not in state["orders"]:
+                    return
             order["active"], order["queue"] = True, self._queue(state, order)
 
     def _fill(self, state, order, quantity, price, now, maker, token):
@@ -372,7 +437,7 @@ class PaperExecution:
             advanced = False
             if previous:
                 old_sequence = previous["sequence"]
-                if isinstance(sequence, int) and isinstance(old_sequence, int):
+                if type(sequence) is int and type(old_sequence) is int:
                     if sequence < old_sequence:
                         raise ValueError("Paper native book sequence regression")
                     advanced = sequence > old_sequence
@@ -387,6 +452,18 @@ class PaperExecution:
                 raise ValueError("Paper book is empty or crossed")
             state["blocked"].pop(key, None)
             state["gap_generations"].pop(key, None)
+            if advanced:
+                candidates = [order for order in state["orders"].values() if order["instrument"] == key and
+                              order["active"] and not order["post_only"] and order["time_in_force"] == "GTC"]
+                candidates.sort(key=lambda order: (order["side"], D(order["price"]) if order["side"] == "sell" else
+                                                    -D(order["price"]), order["arrival_ns"], order["intent_id"]))
+                for order in candidates:
+                    if (order["intent_id"] in state["orders"] and
+                            (not order["source_floor"] or
+                             (book["source_ns"] is not None and book["source_ns"] >= order["source_floor"])) and
+                            self._book_valid(state, key, now) is not None):
+                        self._sweep(state, order, book, now)
+                        order["source_floor"] = book["source_ns"]
             for order in state["orders"].values():
                 if order["instrument"] == key and order["active"] and order["queue"] is None:
                     order["queue"] = self._queue(state, order)

@@ -35,3 +35,15 @@
   Never print credentials; do not install packages or make unscoped rewrites.
 - A ready ticket is sufficient authority: verify, record receipt/status, continue
   through dependencies; stop and record concrete safety/provider blockers.
+
+
+## User-authorized worker fallback (2026-10-27)
+- Keep the Codex lead model/authentication unchanged. OpenCode/FreeLLMAPI remain
+  the preferred implementation routes. If those routes are unavailable OR their
+  per-ticket delegation/repair allowance is exhausted, use a Codex-native child
+  agent pinned to `gpt-6-luna` for bounded implementation/test work. The user has
+  explicitly authorized this fallback; do not ask for another permission solely
+  because the OpenCode repair allowance is exhausted. No extra Codex CLI process.
+- Announce and record the fallback, preserve/inspect partial work, isolate each
+  writer, and keep Codex independent review/acceptance and all safety constraints.
+  This fallback does not authorize live accounts, push, merge, deploy or secrets.

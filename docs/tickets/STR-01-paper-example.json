@@ -1,0 +1,60 @@
+{
+  "run_note": "Disabled LOCAL/PAPER template. Prepare a checksum-verified native bundle, replace the path/digest, build declared same-security product/feed inventory, and explicitly opt in the existing Paper owner capabilities. No provider credentials or live calls. Pass registration to register_configured with strategies.kr.c3.action_builder; paper_permission remains false until explicitly armed locally.",
+  "owner_capabilities": {
+    "allow_taker_gtc": true,
+    "allow_market_orders": true
+  },
+  "registration": {
+    "job_id": "str01-local-paper",
+    "module": "strategies.kr.c3",
+    "strategy_version": "str01-c3-1",
+    "config_version": "fixture-v1",
+    "config": {
+      "day": "2026-10-13",
+      "history_root": "/REDACTED/local/history",
+      "history_manifest_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "mode": "paper",
+      "job_id": "str01-local-paper",
+      "strategy": "C3",
+      "config_version": "fixture-v1",
+      "account": {
+        "venue": "kis",
+        "account": "LOCAL-PAPER-ONLY",
+        "product": "cash",
+        "environment": "paper"
+      },
+      "account_scope": "[\"kis\",\"LOCAL-PAPER-ONLY\",\"cash\",\"paper\"]",
+      "symbols": [
+        "069500",
+        "122630"
+      ],
+      "execution_venue": "kis",
+      "reference_venue": "kiwoom",
+      "index_key": "kis:index:KOSPI200"
+    },
+    "research_receipt": {
+      "ticket": "STR-01",
+      "fixture_only": true
+    },
+    "paper_permission": false,
+    "required_feeds": [
+      "kiwoom:etf:KIWOOM:KRX:069500",
+      "kiwoom:etf:KIWOOM:KRX:122630",
+      "kis:index:KOSPI200"
+    ],
+    "warmup_bars": 0,
+    "accounts": [
+      "[\"kis\",\"LOCAL-PAPER-ONLY\",\"cash\",\"paper\"]"
+    ],
+    "risk": {
+      "[\"kis\",\"LOCAL-PAPER-ONLY\",\"cash\",\"paper\"]": {
+        "funding_buffer": "0",
+        "account_notional_limit": "1000000",
+        "strategy_notional_limit": "1000000",
+        "account_capital_limit": "1000000",
+        "strategy_capital_limit": "1000000",
+        "margin_rate": null
+      }
+    }
+  }
+}

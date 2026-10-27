@@ -141,11 +141,23 @@ class PaperStrategyRuntime:
                 reference, execution = known_instruments[feed], spec.instrument
                 def security(raw):
                     return raw[1:] if len(raw) == 7 and raw.startswith("A") and raw[1:].isdigit() else raw
+                legacy_identity = (
+                    execution.std_symbol == reference.std_symbol
+                    and security(execution.raw_symbol) == security(reference.raw_symbol)
+                )
+                native_kiwoom_krx = (
+                    reference.venue == Venue.KIWOOM
+                    and reference.exchange == "KRX"
+                    and execution.exchange == "KRX"
+                    and reference.raw_symbol.isdigit() and len(reference.raw_symbol) == 6
+                    and execution.raw_symbol == reference.raw_symbol
+                    and execution.std_symbol == execution.raw_symbol
+                    and reference.std_symbol == f"KIWOOM:KRX:{reference.raw_symbol}"
+                )
                 if (execution.venue != Venue.KIS or reference.venue not in {Venue.KIWOOM, Venue.KRX, Venue.TOSS}
                         or execution.asset_class not in {AssetClass.EQUITY, AssetClass.ETF}
                         or execution.asset_class != reference.asset_class
-                        or execution.std_symbol != reference.std_symbol
-                        or security(execution.raw_symbol) != security(reference.raw_symbol)
+                        or not (legacy_identity or native_kiwoom_krx)
                         or not execution.currency or execution.currency != reference.currency
                         or execution.currency != spec.quote_currency or spec.quote_currency != "KRW"):
                     raise ValueError("Reference mapping requires the same explicit Korean security, asset class, and KRW currency")
@@ -176,6 +188,62 @@ class PaperStrategyRuntime:
         self._checkpoint_captured_cursor = None
         self._checkpoint_expected_state = self._checkpoint_restore_proof_value = None
         self._staged_instances = None
+
+    @staticmethod
+    def _configure_instance(instance, config):
+        hook = getattr(instance, "configure", None)
+        if hook is None:
+            return
+        if not callable(hook) or inspect.iscoroutinefunction(hook):
+            raise ValueError("strategy plugin configure hook must be synchronous and callable")
+        result = hook(config)
+        if inspect.isawaitable(result):
+            if inspect.iscoroutine(result):
+                result.close()
+            raise ValueError("strategy plugin configure hook must be synchronous")
+
+    @staticmethod
+    def _validate_instance_registration(instance, facts):
+        hook = getattr(instance, "validate_registration", None)
+        if hook is None:
+            return
+        if not callable(hook) or inspect.iscoroutinefunction(hook):
+            raise ValueError("strategy plugin validate_registration hook must be synchronous and callable")
+        result = hook(facts)
+        if inspect.isawaitable(result):
+            if inspect.iscoroutine(result):
+                result.close()
+            raise ValueError("strategy plugin validate_registration hook must be synchronous")
+
+    def _registration_facts(self, registration):
+        accounts = {}
+        for key in registration.accounts:
+            matcher = self.accounts[key]
+            scope = matcher.ledger.scope
+            capabilities = getattr(matcher, "capabilities", None)
+            if not isinstance(capabilities, Mapping):
+                capabilities = {"allow_taker_gtc": False, "allow_market_orders": False}
+            else:
+                capabilities = {
+                    "allow_taker_gtc": capabilities.get("allow_taker_gtc", False) is True,
+                    "allow_market_orders": capabilities.get("allow_market_orders", False) is True,
+                }
+            accounts[key] = {
+                "scope": {"venue": scope.venue, "account": scope.account,
+                          "product": scope.product, "environment": scope.environment},
+                "mode": matcher.ledger.mode.value,
+                "capabilities": capabilities,
+            }
+        return _freeze({
+            "job_id": registration.job_id,
+            "strategy_id": registration.module.strategy_id,
+            "config_version": registration.config_version,
+            "accounts": accounts,
+            "products": {key: spec.to_document() for key, spec in self.products.items()},
+            "instruments": {key: value.model_dump(mode="json") for key, value in self.known.items()},
+            "required_feeds": tuple(registration.required_feeds),
+            "reference_feeds": dict(self.reference_feeds),
+        })
 
     @staticmethod
     def _document(value):
@@ -240,6 +308,12 @@ class PaperStrategyRuntime:
                         or candidate.account_capital_limit != current.account_capital_limit):
                     raise ValueError("Shared account risk limits differ from existing registrations")
         restart_blocked = False
+        # An optional startup-only hook may load/validate native history before
+        # any durable registration claim or callback can expose risk. Legacy
+        # plugins without the hook are unchanged.
+        instance = registration.module.create()
+        self._configure_instance(instance, registration.config)
+        self._validate_instance_registration(instance, self._registration_facts(registration))
         if self.phase != "replay":
             # Any prior dispatch evidence in any bound account means a fresh
             # plugin instance cannot prove it restored that strategy's state.
@@ -250,7 +324,6 @@ class PaperStrategyRuntime:
             for account in registration.accounts:
                 self.accounts[account].ledger.claim_strategy_event(sid, registration.config_version,
                     "@registration", {"registration": fingerprint})
-        instance = registration.module.create()
         job = _Job(registration, instance, subscriptions, _freeze(registration.config), fingerprint)
         # Durable dispatch evidence is a property of the ledger, not of the
         # permission label displayed for this instance. Keep both fences
@@ -704,6 +777,10 @@ class PaperStrategyRuntime:
             instance = job.registration.module.create()
             if (type(instance).__module__ + "." + type(instance).__qualname__) != snap.get("plugin_class"):
                 raise ValueError("Paper checkpoint plugin module/class identity differs")
+            # Native context/config is re-established before the plugin state
+            # and factual execution facts are restored.
+            self._configure_instance(instance, job.registration.config)
+            self._validate_instance_registration(instance, self._registration_facts(job.registration))
             hook = getattr(instance, "restore_state", None)
             if not callable(hook) or inspect.iscoroutinefunction(hook):
                 raise ValueError("strategy plugin requires a synchronous restore_state hook")
@@ -981,9 +1058,84 @@ class PaperStrategyRuntime:
                 (event.source_ts_ns is None or
                  0 <= now-event.source_ts_ns <= self.budgets.max_feed_age_ns))
 
+    def _ledger_facts(self, accounts=None):
+        """Bounded factual execution snapshot from a job's already bound ledgers."""
+        facts = {}
+        selected = tuple(sorted(self.accounts)) if accounts is None else tuple(accounts)
+        for account in selected:
+            matcher = self.accounts[account]
+            report = matcher.ledger.report()
+            active = []
+            for row in matcher.ledger.active_orders():
+                active.append({
+                    "intent_id": row["intent_id"], "strategy": row["strategy"],
+                    "instrument": row["instrument"], "side": row["side"],
+                    "state": row["state"], "quantity": str(row["quantity"]),
+                    "filled": str(row["filled"]), "reservation": str(row["reservation"]),
+                    "expiry_ns": row["expiry_ns"],
+                })
+            orders = []
+            for row in report.get("orders", []):
+                try:
+                    payload = json.loads(row["payload"])
+                except (TypeError, ValueError) as exc:
+                    raise ValueError("Portfolio order payload is malformed") from exc
+                instrument = str(row["instrument"])
+                intent_instrument = payload.get("instrument") if isinstance(payload, dict) else None
+                raw_symbol = intent_instrument.get("raw_symbol") if isinstance(intent_instrument, dict) else None
+                metadata = payload.get("metadata", {}) if isinstance(payload, dict) else {}
+                if (not isinstance(raw_symbol, str) or not raw_symbol
+                        or not isinstance(metadata, dict)):
+                    raise ValueError("Portfolio order instrument/metadata facts are malformed")
+                created = payload.get("created_ts_ns") if isinstance(payload, dict) else None
+                if isinstance(created, bool) or not isinstance(created, int) or created < 0:
+                    raise ValueError("Portfolio order creation time is malformed")
+                orders.append({
+                    "intent_id": str(row["intent_id"]), "strategy": row["strategy"],
+                    "instrument": instrument, "raw_symbol": raw_symbol, "side": row["side"],
+                    "state": row["state"], "quantity": str(row["quantity"]),
+                    "filled": str(row["filled"]), "reservation": str(row["reservation"]),
+                    "expiry_ns": row["expiry_ns"], "created_ns": created,
+                    "metadata": metadata,
+                })
+            orders = sorted(orders, key=lambda row: (row["created_ns"], row["intent_id"]))
+            facts[account] = {
+                "scope": report["scope"], "mode": report["mode"],
+                "account_version": report["account_version"],
+                "balances": {key: str(value) for key, value in report["balances"].items()},
+                "reserved": {key: str(value) for key, value in report["reserved"].items()},
+                "simulated_margin": report["simulated_margin"],
+                "simulated_capital": report["simulated_capital"],
+                "physical_positions": {key: str(value) for key, value in report["physical_positions"].items()},
+                "virtual_positions": {
+                    strategy: {key: str(value) for key, value in positions.items()}
+                    for strategy, positions in report["virtual_positions"].items()},
+                "strategy_cash": [
+                    {key: (str(value) if isinstance(value, Decimal) else value)
+                     for key, value in row.items()} for row in report["strategy_cash"]],
+                "active_orders": active,
+                "orders": orders,
+                "readiness": dict(report["readiness"]),
+            }
+        return facts
+
+    @staticmethod
+    def _event_proof(event):
+        def plain(value):
+            if isinstance(value, BaseMarketEvent):
+                return plain(value.model_dump(mode="python"))
+            if isinstance(value, Mapping):
+                return {str(key): plain(item) for key, item in value.items()}
+            if isinstance(value, (list, tuple)):
+                return [plain(item) for item in value]
+            if isinstance(value, Decimal):
+                return str(value)
+            return value
+        return stable_hash([plain(event)])
+
     def _claim(self, job, event, snapshot):
         registration = job.registration
-        proof = {"registration": job.fingerprint, "event": stable_hash([event.model_dump(mode="json")]),
+        proof = {"registration": job.fingerprint, "event": self._event_proof(event),
                  "strategy_version": registration.strategy_version}
         # A partial cross-account claim also suppresses replay; omitted actions
         # require explicit operator review rather than an automatic risk retry.
@@ -1017,7 +1169,12 @@ class PaperStrategyRuntime:
                 continue
             job.state = "REPLAY" if replay else "PAPER"
             job.reason = None
-            view = StrategyDataView(snapshot, ready=True, phase=job.state)
+            # Refresh per job so actions from an earlier job are factual for
+            # the next callback, while no other job's account is exposed.
+            execution_facts = self._ledger_facts(job.registration.accounts)
+            view = StrategyDataView(snapshot, ready=True, phase=job.state,
+                                    execution=execution_facts)
+            self.view = view
             try:
                 if not replay and not self._claim(job, event, snapshot):
                     continue

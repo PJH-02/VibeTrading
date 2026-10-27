@@ -10,3 +10,6 @@ src/strategies/legacy/candle_loader.py -text whitespace=blank-at-eol,blank-at-eo
 
 # Preserve historical documentation bytes, including original CRLF.
 docs/archive/CLN-01-history/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/market/hot_path.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/runtime/etf_trading.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/strategies/kr/etf_history.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

@@ -13,8 +13,22 @@ import pandas as pd
 
 from .etf_reference import make_features, rolling_z1
 from storage.etf_csv_history import CsvStrategyHistory, ETF_HISTORY_ROLES
-from .c3 import open_decision
 from feeds.providers.kiwoom import KiwoomAuthClient, KST, _abs_decimal
+
+
+def __getattr__(name):
+    if name == "open_decision":
+        from .c3 import open_decision
+        return open_decision
+    raise AttributeError(name)
+
+
+def _open_decision(z, mis, sigma):
+    """Resolve the optional C3 sibling lazily so KP/KD survive its removal."""
+    decision = globals().get("open_decision")
+    if decision is None:
+        from .c3 import open_decision as decision
+    return decision(z, mis, sigma)
 
 
 def native_frame(rows: list[dict], symbol: str, *, minute: bool = False, index: bool = False) -> pd.DataFrame:
@@ -42,34 +56,87 @@ class EtfHistory:
         self.day = ''
         self.root.mkdir(parents=True, exist_ok=True)
 
-    async def prepare(self, day: str):
-        """Load the shared ticker CSVs; live events supply only today's bars."""
-        reference = await asyncio.to_thread(CsvStrategyHistory,self.root.parent/'history')
+    @classmethod
+    def from_csv(cls, history_root: Path, day: str, *, symbols=None, include_c3: bool = False):
+        """Build a read-only per-strategy history without a broker or cache writes.
+
+        The complete CSV bundle still has one checksum-verified manifest. Each
+        independently loaded plugin only parses the roles it actually consumes.
+        """
+        instance = cls.__new__(cls)
+        instance.client = None
+        instance.root = Path(history_root).parent / 'warmup'
+        instance.daily, instance.minutes = {}, {}
+        instance.index, instance.us = pd.DataFrame(), pd.Series(dtype=float)
+        instance.reference_usage, instance.day = {}, ''
+        instance._load_csv(Path(history_root), day, symbols=symbols, include_c3=include_c3)
+        return instance
+
+    def _load_csv(self, history_root: Path, day: str, *, symbols=None, include_c3: bool = True):
+        """Synchronous CSV load shared by startup preparation and the pure factory."""
+        if not isinstance(day, str) or not day.strip():
+            raise ValueError('native history day must be an explicit YYYY-MM-DD string')
+        try:
+            day = pd.Timestamp(day).strftime('%Y-%m-%d')
+        except (TypeError, ValueError) as exc:
+            raise ValueError('native history day must be a calendar date') from exc
+        role_symbols = tuple(ETF_HISTORY_ROLES) if symbols is None else tuple(symbols)
+        if not role_symbols or len(set(role_symbols)) != len(role_symbols):
+            raise ValueError('native history symbols must be unique and nonempty')
+        unknown = set(role_symbols) - set(ETF_HISTORY_ROLES)
+        if unknown:
+            raise ValueError(f'native history symbols are unsupported: {sorted(unknown)}')
+        try:
+            reference = CsvStrategyHistory(history_root)
+        except Exception as exc:
+            raise RuntimeError(f'native history bundle unavailable: {exc}') from exc
         daily, minutes = {}, {}
-        for symbol,(daily_key,minute_key) in ETF_HISTORY_ROLES.items():
-            daily[symbol] = await asyncio.to_thread(reference.daily,daily_key,symbol)
+        for symbol in role_symbols:
+            daily_key, minute_key = ETF_HISTORY_ROLES[symbol]
+            daily[symbol] = reference.daily(daily_key, symbol)
             prior = daily[symbol][daily[symbol].date < day]
-            if len(prior)<22:
+            if len(prior) < 22:
                 raise RuntimeError(f'{symbol}: fewer than 22 prior sessions')
             selected = set(prior.date.tail(15))
-            minutes[symbol] = await asyncio.to_thread(reference.minute,minute_key,selected)
-            if minutes[symbol].empty or minutes[symbol].date.nunique()<14:
+            minutes[symbol] = reference.minute(minute_key, selected)
+            if minutes[symbol].empty or minutes[symbol].date.nunique() < 14:
                 raise RuntimeError(f'{symbol}: minute warmup has fewer than 14 prior sessions')
-            self.reference_usage[symbol] = {'daily_rows':len(daily[symbol]),'minute_rows':len(minutes[symbol]),
-                'daily_path':reference.manifest['files'][daily_key]['path'],
-                'minute_path':reference.manifest['files'][minute_key]['path']}
-        self.daily,self.minutes,self.day = daily,minutes,day
-        # C3 and KP use this same ticker dataset.
-        self.index = await asyncio.to_thread(reference.daily,'KOSPI200_daily','KOSPI200')
-        us = await asyncio.to_thread(reference.daily,'SP500_daily','SP500')
-        self.us = us.set_index('timestamp').close.dropna().sort_index()
-        self.reference_usage['C3'] = {'shared_etf_path':reference.manifest['files']['069500_daily']['path'],
-            'shared_leverage_path':reference.manifest['files']['122630_daily']['path'],
-            'index_path':reference.manifest['files']['KOSPI200_daily']['path'],
-            'sp500_path':reference.manifest['files']['SP500_daily']['path']}
-        if len(self.index)<252 or len(self.us)<252:
-            raise RuntimeError('C3 index/SP500 history incomplete')
+            self.reference_usage[symbol] = {
+                'daily_rows': len(daily[symbol]), 'minute_rows': len(minutes[symbol]),
+                'daily_path': reference.manifest['files'][daily_key]['path'],
+                'minute_path': reference.manifest['files'][minute_key]['path']}
+        self.daily, self.minutes, self.day = daily, minutes, day
+        if include_c3:
+            self.index = reference.daily('KOSPI200_daily', 'KOSPI200')
+            us = reference.daily('SP500_daily', 'SP500')
+            self.us = us.set_index('timestamp').close.dropna().sort_index()
+            self.reference_usage['C3'] = {
+                'shared_etf_path': reference.manifest['files']['069500_daily']['path'],
+                'shared_leverage_path': reference.manifest['files']['122630_daily']['path'],
+                'index_path': reference.manifest['files']['KOSPI200_daily']['path'],
+                'sp500_path': reference.manifest['files']['SP500_daily']['path']}
+            prior_daily = self.daily.get('069500')
+            if prior_daily is None or len(prior_daily[prior_daily.date < day]) < 252:
+                raise RuntimeError('C3 ETF history has fewer than 252 prior sessions')
+            if len(self.index[self.index.date < day]) < 252 or len(self.us[self.us.index < pd.Timestamp(day)]) < 252:
+                raise RuntimeError('C3 index/SP500 history incomplete')
+            self.validate_c3_day()
+
+    async def prepare(self, day: str):
+        """Load the shared ticker CSVs; live events supply only today's bars."""
+        await asyncio.to_thread(self._load_csv, self.root.parent / 'history', day)
         self.save()
+
+    def validate_c3_day(self):
+        """Fail before a callback if the causal US tail is incomplete."""
+        if self.index.empty or self.us.empty:
+            raise RuntimeError('C3 index/SPX data is unavailable')
+        from feeds.etf_csv_sync import latest_completed_session
+        latest = self.us.index.max()
+        instant = pd.Timestamp(self.day, tz='Asia/Seoul') + pd.Timedelta(hours=9)
+        required = latest_completed_session('XNYS', instant.to_pydatetime(), grace_minutes=10)
+        if latest < pd.Timestamp(required):
+            raise RuntimeError('Latest completed SPX session is missing')
 
     def save(self):
         for symbol in self.daily:
@@ -143,4 +210,4 @@ class EtfHistory:
             raise RuntimeError('C3 discount history incomplete')
         mis = float(np.log(etf_open / index_open) - ratios.median())
         sigma = float(ix.close.pct_change(fill_method=None).tail(20).std(ddof=1) * np.sqrt(252))
-        return open_decision(z, mis, sigma)
+        return _open_decision(z, mis, sigma)

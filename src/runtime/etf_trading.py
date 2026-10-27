@@ -20,7 +20,7 @@ from contextlib import closing
 from pathlib import Path
 
 from execution.process_lease import ProcessLease
-from strategies.kr import kd as _kd, kp as _kp
+from strategies.kr import _etf_plugin
 from strategies.kr._intraday import intraday_decision as _intraday_decision
 
 import numpy as np
@@ -31,7 +31,6 @@ from .bus import NatsJetStreamBus
 from strategies.kr.etf_history import EtfHistory
 from storage.etf_csv_history import ETF_HISTORY_ROLES
 from portfolio.etf_journal import EtfJournal
-from strategies.kr.etf_reference import weights
 from operations.health import touch
 from execution.kis_execution import KisCashBroker, KisOrderRejected, account_permission_rejection
 from core.models import AssetClass, Bar1mEvent, BookUpdateType, EventType, InstrumentId, OrderDestination, OrderIntent, Side, Signal, SignalAction, Venue, event_from_dict
@@ -48,11 +47,9 @@ class EtfDispatchBlocked(RuntimeError):
 
 
 def intraday_decision(strategy: str, feature: dict, book: dict) -> tuple[int, float, str]:
-    """Frozen M1-P compatibility dispatcher to the KR pure helpers."""
-    if strategy == 'KP':
-        return _kp.decide(feature, book)
-    if strategy == 'KD':
-        return _kd.decide(feature, book)
+    """Frozen M1-P compatibility dispatcher to lazily resolved KR helpers."""
+    if strategy in {'KP', 'KD'}:
+        return _etf_plugin.intraday_decision_for(strategy, feature, book)
     return _intraday_decision(strategy, feature, book)
 
 
@@ -149,7 +146,7 @@ class EtfTradingLoop:
         for lease in reversed(tuple(self._owner_leases.values())): lease.close()
 
     def broker_for(self,symbol,scope=None):
-        scope=scope or ('mock2' if symbol in {'122630','251340'} else 'mock')
+        scope=scope or _etf_plugin.account_scope_for(symbol)
         return self.brokers[scope] if hasattr(self,'brokers') else self.broker
 
     def intent_quote(self,symbol):
@@ -444,20 +441,20 @@ class EtfTradingLoop:
                     or actual != (strategy,symbol,side,Decimal(quantity),direction,safety_stop,auction_market,recovery_cleanup,valid_until_ts_ns)):
                 raise ValueError('ETF immutable request collision')
             return
-        valid_until_ts_ns = valid_until_ts_ns if valid_until_ts_ns is not None else time.time_ns()+90_000_000_000
+        valid_until_ts_ns = valid_until_ts_ns if valid_until_ts_ns is not None else time.time_ns()+_etf_plugin.FOLLOWUP_TTL_NS
         if side == Side.BUY and self._feed_entry_blocked(strategy):
             raise EtfDispatchBlocked('ETF entry feed requires snapshot and history recovery')
         broker=self.broker_for(symbol)
-        scope='mock2' if symbol in {'122630','251340'} else 'mock'
+        scope=_etf_plugin.account_scope_for(symbol)
         # Every signal starts with a limit order. During the closing auction
         # retain the last continuous quote for the initial owned-position exit.
         if auction_market and side == Side.SELL:
             bid, ask, received = self.quotes.get(symbol,(Decimal(0),Decimal(0),0))
-            if bid <= 0 or ask < bid or time.time_ns()-received > 90_000_000_000:
+            if bid <= 0 or ask < bid or time.time_ns()-received > _etf_plugin.FOLLOWUP_TTL_NS:
                 raise RuntimeError('Closing-auction exit needs a valid recent quote')
         else:
             bid, ask = self.fresh_quote(symbol)
-        price = ((ask+5)/5).to_integral_value(rounding=ROUND_CEILING)*5 if side == Side.BUY else (max(Decimal(5),bid-5)/5).to_integral_value(rounding=ROUND_FLOOR)*5
+        price = _etf_plugin.limit_price(side,bid,ask)
         if side == Side.BUY:
             power = await broker.buying_power(symbol, price)
             quantity = min(quantity, int(Decimal(str(power['max_buy_qty']))))
@@ -481,8 +478,8 @@ class EtfTradingLoop:
         if self.entry_blocked(strategy):
             log.warning('ETF entry blocked by kill switch strategy=%s',strategy)
             return
-        market = 'KOSPI200' if strategy in {'C3','KP'} else 'KOSDAQ150'
-        targets = weights(side,leverage,market)
+        market = _etf_plugin.market_for(strategy)
+        targets = _etf_plugin.entry_targets(strategy,side,leverage)
         # Both signal ETFs and actual leveraged/inverse vehicles must have
         # their own historical series before entering a position.
         for symbol, weight in targets.items():
@@ -494,26 +491,24 @@ class EtfTradingLoop:
         if self.journal.pending() and any(r['status'] in {'unknown','submitting'} for r in self.journal.pending()):
             raise RuntimeError('Ambiguous order blocks all new entries until reconciled')
         capital = book['cash']-book['reserved']
-        signal_symbol = '069500' if market=='KOSPI200' else '229200'
+        signal_symbol = _etf_plugin.signal_symbol_for(strategy)
         bid, ask = self.fresh_quote(signal_symbol)
         signal = Signal(signal_id=hashlib.sha256(identity.encode()).hexdigest(),strategy_id=strategy,
             instrument=InstrumentId(venue=Venue.KIWOOM,asset_class=AssetClass.ETF,raw_symbol=signal_symbol,std_symbol=f'KIWOOM:KRX:{signal_symbol}'),
             action=SignalAction.ENTER_LONG if side==1 else SignalAction.ENTER_SHORT,
-            event_ts_ns=time.time_ns(),reference_price=(bid+ask)/2,valid_until_ts_ns=time.time_ns()+90_000_000_000,
+            event_ts_ns=time.time_ns(),reference_price=(bid+ask)/2,valid_until_ts_ns=time.time_ns()+_etf_plugin.FOLLOWUP_TTL_NS,
             source_event_id=identity,metadata={'account_mode':'mock','leverage':leverage,'weights':targets})
         try:
             await self.bus.publish_signal(signal)
         except Exception as exc:
             log.warning('ETF signal observation deferred id=%s (%s)',signal.signal_id,type(exc).__name__)
-        planned = []
+        prices = {}
         for symbol, weight in targets.items():
             if weight <= 0:
                 continue
-            _, ask = self.fresh_quote(symbol)
-            conservative = ((ask+5)/5).to_integral_value(rounding=ROUND_CEILING)*5
-            quantity = int(capital*Decimal(str(weight))/(conservative*Decimal('1.005')))
-            if quantity:
-                planned.append((symbol,quantity))
+            symbol_bid, symbol_ask = self.fresh_quote(symbol)
+            prices[symbol] = _etf_plugin.limit_price(Side.BUY,symbol_bid,symbol_ask)
+        planned = _etf_plugin.plan_entry_quantities(capital,targets,prices)
         for symbol, quantity in planned:
             await self.place(strategy,symbol,Side.BUY,quantity,identity,direction=side,safety_stop=safety_stop,valid_until_ts_ns=signal.valid_until_ts_ns)
 
@@ -569,7 +564,7 @@ class EtfTradingLoop:
                 # Guessing by symbol/time could assign someone else's order.
                 continue
             try:
-                if order['status']=='pending' and order['order_type']=='limit' and time.time_ns()-(order['accepted_ns'] or order['created_ns']) >= 5_000_000_000 and not order['cancel_requested']:
+                if _etf_plugin.followup_due(order,time.time_ns()):
                     # Persist once before POST: an uncertain cancellation also
                     # needs broker reconciliation, never automatic resubmission.
                     self.journal.db.execute('UPDATE orders SET cancel_requested=1,fallback_requested=1 WHERE intent_id=?',(order['intent_id'],))
@@ -642,12 +637,15 @@ class EtfTradingLoop:
         snapshot=json.loads((self.settings.state_dir/'kis-index'/'snapshot.json').read_text(encoding='utf-8'))
         if snapshot.get('day')!=self._day:
             raise RuntimeError('Current KIS KOSPI200 opening snapshot unavailable')
-        etf_open,index_open = abs(float(etf['open_pric'])),abs(float(snapshot['bstp_nmix_oprc']))
+        index_open = abs(float(snapshot['bstp_nmix_oprc']))
+        etf_open = abs(float(etf['open_pric']))
         if etf_open <= 0 or index_open <= 0:
             return
-        leverage,detail = self.history.c3(etf_open,index_open)
+        decision = _etf_plugin.module_for('C3').native_open_decision(
+            self.history,etf_open,index_open)
+        leverage,detail = decision['leverage'],decision['detail']
         if leverage > 0:
-            for symbol,weight in weights(1,leverage,'KOSPI200').items():
+            for symbol,weight in _etf_plugin.entry_targets('C3',1,leverage).items():
                 if weight > 0:
                     self.fresh_quote(symbol)
         if self.journal.decision('C3',identity,detail) and leverage > 0:
@@ -673,6 +671,15 @@ class EtfTradingLoop:
             if symbol in getattr(self,'_feed_invalid',set()):
                 self._feed_snapshots.add(symbol)
                 self._restore_feed_readiness()
+            if (symbol=='069500' and self.phase=='ready'
+                    and '09:00' <= now.strftime('%H:%M') <= '09:05'):
+                async with self._lock:
+                    try:
+                        await self.evaluate_c3()
+                    except Exception:
+                        log.exception('C3 native open waiting for index/quote')
+            return
+        if event.event_type == EventType.INDEX_QUOTE and event.instrument.asset_class == AssetClass.INDEX:
             return
         if event.event_type == EventType.TRADE and symbol=='069500':
             if self.phase=='ready' and event.quantity > 0 and '09:00' <= now.strftime('%H:%M') <= '09:05':
@@ -710,34 +717,29 @@ class EtfTradingLoop:
                     log.exception('C3 input/entry not ready')
             strategy = 'KP' if symbol == '069500' else 'KD'
             book = self.journal.logical_book(strategy)
-            if strategy == 'KD' and book['positions'] and book['safety_stop'] is not None:
-                breached = float(event.close) <= book['safety_stop'] if book['direction']==1 else float(event.close) >= book['safety_stop']
-                if breached:
-                    await self.exit('KD',f'KD:{event.close_ts_ns}:safety_stop')
-                    return
+            if timestamp.minute in {0,30} and timestamp.strftime('%H:%M') <= '15:00':
+                bid, ask = self.fresh_quote(symbol)
+            else:
+                bid = ask = None
+            decision = _etf_plugin.intraday_source_decision(
+                strategy,self.history,timestamp,frame,book,bid=bid,ask=ask)
+            action = decision['action']
+            if action == 'paper_stop':
+                identity = f'{strategy}:{event.close_ts_ns}:safety_stop'
+                if self.journal.decision(strategy,identity,{'action':action}):
+                    await self.exit(strategy,identity)
+                return
             if timestamp.minute not in {0,30} or timestamp.strftime('%H:%M') > '15:00':
                 return
-            features = self.history.intraday_features(symbol,frame)
-            if features.empty:
-                return
-            selected = features[features.timestamp == timestamp]
-            if selected.empty:
-                return
-            row = selected.iloc[0].to_dict()
-            if not row['usable']:
-                return
-            direction, leverage, action = intraday_decision(strategy,row,book)
+            direction, leverage = decision['direction'], decision['leverage']
             identity = f'{strategy}:{event.close_ts_ns}:{action}'
-            if not self.journal.decision(strategy,identity,{'direction':direction,'leverage':leverage,'action':action}):
+            if not self.journal.decision(strategy,identity,{'direction':direction,'leverage':leverage,'action':action,'feature_id':decision['identity']}):
                 return
             if action == 'entry':
-                bid, ask = self.fresh_quote(symbol)
-                stop = float((bid+ask)/2)*(1-direction*.25*row['prior_median_range20']) if strategy == 'KD' else None
+                stop = decision['stop']
                 if stop is not None and not np.isfinite(stop):
                     return
                 await self.enter(strategy,direction,leverage,identity,stop)
-            elif action == 'paper_stop':
-                await self.exit(strategy,identity)
 
     async def report_daily(self, day, now):
         from feeds.etf_csv_sync import completed_session
@@ -849,7 +851,7 @@ class EtfTradingLoop:
                     self._warmup_task = asyncio.create_task(self.prepare(day))
             async with self._lock:
                 pending = self.journal.pending()
-                due = any(r['order_type']=='limit' and r['status']=='pending' and time.time_ns()-(r['accepted_ns'] or r['created_ns'])>=5_000_000_000 and not r['cancel_requested'] for r in pending)
+                due = any(_etf_plugin.followup_due(r,time.time_ns()) for r in pending)
                 if (pending and (due or time.monotonic()-last_reconcile >= 1)) or self.journal.fallback_candidates():
                     try:
                         await self.reconcile()
@@ -866,15 +868,15 @@ class EtfTradingLoop:
                 for strategy in ('C3','KP','KD'):
                     if recovering:
                         continue
-                    deadline = '15:19:55' if strategy != 'C3' else '15:20:05'
+                    session = _etf_plugin.session_action(strategy,pd.Timestamp(now))
                     # Submit while continuous quotes are still tradable. KRX's
                     # closing auction cannot be reconstructed as a past fill.
-                    if clock >= deadline and clock <= '15:30:00':
+                    if session == 'session_exit':
                         try:
                             await self.exit(strategy,f'{strategy}:{day}:session_exit:{int(time.time())//30}',auction_market=strategy=='C3')
                         except Exception:
                             log.exception('ETF session liquidation waiting for valid quote/broker')
-                    if clock >= '09:00:00' and clock < '09:05:00' and self.journal.book(strategy)['positions'] and self.journal.book(strategy)['day'] == day and self.journal.book(strategy)['entries'] == 0:
+                    if session == 'overnight_recovery' and self.journal.book(strategy)['positions'] and self.journal.book(strategy)['day'] == day and self.journal.book(strategy)['entries'] == 0:
                         try:
                             await self.exit(strategy,f'{strategy}:{day}:overnight_recovery:{int(time.time())//30}')
                         except Exception:

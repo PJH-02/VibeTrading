@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections import OrderedDict, defaultdict, deque
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from types import MappingProxyType
 from typing import Any, Iterable, Mapping
 import uuid
@@ -464,6 +464,16 @@ class StrategyDataView:
     history_reader: object | None = None
     ready: bool = True
     phase: str = "SHADOW"
+    # Optional, immutable factual account snapshot supplied by the runtime owner
+    # from its existing ledger. It is deliberately empty for legacy plugins and
+    # never carries ledger/broker/client references.
+    execution: Mapping[str, Any] = field(default_factory=dict)
+
+    def __post_init__(self):
+        object.__setattr__(self, "execution", _freeze(self.execution))
+
+    def execution_facts(self, account_scope: str) -> Mapping[str, Any] | None:
+        return self.execution.get(account_scope)
 
     def history(self, instrument_key: str, event_type: str, limit: int = 1000) -> list[dict]:
         if not isinstance(self.hot_path, DecisionSnapshot):
