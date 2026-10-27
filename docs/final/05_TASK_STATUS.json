@@ -38,18 +38,16 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 14,
-    "in_progress": 1,
+    "accepted": 15,
+    "in_progress": 2,
     "blocked": 0,
-    "not_started": 18,
+    "not_started": 16,
     "external_not_authorized": 2
   },
   "next_ready_candidate": [
     "CLN-02",
     "CAP-01",
-    "STR-02",
-    "VEN-01",
-    "FEED-01"
+    "STR-02"
   ],
   "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
   "gate_results": {
@@ -427,8 +425,8 @@
     ],
     "missing_required_local_code_blocks_feature_release": true
   },
-  "active_task_id": null,
-  "last_accepted_task_id": "FEED-01",
+  "active_task_id": "CAP-01",
+  "last_accepted_task_id": "VEN-01",
   "stop_requested": false,
   "tickets": [
     {
@@ -1059,7 +1057,7 @@
     {
       "task_id": "CAP-01",
       "wave": "W3",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "depends_on": [
         "CAP-00",
         "MOV-04"
@@ -1067,7 +1065,7 @@
       "risk_review": "CRITICAL_CODEX",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
+      "base_sha": "58545cbe6785507be7f4506bc6a32533dd0dc911",
       "actual_commit_sha": null,
       "acceptance_receipt": null,
       "test_exit": null,
@@ -1080,7 +1078,8 @@
           "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-05.acceptance.json",
           "details": "286 function statuses remain DEFER; source evidence is not semantic consolidation/retirement."
         }
-      ]
+      ],
+      "bounded_packet": "docs/tickets/CAP-01-reuse-integration.md"
     },
     {
       "task_id": "CAP-02",
@@ -1404,7 +1403,7 @@
     {
       "task_id": "VEN-01",
       "wave": "W3",
-      "status": "NOT_STARTED",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "MOV-04",
         "CAP-00"
@@ -1412,13 +1411,61 @@
       "risk_review": "HIGH",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "base_sha": "ab3e5148874245f5ea31b359a7636b2e3b0468e1",
+      "actual_commit_sha": "58545cbe6785507be7f4506bc6a32533dd0dc911",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/VEN01.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
-      "definition_heading_id": "VEN-01"
+      "definition_heading_id": "VEN-01",
+      "bounded_packet": "docs/tickets/VEN-01-registry.md",
+      "worker_attempts": [
+        {
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "role": "refactor",
+          "worker_exit": 124,
+          "source_draft": "VEN01-deepseek/work",
+          "independent_adverse_failed": 8,
+          "accepted": false
+        },
+        {
+          "model": "opencode/glm-5.3-flash-free",
+          "role": "debug",
+          "repair": 1,
+          "worker_exit": 124,
+          "source_changes": []
+        },
+        {
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "role": "debug",
+          "repair": 2,
+          "state": "FINISHED",
+          "scope": [
+            "registry.py",
+            "local_config.py"
+          ],
+          "worker_exit": 124,
+          "source_changes": []
+        },
+        {
+          "model": "gpt-6-luna",
+          "role": "bounded implementation/test",
+          "state": "FINISHED",
+          "scope": [
+            "src/execution/venues/__init__.py",
+            "src/execution/venues/registry.py",
+            "src/execution/venues/dummy_crypto.py",
+            "src/execution/venues/dummy_stock.py",
+            "src/runtime/local_config.py",
+            "tests/refactoring/test_ven01_registry.py"
+          ],
+          "reason": "User-authorized fallback after external initial + two repairs timed out. Partial work preserved; Luna sole isolated writer after external exit.",
+          "agent": "/root/ven01_finish",
+          "worker_test_exit": 0,
+          "public_passed": 49
+        }
+      ],
+      "receipt_sha256": "df2a75ff4882c368a6013776c9ed994d91724172786c3f481aefa28f50818ac3"
     },
     {
       "task_id": "EXEC-01",
@@ -1794,6 +1841,12 @@
       "reason": "FEED01 ACCEPTED_LOCAL after2566 Linux+25 lease,14 exactAST and26 JSON events,138 wheel source equality. Ubuntu target preserved; advance VEN01.",
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/FEED01.acceptance.json",
       "actual_commit_sha": "6eafe31edae8dfb19cde2a6fcab5a9ae33e1e493"
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "VEN01 accepted after independent2615 Linux+25 leases+185 focused; preserved native owners and Ubuntu config. Advance user batch CAP01, preserve STR02.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/VEN01.acceptance.json",
+      "actual_commit_sha": "58545cbe6785507be7f4506bc6a32533dd0dc911"
     }
   ],
   "requirements_revision": {
@@ -1891,9 +1944,10 @@
       "CAP-01"
     ],
     "accepted": [
-      "FEED-01"
+      "FEED-01",
+      "VEN-01"
     ],
-    "status": "VEN01_NEXT",
+    "status": "CAP01_IN_PROGRESS",
     "artifacts": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027",
     "target_os": "Ubuntu Linux",
     "str02_preserved": true
