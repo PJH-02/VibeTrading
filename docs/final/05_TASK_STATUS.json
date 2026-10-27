@@ -38,10 +38,10 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 13,
-    "in_progress": 0,
+    "accepted": 14,
+    "in_progress": 1,
     "blocked": 0,
-    "not_started": 20,
+    "not_started": 18,
     "external_not_authorized": 2
   },
   "next_ready_candidate": [
@@ -428,7 +428,7 @@
     "missing_required_local_code_blocks_feature_release": true
   },
   "active_task_id": null,
-  "last_accepted_task_id": "STR-01",
+  "last_accepted_task_id": "FEED-01",
   "stop_requested": false,
   "tickets": [
     {
@@ -1354,7 +1354,7 @@
     {
       "task_id": "STR-02",
       "wave": "W3",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "depends_on": [
         "STR-01",
         "MOV-05",
@@ -1363,11 +1363,13 @@
       "risk_review": "HIGH",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
+      "base_sha": "a0de9111cf4f765019a5fe894fa17ebdba7fab36",
       "actual_commit_sha": null,
       "acceptance_receipt": null,
       "test_exit": null,
-      "blocking_reasons": [],
+      "blocking_reasons": [
+        "Preserved unfinished after host filesystem I/O failures; user now explicitly requests FEED01→VEN01→CAP01 bypass. No STR02 source adopted."
+      ],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "STR-02",
       "follow_up_findings": [
@@ -1375,6 +1377,27 @@
           "id": "LEGACY_BUNDLE_SEMANTIC_REUSE",
           "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-05.acceptance.json",
           "details": "286 function statuses remain DEFER; source evidence is not semantic consolidation/retirement."
+        }
+      ],
+      "bounded_packet": "docs/tickets/STR-02-action-feedback.md",
+      "worker_attempts": [
+        {
+          "phase": "A",
+          "model": "freellmapi/glm-4.5-flash",
+          "state": "INTERRUPTED_ENVIRONMENT_IO",
+          "applied": false
+        },
+        {
+          "phase": "A-resume",
+          "model": "freellmapi/glm-4.5-flash",
+          "state": "WRAPPER_EXIT1_FILESYSTEM_IO",
+          "applied": false
+        },
+        {
+          "phase": "C",
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "state": "WRAPPER_EXIT1_FILESYSTEM_IO",
+          "applied": false
         }
       ]
     },
@@ -1451,7 +1474,7 @@
     {
       "task_id": "FEED-01",
       "wave": "W3",
-      "status": "NOT_STARTED",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "MOV-07",
         "CAP-00"
@@ -1459,10 +1482,10 @@
       "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "base_sha": "a0de9111cf4f765019a5fe894fa17ebdba7fab36",
+      "actual_commit_sha": "6eafe31edae8dfb19cde2a6fcab5a9ae33e1e493",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/FEED01.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "FEED-01",
@@ -1472,7 +1495,15 @@
           "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.acceptance.json",
           "evidence": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.domain-evidence.json"
         }
-      ]
+      ],
+      "bounded_packet": "docs/tickets/FEED-01-provider-split.md",
+      "worker_attempts": [
+        "freellmapi/glm-4.5-flash: relay502/no edits",
+        "opencode/deepseek-v4.1-flash-free: timeout124; reviewed7 source drafts",
+        "freellmapi/gemini-2.5-flash: relay502/no edits",
+        "gpt-6-luna: native7 tests+bounded review repair"
+      ],
+      "receipt_sha256": "c301214b63a5d660e74d9cdaa92a7c45fb896f7944809b4a4884c503fcd1e49a"
     },
     {
       "task_id": "OBS-01",
@@ -1752,6 +1783,17 @@
     {
       "date": "2026-10-27",
       "reason": "STR01 accepted on independent2559 Linux+25 guarded lease+41 oracle cases, final offline wheel/removal imports. User-authorized Luna fallback; next stage STR02 now ready."
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "User requests FEED01→VEN01→CAP01 bypass; Ubuntu target mandatory; preserve STR02 unfinished and all prior changes. Local Linux shell is restored, C free8GB observed.",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027"
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "FEED01 ACCEPTED_LOCAL after2566 Linux+25 lease,14 exactAST and26 JSON events,138 wheel source equality. Ubuntu target preserved; advance VEN01.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/FEED01.acceptance.json",
+      "actual_commit_sha": "6eafe31edae8dfb19cde2a6fcab5a9ae33e1e493"
     }
   ],
   "requirements_revision": {
@@ -1842,17 +1884,19 @@
     "snapshot_baseline_sha": "dd2e776c35ca18523546a2491213e7c3026505c4"
   },
   "active_batch": {
-    "requested_tasks": 2,
+    "requested_tasks": 3,
     "tasks": [
-      "STR-01",
-      "STR-02"
+      "FEED-01",
+      "VEN-01",
+      "CAP-01"
     ],
     "accepted": [
-      "STR-01"
+      "FEED-01"
     ],
-    "status": "STR01_ACCEPTED_STR02_NEXT",
-    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/STR-01-luna-resume-20261027",
-    "selection_reason": "User resumed STR01 and next stage; STR02 requires STR01 acceptance first"
+    "status": "VEN01_NEXT",
+    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027",
+    "target_os": "Ubuntu Linux",
+    "str02_preserved": true
   },
   "completed_batches": [
     {

@@ -1,0 +1,7 @@
+# FEED-01 — ACCEPTED_LOCAL
+
+Ubuntu/Linux target. Source commit `6eafe31edae8dfb19cde2a6fcab5a9ae33e1e493`. Native collectors split by venue, shared normalization single. TOSS/KIS/Kiwoom/Hyperliquid source bytes unchanged; Binance TradFi classes AST unchanged. Two old multiplexers retired, direct callers mechanically migrated. STR-02 preserved.
+
+Independent final source: 2,566 Linux tests (two existing live-data exclusions; one unchanged external Babel warning),25 guarded lease tests,5 whole-event JSON comparisons/26 events,14 exact native/shared method AST comparisons. New fake native startup and100-event independent HotPath application tests included. Offline wheel:13 external-directory canonical imports,138 byte-exact source files, no retired modules. All exit0; diff-check0.
+
+Wheel SHA256 `642d5974385071d910e4992f60c98eebe4503ea56c5940ed82008a642775fca8`. Receipt `/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/FEED01.acceptance.json` SHA256 `c301214b63a5d660e74d9cdaa92a7c45fb896f7944809b4a4884c503fcd1e49a`. Original04 unchanged `dc87aacc4be82eedd0c7cd85d653cc4e17dcc152ee5b718a8bb2eec2954af5ee`. No production API/order mutation, push, deployment, package install or Windows product branch. GLM/Gemini relay502 and DeepSeek timeout artifacts preserved; user-authorized Luna supplied bounded tests. Commit command used temporary Codex identity because this resumed shell has no Git identity; no account/global Git config changed.
