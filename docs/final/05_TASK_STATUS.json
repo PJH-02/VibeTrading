@@ -38,16 +38,14 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 19,
-    "in_progress": 0,
+    "accepted": 20,
+    "in_progress": 1,
     "blocked": 0,
-    "not_started": 14,
+    "not_started": 12,
     "external_not_authorized": 2
   },
   "next_ready_candidate": [
     "CLN-02",
-    "CAP-04",
-    "EXEC-01",
     "OBS-01"
   ],
   "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
@@ -426,8 +424,8 @@
     ],
     "missing_required_local_code_blocks_feature_release": true
   },
-  "active_task_id": null,
-  "last_accepted_task_id": "CAP-03",
+  "active_task_id": "EXEC-01",
+  "last_accepted_task_id": "CAP-04",
   "stop_requested": false,
   "tickets": [
     {
@@ -1342,7 +1340,7 @@
     {
       "task_id": "CAP-04",
       "wave": "W3",
-      "status": "NOT_STARTED",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "STR-01",
         "CAP-03",
@@ -1351,13 +1349,63 @@
       "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
       "required_for_offline_release": true,
       "may_need_scope_decision": true,
-      "base_sha": null,
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "base_sha": "6a3e7aaece592fc517a8c62299890b9262bba3e1",
+      "actual_commit_sha": "f8b515ce44cdf2a78c2d49918f5b0c9e63888f68",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/CAP04/CAP04.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
-      "definition_heading_id": "CAP-04"
+      "definition_heading_id": "CAP-04",
+      "bounded_packet": "docs/tickets/CAP-04-process-isolation.md",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/CAP04",
+      "execution_note": "Independent dependency-ready isolated worker runs while EXEC01 is reviewed; integrate only after source/hash conflict review",
+      "worker_attempts": [
+        {
+          "model": "freellmapi/glm-4.5-flash",
+          "role": "implement",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/CAP04/initial-glm",
+          "state": "FINISHED",
+          "worker_exit": 1,
+          "source_changes": [],
+          "scope_pass": true
+        },
+        {
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "role": "debug",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/CAP04/repair1-deepseek",
+          "state": "FINISHED",
+          "worker_exit": 124,
+          "source_changes": [
+            "src/runtime/runtime_checkpoint.py",
+            "src/runtime/strategy_process.py",
+            "src/runtime/strategy_runtime.py",
+            "tests/refactoring/test_cap04_isolation.py",
+            "tests/refactoring/test_cap04_process_contract.py"
+          ],
+          "scope_pass": true
+        },
+        {
+          "model": "freellmapi/gemini-3.1-flash-lite",
+          "role": "implement",
+          "state": "FINISHED",
+          "worker_exit": 1,
+          "source_changes": [
+            "src/runtime/strategy_process.py",
+            "tests/refactoring/test_cap04_isolation.py"
+          ],
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/CAP04/repair2-gemini31"
+        }
+      ],
+      "native_fallback": {
+        "model": "gpt-6-luna",
+        "reason": "external per-ticket allowance exhausted and independent review failed",
+        "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/CAP04/native-fallback.json"
+      },
+      "acceptance_receipt_sha256": "840db11f4f144adfd7bf4fbb7f3d187e124d29a5a4182733b7225de61f5c6731",
+      "accepted_utc": "2026-10-28T18:09:17.265469+00:00",
+      "worker_model": "gpt-6-luna",
+      "test_summary": "2832 full +25 guarded leases; wheel149 exact; actual confined installed-wheel worker; independent exits0",
+      "acceptance_document": "docs/tickets/CAP-04-acceptance.md"
     },
     {
       "task_id": "CAP-05",
@@ -1746,7 +1794,7 @@
     {
       "task_id": "EXEC-01",
       "wave": "W3",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "depends_on": [
         "STR-02",
         "VEN-01",
@@ -1757,7 +1805,7 @@
       "risk_review": "CRITICAL",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
+      "base_sha": "6a3e7aaece592fc517a8c62299890b9262bba3e1",
       "actual_commit_sha": null,
       "acceptance_receipt": null,
       "test_exit": null,
@@ -1770,7 +1818,53 @@
           "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-05.acceptance.json",
           "details": "286 function statuses remain DEFER; source evidence is not semantic consolidation/retirement."
         }
-      ]
+      ],
+      "bounded_packet": "docs/tickets/EXEC-01-common-owner-routing.md",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/EXEC01",
+      "worker_attempts": [
+        {
+          "model": "freellmapi/glm-4.5-flash",
+          "role": "implement",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/EXEC01/initial-glm",
+          "state": "FINISHED",
+          "worker_exit": 1,
+          "source_changes": [
+            "tests/refactoring/test_exec01_owner.py"
+          ],
+          "scope_pass": true
+        },
+        {
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "role": "debug",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/EXEC01/repair1-deepseek",
+          "state": "FINISHED",
+          "worker_exit": 124,
+          "source_changes": [
+            "src/execution/execution_ledger.py",
+            "src/execution/execution_owner.py",
+            "src/execution/process_lease.py",
+            "src/execution/trading_contracts.py",
+            "src/execution/venues/registry.py",
+            "tests/refactoring/test_exec01_native.py",
+            "tests/refactoring/test_exec01_owner.py"
+          ],
+          "scope_pass": true
+        },
+        {
+          "model": "freellmapi/gemini-3.1-flash-lite",
+          "role": "implement",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/EXEC01/repair2-gemini31",
+          "state": "FINISHED",
+          "worker_exit": 0,
+          "source_changes": [],
+          "scope_pass": true
+        }
+      ],
+      "native_fallback": {
+        "model": "gpt-6-luna",
+        "reason": "external per-ticket allowance exhausted and independent review failed",
+        "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/EXEC01/native-fallback.json"
+      }
     },
     {
       "task_id": "SIM-01",
@@ -2156,6 +2250,13 @@
       "reason": "STR02 full local action-feedback accepted:2756 Linux+25leases+49focused;148 wheel source byte equality,172 original test files preserved. Original ETF source economics/cadence preserved; account-config fee policy unchanged, no broker-fee reception.",
       "actual_commit_sha": "f9e830c67330de171647f746d4a25a4e8f70fd22",
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/STR-02-resume-20261028/STR02.acceptance.json"
+    },
+    {
+      "date": "2026-10-29",
+      "reason": "CAP04 independently accepted:2832 full+25leases,149wheel source byte equality and actual confined child from installed wheel;2CPU synthetic PAPER200events/20actions, actual engine infinite callback watchdog and kernel address-space/process limits. EXEC01 remains unfinished; Arcus required native NEW proof unresolved. No production activation.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/CAP04/CAP04.acceptance.json",
+      "receipt_sha256": "840db11f4f144adfd7bf4fbb7f3d187e124d29a5a4182733b7225de61f5c6731",
+      "actual_commit_sha": "f8b515ce44cdf2a78c2d49918f5b0c9e63888f68"
     }
   ],
   "requirements_revision": {
@@ -2265,7 +2366,8 @@
       "CAP-04"
     ],
     "accepted": [
-      "CAP-03"
+      "CAP-03",
+      "CAP-04"
     ],
     "status": "IN_PROGRESS",
     "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028",
