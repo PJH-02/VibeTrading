@@ -1576,9 +1576,7 @@
       "actual_commit_sha": null,
       "acceptance_receipt": null,
       "test_exit": null,
-      "blocking_reasons": [
-        "Preserved unfinished after host filesystem I/O failures; user now explicitly requests FEED01→VEN01→CAP01 bypass. No STR02 source adopted."
-      ],
+      "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "STR-02",
       "follow_up_findings": [
@@ -1608,7 +1606,27 @@
           "state": "WRAPPER_EXIT1_FILESYSTEM_IO",
           "applied": false
         }
-      ]
+      ],
+      "historical_blocking_reasons": [
+        {
+          "resolved_on": "2026-10-28",
+          "reasons": [
+            "Preserved unfinished after host filesystem I/O failures; user now explicitly requests FEED01→VEN01→CAP01 bypass. No STR02 source adopted."
+          ],
+          "evidence": "/home/pjh/.local/state/codex-opencode/runs/STR-02-readiness-20261028/STR02-readiness.json"
+        }
+      ],
+      "readiness_check": {
+        "date": "2026-10-28",
+        "can_resume": true,
+        "kind": "ENVIRONMENT_AND_PREREQUISITES",
+        "focused_tests_passed": 114,
+        "test_exit": 0,
+        "docker_required": false,
+        "packet_refresh_required": true,
+        "receipt": "/home/pjh/.local/state/codex-opencode/runs/STR-02-readiness-20261028/STR02-readiness.json",
+        "implementation_started": false
+      }
     },
     {
       "task_id": "VEN-01",
@@ -2079,6 +2097,11 @@
       "reason": "CAP02 account-config fee amendment accepted:2707 Linux+25leases+100focused,146 wheel source equality. Human account rates drive reserve/PAPER/strategy P&L; broker-fee reception/reconciliation excluded. Original acceptance preserved.",
       "actual_commit_sha": "2e642aa1fe06398e308d922ae04ec8c83217f3a2",
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-fee-config-20261028/CAP02-fee-config.acceptance.json"
+    },
+    {
+      "date": "2026-10-28",
+      "reason": "User-requested STR02 readiness-only check: all3 prerequisites accepted, Linux/Windows filesystem fsync and64 process spawns pass, credential-free focused114 tests exit0. Old environment blocker resolved; implementation not started. Docker WSL integration unavailable but not a STR02 local prerequisite.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/STR-02-readiness-20261028/STR02-readiness.json"
     }
   ],
   "requirements_revision": {
