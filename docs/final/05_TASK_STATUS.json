@@ -39,8 +39,8 @@
   "new_task_counts": {
     "total": 35,
     "accepted": 20,
-    "in_progress": 1,
-    "blocked": 0,
+    "in_progress": 0,
+    "blocked": 1,
     "not_started": 12,
     "external_not_authorized": 2
   },
@@ -424,7 +424,7 @@
     ],
     "missing_required_local_code_blocks_feature_release": true
   },
-  "active_task_id": "EXEC-01",
+  "active_task_id": null,
   "last_accepted_task_id": "CAP-04",
   "stop_requested": false,
   "tickets": [
@@ -1794,7 +1794,7 @@
     {
       "task_id": "EXEC-01",
       "wave": "W3",
-      "status": "IN_PROGRESS",
+      "status": "BLOCKED",
       "depends_on": [
         "STR-02",
         "VEN-01",
@@ -1806,10 +1806,13 @@
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
       "base_sha": "6a3e7aaece592fc517a8c62299890b9262bba3e1",
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
-      "blocking_reasons": [],
+      "actual_commit_sha": "cecc9e7a754268cc9aa7e19b4089a1e6d350b99b",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/EXEC01/EXEC01.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [
+        "ARCUS_REQUIRED_NEW_API_SPEC: Canonical Arcus product quotes USD and settles/collateralizes USDG; current native account normalization does not establish conversion denomination and full native margin facts. Accepted CAP03 guard must reject NEW, while historical owned query/cancel/reconcile remains operable. Required five-perpetual single-submit acceptance is not complete. Official target exchange/API specification needed; not downgraded to optional or EXTERNAL_ONLY.",
+        "FINAL_DOCKER_PATH_SMOKE: Docker Windows CLI29.7.2/context and cmd interop work, Linux default socket absent, current daemon API times out via both Windows contexts (12s), local source-only image build times out120s. Prior CAP03 image smoke is preserved but cannot certify this final source. No engine/container restart or server mutation performed."
+      ],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "EXEC-01",
       "follow_up_findings": [
@@ -1864,7 +1867,12 @@
         "model": "gpt-6-luna",
         "reason": "external per-ticket allowance exhausted and independent review failed",
         "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/EXEC01/native-fallback.json"
-      }
+      },
+      "acceptance_receipt_sha256": "dd48ba7801a0a72742dc51514e42baec52e0a5dfa2343f398fc114eba26902b2",
+      "worker_model": "gpt-6-luna",
+      "test_summary": "Independent2887 full+25guarded leases,149wheel source equality/13outside imports; finalDocker unavailable, requiredArcusNEW unimplemented/unproven; NOTaccepted",
+      "progress_document": "docs/tickets/EXEC-01-progress.md",
+      "implementation_preserved_utc": "2026-10-28T18:22:46.399834+00:00"
     },
     {
       "task_id": "SIM-01",
@@ -2257,6 +2265,13 @@
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/CAP04/CAP04.acceptance.json",
       "receipt_sha256": "840db11f4f144adfd7bf4fbb7f3d187e124d29a5a4182733b7225de61f5c6731",
       "actual_commit_sha": "f8b515ce44cdf2a78c2d49918f5b0c9e63888f68"
+    },
+    {
+      "date": "2026-10-29",
+      "reason": "EXEC01 reviewed source partial committed with independent2887+25passes and149wheel exact. Notaccepted: requiredArcusNEW lacks official denomination/margin spec and currentDockerbackend unresponsive. Legacylease/KISlazybinding/falseguard/directsubmit regressions fixed and independentlyretested. Requestedbatch2of3accepted, no downstreamCAP05 advancement.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/EXEC01/EXEC01.acceptance.json",
+      "receipt_sha256": "dd48ba7801a0a72742dc51514e42baec52e0a5dfa2343f398fc114eba26902b2",
+      "actual_commit_sha": "cecc9e7a754268cc9aa7e19b4089a1e6d350b99b"
     }
   ],
   "requirements_revision": {
@@ -2369,9 +2384,16 @@
       "CAP-03",
       "CAP-04"
     ],
-    "status": "IN_PROGRESS",
+    "status": "BLOCKED_REQUIRED_ACCEPTANCE",
     "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028",
-    "target_os": "Ubuntu Linux"
+    "target_os": "Ubuntu Linux",
+    "unfinished": [
+      "EXEC-01"
+    ],
+    "blockers": [
+      "ARCUS_REQUIRED_NEW_API_SPEC",
+      "FINAL_DOCKER_PATH_SMOKE"
+    ]
   },
   "completed_batches": [
     {
