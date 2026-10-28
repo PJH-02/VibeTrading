@@ -38,15 +38,17 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 18,
+    "accepted": 19,
     "in_progress": 0,
     "blocked": 0,
-    "not_started": 15,
+    "not_started": 14,
     "external_not_authorized": 2
   },
   "next_ready_candidate": [
     "CLN-02",
-    "CAP-03"
+    "CAP-04",
+    "EXEC-01",
+    "OBS-01"
   ],
   "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
   "gate_results": {
@@ -425,7 +427,7 @@
     "missing_required_local_code_blocks_feature_release": true
   },
   "active_task_id": null,
-  "last_accepted_task_id": "STR-02",
+  "last_accepted_task_id": "CAP-03",
   "stop_requested": false,
   "tickets": [
     {
@@ -1296,7 +1298,7 @@
     {
       "task_id": "CAP-03",
       "wave": "W3",
-      "status": "NOT_STARTED",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "CAP-00",
         "CAP-01",
@@ -1305,10 +1307,10 @@
       "risk_review": "CRITICAL_CODEX",
       "required_for_offline_release": true,
       "may_need_scope_decision": true,
-      "base_sha": null,
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "base_sha": "f12589c3ad2da7a79f063eab97dbef04b27b1628",
+      "actual_commit_sha": "0f9303025338174b3069c0b04b6eec9f7b274e33",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/CAP03/CAP03.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "CAP-03",
@@ -1327,7 +1329,15 @@
           "fee_status": "RESOLVED_CONFIG_POLICY",
           "amended_receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-fee-config-20261028/CAP02-fee-config.acceptance.json"
         }
-      ]
+      ],
+      "bounded_packet": "docs/tickets/CAP-03-cashflow-risk.md",
+      "acceptance_receipt_sha256": "b767a342daf8cd6cc96535f44cc0eea7e75300e943cd27857912330b3b6d9a47",
+      "accepted_utc": "2026-10-28T12:03:22.092698+00:00",
+      "worker_model": "gpt-6-luna",
+      "worker_route": "authorized native fallback after initial + two external repair allowance exhausted",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/CAP03",
+      "test_summary": "2811 full + 25 guarded leases; wheel 148 source files exact; exits 0",
+      "acceptance_document": "docs/tickets/CAP-03-acceptance.md"
     },
     {
       "task_id": "CAP-04",
@@ -2248,19 +2258,18 @@
     "snapshot_baseline_sha": "dd2e776c35ca18523546a2491213e7c3026505c4"
   },
   "active_batch": {
-    "requested_tasks": 1,
+    "requested_tasks": 3,
     "tasks": [
-      "STR-02"
+      "CAP-03",
+      "EXEC-01",
+      "CAP-04"
     ],
     "accepted": [
-      "STR-02"
+      "CAP-03"
     ],
-    "status": "COMPLETE",
-    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/STR-02-resume-20261028",
-    "target_os": "Ubuntu Linux",
-    "completion_receipts": [
-      "/home/pjh/.local/state/codex-opencode/runs/STR-02-resume-20261028/STR02.acceptance.json"
-    ]
+    "status": "IN_PROGRESS",
+    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028",
+    "target_os": "Ubuntu Linux"
   },
   "completed_batches": [
     {
@@ -2368,6 +2377,21 @@
       "str02_preserved": true,
       "completion_receipts": [
         "/home/pjh/.local/state/codex-opencode/runs/CAP-02-fee-config-20261028/CAP02-fee-config.acceptance.json"
+      ]
+    },
+    {
+      "requested_tasks": 1,
+      "tasks": [
+        "STR-02"
+      ],
+      "accepted": [
+        "STR-02"
+      ],
+      "status": "COMPLETE",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/STR-02-resume-20261028",
+      "target_os": "Ubuntu Linux",
+      "completion_receipts": [
+        "/home/pjh/.local/state/codex-opencode/runs/STR-02-resume-20261028/STR02.acceptance.json"
       ]
     }
   ]
