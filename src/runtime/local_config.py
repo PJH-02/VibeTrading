@@ -325,3 +325,7 @@ def parse_execution_aliases(document, registry):
                 environment=environment, account_scope=scope,
                 required_feeds=feeds, execution_enabled=execution_enabled))
     return tuple(registry.register_aliases(bindings))
+
+
+# Account fee configuration remains opt-in and is never loaded by LocalRuntimePlan.
+from execution.account_fees import parse_account_fee_policies, load_account_fee_policies

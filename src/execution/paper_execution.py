@@ -182,7 +182,10 @@ class PaperExecution:
                margin_rate=None, funding_buffer, account_notional_limit,
                strategy_notional_limit, account_capital_limit, strategy_capital_limit,
                post_only: bool = True, reduce_only: bool = False,
-               time_in_force: str = "GTC", group_id: str | None = None):
+               time_in_force: str = "GTC", group_id: str | None = None,
+               account_fee_policy=None):
+        if account_fee_policy is not None:
+            rules = account_fee_policy.bind_product(self.ledger.scope, rules)
         rules.supported()
         allow = self.capabilities["allow_taker_gtc"]
         if time_in_force not in {"GTC", "IOC"}:
@@ -229,7 +232,8 @@ class PaperExecution:
                     reference_price=reserve_price if is_market else reference_price, margin_rate=margin_rate,
                     funding_buffer=funding_buffer, account_notional_limit=account_notional_limit,
                     strategy_notional_limit=strategy_notional_limit, account_capital_limit=account_capital_limit,
-                    strategy_capital_limit=strategy_capital_limit, now_ns=now_ns)
+                    strategy_capital_limit=strategy_capital_limit, now_ns=now_ns,
+                    account_fee_policy=account_fee_policy)
                 return created, row
             self._clock(state, now_ns)
             self._advance(state, now_ns)
@@ -241,7 +245,8 @@ class PaperExecution:
                 reference_price=reserve_price if is_market else reference_price, margin_rate=margin_rate,
                 funding_buffer=funding_buffer, account_notional_limit=account_notional_limit,
                 strategy_notional_limit=strategy_notional_limit, account_capital_limit=account_capital_limit,
-                strategy_capital_limit=strategy_capital_limit, now_ns=now_ns)
+                strategy_capital_limit=strategy_capital_limit, now_ns=now_ns,
+                account_fee_policy=account_fee_policy)
             if created:
                 state["orders"][intent.intent_id] = {
                     "intent_id": intent.intent_id, "strategy": strategy, "instrument": intent.instrument.key,

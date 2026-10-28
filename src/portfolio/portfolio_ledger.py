@@ -473,7 +473,7 @@ class PortfolioLedger:
     def admit_order(self, intent: OrderIntent, strategy, evidence, expiry_ns, rules: ProductSpec, *,
                     funding_buffer, account_notional_limit, strategy_notional_limit,
                     account_capital_limit, strategy_capital_limit,
-                    reference_price=None, margin_rate=None, now_ns=None):
+                    reference_price=None, margin_rate=None, now_ns=None, account_fee_policy=None):
         """Reserve worst-case gross cash/margin with explicit budgets in one transaction."""
         self._check()
         if self.mode != TradingMode.PAPER:
@@ -481,6 +481,8 @@ class PortfolioLedger:
         bounded_identity(strategy, "strategy")
         if strategy.startswith("@"):
             raise ValueError("Reserved strategy namespace")
+        if account_fee_policy is not None:
+            rules = account_fee_policy.bind_product(self.scope, rules)
         rules.supported()
         if intent.instrument.model_dump(mode="json") != rules.instrument.model_dump(mode="json") or intent.instrument.venue.value != self.scope.venue:
             raise ValueError("Intent/product/account identity mismatch")

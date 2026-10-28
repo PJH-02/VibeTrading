@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "accounts": [
+    {
+      "account_scope": {
+        "venue": "kiwoom",
+        "account": "example-account",
+        "product": "cash",
+        "environment": "paper"
+      },
+      "rate": "0.00015"
+    }
+  ]
+}

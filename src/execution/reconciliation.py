@@ -464,6 +464,25 @@ class ReconciliationSession:
             order["cumulative_quantity"] = str(cumulative)
             return copy.deepcopy(event)
         if kind == "fill":
+            # Configured Kiwoom CASH cost is normalized before immutable event
+            # deduplication, so native fee fields never become authority.
+            is_kiwoom = self.source_family == "account" and json.loads(self.source_scope_key)[0] == "kiwoom"
+            if is_kiwoom:
+                from execution.trading_contracts import ProductSpec
+                from execution.account_fees import recover_account_fee_policy
+                probe_order = self._find_order(event)
+                probe_row = self.ledger.get(probe_order["intent_id"])
+                probe_rules = ProductSpec.from_document(json.loads(probe_row["rules"]))
+                account_fee_policy = recover_account_fee_policy(probe_rules, self.ledger.scope)
+                if account_fee_policy is not None:
+                    quantity = _number(event.get("quantity"), "fill quantity", positive=True)
+                    price = _number(event.get("price"), "fill price", positive=True)
+                    amount = account_fee_policy.calculate_fee(quantity, price, probe_rules.multiplier)
+                    event = {**copy.deepcopy(event), "fee": str(amount), "fee_currency": probe_rules.settlement_currency,
+                             "fee_known": True, "fee_basis": "ACCOUNT_CONFIG", "fee_rate": str(account_fee_policy.rate)}
+                else:
+                    event = {**copy.deepcopy(event), "fee": None, "fee_known": False,
+                             "fee_currency": None, "fee_basis": "CONFIG_REQUIRED"}
             event_id = _identity(event.get("event_id"), "native fill event id")
             previous_fill = next((entry["event"] for entry in self._events
                                   if isinstance(entry.get("event"), dict)
@@ -614,7 +633,7 @@ class ReconciliationSession:
                 if remaining_gaps:
                     raise ValueError("Ledger gaps remain after position comparison")
                 if self._unknown_fees:
-                    raise ValueError("Native fill fee remains unknown")
+                    raise ValueError("Configured account fee is required for Kiwoom fill cost attribution" if self.source_family == "account" and json.loads(self.source_scope_key)[0] == "kiwoom" else "Native fill fee remains unknown")
                 if any(o["status"] in {"UNKNOWN", "CANCEL_PENDING"} for o in self._orders.values()):
                     raise ValueError("An admitted native order remains unresolved")
                 if self._revision != self.ledger.load_reconciliation_state()["revision"]:
