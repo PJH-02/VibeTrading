@@ -14,7 +14,8 @@ import time
 from execution.execution_ledger import AccountScope, canonical, exact_difference, exact_product, exact_sum, positive_decimal as _positive_decimal
 from core.models import OrderIntent, Side
 from execution.process_lease import ProcessLease
-from execution.trading_contracts import ProductKind, ProductSpec, TradingMode, bounded_identity, validate_scope
+from execution.trading_contracts import (ProductKind, ProductSpec, StrategyOrderEvent,
+    TradingMode, bounded_identity, validate_scope)
 
 
 def positive_decimal(value, name, *, zero=False):
@@ -224,6 +225,139 @@ class PortfolioLedger:
             return False
         self._db.execute("INSERT INTO portfolio_receipts VALUES(?,?,?,?)", (kind, identity, fingerprint, text))
         return True
+
+    def enable_order_feedback(self, strategy):
+        """Opt one strategy into durable factual order feedback."""
+        self._check()
+        bounded_identity(strategy, "strategy")
+        if strategy.startswith("@"):
+            raise ValueError("Reserved strategy namespace")
+        with self.transaction():
+            count = self._db.execute("SELECT COUNT(*) FROM portfolio_metadata WHERE key LIKE 'order_feedback:%'").fetchone()[0]
+            exists = self._db.execute("SELECT 1 FROM portfolio_metadata WHERE key=?", ("order_feedback:" + strategy,)).fetchone()
+            if not exists and count >= self.max_events:
+                raise RuntimeError("Order feedback strategy budget exhausted")
+            self._db.execute("INSERT OR IGNORE INTO portfolio_metadata(key,value) VALUES(?, '1')",
+                             ("order_feedback:" + strategy,))
+
+    def _feedback_enabled(self, strategy):
+        return self._db.execute("SELECT 1 FROM portfolio_metadata WHERE key=? AND value='1'",
+                                ("order_feedback:" + strategy,)).fetchone() is not None
+
+    def _feedback(self, kind, row, *, fill=None, evidence=None):
+        strategy = row["strategy"]
+        if not self._feedback_enabled(strategy):
+            return
+        status = {"OPEN": "ACCEPTED", "CANCEL_PENDING": "CANCEL_PENDING", "CANCELED": "CANCELLED",
+                  "UNKNOWN": "UNKNOWN", "REJECTED": "REJECTED", "EXPIRED": "EXPIRED", "FILLED": "FILLED"}.get(row["state"], "UNKNOWN")
+        quantity, filled = Decimal(row["quantity"]), Decimal(row["filled"])
+        cumulative = str(row["filled"])
+        fact_key = (fill["fill_id"] if fill else
+                    hashlib.sha256(canonical(evidence).encode()).hexdigest()
+                    if evidence is not None else canonical([row["state"], cumulative]))
+        strategy_key = hashlib.sha256(strategy.encode()).hexdigest()[:24]
+        event_id = "fb:" + strategy_key + ":" + hashlib.sha256(
+            canonical([strategy, row["intent_id"], kind, fact_key, cumulative]).encode()).hexdigest()
+        observed_ns = time.time_ns()
+        event = StrategyOrderEvent(event_id, strategy, self.scope, row["client_order_id"],
+            "PARTIAL_FILL" if fill and filled < quantity else ("FILLED" if fill else status),
+            observed_ns, quantity, filled, exact_difference(quantity, filled),
+            fill_id=fill.get("fill_id") if fill else None,
+            fill_quantity=Decimal(fill["quantity"]) if fill else None,
+            fill_price=Decimal(fill["price"]) if fill else None,
+            fee=Decimal(fill["fee"]) if fill else None,
+            fee_currency=fill.get("fee_currency") if fill else None,
+            metadata={"ledger_state": row["state"], "kind": kind, "evidence": evidence, "source_ts_ns": None,
+                      "intent_id": row["intent_id"],
+                      "order_id": fill.get("order_id") if fill else row["client_order_id"]})
+        body = {name: (str(value) if isinstance(value, Decimal) else dict(value) if hasattr(value, "items") else value)
+                for name, value in event.__dict__.items() if name != "account_scope"}
+        body["account_scope"] = {"venue": self.scope.venue, "account": self.scope.account,
+                                 "product": self.scope.product, "environment": self.scope.environment}
+        old = self._db.execute("SELECT document FROM portfolio_receipts WHERE kind='order_feedback' AND id=?", (event_id,)).fetchone()
+        if old:
+            previous = json.loads(old[0])
+            previous.pop("event_ts_ns", None)
+            current = dict(body)
+            current.pop("event_ts_ns", None)
+            if previous == current:
+                return
+            raise ValueError("Immutable order feedback identity collision")
+        self._receipt("order_feedback", event_id, body)
+
+    def order_feedback(self, strategy, after=0, limit=64):
+        """Return this strategy's bounded committed feedback rows after rowid cursor."""
+        self._check()
+        bounded_identity(strategy, "strategy")
+        if isinstance(after, bool) or not isinstance(after, int) or after < 0:
+            raise ValueError("Feedback cursor must be a nonnegative rowid")
+        if isinstance(limit, bool) or not isinstance(limit, int) or not 1 <= limit <= 256:
+            raise ValueError("Feedback limit must be between 1 and 256")
+        if not self._feedback_enabled(strategy):
+            return ()
+        prefix = "fb:" + hashlib.sha256(strategy.encode()).hexdigest()[:24] + ":"
+        rows = self._db.execute("SELECT rowid,document FROM portfolio_receipts WHERE kind='order_feedback' AND id>=? AND id<? AND rowid>? ORDER BY rowid LIMIT ?",
+                                (prefix, prefix + "~", after, limit)).fetchall()
+        result = []
+        for r in rows:
+            body = json.loads(r[1])
+            body["account_scope"] = self.scope
+            for key in ("quantity", "filled_quantity", "remaining_quantity", "fill_quantity", "fill_price", "fee"):
+                if body.get(key) is not None:
+                    body[key] = Decimal(body[key])
+            result.append((int(r[0]), StrategyOrderEvent(**body)))
+        return tuple(result)
+
+    def record_order_rejection(self, intent_id, strategy, reason, *, intent=None, evidence=None, now_ns=None):
+        """Persist an explicitly local pre-send rejection for an unadmitted intent."""
+        self._check()
+        bounded_identity(strategy, "strategy")
+        bounded_identity(reason, "reason")
+        stamp = time.time_ns() if now_ns is None else now_ns
+        if isinstance(stamp, bool) or not isinstance(stamp, int) or stamp <= 0:
+            raise ValueError("Local rejection observation time must be positive")
+        with self.transaction():
+            row = self.get(intent_id)
+            if row is not None:
+                raise ValueError("LOCAL_NOT_SENT is only valid for an intent that was never admitted")
+            if not isinstance(intent, OrderIntent) or intent.intent_id != intent_id:
+                raise ValueError("Unadmitted local rejection requires its exact OrderIntent")
+            if intent.instrument.venue.value != self.scope.venue:
+                raise ValueError("Local rejection intent venue does not match account scope")
+            for source_key in ("strategy", "strategy_id", "source_strategy_id"):
+                if source_key in intent.metadata and intent.metadata[source_key] != strategy:
+                    raise ValueError("Local rejection intent source strategy does not match owner")
+            if not self._feedback_enabled(strategy):
+                return
+            qty = positive_decimal(intent.quantity, "quantity")
+            strategy_key = hashlib.sha256(strategy.encode()).hexdigest()[:24]
+            intent_document = intent.model_dump(mode="json")
+            immutable_fact = {"strategy": strategy, "intent": intent_document, "reason": reason, "evidence": evidence}
+            fact_fingerprint = hashlib.sha256(self._document(immutable_fact).encode()).hexdigest()
+            event_id = "fb:" + strategy_key + ":local:" + hashlib.sha256(canonical([strategy, intent_id]).encode()).hexdigest()
+            old = self._db.execute("SELECT document FROM portfolio_receipts WHERE kind='order_feedback' AND id=?", (event_id,)).fetchone()
+            if old:
+                old_body = json.loads(old[0])
+                old_fact = old_body.get("metadata", {}).get("immutable_fact_fingerprint")
+                if old_fact == fact_fingerprint:
+                    return
+                raise ValueError("Immutable local rejection identity collision")
+            event = StrategyOrderEvent(event_id, strategy, self.scope,
+                intent.client_order_id, "REJECTED", stamp, qty, Decimal(0), qty,
+                metadata={"kind": "LOCAL_NOT_SENT", "provenance": "LOCAL_NOT_SENT", "reason": reason,
+                          "source_ts_ns": None, "intent_id": intent_id, "evidence": evidence,
+                          "immutable_fact_fingerprint": fact_fingerprint})
+            body = {name: (str(value) if isinstance(value, Decimal) else dict(value) if hasattr(value, "items") else value)
+                    for name, value in event.__dict__.items() if name != "account_scope"}
+            body["account_scope"] = {"venue": self.scope.venue, "account": self.scope.account,
+                                     "product": self.scope.product, "environment": self.scope.environment}
+            old = self._db.execute("SELECT document FROM portfolio_receipts WHERE kind='order_feedback' AND id=?", (event_id,)).fetchone()
+            if old:
+                old_body = json.loads(old[0])
+                if old_body.get("metadata", {}).get("immutable_fact_fingerprint") == fact_fingerprint:
+                    return
+                raise ValueError("Immutable local rejection identity collision")
+            self._receipt("order_feedback", event.event_id, body)
 
     def paper_state(self):
         self._check()
@@ -555,7 +689,9 @@ class PortfolioLedger:
                              (intent.intent_id, intent.client_order_id, strategy, fingerprint, payload, proof, spec,
                               expiry_ns, "OPEN", str(quantity), "0", str(reserve), str(unit), rules.collateral_currency,
                               rules.instrument.key, intent.side.value, str(price), str(rate)))
-            return True, self.get(intent.intent_id)
+            admitted = self.get(intent.intent_id)
+            self._feedback("ACCEPTED", admitted)
+            return True, admitted
 
     def _update_position(self, strategy, instrument, delta, price, multiplier, rate):
         old, average, margin = self._position(strategy, instrument)
@@ -633,6 +769,9 @@ class PortfolioLedger:
                 self._db.execute("INSERT OR REPLACE INTO portfolio_gaps VALUES(?,?)", ("@inventory:" + row["instrument"], self._document({"reason": "late fill created unsupported cash short"})))
             if self._balance(currency) < exact_sum(self._reserved(currency), self._margin()):
                 self._db.execute("INSERT OR REPLACE INTO portfolio_gaps VALUES(?,?)", ("@capital", self._document({"reason": "fill exhausted simulated capital"})))
+            updated = self.get(intent_id)
+            self._feedback("FILL", updated, fill={"fill_id": fill_id, "quantity": quantity, "price": price,
+                "fee": fee, "fee_currency": currency, "order_id": order_id})
             return True
 
     def request_cancel(self, intent_id, strategy):
@@ -640,9 +779,14 @@ class PortfolioLedger:
             row = self.get(intent_id)
             if not row or row["strategy"] != strategy:
                 raise ValueError("Cancel cannot access another strategy namespace")
+            changed = False
             if row["state"] in ("OPEN", "UNKNOWN"):
                 self._db.execute("UPDATE portfolio_orders SET state='CANCEL_PENDING' WHERE intent_id=?", (intent_id,))
-            return self.get(intent_id)
+                changed = True
+            updated = self.get(intent_id)
+            if changed:
+                self._feedback("CANCEL_PENDING", updated)
+            return updated
 
     def _outcome(self, intent_id, state, confirmed, evidence):
         with self.transaction():
@@ -656,9 +800,14 @@ class PortfolioLedger:
                     raise ValueError("Confirmed terminal outcome requires authoritative evidence")
                 if row["state"] in ("CANCELED", "EXPIRED", "REJECTED") and row["state"] != state:
                     raise ValueError("Contradictory terminal order outcome")
-                self._receipt("outcome", intent_id + ":" + state, {"state": state, "evidence": evidence})
+                outcome_new = self._receipt("outcome", intent_id + ":" + state, {"state": state, "evidence": evidence})
                 self._db.execute("UPDATE portfolio_orders SET state=?,reservation='0' WHERE intent_id=? AND state!='FILLED'", (state, intent_id))
-            return self.get(intent_id)
+            if not confirmed:
+                outcome_new = True
+            updated = self.get(intent_id)
+            if outcome_new:
+                self._feedback("OUTCOME" if confirmed else "UNKNOWN", updated, evidence=evidence if confirmed else None)
+            return updated
 
     def cancel(self, intent_id, *, confirmed=False, evidence=None):
         return self._outcome(intent_id, "CANCELED", confirmed, evidence)

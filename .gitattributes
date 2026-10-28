@@ -13,3 +13,7 @@ docs/archive/CLN-01-history/** -text whitespace=blank-at-eol,blank-at-eof,space-
 src/market/hot_path.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 src/runtime/etf_trading.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 src/strategies/kr/etf_history.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Preserve line endings in the STR-02 contract and legacy startup guards.
+src/strategies/contract.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/runtime/strategy_runner.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/timefolio/runner.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

@@ -14,7 +14,8 @@ import numpy as np
 from . import _etf_plugin
 
 STRATEGY_ID = "C3"
-STRATEGY_VERSION = "str01-c3-1"
+STRATEGY_VERSION = "str02-c3-1"
+ACTION_PROTOCOL_VERSION = 1
 SUBSCRIPTIONS = [
     {"instrument_key": "kiwoom:etf:KIWOOM:KRX:069500", "event_type": "bar_1m"},
     {"instrument_key": "kiwoom:etf:KIWOOM:KRX:069500", "event_type": "order_book"},
@@ -39,6 +40,16 @@ def native_open_decision(history, etf_open, index_open):
             "direction": 1 if leverage > 0 else 0,
             "leverage": float(leverage), "detail": dict(detail),
             "identity": identity}
+
+
+def on_order_event(event, context, instance=None):
+    if context.data is not None:
+        if instance is None:
+            return []
+        return _etf_plugin.file_strategy_order_event(instance, event, context)
+    if event.account_scope.environment != 'mock' and event.account_scope.environment != 'mock2':
+        return []
+    return _etf_plugin.kis_order_event_plan(STRATEGY_ID, event, context)
 
 
 class C3Strategy(_etf_plugin.FileEtfStrategy):

@@ -14,7 +14,7 @@ import json
 import math
 import re
 from functools import lru_cache
-from decimal import Decimal, ROUND_CEILING, ROUND_FLOOR
+from decimal import Decimal, ROUND_CEILING, ROUND_FLOOR, localcontext
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -25,7 +25,8 @@ from core.models import (
     SignalAction, Venue,
 )
 from execution.execution_ledger import AccountScope
-from execution.trading_contracts import ActionKind, ExecutionAction, TradingMode
+from execution.trading_contracts import (ActionKind, ExecutionAction, StrategyActionPlan,
+    TradingMode)
 from ._intraday import intraday_decision
 from .etf_reference import MARKETS, weights
 
@@ -53,6 +54,159 @@ LEGACY_STATE_FIELDS = frozenset({"day", "entries", "direction", "safety_stop",
                                  "exit_pending"})
 FOLLOWUP_FIELDS = frozenset({"symbol", "side", "quantity", "filled", "state",
                              "created_ns", "cancel_emitted", "replacement_sent"})
+
+
+def kis_order_event_plan(strategy: str, event, context):
+    """Return the original ETF family's explicit KIS follow-up choice.
+
+    `context.execution` is a frozen, credential-free fact envelope supplied by
+    the existing KIS owner. It contains `order`, `book`, `quote`, `buying_power`,
+    `account_identity`, `route`, `mode`, and `config_version`. This function
+    never talks to a broker and never changes a factual quantity.
+    """
+    from core.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
+    facts = context.execution
+    order, book = facts.get('order'), facts.get('book')
+    quote, power = facts.get('quote'), facts.get('buying_power')
+    if not all(isinstance(value, Mapping) for value in (order, book, quote, power)):
+        raise StrategyUnsupported('KIS order callback facts are incomplete')
+    if (event.strategy_id != strategy or order.get('strategy') != strategy
+            or order.get('status') != event.status or order.get('intent_id') != event.order_id):
+        raise StrategyUnsupported('KIS order callback facts differ from the original strategy event')
+    if facts.get('mode') not in {'mock', 'mock2'} or facts.get('route') != order.get('account_scope'):
+        raise StrategyUnsupported('KIS callback route is not the original owned mock account')
+    if order.get('account_scope') != account_scope_for(str(order.get('symbol', ''))):
+        raise StrategyUnsupported('KIS callback symbol differs from its original mock route')
+    scope = AccountScope('kis', str(facts.get('account_identity')), 'cash', str(facts.get('mode')))
+    if event.account_scope != scope:
+        raise StrategyUnsupported('KIS callback event account scope differs from the owned source scope')
+    try:
+        quantity_decimal = D(str(order['quantity']))
+        order_filled = D(str(order.get('current_filled', order.get('filled', event.filled_quantity))))
+        event_quantity = D(str(event.quantity))
+        filled_decimal = D(str(event.filled_quantity))
+        remaining_decimal = D(str(event.remaining_quantity))
+    except (KeyError, TypeError, ValueError) as exc:
+        raise StrategyUnsupported('KIS callback quantity facts are malformed') from exc
+    if (any(not value.is_finite() for value in
+            (quantity_decimal, order_filled, event_quantity, filled_decimal, remaining_decimal))
+            or quantity_decimal <= 0 or quantity_decimal != quantity_decimal.to_integral_value()
+            or event_quantity != quantity_decimal or order_filled < filled_decimal
+            or any(value != value.to_integral_value() for value in
+                   (order_filled, filled_decimal, remaining_decimal))
+            or order_filled < 0 or order_filled > quantity_decimal
+            or remaining_decimal != quantity_decimal - filled_decimal):
+        raise StrategyUnsupported('KIS callback quantity facts are inconsistent')
+    quantity, filled, remaining_factual = int(quantity_decimal), int(filled_decimal), int(remaining_decimal)
+    now_ns = context.now_ns
+    if isinstance(now_ns, bool) or not isinstance(now_ns, int) or now_ns <= 0:
+        raise StrategyUnsupported("KIS callback requires the owner's positive observation clock")
+    original_meta = order.get('metadata')
+    if not isinstance(original_meta, Mapping):
+        raise StrategyUnsupported('KIS callback is missing the immutable original intent metadata')
+    expiry = original_meta.get('valid_until_ts_ns')
+    if expiry is None and type(order.get('created_ns')) is int:
+        # Existing unguarded owner fixtures have no source TTL; retain the
+        # original KIS five-second/90-second compatibility window.
+        expiry = int(order['created_ns']) + FOLLOWUP_TTL_NS
+    if type(expiry) is not int or expiry <= now_ns:
+        return StrategyActionPlan('plan:' + hashlib.sha256((event.event_id + ':expired').encode()).hexdigest(),
+                                  strategy, str(facts.get('config_version') or 'kis-source-v1'),
+                                  now_ns, ())
+    status = str(event.status).upper()
+    current_status = str(order.get('current_status', 'pending')).upper()
+    if (current_status in {'UNKNOWN', 'FILLED', 'REJECTED', 'EXPIRED'}
+            or (current_status == 'COMPLETE' and order_filled >= quantity_decimal)):
+        return StrategyActionPlan('plan:' + hashlib.sha256((event.event_id + ':current-terminal').encode()).hexdigest(),
+                                  strategy, str(facts.get('config_version') or 'kis-source-v1'),
+                                  now_ns, ())
+    created = order.get('accepted_ns') or order.get('created_ns')
+    if status in {'UNKNOWN', 'REJECTED', 'FILLED', 'EXPIRED'}:
+        return StrategyActionPlan('plan:' + hashlib.sha256((event.event_id + ':none').encode()).hexdigest(), strategy,
+                                  str(facts.get('config_version') or 'kis-source-v1'),
+                                  now_ns, ())
+    if status == 'CANCEL_PENDING':
+        return StrategyActionPlan('plan:' + hashlib.sha256((event.event_id + ':pending').encode()).hexdigest(), strategy,
+                                  str(facts.get('config_version') or 'kis-source-v1'), now_ns, ())
+    actions = ()
+    due_order = {'status': 'pending', 'order_type': order.get('order_type'),
+                 'accepted_ns': order.get('accepted_ns'), 'created_ns': order.get('created_ns'),
+                 'cancel_requested': order.get('cancel_requested')}
+    if status in {'ACCEPTED', 'PARTIAL_FILL'} and order.get('order_type') == 'limit':
+        if followup_due(due_order, now_ns) and not order.get('cancel_requested'):
+            digest = hashlib.sha256((event.event_id + ':cancel').encode()).hexdigest()
+            actions = (ExecutionAction(action_id='action:' + digest, action=ActionKind.CANCEL,
+                scope=scope, strategy_id=strategy,
+                config_version=str(facts.get('config_version') or 'kis-source-v1'),
+                mode=TradingMode(scope.environment), expiry_ns=expiry,
+                target_order_id=str(order['intent_id'])),)
+    elif status == 'CANCELLED' and order.get('cancel_confirmed') is True:
+        intent = kis_market_remainder_intent(strategy, event, context, expiry=expiry)
+        if intent is not None:
+            digest = hashlib.sha256((event.event_id + ':market-remainder').encode()).hexdigest()
+            actions = (ExecutionAction(action_id='action:' + digest, action=ActionKind.NEW,
+                scope=scope, strategy_id=strategy,
+                config_version=str(facts.get('config_version') or 'kis-source-v1'),
+                mode=TradingMode(scope.environment), expiry_ns=expiry,
+                intent=intent, reduce_only=intent.side == Side.SELL, time_in_force='IOC'),)
+    return StrategyActionPlan('plan:' + hashlib.sha256((event.event_id + ':plan').encode()).hexdigest(), strategy,
+        str(facts.get('config_version') or 'kis-source-v1'), now_ns, actions)
+
+
+def kis_market_remainder_intent(strategy: str, event, context, *, expiry=None):
+    """Shared original-source sizing used by callback and legacy owner adapter."""
+    facts = context.execution
+    order, book = facts.get('order'), facts.get('book')
+    power = facts.get('buying_power')
+    if not all(isinstance(value, Mapping) for value in (order, book, power)):
+        raise StrategyUnsupported('KIS remainder facts are incomplete')
+    quantity = int(order.get('quantity', 0))
+    event_filled = int(event.filled_quantity)
+    current_filled = int(order.get('current_filled', order.get('filled', event_filled)))
+    remaining = int(order.get('current_remaining', quantity-current_filled))
+    if (quantity <= 0 or current_filled < event_filled or current_filled > quantity
+            or remaining != quantity-current_filled or remaining <= 0):
+        raise StrategyUnsupported('KIS confirmed-cancel callback current facts are inconsistent')
+    side = Side(str(order['side']))
+    symbol = str(order['symbol'])
+    if side == Side.SELL:
+        remaining = min(remaining, int(book.get('positions', {}).get(symbol, 0)))
+    else:
+        reserve = D(str(power.get('market_reserve_price', 0)))
+        available = D(str(book.get('cash', 0))) - D(str(book.get('reserved', 0)))
+        cap_decimal = D(str(power.get('max_buy_qty', 0)))
+        if (not reserve.is_finite() or reserve <= 0 or not available.is_finite()
+                or not cap_decimal.is_finite() or cap_decimal < 0
+                or cap_decimal != cap_decimal.to_integral_value()):
+            raise StrategyUnsupported('KIS market-buy reservation price/capacity is invalid')
+        with localcontext() as decimal_context:
+            decimal_context.prec = 128
+            affordable = int(available / (reserve * D('1.005')))
+        remaining = min(remaining, int(cap_decimal), affordable)
+    if remaining <= 0 or order.get('replacement_id'):
+        return None
+    now_ns = context.now_ns
+    original_meta = order.get('metadata') or {}
+    if expiry is None:
+        expiry = original_meta.get('valid_until_ts_ns')
+        if expiry is None and type(order.get('created_ns')) is int:
+            expiry = int(order['created_ns']) + FOLLOWUP_TTL_NS
+    key = hashlib.sha256((str(order['intent_id']) + ':market-remainder').encode()).hexdigest()
+    meta = _plain(original_meta)
+    meta.update({'account_scope': str(order['account_scope']), 'account_mode': str(facts['mode']),
+        'strategy': strategy, 'replacement_for': str(order['intent_id']),
+        'reserve_unit_price': str(power.get('market_reserve_price') or order['price']),
+        'execution': 'market_after_5_seconds', 'source_followup': True,
+        'direction': int(order.get('direction', 0)), 'safety_stop': order.get('safety_stop')})
+    quote = facts.get('quote') or {}
+    if isinstance(quote, Mapping) and type(quote.get('observed_ns')) is int:
+        meta['intent_quote'] = {'bid': str(quote.get('bid')), 'ask': str(quote.get('ask')),
+                                'received_ns': quote['observed_ns'], 'intent_ns': now_ns}
+    meta['valid_until_ts_ns'] = expiry
+    return OrderIntent.model_validate_json(str(order['payload'])).model_copy(update={
+        'intent_id': key, 'job_id': strategy, 'signal_id': event.event_id,
+        'client_order_id': key[:32], 'quantity': Decimal(remaining),
+        'limit_price': None, 'created_ts_ns': now_ns, 'metadata': meta})
 
 
 class StrategyUnsupported(ValueError):
@@ -365,6 +519,11 @@ class FileEtfStrategy:
         self.state = blank_state(cfg["day"])
         return self
 
+    def on_order_event(self, event, context):
+        """Keep feedback policy in the same original source module."""
+        return module_for(self.STRATEGY_ID).on_order_event(event, context, self)
+
+
     def validate_registration(self, frozen_facts):
         """Validate source bindings against JSON-only frozen registration facts."""
         cfg = self._ready()
@@ -479,6 +638,22 @@ class FileEtfStrategy:
                       "first_open": None if first_open is None else float(first_open),
                       "followups": clean_followups, "decision_complete": decision_complete}
         return self
+
+def file_strategy_order_event(instance: FileEtfStrategy, event, context):
+    if context.data is None:
+        raise StrategyUnsupported('Paper source callback requires native StrategyDataView')
+    cfg = instance._ready()
+    facts = context.execution
+    if (facts.get('scope') != cfg['account_scope'] or facts.get('mode') != 'paper'
+            or facts.get('account_version') is None):
+        raise StrategyUnsupported('Paper order callback facts do not match the source account')
+    from types import SimpleNamespace
+    view = SimpleNamespace(execution={cfg['account_scope']: facts})
+    policy_event = SimpleNamespace(event_id=event.event_id, receive_ts_ns=context.now_ns)
+    positions = _positions(facts, instance.STRATEGY_ID)
+    return _followup_signals(instance, instance.STRATEGY_ID, policy_event,
+                             context.data, _facts(view, cfg), positions,
+                             allow_replacement=False)
 
 
 @lru_cache(maxsize=8)
@@ -769,7 +944,7 @@ def _followup_order(config, data, strategy, row, direction) -> dict:
 
 
 def _followup_signals(instance: FileEtfStrategy, strategy: str, event, data,
-                      facts, positions) -> list[Signal]:
+                      facts, positions, *, allow_replacement: bool = True) -> list[Signal]:
     """At most one bounded CANCEL/NEW per callback after factual confirmation."""
     _track_orders(instance, strategy, facts)
     followups = instance.state["followups"]
@@ -805,6 +980,10 @@ def _followup_signals(instance: FileEtfStrategy, strategy: str, event, data,
             signals.append(_signal(instance.config, strategy, event, data, order,
                                    event.event_id))
             break
+    # Paper feedback may precede the next fresh reference-book event. Keep the
+    # confirmed fact, then let ordinary source on_event size the replacement.
+    if not allow_replacement:
+        return signals
     # A terminal CANCELED fact is the only proof for one market remainder.
     for intent_id, row in list(followups.items()):
         if row["state"] != "CANCELED" or row["replacement_sent"]:

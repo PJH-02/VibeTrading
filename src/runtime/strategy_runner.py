@@ -15,6 +15,7 @@ from core.models import AssetClass, BaseMarketEvent, EventType, InstrumentId, Si
 from storage.parquet_store import ParquetHistoryReader
 from .settings import get_settings
 from strategies import CompiledSubscription, StrategyModule, compile_subscriptions, compile_warmup, load_strategy
+from strategies.contract import action_protocol_version
 
 logger = logging.getLogger(__name__)
 
@@ -72,6 +73,8 @@ class SharedStrategyRunner:
         self._jobs: list[_StrategyJob] = []
         for job_id, definition in jobs:
             module = load_strategy(definition) if isinstance(definition, str) else definition
+            if action_protocol_version(getattr(module, "module", module)) is not None:
+                raise ValueError("This legacy runner cannot consume ACTION_PROTOCOL_VERSION=1 plans")
             count = compile_warmup(module.warmup)
             if count > self.hot_path.history.max_rows:
                 raise ValueError("Strategy warmup exceeds prepared-history row bound")

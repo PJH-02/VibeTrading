@@ -20,6 +20,9 @@ from contextlib import closing
 from pathlib import Path
 
 from execution.process_lease import ProcessLease
+from execution.execution_ledger import AccountScope
+from execution.trading_contracts import (ActionKind, ExecutionAction, StrategyOrderContext,
+    StrategyOrderEvent, StrategyActionPlan, TradingMode)
 from strategies.kr import _etf_plugin
 from strategies.kr._intraday import intraday_decision as _intraday_decision
 
@@ -68,6 +71,9 @@ class EtfTradingLoop:
             self.market_client = KisAuthClient(self.settings,mode='real')
             root = self.settings.state_dir / 'etf-mock'
             self.journal = EtfJournal(root / 'journal.sqlite3')
+            for strategy in ('C3','KP','KD'):
+                self.journal.enable_order_feedback(strategy)
+            self._bind_feedback_scopes()
             self.history = EtfHistory(self.kiwoom, root / 'warmup')
             self.bus = bus if bus is not None else NatsJetStreamBus(self.settings)
             self._event_source = event_source
@@ -330,6 +336,8 @@ class EtfTradingLoop:
 
     def entry_blocked(self, strategy: str, scope: str | None = None) -> bool:
         """Honor the existing operational kill switch without opening its writer."""
+        if self.journal.order_feedback_fault(strategy):
+            return True
         if self._feed_entry_blocked(strategy):
             return True
         if (self.settings.state_dir/'etf-mock'/'STOP').exists():
@@ -427,6 +435,8 @@ class EtfTradingLoop:
     async def place(self, strategy: str, symbol: str, side: Side, quantity: int, identity: str, *, direction: int = 0, safety_stop: float | None = None, auction_market: bool = False, recovery_cleanup: bool = False, valid_until_ts_ns: int | None = None):
         self._check_checkpoint_dispatch()
         self._check_ownership()
+        if side == Side.BUY and self.journal.order_feedback_fault(strategy):
+            raise EtfDispatchBlocked('ETF source feedback fault blocks new strategy risk')
         key = hashlib.sha256((identity+':'+symbol+':'+side.value).encode()).hexdigest()
         requested_quantity, requested_expiry = quantity,valid_until_ts_ns
         old = self.journal.db.execute('SELECT payload,day FROM orders WHERE intent_id=?',(key,)).fetchone()
@@ -464,15 +474,23 @@ class EtfTradingLoop:
         intent = OrderIntent(intent_id=key,job_id=strategy,signal_id=identity,destination=OrderDestination.REAL,
             instrument=InstrumentId(venue=Venue.KIS,asset_class=AssetClass.ETF,raw_symbol=symbol,std_symbol=symbol,currency='KRW',exchange='KRX'),
             side=side,client_order_id=key[:32],quantity=Decimal(quantity),limit_price=price,
-            metadata={'account_mode':'mock','account_scope':scope,'intent_quote':self.intent_quote(symbol),'source_provider':'kiwoom','strategy':strategy,'closing_auction':auction_market,'direction':direction,'safety_stop':safety_stop,'recovery_cleanup':recovery_cleanup,
+            metadata={'account_mode':scope,'account_scope':scope,'intent_quote':self.intent_quote(symbol),'source_provider':'kiwoom','strategy':strategy,'closing_auction':auction_market,'direction':direction,'safety_stop':safety_stop,'recovery_cleanup':recovery_cleanup,
                 'vehicle_history':history_context,'valid_until_ts_ns':valid_until_ts_ns,
                 'requested_quantity':requested_quantity,'requested_expiry':requested_expiry})
         if not self.journal.stage(intent,self._day.replace('-',''),direction,safety_stop,dispatch_evidence=self._dispatch_evidence(intent),require_evidence=self.execution_guards_enabled()):
             return
         output = await self._submit_staged(broker,intent)
         if output is not None:
-            self.journal.accepted(key, output)
+            receipt = self.journal.accepted(key, output)
+            if receipt == 0:
+                raise EtfDispatchBlocked('ETF feedback capacity exhausted after durable broker ACK')
+            if receipt is not None:
+                await self._deliver_order_feedback(key, feedback_row_id=receipt, status='ACCEPTED')
             log.info('KIS mock accepted strategy=%s symbol=%s side=%s qty=%s order=%s',strategy,symbol,side.value,quantity,output.get('ODNO',output.get('odno')))
+        else:
+            receipt = self.journal.latest_order_feedback(key)
+            if receipt is not None:
+                await self._deliver_order_feedback(key, feedback_row_id=receipt)
 
     async def enter(self, strategy: str, side: int, leverage: float, identity: str, safety_stop: float | None = None):
         if self.entry_blocked(strategy):
@@ -554,8 +572,243 @@ class EtfTradingLoop:
                         f'{strategy}:{self._day}:recovery_cleanup:{int(time.time())//60}',
                         recovery_cleanup=True)
 
+    def _feedback_scope(self, route: str) -> AccountScope:
+        if route not in {'mock', 'mock2'} or self.brokers.get(route) is None:
+            raise EtfDispatchBlocked('ETF feedback route is not an owned KIS mock account')
+        self._check_ownership()
+        physical = self._account_ids.get(route)
+        if not isinstance(physical, str) or not physical:
+            raise EtfDispatchBlocked('ETF feedback physical account identity is not owned')
+        identity = hashlib.sha256((route + ':' + physical + ':01').encode()).hexdigest()
+        self.journal.bind_order_feedback_scope(route, identity)
+        return AccountScope('kis', identity, 'cash', route)
+
+    def _bind_feedback_scopes(self):
+        for route in ('mock','mock2'):
+            self._feedback_scope(route)
+
+    async def _deliver_order_feedback(self, identity: str, *, feedback_row_id: int,
+                                      status: str | None = None):
+        """Claim an atomically journaled factual receipt before invoking source code."""
+        row = self.journal.db.execute('SELECT * FROM orders WHERE intent_id=?', (identity,)).fetchone()
+        if row is None:
+            raise ValueError('ETF feedback order does not exist')
+        order = dict(row)
+        route = order['account_scope']
+        scope = self._feedback_scope(route)
+        event = self.journal.order_feedback_event(feedback_row_id)
+        if event is None or event.order_id != identity or event.strategy_id != order['strategy']:
+            raise EtfDispatchBlocked('ETF feedback receipt differs from the durable source order')
+        if event.account_scope != scope:
+            raise EtfDispatchBlocked('ETF feedback receipt belongs to another physical account scope')
+        if status is not None and event.status != status:
+            status = event.status
+        previous = OrderIntent.model_validate_json(order['payload'])
+        power = {'market_reserve_price': str(order['price']), 'max_buy_qty': int(order['quantity'])}
+        broker = self.broker_for(order['symbol'], route)
+        if event.status == 'CANCELLED' and int(event.remaining_quantity) > 0 and previous.side == Side.BUY:
+            self._check_ownership()
+            observed = await broker.buying_power(order['symbol'], Decimal(0), market=True)
+            self._check_ownership()
+            power = {'market_reserve_price': str(observed.get('psbl_qty_calc_unpr') or 0),
+                     'max_buy_qty': int(Decimal(str(observed.get('max_buy_qty') or 0)))}
+        if self.journal.claim_order_feedback(feedback_row_id, order['strategy']) is None:
+            return
+        execution_order = {'intent_id': identity, 'strategy': order['strategy'],
+            'symbol': order['symbol'], 'side': order['side'], 'quantity': int(order['quantity']),
+            'filled': int(order['filled']), 'current_filled': int(order['filled']),
+            'event_filled': int(event.filled_quantity),
+            'current_remaining': max(0, int(order['quantity']) - int(order['filled'])),
+            'status': event.status, 'current_status': order['status'], 'created_ns': order['created_ns'],
+            'accepted_ns': order['accepted_ns'], 'order_type': order['order_type'],
+            'cancel_requested': bool(order['cancel_requested']),
+            'cancel_confirmed': bool(order['cancel_confirmed']), 'replacement_id': None,
+            'price': order['price'], 'direction': int(previous.metadata.get('direction', 0)),
+            'safety_stop': previous.metadata.get('safety_stop'),
+            'account_scope': route, 'raw_state': dict(event.metadata.get('raw_state', {})),
+            'payload': order['payload'], 'metadata': dict(previous.metadata)}
+        replacement_id = hashlib.sha256((identity + ':market-remainder').encode()).hexdigest()
+        existing_replacement = self.journal.db.execute('SELECT 1 FROM orders WHERE intent_id=?',
+                                                       (replacement_id,)).fetchone()
+        execution_order['replacement_id'] = replacement_id if existing_replacement else None
+        book = self.journal.logical_book(order['strategy'])
+        execution_book = {'cash': str(book['cash']), 'reserved': str(book['reserved']),
+            'positions': dict(book['positions']), 'positions_quality': 'STRATEGY_JOURNAL',
+            'physical_positions': None, 'physical_quality': 'UNAVAILABLE'}
+        quote_bid, quote_ask, quote_at = getattr(self, 'quotes', {}).get(order['symbol'], (Decimal(0),Decimal(0),0))
+        quote = {'bid': str(quote_bid), 'ask': str(quote_ask), 'observed_ns': quote_at}
+        source = _etf_plugin.module_for(order['strategy'])
+        config_version = str(source.STRATEGY_VERSION)
+        context = StrategyOrderContext(data=None, execution={'order': execution_order,
+            'book': execution_book, 'quote': quote, 'buying_power': power,
+            'account_identity': scope.account, 'route': route, 'mode': route,
+            'config_version': config_version}, now_ns=time.time_ns(),
+            cursor=(feedback_row_id,), quality='KIS_JOURNAL_FACTS')
+        if getattr(source, 'ACTION_PROTOCOL_VERSION', None) != 1 or not callable(getattr(source, 'on_order_event', None)):
+            raise EtfDispatchBlocked('ETF source lacks the versioned order feedback callback')
+        try:
+            result = source.on_order_event(event, context)
+        except BaseException as exc:
+            self.journal.mark_order_feedback_fault(order['strategy'], event.event_id,
+                f'{type(exc).__name__}: source order callback failed')
+            raise
+        if (not isinstance(result, StrategyActionPlan) or result.strategy_id != order['strategy']
+                or result.config_version != config_version or len(result.actions) > 1):
+            self.journal.mark_order_feedback_fault(order['strategy'], event.event_id,
+                'Source order callback returned an invalid action plan')
+            raise EtfDispatchBlocked('ETF source returned an invalid KIS action plan')
+        for action in result.actions:
+            await self._execute_feedback_action(action, order, previous, event, scope)
+
+    async def _execute_feedback_action(self, action: ExecutionAction, order: dict,
+                                       previous: OrderIntent, event: StrategyOrderEvent,
+                                       scope: AccountScope):
+        """Validate a source choice, then route through existing owned KIS paths."""
+        self._check_ownership()
+        route = order['account_scope']
+        source = _etf_plugin.module_for(order['strategy'])
+        expected_mode = TradingMode.KIS_MOCK if route == 'mock' else TradingMode.KIS_MOCK2
+        original_expiry = previous.metadata.get('valid_until_ts_ns')
+        if original_expiry is None:
+            original_expiry = int(order['created_ns']) + _etf_plugin.FOLLOWUP_TTL_NS
+        if (action.strategy_id != order['strategy'] or action.scope != scope
+                or action.config_version != source.STRATEGY_VERSION
+                or action.mode != expected_mode or action.expiry_ns != original_expiry
+                or action.expiry_ns <= time.time_ns()):
+            raise EtfDispatchBlocked('ETF source action scope/identity/TTL is not owned')
+        broker = self.broker_for(order['symbol'], route)
+        if action.action == ActionKind.CANCEL:
+            current = self.journal.db.execute('SELECT * FROM orders WHERE intent_id=?',
+                                              (order['intent_id'],)).fetchone()
+            if current is None:
+                raise EtfDispatchBlocked('ETF source cancel order disappeared before handoff')
+            if (action.target_order_id != order['intent_id'] or current['strategy'] != order['strategy']
+                    or current['account_scope'] != route or current['symbol'] != order['symbol']
+                    or current['status'] != 'pending' or current['cancel_requested']
+                    or not current['order_number'] or current['order_number'] != order['order_number']
+                    or event.account_scope != scope or event.order_id != order['intent_id']
+                    or event.strategy_id != order['strategy']):
+                raise EtfDispatchBlocked('ETF source cancel target is not the same live owned order')
+            with self.journal.transaction():
+                self.journal.db.execute('UPDATE orders SET cancel_requested=1,fallback_requested=1 WHERE intent_id=?',
+                                        (order['intent_id'],))
+                factual = dict(self.journal.db.execute('SELECT * FROM orders WHERE intent_id=?',
+                                                       (order['intent_id'],)).fetchone())
+                receipt = self.journal._record_order_feedback_tx(factual, status='CANCEL_PENDING',
+                    raw_state={'cancel_request': 'acknowledgement_pending'})
+                if receipt == 0:
+                    raise EtfDispatchBlocked('ETF feedback capacity exhausted before cancel side effect')
+            try:
+                self._check_ownership()
+                await broker.cancel_order(order['order_number'], order['organization'])
+            except Exception:
+                log.exception('KIS cancel outcome requires factual order-status reconciliation')
+            if receipt is not None:
+                await self._deliver_order_feedback(order['intent_id'], feedback_row_id=receipt,
+                                                   status='CANCEL_PENDING')
+            try:
+                # Cancellation ACK remains pending. Only the fresh native
+                # order-status fact below can authorize a remainder.
+                self._check_ownership()
+                state = await broker.order_status(order['order_number'], day=order['day'],
+                                                  symbol=order['symbol'])
+                self._check_ownership()
+                confirmed = self.journal.apply_status(order['intent_id'], state)
+                if confirmed == 0:
+                    raise EtfDispatchBlocked('ETF feedback capacity exhausted after cancel confirmation facts')
+                if confirmed is not None:
+                    await self._deliver_order_feedback(order['intent_id'], feedback_row_id=confirmed)
+            except Exception:
+                log.exception('KIS cancel confirmation remains unresolved')
+            return
+        if action.action != ActionKind.NEW or action.intent is None:
+            raise EtfDispatchBlocked('ETF KIS feedback supports only explicit cancel/new actions')
+        intent = action.intent
+        key = hashlib.sha256((order['intent_id'] + ':market-remainder').encode()).hexdigest()
+        current = self.journal.db.execute('SELECT * FROM orders WHERE intent_id=?',
+                                          (order['intent_id'],)).fetchone()
+        if current is None:
+            raise EtfDispatchBlocked('ETF source order disappeared before replacement staging')
+        current = dict(current)
+        current_remaining = max(0, int(current['quantity']) - int(current['filled']))
+        quantity = intent.quantity
+        if (not quantity.is_finite() or quantity <= 0 or quantity != quantity.to_integral_value()
+                or event.status != 'CANCELLED' or not current['cancel_confirmed']
+                or event.account_scope != scope or event.order_id != order['intent_id']
+                or event.strategy_id != order['strategy'] or current['strategy'] != order['strategy']
+                or current['account_scope'] != route or current['symbol'] != order['symbol']
+                or event.quantity != Decimal(int(current['quantity']))
+                or event.filled_quantity > Decimal(int(current['filled']))
+                or intent.intent_id != key
+                or intent.job_id != order['strategy'] or intent.instrument.raw_symbol != order['symbol']
+                or intent.instrument != previous.instrument or intent.side != previous.side
+                or intent.destination != OrderDestination.REAL
+                or intent.signal_id != event.event_id or intent.client_order_id != key[:32]
+                or intent.created_ts_ns <= 0 or intent.created_ts_ns > time.time_ns()
+                or intent.limit_price is not None or intent.metadata.get('replacement_for') != order['intent_id']
+                or intent.metadata.get('account_scope') != route
+                or intent.metadata.get('account_mode') != route
+                or intent.metadata.get('valid_until_ts_ns') != original_expiry
+                or intent.metadata.get('strategy') != order['strategy']
+                or intent.metadata.get('source_followup') is not True
+                or intent.metadata.get('execution') != 'market_after_5_seconds'
+                or action.time_in_force != 'IOC'
+                or action.post_only is not False
+                or action.reduce_only != (intent.side == Side.SELL)
+                or int(quantity) > current_remaining):
+            raise EtfDispatchBlocked('ETF source market remainder differs from confirmed factual remainder')
+        if intent.side == Side.SELL and int(quantity) > self.journal.book(order['strategy'])['positions'].get(order['symbol'], 0):
+            raise EtfDispatchBlocked('ETF market remainder exceeds strategy-owned filled shares')
+        if intent.side == Side.BUY:
+            self._check_ownership()
+            market_power = await broker.buying_power(order['symbol'], Decimal(0), market=True)
+            self._check_ownership()
+            reserve = Decimal(str(market_power.get('psbl_qty_calc_unpr') or 0))
+            available = self.journal.logical_book(order['strategy'])['cash'] - self.journal.book(order['strategy'])['reserved']
+            max_quantity_decimal = Decimal(str(market_power.get('max_buy_qty') or 0))
+            if (not reserve.is_finite() or reserve <= 0 or not available.is_finite()
+                    or not max_quantity_decimal.is_finite() or max_quantity_decimal < 0
+                    or max_quantity_decimal != max_quantity_decimal.to_integral_value()):
+                raise EtfDispatchBlocked('ETF market-buy reservation facts are invalid')
+            from decimal import localcontext
+            with localcontext() as decimal_context:
+                decimal_context.prec = 128
+                affordable = int(available / (reserve * Decimal('1.005')))
+            if int(quantity) > min(int(max_quantity_decimal), affordable):
+                raise EtfDispatchBlocked('ETF source market remainder exceeds factual market-buy capacity')
+        if not self.journal.stage(intent, order['day'], int(previous.metadata.get('direction', 0)),
+                previous.metadata.get('safety_stop'), replacement_for=order['intent_id'],
+                dispatch_evidence=self._dispatch_evidence(intent),
+                require_evidence=self.execution_guards_enabled()):
+            return
+        output = await self._submit_staged(broker, intent)
+        if output is not None:
+            receipt = self.journal.accepted(intent.intent_id, output)
+            if receipt == 0:
+                raise EtfDispatchBlocked('ETF feedback capacity exhausted after durable replacement ACK')
+            if receipt is not None:
+                await self._deliver_order_feedback(intent.intent_id, feedback_row_id=receipt,
+                                                   status='ACCEPTED')
+
     async def reconcile(self):
         self._check_ownership()
+        self._bind_feedback_scopes()
+        for strategy in ('C3','KP','KD'):
+            self.journal.enable_order_feedback(strategy)
+        # A crash can occur after status/fill facts and their receipt commit but
+        # before the source claims that receipt. Replay only unclaimed durable
+        # receipts in their committed row order without skipping older facts.
+        unclaimed = self.journal.db.execute(
+            'SELECT row_id,strategy,order_id FROM order_feedback WHERE claimed=0 ORDER BY row_id LIMIT 64'
+        ).fetchall()
+        for pending_feedback in unclaimed:
+            if self.journal.order_feedback_fault(pending_feedback['strategy']):
+                continue
+            try:
+                await self._deliver_order_feedback(pending_feedback['order_id'],
+                    feedback_row_id=int(pending_feedback['row_id']))
+            except Exception:
+                log.exception('KIS source callback recovery failed; source risk remains fenced')
         for order in self.journal.pending():
             broker=self.broker_for(order['symbol'],order['account_scope'])
             if not order['order_number']:
@@ -564,66 +817,115 @@ class EtfTradingLoop:
                 # Guessing by symbol/time could assign someone else's order.
                 continue
             try:
-                if _etf_plugin.followup_due(order,time.time_ns()):
-                    # Persist once before POST: an uncertain cancellation also
-                    # needs broker reconciliation, never automatic resubmission.
-                    self.journal.db.execute('UPDATE orders SET cancel_requested=1,fallback_requested=1 WHERE intent_id=?',(order['intent_id'],))
-                    try:
-                        await broker.cancel_order(order['order_number'],order['organization'])
-                    except Exception:
-                        log.exception('Cancel outcome requires status reconciliation')
-                    # Cancellation ACK is not proof that all remaining shares
-                    # were cancelled. Read cumulative fills again before market.
+                source_fault = self.journal.order_feedback_fault(order['strategy'])
+                latest = self.journal.latest_order_feedback(order['intent_id'])
+                pending_receipt = latest
+                claimed = (self.journal.db.execute('SELECT claimed FROM order_feedback WHERE row_id=?',
+                    (latest,)).fetchone() if latest is not None else None)
+                if latest is None or (claimed is not None and claimed[0]):
+                    pending_receipt = None
+                    if not source_fault and not order['cancel_requested'] and order['status'] != 'unknown':
+                        pending_receipt = self.journal.record_order_observation(order['intent_id'],
+                            observation_ns=time.time_ns())
+                if pending_receipt == 0:
+                    raise EtfDispatchBlocked('ETF feedback capacity exhausted before source observation')
+                if pending_receipt is not None and not source_fault:
+                    claimed = self.journal.db.execute('SELECT claimed FROM order_feedback WHERE row_id=?',
+                                                       (pending_receipt,)).fetchone()
+                    if claimed and not claimed[0]:
+                        await self._deliver_order_feedback(order['intent_id'],
+                            feedback_row_id=pending_receipt)
+                        current = self.journal.db.execute('SELECT cancel_requested FROM orders WHERE intent_id=?',
+                                                           (order['intent_id'],)).fetchone()
+                        if current and current[0]:
+                            continue
+                self._check_ownership()
                 state = await broker.order_status(order['order_number'],day=order['day'],symbol=order['symbol'])
-                self.journal.apply_status(order['intent_id'],state)
+                self._check_ownership()
+                receipt = self.journal.apply_status(order['intent_id'],state)
+                if receipt == 0:
+                    raise EtfDispatchBlocked('ETF feedback capacity exhausted after durable status/fill facts')
+                if receipt is not None and not source_fault:
+                    await self._deliver_order_feedback(order['intent_id'], feedback_row_id=receipt)
             except Exception:
                 log.exception('KIS fill/cancel reconciliation failed; position remains pending')
-        for original in self.journal.fallback_candidates():
-            await self.replace_with_market(original)
 
     async def replace_with_market(self, original: dict):
-        """One persistent replacement for the confirmed-cancelled remainder."""
+        """Compatibility staging seam; original source code chooses the remainder."""
         self._check_ownership()
-        key = hashlib.sha256((original['intent_id']+':market-remainder').encode()).hexdigest()
-        old = self.journal.db.execute('SELECT payload,day FROM orders WHERE intent_id=?',(key,)).fetchone()
-        if old:
-            saved = OrderIntent.model_validate_json(old['payload'])
-            if (old['day'] != original['day'] or saved.job_id != original['strategy']
-                    or saved.instrument.raw_symbol != original['symbol'] or saved.side.value != original['side']
-                    or saved.metadata.get('account_scope') != original['account_scope']
-                    or saved.metadata.get('replacement_for') != original['intent_id']):
-                raise ValueError('ETF immutable replacement collision')
+        identity = original.get('intent_id')
+        row = self.journal.db.execute('SELECT * FROM orders WHERE intent_id=?', (identity,)).fetchone()
+        if row is None:
+            raise EtfDispatchBlocked('ETF replacement source order is absent')
+        row = dict(row)
+        if row['status'] != 'complete' or not row['cancel_confirmed']:
+            raise EtfDispatchBlocked('ETF replacement requires confirmed cancellation facts')
+        self._bind_feedback_scopes()
+        self.journal.enable_order_feedback(row['strategy'])
+        previous = OrderIntent.model_validate_json(row['payload'])
+        key = hashlib.sha256((identity + ':market-remainder').encode()).hexdigest()
+        if self.journal.db.execute('SELECT 1 FROM orders WHERE intent_id=?', (key,)).fetchone():
             return
-        remaining = original['quantity']-original['filled']
-        if remaining <= 0:
-            self.journal.db.execute('UPDATE orders SET fallback_done=1 WHERE intent_id=?',(original['intent_id'],))
+        with self.journal.transaction():
+            row = dict(self.journal.db.execute('SELECT * FROM orders WHERE intent_id=?', (identity,)).fetchone())
+            receipt = self.journal._record_order_feedback_tx(row, status='CANCELLED',
+                raw_state={'cncl_yn':'Y'})
+        if not receipt:
+            raise EtfDispatchBlocked('ETF confirmed cancel has no durable source feedback capacity')
+        event = self.journal.order_feedback_event(receipt)
+        if event is None or event.status != 'CANCELLED':
+            raise EtfDispatchBlocked('ETF replacement requires a durable CANCELLED fact')
+        if self.journal.db.execute('SELECT claimed FROM order_feedback WHERE row_id=?', (receipt,)).fetchone()[0]:
             return
-        previous = OrderIntent.model_validate_json(original['payload'])
-        broker=self.broker_for(original['symbol'],original['account_scope'])
-        reserve_price = Decimal(0)
-        if previous.side == Side.BUY:
-            power = await broker.buying_power(original['symbol'],Decimal(0),market=True)
-            reserve_price = Decimal(str(power.get('psbl_qty_calc_unpr') or 0))
-            if reserve_price <= 0:
-                raise RuntimeError('Broker market-buy reservation price is missing; retain replacement plan')
-            book = self.journal.book(original['strategy'])
-            remaining = min(remaining,int(Decimal(str(power['max_buy_qty']))),int((book['cash']-book['reserved'])/(reserve_price*Decimal('1.005'))))
-        else:
-            remaining = min(remaining,self.journal.book(original['strategy'])['positions'].get(original['symbol'],0))
-        if remaining <= 0:
-            self.journal.db.execute('UPDATE orders SET fallback_done=1 WHERE intent_id=?',(original['intent_id'],))
-            log.warning('No affordable/owned remainder for market replacement id=%s',original['intent_id'])
+        route = row['account_scope']
+        scope = self._feedback_scope(route)
+        book = self.journal.logical_book(row['strategy'])
+        power = {'market_reserve_price': str(row['price']), 'max_buy_qty': int(row['quantity'])}
+        broker = self.broker_for(row['symbol'], route)
+        if previous.side == Side.BUY and int(event.remaining_quantity) > 0:
+            self._check_ownership()
+            observed = await broker.buying_power(row['symbol'], Decimal(0), market=True)
+            self._check_ownership()
+            power = {'market_reserve_price': str(observed.get('psbl_qty_calc_unpr') or 0),
+                     'max_buy_qty': int(Decimal(str(observed.get('max_buy_qty') or 0)))}
+        now_ns = time.time_ns()
+        source = _etf_plugin.module_for(row['strategy'])
+        context = StrategyOrderContext(data=None, execution={'order': {
+            'intent_id': identity, 'strategy': row['strategy'], 'symbol': row['symbol'],
+            'side': row['side'], 'quantity': int(row['quantity']), 'filled': int(row['filled']),
+            'current_filled': int(row['filled']),
+            'current_remaining': int(row['quantity'])-int(row['filled']),
+            'status':'CANCELLED', 'created_ns':row['created_ns'], 'accepted_ns':row['accepted_ns'],
+            'order_type':row['order_type'], 'cancel_requested':bool(row['cancel_requested']),
+            'cancel_confirmed':True, 'replacement_id':None, 'price':row['price'],
+            'direction':int(previous.metadata.get('direction',0)),
+            'safety_stop':previous.metadata.get('safety_stop'), 'account_scope':route,
+            'metadata':dict(previous.metadata), 'payload':row['payload']},
+            'book':{'cash':str(book['cash']),'reserved':str(book['reserved']),
+                'positions':dict(book['positions']),'physical_positions':None,
+                'physical_quality':'UNAVAILABLE'},
+            'quote':{'bid':'0','ask':'0','observed_ns':None}, 'buying_power':power,
+            'account_identity':scope.account,'route':route,'mode':route,
+            'config_version':str(source.STRATEGY_VERSION)}, now_ns=now_ns,
+            cursor=(receipt,),quality='KIS_JOURNAL_FACTS')
+        intent = _etf_plugin.kis_market_remainder_intent(row['strategy'], event, context)
+        if intent is None:
             return
-        replacement = previous.model_copy(update={'intent_id':key,'client_order_id':key[:32],
-            'quantity':Decimal(remaining),'limit_price':None,'created_ts_ns':time.time_ns(),
-            'metadata':previous.metadata|{'account_scope':original['account_scope'],'replacement_for':original['intent_id'],'intent_quote':self.intent_quote(original['symbol']),
-                'reserve_unit_price':str(reserve_price),'execution':'market_after_5_seconds'}})
-        if not self.journal.stage(replacement,original['day'],int(previous.metadata.get('direction',0)),previous.metadata.get('safety_stop'),replacement_for=original['intent_id'],dispatch_evidence=self._dispatch_evidence(replacement),require_evidence=self.execution_guards_enabled()):
+        # Stage the source-sized intent before the normal final permit gate so
+        # expired/ halted attempts remain durably NOT_SENT, as before.
+        if not self.journal.stage(intent, row['day'], int(previous.metadata.get('direction',0)),
+                previous.metadata.get('safety_stop'), replacement_for=identity,
+                dispatch_evidence=self._dispatch_evidence(intent),
+                require_evidence=self.execution_guards_enabled()):
             return
-        output = await self._submit_staged(broker,replacement)
+        output = await self._submit_staged(broker, intent)
         if output is not None:
-            self.journal.accepted(key,output)
-            log.info('KIS mock market remainder strategy=%s symbol=%s qty=%s',original['strategy'],original['symbol'],remaining)
+            followup_receipt = self.journal.accepted(intent.intent_id, output)
+            if followup_receipt == 0:
+                raise EtfDispatchBlocked('ETF feedback capacity exhausted after durable replacement ACK')
+            if followup_receipt is not None:
+                await self._deliver_order_feedback(intent.intent_id,
+                    feedback_row_id=followup_receipt, status='ACCEPTED')
 
     async def evaluate_c3(self):
         """Use confirmed native day opens as soon as live trading begins."""
@@ -851,8 +1153,7 @@ class EtfTradingLoop:
                     self._warmup_task = asyncio.create_task(self.prepare(day))
             async with self._lock:
                 pending = self.journal.pending()
-                due = any(_etf_plugin.followup_due(r,time.time_ns()) for r in pending)
-                if (pending and (due or time.monotonic()-last_reconcile >= 1)) or self.journal.fallback_candidates():
+                if pending and time.monotonic()-last_reconcile >= 1:
                     try:
                         await self.reconcile()
                     except Exception:

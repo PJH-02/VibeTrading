@@ -29,7 +29,9 @@ from market.hot_path import ApplyResult, DecisionSnapshot, HotPathStore, Strateg
 from core.models import AssetClass, BaseMarketEvent, EventType, OrderBookEvent, Signal, TradeEvent, Venue, event_from_dict, stable_hash
 from execution.paper_execution import PaperExecution
 from strategies import StrategyModule, compile_subscriptions, compile_warmup, load_strategy
-from execution.trading_contracts import ActionKind, ExecutionAction, ProductSpec, TradingMode, bounded_identity
+from strategies.contract import action_protocol_version, validate_action_protocol
+from execution.trading_contracts import (ActionKind, ExecutionAction, ProductSpec, TradingMode,
+    StrategyActionPlan, StrategyOrderContext, StrategyOrderEvent, bounded_identity)
 
 
 @dataclass(frozen=True)
@@ -103,6 +105,7 @@ class _Job:
     actions: int = 0
     restart_blocked: bool = False
     permission_blocked: bool = False
+    feedback_cursors: dict[str, int] | None = None
 
 
 class PaperStrategyRuntime:
@@ -188,6 +191,7 @@ class PaperStrategyRuntime:
         self._checkpoint_captured_cursor = None
         self._checkpoint_expected_state = self._checkpoint_restore_proof_value = None
         self._staged_instances = None
+        self._draining_feedback = False
 
     @staticmethod
     def _configure_instance(instance, config):
@@ -312,6 +316,7 @@ class PaperStrategyRuntime:
         # any durable registration claim or callback can expose risk. Legacy
         # plugins without the hook are unchanged.
         instance = registration.module.create()
+        feedback_enabled = validate_action_protocol(registration.module.module, instance)
         self._configure_instance(instance, registration.config)
         self._validate_instance_registration(instance, self._registration_facts(registration))
         if self.phase != "replay":
@@ -324,7 +329,13 @@ class PaperStrategyRuntime:
             for account in registration.accounts:
                 self.accounts[account].ledger.claim_strategy_event(sid, registration.config_version,
                     "@registration", {"registration": fingerprint})
+        if feedback_enabled:
+            if self.phase != "replay":
+                for account in registration.accounts:
+                    self.accounts[account].ledger.enable_order_feedback(sid)
         job = _Job(registration, instance, subscriptions, _freeze(registration.config), fingerprint)
+        if feedback_enabled:
+            job.feedback_cursors = {account: 0 for account in registration.accounts}
         # Durable dispatch evidence is a property of the ledger, not of the
         # permission label displayed for this instance. Keep both fences
         # independently sticky so neither a control operation nor replay can
@@ -709,6 +720,7 @@ class PaperStrategyRuntime:
             "config_version": job.registration.config_version,
             "fingerprint": job.fingerprint, "plugin_sha256": plugin_sha,
             "plugin_state": plugin_state,
+            **({"feedback_cursors": dict(job.feedback_cursors)} if job.feedback_cursors is not None else {}),
             "lifecycle": {"state": job.state, "reason": job.reason,
                 "callbacks": job.callbacks, "actions": job.actions,
                 "permission_blocked": job.permission_blocked,
@@ -797,6 +809,11 @@ class PaperStrategyRuntime:
                     "state", "reason", "callbacks", "actions", "permission_blocked",
                     "restart_blocked"}):
                 raise ValueError("Paper checkpoint lifecycle schema mismatch")
+            cursors = snap.get("feedback_cursors", {})
+            expected_accounts = set(job.feedback_cursors or {})
+            if (type(cursors) is not dict or set(cursors) != expected_accounts
+                    or any(type(value) is not int or value < 0 for value in cursors.values())):
+                raise ValueError("Paper checkpoint feedback cursor schema mismatch")
             saved = lifecycle.get("state")
             if saved not in {"PAPER", "REPLAY", "WARMING", "PAUSED", "HALTED", "FAULTED", "BLOCKED"}:
                 raise ValueError("Paper checkpoint lifecycle state is invalid")
@@ -823,6 +840,7 @@ class PaperStrategyRuntime:
                 final_state, reason = "WARMING", None
             restored_jobs[sid] = {"instance": instance, "state": final_state,
                 "reason": reason, "callbacks": callbacks, "actions": actions,
+                "feedback_cursors": dict(cursors),
                 "permission_blocked": bool(job.permission_blocked
                     or lifecycle.get("permission_blocked")),
                 "restart_blocked": final_state == "BLOCKED" and reason not in {
@@ -845,6 +863,7 @@ class PaperStrategyRuntime:
             job.instance = values["instance"]
             job.state, job.reason = values["state"], values["reason"]
             job.callbacks, job.actions = values["callbacks"], values["actions"]
+            job.feedback_cursors = values["feedback_cursors"] or None
             job.permission_blocked = values["permission_blocked"]
         # The VN07A restart barrier is cleared only when the complete
         # market/plugin/journal proof is published, not merely when hooks return.
@@ -1058,7 +1077,7 @@ class PaperStrategyRuntime:
                 (event.source_ts_ns is None or
                  0 <= now-event.source_ts_ns <= self.budgets.max_feed_age_ns))
 
-    def _ledger_facts(self, accounts=None):
+    def _ledger_facts(self, accounts=None, *, strategy=None):
         """Bounded factual execution snapshot from a job's already bound ledgers."""
         facts = {}
         selected = tuple(sorted(self.accounts)) if accounts is None else tuple(accounts)
@@ -1067,15 +1086,22 @@ class PaperStrategyRuntime:
             report = matcher.ledger.report()
             active = []
             for row in matcher.ledger.active_orders():
+                if strategy is not None and row["strategy"] != strategy:
+                    continue
                 active.append({
                     "intent_id": row["intent_id"], "strategy": row["strategy"],
                     "instrument": row["instrument"], "side": row["side"],
                     "state": row["state"], "quantity": str(row["quantity"]),
-                    "filled": str(row["filled"]), "reservation": str(row["reservation"]),
+                    "filled": str(row["filled"]),
+                    **({"remaining": str(Decimal(row["quantity"])-Decimal(row["filled"]))}
+                       if strategy is not None else {}),
+                    "reservation": str(row["reservation"]),
                     "expiry_ns": row["expiry_ns"],
                 })
             orders = []
             for row in report.get("orders", []):
+                if strategy is not None and row["strategy"] != strategy:
+                    continue
                 try:
                     payload = json.loads(row["payload"])
                 except (TypeError, ValueError) as exc:
@@ -1094,7 +1120,10 @@ class PaperStrategyRuntime:
                     "intent_id": str(row["intent_id"]), "strategy": row["strategy"],
                     "instrument": instrument, "raw_symbol": raw_symbol, "side": row["side"],
                     "state": row["state"], "quantity": str(row["quantity"]),
-                    "filled": str(row["filled"]), "reservation": str(row["reservation"]),
+                    "filled": str(row["filled"]),
+                    **({"remaining": str(Decimal(row["quantity"])-Decimal(row["filled"]))}
+                       if strategy is not None else {}),
+                    "reservation": str(row["reservation"]),
                     "expiry_ns": row["expiry_ns"], "created_ns": created,
                     "metadata": metadata,
                 })
@@ -1104,15 +1133,20 @@ class PaperStrategyRuntime:
                 "account_version": report["account_version"],
                 "balances": {key: str(value) for key, value in report["balances"].items()},
                 "reserved": {key: str(value) for key, value in report["reserved"].items()},
+                **({"available": {key: str(Decimal(value)-Decimal(report["reserved"].get(key, 0)))
+                                   for key, value in report["balances"].items()}}
+                   if strategy is not None else {}),
                 "simulated_margin": report["simulated_margin"],
                 "simulated_capital": report["simulated_capital"],
                 "physical_positions": {key: str(value) for key, value in report["physical_positions"].items()},
                 "virtual_positions": {
-                    strategy: {key: str(value) for key, value in positions.items()}
-                    for strategy, positions in report["virtual_positions"].items()},
+                    owner: {key: str(value) for key, value in positions.items()}
+                    for owner, positions in report["virtual_positions"].items()
+                    if strategy is None or owner == strategy},
                 "strategy_cash": [
                     {key: (str(value) if isinstance(value, Decimal) else value)
-                     for key, value in row.items()} for row in report["strategy_cash"]],
+                     for key, value in row.items()} for row in report["strategy_cash"]
+                    if strategy is None or row.get("strategy") == strategy],
                 "active_orders": active,
                 "orders": orders,
                 "readiness": dict(report["readiness"]),
@@ -1149,6 +1183,8 @@ class PaperStrategyRuntime:
             return ()
         replay = phase == "REPLAY"
         self._market(result, snapshot, phase)
+        if not replay:
+            self._drain_feedback(snapshot, phase)
         if result.duplicate or not result.applied:
             return ()
         if not replay and not self._fresh_input(result.event, snapshot.now_ns):
@@ -1183,43 +1219,151 @@ class PaperStrategyRuntime:
                 job.callbacks += 1
                 if self.callback_clock_ns()-started > self.budgets.max_callback_ns:
                     raise TimeoutError("Cooperative strategy callback exceeded its return-time budget")
-                if not isinstance(signals, list) or len(signals) > self.budgets.max_signals_per_callback:
-                    raise ValueError("Strategy signal count/type exceeds callback contract")
-                pending = []
-                for signal in signals:
-                    if not isinstance(signal, Signal) or signal.strategy_id != sid:
-                        raise ValueError("on_event must return this strategy's list[Signal]")
-                    if len(signal.model_dump_json().encode()) > self.budgets.max_signal_bytes:
-                        raise ValueError("Signal document capacity exceeded")
-                    if signal.event_ts_ns > snapshot.now_ns or signal.valid_until_ts_ns <= snapshot.now_ns:
-                        raise ValueError("Strategy signal is future-dated or expired")
-                    if replay:
-                        continue
-                    actions = job.registration.action_builder(signal, view, job.config)
-                    if not isinstance(actions, list) or len(actions)+len(pending) > self.budgets.max_actions_per_callback:
-                        raise ValueError("Strategy action count/type exceeds callback contract")
-                    pending.extend((action, signal) for action in actions)
-                if self.callback_clock_ns()-started > self.budgets.max_callback_ns:
-                    raise TimeoutError("Cooperative action builder exceeded its return-time budget")
-                if self._pending+len(pending) > self.budgets.max_pending_actions:
-                    raise ValueError("Pending strategy action capacity exceeded")
-                prepared = [(action, signal, self._validate(job, action, signal, snapshot.now_ns))
-                            for action, signal in pending]
-                self._pending += len(prepared)
-                try:
-                    for action, signal, document in prepared:
-                        if self._execute(job, action, signal, document, snapshot):
-                            generated.append(action.action_id)
-                            job.actions += 1
-                finally:
-                    self._pending -= len(prepared)
+                generated.extend(self._consume_callback_result(job, signals, view, snapshot,
+                    replay=replay, started=started,
+                    causal_time=(event.source_ts_ns if event.source_ts_ns is not None
+                                 else event.receive_ts_ns)))
             except Exception as exc:
                 job.state, job.reason = "FAULTED", type(exc).__name__
                 if not replay:
                     self._cancel_owned(job, snapshot.now_ns)
         return tuple(generated)
 
-    def _validate(self, job, action, signal, now):
+    def _consume_callback_result(self, job, result, view, snapshot, *, replay, started, causal_time=None):
+        sid = job.registration.module.strategy_id
+        protocol = action_protocol_version(job.registration.module.module)
+        pending = []
+        if isinstance(result, StrategyActionPlan):
+            if protocol != 1:
+                raise ValueError("StrategyActionPlan requires ACTION_PROTOCOL_VERSION=1")
+            if replay:
+                return ()
+            if (result.strategy_id != sid or result.config_version != job.registration.config_version
+                    or result.event_ts_ns > snapshot.now_ns
+                    or (causal_time is not None and result.event_ts_ns < causal_time)):
+                raise ValueError("Action plan source/config/time differs from this callback")
+            if len(result.actions) > self.budgets.max_actions_per_callback:
+                raise ValueError("Strategy action plan exceeds action count capacity")
+            for action in result.actions:
+                pending.append((action, result, self._validate_plan_action(job, action, result,
+                    snapshot.now_ns, view)))
+        else:
+            if protocol == 1 and not isinstance(result, list):
+                raise ValueError("Opted-in on_event must return list[Signal] or StrategyActionPlan")
+            if not isinstance(result, list) or len(result) > self.budgets.max_signals_per_callback:
+                raise ValueError("Strategy signal count/type exceeds callback contract")
+            for signal in result:
+                if not isinstance(signal, Signal) or signal.strategy_id != sid:
+                    raise ValueError("on_event must return this strategy's list[Signal]")
+                if len(signal.model_dump_json().encode()) > self.budgets.max_signal_bytes:
+                    raise ValueError("Signal document capacity exceeded")
+                if signal.event_ts_ns > snapshot.now_ns or signal.valid_until_ts_ns <= snapshot.now_ns:
+                    raise ValueError("Strategy signal is future-dated or expired")
+                if replay:
+                    continue
+                actions = job.registration.action_builder(signal, view, job.config)
+                if not isinstance(actions, list) or len(actions)+len(pending) > self.budgets.max_actions_per_callback:
+                    raise ValueError("Strategy action count/type exceeds callback contract")
+                for action in actions:
+                    pending.append((action, signal, self._validate(job, action, signal,
+                                                                    snapshot.now_ns, view)))
+        if self.callback_clock_ns()-started > self.budgets.max_callback_ns:
+            raise TimeoutError("Cooperative strategy callback/action planning exceeded its return-time budget")
+        if replay:
+            return ()
+        if len(self._document([document for _, _, document in pending]).encode()) > self.budgets.max_action_bytes:
+            raise ValueError("Callback action batch byte capacity exceeded")
+        if self._pending+len(pending) > self.budgets.max_pending_actions:
+            raise ValueError("Pending strategy action capacity exceeded")
+        result_ids = []
+        self._pending += len(pending)
+        try:
+            for action, source, document in pending:
+                if self._execute(job, action, source, document, snapshot):
+                    result_ids.append(action.action_id)
+                    job.actions += 1
+                    self._drain_feedback(snapshot, "PAPER")
+        finally:
+            self._pending -= len(pending)
+        return tuple(result_ids)
+
+    def _validate_plan_action(self, job, action, plan, now, view):
+        registration = job.registration
+        if not isinstance(action, ExecutionAction):
+            raise ValueError("Action plan entries must be ExecutionAction")
+        if (action.mode != TradingMode.PAPER or action.strategy_id != registration.module.strategy_id
+                or action.config_version != registration.config_version
+                or action.scope.key not in registration.accounts):
+            raise ValueError("Action mode/source/config/account permission mismatch")
+        if not now < action.expiry_ns:
+            raise ValueError("Plan action is expired")
+        if action.action == ActionKind.CANCEL:
+            target = self.accounts[action.scope.key].ledger.get(action.target_order_id)
+            if target is None or target["strategy"] != registration.module.strategy_id:
+                raise ValueError("Cancel target is not owned by this strategy")
+            # Earlier feedback rows can be delivered after a later durable
+            # terminal fact. A same-owner cancel then remains a safe no-op.
+        if action.action in {ActionKind.NEW, ActionKind.REPLACE}:
+            if (not view.ready or view.phase not in {"PAPER", "LIVE"} or self._recovery_gate()
+                    or self._input_phase not in {"LIVE", "PAPER"}
+                    or not self._ready(job, view.hot_path)):
+                raise ValueError("New plan risk requires a ready, fresh PAPER market/account context")
+            if (action.intent.job_id != registration.job_id
+                    or action.intent.instrument.key not in self.products
+                    or self.reference_feeds.get(action.intent.instrument.key, action.intent.instrument.key)
+                    not in registration.required_feeds):
+                raise ValueError("Plan intent job/product/feed binding differs from registration")
+            intent = action.intent
+            if intent.instrument != self.products[intent.instrument.key].instrument:
+                raise ValueError("Plan intent instrument differs from its declared execution product")
+            for value, name in ((intent.intent_id, "intent_id"),
+                    (intent.client_order_id, "client_order_id"), (intent.job_id, "job_id"),
+                    (intent.signal_id, "intent.signal_id")):
+                bounded_identity(value, name)
+            if self._has_unresolved_account_orders(action.scope.key):
+                raise ValueError("New risk is blocked by unresolved account order ownership")
+            created = intent.created_ts_ns
+            if isinstance(created, bool) or not isinstance(created, int) or not plan.event_ts_ns <= created <= now:
+                raise ValueError("Plan intent creation timestamp is not causally bounded")
+            if action.action == ActionKind.REPLACE:
+                self._validate_replacement(job, action)
+        document = {"action_id": action.action_id, "action": action.action.value,
+            "scope": action.scope.key, "strategy": action.strategy_id,
+            "config_version": action.config_version, "expiry_ns": action.expiry_ns,
+            "intent": action.intent.model_dump(mode="json") if action.intent else None,
+            "target": action.target_order_id, "post_only": action.post_only,
+            "reduce_only": action.reduce_only, "time_in_force": action.time_in_force,
+            "group_id": action.group_id, "plan_id": plan.plan_id,
+            "plan_event_ts_ns": plan.event_ts_ns}
+        if len(self._document(document).encode()) > self.budgets.max_action_bytes:
+            raise ValueError("Action document capacity exceeded")
+        return document
+
+    def _has_unresolved_account_orders(self, account_key):
+        unresolved = {"UNKNOWN", "LEGACY_UNKNOWN", "HANDOFF", "SUBMITTED"}
+        matcher = self.accounts[account_key]
+        return any(row["state"] in unresolved for row in matcher.ledger.active_orders())
+
+    def _validate_replacement(self, job, action):
+        if action.scope.key not in job.registration.accounts or action.intent is None:
+            raise ValueError("Replacement must remain within this strategy's bound account")
+        ledger = self.accounts[action.scope.key].ledger
+        target = ledger.get(action.target_order_id)
+        if target is None or target["strategy"] != job.registration.module.strategy_id:
+            raise ValueError("Replacement target is not owned by this strategy")
+        if target["state"] != "CANCELED":
+            raise ValueError("Replacement requires confirmed CANCELED target")
+        old = json.loads(target["payload"])
+        old_intent = old.get("instrument")
+        intent = action.intent
+        if (target["instrument"] != intent.instrument.key or target["side"] != intent.side.value
+                or old_intent != intent.instrument.model_dump(mode="json")):
+            raise ValueError("Replacement must retain the target instrument identity and side")
+        remaining = Decimal(target["quantity"]) - Decimal(target["filled"])
+        if intent.quantity is None or intent.quantity > remaining:
+            raise ValueError("Replacement quantity exceeds factual remaining quantity")
+
+    def _validate(self, job, action, signal, now, view=None):
         registration = job.registration
         if not isinstance(action, ExecutionAction):
             raise ValueError("Action builder must return list[ExecutionAction]")
@@ -1229,6 +1373,15 @@ class PaperStrategyRuntime:
         if (action.action == ActionKind.NEW
                 and (isinstance(now, bool) or not isinstance(now, int) or now < 0)):
             raise ValueError("NEW validation requires a nonnegative integer nanosecond boundary")
+        if (action.action == ActionKind.NEW and view is not None
+                and (not view.ready or view.phase not in {"PAPER", "LIVE"}
+                     or self._recovery_gate() or self._input_phase not in {"LIVE", "PAPER"}
+                     or not self._ready(job, view.hot_path))):
+            raise ValueError("Signal action NEW requires a ready, fresh PAPER market/account context")
+        if (action.action == ActionKind.NEW
+                and action_protocol_version(registration.module.module) == 1
+                and self._has_unresolved_account_orders(action.scope.key)):
+            raise ValueError("Opted-in signal action NEW is blocked by unresolved account order ownership")
         if not now < action.expiry_ns <= signal.valid_until_ts_ns:
             raise ValueError("Action expiry exceeds its causal signal lifetime")
         if action.action == ActionKind.REPLACE:
@@ -1282,19 +1435,161 @@ class PaperStrategyRuntime:
         self._seen_actions[identity] = fingerprint
         if action.action == ActionKind.CANCEL:
             return matcher.cancel(action.target_order_id, action.strategy_id, snapshot.now_ns)
+        if action.action == ActionKind.REPLACE:
+            self._validate_replacement(job, action)
+        plan = isinstance(signal, StrategyActionPlan)
+        local_rejection = None
+        if plan:
+            if action.time_in_force == "FOK":
+                local_rejection = "paper_fok_unsupported"
+            elif action.post_only and action.time_in_force == "IOC":
+                local_rejection = "paper_post_only_ioc_unsupported"
+            elif (action.intent.limit_price is None
+                    and not matcher.capabilities.get("allow_market_orders", False)):
+                local_rejection = "paper_market_order_unsupported"
+            elif (not action.post_only and action.time_in_force == "GTC"
+                    and not matcher.capabilities.get("allow_taker_gtc", False)):
+                local_rejection = "paper_taker_gtc_unsupported"
+        if local_rejection is not None:
+            matcher.ledger.record_order_rejection(action.intent.intent_id, action.strategy_id,
+                local_rejection, intent=action.intent,
+                evidence={"provenance": "LOCAL_NOT_SENT", "action_id": action.action_id},
+                now_ns=snapshot.now_ns)
+            return True
         risk = job.registration.risk[action.scope.key]
-        created, _ = matcher.submit(action.intent, action.strategy_id,
-            {"registration": job.fingerprint, "source_event_id": signal.source_event_id,
-             "signal_id": signal.signal_id, "action_id": action.action_id,
+        reference_price = (self._current_reference_price(action.intent.instrument.key, snapshot)
+                           if plan else signal.reference_price)
+        intent = action.intent
+        if action.action == ActionKind.REPLACE:
+            intent = intent.model_copy(update={"metadata": {
+                **intent.metadata, "replacement_of": action.target_order_id,
+                "replacement_provenance": "confirmed_canceled"}})
+        created, _ = matcher.submit(intent, action.strategy_id,
+            {"registration": job.fingerprint,
+             "source_event_id": None if plan else signal.source_event_id,
+             "signal_id": None if plan else signal.signal_id,
+             "plan_id": signal.plan_id if plan else None,
+             "replacement_of": action.target_order_id if action.action == ActionKind.REPLACE else None,
+             "action_id": action.action_id,
              "reference_feed": self.reference_feeds.get(action.intent.instrument.key, action.intent.instrument.key),
              "cursor": snapshot.cursor, "input_versions": dict(snapshot.versions)},
             action.expiry_ns, self.products[action.intent.instrument.key], snapshot.now_ns,
-            reference_price=signal.reference_price, margin_rate=risk.margin_rate,
+            reference_price=reference_price, margin_rate=risk.margin_rate,
             funding_buffer=risk.funding_buffer, account_notional_limit=risk.account_notional_limit,
             strategy_notional_limit=risk.strategy_notional_limit, account_capital_limit=risk.account_capital_limit,
             strategy_capital_limit=risk.strategy_capital_limit, post_only=action.post_only,
             reduce_only=action.reduce_only, time_in_force=action.time_in_force, group_id=action.group_id)
         return created
+
+    def _current_reference_price(self, product_key, snapshot):
+        feed = self.reference_feeds.get(product_key, product_key)
+        book = snapshot.latest_book(feed)
+        if book is None or not book.bids or not book.asks:
+            raise ValueError("Plan requires a current two-sided reference book")
+        bid = max(level.price for level in book.bids)
+        ask = min(level.price for level in book.asks)
+        if bid > ask:
+            raise ValueError("Plan reference book is crossed")
+        return (bid + ask) / Decimal(2)
+
+    def _drain_feedback(self, snapshot, phase):
+        if self._draining_feedback or phase == "REPLAY":
+            return
+        self._draining_feedback = True
+        remaining_budget = 64 * self.budgets.max_jobs
+        try:
+            for sid, job in self._jobs.items():
+                job_budget = 64
+                cursors = job.feedback_cursors
+                if (cursors is None or job.permission_blocked or job.state in
+                        {"PAUSED", "HALTED", "FAULTED", "BLOCKED"}):
+                    continue
+                hook = getattr(job.instance, "on_order_event", None)
+                if not callable(hook):
+                    job.state, job.reason = "FAULTED", "MissingOrderEventHook"
+                    continue
+                for account in job.registration.accounts:
+                    if remaining_budget <= 0:
+                        return
+                    matcher = self.accounts[account]
+                    deferred = False
+                    while remaining_budget > 0 and job_budget > 0 and job.state != "FAULTED":
+                        rows = matcher.ledger.order_feedback(sid, after=cursors[account],
+                                                             limit=min(remaining_budget, job_budget, 64))
+                        if not rows:
+                            break
+                        for rowid, event in rows:
+                            remaining_budget -= 1
+                            job_budget -= 1
+                            if (not isinstance(event, StrategyOrderEvent)
+                                    or event.strategy_id != sid
+                                    or event.account_scope != matcher.ledger.scope):
+                                job.state, job.reason = "FAULTED", "InvalidOrderFeedbackFact"
+                                break
+                            try:
+                                facts = self._ledger_facts((account,), strategy=sid)
+                                execution = facts[account]
+                                execution["feedback_cursor"] = (account, rowid)
+                                ready = self._ready(job, snapshot)
+                                data = (StrategyDataView(snapshot, ready=True, phase=phase,
+                                    execution=facts) if ready else None)
+                                quality = ("VALID" if all(snapshot.quality.get(key) == "VALID"
+                                    for key in job.registration.required_feeds) else "PARTIAL") if data else "UNAVAILABLE"
+                                context = StrategyOrderContext(data=data, execution=execution,
+                                    now_ns=snapshot.now_ns, cursor=(snapshot.cursor, account, rowid), quality=quality)
+                                event_document = {"event_id": event.event_id,
+                                    "strategy_id": event.strategy_id,
+                                    "account_scope": {"venue": event.account_scope.venue,
+                                        "account": event.account_scope.account,
+                                        "product": event.account_scope.product,
+                                        "environment": event.account_scope.environment},
+                                    "order_id": event.order_id, "status": event.status,
+                                    "event_ts_ns": event.event_ts_ns,
+                                    "quantity": event.quantity, "filled_quantity": event.filled_quantity,
+                                    "remaining_quantity": event.remaining_quantity,
+                                    "fill_id": event.fill_id, "fill_quantity": event.fill_quantity,
+                                    "fill_price": event.fill_price, "fee": event.fee,
+                                    "fee_currency": event.fee_currency, "metadata": event.metadata}
+                                context_size = len(self._document({"event": event_document,
+                                    "execution": dict(context.execution),
+                                    "now_ns": context.now_ns, "cursor": context.cursor,
+                                    "quality": context.quality}).encode())
+                                if context_size > self.budgets.max_action_bytes:
+                                    job.reason = "order_feedback_deferred_capacity"
+                                    deferred = True
+                                    break
+                                proof = {"event_id": event.event_id, "rowid": rowid,
+                                    "account_scope": event.account_scope.key,
+                                    "registration": job.fingerprint}
+                                claimed = matcher.ledger.claim_strategy_event(sid,
+                                    job.registration.config_version, "@order-feedback:" + event.event_id, proof)
+                                # The durable claim comes immediately before
+                                # callback invocation. A stale cursor can only skip.
+                                cursors[account] = rowid
+                                if not claimed:
+                                    continue
+                                started = self.callback_clock_ns()
+                                result = hook(event, context)
+                                job.callbacks += 1
+                                if inspect.isawaitable(result):
+                                    if inspect.iscoroutine(result):
+                                        result.close()
+                                    raise ValueError("on_order_event must be synchronous")
+                                if self.callback_clock_ns()-started > self.budgets.max_callback_ns:
+                                    raise TimeoutError("Cooperative order callback exceeded its return-time budget")
+                                callback_view = data or StrategyDataView(snapshot, ready=False, phase=phase)
+                                self._consume_callback_result(job, result, callback_view, snapshot,
+                                    replay=False, started=started, causal_time=snapshot.now_ns)
+                            except Exception as exc:
+                                job.state, job.reason = "FAULTED", type(exc).__name__
+                                self._cancel_owned(job, snapshot.now_ns)
+                                break
+                        if job.state == "FAULTED" or deferred or job_budget <= 0:
+                            break
+                    if job.state == "FAULTED":
+                        break
+        finally:
+            self._draining_feedback = False
 
     def _cancel_owned(self, job, now):
         sid = job.registration.module.strategy_id
@@ -1417,6 +1712,8 @@ class PaperStrategyRuntime:
                     matcher.advance(now_ns)
                 except Exception as exc:
                     self._account_faults[account] = type(exc).__name__
+        self._drain_feedback(snapshot, "REPLAY" if self._input_phase == "REPLAY"
+                             else self.phase.upper())
 
     def report(self):
         return {"mode": "paper", "phase": self.phase, "external_mutations": 0,

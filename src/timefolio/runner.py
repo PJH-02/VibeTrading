@@ -16,6 +16,7 @@ from storage.parquet_store import ParquetHistoryReader
 from runtime.settings import get_settings
 from storage.sqlite_store import RuntimeStore
 from strategies import load_strategy
+from strategies.contract import action_protocol_version
 from timefolio.client import AsyncTimefolioBrowserManager, TimefolioCredentials, TimefolioOrderIntent, TimefolioOrderResult
 from core.dedup import BoundedDedup
 from operations.dashboard.telemetry import heartbeat
@@ -73,6 +74,8 @@ class TimefolioStrategyRunner:
         self.bus = bus
         self._event_source = event_source
         self.strategy_module = load_strategy(config.strategy_module)
+        if action_protocol_version(getattr(self.strategy_module, "module", self.strategy_module)) is not None:
+            raise ValueError("Timefolio runner cannot consume ACTION_PROTOCOL_VERSION=1 plans")
         self.strategy = self.strategy_module.create()
         self.hot_path = HotPathStore()
         self.history = ParquetHistoryReader(self.settings.parquet.data_root)

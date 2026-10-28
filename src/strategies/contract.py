@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib
+import inspect
 import re
 from dataclasses import dataclass
 from types import ModuleType
@@ -14,6 +15,27 @@ _MODERN_STRATEGY_NAME = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 
 class StrategyInstance(Protocol):
     def on_event(self, event: BaseMarketEvent, data: StrategyDataView) -> list[Signal]: ...
+
+
+def action_protocol_version(module: ModuleType) -> int | None:
+    """Return the explicitly advertised, supported action protocol version."""
+    value = getattr(module, "ACTION_PROTOCOL_VERSION", None)
+    if value is None:
+        return None
+    if type(value) is not int or value != 1:
+        raise ValueError("Unsupported strategy ACTION_PROTOCOL_VERSION")
+    return value
+
+
+def validate_action_protocol(module: ModuleType, instance: Any) -> bool:
+    """Validate opt-in against the actual synchronous strategy instance."""
+    version = action_protocol_version(module)
+    if version is None:
+        return False
+    hook = getattr(instance, "on_order_event", None)
+    if not callable(hook) or inspect.iscoroutinefunction(hook):
+        raise TypeError("ACTION_PROTOCOL_VERSION=1 requires synchronous on_order_event(event, context)")
+    return True
 
 
 @dataclass(frozen=True)
@@ -74,6 +96,7 @@ class StrategyModule:
         strategy = self.module.create_strategy()
         if not hasattr(strategy, "on_event"):
             raise TypeError(f"Strategy {self.strategy_id} must implement on_event(event, data)")
+        validate_action_protocol(self.module, strategy)
         return strategy
 
 
