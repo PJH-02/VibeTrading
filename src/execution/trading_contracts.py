@@ -82,8 +82,12 @@ def validate_scope(scope: AccountScope, mode: TradingMode | str) -> TradingMode:
     if scope.venue.strip().casefold() == "toss":
         raise ValueError("TOSS accounts cannot register in any trading mode")
     if mode in (TradingMode.KIS_MOCK, TradingMode.KIS_MOCK2):
-        if scope.venue.casefold() != "kis" or scope.product != "cash" or scope.environment != mode.value:
-            raise ValueError("KIS mock modes require the exact KIS cash account environment")
+        # `mock` is the shared domestic mock-environment vocabulary; `mock2`
+        # remains the KIS-only VTS mode.  Both require cash economics.
+        venues = {"kis"} if mode is TradingMode.KIS_MOCK2 else {"kis", "kiwoom"}
+        if (scope.venue.casefold() not in venues or scope.product != "cash"
+                or scope.environment != mode.value):
+            raise ValueError("Domestic mock modes require the exact cash account environment")
     elif scope.environment != mode.value:
         raise ValueError("Account environment must explicitly match paper/sandbox/live mode")
     return mode
@@ -366,7 +370,12 @@ class ExecutionAction:
         if self.action == ActionKind.NEW and self.target_order_id is not None:
             raise ValueError("NEW cannot target an existing order")
         if self.intent is not None and self.intent.instrument.venue.value != self.scope.venue:
-            raise ValueError("Action instrument venue does not match account scope")
+            # A source may explicitly select a separate execution venue while
+            # retaining its market/listing instrument identity. Route aliases
+            # still bind that exact venue, account, product and environment.
+            selected = self.intent.metadata.get("execution_venue_id")
+            if not isinstance(selected, str) or selected != self.scope.venue:
+                raise ValueError("Action instrument venue differs without an explicit execution_venue_id")
         if self.time_in_force not in ("GTC", "IOC", "FOK"):
             raise ValueError("Unsupported time in force")
         if not isinstance(self.post_only, bool) or not isinstance(self.reduce_only, bool):

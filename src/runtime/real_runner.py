@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
+import json
 import logging
 import math
+import uuid
 from dataclasses import dataclass
 from collections import deque
 from decimal import Decimal
+from collections.abc import Mapping
 from typing import Any
 
 from runtime.bus import EventBus, NatsJetStreamBus
@@ -17,7 +21,7 @@ from storage.sqlite_store import RuntimeStore
 from core.dedup import BoundedDedup
 from execution.execution_owner import ExecutionOwner
 from runtime.runtime_control import GateBlocked
-from execution.execution_ledger import exact_product
+from execution.execution_ledger import AccountScope, canonical, exact_product
 
 
 logger = logging.getLogger(__name__)
@@ -65,6 +69,9 @@ class RealExecutionRunner:
         self.intent_factory = OrderIntentFactory(self.store)
         self._seen_signals = BoundedDedup(max_entries=100_000)
         self.owner, self.readiness = owner, readiness
+        self._source_runtime_active: set[str] = set()
+        self._source_runtime_ids: dict[str, str] = {}
+        self._source_recovery_tokens: dict[str, str] = {}
 
     async def run(self, duration_sec: float | None = None) -> list[dict[str, Any]]:
         if duration_sec is not None and (not math.isfinite(duration_sec) or duration_sec < 0):
@@ -189,6 +196,454 @@ class RealExecutionRunner:
             self.store.update_order_intent(intent.intent_id, report_status, {"execution_owner_state": status})
         await self._publish_intent_status(intent, report_status, {"execution_owner_state": status})
         return dict(result, signal_id=signal.signal_id)
+
+    async def dispatch_strategy_market_event(
+        self, source: Any, event: Any, data: Any, *, registry: Any,
+        evidence: dict[str, Any], readiness: Any = None, reserve_units: Any = None,
+        guard: Any = None, source_trust: str | None = None,
+        isolated_worker: Any = None,
+    ) -> dict[str, Any]:
+        """Route a trusted cooperative callback or a CAP04 worker response.
+
+        Bare callbacks execute in the parent and are accepted only when the
+        caller explicitly classifies the selected source as trusted cooperative.
+        Untrusted sources must use the asynchronous JSON worker primitive.
+        """
+        import inspect
+        import sys
+        from execution.trading_contracts import StrategyActionPlan
+        from core.models import BaseMarketEvent
+        from market.hot_path import DecisionSnapshot, StrategyDataView
+        if (not isinstance(event, BaseMarketEvent) or not isinstance(data, StrategyDataView)
+                or not isinstance(data.hot_path, DecisionSnapshot)
+                or data.cursor != data.hot_path.cursor or not event.event_id):
+            raise GateBlocked("Source dispatch requires a typed market event and matching immutable decision cursor")
+        if not self._event_is_in_snapshot(event, data.hot_path):
+            raise GateBlocked("Typed market input is not present in its cited decision snapshot")
+        feedback_callback = None
+        if isolated_worker is not None:
+            snapshot = getattr(data, "hot_path", None)
+            cursor = getattr(data, "cursor", None)
+            execution = getattr(data, "execution", None)
+            ready = getattr(data, "ready", None)
+            phase = getattr(data, "phase", None)
+            strategy_id = getattr(isolated_worker, "strategy_id", None)
+            expected = getattr(isolated_worker, "expected", None)
+            config_version = evidence.get("config_version") if isinstance(evidence, dict) else None
+            if (not isinstance(strategy_id, str) or not strategy_id
+                    or not isinstance(expected, dict)
+                    or expected.get("strategy_id") != strategy_id
+                    or not isinstance(config_version, str) or not config_version
+                    or snapshot is None or cursor is None or not isinstance(execution, Mapping)
+                    or not all(hasattr(snapshot, name) for name in
+                               ("engine_incarnation", "apply_seq", "now_ns", "versions", "books"))
+                    or type(ready) is not bool or not isinstance(phase, str)):
+                raise GateBlocked("Isolated source registration or decision snapshot is incomplete")
+            self._check_isolated_worker(isolated_worker)
+            fresh, source_runtime_id = self._claim_source_market_event(
+                event, data, strategy_id, config_version, evidence)
+            if not fresh:
+                return {"status": "DUPLICATE_SOURCE_EVENT", "strategy_id": strategy_id,
+                        "event_id": event.event_id}
+            request = self._submit_isolated_event(
+                isolated_worker, event=event, snapshot=snapshot, execution=execution,
+                ready=ready, phase=phase, cursor=cursor)
+            result = await self._await_isolated_plan(isolated_worker, request)
+
+            async def feedback_callback(feedback_event, context):
+                return await self.dispatch_strategy_order_event(
+                    None, feedback_event, context, registry=registry, evidence=evidence,
+                    readiness=readiness, reserve_units=reserve_units, guard=guard,
+                    isolated_worker=isolated_worker, isolated_snapshot=snapshot,
+                    on_feedback=feedback_callback)
+        else:
+            if source_trust != "trusted_cooperative":
+                raise GateBlocked("Parent-process source callbacks require explicit trusted_cooperative selection")
+            is_module = inspect.ismodule(source)
+            source_module = source if is_module else sys.modules.get(type(source).__module__)
+            version = getattr(source, "ACTION_PROTOCOL_VERSION",
+                              getattr(source_module, "ACTION_PROTOCOL_VERSION", None))
+            strategy_id = getattr(source, "STRATEGY_ID",
+                                  getattr(source_module, "STRATEGY_ID", None))
+            callback = getattr(source, "on_event", None)
+            order_callback = getattr(source, "on_order_event", None)
+            if type(version) is not int or version != 1 or not callable(callback):
+                raise GateBlocked("Selected source lacks the versioned action-plan market contract")
+            if not callable(order_callback):
+                raise GateBlocked("Selected source lacks the typed factual order callback")
+            config_version = getattr(source, "config_version", None)
+            fresh, source_runtime_id = self._claim_source_market_event(
+                event, data, strategy_id, config_version, evidence)
+            if not fresh:
+                return {"status": "DUPLICATE_SOURCE_EVENT", "strategy_id": strategy_id,
+                        "event_id": event.event_id}
+            result = callback(event, data)
+            if inspect.isawaitable(result):
+                if inspect.iscoroutine(result):
+                    result.close()
+                raise GateBlocked("Versioned trusted cooperative source callback must be synchronous")
+            if isinstance(result, list) and not result:
+                self._source_runtime_active.add(strategy_id)
+                self._source_runtime_ids[strategy_id] = source_runtime_id
+                return {"status": "NO_ACTION", "strategy_id": strategy_id}
+            feedback_callback = order_callback
+        if (not isinstance(result, StrategyActionPlan)
+                or result.strategy_id != strategy_id
+                or result.config_version != config_version
+                or (isinstance(evidence, dict) and evidence.get("config_version") != config_version)):
+            raise GateBlocked("Selected source returned a non-owned or invalid action plan")
+        self._source_runtime_active.add(strategy_id)
+        self._source_runtime_ids[strategy_id] = source_runtime_id
+        if self.owner is None or self.owner.ledger.scope.account != self.config.account_id:
+            raise GateBlocked("A same-account execution owner is required")
+        return await self.owner.dispatch_plan(
+            result, registry=registry, readiness=readiness or self.readiness,
+            evidence=evidence, reserve_units=reserve_units, guard=guard,
+            on_event=feedback_callback)
+
+    def _claim_source_market_event(self, event, data, strategy_id, config_version, evidence):
+        if (self.owner is None or self.owner.ledger.scope.account != self.config.account_id
+                or not isinstance(strategy_id, str) or not strategy_id
+                or not isinstance(config_version, str) or not config_version
+                or not isinstance(evidence, dict)):
+            raise GateBlocked("Durable source event claim lacks its strategy, config, evidence, or account binding")
+        document = {
+            "scope": self.owner.ledger.scope.key,
+            "event": event.model_dump(mode="json"),
+            "cursor": list(data.cursor),
+            "config_version": config_version,
+            "evidence": evidence,
+        }
+        runtime_id = self._source_runtime_ids.get(strategy_id) or uuid.uuid4().hex
+        try:
+            fresh = self.owner.ledger.claim_source_event(strategy_id, event.event_id, document,
+                runtime_id=runtime_id,
+                restored_checkpoint_sha256=self._source_recovery_tokens.get(strategy_id))
+        except Exception as error:
+            raise GateBlocked("Durable source event claim failed closed: " + str(error)) from error
+        if fresh:
+            self._source_recovery_tokens.pop(strategy_id, None)
+        return fresh, runtime_id
+
+    @staticmethod
+    def _source_state_document(value, *, depth=0):
+        if depth > 32:
+            raise GateBlocked("Source checkpoint state exceeds its nesting limit")
+        if value is None or type(value) in {bool, int, str}:
+            return value
+        if type(value) is list:
+            if len(value) > 16_384:
+                raise GateBlocked("Source checkpoint state exceeds its item limit")
+            return [RealExecutionRunner._source_state_document(item, depth=depth + 1)
+                    for item in value]
+        if type(value) is dict:
+            if len(value) > 16_384 or any(type(key) is not str or not key for key in value):
+                raise GateBlocked("Source checkpoint state has invalid object keys or size")
+            return {key: RealExecutionRunner._source_state_document(item, depth=depth + 1)
+                    for key, item in value.items()}
+        raise GateBlocked("Source checkpoint state is not finite canonical JSON")
+
+    def _source_checkpoint_identity(self, worker, config_version):
+        strategy_id = getattr(worker, "strategy_id", None)
+        expected = getattr(worker, "expected", None)
+        config = getattr(worker, "config", None)
+        registration = getattr(worker, "registration_facts", None)
+        module_path = getattr(worker, "module_path", None)
+        if (not isinstance(strategy_id, str) or not strategy_id
+                or not isinstance(config_version, str) or not config_version
+                or not isinstance(expected, dict) or not isinstance(config, Mapping)
+                or not isinstance(registration, Mapping)
+                or registration.get("config_version") != config_version
+                or not isinstance(module_path, str) or not module_path
+                or self.owner is None or self.owner.ledger.scope.account != self.config.account_id):
+            raise GateBlocked("Source checkpoint identity lacks strategy, config, or account binding")
+        source_sha = expected.get("source_sha256")
+        if (type(source_sha) is not str or len(source_sha) != 64
+                or any(ch not in "0123456789abcdef" for ch in source_sha)):
+            raise GateBlocked("Source checkpoint requires a pinned source SHA256 manifest")
+        account_key = config.get("account_key")
+        accounts = registration.get("accounts")
+        selected = accounts.get(account_key) if isinstance(accounts, Mapping) and isinstance(account_key, str) else None
+        scope_doc = selected.get("scope") if isinstance(selected, Mapping) else None
+        try:
+            selected_scope = AccountScope(**scope_doc) if isinstance(scope_doc, Mapping) else None
+        except (TypeError, ValueError) as error:
+            raise GateBlocked("Source checkpoint registration account scope is malformed") from error
+        if (selected_scope is None or selected_scope.key != self.owner.ledger.scope.key
+                or selected_scope.account != self.owner.ledger.scope.account):
+            raise GateBlocked("Source checkpoint registration differs from the owner's account scope")
+        selected_native = selected.get("native_account_id")
+        if selected_native is None:
+            selected_native = selected_scope.account
+        if selected_native != self.owner.ledger.native_account_id:
+            raise GateBlocked("Source checkpoint registration differs from the owner's physical account")
+        try:
+            manifest_identity = hashlib.sha256(canonical({
+                "module_name": getattr(worker, "module_name", None),
+                "module_path": module_path,
+                "source_sha256": source_sha,
+                "expected": expected,
+            }).encode("utf-8")).hexdigest()
+            config_identity = hashlib.sha256(canonical(dict(config)).encode("utf-8")).hexdigest()
+            registration_identity = hashlib.sha256(
+                canonical(dict(registration)).encode("utf-8")).hexdigest()
+        except (TypeError, ValueError) as error:
+            raise GateBlocked("Source checkpoint manifest or config is not canonical") from error
+        return {
+            "strategy_id": strategy_id, "config_version": config_version,
+            "manifest_identity": manifest_identity, "source_sha256": source_sha,
+            "config_identity": config_identity, "registration_identity": registration_identity,
+            "account_scope": self.owner.ledger.scope.key,
+            "native_account_id": self.owner.ledger.native_account_id,
+        }
+
+    async def checkpoint_strategy_source(self, isolated_worker, *, config_version,
+                                         timeout_ns=None):
+        """Persist an untrusted worker checkpoint at an unchanged quiescent cut."""
+        if isolated_worker is None:
+            raise GateBlocked("Untrusted source checkpoint requires the isolated CAP04 worker")
+        strategy_id = getattr(isolated_worker, "strategy_id", None)
+        if not isinstance(strategy_id, str) or strategy_id not in self._source_runtime_active:
+            raise GateBlocked("Source checkpoint requires an active restored worker runtime")
+        default_timeout = self._check_isolated_worker(isolated_worker)
+        timeout = default_timeout if timeout_ns is None else timeout_ns
+        if isinstance(timeout, bool) or not isinstance(timeout, int) or timeout <= 0:
+            raise GateBlocked("Source checkpoint requires an explicit bounded timeout")
+        identity = self._source_checkpoint_identity(isolated_worker, config_version)
+        ledger = self.owner.ledger
+        try:
+            before = ledger.source_checkpoint_cut(strategy_id)
+        except Exception as error:
+            raise GateBlocked("Source checkpoint has no durable market-event cut") from error
+        if before["pending_feedback"] != 0:
+            raise GateBlocked("Source checkpoint requires all factual feedback to be claimed")
+        submit = getattr(isolated_worker, "submit_checkpoint", None)
+        if not callable(submit):
+            raise GateBlocked("CAP04 worker does not provide checkpoint control")
+        try:
+            response = await isolated_worker.await_response(submit(), timeout_ns=timeout)
+        except Exception as error:
+            raise GateBlocked("Source checkpoint callback failed or exceeded its deadline") from error
+        if (not isinstance(response, dict) or set(response) != {"state", "sha256"}
+                or type(response["sha256"]) is not str or len(response["sha256"]) != 64):
+            raise GateBlocked("CAP04 worker returned a malformed source checkpoint")
+        state = self._source_state_document(response["state"])
+        try:
+            encoded_state = json.dumps(state, sort_keys=True, separators=(",", ":"),
+                ensure_ascii=False, allow_nan=False).encode("utf-8")
+        except (TypeError, ValueError) as error:
+            raise GateBlocked("Source checkpoint state is not canonical finite JSON") from error
+        state_digest = hashlib.sha256(encoded_state).hexdigest()
+        if state_digest != response["sha256"]:
+            raise GateBlocked("CAP04 source checkpoint state hash differs")
+        try:
+            after = ledger.source_checkpoint_cut(strategy_id)
+        except Exception as error:
+            raise GateBlocked("Source checkpoint cut became unavailable") from error
+        if before != after or after["pending_feedback"] != 0:
+            raise GateBlocked("Source checkpoint inputs changed while the worker was quiescing")
+        document = {"version": 1, **identity, "cut": after,
+                    "state": state, "state_sha256": state_digest}
+        try:
+            digest = ledger.save_source_checkpoint(strategy_id, document)
+        except Exception as error:
+            raise GateBlocked("Source checkpoint was not durably committed at its original cut") from error
+        return {"strategy_id": strategy_id, "sha256": digest, "cut": after}
+
+    async def restore_strategy_source(self, isolated_worker, *, config_version,
+                                      timeout_ns=None):
+        """Restore a fresh CAP04 child and reopen new inputs only at the saved exact cut."""
+        if isolated_worker is None:
+            raise GateBlocked("Untrusted source restore requires the isolated CAP04 worker")
+        default_timeout = self._check_isolated_worker(isolated_worker)
+        timeout = default_timeout if timeout_ns is None else timeout_ns
+        if isinstance(timeout, bool) or not isinstance(timeout, int) or timeout <= 0:
+            raise GateBlocked("Source restore requires an explicit bounded timeout")
+        identity = self._source_checkpoint_identity(isolated_worker, config_version)
+        strategy_id = identity["strategy_id"]
+        ledger = self.owner.ledger
+        try:
+            checkpoint = ledger.load_source_checkpoint(strategy_id)
+            saved = checkpoint["document"]
+            before = ledger.source_checkpoint_cut(strategy_id)
+        except Exception as error:
+            raise GateBlocked("Source restore checkpoint is missing or corrupt") from error
+        expected = {"version": 1, **identity}
+        if any(saved.get(key) != value for key, value in expected.items()):
+            raise GateBlocked("Source restore checkpoint belongs to another source/config/account")
+        if before != saved.get("cut") or before["pending_feedback"] != 0:
+            raise GateBlocked("Source restore checkpoint is stale against current market/feedback cursors")
+        state = saved.get("state")
+        if (not isinstance(state, (dict, list, str, int, bool)) and state is not None):
+            raise GateBlocked("Source restore checkpoint state has an invalid type")
+        state = self._source_state_document(state)
+        encoded_state = json.dumps(state, sort_keys=True, separators=(",", ":"),
+            ensure_ascii=False, allow_nan=False).encode("utf-8")
+        state_digest = hashlib.sha256(encoded_state).hexdigest()
+        if state_digest != saved.get("state_sha256"):
+            raise GateBlocked("Source restore checkpoint state hash is invalid")
+        submit = getattr(isolated_worker, "submit_restore", None)
+        if not callable(submit):
+            raise GateBlocked("CAP04 worker does not provide restore control")
+        try:
+            response = await isolated_worker.await_response(
+                submit(state=state, sha256=state_digest), timeout_ns=timeout)
+        except Exception as error:
+            raise GateBlocked("CAP04 source restore hook failed or exceeded its deadline") from error
+        if response != {"state": state, "sha256": state_digest}:
+            raise GateBlocked("CAP04 restored source state did not round-trip exactly")
+        try:
+            after = ledger.source_checkpoint_cut(strategy_id)
+        except Exception as error:
+            raise GateBlocked("Source restore cut became unavailable") from error
+        if before != after or after["pending_feedback"] != 0:
+            raise GateBlocked("Source inputs changed while checkpoint restoration was running")
+        self._source_runtime_active.add(strategy_id)
+        self._source_recovery_tokens[strategy_id] = checkpoint["sha256"]
+        return {"status": "RESTORED", "strategy_id": strategy_id, "cut": after}
+
+    @staticmethod
+    def _event_is_in_snapshot(event, snapshot):
+        matches = []
+        for name in ("trades", "books", "index_quotes"):
+            values = getattr(snapshot, name, {})
+            if isinstance(values, Mapping):
+                matches.extend(values.values())
+        bars = getattr(snapshot, "bars", {})
+        if isinstance(bars, Mapping):
+            for values in bars.values():
+                if isinstance(values, (tuple, list)):
+                    matches.extend(values)
+        return any(type(candidate) is type(event)
+                   and candidate.event_id == event.event_id
+                   and candidate.model_dump(mode="json") == event.model_dump(mode="json")
+                   for candidate in matches)
+
+    async def dispatch_strategy_order_event(
+        self, source: Any, event: Any, context: Any, *, registry: Any,
+        evidence: dict[str, Any], readiness: Any = None, reserve_units: Any = None,
+        guard: Any = None, instance: Any = None, source_trust: str | None = None,
+        isolated_worker: Any = None, isolated_snapshot: Any = None,
+        on_feedback: Any = None,
+    ) -> dict[str, Any]:
+        """Run the selected source callback and hand its original plan to this owner.
+
+        This is the public source-to-execution entrypoint for versioned order
+        feedback. The source retains policy; the owner retains route, risk and
+        mutation authority.
+        """
+        import inspect
+        import sys
+        from execution.trading_contracts import (
+            StrategyActionPlan, StrategyOrderContext, StrategyOrderEvent,
+        )
+        if not isinstance(event, StrategyOrderEvent) or not isinstance(context, StrategyOrderContext):
+            raise GateBlocked("Selected source lacks the versioned typed order-event contract")
+        callback = None
+        if isolated_worker is not None:
+            worker_strategy = getattr(isolated_worker, "strategy_id", None)
+            expected = getattr(isolated_worker, "expected", None)
+            if (not isinstance(worker_strategy, str) or not isinstance(expected, dict)
+                    or expected.get("strategy_id") != worker_strategy):
+                raise GateBlocked("Isolated source registration is not bound to its manifest")
+            snapshot = (getattr(context.data, "hot_path", None)
+                        if context.data is not None else isolated_snapshot)
+            if snapshot is None:
+                raise GateBlocked("Isolated order feedback requires an immutable decision snapshot")
+            ready = bool(context.data.ready) if context.data is not None else False
+            phase = context.data.phase if context.data is not None else getattr(snapshot, "phase", None)
+            request = self._submit_isolated_feedback(isolated_worker, event=event,
+                context={"snapshot": snapshot, "execution": dict(context.execution),
+                         "now_ns": context.now_ns, "cursor": context.cursor,
+                         "quality": context.quality, "ready": ready, "phase": phase},
+                cursor=context.cursor)
+            result = await self._await_isolated_plan(isolated_worker, request)
+            strategy_id = worker_strategy
+            version = 1
+        else:
+            if source_trust != "trusted_cooperative":
+                raise GateBlocked("Parent-process source callbacks require explicit trusted_cooperative selection")
+            is_module = inspect.ismodule(source)
+            source_module = source if is_module else sys.modules.get(type(source).__module__)
+            callback = getattr(source, "on_order_event", None)
+            version = getattr(source, "ACTION_PROTOCOL_VERSION",
+                              getattr(source_module, "ACTION_PROTOCOL_VERSION", None))
+            strategy_id = getattr(source, "STRATEGY_ID",
+                                  getattr(source_module, "STRATEGY_ID", None))
+            if type(version) is not int or version != 1 or not callable(callback):
+                raise GateBlocked("Selected source lacks the versioned typed order-event contract")
+            if instance is not None and not inspect.ismethod(callback):
+                result = callback(event, context, instance)
+            else:
+                result = callback(event, context)
+            if inspect.isawaitable(result):
+                if inspect.iscoroutine(result):
+                    result.close()
+                raise GateBlocked("Versioned trusted cooperative order callback must be synchronous")
+            if isinstance(result, list) and not result:
+                return {"status": "NO_ACTION", "strategy_id": event.strategy_id}
+        if (not isinstance(result, StrategyActionPlan)
+                or result.strategy_id != event.strategy_id
+                or (strategy_id is not None and result.strategy_id != strategy_id)
+                or result.config_version != event.metadata.get("config_version")
+                or result.config_version != (evidence.get("config_version") if isinstance(evidence, dict) else None)
+                or context.quality not in {"VALID", "SYNTHETIC", "KIS_JOURNAL_FACTS"}):
+            raise GateBlocked("Selected source returned an unowned or unproven action plan")
+        if self.owner is None or self.owner.ledger.scope.account != self.config.account_id:
+            raise GateBlocked("A same-account execution owner is required")
+        return await self.owner.dispatch_plan(
+            result, registry=registry, readiness=readiness or self.readiness,
+            evidence=evidence, reserve_units=reserve_units, guard=guard,
+            on_event=(on_feedback if isolated_worker is not None else
+                      (callback if is_module or instance is None else source.on_order_event)))
+
+    @staticmethod
+    def _check_isolated_worker(worker):
+        if (not callable(getattr(worker, "submit_event", None))
+                or not callable(getattr(worker, "submit_feedback", None))
+                or not callable(getattr(worker, "await_response", None))
+                or getattr(worker, "alive", False) is not True
+                or getattr(worker, "inflight", True)
+                or getattr(worker, "queued", 1) != 0):
+            raise GateBlocked("Isolated strategy worker is unavailable or already processing a callback")
+        budgets = getattr(worker, "budgets", None)
+        timeout = getattr(budgets, "callback_timeout_ns", None)
+        if isinstance(timeout, bool) or not isinstance(timeout, int) or timeout <= 0:
+            raise GateBlocked("Isolated strategy worker lacks an explicit callback deadline")
+        return timeout
+
+    @classmethod
+    def _submit_isolated_event(cls, worker, **kwargs):
+        cls._check_isolated_worker(worker)
+        try:
+            return worker.submit_event(**kwargs)
+        except Exception as error:
+            raise GateBlocked("Isolated market event could not enter the bounded worker queue") from error
+
+    @classmethod
+    def _submit_isolated_feedback(cls, worker, **kwargs):
+        cls._check_isolated_worker(worker)
+        try:
+            return worker.submit_feedback(**kwargs)
+        except Exception as error:
+            raise GateBlocked("Isolated order feedback could not enter the bounded worker queue") from error
+
+    @classmethod
+    async def _await_isolated_plan(cls, worker, request):
+        budgets = getattr(worker, "budgets", None)
+        timeout_ns = getattr(budgets, "callback_timeout_ns", None)
+        if (not callable(getattr(worker, "await_response", None))
+                or getattr(worker, "alive", False) is not True
+                or isinstance(timeout_ns, bool) or not isinstance(timeout_ns, int)
+                or timeout_ns <= 0):
+            raise GateBlocked("Isolated strategy worker is unavailable while awaiting its response")
+        try:
+            response = await worker.await_response(request, timeout_ns=timeout_ns)
+            from runtime.strategy_process import result_from_document
+            result = result_from_document(response)
+        except Exception as error:
+            raise GateBlocked("Isolated strategy callback failed or exceeded its bounded deadline") from error
+        return result
 
     def _guard_failures(self, signal, config, side) -> list[str]:
         failures = self.gate.validate(signal, config)

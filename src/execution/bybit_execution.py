@@ -218,6 +218,9 @@ class BybitOrderClient:
         return int(time.time()*1000)+self.server_clock_offset_ms
 
     async def request(self, method: str, path: str, payload: dict | None = None, *, public: bool = False) -> dict:
+        if method.upper() in {"POST", "PUT", "DELETE"} and path.startswith("/v5/order/"):
+            raise RuntimeError(
+                "Standalone Bybit probe mutation is retired; use the registered common-owner adapter")
         payload=payload or {}
         body=json.dumps(payload,separators=(",", ":")) if method=="POST" else ""
         query=urlencode(payload) if method=="GET" else ""

@@ -36,6 +36,7 @@ from storage.etf_csv_history import ETF_HISTORY_ROLES
 from portfolio.etf_journal import EtfJournal
 from operations.health import touch
 from execution.kis_execution import KisCashBroker, KisOrderRejected, account_permission_rejection
+_CANONICAL_KIS_CASH_BROKER = KisCashBroker
 from core.models import AssetClass, Bar1mEvent, BookUpdateType, EventType, InstrumentId, OrderDestination, OrderIntent, Side, Signal, SignalAction, Venue, event_from_dict
 from feeds.providers.kiwoom import KiwoomAuthClient, KST
 from feeds.providers.kis_client import KisAuthClient
@@ -43,6 +44,8 @@ from .settings import get_settings
 
 log = logging.getLogger(__name__)
 SYMBOLS = {'069500','122630','114800','252670','229200','233740','251340'}
+_KIS_CASH_FACT_MAX_ROWS = 4096
+_KIS_CASH_FACT_MAX_BYTES = 8 * 1024 * 1024
 
 
 class EtfDispatchBlocked(RuntimeError):
@@ -65,6 +68,10 @@ class EtfTradingLoop:
         self._close_task, self._closing = None, False
         self.broker = KisCashBroker(self.settings, mode='mock')
         self.brokers = {'mock':self.broker,'mock2':KisCashBroker(self.settings,mode='mock2')}
+        self._native_registry_required = True
+        for broker in self.brokers.values():
+            if type(broker) is _CANONICAL_KIS_CASH_BROKER:
+                broker._common_owner_bound = True
         self._acquire_ownership(Path(authority_root))
         try:
             self.kiwoom = KiwoomAuthClient(self.settings)
@@ -74,6 +81,9 @@ class EtfTradingLoop:
             for strategy in ('C3','KP','KD'):
                 self.journal.enable_order_feedback(strategy)
             self._bind_feedback_scopes()
+            self.execution_registry = None
+            self._execution_route_ids = {}
+            self._physical_holdings = {}
             self.history = EtfHistory(self.kiwoom, root / 'warmup')
             self.bus = bus if bus is not None else NatsJetStreamBus(self.settings)
             self._event_source = event_source
@@ -204,8 +214,11 @@ class EtfTradingLoop:
         if self.execution_guards_enabled():
             self.journal.recover_dispatch_attempts()
         states={}
-        for scope,broker in self.brokers.items():
+        for broker in self.brokers.values():
             await broker.connect()
+        if self.execution_guards_enabled():
+            self._ensure_execution_registry()
+        for scope,broker in self.brokers.items():
             states[scope]=await broker.account_state()
         state=states['mock']
         power = await self.broker.buying_power('069500', Decimal('1'))
@@ -331,6 +344,10 @@ class EtfTradingLoop:
         return bid, ask
 
     def execution_guards_enabled(self) -> bool:
+        # Every normally constructed runner is owner-mandatory regardless of
+        # the legacy opt-in flag. The flag only controls `__new__` unit fixtures.
+        if getattr(self, '_native_registry_required', False):
+            return True
         env = getattr(getattr(self,'settings',None),'env',{})
         return env.get('ETF_EXECUTION_GUARDS','false').lower() == 'true'
 
@@ -401,6 +418,27 @@ class EtfTradingLoop:
             # recheck synchronously before either dispatch branch.
             self._check_checkpoint_dispatch()
             if guarded:
+                registry = getattr(self, 'execution_registry', None)
+                if registry is None and getattr(self, '_native_registry_required', False):
+                    registry = self._ensure_execution_registry()
+                if registry is not None:
+                    await self._refresh_native_holdings(intent.metadata.get('account_scope'),
+                        symbol=intent.instrument.raw_symbol)
+                    from execution.execution_owner import ExecutionOwner
+                    route = intent.metadata.get('account_scope')
+                    route_id = self._execution_route_ids.get(route)
+                    if route_id is None:
+                        raise EtfDispatchBlocked('ETF route is not registered with the common owner')
+                    output = await ExecutionOwner.dispatch_journal_intent(
+                        journal=self.journal, registry=registry, route_id=route_id,
+                        intent=intent, verify=lambda: self._dispatch_verification(intent),
+                        timeout_seconds=20.0)
+                    if self.journal.dispatch_state(intent.intent_id) != 'HANDOFF':
+                        raise EtfDispatchBlocked('Common owner returned without durable KIS handoff')
+                    return output
+                # Existing __new__-constructed unit fixtures retain their
+                # narrow local permit seam. Normal initialized runners always
+                # construct and require the common-owner registry above.
                 namespace = type(broker).__dict__
                 if (namespace.get('execution_permit_protocol') != 1 or 'submit_order_with_permit' not in namespace
                         or 'submit_order' in getattr(broker,'__dict__',{})):
@@ -409,8 +447,6 @@ class EtfTradingLoop:
                     self._check_dispatch(intent)
                     self.journal.dispatch_handoff(intent.intent_id)
                     try:
-                        # FULL commit can itself consume the remaining TTL.
-                        # This is still synchronously before session.post.
                         self._check_dispatch(intent)
                     except BaseException as exc:
                         self.journal.dispatch_not_sent(intent.intent_id,str(exc),before_post=True)
@@ -456,6 +492,9 @@ class EtfTradingLoop:
             raise EtfDispatchBlocked('ETF entry feed requires snapshot and history recovery')
         broker=self.broker_for(symbol)
         scope=_etf_plugin.account_scope_for(symbol)
+        if (self.execution_guards_enabled()
+                and getattr(self, 'execution_registry', None) is not None):
+            await self._refresh_native_holdings(scope, symbol=symbol)
         # Every signal starts with a limit order. During the closing auction
         # retain the last continuous quote for the initial owned-position exit.
         if auction_market and side == Side.SELL:
@@ -476,7 +515,8 @@ class EtfTradingLoop:
             side=side,client_order_id=key[:32],quantity=Decimal(quantity),limit_price=price,
             metadata={'account_mode':scope,'account_scope':scope,'intent_quote':self.intent_quote(symbol),'source_provider':'kiwoom','strategy':strategy,'closing_auction':auction_market,'direction':direction,'safety_stop':safety_stop,'recovery_cleanup':recovery_cleanup,
                 'vehicle_history':history_context,'valid_until_ts_ns':valid_until_ts_ns,
-                'requested_quantity':requested_quantity,'requested_expiry':requested_expiry})
+                'requested_quantity':requested_quantity,'requested_expiry':requested_expiry,
+                'strategy_id':strategy,'reduce_only':side == Side.SELL,'time_in_force':'GTC'})
         if not self.journal.stage(intent,self._day.replace('-',''),direction,safety_stop,dispatch_evidence=self._dispatch_evidence(intent),require_evidence=self.execution_guards_enabled()):
             return
         output = await self._submit_staged(broker,intent)
@@ -586,6 +626,198 @@ class EtfTradingLoop:
     def _bind_feedback_scopes(self):
         for route in ('mock','mock2'):
             self._feedback_scope(route)
+
+    def _ensure_execution_registry(self):
+        registry = getattr(self, 'execution_registry', None)
+        if registry is not None:
+            return registry
+        if not getattr(self, '_native_registry_required', False):
+            return None
+        self._check_ownership()
+        # Called only after startup has reached actual use. Unknown adapters fail
+        # closed in the canonical registry and never receive a fallback permit.
+        registry = self._build_execution_registry()
+        self.execution_registry = registry
+        return registry
+
+    def _build_execution_registry(self):
+        """Bind the two existing KIS mock clients to this loop's physical leases."""
+        from execution.venues.registry import Capabilities, RouteSpec, VenueRegistry
+        registry = VenueRegistry(max_routes=2, max_aliases=8, max_fact_bytes=16384)
+        route_ids = {}
+        for route, broker in self.brokers.items():
+            native_account = broker.account_params().get('CANO')
+            if not isinstance(native_account, str) or native_account != self._account_ids.get(route):
+                raise EtfDispatchBlocked('KIS native account identity is not independently bound')
+            scope = self._feedback_scope(route)
+            route_id = 'kis-' + route
+            route_fields = {'route_id':route_id, 'venue':'kis', 'market_segment':'krx_cash',
+                'product':'cash', 'environment':route, 'account_scope':scope}
+            if 'native_account_id' not in inspect.signature(RouteSpec).parameters:
+                raise RuntimeError('Common owner RouteSpec lacks independently bound native account identity')
+            route_fields['native_account_id'] = native_account
+            route_spec = RouteSpec(**route_fields)
+            capability_fields = {'products':{'cash'}, 'environments':{route},
+                'time_in_force':{'GTC','IOC'}, 'post_only':False,
+                'reduce_only':False, 'funding':False}
+            if 'owner_enforced_reduce_only' in inspect.signature(Capabilities).parameters:
+                capability_fields['owner_enforced_reduce_only'] = True
+            capabilities = Capabilities(**capability_fields)
+            registry.bind_existing_adapter(route_spec, broker,
+                reference_provider=lambda route=route: self._execution_route_references(route),
+                capabilities=capabilities)
+            broker._common_owner_bound = True
+            route_ids[route] = route_id
+        self._execution_route_ids = route_ids
+        return registry
+
+    def _execution_route_references(self, route):
+        rows = self.journal.db.execute('SELECT status FROM orders WHERE account_scope=?', (route,)).fetchall()
+        open_orders = sum(row['status'] in {'submitting','unknown','pending'} for row in rows)
+        unknown_orders = sum(row['status'] == 'unknown' for row in rows)
+        return {'open_orders':int(open_orders), 'unknown_orders':int(unknown_orders),
+            'unreconciled_fills':int(open_orders), 'account_dependencies':1,
+            'strategy_aliases':0, 'rollback_refs':int(open_orders)}
+
+    async def _refresh_native_holdings(self, route, *, symbol='069500'):
+        """Read current KIS positions and orderable cash for a final owner proof."""
+        self._check_ownership()
+        broker = self.brokers[route]
+        observed_ns = time.time_ns()
+        snapshot = await broker.account_state()
+        self._check_ownership()
+        buying_power = await broker.buying_power(symbol, Decimal(0), market=True)
+        self._check_ownership()
+        cash_reservation_version, journal_fact_version = self._journal_cash_versions(route)
+        if snapshot.get('provider') != 'kis' or snapshot.get('mock') is not True:
+            raise EtfDispatchBlocked('KIS native holdings snapshot has the wrong provider or mode')
+        positions = {}
+        rows = snapshot.get('positions')
+        if not isinstance(rows, list):
+            raise EtfDispatchBlocked('KIS native holdings snapshot is unavailable')
+        for item in rows:
+            if not isinstance(item, dict):
+                raise EtfDispatchBlocked('KIS native holdings row is malformed')
+            symbol = item.get('pdno')
+            try:
+                quantity = Decimal(str(item.get('hldg_qty') or '0'))
+            except Exception as exc:
+                raise EtfDispatchBlocked('KIS native holdings quantity is malformed') from exc
+            if (not isinstance(symbol, str) or len(symbol) != 6 or not symbol.isdigit()
+                    or not quantity.is_finite() or quantity < 0
+                    or quantity != quantity.to_integral_value()):
+                raise EtfDispatchBlocked('KIS native holdings fact is invalid')
+            positions[symbol] = positions.get(symbol, 0) + int(quantity)
+        cash_raw = buying_power.get('ord_psbl_cash') if isinstance(buying_power, dict) else None
+        try:
+            orderable_cash = Decimal(cash_raw) if isinstance(cash_raw, str) else None
+        except Exception as exc:
+            raise EtfDispatchBlocked('KIS orderable cash fact is unavailable') from exc
+        if (orderable_cash is None or not cash_raw or len(cash_raw) > 64
+                or not orderable_cash.is_finite() or orderable_cash < 0):
+            raise EtfDispatchBlocked('KIS orderable cash fact is invalid')
+        self._physical_holdings[route] = {'positions':positions,
+            'orderable_cash':cash_raw, 'currency':'KRW',
+            'cash_reservation_version':cash_reservation_version,
+            'journal_fact_version':journal_fact_version,
+            'observed_ns':observed_ns, 'scope':self._feedback_scope(route)}
+        return self._physical_holdings[route]
+
+    def _journal_cash_versions(self, route):
+        """Hash bounded current cash reservations and all journal facts without pruning."""
+        cursor = self.journal.db.execute(
+            'SELECT intent_id,side,status,quantity,filled,notional,reserve,'
+            'cancel_requested,cancel_confirmed FROM orders WHERE account_scope=? ORDER BY intent_id',
+            (route,))
+        reserve_digest, fact_digest = hashlib.sha256(b'['), hashlib.sha256(b'[')
+        reserve_bytes = fact_bytes = 1
+        reserve_count = fact_count = 0
+        active_statuses = {'submitting','unknown','pending','cancel_pending'}
+        for row in cursor:
+            fact_count += 1
+            if fact_count > _KIS_CASH_FACT_MAX_ROWS:
+                raise EtfDispatchBlocked('KIS local journal fact version exceeds its row budget')
+            fact = {'intent_id':str(row['intent_id']), 'side':str(row['side']),
+                'status':str(row['status']), 'quantity':int(row['quantity']),
+                'filled':int(row['filled'] or 0), 'notional':str(row['notional'] or '0'),
+                'reserve':str(row['reserve']), 'cancel_requested':int(row['cancel_requested'] or 0),
+                'cancel_confirmed':int(row['cancel_confirmed'] or 0)}
+            encoded_fact = json.dumps(fact, sort_keys=True, separators=(',', ':'),
+                ensure_ascii=False).encode('utf-8')
+            fact_bytes += len(encoded_fact) + (1 if fact_count > 1 else 0)
+            if fact_bytes > _KIS_CASH_FACT_MAX_BYTES:
+                raise EtfDispatchBlocked('KIS local journal fact version exceeds its byte budget')
+            if fact_count > 1:
+                fact_digest.update(b',')
+            fact_digest.update(encoded_fact)
+            if fact['side'] == 'buy' and fact['status'] in active_statuses:
+                reserve_count += 1
+                reserve = {'intent_id':fact['intent_id'], 'status':fact['status'],
+                    'reserve':fact['reserve'], 'quantity':fact['quantity'], 'filled':fact['filled']}
+                encoded_reserve = json.dumps(reserve, sort_keys=True, separators=(',', ':'),
+                    ensure_ascii=False).encode('utf-8')
+                reserve_bytes += len(encoded_reserve) + (1 if reserve_count > 1 else 0)
+                if (reserve_count > _KIS_CASH_FACT_MAX_ROWS
+                        or reserve_bytes > _KIS_CASH_FACT_MAX_BYTES):
+                    raise EtfDispatchBlocked('KIS cash reservation version exceeds its budget')
+                if reserve_count > 1:
+                    reserve_digest.update(b',')
+                reserve_digest.update(encoded_reserve)
+        reserve_digest.update(b']')
+        fact_digest.update(b']')
+        return reserve_digest.hexdigest(), fact_digest.hexdigest()
+
+    def _dispatch_verification(self, intent):
+        self._check_dispatch(intent)
+        route = intent.metadata.get('account_scope')
+        physical = self._account_ids.get(route)
+        if not isinstance(physical, str) or not physical:
+            raise EtfDispatchBlocked('KIS physical account identity is unavailable')
+        identity = hashlib.sha256((route + ':' + physical + ':01').encode()).hexdigest()
+        expected_scope = AccountScope('kis', identity, 'cash', route)
+        fact = getattr(self, '_physical_holdings', {}).get(route)
+        now_ns = time.time_ns()
+        age_ns = now_ns - fact.get('observed_ns', 0) if isinstance(fact, dict) else None
+        if (not isinstance(fact, dict) or not isinstance(age_ns, int)
+                or not 0 <= age_ns <= 5_000_000_000 or fact.get('scope') != expected_scope):
+            raise EtfDispatchBlocked('KIS native holdings proof is unavailable or stale')
+        symbol = intent.instrument.raw_symbol
+        aggregate_pending = sum(max(0, int(row['quantity']) - int(row['filled']))
+            for row in self.journal.pending()
+            if row['intent_id'] != intent.intent_id and row['account_scope'] == route
+            and row['symbol'] == symbol and row['side'] == 'sell')
+        physical = int(fact['positions'].get(symbol, 0))
+        if intent.side == Side.SELL and intent.quantity > max(0, physical - aggregate_pending):
+            raise EtfDispatchBlocked('ETF SELL exceeds fresh unreserved native holdings')
+        proof = {'physical_holdings':{intent.instrument.key:physical},
+            'aggregate_pending_sell':{intent.instrument.key:aggregate_pending},
+            'observed_ns':fact['observed_ns'],
+            'account_scope':fact['scope'].key,'quality':'VALID'}
+        if intent.side == Side.BUY:
+            if (fact.get('currency') != intent.instrument.currency
+                    or not isinstance(fact.get('orderable_cash'), str)):
+                raise EtfDispatchBlocked('KIS orderable cash does not match the selected quote currency')
+            if (not isinstance(fact.get('cash_reservation_version'), str)
+                    or not isinstance(fact.get('journal_fact_version'), str)):
+                raise EtfDispatchBlocked('KIS cash snapshot is missing its local journal version')
+            proof.update({'orderable_cash':fact['orderable_cash'],
+                'currency':fact['currency'], 'product_currency':intent.instrument.currency,
+                'cash_reservation_version':fact['cash_reservation_version'],
+                'journal_fact_version':fact['journal_fact_version']})
+        return proof
+
+    def _verify_cancel_dispatch(self, order):
+        self._check_ownership()
+        current = self.journal.db.execute('SELECT * FROM orders WHERE intent_id=?',
+                                          (order['intent_id'],)).fetchone()
+        if (current is None or current['strategy'] != order['strategy']
+                or current['account_scope'] != order['account_scope']
+                or current['order_number'] != order['order_number']
+                or current['organization'] != order['organization']
+                or current['status'] != 'pending' or not current['cancel_requested']
+                or current['cancel_confirmed']):
+            raise EtfDispatchBlocked('KIS cancel facts changed before common-owner handoff')
+        return True
 
     async def _deliver_order_feedback(self, identity: str, *, feedback_row_id: int,
                                       status: str | None = None):
@@ -700,7 +932,20 @@ class EtfTradingLoop:
                     raise EtfDispatchBlocked('ETF feedback capacity exhausted before cancel side effect')
             try:
                 self._check_ownership()
-                await broker.cancel_order(order['order_number'], order['organization'])
+                registry = getattr(self, 'execution_registry', None)
+                if registry is None and getattr(self, '_native_registry_required', False):
+                    registry = self._ensure_execution_registry()
+                if registry is not None:
+                    from execution.execution_owner import ExecutionOwner
+                    route_id = self._execution_route_ids.get(route)
+                    if route_id is None:
+                        raise EtfDispatchBlocked('ETF cancel route is not registered with the common owner')
+                    await ExecutionOwner.dispatch_journal_cancel(
+                        journal=self.journal, registry=registry, route_id=route_id,
+                        order=factual, verify=lambda: self._verify_cancel_dispatch(factual),
+                        timeout_seconds=20.0)
+                else:
+                    await broker.cancel_order(order['order_number'], order['organization'])
             except Exception:
                 log.exception('KIS cancel outcome requires factual order-status reconciliation')
             if receipt is not None:
@@ -723,7 +968,10 @@ class EtfTradingLoop:
             return
         if action.action != ActionKind.NEW or action.intent is None:
             raise EtfDispatchBlocked('ETF KIS feedback supports only explicit cancel/new actions')
-        intent = action.intent
+        source_intent = action.intent
+        intent = source_intent.model_copy(update={'metadata':dict(source_intent.metadata) | {
+            'strategy_id':order['strategy'],'reduce_only':bool(action.reduce_only),
+            'time_in_force':action.time_in_force}})
         key = hashlib.sha256((order['intent_id'] + ':market-remainder').encode()).hexdigest()
         current = self.journal.db.execute('SELECT * FROM orders WHERE intent_id=?',
                                           (order['intent_id'],)).fetchone()
@@ -759,6 +1007,9 @@ class EtfTradingLoop:
             raise EtfDispatchBlocked('ETF source market remainder differs from confirmed factual remainder')
         if intent.side == Side.SELL and int(quantity) > self.journal.book(order['strategy'])['positions'].get(order['symbol'], 0):
             raise EtfDispatchBlocked('ETF market remainder exceeds strategy-owned filled shares')
+        if (self.execution_guards_enabled()
+                and getattr(self, 'execution_registry', None) is not None):
+            await self._refresh_native_holdings(route, symbol=order['symbol'])
         if intent.side == Side.BUY:
             self._check_ownership()
             market_power = await broker.buying_power(order['symbol'], Decimal(0), market=True)

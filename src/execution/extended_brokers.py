@@ -207,8 +207,7 @@ class ArcusBrokerAdapter(_WebSocketBroker):
 
     async def submit_order(self, intent: OrderIntent) -> dict:
         self._assert_submit_enabled()
-        if not self.markets: await self.connect()
-        return await self._rpc(self.prepare_order(intent),mutation=True)
+        raise RuntimeError('Legacy Arcus adapter has no registered common-owner mutation route')
 
     async def account_state(self) -> dict:
         async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=15)) as session:
@@ -326,9 +325,7 @@ class GrvtBrokerAdapter(_WebSocketBroker):
 
     async def submit_order(self, intent: OrderIntent) -> dict:
         self._assert_submit_enabled()
-        if time.monotonic()>=self._auth_deadline:
-            await self.close(); await self.connect()
-        return await self._rpc(self.prepare_order(intent),headers=self._headers,mutation=True)
+        raise RuntimeError('Legacy GRVT adapter has no registered common-owner mutation route')
 
     async def account_state(self) -> dict:
         if time.monotonic()>=self._auth_deadline: await self.close(); await self.connect()

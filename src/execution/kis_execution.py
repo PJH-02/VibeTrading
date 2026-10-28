@@ -44,6 +44,7 @@ class KisCashBroker:
     def __init__(self, settings: RuntimeSettings | None = None, *, mode: str = "mock"):
         self.client = KisAuthClient(settings, mode=mode)
         self.mode = mode
+        self._common_owner_bound = False
         self._lock = asyncio.Lock()
         self._next_request_at = 0.
 
@@ -135,6 +136,8 @@ class KisCashBroker:
         return (await self.request('GET', 'inquire-psbl-order', self.tr('8908R'), params))['body']['output']
 
     async def submit_order(self, intent: OrderIntent) -> dict:
+        if getattr(self, '_common_owner_bound', False):
+            raise RuntimeError('Selected KIS route requires the common owner submit permit')
         return await self._submit_order(intent)
 
     async def submit_order_with_permit(self, intent: OrderIntent, permit) -> dict:
@@ -207,7 +210,19 @@ class KisCashBroker:
         raise RuntimeError('KIS daily fill pagination incomplete')
 
     async def cancel_order(self, order_number: str, organization: str) -> dict:
+        if getattr(self, '_common_owner_bound', False):
+            raise RuntimeError('Selected KIS route requires the common owner cancel permit')
         body = self.account_params() | {'KRX_FWDG_ORD_ORGNO': organization, 'ORGN_ODNO': order_number,
             'ORD_DVSN': '00', 'RVSE_CNCL_DVSN_CD': '02', 'ORD_QTY': '0', 'ORD_UNPR': '0',
             'QTY_ALL_ORD_YN': 'Y', 'EXCG_ID_DVSN_CD': 'KRX'}
         return (await self.request('POST', 'order-rvsecncl', self.tr('0013U'), body))['body']
+
+    async def cancel_order_with_permit(self, order_number: str, organization: str, permit) -> dict:
+        """Cancel a durable KIS order only through the common one-use permit."""
+        if not callable(permit):
+            raise TypeError('KIS guarded cancel requires a dispatch permit')
+        body = self.account_params() | {'KRX_FWDG_ORD_ORGNO': organization, 'ORGN_ODNO': order_number,
+            'ORD_DVSN': '00', 'RVSE_CNCL_DVSN_CD': '02', 'ORD_QTY': '0', 'ORD_UNPR': '0',
+            'QTY_ALL_ORD_YN': 'Y', 'EXCG_ID_DVSN_CD': 'KRX'}
+        return (await self.request('POST', 'order-rvsecncl', self.tr('0013U'), body,
+                                   permit=permit))['body']

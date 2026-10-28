@@ -10,6 +10,31 @@ import stat
 from operations.maintenance_gate import _try_lock, _unlock
 
 
+# Route vocabularies and the older lease vocabulary name the same physical
+# environment.  Normalize once here so old/new owners fence one another.
+_ENVIRONMENT_ALIASES = {
+    "sandbox": "testnet",
+    "live": "real",
+    "mock2": "mock",
+}
+_CANONICAL_ENVIRONMENTS = frozenset({"offline", "paper", "mock", "real", "testnet"})
+_CANONICAL_VENUES = frozenset({
+    "kis", "kiwoom", "binance", "bitget", "bybit", "grvt", "arcus", "hyperliquid",
+})
+
+
+def normalize_route_environment(value: str) -> str:
+    """Map runtime route labels to the strict legacy lease vocabulary."""
+    if not isinstance(value, str):
+        raise ValueError("Route execution environment is required")
+    return _ENVIRONMENT_ALIASES.get(value.casefold(), value.casefold())
+
+
+def normalize_environment(value: str) -> str:
+    """Compatibility alias used by route validation; not by the legacy lease API."""
+    return normalize_route_environment(value)
+
+
 class ProcessLease:
     def __init__(self, path: Path) -> None:
         self.path = Path(path)
@@ -17,16 +42,29 @@ class ProcessLease:
         self._pid = None
         self._lost = False
 
+    # Explicitly registered extension venues (e.g. a test-only dummy module)
+    # may be added without weakening the unknown-venue guard globally.
+    _extension_venues: set[str] = set()
+
+    @classmethod
+    def register_extension_venue(cls, venue: str) -> str:
+        if (not isinstance(venue, str) or not venue.strip() or len(venue) > 64
+                or any(c.isspace() or ord(c) < 32 or ord(c) == 127 for c in venue)):
+            raise ValueError('Extension venue requires a bounded explicit identity')
+        cls._extension_venues.add(venue.casefold())
+        return venue.casefold()
+
     @classmethod
     def account(cls, root: Path, venue: str, account: str, environment: str):
         """Fence the whole physical parent account, across products/subaccounts.
 
-        Callers supply canonical physical identities, never credential/route aliases.
+        This legacy entrypoint deliberately accepts only its exact canonical
+        lowercase vocabulary. Route aliases belong at the native ledger seam.
         Every cooperating process must use the same protected shared root.
         """
-        if venue not in {'kis', 'kiwoom', 'binance', 'bitget', 'bybit', 'grvt', 'arcus', 'hyperliquid'}:
+        if venue not in _CANONICAL_VENUES and venue not in cls._extension_venues:
             raise ValueError('Noncanonical execution venue')
-        if environment not in {'offline', 'paper', 'mock', 'real', 'testnet'}:
+        if environment not in _CANONICAL_ENVIRONMENTS:
             raise ValueError('Noncanonical execution environment')
         if (not isinstance(account, str) or not account or len(account) > 200
                 or any(c.isspace() or ord(c) < 32 or ord(c) == 127 for c in account)):
@@ -36,6 +74,11 @@ class ProcessLease:
             raise ValueError('Authority root must be absolute and free of symlinks')
         key = json.dumps([venue, account, environment], separators=(',', ':'), ensure_ascii=False)
         return cls(root / (hashlib.sha256(key.encode()).hexdigest() + '.lock'))
+
+    @classmethod
+    def account_for_route(cls, root: Path, venue: str, account: str, environment: str):
+        """Native execution seam: normalize route environment, then use strict fencing."""
+        return cls.account(root, venue, account, normalize_route_environment(environment))
 
     def acquire(self) -> None:
         if self._handle is not None:

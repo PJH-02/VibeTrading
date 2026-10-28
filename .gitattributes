@@ -17,3 +17,6 @@ src/strategies/kr/etf_history.py -text whitespace=blank-at-eol,blank-at-eof,spac
 src/strategies/contract.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 src/runtime/strategy_runner.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 src/timefolio/runner.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+src/execution/kis_execution.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/runtime/real_runner.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

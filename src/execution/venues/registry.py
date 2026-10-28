@@ -18,6 +18,7 @@ import threading
 import weakref
 
 from execution.execution_ledger import AccountScope
+from execution.process_lease import normalize_environment
 
 
 SUPPORTED_OPERATIONS = (
@@ -138,6 +139,7 @@ class RouteSpec:
     product: str
     environment: str
     account_scope: AccountScope
+    native_account_id: str | None = None
 
     def __post_init__(self):
         _bounded(self.route_id, "route_id")
@@ -147,6 +149,8 @@ class RouteSpec:
         _bounded(self.environment, "environment")
         if not isinstance(self.account_scope, AccountScope):
             raise ValueError("route requires an immutable AccountScope")
+        if self.native_account_id is not None:
+            _bounded(self.native_account_id, "independently bound native account id")
         if self.venue.strip().casefold() == "toss" or self.account_scope.venue.strip().casefold() == "toss":
             raise ValueError("TOSS is DATA_ONLY and cannot register a trading route")
         if self.environment not in _ALLOWED_ENVIRONMENTS:
@@ -185,9 +189,9 @@ class RouteSpec:
         scope = self.account_scope
         # Segment/product spellings such as Binance `linear` and `usdm_perp`
         # describe the same economic mutation family for this physical account.
-        return (self.venue.casefold(), self.mode_family,
-                self.environment.casefold(), scope.venue.casefold(), scope.account,
-                _mode_family(scope.product), scope.environment.casefold())
+        return (scope.venue.casefold(), self.mode_family,
+                self.native_account_id or scope.account,
+                normalize_environment(scope.environment))
 
 
 @dataclass(frozen=True)
@@ -201,6 +205,8 @@ class Capabilities:
     reduce_only: bool
     funding: bool
     private_or_poll: bool = True
+    owner_enforced_reduce_only: bool = False
+    synthetic_fixture: bool = False
 
     def __post_init__(self):
         for name in ("products", "environments", "time_in_force"):
@@ -209,11 +215,16 @@ class Capabilities:
                 raise ValueError(name + " requires an explicit nonempty set")
             bounded = frozenset(_bounded(item, name + " item") for item in values)
             object.__setattr__(self, name, bounded)
-        for name in ("post_only", "reduce_only", "funding", "private_or_poll"):
+        for name in ("post_only", "reduce_only", "funding", "private_or_poll",
+                     "owner_enforced_reduce_only", "synthetic_fixture"):
             if type(getattr(self, name)) is not bool:
                 raise ValueError(name + " requires an explicit boolean")
         if self.private_or_poll is not True:
             raise ValueError("private_or_poll is required for every registered route")
+        if self.owner_enforced_reduce_only and self.reduce_only:
+            raise ValueError("Owner-enforced and venue-native reduce-only are distinct capabilities")
+        if self.synthetic_fixture and (self.funding or self.reduce_only or self.owner_enforced_reduce_only):
+            raise ValueError("Synthetic fixture routes cannot claim funding or reduce-only capabilities")
 
 
 @dataclass(frozen=True)
@@ -276,6 +287,7 @@ class Binding:
     reference_provider: Callable
     canonical_owner: str
     gaps: tuple[str, ...] = ()
+    native_facts_provider: Callable | None = None
 
 
 class _GuardedPermit:
@@ -347,20 +359,26 @@ class VenueRegistry:
 
     # ------------------------------------------------------------------ routes
     def register(self, route: RouteSpec, adapter, operations, capabilities: Capabilities,
-                 reference_provider, *, canonical_owner=None, gaps=()) -> Binding:
+                 reference_provider, *, canonical_owner=None, gaps=(), native_facts_provider=None) -> Binding:
         if not isinstance(route, RouteSpec):
             raise TypeError("An explicit RouteSpec is required")
         if not isinstance(capabilities, Capabilities):
             raise TypeError("Frozen explicit Capabilities are required")
         if not callable(reference_provider):
             raise TypeError("A trusted owner factual reference provider is required")
+        if native_facts_provider is not None and not callable(native_facts_provider):
+            raise TypeError("Native account facts provider must be explicit and callable")
         operations = self._resolve_operations(adapter, operations)
         owner = canonical_owner or (type(adapter).__module__ + "." + type(adapter).__qualname__)
         _bounded(owner, "canonical_owner", 512)
+        if capabilities.synthetic_fixture and owner in EXISTING_ADAPTER_MAPS:
+            raise ValueError("Synthetic fixture capability cannot downgrade a canonical native API adapter")
+        if capabilities.synthetic_fixture and not route.environment in {"sandbox", "offline"}:
+            raise ValueError("Synthetic fixture routes are sandbox/offline only")
         gap_tuple = tuple(_bounded(str(gap), "gap", 512) for gap in gaps)
         self._validate_adapter_scope(adapter, route)
         binding = Binding(route, adapter, MappingProxyType(dict(operations)), capabilities,
-                          reference_provider, owner, gap_tuple)
+                          reference_provider, owner, gap_tuple, native_facts_provider)
         with self._lock:
             if route.route_id in self._records:
                 raise ValueError("Route ID is already registered and is never silently evicted")
@@ -376,10 +394,11 @@ class VenueRegistry:
         return binding
 
     def bind_existing_adapter(self, route: RouteSpec, adapter, *, reference_provider,
-                              capabilities: Capabilities) -> Binding:
+                              capabilities: Capabilities, native_facts_provider=None) -> Binding:
         owner, operations, gaps = existing_adapter_contract(adapter)
         return self.register(route, adapter, operations, capabilities, reference_provider,
-                             canonical_owner=owner, gaps=gaps)
+                             canonical_owner=owner, gaps=gaps,
+                             native_facts_provider=native_facts_provider)
 
     def _resolve_operations(self, adapter, operations):
         if not isinstance(operations, Mapping):
@@ -539,8 +558,10 @@ class VenueRegistry:
             for item in self._aliases.values():
                 ambiguity[(item.strategy_id, item.symbol.casefold(), item.market_segment.casefold(),
                            item.product.casefold())] = item.route_id
-                physical[(item.account_scope.venue.casefold(), item.account_scope.account,
-                          item.environment.casefold())] = (
+                route = self._records[item.route_id].binding.route
+                physical[(item.account_scope.venue.casefold(),
+                          route.native_account_id or item.account_scope.account,
+                          normalize_environment(item.environment))] = (
                               _mode_family(item.product), item.route_id)
             for item in items:
                 if item.key in seen or item.key in self._aliases:
@@ -561,8 +582,9 @@ class VenueRegistry:
                 if amb in ambiguity and ambiguity[amb] != item.route_id:
                     raise ValueError("Ambiguous alias resolves the same product/symbol to another route")
                 ambiguity[amb] = item.route_id
-                phys = (item.account_scope.venue.casefold(), item.account_scope.account,
-                        item.environment.casefold())
+                phys = (item.account_scope.venue.casefold(),
+                        route.native_account_id or item.account_scope.account,
+                        normalize_environment(item.environment))
                 family = _mode_family(item.product)
                 if phys in physical and physical[phys][0] != family:
                     raise ValueError("Incompatible product/mode declarations for one physical account")
@@ -584,6 +606,11 @@ class VenueRegistry:
     def aliases_for_route(self, route_id):
         with self._lock:
             return tuple(item for item in self._aliases.values() if item.route_id == route_id)
+
+    def aliases_for_strategy(self, strategy_id):
+        with self._lock:
+            return tuple(item for item in self._aliases.values()
+                         if item.strategy_id == strategy_id)
 
     def unbind_alias(self, strategy_id, alias):
         with self._lock:
@@ -612,6 +639,43 @@ class VenueRegistry:
                 "missing_feeds": item.missing_feeds(available_feeds),
             } for item in self._aliases.values())
 
+    def restore_owned(self, route_id, rows):
+        """Rebuild bounded owned handles from validated durable ledger facts."""
+        with self._lock:
+            record = self._record(route_id)
+            if record.state is RouteState.REMOVED:
+                raise RouteStateError("Removed routes cannot restore owned handles")
+            restored = 0
+            for row in rows:
+                if not isinstance(row, Mapping):
+                    raise ValueError("Restored owned facts must be explicit mappings")
+                identities = row.get("identities")
+                if identities is None:
+                    identities = [row.get("client_order_id"), row.get("order_id")]
+                if not isinstance(identities, (list, tuple)) or not identities:
+                    raise ValueError("Restored owned facts require bounded identities")
+                strategy = row.get("strategy_id")
+                if strategy is not None:
+                    _bounded(strategy, "restored strategy", 128)
+                scope = row.get("account_scope")
+                if isinstance(scope, Mapping):
+                    scope = AccountScope(scope["venue"], scope["account"],
+                                         scope["product"], scope["environment"])
+                if scope is not None and (not isinstance(scope, AccountScope)
+                                          or scope.key != record.binding.route.account_scope.key):
+                    raise ValueError("Restored owned facts belong to another account scope")
+                if len(record.owned) + len(identities) > self.max_owned_orders:
+                    raise ValueError("Explicit max_owned_orders budget exhausted on restore")
+                for identity in identities:
+                    if identity is None:
+                        continue
+                    _bounded(identity, "restored owned identity", MAX_IDENTITY_BYTES)
+                    record.owned.add(identity)
+                    record.owned_meta[identity] = (strategy, scope.key if scope else None)
+                    restored += 1
+            self._epoch += 1
+            return restored
+
     # ----------------------------------------------------------------- invoke
     def issue_permit(self, route_id, source) -> _GuardedPermit:
         with self._lock:
@@ -626,6 +690,11 @@ class VenueRegistry:
     async def invoke(self, route_id, operation, *args, permit=None, **kwargs):
         if operation not in SUPPORTED_OPERATIONS:
             raise UnsupportedOperation("Unsupported operation: " + str(operation))
+        # Owner-supplied provenance is consumed by the seam and never forwarded
+        # to a native adapter whose signature does not declare it.
+        owner_strategy_id = kwargs.pop("owner_strategy_id", None)
+        owner_target_order_id = kwargs.pop("owner_target_order_id", None)
+        kwargs.pop("owner_account_scope", None)
         with self._lock:
             record = self._record(route_id)
             if record.state is RouteState.REMOVED:
@@ -640,11 +709,12 @@ class VenueRegistry:
                 if action in ("NEW", "REPLACE") and record.state is not RouteState.ENABLED:
                     raise RouteStateError("NEW/REPLACE requires an ENABLED route")
                 if action == "CANCEL":
-                    target = _cancel_target(args, kwargs)
+                    target = owner_target_order_id or _cancel_target(args, kwargs)
                     if target is None or target not in record.owned:
                         raise ForeignOrderError("Only originally owned orders can be cancelled")
                     candidate = _extract_candidate(args, kwargs)
-                    strategy = kwargs.get("strategy_id", _field(candidate, "strategy_id"))
+                    strategy = owner_strategy_id or kwargs.get(
+                        "strategy_id", _candidate_strategy(candidate))
                     metadata = record.owned_meta.get(target)
                     if metadata is not None and metadata[0] is not None and strategy != metadata[0]:
                         raise ForeignOrderError("Order belongs to another strategy")
@@ -670,7 +740,7 @@ class VenueRegistry:
             else:
                 _validate_request(binding, operation, action, args, kwargs)
                 if operation == "query_order" and record.state in (RouteState.DISABLED, RouteState.QUARANTINED):
-                    target = _query_target(args, kwargs)
+                    target = owner_target_order_id or _query_target(args, kwargs)
                     if target is not None and target not in record.owned:
                         raise ForeignOrderError("Only originally owned orders can be queried after disable")
             epoch = record.epoch
@@ -713,8 +783,8 @@ class VenueRegistry:
 
     def _remember_owned(self, record, args, kwargs, result):
         candidate = _extract_candidate(args, kwargs)
-        strategy = _field(candidate, "strategy_id")
-        scope = _field(candidate, "account_scope")
+        strategy = kwargs.get("strategy_id", _candidate_strategy(candidate))
+        scope = kwargs.get("account_scope", _field(candidate, "account_scope"))
         primary = _field(candidate, "client_order_id")
         if isinstance(primary, str):
             record.owned_primary.add(primary)
@@ -725,11 +795,15 @@ class VenueRegistry:
             record.owned_meta[value] = (strategy, scope.key if isinstance(scope, AccountScope) else None)
         record.reserved_owned.difference_update(_identity_candidates(args, kwargs))
         if isinstance(result, Mapping):
-            for key in ("client_order_id", "order_id", "target_order_id"):
+            for key in ("client_order_id", "order_id", "target_order_id",
+                        "clientOrderId", "orderId", "ODNO", "odno", "ord_no"):
                 value = result.get(key)
-                if value is not None:
-                    _bounded(value, "adapter returned order identity", MAX_IDENTITY_BYTES)
+                if value is None:
+                    continue
+                if type(value) is int and value >= 0:
+                    value = str(value)
                 if isinstance(value, str) and value:
+                    _bounded(value, "adapter returned order identity", MAX_IDENTITY_BYTES)
                     if value in record.owned and value not in _identity_candidates(args, kwargs):
                         raise AdapterProtocolError("Adapter returned an identity already owned by another order")
                     record.owned.add(value)
@@ -825,6 +899,20 @@ def _field(candidate, name, default=None):
     return getattr(candidate, name, default)
 
 
+def _candidate_strategy(candidate):
+    value = _field(candidate, "strategy_id")
+    if value is None:
+        # The preserved ETF journal submits its original immutable OrderIntent
+        # directly.  Its source-owned attribution is `job_id`; do not require a
+        # synthetic wrapper or rewritten payload at this adapter seam.
+        value = _field(candidate, "job_id")
+    if value is None and not isinstance(candidate, Mapping):
+        metadata = getattr(candidate, "metadata", None)
+        if isinstance(metadata, Mapping):
+            value = metadata.get("strategy_id")
+    return value
+
+
 def _validate_request(binding: Binding, operation, action, args, kwargs):
     candidate = _extract_candidate(args, kwargs)
     route, caps = binding.route, binding.capabilities
@@ -842,7 +930,7 @@ def _validate_request(binding: Binding, operation, action, args, kwargs):
     if route.product not in caps.products or route.environment not in caps.environments:
         raise ValueError("Route product/environment is not an explicit adapter capability")
     if operation == "submit":
-        strategy_id = _field(candidate, "strategy_id")
+        strategy_id = _candidate_strategy(candidate)
         _bounded(strategy_id, "strategy_id", 128)
     scope = kwargs.get("account_scope", _field(candidate, "account_scope", None))
     if scope is None:
@@ -882,7 +970,8 @@ def _validate_request(binding: Binding, operation, action, args, kwargs):
     if post_only and not caps.post_only:
         raise ValueError("post_only is unsupported for this route")
     if reduce_only and not caps.reduce_only:
-        raise ValueError("reduce_only is unsupported for this route")
+        if not (route.mode_family == "cash" and caps.owner_enforced_reduce_only):
+            raise ValueError("reduce_only is unsupported for this route")
     if post_only and tif == "FOK":
         raise ValueError("post_only is incompatible with FOK")
 
@@ -954,6 +1043,7 @@ _PERP_OPERATIONS = {
 }
 _KIS_OPERATIONS = {
     "submit": "submit_order_with_permit",
+    "cancel": "cancel_order_with_permit",
     "query_order": "order_status",
     "get_fills": "daily_fills",
     "account_state": "account_state",
@@ -1019,6 +1109,126 @@ def existing_adapter_contract(adapter):
         else:
             gaps.append("Missing proven method for " + operation + ": " + method_name)
     return owner, operations, tuple(gaps)
+
+
+_PERP_SUBMIT_OWNERS = frozenset(
+    owner for owner in EXISTING_ADAPTER_MAPS if owner.startswith("execution.perp_execution."))
+_CASH_INTENT_OWNERS = frozenset({
+    "execution.brokers.BinanceBrokerAdapter",
+    "execution.brokers.KiwoomBrokerAdapter",
+    "execution.brokers.KisBrokerAdapter",
+    "execution.kis_execution.KisCashBroker",
+})
+
+
+def submit_candidate(binding: Binding, action, intent):
+    """Convert an original StrategyActionPlan intent at the binding seam.
+
+    The strategy-owned price/quantity/side/TIF are copied verbatim.  No sizing,
+    repricing, or venue policy is applied here.
+    """
+    owner = binding.canonical_owner
+    declared = getattr(binding.adapter, "execution_candidate_protocol", None)
+    if declared == "intent-v1":
+        return _intent_candidate(binding, action, intent)
+    if declared == "mapping-v1" or binding.capabilities.synthetic_fixture:
+        return _mapping_candidate(binding, action, intent)
+    if owner in _PERP_SUBMIT_OWNERS:
+        adapter = binding.adapter
+        metadata = getattr(adapter, "_metadata", None)
+        symbol = intent.instrument.raw_symbol
+        row = metadata.get(symbol) if isinstance(metadata, Mapping) else None
+        if not isinstance(row, Mapping):
+            raise ValueError("Native perpetual instrument metadata must be loaded before submission")
+        scope = getattr(adapter, "scope", None)
+        if scope is None or not hasattr(scope, "key"):
+            raise ValueError("Native perpetual adapter lacks its exact scope key")
+        tif = action.time_in_force
+        if action.post_only:
+            tif = "POST_ONLY"
+        return {
+            "scope_key": scope.key, "symbol": symbol,
+            "side": intent.side.value.lower(), "quantity": str(intent.quantity),
+            "limit_price": None if intent.limit_price is None else str(intent.limit_price),
+            "time_in_force": tif, "post_only": bool(action.post_only),
+            "reduce_only": bool(action.reduce_only),
+            "client_order_id": intent.client_order_id,
+            "strategy_id": action.strategy_id, "account_scope": action.scope,
+            "product": binding.route.product, "venue": binding.route.venue,
+            "environment": binding.route.environment, "action": "NEW",
+        }
+    if owner in _CASH_INTENT_OWNERS:
+        product = "spot" if owner == "execution.brokers.BinanceBrokerAdapter" else "cash"
+        return _intent_candidate(binding, action, intent, product=product)
+    raise UnsupportedOperation("No proven submit signature for " + owner)
+
+
+def _intent_candidate(binding: Binding, action, intent, *, product=None):
+    if product is None:
+        product = ("spot" if binding.route.market_segment in {"spot", "crypto_spot"}
+                   else "cash")
+    metadata = dict(intent.metadata)
+    metadata.update({
+        "strategy_id": action.strategy_id, "config_version": action.config_version,
+        "account_id": action.scope.account, "environment": action.scope.environment,
+        "product": product, "time_in_force": action.time_in_force,
+        "post_only": bool(action.post_only), "reduce_only": bool(action.reduce_only),
+    })
+    return intent.model_copy(update={"metadata": metadata})
+
+
+def _mapping_candidate(binding: Binding, action, intent):
+    return {
+        "client_order_id": intent.client_order_id,
+        "symbol": intent.instrument.raw_symbol,
+        "side": intent.side.value.lower(),
+        "quantity": str(intent.quantity),
+        "limit_price": None if intent.limit_price is None else str(intent.limit_price),
+        "time_in_force": action.time_in_force,
+        "post_only": bool(action.post_only), "reduce_only": bool(action.reduce_only),
+        "strategy_id": action.strategy_id, "account_scope": action.scope,
+        "product": binding.route.product, "venue": binding.route.venue,
+        "environment": binding.route.environment, "action": "NEW",
+    }
+
+
+def cancel_arguments(binding: Binding, *, symbol, target_order_id, strategy_id, scope,
+                     organization=None):
+    owner = binding.canonical_owner
+    declared = getattr(binding.adapter, "execution_cancel_protocol", None)
+    if declared == "symbol-client-id" or binding.capabilities.synthetic_fixture:
+        return (symbol, target_order_id), {"strategy_id": strategy_id, "account_scope": scope}
+    if owner in _PERP_SUBMIT_OWNERS:
+        return (symbol, target_order_id), {}
+    if owner == "execution.brokers.KiwoomBrokerAdapter":
+        return (symbol, target_order_id), {}
+    if owner == "execution.kis_execution.KisCashBroker":
+        if not isinstance(organization, str) or not organization:
+            raise UnsupportedOperation("KIS cancel requires its durable original organization number")
+        return (target_order_id, organization), {}
+    if owner == "execution.brokers.BinanceBrokerAdapter":
+        return (symbol,), {"client_order_id": target_order_id}
+    raise UnsupportedOperation("No proven cancel signature for " + owner)
+
+
+def query_arguments(binding: Binding, *, symbol, order_id, client_order_id, day):
+    """Exact bridge for proven existing adapter status-query signatures."""
+    owner = binding.canonical_owner
+    if owner.startswith("execution.perp_execution."):
+        return (symbol, client_order_id or order_id), {}
+    if owner == "execution.brokers.KiwoomBrokerAdapter":
+        return (symbol, day, order_id or client_order_id), {}
+    if owner in {"execution.kis_execution.KisCashBroker", "execution.brokers.KisBrokerAdapter"}:
+        return (order_id or client_order_id,), {"day": day, "symbol": symbol}
+    if owner == "execution.brokers.BinanceBrokerAdapter":
+        kwargs = {"order_id": order_id} if order_id else {"client_order_id": client_order_id}
+        return (symbol,), kwargs
+    declared = getattr(binding.adapter, "execution_query_protocol", None)
+    if declared == "symbol-order-id":
+        return (symbol,), {"order_id": order_id, "client_order_id": client_order_id}
+    if binding.capabilities.synthetic_fixture:
+        return (symbol, client_order_id or order_id), {}
+    raise UnsupportedOperation("No proven query signature for " + owner)
 
 
 def content_digest(value) -> str:
