@@ -255,6 +255,15 @@ class StrategyActionPlan:
 
 위 유형은 **기능·검증 최소 필드**를 명시한 의사 코드이다. 전략별 Config에서 `instruments` alias(예: `spot: binance/spot/BTCUSDT`, `perp: binance/usdm_perp/BTCUSDT`)를 선언하고 기존 설정 파서/Adapter 메타데이터로 해석한다. 동일 ticker라도 시장 구분 없이 유일하다고 가정하지 않으며 신규 글로벌 상품 레지스트리나 전략별 엔진 분기를 만들지 않는다. 기존 `Signal`, `OrderIntent`, `ExecutionGroupSpec`가 이미 표현 가능한 속성은 어댑터로 재사용하고, 양쪽에 서로 다른 단일 권위를 만들지 않는다. 전략 파일 경제 결정은 `on_event` / `on_order_event`의 결과로 테스트할 수 있어야 하며 Venue ID나 비공개 키를 런타임 소스에 하드코딩하지 않는다.
 
+### STR-02 로컬 수락에서 확정한 실제 API (2026-10-28)
+
+- 실제 타입은 `execution.trading_contracts.StrategyActionPlan(plan_id, strategy_id, config_version, event_ts_ns, actions: tuple[ExecutionAction, ...])`이다. 위 의사 코드의 별도 `OrderAction`을 새 권위로 만들지 않고 기존 `ExecutionAction`/`OrderIntent`/`AccountScope`를 재사용한다.
+- 파일의 `ACTION_PROTOCOL_VERSION=1`과 실제 인스턴스의 동기 `on_order_event(event, context)`가 opt-in 계약이다. 결과는 기존 `list[Signal]` 또는 `StrategyActionPlan`이며 기존 `on_event(event, data)`는 보존한다. 이를 소비하지 못하는 구 Runner는 opt-in 파일을 시작 시 거절한다.
+- `StrategyOrderEvent`는 source/account/order/status/누적·잔여·개별 fill·fee 사실을 담는다. 원본 시각/수수료가 없으면 null과 명시 provenance를 유지한다. `StrategyOrderContext(data, execution, now_ns, cursor, quality)`는 재귀적으로 불변·유계이며 현재 사실과 이벤트 당시 사실, 물리 계좌/전략 가상 귀속을 구분한다.
+- PAPER의 opt-in 피드백은 기존 portfolio receipts와 runtime checkpoint를 사용한다. KIS는 기존 ETF journal의 유계 피드백 표와 확인 취소 marker를 사용하며 원래 C3/KP/KD 모듈로 순서대로 귀환한다. durable fact/claim 이후 콜백, 계좌 UNKNOWN 신규 위험 차단, 현재 잔여 수량 검증을 강제한다.
+- PAPER ETF 잔여 시장가 결정은 원래 파일의 정상 `on_event` cadence에서 유지하고, KIS 확인 취소 후속 주문도 원 전략 helper가 결정한다. 공통 Core/journal은 5초·가격·수량 정책을 소유하지 않는다. 계좌 config 수수료 정책을 보존하며 증권사 수수료 수신 작업은 포함하지 않는다.
+- STR-02의 로컬 수락은 공통 Production Owner/활성화를 수락하지 않는다. EXEC-01 및 후속 gate가 계속 적용된다. 실제 검증/receipt는 `05_TASK_STATUS.json`의 STR-02 항목과 `docs/tickets/STR-02-acceptance.md`를 따른다.
+
 ### C. 결정을 돌려주는 이벤트와 주문 루프
 
 1. Shared MarketState가 causal snapshot / per-venue BBO/Trade/ETF bar를 하나의 bounded async fanout으로 전달한다.

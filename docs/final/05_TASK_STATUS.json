@@ -38,15 +38,15 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 17,
-    "in_progress": 1,
+    "accepted": 18,
+    "in_progress": 0,
     "blocked": 0,
     "not_started": 15,
     "external_not_authorized": 2
   },
   "next_ready_candidate": [
-    "CAP-03",
-    "CLN-02"
+    "CLN-02",
+    "CAP-03"
   ],
   "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
   "gate_results": {
@@ -425,7 +425,7 @@
     "missing_required_local_code_blocks_feature_release": true
   },
   "active_task_id": null,
-  "last_accepted_task_id": "CAP-02",
+  "last_accepted_task_id": "STR-02",
   "stop_requested": false,
   "tickets": [
     {
@@ -1563,7 +1563,7 @@
     {
       "task_id": "STR-02",
       "wave": "W3",
-      "status": "IN_PROGRESS",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "STR-01",
         "MOV-05",
@@ -1572,10 +1572,10 @@
       "risk_review": "HIGH",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": "a0de9111cf4f765019a5fe894fa17ebdba7fab36",
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "base_sha": "52ade034c3c3b2a234743911ea3a021e1b714411",
+      "actual_commit_sha": "f9e830c67330de171647f746d4a25a4e8f70fd22",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/STR-02-resume-20261028/STR02.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "STR-02",
@@ -1605,6 +1605,14 @@
           "model": "opencode/deepseek-v4.1-flash-free",
           "state": "WRAPPER_EXIT1_FILESYSTEM_IO",
           "applied": false
+        },
+        {
+          "phase": "A+B+C+independent-adverse",
+          "model": "gpt-6-luna",
+          "state": "FINISHED",
+          "reason": "User-authorized native fallback after prior external allowance exhaustion",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/STR-02-resume-20261028",
+          "lead_independent_acceptance": "PASS"
         }
       ],
       "historical_blocking_reasons": [
@@ -1623,9 +1631,39 @@
         "focused_tests_passed": 114,
         "test_exit": 0,
         "docker_required": false,
-        "packet_refresh_required": true,
+        "packet_refresh_required": false,
         "receipt": "/home/pjh/.local/state/codex-opencode/runs/STR-02-readiness-20261028/STR02-readiness.json",
         "implementation_started": false
+      },
+      "resume_execution": {
+        "date": "2026-10-28",
+        "model": "gpt-6-luna",
+        "reason": "User-authorized fallback after prior STR02 initial plus two resume delegations failed without adopted source; snapshots inspected unchanged.",
+        "artifacts": "/home/pjh/.local/state/codex-opencode/runs/STR-02-resume-20261028",
+        "phases": [
+          "contracts/ledger",
+          "generic PAPER callbacks",
+          "original KIS source callbacks"
+        ],
+        "acceptance": "PASS",
+        "implementation_finished": true
+      },
+      "receipt_sha256": "b372c7dfa455085a31ac06b5e4320c11255baf16e4c3b8b89819092715e6e932",
+      "selected_worker_model": "gpt-6-luna",
+      "public_acceptance": "docs/tickets/STR-02-acceptance.md",
+      "acceptance_scope": "Full local strategy action/feedback contract, generic PAPER plus original C3/KP/KD KIS Mock/Mock2 callbacks; production activation remains separate",
+      "independent_verification_progress": {
+        "state": "PASS",
+        "full_passed": 2756,
+        "leases_passed": 25,
+        "focused_passed": 49,
+        "all_test_exits": 0,
+        "wheel_build_exit": 0,
+        "wheel_import_exit": 0,
+        "source_bytes_equal": 148,
+        "old_test_files_preserved": 172,
+        "status_docs_passed": 78,
+        "status_docs_exit": 0
       }
     },
     {
@@ -2102,6 +2140,12 @@
       "date": "2026-10-28",
       "reason": "User-requested STR02 readiness-only check: all3 prerequisites accepted, Linux/Windows filesystem fsync and64 process spawns pass, credential-free focused114 tests exit0. Old environment blocker resolved; implementation not started. Docker WSL integration unavailable but not a STR02 local prerequisite.",
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/STR-02-readiness-20261028/STR02-readiness.json"
+    },
+    {
+      "date": "2026-10-28",
+      "reason": "STR02 full local action-feedback accepted:2756 Linux+25leases+49focused;148 wheel source byte equality,172 original test files preserved. Original ETF source economics/cadence preserved; account-config fee policy unchanged, no broker-fee reception.",
+      "actual_commit_sha": "f9e830c67330de171647f746d4a25a4e8f70fd22",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/STR-02-resume-20261028/STR02.acceptance.json"
     }
   ],
   "requirements_revision": {
@@ -2164,15 +2208,14 @@
       "selected": "opencode/deepseek-v4.1-flash-free"
     },
     "last_worker_result": {
-      "task_id": "CAP-02",
-      "amendment": "CAP02-ACCOUNT-FEE-CONFIG",
+      "task_id": "STR-02",
       "model": "gpt-6-luna",
-      "reason": "Authorized fallback after same-ticket external allowance exhausted",
-      "independent_final_tests": 2707,
+      "reason": "Previously authorized per-ticket allowance exhaustion fallback; no silent provider/model switch",
+      "independent_final_tests": 2756,
       "independent_leases": 25,
-      "independent_focused": 100,
+      "independent_focused": 49,
       "independent_test_exit": 0,
-      "receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-fee-config-20261028/CAP02-fee-config.acceptance.json"
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/STR-02-resume-20261028/STR02.acceptance.json"
     },
     "current_batch_alternatives": {
       "gemini_minimax_kimi_requested": true,
@@ -2187,6 +2230,15 @@
       "trigger": "OpenCode/FreeLLMAPI unavailable OR per-ticket delegation allowance exhausted",
       "lead_model_unchanged": true,
       "date": "2026-10-27"
+    },
+    "latest_user_preference": {
+      "date": "2026-10-28",
+      "instruction": "Prefer other available OpenCode/FreeLLMAPI models; use gpt-6-luna when both routes cannot be used.",
+      "exact_ids_required": true,
+      "catalog_is_not_quota_evidence": true,
+      "existing_per_ticket_limits_and_partial_work_review_preserved": true,
+      "lead_model_unchanged": true,
+      "new_paid_routes_authorized": false
     }
   },
   "execution_checkout": {
@@ -2198,18 +2250,16 @@
   "active_batch": {
     "requested_tasks": 1,
     "tasks": [
-      "CAP-02"
+      "STR-02"
     ],
-    "amendment": "CAP02-ACCOUNT-FEE-CONFIG",
     "accepted": [
-      "CAP-02"
+      "STR-02"
     ],
     "status": "COMPLETE",
-    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-fee-config-20261028",
+    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/STR-02-resume-20261028",
     "target_os": "Ubuntu Linux",
-    "str02_preserved": true,
     "completion_receipts": [
-      "/home/pjh/.local/state/codex-opencode/runs/CAP-02-fee-config-20261028/CAP02-fee-config.acceptance.json"
+      "/home/pjh/.local/state/codex-opencode/runs/STR-02-resume-20261028/STR02.acceptance.json"
     ]
   },
   "completed_batches": [
@@ -2301,6 +2351,23 @@
         "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/FEED01.acceptance.json",
         "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/VEN01.acceptance.json",
         "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/CAP01.acceptance.json"
+      ]
+    },
+    {
+      "requested_tasks": 1,
+      "tasks": [
+        "CAP-02"
+      ],
+      "amendment": "CAP02-ACCOUNT-FEE-CONFIG",
+      "accepted": [
+        "CAP-02"
+      ],
+      "status": "COMPLETE",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-fee-config-20261028",
+      "target_os": "Ubuntu Linux",
+      "str02_preserved": true,
+      "completion_receipts": [
+        "/home/pjh/.local/state/codex-opencode/runs/CAP-02-fee-config-20261028/CAP02-fee-config.acceptance.json"
       ]
     }
   ]
