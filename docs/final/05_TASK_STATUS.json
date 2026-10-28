@@ -1172,8 +1172,8 @@
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
       "base_sha": "514f9c1f1b7ebb94ced4310bbcecedb1f6a22e01",
-      "actual_commit_sha": "f4f7c51c91c421cab613d20e5df2bcefd5a4da29",
-      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/CAP02.acceptance.json",
+      "actual_commit_sha": "2e642aa1fe06398e308d922ae04ec8c83217f3a2",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-fee-config-20261028/CAP02-fee-config.acceptance.json",
       "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
@@ -1185,7 +1185,7 @@
           "details": "Original broker auth/cache helpers remain unchanged. Private session/auth refresh, vendor aggregate fill identity/quantity and durable reconciliation remain this ticket; CAP01 raw facts are not normalized perfill events."
         }
       ],
-      "bounded_packet": "docs/tickets/CAP-02-reconciliation.md",
+      "bounded_packet": "docs/tickets/CAP-02-account-fee-config.md",
       "worker_attempts": [
         {
           "model": "freellmapi/glm-4.5-flash",
@@ -1258,18 +1258,40 @@
       ],
       "independent_verification_progress": {
         "state": "PASS",
-        "full_passed": 2688,
+        "full_passed": 2707,
         "leases_passed": 25,
-        "focused_passed": 136,
+        "focused_passed": 100,
         "all_test_exits": 0,
         "wheel_build_exit": 0,
         "wheel_import_exit": 0,
-        "source_bytes_equal": 145,
+        "source_bytes_equal": 146,
         "status_docs_passed": 78
       },
-      "receipt_sha256": "a042c3c27a67a30f35124833cfeaa25caa0d8ae527c4e6b296517cd0c8b5063f",
-      "public_acceptance": "docs/tickets/CAP-02-acceptance.md",
-      "acceptance_scope": "Ubuntu credential-free bounded private/poll recovery and durable PAPER projection; no native production activation"
+      "receipt_sha256": "27879bd4080c837db8dbb4857ed5d5750b233c839601d26d7815af4ef46fd01c",
+      "public_acceptance": "docs/tickets/CAP-02-account-fee-config-acceptance.md",
+      "acceptance_scope": "Original native order/fill recovery plus human-authorized configured account cost amendment; no broker fee reception or server activation",
+      "acceptance_history": [
+        {
+          "status": "ACCEPTED_LOCAL",
+          "actual_commit_sha": "f4f7c51c91c421cab613d20e5df2bcefd5a4da29",
+          "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/CAP02.acceptance.json",
+          "receipt_sha256": "a042c3c27a67a30f35124833cfeaa25caa0d8ae527c4e6b296517cd0c8b5063f",
+          "test_exit": 0
+        }
+      ],
+      "amendment": {
+        "id": "CAP02-ACCOUNT-FEE-CONFIG",
+        "status": "ACCEPTED_LOCAL",
+        "base_sha": "c5d51f79c2f9dc046ce6abd55daf408dbd32bedc",
+        "user_authority_date": "2026-10-28",
+        "policy": "User account config rate for preflight/PAPER/strategy P&L. No broker fee receipt/subscription/query/reconciliation work.",
+        "worker_model": "gpt-6-luna",
+        "worker_route": "same-ticket external allowance exhausted; authorized native fallback",
+        "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-fee-config-20261028",
+        "source_commit": "2e642aa1fe06398e308d922ae04ec8c83217f3a2",
+        "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-fee-config-20261028/CAP02-fee-config.acceptance.json",
+        "test_exit": 0
+      }
     },
     {
       "task_id": "CAP-03",
@@ -1299,7 +1321,11 @@
         {
           "id": "CAP02-KIWOOM-UNKNOWN-COST-AND-NATIVE-PERMISSIONS",
           "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/CAP02.acceptance.json",
-          "details": "Kiwoom kt00009 native execution IDs/quantities and kt00007 cancellation proof are implemented, but per-execution fee is absent. fee=None/known=false stays unknown; labeled provisional PAPER fee zero never clears @private. CAP-03 cost attribution remains PAPER projection freshness only. Native account identity/permissions, private WS wire auth and production activation remain EXTERNAL_ONLY and EXEC-01/CAP-03"
+          "details": "Fee dependency resolved by user-owned ACCOUNT_CONFIG model cost policy. No broker fee reception/subscription/query/reconciliation work. Native production permissions/margin/owner boundaries remain CAP03/EXEC01.",
+          "superseded_fee_requirement": "2026-10-28 human directive: configured account rate, no broker fee reception or reconciliation; native permission boundaries remain unchanged.",
+          "historical_details": "Kiwoom kt00009 native execution IDs/quantities and kt00007 cancellation proof are implemented, but per-execution fee is absent. fee=None/known=false stays unknown; labeled provisional PAPER fee zero never clears @private. CAP-03 cost attribution remains PAPER projection freshness only. Native account identity/permissions, private WS wire auth and production activation remain EXTERNAL_ONLY and EXEC-01/CAP-03",
+          "fee_status": "RESOLVED_CONFIG_POLICY",
+          "amended_receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-fee-config-20261028/CAP02-fee-config.acceptance.json"
         }
       ]
     },
@@ -2043,6 +2069,16 @@
       "reason": "CAP-02 accepted after2688 Linux+25 final lease+136 focused tests; native adapter/real PAPER ledger restart recovery and145 wheel source equality. Original schema/math/protected tests preserved. No native account or server activation.",
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/CAP02.acceptance.json",
       "actual_commit_sha": "f4f7c51c91c421cab613d20e5df2bcefd5a4da29"
+    },
+    {
+      "date": "2026-10-28",
+      "reason": "Human supersedes Kiwoom broker-fee dependency: explicit account config rates for reservation/PAPER/strategy P&L, no broker fee reception/reconciliation. CAP02 bounded amendment in progress; original acceptance receipt preserved."
+    },
+    {
+      "date": "2026-10-28",
+      "reason": "CAP02 account-config fee amendment accepted:2707 Linux+25leases+100focused,146 wheel source equality. Human account rates drive reserve/PAPER/strategy P&L; broker-fee reception/reconciliation excluded. Original acceptance preserved.",
+      "actual_commit_sha": "2e642aa1fe06398e308d922ae04ec8c83217f3a2",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-fee-config-20261028/CAP02-fee-config.acceptance.json"
     }
   ],
   "requirements_revision": {
@@ -2106,13 +2142,14 @@
     },
     "last_worker_result": {
       "task_id": "CAP-02",
+      "amendment": "CAP02-ACCOUNT-FEE-CONFIG",
       "model": "gpt-6-luna",
-      "route": "Native child agents in isolated component clones",
-      "independent_final_tests": 2688,
+      "reason": "Authorized fallback after same-ticket external allowance exhausted",
+      "independent_final_tests": 2707,
       "independent_leases": 25,
-      "independent_focused": 136,
+      "independent_focused": 100,
       "independent_test_exit": 0,
-      "receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/CAP02.acceptance.json"
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-fee-config-20261028/CAP02-fee-config.acceptance.json"
     },
     "current_batch_alternatives": {
       "gemini_minimax_kimi_requested": true,
@@ -2140,15 +2177,16 @@
     "tasks": [
       "CAP-02"
     ],
+    "amendment": "CAP02-ACCOUNT-FEE-CONFIG",
     "accepted": [
       "CAP-02"
     ],
     "status": "COMPLETE",
-    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028",
+    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-fee-config-20261028",
     "target_os": "Ubuntu Linux",
     "str02_preserved": true,
     "completion_receipts": [
-      "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/CAP02.acceptance.json"
+      "/home/pjh/.local/state/codex-opencode/runs/CAP-02-fee-config-20261028/CAP02-fee-config.acceptance.json"
     ]
   },
   "completed_batches": [

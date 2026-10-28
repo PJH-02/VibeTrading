@@ -44,3 +44,6 @@ GLM4.5 returned relay HTTP502; direct OpenCode DeepSeek timed out124; Gemini fai
 Actual external account calls/orders/cancels:0. Server changes/push/deploy:0. STR-02 state and four pre-existing packets are preserved. CAP-03 and CLN-02 are ready; this receipt does not accept their work.
 
 API evidence: [Kiwoom executions](https://openapi.kiwoom.com/m/guide/apiguide/08/kt00009), [Kiwoom order/cancel facts](https://openapi.kiwoom.com/m/guide/apiguide/08/kt00007), [Binance Spot account trades](https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/account), [Hyperliquid order status](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/info-endpoint). Frozen evidence hashes and selected field contracts are in `CAP-02-api-evidence.json`.
+
+
+User-directed amendment2026-10-28: the original Kiwoom broker-fee dependency above is superseded by explicit account-config model costs. No broker fee receiver/reconciliation is required or implemented. See [account-config fee acceptance](CAP-02-account-fee-config-acceptance.md). Original receipt/hash remains historical evidence.

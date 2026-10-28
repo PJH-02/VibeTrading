@@ -391,6 +391,13 @@ Validate mode/capability/identity/feed/time/risk/nonce
 - Real and Paper ledger are separate. Linear cashflow is different from inverse or Unified Portfolio Margin. If no precise mode-specific exchange formula available, reject unsupported mode rather than extrapolate.
 - Long/Short sign, entry/exit fee, maker/taker, realized/mark-to-market, trade settlement funding payments, commission currency, margin reserve and available collateral, partial fill and reduce-only *must* be accounted in selected products. Paper mark/FX absent => PnL `UNAVAILABLE`, not zeros silently.
 - Unreconciled account or inconsistent `marginBalance/withdrawable` => fail closed for new orders. Funding history pagination incomplete => known missing range; do not label all settled funding.
+### ARCH-FEE-CONFIG. 사용자 설정 계좌 수수료 (2026-10-28)
+
+- 선택 Kiwoom Cash 경로의 수수료 비용 권위는 사용자 지정 계좌 config다. 같은 설정을 주문 전 비용 예약, PAPER 체결 비용, 전략별 비용·순손익 귀속에 사용한다. 계산 기준은 실제 체결 수량·가격·계약 승수와 설정 요율이며 `ACCOUNT_CONFIG` 근거를 보존한다. 증권사 실제 청구액이라고 표시하지 않는다.
+- 증권사 수수료 수신·구독·추가 API 조회·대조/정정은 구현 범위에서 제외한다. 명시한 수수료 config가 유효한 경우 증권사 수수료 필드가 없다는 이유로 거래를 막지 않는다. 계좌/환경 경계, 중복·늦은 체결, 실제 주문/포지션 대조 및 재시작 안전은 그대로 적용한다.
+- 설정 요율은 소수 비율 Decimal 문자열이며 기본 실제 요율은 없다. 사용자 입력 전 예시를 실제 계좌 설정으로 자동 활성화하지 않는다. Config는 주문의 불변 비용 규칙에 결합되어야 하며, 다른 계좌/환경·재시작 때 이미 반영한 수수료를 조용히 변경하거나 이중 차감하지 않는다.
+- 이 범위 결정은 다른 거래소의 기존 fee/funding 사실 파서·회귀 동작을 변경하라는 지시가 아니다. 기존 역사 기록은 보존하며 후속 요구의 증권사 보고액 의존만 제거한다.
+
 ### ARCH-CROSS. 필수 Cross-Venue 그룹 실행 계약
 
 - **독립 전략 호출**: `strategies/contract.py`를 사용하는 전략 파일의 단일 인과적 신호/명시 Group Intent가 서로 다른 Venue A의 BUY와 Venue B의 SELL 두 Leg를 만든다(역방향도 허용). `group_id/strategy_id/config_hash/source_available_at/deadline`와 각 Leg의 `venue/product/account/symbol/side/quantity/price/TIF/reduce_only/client_id`는 영속 식별 가능해야 한다.

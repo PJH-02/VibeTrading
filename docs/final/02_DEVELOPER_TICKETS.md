@@ -437,6 +437,13 @@ StrategyFile.on_event/on_order_event → Explicit ActionPlan
 - 환경별 Broker가 authoritative fill history를 노출하지 않거나 실제 계좌 주문 조회가 불가능하면 로컬 `UNSUPPORTED/BLOCKED_API_SPEC_REQUIRED`로 기록; **모든 주문 조회를 `FILLED`로 간주하거나 종가·현재 잔고 차이로 fill을 추정하지 말 것**. 이 티켓은 전략의 매매 정책 및 대체 주문을 생성하지 않는다.
 - Credential-free fixture: NEW Ack → partial 2/5 → cancel acknowledged → late fill 1/5 → remaining cancellation confirmed; restart 시 cumulative fill=3/5 exactly once. Timed out status → UNKNOWN; no new risk until successful query/reconcile. 기존 KIS Mock2/Perp reconciliation 케이스 회귀 유지.
 
+**사용자 확정 수수료 정책 (2026-10-28, 기존 보고액 의존 후속 과제보다 우선)**
+
+- Kiwoom Cash 계좌의 수수료율은 사용자가 계좌별 config에 나중에 명시한다. 설정한 요율을 주문 전 자금 예약, PAPER 체결 비용, 전략별 손익 귀속의 비용 기준으로 사용한다. 임의 실제 요율·기본0·자동 요율 조회는 추가하지 않는다.
+- 증권사 수수료 보고액 수신·구독·추가 조회·보고액 대조/정정 작업은 수행하지 않는다. 수수료 필드 미수신 자체를 신규 위험 차단 사유로 삼지 않는다. 주문·체결·잔고·누락 복구 안전 검증은 유지한다.
+- Config 비용은 `ACCOUNT_CONFIG` 근거와 정확한 계좌/상품/환경·요율을 주문의 불변 ProductSpec에 묶는다. 미설정·잘못된 설정은 명확한 config 오류이며 증권사 데이터 부족으로 표현하지 않는다. 기존 미가격화 영속 체결을 소급 변경하거나 기존 receipt를 다시 부과하지 않는다.
+- 구현/검증 패킷: `docs/tickets/CAP-02-account-fee-config.md`. 현재 Kiwoom 수수료 보고액 연결을 요구했던 CAP02 후속 설명은 이 결정으로 대체한다. CAP03 전체 계좌·마진 작업은 별도 티켓으로 남는다.
+
 ### CAP-03 — Perp Cashflow, Product Constraints, Same-account Live Ownership
 
 - **선행**: CAP-00, CAP-01, CAP-02. **담당**: DeepSeek/GLM implement + Codex critical review. **읽기**: existing `portfolio_ledger.py`, `perp_execution.py` metadata, `execution_owner.py`, `execution_groups.py`, `etf_journal.py`. **쓰기**: 선택된 제품 범위만, existing ledger/owner methods.
