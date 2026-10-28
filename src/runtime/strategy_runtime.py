@@ -20,6 +20,7 @@ import json
 import math
 import stat
 import time
+import uuid
 from pathlib import Path
 from types import MappingProxyType
 from typing import Any, Callable, Mapping
@@ -29,7 +30,8 @@ from market.hot_path import ApplyResult, DecisionSnapshot, HotPathStore, Strateg
 from core.models import AssetClass, BaseMarketEvent, EventType, OrderBookEvent, Signal, TradeEvent, Venue, event_from_dict, stable_hash
 from execution.paper_execution import PaperExecution
 from strategies import StrategyModule, compile_subscriptions, compile_warmup, load_strategy
-from strategies.contract import action_protocol_version, validate_action_protocol
+from strategies.contract import load_strategy_manifest
+from strategies.contract import action_protocol_version, source_has_order_feedback, validate_action_protocol
 from execution.trading_contracts import (ActionKind, ExecutionAction, ProductSpec, TradingMode,
     StrategyActionPlan, StrategyOrderContext, StrategyOrderEvent, bounded_identity)
 
@@ -106,6 +108,16 @@ class _Job:
     restart_blocked: bool = False
     permission_blocked: bool = False
     feedback_cursors: dict[str, int] | None = None
+    worker: Any = None
+    isolated_plugin_class: str | None = None
+    isolated_checkpoint_state: Any = None
+    isolated_checkpoint_sha256: str | None = None
+    isolated_restore_prepared: tuple | None = None
+    isolated_pending: dict[str, Any] | None = None
+    isolated_generation: int = 0
+    isolated_initialized: bool = False
+    isolated_init_request: dict[str, Any] | None = None
+    isolated_restart_requested: bool = False
 
 
 class PaperStrategyRuntime:
@@ -114,7 +126,8 @@ class PaperStrategyRuntime:
                  reference_feeds: Mapping[str, str],
                  budgets: RuntimeBudgets, settings: Mapping[str, Any], mode: TradingMode,
                  phase: str, now_ns: Callable[[], int],
-                 callback_clock_ns: Callable[[], int] = time.perf_counter_ns):
+                 callback_clock_ns: Callable[[], int] = time.perf_counter_ns,
+                 isolation: Any = None):
         if TradingMode(mode) != TradingMode.PAPER:
             raise ValueError("Sandbox/live strategy execution is capability BLOCKED")
         if phase not in {"paper", "replay"}:
@@ -170,6 +183,17 @@ class PaperStrategyRuntime:
         self.reference_feeds = MappingProxyType(dict(reference_feeds))
         self.settings, self.phase = _freeze(settings), phase
         self.now_ns, self.callback_clock_ns = now_ns, callback_clock_ns
+        if isolation is not None:
+            from .strategy_process import StrategyIsolation
+            if not isinstance(isolation, StrategyIsolation):
+                raise TypeError("isolation must be an explicit StrategyIsolation configuration")
+        self.isolation = isolation
+        self._isolation_pool_cache = None
+        self._parent_incarnation = uuid.uuid4().hex
+        self._isolation_report = {"active": isolation is not None,
+            "mode": (("confined_process" if isolation.require_bubblewrap else "trusted_process_only")
+                     if isolation is not None else "cooperative"),
+            "security_sandbox": False}
         self._jobs: dict[str, _Job] = {}
         self._seen_actions: dict[str, str] = {}
         self._account_faults: dict[str, str] = {}
@@ -254,6 +278,74 @@ class PaperStrategyRuntime:
         return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str,
                           allow_nan=False, ensure_ascii=False)
 
+    def _isolation_pool(self):
+        if self.isolation is None:
+            return None
+        if self._isolation_pool_cache is None:
+            from .strategy_process import StrategyProcessPool
+            self._isolation_pool_cache = StrategyProcessPool(self.isolation,
+                parent_incarnation=self._parent_incarnation, now_ns=self.now_ns)
+        return self._isolation_pool_cache
+
+    async def _await_worker(self, worker, request, timeout_ns=None):
+        """Control-plane worker handshake without blocking the parent loop."""
+        return await worker.await_response(request, timeout_ns=timeout_ns)
+
+    def _start_isolated_job(self, registration):
+        from .strategy_process import IsolatedStrategyWorker
+        sid = registration.module.strategy_id
+        module = registration.module.module
+        module_name = getattr(module, "__name__", None)
+        module_path = getattr(module, "__file__", None)
+        if not module_name and not module_path:
+            raise ValueError("isolated registration requires an importable module or explicit source file")
+        source_sha256 = None
+        if module_path:
+            source_path = Path(module_path).resolve(strict=True)
+            if self.isolation.allowed_source_roots and not any(
+                    source_path == Path(root).resolve() or
+                    Path(root).resolve() in source_path.parents
+                    for root in self.isolation.allowed_source_roots):
+                raise ValueError("isolated strategy source is outside explicit source roots")
+            source_sha256 = hashlib.sha256(source_path.read_bytes()).hexdigest()
+            declared_sha = getattr(module, "__cap04_source_sha256__", None)
+            if declared_sha != source_sha256:
+                raise ValueError("isolated strategy source changed after static manifest read")
+        protocol = action_protocol_version(module)
+        feedback = protocol == 1 and source_has_order_feedback(module_path)
+        if protocol == 1 and not feedback:
+            raise TypeError("ACTION_PROTOCOL_VERSION=1 requires a declared on_order_event method")
+        worker = IsolatedStrategyWorker(
+            strategy_id=sid, module_name=module_name, module_path=module_path,
+            config=dict(registration.config),
+            registration_facts=self._registration_facts(registration),
+            expected={"strategy_id": sid, "job_id": registration.job_id,
+                      "config_version": registration.config_version,
+                      "source_sha256": source_sha256,
+                      "subscriptions": registration.module.subscriptions,
+                      "warmup": registration.module.warmup,
+                      "action_protocol_version": protocol,
+                      "has_feedback": feedback},
+            isolation=self.isolation, parent_incarnation=self._parent_incarnation,
+            now_ns=self.now_ns)
+        pool = self._isolation_pool()
+        pool.add(worker)
+        try:
+            request = worker.start()
+            return worker, None, feedback, request
+        except BaseException:
+            pool.remove(sid)
+            raise
+
+    def _isolated_has_capacity(self):
+        pool = self._isolation_pool()
+        if pool is None:
+            raise RuntimeError("hard isolation is not configured")
+        if len(pool.workers) >= self.isolation.budgets.max_processes:
+            raise ValueError("isolated process capacity exceeded")
+        if pool.total_rss_bytes() > self.isolation.budgets.max_total_rss_bytes:
+            raise ValueError("isolated process RSS capacity exceeded")
+
     def register(self, registration: StrategyRegistration):
         sid = bounded_identity(registration.module.strategy_id, "strategy id")
         for name in ("job_id", "strategy_version", "config_version"):
@@ -289,6 +381,9 @@ class PaperStrategyRuntime:
                  "reference_feeds": dict(self.reference_feeds),
                  "risk": {key: vars(value) for key, value in registration.risk.items()},
                  "paper_permission": registration.paper_permission}
+        if self.isolation is not None:
+            proof["source_sha256"] = getattr(registration.module.module,
+                                               "__cap04_source_sha256__", None)
         text = self._document(proof)
         if len(text.encode()) > self.budgets.max_config_bytes:
             raise ValueError("Strategy registration document capacity exceeded")
@@ -312,13 +407,23 @@ class PaperStrategyRuntime:
                         or candidate.account_capital_limit != current.account_capital_limit):
                     raise ValueError("Shared account risk limits differ from existing registrations")
         restart_blocked = False
-        # An optional startup-only hook may load/validate native history before
-        # any durable registration claim or callback can expose risk. Legacy
-        # plugins without the hook are unchanged.
-        instance = registration.module.create()
-        feedback_enabled = validate_action_protocol(registration.module.module, instance)
-        self._configure_instance(instance, registration.config)
-        self._validate_instance_registration(instance, self._registration_facts(registration))
+        worker = plugin_class = init_request = None
+        if self.isolation is None:
+            # An optional startup-only hook may load/validate native history
+            # before any durable registration claim or callback can expose risk.
+            # Legacy plugins without the hook are unchanged.
+            instance = registration.module.create()
+            feedback_enabled = validate_action_protocol(registration.module.module, instance)
+            self._configure_instance(instance, registration.config)
+            self._validate_instance_registration(instance, self._registration_facts(registration))
+        else:
+            # Hard mode never calls create/configure/validate_registration in the
+            # parent. A child is started and must return its own typed identity.
+            if getattr(registration.module.module, "__cap04_static_manifest__", False) is not True:
+                raise ValueError("isolated registration requires a static source manifest, not an imported plugin")
+            self._isolated_has_capacity()
+            worker, plugin_class, feedback_enabled, init_request = self._start_isolated_job(registration)
+            instance = None
         if self.phase != "replay":
             # Any prior dispatch evidence in any bound account means a fresh
             # plugin instance cannot prove it restored that strategy's state.
@@ -333,7 +438,12 @@ class PaperStrategyRuntime:
             if self.phase != "replay":
                 for account in registration.accounts:
                     self.accounts[account].ledger.enable_order_feedback(sid)
-        job = _Job(registration, instance, subscriptions, _freeze(registration.config), fingerprint)
+        job = _Job(registration, instance, subscriptions, _freeze(registration.config), fingerprint,
+                   worker=worker, isolated_plugin_class=plugin_class,
+                   isolated_pending=({init_request["request_id"]: {
+                       "kind": "init", "generation": 0, "request": init_request}}
+                       if worker is not None else None),
+                   isolated_init_request=init_request)
         if feedback_enabled:
             job.feedback_cursors = {account: 0 for account in registration.accounts}
         # Durable dispatch evidence is a property of the ledger, not of the
@@ -552,7 +662,8 @@ class PaperStrategyRuntime:
             except (ArithmeticError, TypeError, ValueError) as exc:
                 raise ValueError("Strategy risk values must be explicit finite decimals") from exc
         self._validate_data_manifest(receipt)
-        module = load_strategy(module_name)
+        module = (load_strategy_manifest(module_name, self.isolation.allowed_source_roots)
+                  if self.isolation is not None else load_strategy(module_name))
         return self.register(StrategyRegistration(
             job_id=document["job_id"], module=module,
             strategy_version=document["strategy_version"],
@@ -623,6 +734,10 @@ class PaperStrategyRuntime:
     def _checkpoint_capture_guard(self, engine):
         if self._processing or self._pending:
             raise ValueError("Paper checkpoint capture requires no callback/pending action")
+        if self.isolation is not None and any(
+                job.worker is not None and (job.worker.queued or job.isolated_pending)
+                for job in self._jobs.values()):
+            raise ValueError("Paper checkpoint capture requires quiescent isolated callbacks")
         if self._recovery_state in {"RECOVERING", "QUARANTINED"}:
             raise ValueError("Paper checkpoint capture requires an idle/ready recovery gate")
         hot = engine.hot_path
@@ -662,15 +777,20 @@ class PaperStrategyRuntime:
             return result
         raise ValueError("plugin checkpoint state must contain only dict/list/scalars")
 
-    def _plugin_state(self, instance, limit):
-        hook = getattr(instance, "checkpoint_state", None)
-        if not callable(hook) or inspect.iscoroutinefunction(hook):
-            raise ValueError("strategy plugin requires a synchronous checkpoint_state hook")
-        value = hook()
-        if inspect.isawaitable(value):
-            if inspect.iscoroutine(value):
-                value.close()
-            raise ValueError("strategy checkpoint_state must be synchronous")
+    def _plugin_state(self, job, limit):
+        if job.worker is not None:
+            if job.isolated_checkpoint_state is None:
+                raise ValueError("isolated plugin state requires an awaited child checkpoint")
+            value = job.isolated_checkpoint_state
+        else:
+            hook = getattr(job.instance, "checkpoint_state", None)
+            if not callable(hook) or inspect.iscoroutinefunction(hook):
+                raise ValueError("strategy plugin requires a synchronous checkpoint_state hook")
+            value = hook()
+            if inspect.isawaitable(value):
+                if inspect.iscoroutine(value):
+                    value.close()
+                raise ValueError("strategy checkpoint_state must be synchronous")
         detached = self._json_state(value, limit)
         encoded = self._document(detached).encode()
         if len(encoded) > limit:
@@ -713,9 +833,11 @@ class PaperStrategyRuntime:
         return proof, hashlib.sha256(self._document(proof).encode()).hexdigest()
 
     def _job_state_document(self, sid, job, max_bytes):
-        plugin_state, plugin_sha = self._plugin_state(job.instance, max_bytes)
+        plugin_state, plugin_sha = self._plugin_state(job, max_bytes)
+        plugin_class = (job.isolated_plugin_class if job.worker is not None else
+                        type(job.instance).__module__ + "." + type(job.instance).__qualname__)
         return {"strategy_id": sid, "job_id": job.registration.job_id,
-            "plugin_class": type(job.instance).__module__ + "." + type(job.instance).__qualname__,
+            "plugin_class": plugin_class,
             "strategy_version": job.registration.strategy_version,
             "config_version": job.registration.config_version,
             "fingerprint": job.fingerprint, "plugin_sha256": plugin_sha,
@@ -739,6 +861,10 @@ class PaperStrategyRuntime:
     def capture_runtime_state(self, *, max_bytes):
         if self._processing or self._pending:
             raise ValueError("Paper checkpoint capture requires no callback/pending action")
+        if self.isolation is not None and any(
+                job.worker is not None and (job.worker.queued or job.isolated_pending)
+                for job in self._jobs.values()):
+            raise ValueError("Paper checkpoint capture requires quiescent isolated callbacks")
         if self._recovery_state in {"RECOVERING", "QUARANTINED"}:
             raise ValueError("Paper checkpoint capture requires an idle/ready recovery gate")
         hot_before = self._checkpoint_captured_cursor
@@ -752,6 +878,105 @@ class PaperStrategyRuntime:
             self._checkpoint_captured_cursor = (self.hot_path.engine_incarnation,
                 self.hot_path.apply_seq, self.hot_path.clock_version)
         return deepcopy(state)
+
+    async def prepare_checkpoint_capture(self):
+        """Await bounded child checkpoints before the synchronous capture seam.
+
+        No untrusted plugin hook is called in the parent. Cooperative runtimes
+        return immediately and keep their existing synchronous behavior.
+        """
+        if self.isolation is None:
+            return None
+        if self._processing or self._pending:
+            raise ValueError("isolated checkpoint capture requires no callback/pending action")
+        for sid, job in self._jobs.items():
+            if job.worker is None:
+                continue
+            if not job.isolated_initialized:
+                request = job.isolated_init_request
+                if request is None:
+                    raise ValueError("isolated checkpoint capture requires child init proof")
+                payload = await self._await_worker(job.worker, request)
+                job.isolated_pending.pop(request["request_id"], None)
+                self._accept_isolated_init(job, payload)
+            if job.isolated_pending or job.worker.inflight:
+                raise ValueError("isolated checkpoint capture requires quiescent strategies")
+            if not job.worker.alive:
+                raise ValueError("isolated checkpoint capture requires a live child")
+            request = job.worker.submit_checkpoint()
+            payload = await self._await_worker(job.worker, request)
+            state = payload.get("state")
+            sha = payload.get("sha256")
+            detached = self._json_state(state, self.budgets.max_action_bytes * 16)
+            encoded = self._document(detached).encode()
+            if len(encoded) > self.isolation.budgets.max_state_bytes:
+                raise ValueError("isolated checkpoint state exceeds its byte bound")
+            if hashlib.sha256(encoded).hexdigest() != sha:
+                raise ValueError("isolated child checkpoint checksum mismatch")
+            job.isolated_checkpoint_state = detached
+            job.isolated_checkpoint_sha256 = sha
+        return None
+
+    async def prepare_checkpoint_restore(self, state):
+        """Restart children and verify their restored state before publication."""
+        if self.isolation is None:
+            return None
+        if self._processing or self._pending:
+            raise ValueError("isolated checkpoint restore requires no callback/pending action")
+        if type(state) is not dict or type(state.get("jobs")) is not list:
+            raise ValueError("isolated checkpoint restore state schema mismatch")
+        snapshots = {item.get("strategy_id"): item
+                     for item in state["jobs"] if type(item) is dict}
+        for sid, job in self._jobs.items():
+            if job.worker is None:
+                continue
+            if not job.isolated_initialized:
+                init_request = job.isolated_init_request
+                if init_request is None:
+                    raise ValueError("isolated restore requires child init proof")
+                init_payload = await self._await_worker(job.worker, init_request)
+                job.isolated_pending.pop(init_request["request_id"], None)
+                self._accept_isolated_init(job, init_payload)
+            snap = snapshots.get(sid)
+            if snap is None:
+                raise ValueError("isolated checkpoint job inventory differs from registration")
+            if (snap.get("job_id") != job.registration.job_id
+                    or snap.get("strategy_version") != job.registration.strategy_version
+                    or snap.get("config_version") != job.registration.config_version
+                    or snap.get("fingerprint") != job.fingerprint
+                    or snap.get("plugin_class") != job.isolated_plugin_class):
+                raise ValueError("isolated checkpoint job identity differs from registration")
+            plugin_state = self._json_state(snap.get("plugin_state"),
+                                            self.isolation.budgets.max_state_bytes)
+            plugin_sha = snap.get("plugin_sha256")
+            encoded = self._document(plugin_state).encode()
+            if hashlib.sha256(encoded).hexdigest() != plugin_sha:
+                raise ValueError("isolated checkpoint plugin checksum mismatch")
+            if len(encoded) > self.isolation.budgets.max_state_bytes:
+                raise ValueError("isolated checkpoint state exceeds its byte bound")
+            if job.isolated_pending:
+                raise ValueError("isolated checkpoint restore requires quiescent strategies")
+            job.isolated_generation += 1
+            request = job.worker.restart(epoch=job.isolated_generation)
+            job.isolated_pending = {}
+            try:
+                init_payload = await self._await_worker(job.worker, request)
+                self._accept_isolated_init(job, init_payload)
+                request = job.worker.submit_restore(state=plugin_state, sha256=plugin_sha)
+                restored = await self._await_worker(job.worker, request)
+            except BaseException:
+                job.worker.kill()
+                raise
+            if (restored.get("state") != plugin_state
+                    or restored.get("sha256") != plugin_sha):
+                job.worker.kill()
+                raise ValueError("isolated child restore roundtrip differs from checkpoint")
+            job.isolated_checkpoint_state = deepcopy(plugin_state)
+            job.isolated_checkpoint_sha256 = plugin_sha
+            job.isolated_restore_prepared = {
+                "plugin_class": job.isolated_plugin_class,
+                "state": deepcopy(plugin_state), "sha256": plugin_sha}
+        return None
 
     def restore_runtime_state(self, state, *, verify=None, max_bytes):
         if self._processing or self._pending:
@@ -786,22 +1011,46 @@ class PaperStrategyRuntime:
             plugin_state, plugin_sha = self._json_state(snap.get("plugin_state"), max_bytes), snap.get("plugin_sha256")
             if hashlib.sha256(self._document(plugin_state).encode()).hexdigest() != plugin_sha:
                 raise ValueError("Paper checkpoint plugin checksum mismatch")
-            instance = job.registration.module.create()
-            if (type(instance).__module__ + "." + type(instance).__qualname__) != snap.get("plugin_class"):
-                raise ValueError("Paper checkpoint plugin module/class identity differs")
-            # Native context/config is re-established before the plugin state
-            # and factual execution facts are restored.
-            self._configure_instance(instance, job.registration.config)
-            self._validate_instance_registration(instance, self._registration_facts(job.registration))
-            hook = getattr(instance, "restore_state", None)
-            if not callable(hook) or inspect.iscoroutinefunction(hook):
-                raise ValueError("strategy plugin requires a synchronous restore_state hook")
-            result = hook(deepcopy(plugin_state))
-            if inspect.isawaitable(result):
-                if inspect.iscoroutine(result):
-                    result.close()
-                raise ValueError("strategy restore_state must be synchronous")
-            check, check_sha = self._plugin_state(instance, max_bytes)
+            if job.worker is not None:
+                # The child restore is prepared by the async checkpoint seam.
+                # Never call create/configure/restore_state in the parent.
+                prepared = job.isolated_restore_prepared
+                if prepared is None:
+                    raise ValueError("isolated checkpoint restore requires awaited child preparation")
+                if (prepared.get("plugin_class") != snap.get("plugin_class")
+                        or prepared.get("state") != plugin_state
+                        or prepared.get("sha256") != plugin_sha):
+                    raise ValueError("isolated child restore identity differs from checkpoint")
+                job.isolated_checkpoint_state = deepcopy(plugin_state)
+                job.isolated_checkpoint_sha256 = plugin_sha
+                instance = None
+            else:
+                instance = job.registration.module.create()
+                if (type(instance).__module__ + "." + type(instance).__qualname__) != snap.get("plugin_class"):
+                    raise ValueError("Paper checkpoint plugin module/class identity differs")
+                # Native context/config is re-established before the plugin state
+                # and factual execution facts are restored.
+                self._configure_instance(instance, job.registration.config)
+                self._validate_instance_registration(instance, self._registration_facts(job.registration))
+                hook = getattr(instance, "restore_state", None)
+                if not callable(hook) or inspect.iscoroutinefunction(hook):
+                    raise ValueError("strategy plugin requires a synchronous restore_state hook")
+                result = hook(deepcopy(plugin_state))
+                if inspect.isawaitable(result):
+                    if inspect.iscoroutine(result):
+                        result.close()
+                    raise ValueError("strategy restore_state must be synchronous")
+            # Validate the staged instance itself. The prior implementation
+            # accidentally checkpointed job.instance (the old live object),
+            # which made an unrelated old state appear to prove restore.
+            if job.worker is not None:
+                check, check_sha = self._json_state(plugin_state, max_bytes), plugin_sha
+            else:
+                hook = getattr(instance, "checkpoint_state", None)
+                if not callable(hook) or inspect.iscoroutinefunction(hook):
+                    raise ValueError("strategy plugin requires a synchronous checkpoint_state hook")
+                check = self._json_state(hook(), max_bytes)
+                check_sha = hashlib.sha256(self._document(check).encode()).hexdigest()
             if check != plugin_state or check_sha != plugin_sha:
                 raise ValueError("strategy restore_state roundtrip differs from checkpoint")
             lifecycle = snap.get("lifecycle")
@@ -1177,6 +1426,143 @@ class PaperStrategyRuntime:
                   registration.config_version, event.event_id, proof) for account in registration.accounts]
         return all(claims)
 
+    def _isolated_reject(self, job, reason, now_ns):
+        """Fence one strategy only; never stop other feeds or strategies."""
+        job.state, job.reason = "FAULTED", str(reason)[:256] or "isolated_strategy_fault"
+        job.isolated_pending = {} if job.worker is not None else None
+        if job.worker is not None:
+            job.isolated_initialized = False
+            job.isolated_init_request = None
+            job.isolated_restart_requested = False
+            job.worker.kill()
+        self._cancel_owned(job, now_ns)
+
+    def _accept_isolated_init(self, job, payload):
+        plugin_class = payload.get("plugin_class")
+        if type(plugin_class) is not str or not plugin_class or len(plugin_class) > 512:
+            raise ValueError("isolated child plugin class identity is invalid")
+        has_feedback = payload.get("has_feedback")
+        if type(has_feedback) is not bool or has_feedback != (job.feedback_cursors is not None):
+            raise ValueError("isolated child feedback capability differs from static manifest")
+        job.isolated_plugin_class = plugin_class
+        job.isolated_initialized = True
+        job.isolated_init_request = None
+        return True
+
+    def _handle_isolated_response(self, job, response, observed_ns):
+        from .strategy_process import ProtocolError, WorkerUnavailable, result_from_document
+        pending_by_id = job.isolated_pending
+        if not isinstance(pending_by_id, dict):
+            return ()
+        pending = pending_by_id.get(response.get("request_id"))
+        if pending is None:
+            # Late/duplicate/out-of-order responses mutate nothing.
+            return ()
+        try:
+            payload = job.worker.accept_response(response, now_ns=observed_ns)
+        except (ProtocolError, WorkerUnavailable, TimeoutError, RuntimeError, ValueError) as exc:
+            pending_by_id.pop(response.get("request_id"), None)
+            self._isolated_reject(job, type(exc).__name__, self.now_ns())
+            return ()
+        pending_by_id.pop(response.get("request_id"), None)
+        if pending["kind"] == "init":
+            try:
+                self._accept_isolated_init(job, payload)
+            except (ValueError, TypeError) as exc:
+                self._isolated_reject(job, "IsolatedInitProofFailed", self.now_ns())
+                return ()
+            return ()
+        # Pause/halt/restart/generation/feed fences invalidate queued work even
+        # when a correct child reply becomes readable later.
+        if (job.state in {"PAUSED", "HALTED", "FAULTED", "BLOCKED"}
+                or self._recovery_gate()):
+            return ()
+        if pending["kind"] == "event" and (job.state == "WARMING" or (
+                not pending["replay"] and not self._ready(job, pending["snapshot"]))):
+            return ()
+        if pending["generation"] != job.isolated_generation:
+            return ()
+        if (pending["cursor"] != pending["snapshot"].cursor
+                or pending["snapshot"].engine_incarnation != self.hot_path.engine_incarnation):
+            return ()
+        current = self.hot_path.snapshot(self.now_ns(), self.phase.upper())
+        for key in job.registration.required_feeds:
+            if (pending["snapshot"].versions.get(key) != current.versions.get(key)
+                    or pending["snapshot"].book_versions.get(key) != current.book_versions.get(key)
+                    or pending["snapshot"].quality.get(key) != current.quality.get(key)):
+                return ()
+            if (job.registration.warmup_bars and
+                    pending["snapshot"].history_quality.get(key) != current.history_quality.get(key)):
+                return ()
+        try:
+            result = result_from_document(payload)
+        except ProtocolError as exc:
+            self._isolated_reject(job, "MalformedIsolatedResult", self.now_ns())
+            return ()
+        job.callbacks += 1
+        if pending["kind"] == "event":
+            return self._consume_callback_result(job, result, pending["view"],
+                pending["snapshot"], replay=pending["replay"],
+                started=self.callback_clock_ns(), causal_time=pending["causal_time"])
+        view = pending["view"]
+        return self._consume_callback_result(job, result, view, pending["snapshot"],
+            replay=False, started=self.callback_clock_ns(),
+            causal_time=pending["snapshot"].now_ns)
+
+    def poll_isolated(self, *, max_frames=8):
+        """Bounded nonblocking parent poll/watchdog for isolated callbacks."""
+        if self.isolation is None:
+            return ()
+        pool = self._isolation_pool()
+        generated = []
+        for sid, job in list(self._jobs.items()):
+            worker = job.worker
+            if worker is None:
+                continue
+            worker.reap()
+            if job.isolated_restart_requested:
+                if worker.process is not None:
+                    continue
+                try:
+                    request = worker.start(epoch=job.isolated_generation)
+                except BaseException:
+                    self._isolated_reject(job, "IsolatedRestartFailed", self.now_ns())
+                    continue
+                job.isolated_restart_requested = False
+                job.isolated_init_request = request
+                job.isolated_pending = {request["request_id"]: {
+                    "kind": "init", "generation": job.isolated_generation,
+                    "request": request}}
+            safety_now = time.monotonic_ns()
+            market_now = self.now_ns()
+            if worker.pending_expired(safety_now):
+                self._isolated_reject(job, "StrategyTimeout", market_now)
+                continue
+            if not worker.alive:
+                if job.isolated_pending:
+                    self._isolated_reject(job, job.worker.fault or "WorkerUnavailable", market_now)
+                continue
+            try:
+                responses = worker.poll(max_frames=max_frames, now_ns=safety_now)
+            except BaseException:
+                self._isolated_reject(job, "WorkerPollFailed", market_now)
+                continue
+            for response, observed in responses:
+                try:
+                    generated.extend(self._handle_isolated_response(job, response, observed))
+                except BaseException as exc:
+                    self._isolated_reject(job, type(exc).__name__, self.now_ns())
+        if pool.total_rss_bytes() > self.isolation.budgets.max_total_rss_bytes:
+            victims = sorted((item for item in self._jobs.values() if item.worker is not None),
+                             key=lambda item: item.worker.rss_bytes() or 0, reverse=True)
+            if victims:
+                self._isolated_reject(victims[0], "IsolatedRssCapacityExceeded", self.now_ns())
+        return tuple(generated)
+
+    def watchdog(self):
+        """Advance deadlines independently of incoming market events."""
+        return self.poll_isolated()
+
     def _dispatch(self, result, snapshot, phase):
         self.view = StrategyDataView(snapshot, ready=False, phase=phase)
         if phase in {"INVALID", "WARMING"}:
@@ -1214,19 +1600,33 @@ class PaperStrategyRuntime:
             try:
                 if not replay and not self._claim(job, event, snapshot):
                     continue
+                causal_time = (event.source_ts_ns if event.source_ts_ns is not None
+                               else event.receive_ts_ns)
+                if job.worker is not None:
+                    request = job.worker.submit_event(event=event, snapshot=snapshot,
+                        execution=execution_facts, ready=True, phase=job.state,
+                        cursor=snapshot.cursor)
+                    job.isolated_pending[request["request_id"]] = {
+                        "kind": "event", "generation": job.isolated_generation,
+                        "cursor": snapshot.cursor, "snapshot": snapshot, "view": view,
+                        "replay": replay, "causal_time": causal_time,
+                        "request_ns": self.now_ns()}
+                    continue
                 started = self.callback_clock_ns()
                 signals = job.instance.on_event(event, view)
                 job.callbacks += 1
                 if self.callback_clock_ns()-started > self.budgets.max_callback_ns:
                     raise TimeoutError("Cooperative strategy callback exceeded its return-time budget")
                 generated.extend(self._consume_callback_result(job, signals, view, snapshot,
-                    replay=replay, started=started,
-                    causal_time=(event.source_ts_ns if event.source_ts_ns is not None
-                                 else event.receive_ts_ns)))
+                    replay=replay, started=started, causal_time=causal_time))
             except Exception as exc:
                 job.state, job.reason = "FAULTED", type(exc).__name__
+                if job.worker is not None:
+                    job.worker.kill()
                 if not replay:
                     self._cancel_owned(job, snapshot.now_ns)
+        if self.isolation is not None:
+            generated.extend(self.poll_isolated())
         return tuple(generated)
 
     def _consume_callback_result(self, job, result, view, snapshot, *, replay, started, causal_time=None):
@@ -1504,8 +1904,8 @@ class PaperStrategyRuntime:
                 if (cursors is None or job.permission_blocked or job.state in
                         {"PAUSED", "HALTED", "FAULTED", "BLOCKED"}):
                     continue
-                hook = getattr(job.instance, "on_order_event", None)
-                if not callable(hook):
+                hook = None if job.worker is not None else getattr(job.instance, "on_order_event", None)
+                if job.worker is None and not callable(hook):
                     job.state, job.reason = "FAULTED", "MissingOrderEventHook"
                     continue
                 for account in job.registration.accounts:
@@ -1558,15 +1958,33 @@ class PaperStrategyRuntime:
                                     job.reason = "order_feedback_deferred_capacity"
                                     deferred = True
                                     break
+                                if (job.worker is not None and job.worker.queued
+                                        >= self.isolation.budgets.max_queue_frames):
+                                    job.reason = "order_feedback_deferred_capacity"
+                                    deferred = True
+                                    break
                                 proof = {"event_id": event.event_id, "rowid": rowid,
                                     "account_scope": event.account_scope.key,
                                     "registration": job.fingerprint}
                                 claimed = matcher.ledger.claim_strategy_event(sid,
                                     job.registration.config_version, "@order-feedback:" + event.event_id, proof)
                                 # The durable claim comes immediately before
-                                # callback invocation. A stale cursor can only skip.
+                                # callback invocation/enqueue. A stale cursor can only skip.
                                 cursors[account] = rowid
                                 if not claimed:
+                                    continue
+                                callback_view = data or StrategyDataView(snapshot, ready=False, phase=phase)
+                                if job.worker is not None:
+                                    request = job.worker.submit_feedback(event=event,
+                                        context={"snapshot": snapshot, "execution": execution,
+                                                 "now_ns": context.now_ns, "cursor": context.cursor,
+                                                 "quality": quality, "ready": data is not None,
+                                                 "phase": phase},
+                                        cursor=snapshot.cursor)
+                                    job.isolated_pending[request["request_id"]] = {
+                                        "kind": "feedback", "generation": job.isolated_generation,
+                                        "cursor": snapshot.cursor, "snapshot": snapshot,
+                                        "view": callback_view, "request_ns": self.now_ns()}
                                     continue
                                 started = self.callback_clock_ns()
                                 result = hook(event, context)
@@ -1577,7 +1995,6 @@ class PaperStrategyRuntime:
                                     raise ValueError("on_order_event must be synchronous")
                                 if self.callback_clock_ns()-started > self.budgets.max_callback_ns:
                                     raise TimeoutError("Cooperative order callback exceeded its return-time budget")
-                                callback_view = data or StrategyDataView(snapshot, ready=False, phase=phase)
                                 self._consume_callback_result(job, result, callback_view, snapshot,
                                     replay=False, started=started, causal_time=snapshot.now_ns)
                             except Exception as exc:
@@ -1654,8 +2071,16 @@ class PaperStrategyRuntime:
             return False
         return True
 
+    def _fence_isolated_job(self, job):
+        if job.worker is None:
+            return
+        job.isolated_generation += 1
+        job.isolated_pending = {}
+        job.worker.kill()
+
     def pause(self, strategy_id: str, now_ns: int):
         job = self._jobs[strategy_id]
+        self._fence_isolated_job(job)
         if self._hold_blocked(job):
             self._cancel_owned(job, now_ns)
             return
@@ -1669,11 +2094,18 @@ class PaperStrategyRuntime:
         if job.state != "PAUSED":
             raise ValueError("Only an explicitly paused strategy may resume")
         job.state, job.reason = "WARMING", None
+        if job.worker is not None:
+            job.isolated_generation += 1
+            job.isolated_pending = {}
+            job.isolated_initialized = False
+            job.isolated_init_request = None
+            job.isolated_restart_requested = True
 
     def halt(self, reason: str, now_ns: int, strategy_id: str | None = None):
         bounded_identity(reason, "halt reason")
         for sid, job in self._jobs.items():
             if strategy_id is None or sid == strategy_id:
+                self._fence_isolated_job(job)
                 if self._hold_blocked(job):
                     # Operator stop remains risk-reducing even while the
                     # no-new-risk fence stays in place.
@@ -1682,7 +2114,30 @@ class PaperStrategyRuntime:
                 job.state, job.reason = "HALTED", reason
                 self._cancel_owned(job, now_ns)
 
+    def close(self):
+        """Boundedly reap isolated children without blocking market callbacks."""
+        if self.isolation is None:
+            return
+        pool = self._isolation_pool()
+        for job in self._jobs.values():
+            if job.worker is not None:
+                job.isolated_pending = {}
+                job.worker.kill()
+        pool.close()
+
+    async def close_async(self):
+        """Asynchronous bounded child cleanup for the local runtime driver."""
+        if self.isolation is None:
+            return
+        pool = self._isolation_pool()
+        for job in self._jobs.values():
+            if job.worker is not None:
+                job.isolated_pending = {}
+        await pool.close_async()
+
     def advance(self, now_ns: int):
+        if self.isolation is not None:
+            self.poll_isolated()
         if self._recovery_gate():
             return
         snapshot = self.hot_path.snapshot(now_ns, self.phase.upper())
@@ -1716,9 +2171,19 @@ class PaperStrategyRuntime:
                              else self.phase.upper())
 
     def report(self):
+        isolation = (None if self.isolation is None else
+                     {"callback_isolation": ("process_hard_isolation" if self.isolation.require_bubblewrap
+                                              else "process_isolation_trusted_only"),
+                      "security_sandbox": ("bubblewrap_fail_closed" if self.isolation.require_bubblewrap
+                                           else "not_claimed"),
+                      "pool": self._isolation_pool().report()})
         return {"mode": "paper", "phase": self.phase, "external_mutations": 0,
                 "input_phase": self._input_phase,
-                "production_gate": "BLOCKED", "callback_isolation": "cooperative_return_time_only",
+                "production_gate": "BLOCKED",
+                "callback_isolation": (("process_hard_isolation" if self.isolation.require_bubblewrap
+                                         else "process_isolation_trusted_only")
+                                       if self.isolation is not None else "cooperative_return_time_only"),
+                "isolation": isolation,
                 "durable_dispatch": "at_most_once_claim_before_callback_or_submission",
                 "replace": "unsupported_until_confirmed_remaining_handoff",
                 "reference_feeds": dict(self.reference_feeds),

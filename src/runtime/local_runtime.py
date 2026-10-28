@@ -624,7 +624,12 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
                     try:
                         try:
                             if checkpoint_journal is not None:await checkpoint_journal.close()
-                        finally:await engine.close()
+                        finally:
+                            try:await engine.close()
+                            finally:
+                                if paper_runtime is not None:
+                                    close_workers=getattr(paper_runtime,'close_async',None)
+                                    if callable(close_workers):await close_workers()
                     finally:
                         try:
                             if observation is not None:await observation.close()

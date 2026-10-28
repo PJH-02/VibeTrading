@@ -453,6 +453,12 @@ class RuntimeCheckpoint:
         if self._loop is not None and self._loop is not loop:
             raise RuntimeCheckpointError("runtime checkpoint is bound to another loop")
         self._loop = loop
+        if paper_runtime is not None:
+            prepare = getattr(paper_runtime, "prepare_checkpoint_capture", None)
+            if callable(prepare):
+                prepared = prepare()
+                if inspect.isawaitable(prepared):
+                    await prepared
         payload = self._capture_sync(engine, paper_runtime, etf)
         # A cancelled caller may no longer retrieve a failed write's exception.
         operation = asyncio.create_task(asyncio.to_thread(
@@ -560,6 +566,11 @@ class RuntimeCheckpoint:
                 _verify_evidence(body["journals"]["paper"],
                     _paper_evidence(paper_runtime, self.max_journal_rows,
                                     self.max_journal_bytes))
+                prepare = getattr(paper_runtime, "prepare_checkpoint_restore", None)
+                if callable(prepare):
+                    prepared = prepare(paper_state)
+                    if inspect.isawaitable(prepared):
+                        await prepared
                 paper_proof = paper_runtime.restore_runtime_state(
                     paper_state, verify=lambda: _verify_evidence(
                         body["journals"]["paper"], _paper_evidence(

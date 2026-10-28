@@ -2,15 +2,22 @@ from __future__ import annotations
 
 import importlib
 import inspect
+import ast
+import hashlib
 import re
 from dataclasses import dataclass
-from types import ModuleType
+from types import ModuleType, SimpleNamespace
+from pathlib import Path
 from typing import Any, Protocol
 
 from market.hot_path import StrategyDataView
 from core.models import BaseMarketEvent, EventType, InstrumentId, Signal, Venue
 
 _MODERN_STRATEGY_NAME = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+_MAX_STRATEGY_SOURCE_BYTES = 1_048_576
+_MAX_STRATEGY_AST_NODES = 25_000
+_MAX_STRATEGY_AST_DEPTH = 128
+_MAX_STRATEGY_ID_BYTES = 512
 
 
 class StrategyInstance(Protocol):
@@ -132,6 +139,53 @@ def _canonical_module_name(module_name: str) -> str:
     return f"strategies.{relative}"
 
 
+def _read_bounded_strategy_source(path: Path) -> bytes:
+    """Read one bounded source snapshot, rejecting oversized files before parsing."""
+    import os
+    import stat
+
+    with path.open("rb") as source_file:
+        metadata = os.fstat(source_file.fileno())
+        if not stat.S_ISREG(metadata.st_mode):
+            raise ValueError("Strategy source must be a regular file")
+        if metadata.st_size > _MAX_STRATEGY_SOURCE_BYTES:
+            raise ValueError("Strategy source exceeds the bounded byte limit")
+        source_bytes = source_file.read(_MAX_STRATEGY_SOURCE_BYTES + 1)
+    if len(source_bytes) > _MAX_STRATEGY_SOURCE_BYTES:
+        raise ValueError("Strategy source exceeds the bounded byte limit")
+    return source_bytes
+
+
+def _parse_bounded_strategy_source(source_bytes: bytes, filename: str) -> ast.Module:
+    if len(source_bytes) > _MAX_STRATEGY_SOURCE_BYTES:
+        raise ValueError("Strategy source exceeds the bounded byte limit")
+    try:
+        source = source_bytes.decode("utf-8")
+        tree = ast.parse(source, filename=filename)
+    except (UnicodeDecodeError, SyntaxError, RecursionError, MemoryError) as exc:
+        raise ValueError("Strategy source is not bounded valid UTF-8 Python") from exc
+
+    # Iterative DFS bounds both parser output complexity and recursion depth
+    # before any manifest expression is passed to literal_eval.
+    nodes = 0
+    pending = [(iter((tree,)), -1)]
+    while pending:
+        siblings, parent_depth = pending[-1]
+        try:
+            node = next(siblings)
+        except StopIteration:
+            pending.pop()
+            continue
+        depth = parent_depth + 1
+        if depth > _MAX_STRATEGY_AST_DEPTH:
+            raise ValueError("Strategy AST exceeds the bounded nesting depth")
+        nodes += 1
+        if nodes > _MAX_STRATEGY_AST_NODES:
+            raise ValueError("Strategy AST exceeds the bounded node count")
+        pending.append((iter(ast.iter_child_nodes(node)), depth))
+    return tree
+
+
 def load_strategy(module_name: str) -> StrategyModule:
     module_name = _canonical_module_name(module_name)
     module = importlib.import_module(module_name)
@@ -150,3 +204,68 @@ def load_strategy(module_name: str) -> StrategyModule:
         subscriptions=subscriptions,
         warmup=warmup,
     )
+
+
+def load_strategy_manifest(module_name: str, source_roots) -> StrategyModule:
+    """Read only literal plugin identity metadata without importing plugin code.
+
+    Used by the optional isolated runtime. The plugin is imported, constructed,
+    configured and validated only in its confined child. Roots are explicit and
+    the selected source bytes are pinned for the child handshake.
+    """
+    canonical = _canonical_module_name(module_name)
+    relative = canonical.removeprefix("strategies.").replace(".", "/") + ".py"
+    roots = tuple(Path(root).resolve(strict=True) for root in source_roots)
+    candidates = []
+    for root in roots:
+        candidates.extend((root / "strategies" / relative,
+                          root / "src" / "strategies" / relative,
+                          root / relative))
+    path = next((item.resolve() for item in candidates if item.is_file()
+                 and any(item.resolve() == root or root in item.resolve().parents
+                         for root in roots)), None)
+    if path is None:
+        raise ValueError("Strategy source is not found beneath an explicit source root")
+    source_bytes = _read_bounded_strategy_source(path)
+    source_sha256 = hashlib.sha256(source_bytes).hexdigest()
+    tree = _parse_bounded_strategy_source(source_bytes, str(path))
+    values = {}
+    for node in tree.body:
+        if isinstance(node, (ast.Assign, ast.AnnAssign)):
+            targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+            value_node = node.value
+            for target in targets:
+                if isinstance(target, ast.Name) and target.id in {
+                        "STRATEGY_ID", "SUBSCRIPTIONS", "WARMUP", "ACTION_PROTOCOL_VERSION"}:
+                    try:
+                        values[target.id] = ast.literal_eval(value_node)
+                    except (ValueError, TypeError) as exc:
+                        raise ValueError("Isolated strategy manifest fields must be literal constants") from exc
+    if not all(name in values for name in ("STRATEGY_ID", "SUBSCRIPTIONS", "WARMUP")):
+        raise ValueError("Isolated strategy source lacks static identity/subscription/warmup manifest")
+    strategy_id = values["STRATEGY_ID"]
+    if (type(strategy_id) is not str or not strategy_id.strip()
+            or len(strategy_id.encode("utf-8")) > _MAX_STRATEGY_ID_BYTES):
+        raise ValueError("Isolated strategy STRATEGY_ID must be a bounded literal string")
+    if not any(isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+               and node.name == "create_strategy" for node in tree.body):
+        raise ValueError("Isolated strategy source lacks create_strategy")
+    feedback = any(isinstance(node, ast.ClassDef) and any(
+        isinstance(member, (ast.FunctionDef, ast.AsyncFunctionDef))
+        and member.name == "on_order_event" for member in node.body) for node in tree.body)
+    values["HAS_ORDER_FEEDBACK"] = feedback
+    metadata = SimpleNamespace(__name__=canonical, __file__=str(path),
+                              __cap04_static_manifest__=True,
+                              __cap04_source_sha256__=source_sha256, **values)
+    return StrategyModule(metadata, strategy_id,
+                          values["SUBSCRIPTIONS"], values["WARMUP"])
+
+
+def source_has_order_feedback(path: str) -> bool:
+    """Check for a literal class method declaration without executing source."""
+    source_path = Path(path)
+    tree = _parse_bounded_strategy_source(
+        _read_bounded_strategy_source(source_path), str(source_path))
+    return any(isinstance(node, ast.ClassDef) and any(
+        isinstance(member, (ast.FunctionDef, ast.AsyncFunctionDef))
+        and member.name == "on_order_event" for member in node.body) for node in tree.body)
