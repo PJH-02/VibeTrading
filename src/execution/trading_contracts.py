@@ -154,6 +154,188 @@ class ProductSpec:
             raise ValueError("Only isolated simulated perpetual margin is supported")
 
 
+_NATIVE_LINEAR_VENUES = frozenset({"binance", "bybit", "grvt", "arcus", "hyperliquid"})
+_NATIVE_PRODUCT_FIELDS = frozenset({
+    "scope_key", "venue", "product", "environment", "symbol", "kind", "multiplier",
+    "tick_size", "lot_size", "min_quantity", "min_notional", "base_currency", "quote_currency",
+    "settlement_currency", "collateral_currency", "raw",
+})
+
+
+def _native_exact_decimal(value, name, *, nonnegative=False):
+    """Parse adapter decimal strings/integers without accepting floats or bools."""
+    if isinstance(value, (bool, float)) or not isinstance(value, (str, int, Decimal)):
+        raise ValueError(name + " requires an exact decimal string/integer")
+    return positive_decimal(value, name, zero=nonnegative)
+
+
+def _native_result(reason, *, facts=None):
+    return _freeze_bounded({
+        "quality": "UNAVAILABLE" if reason else "VALID",
+        "reason": reason,
+        "risk_ready": reason is None,
+        "basis": "NATIVE_REPORTED_FACTS",
+        "facts": facts or {},
+    }, name="native risk result")
+
+
+def validate_native_account_facts(account_facts, product_specs, current_scope, *,
+                                  account_version, expected_native_account_id,
+                                  now_ns, max_age_ns):
+    """Validate an explicit, read-only native account/product evidence envelope.
+
+    ``account_facts`` must contain ``normalized`` (the adapter's account_state
+    row), ``observed_ns``, ``account_version``, ``reconciliation_state`` equal
+    to ``RECONCILED``, ``unknown`` equal to False, explicit ``position_mode``
+    and ``margin_mode``, and ``native_identity``. Identity evidence must name
+    the exact scope and native account/session, match
+    ``expected_native_account_id`` (the independently bound physical account
+    identity), identify its source as an authenticated native session, and list
+    both ``account_read`` and ``trade`` permissions. A caller alias or isolated
+    boolean is never sufficient.
+
+    ``product_specs`` is a bounded mapping of native metadata rows with the
+    same shape emitted by ``_Adapter._metadata_row``. The function only
+    validates declared facts; it performs no requests, permission grants, FX,
+    margin calculations, or authentication. Its result is a frozen mapping.
+    """
+    try:
+        frozen = _freeze_bounded(account_facts, name="native account facts")
+        specs = _freeze_bounded(product_specs, name="native product specs")
+        if not isinstance(account_version, str) or not account_version or len(account_version) > 256:
+            raise ValueError("expected account version is missing")
+        if (not isinstance(expected_native_account_id, str) or not expected_native_account_id.strip()
+                or len(expected_native_account_id.encode("utf-8")) > 256):
+            raise ValueError("independently expected native account identity is missing")
+        if (isinstance(now_ns, bool) or not isinstance(now_ns, int) or now_ns <= 0
+                or isinstance(max_age_ns, bool) or not isinstance(max_age_ns, int) or max_age_ns <= 0):
+            raise ValueError("explicit positive freshness bounds are required")
+        venue = getattr(current_scope, "venue", None)
+        product = getattr(current_scope, "product", None)
+        environment = getattr(current_scope, "environment", None)
+        scope_key = getattr(current_scope, "key", None)
+        settlement_currency = getattr(current_scope, "settlement_currency", None)
+        if (venue not in _NATIVE_LINEAR_VENUES or product != "linear_perpetual"
+                or environment not in {"sandbox", "live"} or not isinstance(scope_key, str)
+                or not isinstance(settlement_currency, str) or not settlement_currency):
+            raise ValueError("scope is outside the selected linear perpetual boundary")
+        if not isinstance(frozen, Mapping) or not isinstance(specs, Mapping) or not specs:
+            raise ValueError("native account and product evidence must be nonempty mappings")
+        normalized = frozen.get("normalized")
+        if not isinstance(normalized, Mapping):
+            raise ValueError("normalized adapter account row is missing")
+        for key, expected in (("scope_key", scope_key), ("venue", venue),
+                              ("product", product), ("environment", environment)):
+            if normalized.get(key) != expected:
+                raise ValueError("normalized account scope mismatch")
+        raw_account = normalized.get("raw")
+        if not isinstance(raw_account, Mapping) or not raw_account:
+            raise ValueError("native raw account source evidence is missing")
+        observed_ns = frozen.get("observed_ns")
+        if isinstance(observed_ns, bool) or not isinstance(observed_ns, int) or observed_ns <= 0:
+            raise ValueError("native observation timestamp is missing")
+        if observed_ns > now_ns:
+            raise ValueError("native account observation is from the future")
+        if now_ns - observed_ns > max_age_ns:
+            raise ValueError("native account observation is stale")
+        if frozen.get("account_version") != account_version:
+            raise ValueError("native account version mismatch")
+        if frozen.get("reconciliation_state") != "RECONCILED" or frozen.get("unknown") is not False:
+            raise ValueError("native account state is unreconciled or UNKNOWN")
+        if frozen.get("position_mode") != "net":
+            raise ValueError("native account position mode is not net")
+        margin_mode = frozen.get("margin_mode")
+        if margin_mode not in {"cross", "isolated"}:
+            raise ValueError("native account margin mode is missing or unsupported")
+
+        identity = frozen.get("native_identity")
+        if not isinstance(identity, Mapping):
+            raise ValueError("authenticated native identity evidence is missing")
+        for key in ("native_account_id", "authenticated_session_id"):
+            value = identity.get(key)
+            if not isinstance(value, str) or not value.strip() or len(value.encode("utf-8")) > 256:
+                raise ValueError("authenticated native identity/session is missing")
+        if identity.get("native_account_id") != expected_native_account_id:
+            raise ValueError("native account identity differs from the independently bound physical account")
+        # Some existing adapters expose an independently observed native ID in
+        # the normalized row (notably Hyperliquid's account_address). Bind such
+        # fields when present; do not infer a native ID from arbitrary raw keys.
+        for key in ("account_address", "native_account_id"):
+            if key in normalized and normalized[key] != expected_native_account_id:
+                raise ValueError("normalized native account identity differs from the independently bound physical account")
+        if identity.get("scope_key") != scope_key or identity.get("source") != "authenticated_native_session":
+            raise ValueError("native identity evidence does not bind the authenticated scope")
+        permissions = identity.get("permissions")
+        if (not isinstance(permissions, tuple)
+                or not {"account_read", "trade"}.issubset(permissions)):
+            raise ValueError("native read/trade permission provenance is incomplete")
+
+        account_currency = normalized.get("currency")
+        settlement = normalized.get("settlement_currency", account_currency)
+        if account_currency != settlement_currency or settlement != settlement_currency:
+            raise ValueError("native account currency does not exactly match settlement currency")
+        numbers = {}
+        for key, nonnegative in (("equity", True), ("available", True),
+                                 ("initial_margin", True), ("maintenance_margin", True)):
+            value = normalized.get(key)
+            if value is None:
+                raise ValueError("native reported " + key + " is unavailable")
+            numbers[key] = _native_exact_decimal(value, key, nonnegative=nonnegative)
+        if numbers["available"] > numbers["equity"]:
+            raise ValueError("native available balance exceeds reported equity")
+
+        checked_specs = {}
+        if len(specs) > 64:
+            raise ValueError("native product set exceeds the bounded product count")
+        for symbol, row in specs.items():
+            if not isinstance(symbol, str) or not symbol or len(symbol.encode("utf-8")) > 256:
+                raise ValueError("native product symbol is invalid")
+            if not isinstance(row, Mapping) or not _NATIVE_PRODUCT_FIELDS.issubset(row):
+                raise ValueError("native product metadata is incomplete")
+            for key, expected in (("scope_key", scope_key), ("venue", venue),
+                                  ("product", product), ("environment", environment),
+                                  ("symbol", symbol), ("kind", "linear_perpetual")):
+                if row.get(key) != expected:
+                    raise ValueError("native product metadata scope/kind mismatch")
+            raw_product = row.get("raw")
+            if not isinstance(raw_product, Mapping) or not raw_product:
+                raise ValueError("native product source metadata is missing")
+            base_currency = row.get("base_currency")
+            if (not isinstance(base_currency, str) or not base_currency.strip()
+                    or len(base_currency.encode("utf-8")) > 256):
+                raise ValueError("native product base currency is missing")
+            for key, expected_mode in (("position_mode", "net"), ("margin_mode", margin_mode)):
+                reported_mode = row.get(key)
+                if reported_mode is not None and reported_mode != expected_mode:
+                    raise ValueError("native product " + key + " contradicts authenticated account mode")
+            currencies = (row.get("quote_currency"), row.get("settlement_currency"),
+                          row.get("collateral_currency"))
+            if any(currency != settlement_currency for currency in currencies):
+                raise ValueError("cross-currency, FX, or wrong-collateral product is unsupported")
+            spec_numbers = {}
+            for key, nonnegative in (("multiplier", False), ("tick_size", False),
+                                     ("lot_size", False), ("min_quantity", False),
+                                     ("min_notional", True)):
+                spec_numbers[key] = _native_exact_decimal(row.get(key), key, nonnegative=nonnegative)
+                if key != "min_notional" and spec_numbers[key] <= 0:
+                    raise ValueError("native product " + key + " must be positive")
+            checked_specs[symbol] = {**dict(row), **spec_numbers}
+        facts = {
+            "scope_key": scope_key, "venue": venue, "product": product,
+            "environment": environment, "account_version": account_version,
+            "observed_ns": observed_ns, "native_account_id": identity["native_account_id"],
+            "position_mode": "net", "margin_mode": margin_mode,
+            "basis": "NATIVE_REPORTED_FACTS",
+            "currency": settlement_currency, "reported": numbers,
+            "products": checked_specs,
+        }
+        return _native_result(None, facts=facts)
+    except (TypeError, ValueError, ArithmeticError) as error:
+        # Errors are converted to a closed, immutable result so callers can use
+        # one gate contract without accidentally treating absent facts as zero.
+        return _native_result(str(error)[:256])
+
+
 @dataclass(frozen=True)
 class ExecutionAction:
     action_id: str

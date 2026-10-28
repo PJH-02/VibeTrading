@@ -155,6 +155,9 @@ class PaperExecution:
                 self._check_bound(staged)
                 self.ledger.save_paper_state(staged)
         self._state = staged
+        # Clear one-process legacy provenance only after the transaction and
+        # its first persistent checkpoint commit successfully.
+        self.ledger._startup_legacy_recovery.clear()
         return result
 
     @staticmethod
@@ -235,6 +238,11 @@ class PaperExecution:
                     strategy_capital_limit=strategy_capital_limit, now_ns=now_ns,
                     account_fee_policy=account_fee_policy)
                 return created, row
+            # Reconcile only as part of new-risk admission. Routine cancel,
+            # advance, and market-input transitions preserve untouched UNKNOWN
+            # rows from the saved account checkpoint.
+            self.ledger.restore_startup_paper_orders(state)
+            self._aligned(state)
             self._clock(state, now_ns)
             self._advance(state, now_ns)
             if intent.instrument.key in state["blocked"]:

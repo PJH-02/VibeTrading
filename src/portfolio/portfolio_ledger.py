@@ -1,6 +1,7 @@
 """Bounded local paper portfolio authority. No venue client or live margin claim."""
 from __future__ import annotations
 
+from collections.abc import Mapping
 from contextlib import contextmanager
 from decimal import Decimal, InvalidOperation, ROUND_CEILING, localcontext
 import hashlib
@@ -81,6 +82,7 @@ class PortfolioLedger:
             raise ValueError("Portfolio path must be inside protected owner_root/<mode>")
         self._thread, self._pid, self._closed = threading.get_ident(), os.getpid(), False
         self._authority = None
+        self._startup_legacy_recovery = {}
         if self.mode == TradingMode.PAPER:
             # The explicit owner_root is the physical authority root shared with
             # ExecutionLedger(authority_root=owner_root, environment='paper').
@@ -136,7 +138,35 @@ class PortfolioLedger:
                         raise ValueError("Portfolio metadata scope/mode/path mismatch")
                     self._db.execute("INSERT OR IGNORE INTO portfolio_metadata VALUES(?,?)", (key, value))
                 self._db.execute("INSERT OR IGNORE INTO portfolio_metadata VALUES('account_version','0')")
-                self._db.execute("UPDATE portfolio_orders SET state='UNKNOWN' WHERE state IN ('OPEN','CANCEL_PENDING')")
+                # The paper matcher checkpoints recovery provenance before a
+                # restart. Startup changes order state only; it must leave that
+                # already-hashed metadata byte-for-byte unchanged.
+                if self.mode == TradingMode.PAPER:
+                    marker_row = self._db.execute(
+                        "SELECT value FROM portfolio_metadata WHERE key='paper_startup_recovery'").fetchone()
+                    if marker_row:
+                        recovery = json.loads(marker_row[0])
+                        if (not isinstance(recovery, dict) or len(recovery) > max_orders or
+                                any(state not in ("OPEN", "CANCEL_PENDING") for state in recovery.values())):
+                            raise ValueError("Malformed bounded paper startup recovery marker")
+                        for identity in recovery:
+                            bounded_identity(identity, "paper recovery order id")
+                    else:
+                        # One-process compatibility for old checkpoints that
+                        # predate persisted recovery provenance. Capture only
+                        # facts present before this startup marks them UNKNOWN.
+                        rows = self._db.execute(
+                            "SELECT intent_id,state FROM portfolio_orders "
+                            "WHERE state IN ('OPEN','CANCEL_PENDING') LIMIT ?", (max_orders + 1,)).fetchall()
+                        if len(rows) > max_orders:
+                            raise ValueError("Legacy paper recovery candidates exceed order bound")
+                        self._startup_legacy_recovery = {row["intent_id"]: row["state"] for row in rows}
+                        for identity in self._startup_legacy_recovery:
+                            bounded_identity(identity, "legacy paper recovery order id")
+                    self._db.execute(
+                        "UPDATE portfolio_orders SET state='UNKNOWN' WHERE state IN ('OPEN','CANCEL_PENDING')")
+                else:
+                    self._db.execute("UPDATE portfolio_orders SET state='UNKNOWN' WHERE state IN ('OPEN','CANCEL_PENDING')")
         except BaseException:
             if hasattr(self, "_db"):
                 self._db.close()
@@ -413,7 +443,80 @@ class PortfolioLedger:
             raise ValueError("Paper state requires paper mode")
         text = self._document(state)
         with self.transaction():
+            recovery = {}
+            orders = state.get("orders") if isinstance(state, dict) else None
+            marker_row = self._db.execute(
+                "SELECT value FROM portfolio_metadata WHERE key='paper_startup_recovery'").fetchone()
+            previous_recovery = json.loads(marker_row[0]) if marker_row else {}
+            if isinstance(orders, dict):
+                if len(orders) > self.max_orders:
+                    raise ValueError("Paper matcher orders exceed recovery metadata bounds")
+                for identity, order in orders.items():
+                    bounded_identity(identity, "paper recovery order id")
+                    if not isinstance(order, dict):
+                        raise ValueError("Paper matcher order record is malformed")
+                    row = self._db.execute("SELECT state FROM portfolio_orders WHERE intent_id=?", (identity,)).fetchone()
+                    if row is None:
+                        raise ValueError("Paper checkpoint references an unknown ledger order")
+                    if row["state"] in ("OPEN", "CANCEL_PENDING"):
+                        cancel_ns = order.get("cancel_ns")
+                        if ((row["state"] == "OPEN" and cancel_ns is not None) or
+                                (row["state"] == "CANCEL_PENDING" and cancel_ns is None)):
+                            raise ValueError("Paper checkpoint cancellation state differs from ledger")
+                        recovery[identity] = row["state"]
+                    elif row["state"] == "UNKNOWN":
+                        if identity in previous_recovery:
+                            recovery[identity] = previous_recovery[identity]
+                        elif identity in self._startup_legacy_recovery:
+                            recovery[identity] = self._startup_legacy_recovery[identity]
             self._db.execute("INSERT OR REPLACE INTO portfolio_metadata VALUES('matcher',?)", (text,))
+            if isinstance(orders, dict):
+                if recovery:
+                    self._db.execute("INSERT OR REPLACE INTO portfolio_metadata VALUES('paper_startup_recovery',?)",
+                                     (self._document(recovery),))
+                else:
+                    self._db.execute("DELETE FROM portfolio_metadata WHERE key='paper_startup_recovery'")
+
+    def restore_startup_paper_orders(self, staged_state):
+        """Restore only rows this PAPER startup changed, aligned to its exact checkpoint."""
+        self._check()
+        if self.mode != TradingMode.PAPER or not self._db.in_transaction:
+            raise RuntimeError("Startup order recovery requires an active paper transition")
+        staged = self._document(staged_state)
+        marker_row = self._db.execute(
+            "SELECT value FROM portfolio_metadata WHERE key='paper_startup_recovery'").fetchone()
+        if marker_row is None:
+            recovery = dict(self._startup_legacy_recovery)
+            if not recovery:
+                return False
+        else:
+            recovery = json.loads(marker_row[0])
+        for identity in recovery:
+            bounded_identity(identity, "paper recovery order id")
+        saved_row = self._db.execute("SELECT value FROM portfolio_metadata WHERE key='matcher'").fetchone()
+        if saved_row is None or saved_row[0] != staged:
+            raise ValueError("Paper startup recovery checkpoint differs from durable state")
+        if not isinstance(recovery, dict) or len(recovery) > self.max_orders:
+            raise ValueError("Malformed paper startup recovery marker")
+        orders = staged_state.get("orders")
+        if not isinstance(orders, dict):
+            raise ValueError("Paper recovery matcher orders are malformed")
+        for identity, prior_state in recovery.items():
+            if prior_state not in ("OPEN", "CANCEL_PENDING"):
+                raise ValueError("Malformed paper startup recovery state")
+            order = orders.get(identity)
+            row = self._db.execute(
+                "SELECT state FROM portfolio_orders WHERE intent_id=?", (identity,)).fetchone()
+            if order is None or row is None or row["state"] not in ("UNKNOWN", prior_state):
+                raise ValueError("Paper startup recovery order identity is not aligned")
+            cancel_ns = order.get("cancel_ns")
+            if ((prior_state == "OPEN" and cancel_ns is not None) or
+                    (prior_state == "CANCEL_PENDING" and cancel_ns is None)):
+                raise ValueError("Paper startup recovery cancellation state is not aligned")
+        for identity, prior_state in recovery.items():
+            self._db.execute("UPDATE portfolio_orders SET state=? WHERE intent_id=? AND state='UNKNOWN'",
+                             (prior_state, identity))
+        return bool(recovery)
 
     def claim_strategy_event(self, strategy, config_version, event_id, evidence):
         """Commit an at-most-once callback claim before running user code.
@@ -654,6 +757,11 @@ class PortfolioLedger:
                 if old["fingerprint"] != fingerprint:
                     raise ValueError("Immutable intent/evidence collision")
                 return False, old
+            # UNKNOWN outcomes retain their reservation and make the physical
+            # account's exposure incomplete. Allow exact prior-intent replay
+            # above, but admit no additional risk until the outcome is proven.
+            if self._db.execute("SELECT 1 FROM portfolio_orders WHERE state='UNKNOWN' LIMIT 1").fetchone():
+                raise RuntimeError("Unknown order outcome blocks new account risk")
             if isinstance(expiry_ns, bool) or not isinstance(expiry_ns, int) or expiry_ns <= (time.time_ns() if now_ns is None else now_ns) or expiry_ns > 2**63 - 1:
                 raise ValueError("Order expiry is invalid or elapsed")
             if self._db.execute("SELECT 1 FROM portfolio_gaps LIMIT 1").fetchone():
@@ -804,6 +912,18 @@ class PortfolioLedger:
                 self._db.execute("UPDATE portfolio_orders SET state=?,reservation='0' WHERE intent_id=? AND state!='FILLED'", (state, intent_id))
             if not confirmed:
                 outcome_new = True
+            marker = self._db.execute(
+                "SELECT value FROM portfolio_metadata WHERE key='paper_startup_recovery'").fetchone()
+            self._startup_legacy_recovery.pop(intent_id, None)
+            if marker is not None:
+                recovery = json.loads(marker[0])
+                if intent_id in recovery:
+                    recovery.pop(intent_id)
+                    if recovery:
+                        self._db.execute("UPDATE portfolio_metadata SET value=? WHERE key='paper_startup_recovery'",
+                                         (self._document(recovery),))
+                    else:
+                        self._db.execute("DELETE FROM portfolio_metadata WHERE key='paper_startup_recovery'")
             updated = self.get(intent_id)
             if outcome_new:
                 self._feedback("OUTCOME" if confirmed else "UNKNOWN", updated, evidence=evidence if confirmed else None)
@@ -818,22 +938,68 @@ class PortfolioLedger:
     def reject(self, intent_id, *, confirmed=False, evidence=None):
         return self._outcome(intent_id, "REJECTED", confirmed, evidence)
 
-    def apply_funding(self, funding_id, instrument, amount, currency, evidence, *, strategy=None):
+    def apply_funding(self, funding_id, instrument, amount, currency, evidence, *,
+                      strategy=None, allocations=None, account_version=None):
         amount = signed_decimal(amount, "funding amount")
         instrument = instrument.key if hasattr(instrument, "key") else instrument
         bounded_identity(instrument, "funding instrument")
         if not evidence:
             raise ValueError("Funding requires evidence")
+        if allocations is not None:
+            if account_version is None:
+                raise ValueError("Explicit funding allocations require account_version")
+            if not isinstance(allocations, Mapping):
+                raise TypeError("Funding allocations must be an explicit strategy mapping")
+            if strategy is not None:
+                raise ValueError("Explicit strategy and per-strategy allocations cannot be combined")
+            if len(allocations) > 256:
+                raise ValueError("Funding allocations exceed their entry bound")
+            normalized = {}
+            for owner, value in allocations.items():
+                bounded_identity(owner, "funding strategy")
+                if owner.startswith("@"):
+                    raise ValueError("Reserved funding strategy namespace")
+                if isinstance(value, (bool, float)):
+                    raise ValueError("Funding allocation requires an exact decimal input")
+                normalized[owner] = signed_decimal(value, "funding allocation")
+            if exact_sum(*normalized.values()) != amount:
+                raise ValueError("Funding allocations must sum exactly to the native amount")
+            allocations = dict(sorted(normalized.items()))
+        if account_version is not None and (isinstance(account_version, bool)
+                                            or not isinstance(account_version, int)
+                                            or account_version < 0):
+            raise ValueError("Funding account_version must be a nonnegative explicit integer")
+        document = {"instrument": instrument, "amount": str(amount), "currency": currency,
+                    "evidence": evidence, "strategy": strategy}
+        if allocations is not None:
+            document["allocations"] = {owner: str(value) for owner, value in allocations.items()}
+        if account_version is not None:
+            document["account_version"] = account_version
         with self.transaction():
             specs = [ProductSpec.from_document(json.loads(r[0])) for r in self._db.execute("SELECT rules FROM portfolio_orders WHERE instrument=? LIMIT 1", (instrument,))]
             if not specs or specs[0].kind != ProductKind.LINEAR_PERPETUAL or specs[0].settlement_currency != currency:
                 raise ValueError("Funding requires a known perpetual settlement currency")
-            if strategy is not None and not self._db.execute("SELECT 1 FROM portfolio_orders WHERE strategy=? AND instrument=?", (strategy, instrument)).fetchone():
-                raise ValueError("Unknown funding strategy attribution")
-            if not self._receipt("funding", funding_id, {"instrument": instrument, "amount": str(amount), "currency": currency, "evidence": evidence, "strategy": strategy}):
+            owners = [strategy] if strategy is not None else list(allocations or ())
+            for owner in owners:
+                if not self._db.execute("SELECT 1 FROM portfolio_orders WHERE strategy=? AND instrument=?", (owner, instrument)).fetchone():
+                    raise ValueError("Unknown funding strategy attribution")
+            # Exact duplicate facts remain idempotent without reapplying cash.
+            # A changed duplicate is an immutable receipt collision below.
+            old = self._db.execute("SELECT document FROM portfolio_receipts WHERE kind='funding' AND id=?", (funding_id,)).fetchone()
+            if old is not None:
+                if old[0] == self._document(document):
+                    return False
+                raise ValueError("Immutable funding receipt collision")
+            if account_version is not None and account_version != self.account_version():
+                raise ValueError("Stale/unverified funding account version")
+            if not self._receipt("funding", funding_id, document):
                 return False
             self._credit(currency, amount)
-            self._strategy_credit(strategy or "@unallocated_funding", currency, amount, funding=amount)
+            if allocations is None:
+                self._strategy_credit(strategy or "@unallocated_funding", currency, amount, funding=amount)
+            else:
+                for owner, allocated in allocations.items():
+                    self._strategy_credit(owner, currency, allocated, funding=allocated)
             self._advance_version()
             if self._balance(currency) < exact_sum(self._reserved(currency), self._margin()):
                 self._db.execute("INSERT OR REPLACE INTO portfolio_gaps VALUES('@capital',?)", (self._document({"reason": "funding exhausted simulated capital"}),))
@@ -882,6 +1048,210 @@ class PortfolioLedger:
                 "physical_positions": positions, "virtual_positions": virtual,
                 "strategy_cash": [dict(r) for r in self._db.execute("SELECT * FROM portfolio_strategy_cash")],
                 "gaps": {r[0]: json.loads(r[1]) for r in self._db.execute("SELECT * FROM portfolio_gaps")}, "readiness": self.readiness()}
+
+    def valuation(self, marks, *, maintenance_margin_rates, account_version,
+                  asof_ns, now_ns, max_age_ns):
+        """Bounded read-only paper mark projection; never a financial writer.
+
+        ``marks`` and ``maintenance_margin_rates`` are explicit caller facts for
+        every non-zero held instrument. Missing/stale/version-mismatched or
+        cross-currency facts yield UNAVAILABLE totals instead of fabricated
+        zeros. Initial margin is the original simulated ledger margin; the
+        maintenance rate is an explicit synthetic assumption, never a vendor
+        formula.
+        """
+        self._check()
+        if not isinstance(marks, Mapping) or not isinstance(maintenance_margin_rates, Mapping):
+            raise TypeError("Valuation requires explicit mark and maintenance-rate mappings")
+        if len(marks) > 256 or len(maintenance_margin_rates) > 256:
+            raise ValueError("Valuation mapping exceeds its entry bound")
+        clean_marks = {}
+        for instrument, value in marks.items():
+            bounded_identity(instrument, "valuation mark instrument")
+            if isinstance(value, (bool, float)):
+                raise ValueError("Valuation mark requires an exact decimal input")
+            clean_marks[instrument] = positive_decimal(value, "valuation mark")
+        clean_rates = {}
+        for instrument, value in maintenance_margin_rates.items():
+            bounded_identity(instrument, "maintenance rate instrument")
+            if isinstance(value, (bool, float)):
+                raise ValueError("Maintenance rate requires an exact decimal input")
+            rate = positive_decimal(value, "synthetic maintenance margin rate", zero=True)
+            if rate > 1:
+                raise ValueError("Synthetic maintenance margin rate exceeds one")
+            clean_rates[instrument] = rate
+        for name, value in (("account_version", account_version), ("asof_ns", asof_ns),
+                            ("now_ns", now_ns), ("max_age_ns", max_age_ns)):
+            if isinstance(value, bool) or not isinstance(value, int):
+                raise ValueError(name + " must be an explicit integer")
+        if account_version < 0 or asof_ns <= 0 or now_ns <= 0 or max_age_ns <= 0:
+            raise ValueError("Valuation version/time bounds must be positive (version may be zero)")
+        self._document({"marks": {key: str(value) for key, value in clean_marks.items()},
+                        "maintenance_margin_rates": {key: str(value) for key, value in clean_rates.items()}})
+
+        current_version = self.account_version()
+
+        def unavailable(reason):
+            return {"basis": "PAPER_SIMULATION", "scope": self.scope.key,
+                    "mode": self.mode.value, "account_version": account_version,
+                    "current_account_version": current_version,
+                    "asof_ns": asof_ns, "now_ns": now_ns, "max_age_ns": max_age_ns,
+                    "age_ns": now_ns - asof_ns, "quality": "UNAVAILABLE",
+                    "reason": reason, "currency": None, "collateral": None,
+                    "balances": None, "cash": None, "equity": None,
+                    "unrealized": None, "realized": None, "fees": None,
+                    "funding": None, "initial_margin": None,
+                    "maintenance_margin": None, "reserved": None,
+                    "available": None, "strategies": None}
+
+        if account_version != current_version:
+            return unavailable("stale or unverified account version")
+        if asof_ns > now_ns:
+            return unavailable("valuation mark is from the future")
+        if now_ns - asof_ns > max_age_ns:
+            return unavailable("valuation mark is stale")
+        balances = {row[0]: Decimal(row[1]) for row in
+                    self._db.execute("SELECT currency,amount FROM portfolio_balances")}
+        if len(balances) != 1:
+            return unavailable("one explicit collateral currency is required")
+        currency, cash = next(iter(balances.items()))
+
+        rules_cache = {}
+
+        def rules_for(instrument):
+            if instrument not in rules_cache:
+                row = self._db.execute(
+                    "SELECT rules FROM portfolio_orders WHERE instrument=? LIMIT 1",
+                    (instrument,)).fetchone()
+                if row is None:
+                    return None
+                rules_cache[instrument] = ProductSpec.from_document(json.loads(row[0]))
+            return rules_cache[instrument]
+
+        positions = [dict(row) for row in self._db.execute(
+            "SELECT strategy,instrument,quantity,average,margin FROM portfolio_positions")]
+        held = set()
+        for position in positions:
+            quantity = Decimal(position["quantity"])
+            if quantity:
+                held.add(position["instrument"])
+        for instrument in held:
+            rules = rules_for(instrument)
+            if rules is None:
+                return unavailable("held instrument has no pinned product rules")
+            if rules.kind != ProductKind.LINEAR_PERPETUAL:
+                return unavailable("valuation projection supports only linear perpetual positions")
+            if {rules.quote_currency, rules.settlement_currency, rules.collateral_currency} != {currency}:
+                return unavailable("cross-currency/FX valuation is unsupported")
+            if instrument not in clean_marks:
+                return unavailable("missing explicit mark for held instrument")
+            if instrument not in clean_rates:
+                return unavailable("missing explicit maintenance rate for held instrument")
+
+        physical_unrealized = Decimal(0)
+        physical = {}
+        by_strategy = {}
+
+        def strategy_bucket(strategy):
+            return by_strategy.setdefault(strategy, {
+                "currency": currency, "cash": Decimal(0), "amount": Decimal(0),
+                "unrealized": Decimal(0), "realized": Decimal(0), "fees": Decimal(0),
+                "funding": Decimal(0), "initial_margin": Decimal(0),
+                "maintenance_margin": Decimal(0), "reserved": Decimal(0),
+                "equity": Decimal(0), "positions": {}})
+
+        for order in self._db.execute(
+                "SELECT strategy,instrument,rules,reserve_currency FROM portfolio_orders "
+                "WHERE state IN ('OPEN','UNKNOWN','CANCEL_PENDING')"):
+            rules = ProductSpec.from_document(json.loads(order["rules"]))
+            if rules.kind != ProductKind.LINEAR_PERPETUAL:
+                return unavailable("valuation projection does not support pending non-linear/cash products")
+            if ({rules.quote_currency, rules.settlement_currency, rules.collateral_currency} != {currency} or
+                    order["reserve_currency"] != currency):
+                return unavailable("pending product cross-currency/FX valuation is unsupported")
+            if rules.position_mode != "net" or rules.margin_mode != "isolated":
+                return unavailable("pending product mode is outside the linear isolated projection")
+            strategy_bucket(order["strategy"])
+
+        for position in positions:
+            strategy, instrument = position["strategy"], position["instrument"]
+            quantity, average = Decimal(position["quantity"]), Decimal(position["average"])
+            if not quantity:
+                continue
+            rules = rules_for(instrument)
+            mark = clean_marks[instrument]
+            unrealized = exact_product(exact_product(quantity, exact_difference(mark, average)),
+                                       rules.multiplier)
+            if strategy == "@physical":
+                physical[instrument] = str(quantity)
+                physical_unrealized = exact_sum(physical_unrealized, unrealized)
+                continue
+            if strategy == "@physical_netting_adjustment":
+                continue
+            bucket = strategy_bucket(strategy)
+            bucket["unrealized"] = exact_sum(bucket["unrealized"], unrealized)
+            bucket["initial_margin"] = exact_sum(bucket["initial_margin"],
+                                                  Decimal(position["margin"]))
+            bucket["maintenance_margin"] = exact_sum(
+                bucket["maintenance_margin"],
+                exact_product(exact_product(quantity.copy_abs(), mark),
+                              exact_product(rules.multiplier, clean_rates[instrument])))
+            bucket["positions"][instrument] = str(quantity)
+
+        # Strategies with cash facts but no remaining inventory still retain
+        # their realized/fee/funding attribution.
+        for row in self._db.execute("SELECT * FROM portfolio_strategy_cash"):
+            strategy = row["strategy"]
+            if strategy in ("@physical", "@physical_netting_adjustment"):
+                continue
+            bucket = strategy_bucket(strategy)
+            if row["currency"] != currency:
+                return unavailable("cross-currency strategy cash is unsupported")
+            for field in ("amount", "realized", "fees", "funding"):
+                bucket[field] = exact_sum(bucket[field], Decimal(row[field]))
+
+        maintained = Decimal(0)
+        realized = Decimal(0)
+        physical_netting_adjustment = Decimal(0)
+        fees = Decimal(0)
+        funding = Decimal(0)
+        for strategy in by_strategy:
+            bucket = by_strategy[strategy]
+            bucket["reserved"] = self._reserved(currency, strategy)
+            bucket["cash"] = bucket["amount"]
+            bucket["equity"] = exact_sum(bucket["amount"], bucket["unrealized"])
+            maintained = exact_sum(maintained, bucket["maintenance_margin"])
+            realized = exact_sum(realized, bucket["realized"])
+            fees = exact_sum(fees, bucket["fees"])
+            funding = exact_sum(funding, bucket["funding"])
+        adjustment_row = self._db.execute(
+            "SELECT realized FROM portfolio_strategy_cash WHERE strategy='@physical_netting_adjustment' AND currency=?",
+            (currency,)).fetchone()
+        if adjustment_row:
+            physical_netting_adjustment = Decimal(adjustment_row[0])
+            realized = exact_sum(realized, physical_netting_adjustment)
+
+        initial_margin = self._margin()
+        reserved = self._reserved(currency)
+        equity = exact_sum(cash, physical_unrealized)
+        available = exact_sum(equity, initial_margin.copy_negate(), reserved.copy_negate())
+        result = {
+            "basis": "PAPER_SIMULATION", "scope": self.scope.key,
+            "mode": self.mode.value, "account_version": account_version,
+            "current_account_version": current_version, "asof_ns": asof_ns,
+            "now_ns": now_ns, "max_age_ns": max_age_ns, "age_ns": now_ns - asof_ns,
+            "quality": "VALID", "reason": None, "currency": currency,
+            "collateral": cash, "collateral_currency": currency,
+            "balances": {currency: cash}, "cash": cash, "equity": equity,
+            "unrealized": physical_unrealized, "realized": realized, "fees": fees,
+            "funding": funding, "initial_margin": initial_margin,
+            "maintenance_margin": maintained, "reserved": reserved,
+            "physical_netting_adjustment": physical_netting_adjustment,
+            "available": available, "physical_positions": physical,
+            "strategies": by_strategy,
+        }
+        self._document(result)
+        return result
 
     def close(self):
         # Cleanup survives lease-path loss, but never a foreign thread/process.
