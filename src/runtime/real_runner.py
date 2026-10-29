@@ -5,6 +5,7 @@ import hashlib
 import json
 import logging
 import math
+import time
 import uuid
 from dataclasses import dataclass
 from collections import deque
@@ -22,6 +23,7 @@ from core.dedup import BoundedDedup
 from execution.execution_owner import ExecutionOwner
 from runtime.runtime_control import GateBlocked
 from execution.execution_ledger import AccountScope, canonical, exact_product
+from operations.dashboard.latency import observe, observe_strategy
 
 
 logger = logging.getLogger(__name__)
@@ -279,7 +281,17 @@ class RealExecutionRunner:
             if not fresh:
                 return {"status": "DUPLICATE_SOURCE_EVENT", "strategy_id": strategy_id,
                         "event_id": event.event_id}
-            result = callback(event, data)
+            callback_started=time.monotonic_ns()
+            callback_failed=False
+            try:
+                result = callback(event, data)
+            except BaseException:
+                callback_failed=True
+                raise
+            finally:
+                observe("strategy_callback",started_ns=callback_started,ended_ns=time.monotonic_ns(),
+                        strategy_id=strategy_id,account_scope=self.owner.ledger.scope.key if self.owner else "",
+                        mode=self.owner.ledger.scope.environment if self.owner else "",error=callback_failed)
             if inspect.isawaitable(result):
                 if inspect.iscoroutine(result):
                     result.close()
@@ -299,6 +311,8 @@ class RealExecutionRunner:
             raise GateBlocked("Selected source returned a non-owned or invalid action plan")
         self._source_runtime_active.add(strategy_id)
         self._source_runtime_ids[strategy_id] = source_runtime_id
+        observe_strategy(strategy_id,self.owner.ledger.scope.key if self.owner else "",
+                         self.owner.ledger.scope.environment if self.owner else "","RUNNING")
         if result.group_submit_mode is not None or result.group_followup:
             if self.group_coordinator is None:
                 raise GateBlocked("Grouped plan requires an explicitly injected coordinator")

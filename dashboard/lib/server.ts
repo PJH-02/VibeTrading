@@ -1,4 +1,5 @@
 import { env } from "cloudflare:workers";
+import { isAuthorizedViewer } from "./observability";
 
 export function database() {
   if (!env.DB) throw new Error("DB binding unavailable");
@@ -13,6 +14,9 @@ export async function ingestAuthorized(request: Request) {
   const hash = async (s: string) => new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)));
   const [a, b] = await Promise.all([hash(token), hash(env.INGEST_TOKEN)]);
   return a.reduce((diff, byte, i) => diff | (byte ^ b[i]), 0) === 0;
+}
+export function viewerAuthorized(request: Request) {
+  return isAuthorizedViewer(request);
 }
 export function browserWriteAuthorized(request: Request) {
   // Sites dispatch enforces owner-private access. The ingest service has no visitor identity.

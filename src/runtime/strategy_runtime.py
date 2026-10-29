@@ -34,6 +34,7 @@ from strategies.contract import load_strategy_manifest
 from strategies.contract import action_protocol_version, source_has_order_feedback, validate_action_protocol
 from execution.trading_contracts import (ActionKind, ExecutionAction, ProductSpec, TradingMode,
     StrategyActionPlan, StrategyOrderContext, StrategyOrderEvent, bounded_identity)
+from operations.dashboard.latency import observe, observe_strategy
 
 
 @dataclass(frozen=True)
@@ -457,6 +458,9 @@ class PaperStrategyRuntime:
         elif job.restart_blocked:
             job.state, job.reason = "BLOCKED", "strategy_state_restore_unverified"
         self._jobs[sid] = job
+        for account in registration.accounts:
+            observe_strategy(sid,self.accounts[account].ledger.scope.key,"PAPER",
+                             "BLOCKED" if job.state=="BLOCKED" else "REGISTERED")
 
     def _validate_data_manifest(self, receipt):
         """Verify an optional point-in-time data-export manifest binding."""
@@ -1429,6 +1433,9 @@ class PaperStrategyRuntime:
     def _isolated_reject(self, job, reason, now_ns):
         """Fence one strategy only; never stop other feeds or strategies."""
         job.state, job.reason = "FAULTED", str(reason)[:256] or "isolated_strategy_fault"
+        for account in job.registration.accounts:
+            observe_strategy(job.registration.module.strategy_id,
+                             self.accounts[account].ledger.scope.key,"PAPER","FAULTED")
         job.isolated_pending = {} if job.worker is not None else None
         if job.worker is not None:
             job.isolated_initialized = False
@@ -1588,8 +1595,14 @@ class PaperStrategyRuntime:
                 continue
             if not self._ready(job, snapshot):
                 job.state = "WARMING"
+                for account in job.registration.accounts:
+                    observe_strategy(job.registration.module.strategy_id,
+                                     self.accounts[account].ledger.scope.key,"PAPER","WARMING")
                 continue
             job.state = "REPLAY" if replay else "PAPER"
+            for account in job.registration.accounts:
+                observe_strategy(job.registration.module.strategy_id,
+                                 self.accounts[account].ledger.scope.key,"PAPER",job.state)
             job.reason = None
             # Refresh per job so actions from an earlier job are factual for
             # the next callback, while no other job's account is exposed.
@@ -1613,7 +1626,19 @@ class PaperStrategyRuntime:
                         "request_ns": self.now_ns()}
                     continue
                 started = self.callback_clock_ns()
-                signals = job.instance.on_event(event, view)
+                callback_started=time.monotonic_ns()
+                callback_failed=False
+                try:
+                    signals = job.instance.on_event(event, view)
+                except BaseException:
+                    callback_failed=True
+                    raise
+                finally:
+                    for account in job.registration.accounts:
+                        observe("strategy_callback",started_ns=callback_started,ended_ns=time.monotonic_ns(),
+                                strategy_id=job.registration.module.strategy_id,
+                                account_scope=self.accounts[account].ledger.scope.key,mode="PAPER",
+                                error=callback_failed)
                 job.callbacks += 1
                 if self.callback_clock_ns()-started > self.budgets.max_callback_ns:
                     raise TimeoutError("Cooperative strategy callback exceeded its return-time budget")
@@ -1621,6 +1646,9 @@ class PaperStrategyRuntime:
                     replay=replay, started=started, causal_time=causal_time))
             except Exception as exc:
                 job.state, job.reason = "FAULTED", type(exc).__name__
+                for account in job.registration.accounts:
+                    observe_strategy(job.registration.module.strategy_id,
+                                     self.accounts[account].ledger.scope.key,"PAPER",job.state)
                 if job.worker is not None:
                     job.worker.kill()
                 if not replay:
@@ -2042,6 +2070,9 @@ class PaperStrategyRuntime:
             if (set(job.registration.required_feeds).intersection(feed_keys)
                     and job.state not in {"PAUSED", "HALTED", "FAULTED", "BLOCKED"}):
                 job.state, job.reason = "WARMING", "input_invalid"
+                for account in job.registration.accounts:
+                    observe_strategy(job.registration.module.strategy_id,
+                                     self.accounts[account].ledger.scope.key,"PAPER","WARMING")
         if not matching_was_live:
             self._deferred_input_gaps.update({key: reason for key in feed_keys})
             return
@@ -2085,6 +2116,8 @@ class PaperStrategyRuntime:
             self._cancel_owned(job, now_ns)
             return
         job.state, job.reason = "PAUSED", "operator_pause"
+        for account in job.registration.accounts:
+            observe_strategy(strategy_id,self.accounts[account].ledger.scope.key,"PAPER","PAUSED")
         self._cancel_owned(job, now_ns)
 
     def resume(self, strategy_id: str):
@@ -2094,6 +2127,8 @@ class PaperStrategyRuntime:
         if job.state != "PAUSED":
             raise ValueError("Only an explicitly paused strategy may resume")
         job.state, job.reason = "WARMING", None
+        for account in job.registration.accounts:
+            observe_strategy(strategy_id,self.accounts[account].ledger.scope.key,"PAPER","WARMING")
         if job.worker is not None:
             job.isolated_generation += 1
             job.isolated_pending = {}
@@ -2112,10 +2147,15 @@ class PaperStrategyRuntime:
                     self._cancel_owned(job, now_ns)
                     continue
                 job.state, job.reason = "HALTED", reason
+                for account in job.registration.accounts:
+                    observe_strategy(sid,self.accounts[account].ledger.scope.key,"PAPER","HALTED")
                 self._cancel_owned(job, now_ns)
 
     def close(self):
         """Boundedly reap isolated children without blocking market callbacks."""
+        for sid, job in self._jobs.items():
+            for account in job.registration.accounts:
+                observe_strategy(sid,self.accounts[account].ledger.scope.key,"PAPER","STOPPED")
         if self.isolation is None:
             return
         pool = self._isolation_pool()
@@ -2127,6 +2167,9 @@ class PaperStrategyRuntime:
 
     async def close_async(self):
         """Asynchronous bounded child cleanup for the local runtime driver."""
+        for sid, job in self._jobs.items():
+            for account in job.registration.accounts:
+                observe_strategy(sid,self.accounts[account].ledger.scope.key,"PAPER","STOPPED")
         if self.isolation is None:
             return
         pool = self._isolation_pool()

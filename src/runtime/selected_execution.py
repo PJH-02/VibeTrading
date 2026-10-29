@@ -13,6 +13,7 @@ import math
 import time
 from collections import deque
 from types import MappingProxyType
+from operations.dashboard.latency import observe, observe_strategy
 
 
 _REGISTRATION_FIELDS = frozenset({
@@ -425,6 +426,9 @@ class NativeSelectionDispatcher:
         if selection.mode == "LIVE":
             # Replace any caller-provided boolean-style activation callback.
             binding.owner.live_activation_guard = self._promotion_guard
+        for dispatcher in self._scope_dispatchers.values():
+            observe_strategy(self.strategy_id,dispatcher.binding.owner.ledger.scope.key,
+                             dispatcher.selection.mode,"REGISTERED")
 
     def _check_live_authorization(self, strategy_id):
         owner = self.binding.owner
@@ -1148,6 +1152,10 @@ class NativeSelectionDispatcher:
         # Feed loss, engine shutdown, or queue pressure invalidates the native
         # source lease. A fresh process/account proof is required to resume.
         self._fail_closed()
+        state="STOPPED" if reason == "runtime_closed" else "BLOCKED"
+        for dispatcher in self._scope_dispatchers.values():
+            observe_strategy(self.strategy_id,dispatcher.binding.owner.ledger.scope.key,
+                             dispatcher.selection.mode,state)
 
     async def run(self):
         from market.hot_path import StrategyDataView
@@ -1196,13 +1204,23 @@ class NativeSelectionDispatcher:
                         raise ValueError("trusted evidence provider must return the exact factual evidence mapping")
                     evidence = dict(evidence)
                     readiness = self.binding.readiness
-                result = await self.binding.runner.dispatch_strategy_market_event(
-                    self.source_proxy, item.result.event, data,
-                    registry=self.binding.registry, evidence=evidence,
-                    readiness=readiness, guard=(self._dispatch_guard()
-                        if len(self._scope_dispatchers) > 1 else self._dispatch_guard),
-                    source_trust=self.binding.source_trust)
+                dispatch_started=time.monotonic_ns()
+                try:
+                    result = await self.binding.runner.dispatch_strategy_market_event(
+                        self.source_proxy, item.result.event, data,
+                        registry=self.binding.registry, evidence=evidence,
+                        readiness=readiness, guard=(self._dispatch_guard()
+                            if len(self._scope_dispatchers) > 1 else self._dispatch_guard),
+                        source_trust=self.binding.source_trust)
+                finally:
+                    observe("selected_dispatch",started_ns=dispatch_started,ended_ns=time.monotonic_ns(),
+                            strategy_id=self.strategy_id,account_scope=self.binding.owner.ledger.scope.key,
+                            mode=self.selection.mode,queue_depth=self.queue.qsize(),
+                            oldest_queue_age_ns=max(0,time.monotonic_ns()-item.queued_ns))
                 self.results.append(result)
+                for dispatcher in self._scope_dispatchers.values():
+                    observe_strategy(self.strategy_id,dispatcher.binding.owner.ledger.scope.key,
+                                     dispatcher.selection.mode,"RUNNING")
             except asyncio.CancelledError:
                 raise
             except Exception as error:

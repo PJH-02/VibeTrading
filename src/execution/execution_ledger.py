@@ -13,6 +13,7 @@ import time
 
 from core.models import OrderIntent, Side
 from .process_lease import ProcessLease
+from operations.dashboard.latency import observe
 
 
 def positive_decimal(value, label: str, *, zero: bool = False) -> Decimal:
@@ -209,7 +210,15 @@ class ExecutionLedger:
         self._lease.check()
 
     def _commit(self):
-        self._db.execute("COMMIT")
+        started=time.monotonic_ns()
+        try:
+            self._db.execute("COMMIT")
+        except BaseException:
+            observe("durable_order_commit",started_ns=started,ended_ns=time.monotonic_ns(),
+                    account_scope=self.scope.key,mode=self.scope.environment,error=True)
+            raise
+        observe("durable_order_commit",started_ns=started,ended_ns=time.monotonic_ns(),
+                account_scope=self.scope.key,mode=self.scope.environment)
 
     @contextmanager
     def transaction(self):

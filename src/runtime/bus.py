@@ -7,7 +7,7 @@ import logging
 import re
 import time
 import hashlib
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, AsyncIterator, Protocol
 
 from pydantic import BaseModel
@@ -105,6 +105,8 @@ class MarketEventPacket:
     subject: str
     payload: bytes
     live_payload: bytes
+    receive_monotonic_ns: int | None = field(default=None, compare=False, repr=False)
+    normalization_ended_ns: int | None = field(default=None, compare=False, repr=False)
 
     @property
     def byte_length(self) -> int:
@@ -134,7 +136,8 @@ def prepare_market_event(event: BaseMarketEvent) -> MarketEventPacket:
         event.event_id, event.event_type, event.instrument, event.venue, event.provider,
         event.source_ts_ns, event.wallclock_ts_ns, event.receive_ts_ns, event.ingest_mode,
         event.session, event.sequence, getattr(event, "fast", None))
-    return MarketEventPacket(snapshot, subject_for_event(event), payload, live_payload)
+    return MarketEventPacket(snapshot, subject_for_event(event), payload, live_payload,
+                             getattr(event, "receive_monotonic_ns", None), time.monotonic_ns())
 
 
 def resolve_market_publication(packet: MarketEventPacket, env: dict[str, str]) -> MarketPublication | None:

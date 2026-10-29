@@ -23,6 +23,7 @@ from .execution_ledger import (ExecutionLedger, canonical, exact_difference,
 from .trading_contracts import (ActionKind, ExecutionAction, StrategyActionPlan,
                                 StrategyOrderContext, StrategyOrderEvent, LiveExecutionAuthorization,
                                 validate_native_account_facts)
+from operations.dashboard.latency import observe
 from .venues.registry import (
     AdapterProtocolError, ForeignOrderError, RouteStateError, UnsupportedOperation,
     cancel_arguments, query_arguments, submit_candidate,
@@ -855,6 +856,24 @@ class ExecutionOwner:
     async def _prepare_action(self, action: ExecutionAction, *, registry, readiness,
                               evidence: dict, reserve_units=None, guard=None,
                               on_event=None, allow_grouped=False):
+        started=time.monotonic_ns()
+        failed=False
+        try:
+            return await self._prepare_action_inner(action,registry=registry,readiness=readiness,
+                evidence=evidence,reserve_units=reserve_units,guard=guard,on_event=on_event,
+                allow_grouped=allow_grouped)
+        except BaseException:
+            failed=True
+            raise
+        finally:
+            observe("owner_preflight",started_ns=started,ended_ns=time.monotonic_ns(),
+                    strategy_id=getattr(action,"strategy_id", ""),
+                    account_scope=getattr(getattr(action,"scope",None),"key", ""),
+                    mode=getattr(getattr(action,"mode",None),"value", ""),error=failed)
+
+    async def _prepare_action_inner(self, action: ExecutionAction, *, registry, readiness,
+                              evidence: dict, reserve_units=None, guard=None,
+                              on_event=None, allow_grouped=False):
         if self._pending >= self.budgets.max_pending:
             raise GateBlocked("Execution admission budget exhausted")
         self._pending += 1
@@ -933,6 +952,8 @@ class ExecutionOwner:
                 return dict(prepared.duplicate)
             async with self._lock:
                 sent = {"value": False}
+                send_started_ns = [None]
+                send_requested_ns = time.monotonic_ns()
 
                 def source():
                     if prepared.group_permit is not None:
@@ -946,15 +967,24 @@ class ExecutionOwner:
                             or current_native["taker_fee_rate"] != prepared.native_facts["taker_fee_rate"]):
                         raise GateBlocked("Native product/fee facts changed after durable authorization")
                     self.ledger.mark_handoff(intent.intent_id)
+                    send_started_ns[0]=time.monotonic_ns()
+                    observe("adapter_send_begin",started_ns=send_requested_ns,ended_ns=send_started_ns[0],
+                            strategy_id=action.strategy_id,account_scope=action.scope.key,
+                            mode=action.mode.value)
                     sent["value"] = True
 
                 callback = on_event if on_event is not None else prepared.on_event
                 try:
+                    send_requested_ns = time.monotonic_ns()
                     response = await asyncio.wait_for(
                         prepared.registry.invoke(prepared.route_id, "submit", prepared.candidate,
                             permit=source, owner_strategy_id=action.strategy_id,
                             owner_account_scope=action.scope),
                         self.budgets.submit_timeout_seconds)
+                    if send_started_ns[0] is not None:
+                        observe("adapter_ack",started_ns=send_started_ns[0],ended_ns=time.monotonic_ns(),
+                                strategy_id=action.strategy_id,account_scope=action.scope.key,
+                                mode=action.mode.value)
                     order_id = self._response_order_id(response)
                     if order_id is None:
                         raise GateBlocked("Adapter ACK lacked an authoritative order identity")
@@ -977,6 +1007,10 @@ class ExecutionOwner:
                             "intent_id": intent.intent_id, "route_id": prepared.route_id,
                             "order_id": order_id}
                 except BaseException as error:
+                    if send_started_ns[0] is not None:
+                        observe("adapter_ack",started_ns=send_started_ns[0],ended_ns=time.monotonic_ns(),
+                                strategy_id=action.strategy_id,account_scope=action.scope.key,
+                                mode=action.mode.value,error=True)
                     cause = error
                     explicit_rejection = False
                     root_cause = error

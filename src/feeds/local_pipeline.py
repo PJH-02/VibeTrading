@@ -16,6 +16,8 @@ import time
 from typing import Callable
 
 from runtime.bus import MarketEventPacket, prepare_market_event, resolve_market_publication
+from operations.dashboard.latency import observe
+from feeds.collection_timing import is_local_receive_stamp
 from .feed_recovery import EngineCursor, RecoveryFrame
 
 
@@ -395,7 +397,8 @@ class SpoolingMarketPublisher:
             raise
 
     async def publish_market_event(self, event):
-        await self.publish_market_packet(prepare_market_event(event))
+        packet=prepare_market_event(event)
+        await self.publish_market_packet(packet)
 
     _market_packet_protocol=1
     _packet_public_method=publish_market_event
@@ -404,6 +407,12 @@ class SpoolingMarketPublisher:
         self._check()
         if not self._ready:
             raise RuntimeError("connect local ingress before starting the collector")
+        receive_ns=getattr(packet,"receive_monotonic_ns",None)
+        ended_ns=getattr(packet,"normalization_ended_ns",None)
+        if is_local_receive_stamp(receive_ns) and type(ended_ns) is int:
+            observe("receive_normalize",started_ns=receive_ns,ended_ns=ended_ns,
+                    source_id=self.producer,trace_id=getattr(packet.snapshot,"event_id",""),
+                    source_age_ns=max(0,ended_ns-receive_ns))
         publication=resolve_market_publication(packet,self.env)
         if publication is None:
             self._filtered+=1
@@ -437,7 +446,14 @@ class SpoolingMarketPublisher:
                 self._spool.seal()
                 receipt=self._spool.append(item.payload)
             receipts.append(receipt)
-        floor=self._spool.flush()
+        flush_started=time.monotonic_ns()
+        try:
+            floor=self._spool.flush()
+        except BaseException:
+            observe("spool_flush",started_ns=flush_started,ended_ns=time.monotonic_ns(),
+                    source_id=self.producer,error=True)
+            raise
+        observe("spool_flush",started_ns=flush_started,ended_ns=time.monotonic_ns(),source_id=self.producer)
         if any(receipt.cursor.sequence>floor.sequence for receipt in receipts):
             raise RuntimeError("spool flush did not establish contiguous durability")
         return receipts
@@ -446,6 +462,10 @@ class SpoolingMarketPublisher:
         while True:
             first=await self._queue.get()
             batch=[first]
+            dequeued_ns=time.monotonic_ns()
+            observe("ingress_queue",started_ns=first.accepted_ns,ended_ns=dequeued_ns,
+                    source_id=self.producer,queue_depth=self._queue.qsize(),
+                    oldest_queue_age_ns=max(0,dequeued_ns-first.accepted_ns))
             stage,reason,cursor="persist","persistence_failed",None
             try:
                 # One deadline and one bounded gather task per group. The
@@ -453,6 +473,7 @@ class SpoolingMarketPublisher:
                 # so timeout/cancellation cannot strand an owned queue item.
                 loop=asyncio.get_running_loop()
                 deadline=loop.time()+self.budgets.group_sync_ms/1000
+                group_started=time.monotonic_ns()
 
                 async def gather_group():
                     batch_bytes=first.size
@@ -465,6 +486,8 @@ class SpoolingMarketPublisher:
                     await asyncio.wait_for(gather_group(),timeout=max(0,deadline-loop.time()))
                 except asyncio.TimeoutError:
                     pass
+                observe("group_wait",started_ns=group_started,ended_ns=time.monotonic_ns(),
+                        source_id=self.producer,queue_depth=self._queue.qsize())
                 if self._error is not None:
                     raise RuntimeError("local ingress invalid before persistence") from self._error
                 receipts=await asyncio.get_running_loop().run_in_executor(self._executor,self._persist,batch)
@@ -511,6 +534,7 @@ class SpoolingMarketPublisher:
             while True:
                 reason,cursor="ack_receive_failed",None
                 receipt=await self.transport.receive_ack()
+                ack_received=time.monotonic_ns()
                 if receipt.phase in {"GAP","REJECTED"}:
                     reason="engine_rejected_input"
                     if (receipt.cursor.producer,receipt.cursor.incarnation)==(self.producer,self.incarnation):
@@ -529,6 +553,8 @@ class SpoolingMarketPublisher:
                     reason="ack_content_or_order_mismatch"
                     raise RuntimeError("local engine ACK content/order mismatch")
                 self._last_applied=cursor.sequence;self._applied+=1
+                observe("ingress_to_apply_ack",started_ns=item.accepted_ns,ended_ns=ack_received,
+                        source_id=self.producer,queue_depth=self._queue.qsize())
                 self._last_applied_latency_ns=max(0,time.monotonic_ns()-item.accepted_ns)
                 self._max_applied_latency_ns=max(self._max_applied_latency_ns,self._last_applied_latency_ns)
                 self._outstanding.pop(cursor.sequence)

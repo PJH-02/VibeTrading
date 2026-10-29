@@ -12,6 +12,9 @@ from pathlib import Path
 import aiohttp
 from cryptography.hazmat.primitives import serialization
 from operations.dashboard.projection import MarketProjection, mm_projection, paper_projection, paper_projection_paths, runtime_orders
+from operations.dashboard.pnl import (etf_journal_pnl_projection, merge_dashboard_strategies,
+                                       merge_runtime_registry, native_ledger_pnl_projection,
+                                       paper_pnl_projection)
 from operations.dashboard.accounts import bybit_account
 from market.local_snapshot import SnapshotError, local_snapshot_config, read_market_snapshot
 
@@ -116,6 +119,7 @@ async def run(*, stop: asyncio.Event | None = None) -> None:
     sent_orders = {}
     strategies, orders, account_state = [], [], []
     last_scan = 0.0
+    mark_snapshot = None
     exchange_strategies, exchange_orders = [], []
     headers = {"Authorization": "Bearer " + token, "OAI-Sites-Authorization": "Bearer " + bypass}
     async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=15)) as session:
@@ -138,8 +142,16 @@ async def run(*, stop: asyncio.Event | None = None) -> None:
             tasks.append(asyncio.create_task(observe_accounts()))
         try:
             while not stop.is_set():
-                if time.monotonic() - last_scan >= 10:
+                if time.monotonic() - last_scan >= 2:
                     roots = [data_root / "state" / "vibetrading.sqlite3", data_root / "crypto_state" / "vibetrading.sqlite3"]
+                    mark_snapshot = None
+                    if local_mode and (paper_paths or os.environ.get("NATIVE_EXECUTION_LEDGER_PATHS")
+                                       or os.environ.get("ETF_PNL_CONFIGS")):
+                        try:
+                            mark_snapshot = await asyncio.to_thread(
+                                read_market_snapshot, snapshot_file, snapshot_budgets)
+                        except SnapshotError:
+                            mark_snapshot = None
                     orders = await asyncio.to_thread(runtime_orders, roots)
                     mm, mm_orders = await asyncio.to_thread(mm_projection, Path(os.environ.get("DASHBOARD_MM_ROOT", str(data_root / "liquidity_mm"))))
                     strategies = mm + [{**s, "running": bool(s.get("running")) and time.time() * 1000 - s.get("updated_ms", 0) < 45000}
@@ -151,9 +163,11 @@ async def run(*, stop: asyncio.Event | None = None) -> None:
                         pass
                     orders.extend(exchange_orders)
                     strategies.extend(exchange_strategies)
+                    pnl_rows = []
                     if local_mode and paper_paths:
                         try:
-                            paper = await asyncio.to_thread(paper_projection, paper_paths, limit=500)
+                            paper = await asyncio.to_thread(paper_projection, paper_paths, limit=500,
+                                                           include_observability=True)
                         except Exception:
                             errors["paper-projection"] = {"source": "paper-projection",
                                                           "type": "PaperProjectionUnavailable",
@@ -161,6 +175,17 @@ async def run(*, stop: asyncio.Event | None = None) -> None:
                         else:
                             orders.extend(paper["orders"])
                             strategies.extend(paper["strategies"])
+                            now_ms = int(time.time() * 1000)
+                            paper_marks = [
+                                {**market, "account_scope": account["scope"]}
+                                for account in paper["accounts"]
+                                for market in (mark_snapshot or {}).get("markets", [])
+                            ]
+                            paper_pnl_rows = paper_pnl_projection(
+                                paper, generated_ms=now_ms, marks=paper_marks,
+                                max_mark_age_ms=max(1, min(300000, int(snapshot_budgets.max_age_seconds * 1000))))
+                            pnl_rows = sorted(paper_pnl_rows,
+                                key=lambda row: (row["strategy_id"] != "UNALLOCATED", row["key"]))[:30]
                             errors.pop("paper-projection", None)
                             paper_errors = {
                                 "paper-projection:" + str(item["source"]): {
@@ -171,6 +196,97 @@ async def run(*, stop: asyncio.Event | None = None) -> None:
                                 if error_key not in paper_errors:
                                     errors.pop(error_key, None)
                             errors.update(paper_errors)
+                    latency_rows = []
+                    latency_status = "NOT_CONFIGURED"
+                    latency_error = None
+                    latency_paths_raw = os.environ.get("DASHBOARD_LATENCY_PATHS")
+                    if latency_paths_raw:
+                        try:
+                            latency_paths = json.loads(latency_paths_raw)
+                            if (not isinstance(latency_paths, list) or len(latency_paths) > 32 or
+                                    any(not isinstance(path, str) or not Path(path).is_absolute()
+                                        for path in latency_paths)):
+                                raise ValueError("invalid explicit latency paths")
+                            from operations.dashboard.latency import read_latency_snapshots
+                            latency_rows = read_latency_snapshots([Path(path) for path in latency_paths])
+                            latency_status = "AVAILABLE" if latency_rows else "UNAVAILABLE"
+                        except (ImportError, TypeError, ValueError, OSError) as exc:
+                            latency_rows = []
+                            latency_status = "UNAVAILABLE"
+                            latency_error = type(exc).__name__
+                    else:
+                        latency_error = None
+                    native_rows = []
+                    native_status = "NOT_CONFIGURED"
+                    native_error = None
+                    native_paths_raw = os.environ.get("NATIVE_EXECUTION_LEDGER_PATHS")
+                    if native_paths_raw:
+                        try:
+                            native_paths = json.loads(native_paths_raw)
+                            product_metadata_raw = os.environ.get("NATIVE_PNL_PRODUCTS", "[]")
+                            if len(product_metadata_raw.encode("utf-8")) > 65536:
+                                raise ValueError("native product metadata exceeds byte budget")
+                            product_metadata = json.loads(product_metadata_raw)
+                            if (not isinstance(native_paths, list) or len(native_paths) > 16 or
+                                    any(not isinstance(path, str) or not Path(path).is_absolute()
+                                        for path in native_paths) or not isinstance(product_metadata, list)):
+                                raise ValueError("invalid explicit native PnL configuration")
+                            native_scopes = {json.dumps(item.get("scope"), separators=(",", ":"),
+                                                         ensure_ascii=False)
+                                             for item in product_metadata
+                                             if isinstance(item, dict) and isinstance(item.get("scope"), list)}
+                            native_marks = [
+                                {**market, "account_scope": scope}
+                                for scope in native_scopes
+                                for market in (mark_snapshot or {}).get("markets", [])
+                            ]
+                            native_rows = native_ledger_pnl_projection(
+                                [Path(path) for path in native_paths], product_metadata=product_metadata,
+                                marks=native_marks,
+                                max_mark_age_ms=(max(1, min(300000, int(snapshot_budgets.max_age_seconds * 1000)))
+                                    if snapshot_budgets is not None else 10000),
+                                generated_ms=int(time.time() * 1000))
+                            native_rows = sorted(native_rows,
+                                key=lambda row: (row["strategy_id"] != "UNALLOCATED", row["key"]))[:30]
+                            native_status = "AVAILABLE" if native_rows else "UNAVAILABLE"
+                        except (TypeError, ValueError, OSError) as exc:
+                            native_status = "UNAVAILABLE"
+                            native_error = type(exc).__name__
+                    pnl_rows.extend(native_rows)
+                    etf_status = "NOT_CONFIGURED"
+                    etf_error = None
+                    etf_configs_raw = os.environ.get("ETF_PNL_CONFIGS")
+                    if etf_configs_raw:
+                        try:
+                            if len(etf_configs_raw.encode("utf-8")) > 65536:
+                                raise ValueError("ETF PnL config exceeds byte budget")
+                            etf_configs = json.loads(etf_configs_raw)
+                            if (not isinstance(etf_configs, list) or len(etf_configs) > 16 or
+                                    any(not isinstance(item, dict) or not isinstance(item.get("path"), str) or
+                                        not Path(item["path"]).is_absolute() for item in etf_configs)):
+                                raise ValueError("invalid explicit ETF PnL config")
+                            etf_scopes = {json.dumps(item.get("scope"), separators=(",", ":"),
+                                                     ensure_ascii=False)
+                                          for item in etf_configs if isinstance(item.get("scope"), list)}
+                            etf_marks = [
+                                {**market, "account_scope": scope}
+                                for scope in etf_scopes
+                                for market in (mark_snapshot or {}).get("markets", [])
+                            ]
+                            etf_rows = etf_journal_pnl_projection(
+                                etf_configs, marks=etf_marks,
+                                max_mark_age_ms=(max(1, min(300000, int(snapshot_budgets.max_age_seconds * 1000)))
+                                    if snapshot_budgets is not None else 10000),
+                                generated_ms=int(time.time() * 1000))
+                            pnl_rows.extend(etf_rows[:15])
+                            etf_status = "AVAILABLE" if etf_rows else "UNAVAILABLE"
+                        except (TypeError, ValueError, OSError) as exc:
+                            etf_status = "UNAVAILABLE"
+                            etf_error = type(exc).__name__
+                    pnl_rows = merge_runtime_registry(
+                        pnl_rows, latency_rows, generated_ms=int(time.time() * 1000))
+                    pnl_rows = merge_dashboard_strategies(
+                        pnl_rows, strategies, generated_ms=int(time.time() * 1000))
                     orders = sorted(orders, key=lambda x: x.get("updated_ms") or 0, reverse=True)[:1000]
                     try:
                         account_state = json.loads((monitor_root / "timefolio.json").read_text(encoding="utf-8"))
@@ -191,6 +307,14 @@ async def run(*, stop: asyncio.Event | None = None) -> None:
                     markets = projection.snapshot()
                 snapshot = {"schema_version": 1, "generated_ms": int(time.time() * 1000),
                     "markets": markets, "strategies": strategies, "orders": changed,
+                    "observability": {"pnl": pnl_rows[:100], "latency": latency_rows[:32],
+                                      "latency_status": latency_status,
+                                      "latency_error": latency_error,
+                                      "native_status": native_status,
+                                      "native_error": native_error,
+                                      "etf_status": etf_status,
+                                      "etf_error": etf_error,
+                                      "end_to_end_ms": None, "end_to_end_status": "SEGMENTED"},
                     "timefolio": account_state, "public_key": key,
                     "errors": list(errors.values())[-20:], "nats_connected": bool(connection is not None and connection.is_connected),
                     "sampling_ms": 2000}

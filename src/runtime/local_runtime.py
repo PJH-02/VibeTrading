@@ -205,10 +205,27 @@ async def run_collector(plan,item,settings,*,collector=None):
     publisher=SpoolingMarketPublisher(producer=item.producer,incarnation=item.incarnation,
         spool_factory=lambda:create_spool(item),transport=None if delivery else transport_factory(),
         budgets=item.pipeline,env=settings.env,on_invalid=invalid,resume_existing=True,**delivery)
+    telemetry_stop=None
+    telemetry_task=None
+    telemetry_env=getattr(settings,'env',{})
+    telemetry_directory=telemetry_env.get('DASHBOARD_TELEMETRY_DIR')
+    if telemetry_directory:
+        telemetry_path=Path(telemetry_directory)
+        from operations.dashboard.latency import export_metrics,telemetry_instance_id
+        try:telemetry_interval=float(telemetry_env.get('DASHBOARD_TELEMETRY_INTERVAL_SECONDS','2'))
+        except (TypeError,ValueError):telemetry_interval=2
+        telemetry_stop=asyncio.Event()
+        telemetry_task=asyncio.create_task(export_metrics(telemetry_path,stop=telemetry_stop,
+            interval_seconds=telemetry_interval,instance_id=telemetry_instance_id('collector',item.producer,
+                telemetry_env.get('DASHBOARD_TELEMETRY_INSTANCE_ID'))),name='dashboard-latency-export')
     try:
         await publisher.connect()
         await collector.run(publisher,duration_sec=None)
     finally:
+        if telemetry_stop is not None:telemetry_stop.set()
+        if telemetry_task is not None:
+            telemetry_task.cancel()
+            telemetry_task.add_done_callback(lambda done: None if done.cancelled() else done.exception())
         await publisher.close()
 
 
@@ -531,6 +548,8 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
     etf=None
     engine=None
     journal_restored=False
+    telemetry_stop=None
+    telemetry_task=None
     def invalid(producer,reason):
         if native_dispatchers and engine is not None and producer in {p.producer for p in plan.producers}:
             affected=set(engine.feed_instruments(producer))
@@ -656,6 +675,18 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
                 event_source=engine.event_source(required_producers=timefolio_producers))
         for dispatcher in native_dispatchers:
             dispatcher.task=asyncio.create_task(dispatcher.run(),name='selected-native-'+dispatcher.selection.job_id)
+        telemetry_env=getattr(settings,'env',{})
+        telemetry_directory=telemetry_env.get('DASHBOARD_TELEMETRY_DIR')
+        if telemetry_directory:
+            from operations.dashboard.latency import export_metrics,telemetry_instance_id
+            telemetry_path=Path(telemetry_directory)
+            try:telemetry_interval=float(telemetry_env.get('DASHBOARD_TELEMETRY_INTERVAL_SECONDS','2'))
+            except (TypeError,ValueError):telemetry_interval=2
+            telemetry_stop=asyncio.Event()
+            telemetry_task=asyncio.create_task(export_metrics(telemetry_path,stop=telemetry_stop,
+                interval_seconds=telemetry_interval,instance_id=telemetry_instance_id('engine',str(plan.endpoint),
+                    telemetry_env.get('DASHBOARD_TELEMETRY_INSTANCE_ID'))),
+                name='dashboard-latency-export')
         await server.start()
         await engine.start()
         from market.local_snapshot import LocalSnapshotWriter, SnapshotBudgets
@@ -673,6 +704,10 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
         for dispatcher in native_dispatchers:
             dispatcher.invalidate('runtime_closed')
         invalid('shutdown','runtime_closed')
+        if telemetry_stop is not None:telemetry_stop.set()
+        if telemetry_task is not None:
+            telemetry_task.cancel()
+            telemetry_task.add_done_callback(lambda done: None if done.cancelled() else done.exception())
         try:
             for dispatcher in native_dispatchers:
                 if dispatcher.task is not None:dispatcher.task.cancel()

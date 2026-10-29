@@ -23,6 +23,8 @@ from feeds.feed_recovery import EngineCursor, FeedMode, RecoveryFrame
 from .hot_path import ApplyResult, DecisionSnapshot, HotPathStore, freeze_market_event
 from runtime.local_transport import AppliedReceipt
 from storage.market_checkpoint import CheckpointCodec, CheckpointProducer, _canonical
+from operations.dashboard.latency import observe
+from feeds.collection_timing import is_local_receive_stamp
 from .market_apply_order import ApplyOrder, ApplyOrderWriter, order_anchor, order_record
 from storage.market_spool import MarketSpool
 from core.models import AssetClass, BaseMarketEvent, EventType, SCHEMA_VERSION, event_from_dict
@@ -773,10 +775,21 @@ class LocalMarketEngine:
             raise EngineError("live_input_before_verified_handoff")
         return feed, False
 
-    def _apply_state(self, event, phase):
+    def _apply_state(self, event, phase, *, source_id=""):
         self._require_owned_store_cursor()
         if self.hot_path is not None:
-            result = self.hot_path.apply_versioned(event)
+            started=time.monotonic_ns()
+            try:
+                result = self.hot_path.apply_versioned(event)
+            except BaseException:
+                observe("market_apply",started_ns=started,ended_ns=time.monotonic_ns(),
+                        source_id=source_id,trace_id=getattr(event,"event_id",""),error=True)
+                raise
+            ended=time.monotonic_ns()
+            receive_ns=getattr(event,"receive_monotonic_ns",None)
+            source_age=max(0,ended-receive_ns) if is_local_receive_stamp(receive_ns) else None
+            observe("market_apply",started_ns=started,ended_ns=ended,source_id=source_id,
+                    trace_id=getattr(event,"event_id",""),source_age_ns=source_age)
             if not result.applied and not result.duplicate and result.reason not in {"raw_only", "data_gap"}:
                 raise EngineError("market_state_rejected:" + result.reason)
             if self.post_apply_callbacks:
@@ -865,7 +878,7 @@ class LocalMarketEngine:
                 if event.event_type == EventType.DATA_GAP:
                     raise EngineError("gap_inside_replay_range")
                 state_started=True
-                self._apply_state(event, FeedMode.REPLAY)
+                self._apply_state(event, FeedMode.REPLAY,source_id=frame.cursor.producer)
                 if feed.generation != generation or feed.mode not in {FeedMode.REPLAY, FeedMode.WARMING}:
                     raise EngineError("state_callback_invalidated_recovery")
                 self._commit_cursor(frame, feed, True)
@@ -904,7 +917,7 @@ class LocalMarketEngine:
             if event.event_type == EventType.DATA_GAP:
                 self.invalidate(frame.cursor.producer, "market_data_gap")
                 state_started=True
-                self._apply_state(event, FeedMode.INVALID)
+                self._apply_state(event, FeedMode.INVALID,source_id=frame.cursor.producer)
                 self._commit_cursor(frame, feed, False)
                 return AppliedReceipt(frame.cursor, frame.digest)
             phase = FeedMode.REPLAY if event.ingest_mode == "backfill" else FeedMode.LIVE
@@ -917,7 +930,7 @@ class LocalMarketEngine:
             if enqueue and (len(self._queue) >= self.budgets.max_records or self._queue_bytes + len(frame.payload) > self.budgets.max_bytes):
                 raise EngineError("trading_queue_budget_exceeded")
             state_started=True
-            changed = self._apply_state(event, phase)
+            changed = self._apply_state(event, phase,source_id=frame.cursor.producer)
             if feed.generation != generation or feed.mode != FeedMode.LIVE:
                 raise EngineError("state_callback_invalidated_feed")
             self._commit_cursor(frame, feed, False)

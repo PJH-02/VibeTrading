@@ -21,6 +21,7 @@ import struct
 import sys
 import time
 import uuid
+from operations.dashboard.latency import observe
 
 from feeds.feed_recovery import EngineCursor, RecoveryFrame
 from execution.process_lease import ProcessLease
@@ -805,7 +806,7 @@ class LocalTransportClient:
         except (TransportError, ValueError) as error:
             self._invalidate(str(error))
             return False
-        self._pending[frame.cursor.sequence] = (raw, frame.digest, time.monotonic(), False)
+        self._pending[frame.cursor.sequence] = (raw, frame.digest, time.monotonic(), False,None)
         self.cursor = frame.cursor
         self._accepted += 1
         self._data_ready.set()
@@ -822,8 +823,9 @@ class LocalTransportClient:
                     self._data_ready.clear()
                     await self._data_ready.wait()
                     continue
-                seq, (raw, digest, stamp, _) = item
-                self._pending[seq] = (raw, digest, stamp, True)
+                seq, (raw, digest, stamp, _, _) = item
+                send_started_ns=time.monotonic_ns()
+                self._pending[seq] = (raw, digest, stamp, True,send_started_ns)
                 for start in range(0, len(raw), 16384):
                     connection.writer.write(raw[start:start + 16384])
                     await connection.writer.drain()
@@ -879,6 +881,9 @@ class LocalTransportClient:
                     if item is None or item[1] != ack.digest:
                         raise TransportError("ack_cursor_or_digest_mismatch")
                     if ack.phase == "APPLIED":
+                        ack_ns=time.monotonic_ns()
+                        observe("local_transport_applied_ack",started_ns=item[4],ended_ns=ack_ns,
+                                source_id=self.cursor.producer,queue_depth=self._acks.qsize())
                         self._pending.pop(ack.cursor.sequence)
                         self._receipts[ack.cursor.sequence] = ack.digest
                         self._applied += 1

@@ -228,6 +228,7 @@ _PAPER_REQUIRED_COLUMNS = {
     "portfolio_positions": {"strategy", "instrument", "quantity", "average", "margin"},
     "portfolio_strategy_cash": {"strategy", "currency", "amount", "fees", "funding", "realized"},
     "portfolio_gaps": {"instrument"},
+    "portfolio_receipts": {"kind", "id", "fingerprint", "document"},
 }
 
 
@@ -305,7 +306,7 @@ def _paper_instrument_parts(key: Any) -> tuple[str | None, str | None, str | Non
             parts[2] if len(parts) > 2 else None)
 
 
-def _paper_order_facts(payload_text: Any, rules_text: Any, instrument: Any):
+def _paper_order_facts(payload_text: Any, rules_text: Any, instrument: Any, *, include_observability: bool = False):
     payload = _paper_json_object(payload_text)
     rules = _paper_json_object(rules_text)
     details = payload.get("instrument") if isinstance(payload.get("instrument"), dict) else {}
@@ -313,17 +314,22 @@ def _paper_order_facts(payload_text: Any, rules_text: Any, instrument: Any):
     venue = _paper_text(details.get("venue")) or venue
     asset_class = _paper_text(details.get("asset_class")) or asset_class
     symbol = _paper_text(details.get("std_symbol")) or symbol
-    currency = _paper_text(details.get("currency"))
-    if currency is None:
-        currency = _paper_text(rules.get("settlement_currency")) or _paper_text(rules.get("collateral_currency"))
+    settlement_currency = _paper_text(rules.get("settlement_currency"))
+    quote_currency = _paper_text(rules.get("quote_currency"))
+    multiplier = _paper_text(rules.get("multiplier"))
+    currency = (_paper_text(details.get("currency")) or settlement_currency or _paper_text(rules.get("collateral_currency")))
+    if include_observability:
+        currency = settlement_currency or _paper_text(details.get("currency")) or _paper_text(rules.get("collateral_currency"))
     section = "crypto" if asset_class and asset_class.startswith("crypto") else (
         "stocks" if asset_class else None)
-    return symbol, venue, asset_class, currency, section
+    return symbol, venue, asset_class, currency, section, multiplier, settlement_currency, quote_currency
 
 
-def _paper_schema(db: sqlite3.Connection) -> None:
+def _paper_schema(db: sqlite3.Connection, *, include_observability: bool = False) -> None:
     tables = {row[0] for row in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
     for table, columns in _PAPER_REQUIRED_COLUMNS.items():
+        if table == "portfolio_receipts" and not include_observability:
+            continue
         if table not in tables:
             raise _PaperUnavailable("schema")
         actual = {row[1] for row in db.execute("PRAGMA table_info(" + table + ")")}
@@ -343,7 +349,7 @@ def _paper_id(scope, kind, identity):
     return "paper:" + hashlib.sha256(json.dumps([scope, kind, identity], ensure_ascii=False).encode()).hexdigest()
 
 
-def _paper_source(path: Path, limit: int):
+def _paper_source(path: Path, limit: int, *, include_observability: bool = False):
     if not path.is_file():
         raise _PaperUnavailable("missing")
     try:
@@ -352,11 +358,14 @@ def _paper_source(path: Path, limit: int):
         raise _PaperUnavailable("unavailable") from exc
     try:
         db.execute("BEGIN")
-        _paper_schema(db)
+        tables = {row[0] for row in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+        if "portfolio_metadata" not in tables:
+            raise _PaperUnavailable("schema")
         metadata = {row[0]: row[1] for row in db.execute("SELECT key,value FROM portfolio_metadata")}
         mode = metadata.get("mode")
         if mode != "paper":
             raise _PaperUnavailable("nonpaper")
+        _paper_schema(db, include_observability=include_observability)
         scope = _paper_text(metadata.get("scope"))
         version_text = metadata.get("account_version")
         if scope is None or not isinstance(version_text, str) or not version_text.isdigit():
@@ -372,6 +381,8 @@ def _paper_source(path: Path, limit: int):
         cash_rows = _paper_rows(db, "SELECT strategy,currency,amount,fees,funding,realized "
                                     "FROM portfolio_strategy_cash ORDER BY strategy,currency LIMIT ?", limit)
         gap_rows = _paper_rows(db, "SELECT instrument FROM portfolio_gaps ORDER BY instrument LIMIT ?", limit)
+        fill_rows = (_paper_rows(db, "SELECT id,document FROM portfolio_receipts WHERE kind='fill' ORDER BY rowid LIMIT ?", limit)
+                     if include_observability else [])
         db.execute("COMMIT")
     except _PaperUnavailable:
         if db.in_transaction:
@@ -390,11 +401,11 @@ def _paper_source(path: Path, limit: int):
     finally:
         db.close()
 
-    orders, currencies = [], {}
+    orders, currencies, products, fills = [], {}, {}, []
     for row in order_rows:
         instrument = _paper_text(row["instrument"])
-        symbol, venue, asset_class, currency, section = _paper_order_facts(
-            row["payload"], row["rules"], instrument)
+        symbol, venue, asset_class, currency, section, multiplier, settlement_currency, quote_currency = _paper_order_facts(
+            row["payload"], row["rules"], instrument, include_observability=include_observability)
         state = _paper_text(row["state"])
         recovery = "UNRECONCILED" if state in _PAPER_UNRECONCILED_STATES else "UNVERIFIED"
         orders.append({
@@ -408,6 +419,18 @@ def _paper_source(path: Path, limit: int):
             "created_ms": None, "updated_ms": None,
         })
         currencies[instrument] = currency
+        if include_observability:
+            products[instrument] = {"currency": currency, "settlement_currency": settlement_currency,
+                                    "quote_currency": quote_currency, "multiplier": multiplier}
+
+    for row in fill_rows:
+        document = _paper_json_object(row["document"])
+        strategy = _paper_text(document.get("strategy"))
+        instrument = _paper_text(document.get("instrument"))
+        if strategy is None or instrument is None:
+            continue
+        fills.append({"strategy": strategy, "account": scope, "instrument": instrument,
+                      "currency": _paper_text(document.get("fee_currency"))})
 
     positions = []
     strategy_names = []
@@ -430,6 +453,7 @@ def _paper_source(path: Path, limit: int):
             "instrument": instrument, "symbol": symbol, "venue": venue, "asset_class": asset_class,
             "quantity": _paper_decimal(row["quantity"]), "average": _paper_decimal(row["average"]),
             "margin": _paper_decimal(row["margin"]), "currency": currencies.get(instrument),
+            **(products.get(instrument, {}) if include_observability else {}),
             "mode": "paper", "evidence": "PAPER_SIMULATION",
             "recovery": "UNRECONCILED" if strategy_unresolved else "UNVERIFIED",
         })
@@ -445,6 +469,7 @@ def _paper_source(path: Path, limit: int):
             "strategy": strategy, "account": scope, "currency": currency,
             "realized_pnl": _paper_decimal(row["realized"]), "fees": _paper_decimal(row["fees"]),
             "funding": _paper_decimal(row["funding"]),
+            **({"amount": _paper_decimal(row["amount"])} if include_observability else {}),
             "unrealized_pnl": None, "unrealized_pnl_status": "UNAVAILABLE",
             "unrealized_pnl_reason": "NO_TRUSTED_MARK", "mark": None, "mark_asof": None,
             "mode": "paper", "evidence": "PAPER_SIMULATION",
@@ -478,10 +503,11 @@ def _paper_source(path: Path, limit: int):
             "running": None, "status": "UNVERIFIED",
             "recovery": "UNRECONCILED" if unresolved else "UNVERIFIED",
         })
-    return account, orders, strategies, positions, pnl
+    return ((account, orders, strategies, positions, pnl, fills) if include_observability
+            else (account, orders, strategies, positions, pnl))
 
 
-def paper_projection(paths, *, limit: int) -> dict:
+def paper_projection(paths, *, limit: int, include_observability: bool = False) -> dict:
     """Cold bounded read of explicitly configured paper accounts; never owner writes."""
     if isinstance(limit, bool) or not isinstance(limit, int) or not 1 <= limit <= 1000:
         raise ValueError("Paper projection limit must be an explicit integer in 1..1000")
@@ -494,9 +520,16 @@ def paper_projection(paths, *, limit: int) -> dict:
                 "read_at_ns": time.time_ns(), "fact_asof_ns": None,
                 "accounts": [], "orders": [], "strategies": [], "positions": [],
                 "pnl": [], "errors": []}
+    if include_observability:
+        document["fills"] = []
     for path in configured:
         try:
-            account, orders, strategies, positions, pnl = _paper_source(path, limit)
+            facts = _paper_source(path, limit, include_observability=include_observability)
+            if include_observability:
+                account, orders, strategies, positions, pnl, fills = facts
+            else:
+                account, orders, strategies, positions, pnl = facts
+                fills = []
         except _PaperUnavailable as exc:
             document["errors"].append({"source": str(path), "type": _PAPER_UNAVAILABLE,
                                        "reason": exc.reason})
@@ -510,4 +543,6 @@ def paper_projection(paths, *, limit: int) -> dict:
         document["strategies"].extend(strategies)
         document["positions"].extend(positions)
         document["pnl"].extend(pnl)
+        if include_observability:
+            document["fills"].extend(fills)
     return document
