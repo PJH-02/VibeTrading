@@ -415,10 +415,45 @@ def etf_feed_dependencies(plan, producer):
 
 
 async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_feed_dependencies=None,
+                     selected_action_builders=None,native_selection_bindings=None,
                      recovery_readiness=None,checkpoint_path=None,checkpoint_codec=None,
                      checkpoint_engine_incarnation=None,checkpoint_readiness=None,checkpoint_apply_order=None,
                      checkpoint_journal=None,runtime_checkpoint=None,on_command=None,
                      timefolio_config=None,timefolio_producers=None,timefolio_duration=None):
+    from .selected_execution import (NativeSelectionBinding, NativeSelectionDispatcher,
+                                     activate_paper_selections)
+    selections=tuple(getattr(plan,'strategy_selections',()))
+    paper_selections=tuple(item for item in selections if item.mode=='PAPER')
+    native_selections=tuple(item for item in selections if item.mode in {'TESTNET','LIVE'})
+    if paper_selections and (paper_runtime is None or selected_action_builders is None):
+        raise ValueError('configured PAPER selections require their existing runtime and explicit action builders')
+    if not paper_selections and selected_action_builders is not None:
+        raise ValueError('PAPER action builders were supplied without configured PAPER selections')
+    if native_selections:
+        if (not isinstance(native_selection_bindings,dict)
+                or set(native_selection_bindings)!={item.job_id for item in native_selections}):
+            raise ValueError('configured native selections require one exact injected owner binding per job')
+    elif native_selection_bindings:
+        raise ValueError('native selection bindings were supplied without configured native selections')
+    live_by_owner={}
+    for selection in native_selections:
+        if selection.mode!='LIVE':continue
+        binding=native_selection_bindings[selection.job_id]
+        coordinator=getattr(getattr(binding,'runner',None),'group_coordinator',None)
+        owners=getattr(coordinator,'owners',None)
+        if owners is not None:
+            selected_owners=[owners[key] for key in selection.registration['accounts'] if key in owners]
+            if len(selected_owners)!=len(selection.registration['accounts']):
+                raise ValueError('LIVE group selection lacks an exact owner for every registered account')
+        else:
+            owner=getattr(binding,'owner',None)
+            selected_owners=[] if owner is None else [owner]
+        for owner in {id(item):item for item in selected_owners}.values():
+            prior=live_by_owner.get(id(owner))
+            if prior is not None:
+                raise ValueError('one owner cannot be rebound by multiple LIVE selections without an exact multi-source authorization map')
+            live_by_owner[id(owner)]=selection.job_id
+    native_dispatchers=[]
     checkpoint_enabled=any(value is not None for value in (
         checkpoint_path,checkpoint_codec,checkpoint_engine_incarnation,checkpoint_apply_order)) or (
             checkpoint_readiness is not None and checkpoint_journal is None)
@@ -478,10 +513,30 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
                        or not set(keys)<=set(paper_runtime.known)
                        for keys in paper_feed_dependencies.values())):
             raise ValueError('Paper feed ownership requires an exact producer inventory and known feed keys')
+    # Finish pure configuration/restore compatibility checks before any
+    # selected native account read or Paper source registration.
+    for selection in native_selections:
+        binding=native_selection_bindings[selection.job_id]
+        if not isinstance(binding,NativeSelectionBinding):
+            raise TypeError('native selection binding must use the explicit typed assembly')
+        native_dispatchers.append(NativeSelectionDispatcher(selection,binding))
+    if native_dispatchers:
+        snapshot_bound=int(plan.engine['max_frame_bytes'])*int(plan.engine['max_instruments'])
+        for dispatcher in native_dispatchers:
+            if dispatcher.selection.snapshot_charge_bytes < snapshot_bound:
+                raise ValueError('selected native queue byte charge is below the configured immutable snapshot bound')
+            # The bounded per-source drain proves native readiness before dispatch.
+            # Native account I/O must not gate unrelated market apply or sources.
+    activate_paper_selections(plan,paper_runtime,selected_action_builders)
     etf=None
     engine=None
     journal_restored=False
     def invalid(producer,reason):
+        if native_dispatchers and engine is not None and producer in {p.producer for p in plan.producers}:
+            affected=set(engine.feed_instruments(producer))
+            for dispatcher in native_dispatchers:
+                if affected.intersection(dispatcher.required_feeds):
+                    dispatcher.invalidate(reason)
         if etf is not None:
             # Synchronous local gate closes before a timer/order can run again.
             for symbol in etf_feed_dependencies(plan,producer):etf._invalidate_market_feed(symbol)
@@ -504,7 +559,8 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
         # Coupled restore installs market/plugin state with no callback attached.
         # The selected Paper callback is published only after every proof.
         post_apply_callbacks=(() if runtime_checkpoint is not None else
-            ((paper_runtime.process_applied,) if paper_runtime is not None else ())),
+            ((paper_runtime.process_applied,) if paper_runtime is not None else ())+
+            tuple(dispatcher.enqueue_applied for dispatcher in native_dispatchers)),
         on_tick=(getattr(paper_runtime,"advance",None) if paper_runtime is not None else None),
         snapshot_clock=time.time_ns,
         trading_filter=(lambda event:event.provider=='kiwoom' and event.instrument.asset_class==AssetClass.ETF)
@@ -550,8 +606,9 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
                     event_source=engine.event_source(required_producers=()))
             handoffs=await runtime_checkpoint.restore(engine,plan.producers,
                 paper_runtime=paper_runtime,etf=etf,readiness=recovery_readiness)
-            if paper_runtime is not None:
-                engine.post_apply_callbacks=(paper_runtime.process_applied,)
+            engine.post_apply_callbacks=(
+                ((paper_runtime.process_applied,) if paper_runtime is not None else ())+
+                tuple(dispatcher.enqueue_applied for dispatcher in native_dispatchers))
         elif checkpoint_journal is not None:
             journal_restored=await checkpoint_journal.restore(engine,plan.producers,checkpoint_readiness)
             handoffs=() if journal_restored else await replay_startup(engine,plan.producers,promote=False)
@@ -597,6 +654,8 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
                 on_invalid=lambda reason:invalid(item.producer,reason))
             timefolio=TimefolioStrategyRunner(timefolio_config,bus=observation,
                 event_source=engine.event_source(required_producers=timefolio_producers))
+        for dispatcher in native_dispatchers:
+            dispatcher.task=asyncio.create_task(dispatcher.run(),name='selected-native-'+dispatcher.selection.job_id)
         await server.start()
         await engine.start()
         from market.local_snapshot import LocalSnapshotWriter, SnapshotBudgets
@@ -611,8 +670,15 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
         elif checkpoint_journal is not None:await checkpoint_journal.run()
         else:await asyncio.Event().wait()
     finally:
+        for dispatcher in native_dispatchers:
+            dispatcher.invalidate('runtime_closed')
         invalid('shutdown','runtime_closed')
         try:
+            for dispatcher in native_dispatchers:
+                if dispatcher.task is not None:dispatcher.task.cancel()
+            if native_dispatchers:
+                await asyncio.gather(*(item.task for item in native_dispatchers
+                    if item.task is not None),return_exceptions=True)
             if task is not None:
                 task.cancel();await asyncio.gather(task,return_exceptions=True)
         finally:
@@ -641,7 +707,8 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
                                 else:etf.journal.db.close()
 
 
-def main(argv=None, *, paper_runtime=None, paper_feed_dependencies=None):
+def main(argv=None, *, paper_runtime=None, paper_feed_dependencies=None,
+         selected_action_builders=None,native_selection_bindings=None):
     parser=argparse.ArgumentParser(description='Explicit NATS-free local roles')
     parser.add_argument('role',choices=('check','collector','engine','storage','telegram','dashboard'))
     parser.add_argument('--config',type=Path,required=True)
@@ -650,6 +717,8 @@ def main(argv=None, *, paper_runtime=None, paper_feed_dependencies=None):
 
     # Load plan first for validation
     plan=LocalRuntimePlan.load(args.config)
+    if plan.strategy_selections and args.role!='engine':
+        raise ValueError('Configured strategy selections are consumed only by the local engine role')
 
     # This is explicit borrowed local assembly, not a capability promotion.
     if paper_feed_dependencies is not None and paper_runtime is None:
@@ -671,6 +740,15 @@ def main(argv=None, *, paper_runtime=None, paper_feed_dependencies=None):
                        or not set(keys) <= set(paper_runtime.known)
                        for keys in paper_feed_dependencies.values())):
             raise ValueError('Paper dependencies require the exact configured producer and known-feed inventory')
+    configured_paper=tuple(item for item in plan.strategy_selections if item.mode=='PAPER')
+    if configured_paper and paper_runtime is None:
+        raise ValueError('Configured PAPER selections require an explicitly injected PaperStrategyRuntime')
+    configured_native=tuple(item for item in plan.strategy_selections if item.mode in {'TESTNET','LIVE'})
+    if configured_native and (not isinstance(native_selection_bindings,dict)
+            or set(native_selection_bindings)!={item.job_id for item in configured_native}):
+        raise ValueError('Configured native selections require exact explicit owner bindings')
+    if selected_action_builders is not None and not configured_paper:
+        raise ValueError('PAPER action builders were supplied without configured PAPER selections')
     # Validate mounts before any settings helper creates a data directory.
     os.environ['VIBETRADING_RUNTIME']='local'
     settings=RuntimeSettings.from_env()
@@ -707,11 +785,15 @@ def main(argv=None, *, paper_runtime=None, paper_feed_dependencies=None):
         if len(matches)!=1:raise ValueError('select one configured producer')
         asyncio.run(run_collector(plan,matches[0],settings))
     elif args.role=='engine':
-        if paper_runtime is None:
-            asyncio.run(run_engine(plan,settings))
-        else:
-            asyncio.run(run_engine(plan,settings, paper_runtime=paper_runtime,
-                                   paper_feed_dependencies=paper_feed_dependencies))
+        selected_kwargs={}
+        if paper_runtime is not None:
+            selected_kwargs.update(paper_runtime=paper_runtime,
+                paper_feed_dependencies=paper_feed_dependencies)
+        if selected_action_builders is not None:
+            selected_kwargs['selected_action_builders']=selected_action_builders
+        if native_selection_bindings is not None:
+            selected_kwargs['native_selection_bindings']=native_selection_bindings
+        asyncio.run(run_engine(plan,settings,**selected_kwargs))
     else:
         from storage.local_storage import run_local_storage
         run_local_storage(plan,settings)

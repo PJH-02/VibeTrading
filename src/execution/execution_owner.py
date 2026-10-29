@@ -21,7 +21,7 @@ from datetime import datetime, timezone
 from .execution_ledger import (ExecutionLedger, canonical, exact_difference,
                                exact_product, exact_sum, positive_decimal)
 from .trading_contracts import (ActionKind, ExecutionAction, StrategyActionPlan,
-                                StrategyOrderContext, StrategyOrderEvent,
+                                StrategyOrderContext, StrategyOrderEvent, LiveExecutionAuthorization,
                                 validate_native_account_facts)
 from .venues.registry import (
     AdapterProtocolError, ForeignOrderError, RouteStateError, UnsupportedOperation,
@@ -142,11 +142,19 @@ class _PreparedAction:
 
 class ExecutionOwner:
     def __init__(self, ledger: ExecutionLedger, control: RuntimeControl, adapter, budgets: ExecutionBudgets,
-                 *, clock: Callable[[], int] = time.time_ns):
+                 *, clock: Callable[[], int] = time.time_ns,
+                 live_authorization: LiveExecutionAuthorization | None = None,
+                 live_activation_guard: Callable[[], bool] | None = None):
         if control.ledger is not ledger:
             raise ValueError("Owner/control must share one ledger writer")
         self.ledger, self.control, self.adapter, self.budgets = ledger, control, adapter, budgets
         self.clock = clock
+        if live_authorization is not None and not isinstance(live_authorization, LiveExecutionAuthorization):
+            raise TypeError("LIVE authorization must use the explicit scoped authorization contract")
+        if live_activation_guard is not None and not callable(live_activation_guard):
+            raise TypeError("LIVE activation guard must be an explicit trusted injected provider")
+        self.live_authorization = live_authorization
+        self.live_activation_guard = live_activation_guard
         self._lock = _OwnerAsyncLock()
         self._pending = 0
         self._connected = False
@@ -423,10 +431,33 @@ class ExecutionOwner:
         if route.environment == "paper":
             raise GateBlocked("PAPER uses the local matcher and never an external mutation client")
         if route.environment == "live":
-            raise GateBlocked("LIVE mutation remains disabled without separately approved activation")
+            self._check_live_activation(action, route)
         if not route.native_account_id or route.native_account_id != self.ledger.native_account_id:
             raise GateBlocked("Route lacks the independently bound physical native account identity")
         return binding
+
+    def _check_live_activation(self, action, route):
+        auth = self.live_authorization
+        now = self.clock()
+        if (not isinstance(auth, LiveExecutionAuthorization)
+                or auth.strategy_id != action.strategy_id
+                or auth.config_version != action.config_version
+                or auth.scope_key != route.account_scope.key
+                or auth.native_account_id != route.native_account_id
+                or auth.issued_ns > now or now >= auth.expires_ns
+                or (getattr(action, "action", None) is not ActionKind.CANCEL
+                    and not callable(self.live_activation_guard))):
+            raise GateBlocked("Separately injected exact scoped LIVE authorization is missing or expired")
+        # Fresh account-promotion proof governs new risk. It must not strand an
+        # already-owned order from its scoped cancellation path.
+        if getattr(action, "action", None) is ActionKind.CANCEL:
+            return
+        try:
+            valid = self.live_activation_guard()
+        except Exception as error:
+            raise GateBlocked("LIVE activation state is unavailable") from error
+        if valid is not True:
+            raise GateBlocked("LIVE environment/account-arm/native promotion proof is not current")
 
     def _native_facts(self, binding, action):
         provider = binding.native_facts_provider
@@ -553,6 +584,8 @@ class ExecutionOwner:
         if not isinstance(action, ExecutionAction):
             raise GateBlocked("Only original StrategyActionPlan actions are accepted")
         route = binding.route
+        if route.environment == "live":
+            self._check_live_activation(action, route)
         if action.scope.key != route.account_scope.key:
             raise GateBlocked("Action account scope differs from the selected route")
         now = self.clock()

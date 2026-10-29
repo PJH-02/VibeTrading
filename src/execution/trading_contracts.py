@@ -20,6 +20,29 @@ class TradingMode(str, Enum):
     KIS_MOCK2 = "mock2"
 
 
+@dataclass(frozen=True)
+class LiveExecutionAuthorization:
+    """Explicit trusted, scoped, expiring user authorization for one source."""
+    strategy_id: str
+    config_version: str
+    scope_key: str
+    native_account_id: str
+    authorization_ref: str
+    issued_ns: int
+    expires_ns: int
+
+    def __post_init__(self):
+        for name in ("strategy_id", "config_version", "scope_key", "native_account_id",
+                     "authorization_ref"):
+            value = getattr(self, name)
+            if (not isinstance(value, str) or not value.strip() or value != value.strip()
+                    or len(value.encode("utf-8")) > 256):
+                raise ValueError(name + " requires a bounded explicit authorization identity")
+        if (type(self.issued_ns) is not int or type(self.expires_ns) is not int
+                or self.issued_ns <= 0 or self.expires_ns <= self.issued_ns):
+            raise ValueError("LIVE authorization requires an ordered positive issue and expiry time")
+
+
 class ProductKind(str, Enum):
     CASH = "cash"
     LINEAR_PERPETUAL = "linear_perpetual"

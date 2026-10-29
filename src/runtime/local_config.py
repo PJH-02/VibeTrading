@@ -174,6 +174,7 @@ class LocalRuntimePlan:
     storage:dict
     events:dict
     snapshot:dict
+    strategy_selections:tuple=()
 
     @classmethod
     def load(cls,path:Path):
@@ -192,7 +193,8 @@ class LocalRuntimePlan:
     def from_document(cls,document):
         expected={'schema_version','endpoint','allowed_uid','disk_reserve_bytes','transport','engine',
                   'producers','etf_enabled','observation','storage','events','snapshot'}
-        if set(document)!=expected or type(document['schema_version']) is not int or document['schema_version']!=1:
+        allowed=expected|{'strategy_selections'}
+        if not expected<=set(document) or set(document)-allowed or type(document['schema_version']) is not int or document['schema_version']!=1:
             raise ValueError('invalid NATS-free runtime config fields/version')
         endpoint=absolute(document['endpoint'],'endpoint')
         uid=document['allowed_uid']
@@ -227,9 +229,13 @@ class LocalRuntimePlan:
         if observed is not None and (observed.producer in {p.producer for p in producers}
                 or observed.spool_root.resolve() in {p.spool_root.resolve() for p in producers}):
             raise ValueError('observation must have its own producer and spool directory')
+        selections=()
+        if 'strategy_selections' in document:
+            from .selected_execution import parse_strategy_selections
+            selections=parse_strategy_selections(document['strategy_selections'])
         return cls(endpoint,uid,positive(document['disk_reserve_bytes'],'disk_reserve_bytes'),transport,
                    document['engine'],tuple(producers),document['etf_enabled'],observed,document['storage'],
-                   document['events'],document['snapshot'])
+                   document['events'],document['snapshot'],selections)
 
 
 def parse_execution_aliases(document, registry):
