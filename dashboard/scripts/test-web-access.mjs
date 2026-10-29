@@ -90,7 +90,10 @@ test("expired, altered and credential-rotated sessions are rejected", async () =
     Date.now = () => initial() + 601_000;
     assert.equal((await gateway.fetch(request("/api/state", { cookie }), async () => new Response())).status, 401);
   } finally { Date.now = initial; }
-  const altered = cookie.replace(/.$/, cookie.endsWith("A") ? "B" : "A");
+  const [cookiePayload, cookieSignature] = cookie.split(".");
+  const signatureBytes = Buffer.from(cookieSignature, "base64url");
+  signatureBytes[signatureBytes.length - 1] ^= 1;
+  const altered = cookiePayload + "." + signatureBytes.toString("base64url");
   assert.equal((await gateway.fetch(request("/api/state", { cookie: altered }), async () => new Response())).status, 401);
   const rotated = new ViewerGateway({ ...base, VIEWER_TOKEN_SHA256: digest(token + "rotated") });
   assert.equal((await rotated.fetch(request("/api/state", { cookie }), async () => new Response())).status, 401);
@@ -194,7 +197,9 @@ test("encrypted order cursor is opaque, owner/section bound, tamper resistant an
   assert.equal(await openOrderCursor(token, secret + "rotated", owner, "crypto"), null);
   assert.equal(await openOrderCursor(token, secret, "fedcba9876543210fedcba98", "crypto"), null);
   assert.equal(await openOrderCursor(token, secret, owner, "stocks"), null);
-  const altered = token.slice(0, -1) + (token.endsWith("A") ? "B" : "A");
+  const ciphertextBytes = Buffer.from(token, "base64url");
+  ciphertextBytes[ciphertextBytes.length - 1] ^= 1;
+  const altered = ciphertextBytes.toString("base64url");
   assert.equal(await openOrderCursor(altered, secret, owner, "crypto"), null);
   const originalNow = Date.now;
   try { Date.now = () => originalNow() + 601_000; assert.equal(await openOrderCursor(token, secret, owner, "crypto"), null); }
