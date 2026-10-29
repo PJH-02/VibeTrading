@@ -38,9 +38,9 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 20,
+    "accepted": 21,
     "in_progress": 0,
-    "blocked": 1,
+    "blocked": 0,
     "not_started": 12,
     "external_not_authorized": 2
   },
@@ -425,7 +425,7 @@
     "missing_required_local_code_blocks_feature_release": true
   },
   "active_task_id": null,
-  "last_accepted_task_id": "CAP-04",
+  "last_accepted_task_id": "EXEC-01",
   "stop_requested": false,
   "tickets": [
     {
@@ -1794,7 +1794,7 @@
     {
       "task_id": "EXEC-01",
       "wave": "W3",
-      "status": "BLOCKED",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "STR-02",
         "VEN-01",
@@ -1806,13 +1806,10 @@
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
       "base_sha": "6a3e7aaece592fc517a8c62299890b9262bba3e1",
-      "actual_commit_sha": "cecc9e7a754268cc9aa7e19b4089a1e6d350b99b",
-      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/EXEC01/EXEC01.acceptance.json",
+      "actual_commit_sha": "a71770dcb0eb932e4f6f1023e09316f1fc25a02e",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/EXEC01-arcus-resume-20261029/EXEC01.complete.acceptance.json",
       "test_exit": 0,
-      "blocking_reasons": [
-        "ARCUS_REQUIRED_NEW_API_SPEC: Canonical Arcus product quotes USD and settles/collateralizes USDG; current native account normalization does not establish conversion denomination and full native margin facts. Accepted CAP03 guard must reject NEW, while historical owned query/cancel/reconcile remains operable. Required five-perpetual single-submit acceptance is not complete. Official target exchange/API specification needed; not downgraded to optional or EXTERNAL_ONLY.",
-        "FINAL_DOCKER_PATH_SMOKE: Docker Windows CLI29.7.2/context and cmd interop work, Linux default socket absent, current daemon API times out via both Windows contexts (12s), local source-only image build times out120s. Prior CAP03 image smoke is preserved but cannot certify this final source. No engine/container restart or server mutation performed."
-      ],
+      "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "EXEC-01",
       "follow_up_findings": [
@@ -1868,11 +1865,22 @@
         "reason": "external per-ticket allowance exhausted and independent review failed",
         "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/EXEC01/native-fallback.json"
       },
-      "acceptance_receipt_sha256": "dd48ba7801a0a72742dc51514e42baec52e0a5dfa2343f398fc114eba26902b2",
+      "acceptance_receipt_sha256": "25e40a3a37ab3b648c7f5d44c1df934ec754dd56463c57657912cf9018f29795",
       "worker_model": "gpt-6-luna",
-      "test_summary": "Independent2887 full+25guarded leases,149wheel source equality/13outside imports; finalDocker unavailable, requiredArcusNEW unimplemented/unproven; NOTaccepted",
+      "test_summary": "2919full+25leases+44independentadverse/focused;150wheel exact+14imports; finalLinuxDocker build/run0,14canonicalimports; allrequiredlocalcriteria PASS",
       "progress_document": "docs/tickets/EXEC-01-progress.md",
-      "implementation_preserved_utc": "2026-10-28T18:22:46.399834+00:00"
+      "implementation_preserved_utc": "2026-10-28T18:22:46.399834+00:00",
+      "resume_packet": "docs/tickets/EXEC-01-arcus-native-quote-proof.md",
+      "official_api_documentation": "https://docs.arcus.xyz/api-reference/introduction",
+      "accepted_utc": "2026-10-29T00:41:50.083119+00:00",
+      "acceptance_document": "docs/tickets/EXEC-01-acceptance.md",
+      "prior_receipts": [
+        {
+          "path": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/EXEC01/EXEC01.acceptance.json",
+          "sha256": "dd48ba7801a0a72742dc51514e42baec52e0a5dfa2343f398fc114eba26902b2",
+          "decision": "BLOCKED"
+        }
+      ]
     },
     {
       "task_id": "SIM-01",
@@ -2272,6 +2280,18 @@
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/EXEC01/EXEC01.acceptance.json",
       "receipt_sha256": "dd48ba7801a0a72742dc51514e42baec52e0a5dfa2343f398fc114eba26902b2",
       "actual_commit_sha": "cecc9e7a754268cc9aa7e19b4089a1e6d350b99b"
+    },
+    {
+      "date": "2026-10-29",
+      "reason": "User supplied official Arcus API introduction and requested EXEC01 completion then next dependency ticket. Direct Mozilla-UA documentation GET200; original web tool unavailable. Reopen bounded native quote proof implementation with authorized Luna fallback (external allowance exhausted); prior receipt remains immutable. Docker Desktop currently stopped; local start requested for final verification.",
+      "official_url": "https://docs.arcus.xyz/api-reference/introduction"
+    },
+    {
+      "date": "2026-10-29",
+      "reason": "EXEC01 allrequiredlocalcriteria accepted after official Arcusquoteproof and nativeavailable/localfillversion guard; independent2919+25+44/wheel150/Docker14 all0. Prior blockedreceipt untouched, original CAP03/EXEC01/CAP04 batch nowcomplete. Advance authorized nextdependency CAP05.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/EXEC01-arcus-resume-20261029/EXEC01.complete.acceptance.json",
+      "receipt_sha256": "25e40a3a37ab3b648c7f5d44c1df934ec754dd56463c57657912cf9018f29795",
+      "actual_commit_sha": "a71770dcb0eb932e4f6f1023e09316f1fc25a02e"
     }
   ],
   "requirements_revision": {
@@ -2374,26 +2394,18 @@
     "snapshot_baseline_sha": "dd2e776c35ca18523546a2491213e7c3026505c4"
   },
   "active_batch": {
-    "requested_tasks": 3,
+    "requested_tasks": 2,
     "tasks": [
-      "CAP-03",
       "EXEC-01",
-      "CAP-04"
+      "CAP-05"
     ],
     "accepted": [
-      "CAP-03",
-      "CAP-04"
-    ],
-    "status": "BLOCKED_REQUIRED_ACCEPTANCE",
-    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028",
-    "target_os": "Ubuntu Linux",
-    "unfinished": [
       "EXEC-01"
     ],
-    "blockers": [
-      "ARCUS_REQUIRED_NEW_API_SPEC",
-      "FINAL_DOCKER_PATH_SMOKE"
-    ]
+    "status": "IN_PROGRESS",
+    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/EXEC01-arcus-resume-20261029",
+    "target_os": "Ubuntu Linux",
+    "user_request": "OfficialArcusdocs supplied; complete EXEC01 remainder then next dependency ticket CAP05"
   },
   "completed_batches": [
     {
@@ -2517,6 +2529,23 @@
       "completion_receipts": [
         "/home/pjh/.local/state/codex-opencode/runs/STR-02-resume-20261028/STR02.acceptance.json"
       ]
+    },
+    {
+      "requested_tasks": 3,
+      "tasks": [
+        "CAP-03",
+        "EXEC-01",
+        "CAP-04"
+      ],
+      "accepted": [
+        "CAP-03",
+        "EXEC-01",
+        "CAP-04"
+      ],
+      "status": "COMPLETED_REQUESTED_THREE_TICKETS",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028",
+      "target_os": "Ubuntu Linux",
+      "completed_utc": "2026-10-29T00:41:50.083119+00:00"
     }
   ]
 }
