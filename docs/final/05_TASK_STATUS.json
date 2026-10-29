@@ -38,14 +38,15 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 25,
-    "in_progress": 1,
+    "accepted": 27,
+    "in_progress": 0,
     "blocked": 0,
-    "not_started": 7,
+    "not_started": 6,
     "external_not_authorized": 2
   },
   "next_ready_candidate": [
-    "WEB-01"
+    "CLN-03",
+    "QA-01"
   ],
   "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
   "gate_results": {
@@ -430,8 +431,8 @@
     ],
     "missing_required_local_code_blocks_feature_release": true
   },
-  "active_task_id": "SIM-01",
-  "last_accepted_task_id": "CLN-02",
+  "active_task_id": null,
+  "last_accepted_task_id": "WEB-01",
   "stop_requested": false,
   "tickets": [
     {
@@ -2073,7 +2074,7 @@
     {
       "task_id": "SIM-01",
       "wave": "W4",
-      "status": "IN_PROGRESS",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "CLN-02",
         "STR-02",
@@ -2085,14 +2086,18 @@
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
       "base_sha": "61e17079228aadbe073988d1dc801be79fbb0dfb",
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "actual_commit_sha": "26809c778e9d04ac3f9cddb3abbbf99668045007",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030/SIM01.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "SIM-01",
       "bounded_packet": "docs/tickets/SIM-01-ponytail.md",
-      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030"
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030",
+      "acceptance_receipt_sha256": "232aab298c3a824d89b5d4b156c009a102ae86a504b93f9b39994ca78bb70108",
+      "local_ticket_completion_percent": 100,
+      "source_diff_sha256": "e36b4fa512137263e38ef52ce7d73711377777f3540570fce88be974b2a360c4",
+      "compact_receipt": "docs/tickets/SIM-01-local-acceptance.json"
     },
     {
       "task_id": "FEED-01",
@@ -2168,7 +2173,7 @@
     {
       "task_id": "WEB-01",
       "wave": "W4",
-      "status": "NOT_STARTED",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "OBS-01",
         "MOV-06"
@@ -2176,13 +2181,26 @@
       "risk_review": "CRITICAL_CODEX",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "base_sha": "ef5947ee480545ba8599155b884b0a4c83da87de",
+      "actual_commit_sha": "eff3412cf105587423756f057438e49187366bda",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030/WEB01.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
-      "definition_heading_id": "WEB-01"
+      "definition_heading_id": "WEB-01",
+      "bounded_packet": "docs/tickets/WEB-01-secure-readonly.md",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030",
+      "acceptance_receipt_sha256": "8404c3d5690b8f40a89ea9d1f10728e4c325f583f0c30cb62399e3d2cf2dfbfe",
+      "local_ticket_completion_percent": 100,
+      "source_diff_sha256": "2d0706c469350cd05fdda224d60cbc58698b54137f415ef5f1117aaef6f77bfb",
+      "compact_receipt": "docs/tickets/WEB-01-local-acceptance.json",
+      "ssl_status": "LOCAL_TEST_ONLY",
+      "production_verified": false,
+      "external_gates_pending": [
+        "real private Sites/gateway routing to named service with independent service credential and original bridge/envelope contract",
+        "real single-owner D1 binding/data evidence",
+        "actual DNS, trusted TLS/renewal, public origin/rate/bypass and firewall configuration approved at DEP/CUT"
+      ]
     },
     {
       "task_id": "KR-DATA-01",
@@ -2639,11 +2657,13 @@
       "SIM-01",
       "WEB-01"
     ],
-    "status": "IN_PROGRESS",
+    "status": "COMPLETED_REQUESTED_THREE_TICKETS",
     "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030",
     "worker_policy": "external GLM/DeepSeek measured; stopped after cache-inclusive overhead exceeded comparison; sol lead + native gpt-6-luna fallback",
     "accepted": [
-      "CLN-02"
+      "CLN-02",
+      "SIM-01",
+      "WEB-01"
     ],
     "target_os": "Ubuntu Linux",
     "push_authorized": false,
@@ -2651,7 +2671,10 @@
       "sol lead unchanged",
       "opencode/deepseek-v4.1-flash-free (stopped for measured cache-inclusive overhead)",
       "gpt-6-luna"
-    ]
+    ],
+    "completed_utc": "2026-10-29T21:14:31.046577+00:00",
+    "ssl_status": "LOCAL_TEST_ONLY",
+    "public_url_activated": false
   },
   "completed_batches": [
     {
