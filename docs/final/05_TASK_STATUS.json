@@ -38,14 +38,13 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 24,
-    "in_progress": 0,
+    "accepted": 25,
+    "in_progress": 1,
     "blocked": 0,
-    "not_started": 9,
+    "not_started": 7,
     "external_not_authorized": 2
   },
   "next_ready_candidate": [
-    "CLN-02",
     "WEB-01"
   ],
   "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
@@ -431,8 +430,8 @@
     ],
     "missing_required_local_code_blocks_feature_release": true
   },
-  "active_task_id": null,
-  "last_accepted_task_id": "OBS-01",
+  "active_task_id": "SIM-01",
+  "last_accepted_task_id": "CLN-02",
   "stop_requested": false,
   "tickets": [
     {
@@ -875,7 +874,7 @@
     {
       "task_id": "CLN-02",
       "wave": "W4",
-      "status": "NOT_STARTED",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "MOV-07",
         "CAP-00"
@@ -883,10 +882,10 @@
       "risk_review": "CRITICAL_CODEX",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "base_sha": "2fdf1927a7098e077530698c1e29ab28c6297bac",
+      "actual_commit_sha": "61e17079228aadbe073988d1dc801be79fbb0dfb",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030/CLN02.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "CLN-02",
@@ -901,7 +900,12 @@
           "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-05.acceptance.json",
           "details": "286 function statuses remain DEFER; source evidence is not semantic consolidation/retirement."
         }
-      ]
+      ],
+      "bounded_packet": "docs/tickets/CLN-02-consolidation.md",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030",
+      "acceptance_receipt_sha256": "eda8f0d0b4ac1a409022d852acb874eeb6794804a5b2097d8ccb32b53fe12047",
+      "local_ticket_completion_percent": 100,
+      "source_diff_sha256": "188b3fb8f9e7ae17fdc21f124213c110b368990a055c41638deee0ebef1bd530"
     },
     {
       "task_id": "CLN-03",
@@ -2069,7 +2073,7 @@
     {
       "task_id": "SIM-01",
       "wave": "W4",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "depends_on": [
         "CLN-02",
         "STR-02",
@@ -2080,13 +2084,15 @@
       "risk_review": "HIGH",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
+      "base_sha": "61e17079228aadbe073988d1dc801be79fbb0dfb",
       "actual_commit_sha": null,
       "acceptance_receipt": null,
       "test_exit": null,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
-      "definition_heading_id": "SIM-01"
+      "definition_heading_id": "SIM-01",
+      "bounded_packet": "docs/tickets/SIM-01-ponytail.md",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030"
     },
     {
       "task_id": "FEED-01",
@@ -2627,23 +2633,25 @@
     "snapshot_baseline_sha": "dd2e776c35ca18523546a2491213e7c3026505c4"
   },
   "active_batch": {
-    "requested_tasks": 1,
+    "requested_tasks": 3,
     "tasks": [
-      "OBS-01"
+      "CLN-02",
+      "SIM-01",
+      "WEB-01"
     ],
+    "status": "IN_PROGRESS",
+    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030",
+    "worker_policy": "external GLM/DeepSeek measured; stopped after cache-inclusive overhead exceeded comparison; sol lead + native gpt-6-luna fallback",
     "accepted": [
-      "OBS-01"
+      "CLN-02"
     ],
-    "status": "COMPLETED_REQUESTED_ONE_TICKET",
-    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/OBS-01-sol-luna-20261029",
     "target_os": "Ubuntu Linux",
+    "push_authorized": false,
     "worker_models": [
       "sol lead unchanged",
+      "opencode/deepseek-v4.1-flash-free (stopped for measured cache-inclusive overhead)",
       "gpt-6-luna"
-    ],
-    "push_authorized": false,
-    "completed_utc": "2026-10-29T15:59:12.455582+00:00",
-    "source_commit": "a353fbb65f0d5681e7e827adfaeef8e5bda4b3fc"
+    ]
   },
   "completed_batches": [
     {
@@ -2820,6 +2828,34 @@
       "push_authorized": true,
       "push_target": "origin codex/move-core-feeds",
       "source_commit": "6d52bf3801ba17e9df8c04b555d2731479706f0a"
+    },
+    {
+      "requested_tasks": 1,
+      "tasks": [
+        "OBS-01"
+      ],
+      "accepted": [
+        "OBS-01"
+      ],
+      "status": "COMPLETED_REQUESTED_ONE_TICKET",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/OBS-01-sol-luna-20261029",
+      "target_os": "Ubuntu Linux",
+      "worker_models": [
+        "sol lead unchanged",
+        "gpt-6-luna"
+      ],
+      "push_authorized": false,
+      "completed_utc": "2026-10-29T15:59:12.455582+00:00",
+      "source_commit": "a353fbb65f0d5681e7e827adfaeef8e5bda4b3fc"
     }
-  ]
+  ],
+  "worker_policy_latest": {
+    "date": "2026-10-30",
+    "instruction": "User requested external GLM/DeepSeek/Gemini/Kimi/Muse only while total cache-inclusive overhead is not greater than sol+luna; stop and switch when exceeded.",
+    "actual": "GLM timed out; DeepSeek pilot succeeded; implementation stopped after cumulative744285 tokens; Kimi absent; Gemini/Muse catalogued but no extra calls after stop.",
+    "evidence": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030/worker-route-pilot.json",
+    "lead_auth_unchanged": true,
+    "native_fallback": "gpt-6-luna",
+    "comparison_limit": "Matched tiny native171759 is a conservative stop reference, not full-ticket counterfactual; no exact savings claim."
+  }
 }
