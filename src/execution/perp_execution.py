@@ -904,6 +904,70 @@ class ArcusPerpAdapter(_Adapter):
             "initial_margin": None, "maintenance_margin": None,
             "margin_totals_proven": False, "account_sequence": row["sequenceNumber"], "raw": row})
 
+    async def native_risk_snapshot(self, symbol, *, native_identity, local_ledger_version, max_age_ns):
+        """Read a bounded, double-cut Arcus native USD quote risk snapshot.
+
+        This is intentionally separate from legacy account_state(), whose wire
+        shape remains unchanged. The REST endpoints are public; this evidence
+        does not assert authentication/session permissions.
+        """
+        from .arcus_risk import decode_arcus_quote_proof
+        if (not isinstance(native_identity, dict)
+                or native_identity.get("native_account_id") != self.address
+                or native_identity.get("scope_key") != self.scope.key
+                or native_identity.get("source") != "authenticated_native_session"
+                or not {"account_read", "trade"}.issubset(set(native_identity.get("permissions", ())))
+                or not native_identity.get("authenticated_session_id")):
+            raise CapabilityBlocked("Arcus snapshot requires independently verified authenticated session identity")
+        if (type(local_ledger_version) is not int or local_ledger_version < 0
+                or type(max_age_ns) is not int or not 0 < max_age_ns <= 60_000_000_000):
+            raise CapabilityBlocked("Arcus snapshot requires explicit bounded local-version and freshness cuts")
+        observed_ns = self.clock_ns()
+        if type(observed_ns) is not int or observed_ns <= 0:
+            raise CapabilityBlocked("Arcus snapshot clock is invalid")
+        first = await self._get("/v1/account")
+        self._account_identity(first)
+        markets_doc = await self._get("/v1/markets", account=False)
+        leverages_doc = await self._get("/v1/leverages")
+        last = await self._get("/v1/account")
+        self._account_identity(last)
+        # The account endpoint is not an atomic snapshot with the other reads;
+        # reject any observable sequence or economic-cut change.
+        cut_fields = ("sequenceNumber", "equity", "freeCollateral", "marginState", "positions",
+                      "netDepositsByAsset", "pendingDeposits", "pendingWithdrawals",
+                      "borrowHeadroom", "loanBalance", "unsettledInterest", "pendingInterest",
+                      "interestAccrued", "spotPositions")
+        if any(((k in first) != (k in last)) or first.get(k) != last.get(k) for k in cut_fields):
+            raise CapabilityBlocked("Arcus account economic cut changed during native risk reads")
+        observed_end_ns = self.clock_ns()
+        if (type(observed_end_ns) is not int or observed_end_ns < observed_ns
+                or observed_end_ns - observed_ns > max_age_ns):
+            raise CapabilityBlocked("Arcus snapshot read span is nonmonotone or exceeds freshness bound")
+        markets = markets_doc.get("markets") if isinstance(markets_doc, dict) else None
+        leverages = leverages_doc.get("leverages") if isinstance(leverages_doc, dict) else None
+        proof = decode_arcus_quote_proof(first, markets, leverages, address=self.address,
+                                         account_index=int(self.scope.subaccount), symbol=symbol,
+                                         local_ledger_version=local_ledger_version)
+        market = next(m for m in markets if m.get("marketDisplayName") == symbol)
+        product = self._metadata_row(symbol, market, tick=market["tickSize"], lot=market["stepSize"],
+            minimum=market["minOrderSize"], notional=market["minOrderNotional"],
+            base=market["baseAsset"], quote="USD", settlement="USDG", distinct_quote=True)
+        product["valuation_conversion_required"] = True
+        product["margin_mode"] = proof["margin_mode"]
+        product["position_mode"] = "net"
+        normalized = self._scope_row({"equity": str(proof["equityUSD"]), "available": str(proof["availableUSD"]),
+            "currency": "USD", "settlement_currency": "USDG", "initial_margin": str(proof["initialMarginUSD"]),
+            "maintenance_margin": str(proof["maintenanceMarginUSD"]), "margin_state": first.get("marginState"),
+            "account_sequence": first["sequenceNumber"], "margin_totals_proven": True, "raw": first})
+        return {"account_facts": {"normalized": normalized, "observed_ns": observed_ns,
+            "account_version": "arcus:" + str(first["sequenceNumber"]), "reconciliation_state": "RECONCILED",
+            "unknown": False, "position_mode": "net", "margin_mode": proof["margin_mode"],
+            "local_ledger_version": local_ledger_version,
+            "native_identity": deepcopy(native_identity),
+            "arcus_quote_proof": {"account": first, "markets": markets, "leverages": leverages,
+                                  "decoded": proof}}, "product_specs": {symbol: product},
+                "max_age_ns": max_age_ns}
+
     async def positions(self, symbol):
         rows = (await self._get("/v1/positions", {"market": symbol}))["positions"]
         result = []

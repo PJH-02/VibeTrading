@@ -451,6 +451,10 @@ class ExecutionOwner:
                 now_ns=self.clock(), max_age_ns=facts.get("max_age_ns"))
             if result["quality"] != "VALID":
                 raise GateBlocked("Native linear risk facts unavailable: " + str(result["reason"]))
+            local_cut = result["facts"].get("local_ledger_version")
+            if (local_cut is not None
+                    and (type(local_cut) is not int or local_cut != self.ledger.account_version())):
+                raise GateBlocked("Native linear account snapshot is stale against local fill version")
             product = result["facts"]["products"].get(action.intent.instrument.raw_symbol)
             if product is None:
                 raise GateBlocked("Native product facts do not cover the selected symbol")
@@ -575,6 +579,20 @@ class ExecutionOwner:
         if (exact_sum(Decimal(str(state.position_notional)), total) > self.budgets.max_account_notional
                 or total > Decimal(str(state.available_notional))):
             raise GateBlocked("Worst-case reservation exceeds verified account capacity")
+        if route.mode_family == "linear":
+            native = native_facts.get("native")
+            reported = native.get("reported") if isinstance(native, Mapping) else None
+            native_available = reported.get("available") if isinstance(reported, Mapping) else None
+            if (isinstance(native_available, (bool, float))
+                    or not isinstance(native_available, (str, int, Decimal))):
+                raise GateBlocked("Verified native linear available balance is missing")
+            try:
+                native_available = positive_decimal(native_available,
+                    "verified native linear available balance", zero=True)
+            except (ValueError, ArithmeticError) as error:
+                raise GateBlocked("Verified native linear available balance is invalid") from error
+            if total > native_available:
+                raise GateBlocked("Worst-case reservation exceeds verified native available balance")
         return unit
 
     @staticmethod

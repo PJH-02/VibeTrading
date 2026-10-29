@@ -274,6 +274,88 @@ def validate_native_account_facts(account_facts, product_specs, current_scope, *
                 or not {"account_read", "trade"}.issubset(permissions)):
             raise ValueError("native read/trade permission provenance is incomplete")
 
+        # Arcus is the sole explicit native quote/settlement exception. The
+        # public read snapshots are recomputed here; a caller-supplied decoded
+        # result or legacy account flags cannot establish this proof.
+        if venue == "arcus":
+            proof_input = frozen.get("arcus_quote_proof")
+            if not isinstance(proof_input, Mapping):
+                raise ValueError("cross-currency, FX, or wrong-collateral Arcus quote lacks native USD valuation proof")
+            if margin_mode not in {"cross", "isolated"}:
+                raise ValueError("Arcus native margin mode is unsupported")
+            from .arcus_risk import decode_arcus_quote_proof
+            computed = decode_arcus_quote_proof(
+                proof_input.get("account"), proof_input.get("markets"), proof_input.get("leverages"),
+                address=identity["native_account_id"], account_index=int(getattr(current_scope, "subaccount", "-1")),
+                symbol=next(iter(specs), ""),
+                local_ledger_version=frozen.get("local_ledger_version"))
+            if frozen.get("account_version") != "arcus:" + str(computed["sequence"]):
+                raise ValueError("Arcus account sequence/version mismatch")
+            if normalized.get("raw") != proof_input.get("account") or normalized.get("account_sequence") != computed["sequence"]:
+                raise ValueError("Arcus normalized account raw/sequence differs from native quote proof")
+            if margin_mode != computed["margin_mode"]:
+                raise ValueError("Arcus native mode differs from its quote proof")
+            if (normalized.get("currency") != "USD" or normalized.get("settlement_currency") != "USDG"
+                    or getattr(current_scope, "settlement_currency", None) != "USDG"):
+                raise ValueError("Arcus quote USD and settlement USDG must remain distinct")
+            expected_nums = {"equity": computed["equityUSD"], "available": computed["availableUSD"],
+                             "initial_margin": computed["initialMarginUSD"],
+                             "maintenance_margin": computed["maintenanceMarginUSD"]}
+            for key, expected in expected_nums.items():
+                if _native_exact_decimal(normalized.get(key), key, nonnegative=True) != expected:
+                    raise ValueError("Arcus normalized " + key + " differs from recomputed native USD proof")
+            if computed["availableUSD"] > computed["equityUSD"]:
+                raise ValueError("Arcus available USD exceeds equity USD")
+            checked_specs = {}
+            if len(specs) > 64:
+                raise ValueError("native product set exceeds the bounded product count")
+            for symbol, row in specs.items():
+                if not isinstance(row, Mapping) or not _NATIVE_PRODUCT_FIELDS.issubset(row):
+                    raise ValueError("Arcus native product metadata is incomplete")
+                for key, expected in (("scope_key", scope_key), ("venue", "arcus"),
+                                      ("product", product), ("environment", environment),
+                                      ("symbol", symbol), ("kind", "linear_perpetual")):
+                    if row.get(key) != expected:
+                        raise ValueError("Arcus native product scope/kind mismatch")
+                if (row.get("quote_currency") != "USD" or row.get("settlement_currency") != "USDG"
+                        or row.get("collateral_currency") != "USDG" or row.get("margin_mode") != computed["margin_mode"]
+                        or row.get("position_mode") != "net" or not isinstance(row.get("raw"), Mapping)):
+                    raise ValueError("Arcus native product quote/settlement/mode proof mismatch")
+                native_market = next((m for m in computed["raw_markets"]
+                                      if m.get("marketDisplayName") == symbol), None)
+                if native_market is None or row.get("raw") != native_market:
+                    raise ValueError("Arcus native product metadata differs from full market snapshot")
+                from .arcus_risk import dec as arcus_decimal
+                if (row.get("base_currency") != native_market.get("baseAsset")
+                        or row.get("quote_currency") != native_market.get("quoteAsset")
+                        or arcus_decimal(row.get("multiplier"), "Arcus product multiplier") != Decimal(1)
+                        or arcus_decimal(row.get("tick_size"), "Arcus product tick") != arcus_decimal(native_market.get("tickSize"), "Arcus native tick")
+                        or arcus_decimal(row.get("lot_size"), "Arcus product lot") != arcus_decimal(native_market.get("stepSize"), "Arcus native step")
+                        or arcus_decimal(row.get("min_quantity"), "Arcus product minimum") != arcus_decimal(native_market.get("minOrderSize"), "Arcus native minimum")
+                        or arcus_decimal(row.get("min_notional"), "Arcus product notional") != arcus_decimal(native_market.get("minOrderNotional"), "Arcus native notional minimum")):
+                    raise ValueError("Arcus normalized contract fields differ from native market metadata")
+                nums = {}
+                for key, nonnegative in (("multiplier", False), ("tick_size", False),
+                                         ("lot_size", False), ("min_quantity", False),
+                                         ("min_notional", True)):
+                    nums[key] = _native_exact_decimal(row.get(key), key, nonnegative=nonnegative)
+                    if key != "min_notional" and nums[key] <= 0:
+                        raise ValueError("Arcus native product " + key + " must be positive")
+                checked_specs[symbol] = {**dict(row), **nums}
+            facts = {"scope_key": scope_key, "venue": venue, "product": product,
+                     "environment": environment, "account_version": account_version,
+                     "local_ledger_version": computed["local_ledger_version"],
+                     "observed_ns": observed_ns, "native_account_id": identity["native_account_id"],
+                     "position_mode": "net", "margin_mode": computed["margin_mode"],
+                     "basis": "ARCUS_NATIVE_QUOTE_USD", "currency": "USD",
+                     "settlement_currency": "USDG", "collateral_currency": "USDG",
+                     "valuation_currency": "USD", "initial_margin_basis": computed["initial_margin_basis"],
+                     "maintenance_margin_basis": computed["maintenance_margin_basis"],
+                     "native_margin_state": computed["margin_state"],
+                     "reported": expected_nums, "products": checked_specs,
+                     "arcus_quote_proof": computed}
+            return _native_result(None, facts=facts)
+
         account_currency = normalized.get("currency")
         settlement = normalized.get("settlement_currency", account_currency)
         if account_currency != settlement_currency or settlement != settlement_currency:
