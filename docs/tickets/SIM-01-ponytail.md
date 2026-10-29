@@ -16,3 +16,17 @@ Approved finding: INLINE the two forwarding wrappers and REUSE already imported 
 KEEP_WITH_REASON: freeze/thaw preserves deep immutability; divide uses precision128; reserve_product uses128 and ROUND_CEILING; nested position transition logic and stale/missing-mark cases remain. No safe stdlib substitute for these semantics. No deferred applicable candidate in bounded owner scope.
 
 Acceptance: full offline regression plus separate guarded fork/lease tests; PnL Golden under low ambient Decimal precision, fee/funding, missing-mark FX, replay and exact return/exception behavior. Exact helper imports unchanged, all safety validation retained. Source/math normalization hash evidence and real test exits in receipt. SIMPLIFY source commit separate from CLN-02.
+
+## Bounded prerequisite test-fixture correction
+
+Lead approved an additional test-only path, `tests/refactoring/test_cap04_adverse.py`,
+for the two existing adversarial process scenarios. Diagnostic traces show normal
+confined initialization around 0.6s, while the synchronous case previously mixed
+startup and callback observation in a nominal 500ms polling window. Await both
+jobs' real validated `isolated_initialized` state within the existing 2s init
+contract before the first market frame; assert no orders exist before that frame.
+Keep every existing callback/ACK/watchdog/cancellation/recovery assertion and the
+50ms callback, 100ms ACK, 500-iteration callback polling and 3s fence/cancel limits.
+No production process/engine/strategy source change. Do not count a passing trace
+as acceptance of the previously intermittent 3s timeout; independently rerun the
+unchanged assertions and full regression after fixture correction.

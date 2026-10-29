@@ -286,6 +286,16 @@ def test_local_market_engine_apply_ack_and_other_feed_progress_while_plugin_spin
             host.register(h.registration(ledger, healthy))
             host.register(h.registration(ledger, hostile))
 
+            async def wait_for_isolated_initialization():
+                while not all(job.isolated_initialized
+                              for job in host._jobs.values()):
+                    host.poll_isolated()
+                    await asyncio.sleep(.01)
+
+            await asyncio.wait_for(wait_for_isolated_initialization(), timeout=2)
+            assert all(job.isolated_initialized for job in host._jobs.values())
+            assert ledger.report()["orders"] == []
+
             budgets = EngineBudgets(2, 8, 65536, 32, 1_048_576,
                 10_000_000_000, 64, 8, 10_000_000_000, .01)
             engine = LocalMarketEngine(
@@ -392,6 +402,14 @@ def test_infinite_callback_can_be_fenced_without_blocking_parent_or_sibling(tmp_
         hostile = load_strategy_manifest(hostile_path.stem, (str(tmp_path),))
         host.register(h.registration(ledger, healthy))
         host.register(h.registration(ledger, hostile))
+
+        initialization_deadline = time.monotonic() + 2
+        while (not all(job.isolated_initialized for job in host._jobs.values())
+               and time.monotonic() < initialization_deadline):
+            host.poll_isolated()
+            time.sleep(.01)
+        assert all(job.isolated_initialized for job in host._jobs.values())
+        assert ledger.report()["orders"] == []
 
         first = h.book(h.T).model_copy(update={"event_id": "first", "sequence": 1,
             "final_update_id": 1, "receive_ts_ns": h.T, "source_ts_ns": h.T,
