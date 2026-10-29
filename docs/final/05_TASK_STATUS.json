@@ -38,15 +38,15 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 23,
+    "accepted": 24,
     "in_progress": 0,
     "blocked": 0,
-    "not_started": 10,
+    "not_started": 9,
     "external_not_authorized": 2
   },
   "next_ready_candidate": [
     "CLN-02",
-    "OBS-01"
+    "WEB-01"
   ],
   "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
   "gate_results": {
@@ -432,7 +432,7 @@
     "missing_required_local_code_blocks_feature_release": true
   },
   "active_task_id": null,
-  "last_accepted_task_id": "CAP-06",
+  "last_accepted_task_id": "OBS-01",
   "stop_requested": false,
   "tickets": [
     {
@@ -2125,7 +2125,7 @@
     {
       "task_id": "OBS-01",
       "wave": "W3",
-      "status": "NOT_STARTED",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "MOV-07",
         "STR-02",
@@ -2135,13 +2135,29 @@
       "risk_review": "CRITICAL_CODEX",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "base_sha": "593c22bdf30df21c642c7e51a19d5c5125015b27",
+      "actual_commit_sha": "a353fbb65f0d5681e7e827adfaeef8e5bda4b3fc",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/OBS-01-sol-luna-20261029/OBS01.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
-      "definition_heading_id": "OBS-01"
+      "definition_heading_id": "OBS-01",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/OBS-01-sol-luna-20261029",
+      "bounded_packet": "docs/tickets/OBS-01-observability.md",
+      "worker_policy_override": {
+        "models": [
+          "sol lead unchanged",
+          "gpt-6-luna"
+        ],
+        "opencode_invocations": 0,
+        "reason": "continue user sol+luna-only model preference"
+      },
+      "acceptance_receipt_sha256": "6e2a843e9c3a0b0af5a486dedeb127f8f162c1d330fe3a29b68907913325497c",
+      "local_e2e": "PASS_SCRIPTED",
+      "mandatory_matrix": "ALL_REQUIRED_LOCAL_PASS",
+      "independent_unique_offline_cases": 3099,
+      "selected_worker_model": "gpt-6-luna",
+      "opencode_invocations": 0
     },
     {
       "task_id": "WEB-01",
@@ -2501,6 +2517,16 @@
       "receipt_sha256": "c793e2f11db6ae330d7e7f598003a3ad19329048764a67915d04997189f72c57",
       "tests": "3034 full +25 guarded lease, all exit0; wheel151 exact/19 imports; LinuxDocker151 exact/16 imports",
       "no_production_activation": true
+    },
+    {
+      "date": "2026-10-29",
+      "reason": "OBS-01 independent local acceptance; unchanged sol lead/native luna only, zero OpenCode; one requested ticket completed",
+      "task_id": "OBS-01",
+      "actual_commit_sha": "a353fbb65f0d5681e7e827adfaeef8e5bda4b3fc",
+      "receipt_sha256": "6e2a843e9c3a0b0af5a486dedeb127f8f162c1d330fe3a29b68907913325497c",
+      "tests": "3074full+25guardedleases=3099; actualroutes7, unit/build/browserPASS; wheel153exact/23imports; LinuxDocker153exact/20imports",
+      "no_production_activation": true,
+      "push_authorized": false
     }
   ],
   "requirements_revision": {
@@ -2603,23 +2629,21 @@
   "active_batch": {
     "requested_tasks": 1,
     "tasks": [
-      "CAP-06"
+      "OBS-01"
     ],
     "accepted": [
-      "CAP-06"
+      "OBS-01"
     ],
     "status": "COMPLETED_REQUESTED_ONE_TICKET",
-    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-06-sol-luna-20261029",
+    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/OBS-01-sol-luna-20261029",
     "target_os": "Ubuntu Linux",
     "worker_models": [
       "sol lead unchanged",
       "gpt-6-luna"
     ],
-    "user_request": "next ready W3 ticket; sol+luna only, no OpenCode",
-    "completed_utc": "2026-10-29T12:19:10.331939+00:00",
-    "push_authorized": true,
-    "push_target": "origin codex/move-core-feeds",
-    "source_commit": "6d52bf3801ba17e9df8c04b555d2731479706f0a"
+    "push_authorized": false,
+    "completed_utc": "2026-10-29T15:59:12.455582+00:00",
+    "source_commit": "a353fbb65f0d5681e7e827adfaeef8e5bda4b3fc"
   },
   "completed_batches": [
     {
@@ -2775,6 +2799,27 @@
       "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029",
       "target_os": "Ubuntu Linux",
       "user_request": "OfficialArcusdocs supplied; complete EXEC01 remainder then next dependency ticket CAP05"
+    },
+    {
+      "requested_tasks": 1,
+      "tasks": [
+        "CAP-06"
+      ],
+      "accepted": [
+        "CAP-06"
+      ],
+      "status": "COMPLETED_REQUESTED_ONE_TICKET",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-06-sol-luna-20261029",
+      "target_os": "Ubuntu Linux",
+      "worker_models": [
+        "sol lead unchanged",
+        "gpt-6-luna"
+      ],
+      "user_request": "next ready W3 ticket; sol+luna only, no OpenCode",
+      "completed_utc": "2026-10-29T12:19:10.331939+00:00",
+      "push_authorized": true,
+      "push_target": "origin codex/move-core-feeds",
+      "source_commit": "6d52bf3801ba17e9df8c04b555d2731479706f0a"
     }
   ]
 }
