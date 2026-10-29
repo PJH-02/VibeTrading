@@ -464,7 +464,7 @@ def test_alias_status_tracks_route_lifecycle_and_removed_routes_reject_aliases()
 def test_actual_adapter_maps_preserve_honest_gaps_and_native_route_spellings():
     # Import concrete classes only for this explicit binding proof; constructors
     # with clients, credentials, or external accounts are never invoked.
-    from execution.brokers import KiwoomBrokerAdapter, KisBrokerAdapter
+    from execution.brokers import KiwoomBrokerAdapter
     from execution.kis_execution import KisCashBroker
     from execution.perp_execution import BinancePerpAdapter
 
@@ -478,13 +478,12 @@ def test_actual_adapter_maps_preserve_honest_gaps_and_native_route_spellings():
                      AccountScope("binance", "fixture", "linear_perpetual", "sandbox"))
 
     for cls, fragment in ((KiwoomBrokerAdapter, "KiwoomBrokerAdapter"),
-                          (KisBrokerAdapter, "KisBrokerAdapter"),
                           (KisCashBroker, "KisCashBroker"),
                           (BinancePerpAdapter, "BinancePerpAdapter")):
         owner, operations, gaps = existing_adapter_contract(cls.__new__(cls))
         assert owner.endswith(fragment)
         assert operations
-        if cls in (KiwoomBrokerAdapter, KisBrokerAdapter, KisCashBroker):
+        if cls in (KiwoomBrokerAdapter, KisCashBroker):
             assert gaps
         if cls is KiwoomBrokerAdapter:
             assert any("NOT_IMPLEMENTED" in gap or "unsupported" in gap for gap in gaps)

@@ -428,7 +428,6 @@ class VenueRegistry:
         owner = type(adapter).__module__ + "." + type(adapter).__qualname__
         known_cash_owners = {
             "execution.kis_execution.KisCashBroker",
-            "execution.brokers.KisBrokerAdapter",
             "execution.brokers.KiwoomBrokerAdapter",
             "execution.brokers.BinanceBrokerAdapter",
         }
@@ -1076,10 +1075,6 @@ EXISTING_ADAPTER_MAPS = {
         "cancel_order has no synchronous permit seam and is unsupported",
         "list_open_orders, positions, reconcile, instrument_spec and private_or_poll are absent",
     )),
-    "execution.brokers.KisBrokerAdapter": (_KIS_OPERATIONS, (
-        "cancel_order has no synchronous permit seam and is unsupported",
-        "list_open_orders, positions, reconcile, instrument_spec and private_or_poll are absent",
-    )),
     "execution.brokers.BinanceBrokerAdapter": (_SPOT_OPERATIONS, (
         "positions, reconcile and private_or_poll remain unsupported (CAP02/EXEC01)",
     )),
@@ -1116,7 +1111,6 @@ _PERP_SUBMIT_OWNERS = frozenset(
 _CASH_INTENT_OWNERS = frozenset({
     "execution.brokers.BinanceBrokerAdapter",
     "execution.brokers.KiwoomBrokerAdapter",
-    "execution.brokers.KisBrokerAdapter",
     "execution.kis_execution.KisCashBroker",
 })
 
@@ -1218,7 +1212,7 @@ def query_arguments(binding: Binding, *, symbol, order_id, client_order_id, day)
         return (symbol, client_order_id or order_id), {}
     if owner == "execution.brokers.KiwoomBrokerAdapter":
         return (symbol, day, order_id or client_order_id), {}
-    if owner in {"execution.kis_execution.KisCashBroker", "execution.brokers.KisBrokerAdapter"}:
+    if owner == "execution.kis_execution.KisCashBroker":
         return (order_id or client_order_id,), {"day": day, "symbol": symbol}
     if owner == "execution.brokers.BinanceBrokerAdapter":
         kwargs = {"order_id": order_id} if order_id else {"client_order_id": client_order_id}

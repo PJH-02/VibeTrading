@@ -751,14 +751,6 @@ class KiwoomBrokerAdapter:
 from execution.kis_execution import KisCashBroker
 
 
-class KisBrokerAdapter(KisCashBroker):
-    """Generic execution defaults to the configured mode; ETF loop uses mock."""
-
-    def __init__(self, settings: RuntimeSettings | None = None, *, mode: str | None = None) -> None:
-        settings = settings or get_settings()
-        super().__init__(settings, mode=mode or ("mock" if _bool(settings.env.get("KIS_USE_MOCK"), default=True) else "real"))
-
-
 class HyperliquidBrokerAdapter:
     name = "hyperliquid"
 
@@ -824,10 +816,15 @@ class TossBrokerAdapter:
 def broker_for_name(name: str, settings: RuntimeSettings | None = None) -> BrokerAdapter:
     from .extended_brokers import ArcusBrokerAdapter, GrvtBrokerAdapter
     normalized = name.strip().lower()
+    if normalized == "kis":
+        settings = settings or get_settings()
+        return KisCashBroker(
+            settings,
+            mode="mock" if _bool(settings.env.get("KIS_USE_MOCK"), default=True) else "real",
+        )
     mapping = {
         "binance": BinanceBrokerAdapter,
         "kiwoom": KiwoomBrokerAdapter,
-        "kis": KisBrokerAdapter,
         "hyperliquid": HyperliquidBrokerAdapter,
         "toss": TossBrokerAdapter,
         "arcus": ArcusBrokerAdapter,
