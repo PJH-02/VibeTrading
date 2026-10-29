@@ -39,13 +39,6 @@ def _wire(value: Decimal | None) -> str | None:
     return None if value is None else str(value)
 
 
-def _exact_add(first: Decimal, second: Decimal) -> Decimal:
-    return exact_sum(first, second)
-
-
-def _exact_product(first: Decimal, second: Decimal) -> Decimal:
-    return exact_product(first, second)
-
 
 def paper_pnl_projection(document: dict, *, generated_ms: int | None = None,
                          marks=(), max_mark_age_ms: int = 10000,
@@ -159,7 +152,7 @@ def paper_pnl_projection(document: dict, *, generated_ms: int | None = None,
         unrealized = position["unrealized"] if count == 0 or position["complete"] else None
         net = None
         if not gap and not unresolved and not unallocated and realized is not None and fees is not None and funding is not None and unrealized is not None:
-            net = _exact_add(_exact_add(_exact_add(realized, unrealized), fees.copy_negate()), funding)
+            net = exact_sum(exact_sum(exact_sum(realized, unrealized), fees.copy_negate()), funding)
         strategy_orders = orders_by_strategy.get((raw_scope, strategy), [])
         working = sum(1 for item in strategy_orders if str(item.get("status", "")).upper()
                       in {"OPEN", "UNKNOWN", "CANCEL_PENDING"})
@@ -461,11 +454,11 @@ def native_ledger_pnl_projection(paths, *, product_metadata=(), marks=(),
     def project_position(position: dict, delta: Decimal, price: Decimal, multiplier: Decimal) -> Decimal:
         old = position["quantity"]
         average = position["average"]
-        new = _exact_add(old, delta)
+        new = exact_sum(old, delta)
         realized = Decimal(0)
         if old and (old > 0) != (delta > 0):
             closed = min(old.copy_abs(), delta.copy_abs())
-            realized = _exact_product(_exact_product(closed, multiplier), _exact_add(price, average.copy_negate()))
+            realized = exact_product(exact_product(closed, multiplier), exact_sum(price, average.copy_negate()))
             if old < 0:
                 realized = realized.copy_negate()
         if not new:
@@ -473,8 +466,8 @@ def native_ledger_pnl_projection(paths, *, product_metadata=(), marks=(),
         elif not old or (old > 0) != (new > 0):
             average = price
         elif (old > 0) == (delta > 0):
-            average = exact_divide(_exact_add(_exact_product(old.copy_abs(), average),
-                                              _exact_product(delta.copy_abs(), price)), new.copy_abs())
+            average = exact_divide(exact_sum(exact_product(old.copy_abs(), average),
+                                              exact_product(delta.copy_abs(), price)), new.copy_abs())
         position["quantity"], position["average"] = new, average
         return realized
 
@@ -644,13 +637,13 @@ def native_ledger_pnl_projection(paths, *, product_metadata=(), marks=(),
                 cashflow = cashflow.copy_negate()
             state["trade_cashflow"] = exact_sum(state["trade_cashflow"], cashflow)
             realized = project_position(instrument_position,
-                _exact_product(quantity, Decimal(direction)), price, multiplier)
+                exact_product(quantity, Decimal(direction)), price, multiplier)
             if product is not None and multiplier == product["multiplier_decimal"]:
-                state["realized"] = _exact_add(state["realized"], realized)
+                state["realized"] = exact_sum(state["realized"], realized)
             else:
                 state["complete"] = False
             if product is not None and product["fee_currency"] == product["currency"]:
-                state["fees"] = _exact_add(state["fees"], fee)
+                state["fees"] = exact_sum(state["fees"], fee)
             else:
                 state["fees_complete"] = False
         for intent in intents:
