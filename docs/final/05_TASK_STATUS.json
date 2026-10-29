@@ -38,14 +38,15 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 21,
+    "accepted": 22,
     "in_progress": 0,
     "blocked": 0,
-    "not_started": 12,
+    "not_started": 11,
     "external_not_authorized": 2
   },
   "next_ready_candidate": [
     "CLN-02",
+    "CAP-06",
     "OBS-01"
   ],
   "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
@@ -228,7 +229,14 @@
       "configured_live_pairs": [],
       "no_live_mutation_without_explicit_approval": true,
       "skip_or_not_applicable_without_implementation": false,
-      "implementation_acceptance": "CAP-05 ACCEPTED_LOCAL requires executable two-leg dispatch + persistence/reconcile + independent fault tests; not paper observation only"
+      "implementation_acceptance": "CAP-05 ACCEPTED_LOCAL requires executable two-leg dispatch + persistence/reconcile + independent fault tests; not paper observation only",
+      "code_status": "ACCEPTED_LOCAL",
+      "local_e2e_status": "PASS",
+      "verified_local_adapters": [
+        "execution.perp_execution.BinancePerpAdapter",
+        "execution.perp_execution.BybitPerpAdapter"
+      ],
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/CAP05.acceptance.json"
     },
     "strategy_action_routing": {
       "code_requirement": "REQUIRED_FOR_OFFLINE_RELEASE",
@@ -425,7 +433,7 @@
     "missing_required_local_code_blocks_feature_release": true
   },
   "active_task_id": null,
-  "last_accepted_task_id": "EXEC-01",
+  "last_accepted_task_id": "CAP-05",
   "stop_requested": false,
   "tickets": [
     {
@@ -1410,7 +1418,7 @@
     {
       "task_id": "CAP-05",
       "wave": "W3",
-      "status": "NOT_STARTED",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "CAP-01",
         "CAP-02",
@@ -1422,10 +1430,10 @@
       "risk_review": "CRITICAL_CODEX",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "base_sha": "ec518acc98e86a5bffb32c1958e864d6238219c9",
+      "actual_commit_sha": "1d25032b31958099b81dbf226f6176a8cd2f9081",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/CAP05.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "CAP-05",
@@ -1437,7 +1445,165 @@
         "DURABLE_GROUP_AND_LEG_RESTART_RECONCILIATION",
         "PARTIAL_FILL_UNKNOWN_CANCEL_HEDGE_BOUNDS",
         "OTHER_STRATEGY_ISOLATION_AND_ZERO_LIVE_MUTATION"
-      ]
+      ],
+      "bounded_packet": "docs/tickets/CAP-05-native-cross-venue-groups.md",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029",
+      "worker_attempts": [
+        {
+          "model": "freellmapi/glm-4.5-flash",
+          "role": "implement",
+          "state": "FINISHED",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/initial-glm",
+          "worker_exit": 1,
+          "source_changes": [],
+          "http_statuses": [
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            429,
+            429,
+            429,
+            429,
+            429,
+            429
+          ]
+        },
+        {
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "role": "debug",
+          "state": "FINISHED",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/repair1-deepseek",
+          "worker_exit": 124,
+          "source_changes": [
+            "src/execution/execution_groups.py",
+            "src/execution/execution_ledger.py",
+            "src/execution/execution_owner.py",
+            "src/execution/trading_contracts.py",
+            "src/runtime/real_runner.py",
+            "src/runtime/strategy_process.py",
+            "tests/refactoring/cap05_source_fixture.py",
+            "tests/refactoring/test_cap05_groups.py",
+            "tests/refactoring/test_cap05_native_integration.py"
+          ],
+          "scope_pass": true,
+          "independent_focused": "28passed1failed; expandedadverse4failed2passed; requiredlifecyclegaps"
+        },
+        {
+          "model": "freellmapi/gemini-2.5-flash",
+          "role": "debug",
+          "state": "FINISHED",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/repair2-gemini25",
+          "worker_exit": 1,
+          "source_changes": [],
+          "http_statuses": [
+            429,
+            429,
+            429,
+            429,
+            429,
+            429,
+            429,
+            429,
+            429
+          ]
+        },
+        {
+          "model": "opencode/mimo-v2.6-flash-free",
+          "role": "debug",
+          "state": "FINISHED",
+          "user_authorized_alternative": true,
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/alternative-mimo26",
+          "worker_exit": 124,
+          "source_changes": [
+            "src/execution/execution_groups.py",
+            "src/execution/trading_contracts.py",
+            "src/runtime/real_runner.py",
+            "src/runtime/strategy_process.py"
+          ],
+          "scope_pass": true,
+          "independent_focused": "32 passed; true native lifecycle/funding remaining"
+        },
+        {
+          "model": "opencode/glm-5.3-flash-free",
+          "role": "debug",
+          "state": "STOPPED_USER_AUTHORIZED_LUNA_CONTINUATION",
+          "user_authorized_alternative": true,
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/alternative-glm53",
+          "launcher_exit": -15,
+          "worker_exit": null,
+          "source_changes": [
+            "src/execution/execution_groups.py",
+            "src/execution/execution_ledger.py",
+            "src/execution/execution_owner.py",
+            "tests/refactoring/cap05_source_fixture.py",
+            "tests/refactoring/test_cap05_core_adverse.py"
+          ],
+          "scope_pass": true,
+          "reason": "Lead terminated own isolated worker after1921sec with remaining failing/incomplete tests following explicit user OR Luna instruction; no provider quota inference"
+        },
+        {
+          "model": "opencode/flint-40b-free",
+          "role": "test",
+          "state": "FINISHED_STARTUP_CATALOG_ERROR",
+          "user_authorized_alternative": true,
+          "isolated_test_only": true,
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/alternative-flint-tests",
+          "launcher_exit": 3,
+          "worker_exit": null,
+          "source_changes": [],
+          "reason": "fresh model list initially absent; same isolated catalog subsequently returns exact free ID; no provider quota inference"
+        },
+        {
+          "model": "opencode/flint-40b-free",
+          "role": "test",
+          "state": "STOPPED_TOOL_INCOMPATIBLE",
+          "user_authorized_alternative": true,
+          "isolated_test_only": true,
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/alternative-flint-tests-warm",
+          "startup_public_catalog_warmed": true,
+          "launcher_exit": -15,
+          "worker_exit": null,
+          "source_changes": [],
+          "scope_pass": true,
+          "reason": "Repeated read schema path instead of filePath + forbidden exploration attempts; own isolated worker terminated; no API quota inference"
+        }
+      ],
+      "native_fallback": {
+        "model": "gpt-6-luna",
+        "reason": "Latest direct user: available other models OR Luna; preserved scoped GLM partial; independent review required",
+        "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/CAP05.acceptance.json",
+        "state": "PASS_INDEPENDENTLY_ACCEPTED",
+        "explicit_latest_user_authorization": true,
+        "isolated_writers": {
+          "core": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/luna-final-core",
+          "runtime_wire": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/luna-final-wire"
+        },
+        "lead_acceptance": true,
+        "core_agent": "/root/cap05_final_core_luna",
+        "runtime_agent": "/root/cap05_final_wire_luna",
+        "prior_staging_receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/native-fallback.json"
+      },
+      "user_authorized_alternative_routes": {
+        "date": "2026-10-29",
+        "instruction": "Try othermodels suchasMiMo; Lunaonlyifothermodelsunavailable",
+        "supersedes_exhaustion_only_native_start": true,
+        "additional_free_worker_attempts_authorized": true,
+        "no_paid_routes": true
+      },
+      "acceptance_receipt_sha256": "8f91381621ff35a2edbc12076bf251ad0e9c1bddb04441fe017464bff53f1636",
+      "local_e2e": "PASS",
+      "mandatory_matrix": "ALL_16_PASS",
+      "independent_unique_offline_cases": 3019,
+      "metadata_verification": {
+        "receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/CAP05.metadata-verification.json",
+        "sha256": "859940602ed15bb742dc5a76b4a11361247b8b2aaec3471f57f7322e8937a6f0",
+        "tests_passed": 71,
+        "exit": 0
+      }
     },
     {
       "task_id": "CAP-06",
@@ -2292,6 +2458,22 @@
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/EXEC01-arcus-resume-20261029/EXEC01.complete.acceptance.json",
       "receipt_sha256": "25e40a3a37ab3b648c7f5d44c1df934ec754dd56463c57657912cf9018f29795",
       "actual_commit_sha": "a71770dcb0eb932e4f6f1023e09316f1fc25a02e"
+    },
+    {
+      "date": "2026-10-29",
+      "reason": "CAP05 is dependencyready after EXEC01acceptance; start source-owned group prepare/nativeowners/cancelreconcile implementation in isolatedcredentialfree GLM45worker. No actual pair/accountactivation.",
+      "base_sha": "ec518acc98e86a5bffb32c1958e864d6238219c9"
+    },
+    {
+      "date": "2026-10-29",
+      "reason": "User steer: othermodelsincludingMiMo beforeLuna evenafterprior external allowance exhaustion. No nativeCAP05agent started. Verify exact freecatalogIDs, preserve reviewedDeepSeekseed, proceedadditionaluserauthorizedfreealternative.",
+      "models_catalog": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/opencode-models-user-alternative.log"
+    },
+    {
+      "date": "2026-10-29",
+      "reason": "CAP-05 accepted after user-authorized alternative models and Luna completion, independent native fault/restart/source/fee/funding validation, full offline suite and exact wheel/Linux Docker source checks",
+      "actual_commit_sha": "1d25032b31958099b81dbf226f6176a8cd2f9081",
+      "receipt_sha256": "8f91381621ff35a2edbc12076bf251ad0e9c1bddb04441fe017464bff53f1636"
     }
   ],
   "requirements_revision": {
@@ -2378,13 +2560,11 @@
       "date": "2026-10-27"
     },
     "latest_user_preference": {
-      "date": "2026-10-28",
-      "instruction": "Prefer other available OpenCode/FreeLLMAPI models; use gpt-6-luna when both routes cannot be used.",
-      "exact_ids_required": true,
-      "catalog_is_not_quota_evidence": true,
-      "existing_per_ticket_limits_and_partial_work_review_preserved": true,
-      "lead_model_unchanged": true,
-      "new_paid_routes_authorized": false
+      "date": "2026-10-29",
+      "instruction": "Use available other models (GLM, DeepSeek, Gemini, MiMo etc) OR Luna",
+      "native_luna_explicitly_authorized_now": true,
+      "lead_model_auth_unchanged": true,
+      "paid_routes_authorized": false
     }
   },
   "execution_checkout": {
@@ -2400,10 +2580,11 @@
       "CAP-05"
     ],
     "accepted": [
-      "EXEC-01"
+      "EXEC-01",
+      "CAP-05"
     ],
-    "status": "IN_PROGRESS",
-    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/EXEC01-arcus-resume-20261029",
+    "status": "COMPLETED_LOCAL",
+    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029",
     "target_os": "Ubuntu Linux",
     "user_request": "OfficialArcusdocs supplied; complete EXEC01 remainder then next dependency ticket CAP05"
   },
