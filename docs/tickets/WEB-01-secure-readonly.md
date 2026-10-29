@@ -11,7 +11,7 @@ stop threshold. Source edits only in an isolated public snapshot. Lead owns
 architecture, source review, independent TLS/route/DB/build/regression validation,
 receipt/status and final acceptance. No recursive delegation or self-approval.
 
-Allowed dashboard paths: build/sites-worker.ts, lib/{server,viewer-gateway,
+Allowed dashboard paths: tsconfig.json (noEmit-only explicit TS extension support), build/sites-worker.ts, lib/{server,viewer-gateway,
 viewer-context,public-projection,order-cursor}.ts, cloudflare-env.d.ts, app/api/{state,pnl,
 orders,accounts,ingest,observability/stream}/route.ts, app/page.tsx and new
 scripts/test-web-access.mjs. Allowed operational templates: deploy/WEB-01-access.md,

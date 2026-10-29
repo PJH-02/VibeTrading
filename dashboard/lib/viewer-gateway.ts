@@ -36,9 +36,9 @@ export class ViewerGateway {
     if (!config) return json({ error: "gateway unavailable" }, 503, commonHeaders());
     const url = new URL(request.url), expected = new URL(config.origin);
     if (url.host.toLowerCase() !== expected.host.toLowerCase()) return json({ error: "forbidden" }, 403, commonHeaders());
+    if (url.href.length > 2048 || [...url.searchParams.keys()].some(key => querySecret.test(key))) return json({ error: "forbidden" }, 403, commonHeaders());
     if (url.protocol !== "https:") return new Response(null, { status: 308, headers: commonHeaders(new Headers({ Location: config.origin + url.pathname + url.search })) });
     if (request.headers.has("origin") && request.headers.get("origin") !== config.origin) return json({ error: "forbidden" }, 403, commonHeaders());
-    if (url.href.length > 2048 || [...url.searchParams.keys()].some(key => querySecret.test(key))) return json({ error: "forbidden" }, 403, commonHeaders());
     const queryAllow: Record<string, Set<string>> = {
       "/api/orders": new Set(["section", "cursor"]), "/api/pnl": new Set(["key", "strategy"]),
     };

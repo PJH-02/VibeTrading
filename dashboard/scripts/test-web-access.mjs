@@ -222,3 +222,11 @@ test("scientific Decimal strings survive public price and curve projection", () 
   assert.equal(projected.observability.pnl[0].equity_curve[0].net_pnl, "-7E-18");
   assert.equal(publicOrders([{ price: "1E-8", quantity: "2E+3" }], owner).rows[0].price, "1E-8");
 });
+
+test("HTTP redirects never echo credential query parameters", async () => {
+  const gateway = new ViewerGateway(base);
+  const response = await gateway.fetch(new Request(base.VIEWER_ORIGIN.replace("https:", "http:") + "/api/state?token=PRIVATE-QUERY-CANARY"), async () => new Response("must not dispatch"));
+  assert.equal(response.status, 403);
+  assert.equal(response.headers.get("location"), null);
+  assert.ok(!(await response.text()).includes("PRIVATE-QUERY-CANARY"));
+});
