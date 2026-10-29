@@ -71,7 +71,7 @@ class ExecutionLedger:
 
     UNRESOLVED = ("AUTHORIZED", "HANDOFF", "UNKNOWN", "LEGACY_UNKNOWN", "SUBMITTED")
 
-    SCHEMA_VERSION = 3
+    SCHEMA_VERSION = 4
 
     def __init__(self, path: Path, scope: AccountScope, *, max_intents: int,
                  max_evidence_bytes: int, max_fills: int, authority_root: Path,
@@ -132,6 +132,20 @@ class ExecutionLedger:
                     PRIMARY KEY(strategy_id,event_key));
                 CREATE TABLE IF NOT EXISTS execution_source_checkpoints(
                     strategy_id TEXT PRIMARY KEY,document TEXT NOT NULL,sha256 TEXT NOT NULL,
+                    updated_ns INTEGER NOT NULL);
+                CREATE TABLE IF NOT EXISTS execution_group_facts(
+                    seq INTEGER PRIMARY KEY AUTOINCREMENT,group_id TEXT NOT NULL,
+                    fact_id TEXT NOT NULL,kind TEXT NOT NULL,document TEXT NOT NULL,
+                    sha256 TEXT NOT NULL,created_ns INTEGER NOT NULL,
+                    UNIQUE(group_id,fact_id));
+                CREATE INDEX IF NOT EXISTS execution_group_facts_group
+                    ON execution_group_facts(group_id,seq);
+                CREATE TABLE IF NOT EXISTS execution_group_legs(
+                    group_id TEXT NOT NULL,leg_id TEXT NOT NULL,scope_key TEXT NOT NULL,
+                    intent_id TEXT NOT NULL,state TEXT NOT NULL,document TEXT NOT NULL,
+                    updated_ns INTEGER NOT NULL,PRIMARY KEY(group_id,leg_id));
+                CREATE TABLE IF NOT EXISTS execution_group_state(
+                    group_id TEXT PRIMARY KEY,state TEXT NOT NULL,document TEXT NOT NULL,
                     updated_ns INTEGER NOT NULL);
             """)
             self._migrate()
@@ -303,7 +317,7 @@ class ExecutionLedger:
                 raise ValueError("Unknown intent")
             # ACK after a full fill must not resurrect an unresolved order.
             effective = "FILLED" if row["state"] == "FILLED" else state
-            release = state in {"BLOCKED", "PRE_SEND_FAILED", "CANCELLED"}
+            release = state in {"BLOCKED", "PRE_SEND_FAILED", "REJECTED", "CANCELLED"}
             cancel_state = state if state in {"CANCEL_PENDING", "CANCELLED"} else row["cancel_state"]
             self._db.execute("UPDATE execution_intents SET state=?,response=?,reservation=?,cancel_state=?,updated_ns=? WHERE intent_id=?",
                 (effective, body, "0" if release else row["reservation"], cancel_state, time.time_ns(), identity))
@@ -430,6 +444,20 @@ class ExecutionLedger:
                 if strategy_id != row["strategy_id"]:
                     raise ValueError("Fill feedback attribution differs from the durable order owner")
                 self.record_feedback(strategy_id, event_id, event)
+        return True
+
+    def fill_receipt_status(self, storage_key: str, *, identity: str, quantity, price, fee) -> bool:
+        """Check an exact native receipt before constructing cumulative feedback."""
+        qty, unit, fees = (positive_decimal(quantity, "fill quantity"),
+                           positive_decimal(price, "fill price"),
+                           positive_decimal(fee, "fee", zero=True))
+        self._check_thread()
+        row = self._db.execute("SELECT fingerprint FROM execution_fills WHERE fill_id=?",
+                               (storage_key,)).fetchone()
+        if row is None:
+            return False
+        if row[0] != canonical([identity, str(qty), str(unit), str(fees)]):
+            raise ValueError("Fill identity conflicts with its original contents")
         return True
 
     def position(self, instrument: str) -> Decimal:
@@ -580,6 +608,152 @@ class ExecutionLedger:
             raise ValueError("Durable source checkpoint identity is corrupt")
         return {"document": value, "sha256": row["sha256"]}
 
+
+    # --------------------------------------------------- bounded group anchor
+    @staticmethod
+    def _group_identity(value, name):
+        if not isinstance(value, str) or not value.strip() or len(value.encode("utf-8")) > 512:
+            raise ValueError(name + " requires a bounded explicit identity")
+        return value
+
+    def record_group_fact(self, group_id: str, fact_id: str, kind: str, document: dict, *,
+                          max_groups: int, max_facts: int, max_bytes: int) -> bool:
+        """Append one immutable group fact inside this same native ledger.
+
+        The first group fact in this account ledger is the durable group anchor.
+        Existing facts are never evicted; terminal history is included in the
+        explicit lifetime capacities.
+        """
+        self._check_thread()
+        for value, name in ((group_id, "group_id"), (fact_id, "group fact_id"),
+                            (kind, "group fact kind")):
+            self._group_identity(value, name)
+        if not isinstance(document, dict):
+            raise ValueError("Group fact requires an explicit mapping")
+        for value, name in ((max_groups, "max_groups"), (max_facts, "max_facts"),
+                            (max_bytes, "max_group_bytes")):
+            if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
+                raise ValueError("Group fact capacities must be explicit positive integers")
+        body = self._bounded_json(document)
+        if len(body.encode("utf-8")) > max_bytes:
+            raise ValueError("Group fact exceeds its explicit byte budget")
+        digest = hashlib.sha256(body.encode("utf-8")).hexdigest()
+        with self.transaction():
+            old = self._db.execute(
+                "SELECT sha256 FROM execution_group_facts WHERE group_id=? AND fact_id=?",
+                (group_id, fact_id)).fetchone()
+            if old is not None:
+                if old[0] != digest:
+                    raise ValueError("Immutable execution group fact collision")
+                return False
+            groups = self._db.execute(
+                "SELECT COUNT(DISTINCT group_id) FROM execution_group_facts").fetchone()[0]
+            if groups >= max_groups and self._db.execute(
+                    "SELECT 1 FROM execution_group_facts WHERE group_id=? LIMIT 1",
+                    (group_id,)).fetchone() is None:
+                raise RuntimeError("Execution group lifetime budget exhausted")
+            count, total = self._db.execute(
+                "SELECT COUNT(*),COALESCE(SUM(LENGTH(document)),0) FROM execution_group_facts"
+            ).fetchone()
+            if count >= max_facts or total + len(body.encode("utf-8")) > max_bytes:
+                raise RuntimeError("Execution group fact lifetime budget exhausted")
+            self._db.execute(
+                "INSERT INTO execution_group_facts(group_id,fact_id,kind,document,sha256,created_ns) "
+                "VALUES(?,?,?,?,?,?)",
+                (group_id, fact_id, kind, body, digest, time.time_ns()))
+            return True
+
+    def group_facts(self, group_id: str | None = None) -> list[dict]:
+        self._check_thread()
+        if group_id is not None:
+            self._group_identity(group_id, "group_id")
+            rows = self._db.execute(
+                "SELECT * FROM execution_group_facts WHERE group_id=? ORDER BY seq",
+                (group_id,)).fetchall()
+        else:
+            rows = self._db.execute(
+                "SELECT * FROM execution_group_facts ORDER BY seq").fetchall()
+        return [{"seq": row["seq"], "group_id": row["group_id"], "fact_id": row["fact_id"],
+                 "kind": row["kind"], "document": json.loads(row["document"]),
+                 "sha256": row["sha256"]} for row in rows]
+
+    def put_group_leg(self, group_id: str, leg_id: str, scope_key: str, intent_id: str,
+                      state: str, document: dict, *, max_bytes: int) -> None:
+        self._check_thread()
+        for value, name in ((group_id, "group_id"), (leg_id, "leg_id"),
+                            (scope_key, "leg scope_key"), (intent_id, "leg intent_id"),
+                            (state, "leg state")):
+            self._group_identity(value, name)
+        if not isinstance(document, dict):
+            raise ValueError("Group leg state requires an explicit mapping")
+        if isinstance(max_bytes, bool) or not isinstance(max_bytes, int) or max_bytes <= 0:
+            raise ValueError("Group leg byte budget must be explicit")
+        body = self._bounded_json(document)
+        if len(body.encode("utf-8")) > max_bytes:
+            raise ValueError("Group leg state exceeds its explicit byte budget")
+        with self.transaction():
+            current = self._db.execute(
+                "SELECT scope_key,intent_id FROM execution_group_legs WHERE group_id=? AND leg_id=?",
+                (group_id, leg_id)).fetchone()
+            if current is not None and (current["scope_key"] != scope_key
+                                        or current["intent_id"] != intent_id):
+                raise ValueError("Group leg identity is immutable")
+            self._db.execute(
+                "INSERT INTO execution_group_legs(group_id,leg_id,scope_key,intent_id,state,document,updated_ns) "
+                "VALUES(?,?,?,?,?,?,?) ON CONFLICT(group_id,leg_id) DO UPDATE SET "
+                "state=excluded.state,document=excluded.document,updated_ns=excluded.updated_ns",
+                (group_id, leg_id, scope_key, intent_id, state, body, time.time_ns()))
+
+    def group_ids_for_intent(self, intent_id: str, scope_key: str) -> list[str]:
+        """Durable intent-to-group membership; never trust a caller group_id."""
+        self._check_thread()
+        if (not isinstance(intent_id, str) or not intent_id
+                or not isinstance(scope_key, str) or not scope_key):
+            return []
+        rows = self._db.execute(
+            "SELECT DISTINCT group_id FROM execution_group_legs WHERE intent_id=? AND scope_key=?",
+            (intent_id, scope_key)).fetchall()
+        return [row["group_id"] for row in rows]
+
+    def group_legs(self, group_id: str) -> list[dict]:
+        self._check_thread()
+        self._group_identity(group_id, "group_id")
+        rows = self._db.execute(
+            "SELECT * FROM execution_group_legs WHERE group_id=? ORDER BY leg_id",
+            (group_id,)).fetchall()
+        return [{"group_id": row["group_id"], "leg_id": row["leg_id"],
+                 "scope_key": row["scope_key"], "intent_id": row["intent_id"],
+                 "state": row["state"], "document": json.loads(row["document"])}
+                for row in rows]
+
+    def put_group_state(self, group_id: str, state: str, document: dict, *,
+                        max_bytes: int) -> None:
+        self._check_thread()
+        for value, name in ((group_id, "group_id"), (state, "group state")):
+            self._group_identity(value, name)
+        if not isinstance(document, dict):
+            raise ValueError("Group state requires an explicit mapping")
+        if isinstance(max_bytes, bool) or not isinstance(max_bytes, int) or max_bytes <= 0:
+            raise ValueError("Group state byte budget must be explicit")
+        body = self._bounded_json(document)
+        if len(body.encode("utf-8")) > max_bytes:
+            raise ValueError("Group state exceeds its explicit byte budget")
+        with self.transaction():
+            self._db.execute(
+                "INSERT INTO execution_group_state(group_id,state,document,updated_ns) "
+                "VALUES(?,?,?,?) ON CONFLICT(group_id) DO UPDATE SET "
+                "state=excluded.state,document=excluded.document,updated_ns=excluded.updated_ns",
+                (group_id, state, body, time.time_ns()))
+
+    def group_state(self, group_id: str) -> dict | None:
+        self._check_thread()
+        self._group_identity(group_id, "group_id")
+        row = self._db.execute(
+            "SELECT * FROM execution_group_state WHERE group_id=?", (group_id,)).fetchone()
+        if row is None:
+            return None
+        return {"group_id": row["group_id"], "state": row["state"],
+                "document": json.loads(row["document"])}
 
     def record_feedback(self, strategy_id: str, event_id: str, event: dict) -> bool:
         """Durably enqueue one attributed factual event before any callback."""

@@ -59,6 +59,7 @@ class RealExecutionRunner:
         owner: ExecutionOwner | None = None,
         readiness: Any = None,
         settings: Any = None,
+        group_coordinator: Any = None,
     ) -> None:
         self.config = config
         self.settings = settings or get_settings()
@@ -69,6 +70,7 @@ class RealExecutionRunner:
         self.intent_factory = OrderIntentFactory(self.store)
         self._seen_signals = BoundedDedup(max_entries=100_000)
         self.owner, self.readiness = owner, readiness
+        self.group_coordinator = group_coordinator
         self._source_runtime_active: set[str] = set()
         self._source_runtime_ids: dict[str, str] = {}
         self._source_recovery_tokens: dict[str, str] = {}
@@ -251,11 +253,11 @@ class RealExecutionRunner:
             result = await self._await_isolated_plan(isolated_worker, request)
 
             async def feedback_callback(feedback_event, context):
-                return await self.dispatch_strategy_order_event(
-                    None, feedback_event, context, registry=registry, evidence=evidence,
-                    readiness=readiness, reserve_units=reserve_units, guard=guard,
-                    isolated_worker=isolated_worker, isolated_snapshot=snapshot,
-                    on_feedback=feedback_callback)
+                # The coordinator owns the effects. Return the worker's original
+                # plan so it can validate group membership/counts before routing.
+                return await self._invoke_order_source_raw(
+                    None, feedback_event, context, evidence=evidence,
+                    isolated_worker=isolated_worker, isolated_snapshot=snapshot)
         else:
             if source_trust != "trusted_cooperative":
                 raise GateBlocked("Parent-process source callbacks require explicit trusted_cooperative selection")
@@ -286,7 +288,10 @@ class RealExecutionRunner:
                 self._source_runtime_active.add(strategy_id)
                 self._source_runtime_ids[strategy_id] = source_runtime_id
                 return {"status": "NO_ACTION", "strategy_id": strategy_id}
-            feedback_callback = order_callback
+            async def feedback_callback(feedback_event, context):
+                return await self._invoke_order_source_raw(
+                    source, feedback_event, context, evidence=evidence,
+                    source_trust="trusted_cooperative")
         if (not isinstance(result, StrategyActionPlan)
                 or result.strategy_id != strategy_id
                 or result.config_version != config_version
@@ -294,6 +299,17 @@ class RealExecutionRunner:
             raise GateBlocked("Selected source returned a non-owned or invalid action plan")
         self._source_runtime_active.add(strategy_id)
         self._source_runtime_ids[strategy_id] = source_runtime_id
+        if result.group_submit_mode is not None or result.group_followup:
+            if self.group_coordinator is None:
+                raise GateBlocked("Grouped plan requires an explicitly injected coordinator")
+            if result.group_followup:
+                return await self.group_coordinator.execute_followup(
+                    result, registry=registry, readiness=readiness or self.readiness,
+                    evidence=evidence, guard=guard)
+            return await self.group_coordinator.execute(
+                result, registry=registry, readiness=readiness or self.readiness,
+                evidence=evidence, reserve_units=reserve_units, guard=guard,
+                on_event=feedback_callback)
         if self.owner is None or self.owner.ledger.scope.account != self.config.account_id:
             raise GateBlocked("A same-account execution owner is required")
         return await self.owner.dispatch_plan(
@@ -532,70 +548,121 @@ class RealExecutionRunner:
         feedback. The source retains policy; the owner retains route, risk and
         mutation authority.
         """
-        import inspect
-        import sys
         from execution.trading_contracts import (
             StrategyActionPlan, StrategyOrderContext, StrategyOrderEvent,
         )
         if not isinstance(event, StrategyOrderEvent) or not isinstance(context, StrategyOrderContext):
             raise GateBlocked("Selected source lacks the versioned typed order-event contract")
-        callback = None
-        if isolated_worker is not None:
-            worker_strategy = getattr(isolated_worker, "strategy_id", None)
-            expected = getattr(isolated_worker, "expected", None)
-            if (not isinstance(worker_strategy, str) or not isinstance(expected, dict)
-                    or expected.get("strategy_id") != worker_strategy):
-                raise GateBlocked("Isolated source registration is not bound to its manifest")
-            snapshot = (getattr(context.data, "hot_path", None)
-                        if context.data is not None else isolated_snapshot)
-            if snapshot is None:
-                raise GateBlocked("Isolated order feedback requires an immutable decision snapshot")
-            ready = bool(context.data.ready) if context.data is not None else False
-            phase = context.data.phase if context.data is not None else getattr(snapshot, "phase", None)
-            request = self._submit_isolated_feedback(isolated_worker, event=event,
-                context={"snapshot": snapshot, "execution": dict(context.execution),
-                         "now_ns": context.now_ns, "cursor": context.cursor,
-                         "quality": context.quality, "ready": ready, "phase": phase},
-                cursor=context.cursor)
-            result = await self._await_isolated_plan(isolated_worker, request)
-            strategy_id = worker_strategy
-            version = 1
-        else:
-            if source_trust != "trusted_cooperative":
-                raise GateBlocked("Parent-process source callbacks require explicit trusted_cooperative selection")
-            is_module = inspect.ismodule(source)
-            source_module = source if is_module else sys.modules.get(type(source).__module__)
-            callback = getattr(source, "on_order_event", None)
-            version = getattr(source, "ACTION_PROTOCOL_VERSION",
-                              getattr(source_module, "ACTION_PROTOCOL_VERSION", None))
-            strategy_id = getattr(source, "STRATEGY_ID",
-                                  getattr(source_module, "STRATEGY_ID", None))
-            if type(version) is not int or version != 1 or not callable(callback):
-                raise GateBlocked("Selected source lacks the versioned typed order-event contract")
-            if instance is not None and not inspect.ismethod(callback):
-                result = callback(event, context, instance)
-            else:
-                result = callback(event, context)
-            if inspect.isawaitable(result):
-                if inspect.iscoroutine(result):
-                    result.close()
-                raise GateBlocked("Versioned trusted cooperative order callback must be synchronous")
-            if isinstance(result, list) and not result:
-                return {"status": "NO_ACTION", "strategy_id": event.strategy_id}
-        if (not isinstance(result, StrategyActionPlan)
-                or result.strategy_id != event.strategy_id
-                or (strategy_id is not None and result.strategy_id != strategy_id)
-                or result.config_version != event.metadata.get("config_version")
-                or result.config_version != (evidence.get("config_version") if isinstance(evidence, dict) else None)
-                or context.quality not in {"VALID", "SYNTHETIC", "KIS_JOURNAL_FACTS"}):
-            raise GateBlocked("Selected source returned an unowned or unproven action plan")
+        result = await self._invoke_order_source_raw(source, event, context,
+            evidence=evidence, source_trust=source_trust, instance=instance,
+            isolated_worker=isolated_worker, isolated_snapshot=isolated_snapshot)
+        if result is None or result == []:
+            return {"status": "NO_ACTION", "strategy_id": event.strategy_id}
+        if not isinstance(result, StrategyActionPlan):
+            raise GateBlocked("Selected source returned an invalid action plan")
+        if result.group_followup or result.group_submit_mode is not None:
+            # Group and group-follow-up plans never dispatch through the
+            # single current owner account; the injected coordinator owns
+            # their exact child-owner routing.
+            if self.group_coordinator is None:
+                raise GateBlocked("Grouped plan requires an explicitly injected coordinator")
+            if result.group_followup:
+                return await self.group_coordinator.execute_followup(
+                    result, registry=registry, readiness=readiness or self.readiness,
+                    evidence=evidence, guard=guard)
+            return await self.group_coordinator.execute(
+                result, registry=registry, readiness=readiness or self.readiness,
+                evidence=evidence, reserve_units=reserve_units, guard=guard,
+                on_event=(on_feedback if isolated_worker is not None else
+                          getattr(source, "on_order_event", None)))
         if self.owner is None or self.owner.ledger.scope.account != self.config.account_id:
             raise GateBlocked("A same-account execution owner is required")
         return await self.owner.dispatch_plan(
             result, registry=registry, readiness=readiness or self.readiness,
             evidence=evidence, reserve_units=reserve_units, guard=guard,
             on_event=(on_feedback if isolated_worker is not None else
-                      (callback if is_module or instance is None else source.on_order_event)))
+                      getattr(source, "on_order_event", None)))
+
+    async def _invoke_order_source_raw(self, source, event, context, *, evidence,
+                                       source_trust=None, instance=None,
+                                       isolated_worker=None, isolated_snapshot=None):
+        """Invoke and validate one source callback without routing its plan."""
+        import inspect
+        import sys
+        from execution.trading_contracts import StrategyActionPlan
+        callback = None
+        strategy_id = None
+        if isolated_worker is not None:
+            strategy_id = getattr(isolated_worker, "strategy_id", None)
+            expected = getattr(isolated_worker, "expected", None)
+            if (not isinstance(strategy_id, str) or not isinstance(expected, dict)
+                    or expected.get("strategy_id") != strategy_id):
+                raise GateBlocked("Isolated source registration is not bound to its manifest")
+            snapshot = getattr(context.data, "hot_path", None) if context.data is not None else isolated_snapshot
+            if snapshot is None:
+                raise GateBlocked("Isolated order feedback requires an immutable decision snapshot")
+            ready = bool(context.data.ready) if context.data is not None else False
+            phase = context.data.phase if context.data is not None else getattr(snapshot, "phase", None)
+            # A CAP04 worker has one active response slot. ACK feedback from
+            # sibling owners can arrive concurrently, so hold this worker's
+            # own bounded lock across submit+await. The lock is attached to the
+            # worker (no process-wide map), leaving unrelated strategies free.
+            lock = self._isolated_feedback_lock(isolated_worker)
+            async with lock:
+                request = self._submit_isolated_feedback(isolated_worker, event=event,
+                    context={"snapshot": snapshot, "execution": dict(context.execution),
+                             "now_ns": context.now_ns, "cursor": context.cursor,
+                             "quality": context.quality, "ready": ready, "phase": phase},
+                    cursor=context.cursor)
+                result = await self._await_isolated_plan(isolated_worker, request)
+        else:
+            if source_trust != "trusted_cooperative":
+                raise GateBlocked("Parent-process source callbacks require explicit trusted_cooperative selection")
+            is_module = inspect.ismodule(source)
+            source_module = source if is_module else sys.modules.get(type(source).__module__)
+            callback = getattr(source, "on_order_event", None)
+            version = getattr(source, "ACTION_PROTOCOL_VERSION", getattr(source_module, "ACTION_PROTOCOL_VERSION", None))
+            strategy_id = getattr(source, "STRATEGY_ID", getattr(source_module, "STRATEGY_ID", None))
+            if type(version) is not int or version != 1 or not callable(callback):
+                raise GateBlocked("Selected source lacks the versioned typed order-event contract")
+            result = (callback(event, context, instance)
+                      if instance is not None and not inspect.ismethod(callback)
+                      else callback(event, context))
+            if inspect.isawaitable(result):
+                if inspect.iscoroutine(result):
+                    result.close()
+                raise GateBlocked("Versioned trusted cooperative order callback must be synchronous")
+            if isinstance(result, list) and not result:
+                return []
+        if result is None or result == []:
+            return None
+        if (not isinstance(result, StrategyActionPlan)
+                or result.strategy_id != event.strategy_id
+                or (strategy_id is not None and result.strategy_id != strategy_id)
+                or result.config_version != event.metadata.get("config_version")
+                or result.config_version != (evidence.get("config_version") if isinstance(evidence, dict) else None)):
+            raise GateBlocked("Selected source returned an unowned or invalid action plan")
+        if context.quality not in {"VALID", "SYNTHETIC", "KIS_JOURNAL_FACTS"}:
+            from execution.trading_contracts import ActionKind
+            cancel_only_followup = (result.group_followup and bool(result.actions)
+                and all(action.action is ActionKind.CANCEL for action in result.actions))
+            if not cancel_only_followup:
+                raise GateBlocked("Selected source returned new risk from unproven order context")
+        return result
+
+    @staticmethod
+    def _isolated_feedback_lock(worker):
+        import asyncio
+        lock = getattr(worker, "_cap05_feedback_lock", None)
+        if lock is None:
+            lock = asyncio.Lock()
+            try:
+                setattr(worker, "_cap05_feedback_lock", lock)
+            except (AttributeError, TypeError) as error:
+                raise GateBlocked("Isolated worker cannot retain its bounded feedback serializer") from error
+        if not isinstance(lock, asyncio.Lock):
+            raise GateBlocked("Isolated worker feedback serializer is invalid")
+        return lock
 
     @staticmethod
     def _check_isolated_worker(worker):

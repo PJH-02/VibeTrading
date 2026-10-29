@@ -27,6 +27,7 @@ from .venues.registry import (
     AdapterProtocolError, ForeignOrderError, RouteStateError, UnsupportedOperation,
     cancel_arguments, query_arguments, submit_candidate,
 )
+from .perp_execution import VenueRejected
 from core.models import AssetClass, OrderDestination, OrderIntent, Side
 from runtime.runtime_control import GateBlocked, RuntimeControl
 
@@ -119,6 +120,26 @@ class _SubmitPermit:
         self.used = True
 
 
+class _PreparedAction:
+    """Opaque, one-use owner handoff between durable prepare and transport send."""
+
+    def __init__(self, owner, action, registry, readiness, evidence, reserve_units, guard,
+                 on_event, route_id, binding, intent, epochs, native_facts, reserve_unit,
+                 candidate, attempt_id, duplicate=None):
+        self.owner = owner
+        self.action = action
+        self.registry, self.readiness, self.evidence = registry, readiness, evidence
+        self.reserve_units, self.guard, self.on_event = reserve_units, guard, on_event
+        self.route_id, self.binding, self.intent = route_id, binding, intent
+        self.epochs, self.native_facts = epochs, native_facts
+        self.reserve_unit, self.candidate = reserve_unit, candidate
+        self.attempt_id, self.duplicate = attempt_id, duplicate
+        self.group_permit = None
+        self.used = False
+        self._identity = object()
+        self.admission_held = True
+
+
 class ExecutionOwner:
     def __init__(self, ledger: ExecutionLedger, control: RuntimeControl, adapter, budgets: ExecutionBudgets,
                  *, clock: Callable[[], int] = time.time_ns):
@@ -132,6 +153,8 @@ class ExecutionOwner:
         self._closing = False
         self._terminal_proofs = {}
         self._source_dispatch = {}
+        self._prepared_inventory = {}
+        self._restored_registry_rows = set()
 
     @staticmethod
     def _strategy(intent: OrderIntent) -> str:
@@ -362,6 +385,35 @@ class ExecutionOwner:
         if route.account_scope.key != action.scope.key:
             raise ForeignOrderError("Cancel scope differs from the original order account")
         return route_id, row
+
+    def _restore_registry_owned(self, registry):
+        """Rebuild exact adapter ownership handles from this account ledger."""
+        restore = getattr(registry, "restore_owned", None)
+        if not callable(restore):
+            raise GateBlocked("Registry cannot restore native ownership after restart")
+        grouped, markers_by_route = {}, {}
+        for row in self.ledger.owned():
+            route_id = row.get("route_id")
+            if not isinstance(route_id, str) or not route_id:
+                continue
+            marker = (id(registry), route_id, row["intent_id"])
+            if marker in self._restored_registry_rows:
+                continue
+            intent = OrderIntent.model_validate_json(row["payload"])
+            if (intent.metadata.get("account_id", self.ledger.scope.account) != self.ledger.scope.account
+                    or (intent.instrument.venue.value.casefold() != self.ledger.scope.venue.casefold()
+                        and intent.metadata.get("execution_venue_id") != self.ledger.scope.venue)):
+                raise GateBlocked("Durable native ownership row differs from the child account scope")
+            grouped.setdefault(route_id, []).append({
+                "identities": [identity for identity in
+                               (row["client_order_id"], row.get("target_order_id"))
+                               if isinstance(identity, str) and identity],
+                "strategy_id": row["strategy_id"], "account_scope": self.ledger.scope,
+            })
+            markers_by_route.setdefault(route_id, []).append(marker)
+        for route_id, rows in grouped.items():
+            restore(route_id, rows)
+            self._restored_registry_rows.update(markers_by_route[route_id])
 
     def _binding(self, registry, route_id, action):
         binding = registry.binding(route_id)
@@ -627,7 +679,8 @@ class ExecutionOwner:
             fee=Decimal(str(fill.get("fee", 0))) if fill else None,
             metadata={"provenance": provenance, "config_version": action.config_version,
                       "intent_id": intent.intent_id, "client_order_id": intent.client_order_id,
-                      "fact_quality": fact_quality},
+                      "fact_quality": fact_quality,
+                      **({"group_id": action.group_id} if action.group_id is not None else {})},
         )
         return event
 
@@ -726,6 +779,8 @@ class ExecutionOwner:
                             on_event=None) -> dict:
         if not isinstance(plan, StrategyActionPlan):
             raise GateBlocked("Only an original StrategyActionPlan is accepted")
+        if plan.group_submit_mode is not None or any(a.group_id is not None for a in plan.actions):
+            raise GateBlocked("Grouped plans require the explicit cross-venue group coordinator")
         if type(plan.event_ts_ns) is not int or plan.event_ts_ns > self.clock():
             raise GateBlocked("Plan event time cannot be in the future")
         results = []
@@ -744,32 +799,56 @@ class ExecutionOwner:
         return {"plan_id": plan.plan_id, "strategy_id": plan.strategy_id,
                 "results": tuple(results)}
 
-    async def dispatch_action(self, action: ExecutionAction, *, registry, readiness,
+    async def prepare_action(self, action: ExecutionAction, *, registry, readiness,
+                             evidence: dict, reserve_units=None, guard=None,
+                             on_event=None):
+        """Durably validate/reserve one ungrouped NEW/REPLACE without sending."""
+        if not isinstance(action, ExecutionAction) or action.group_id is not None:
+            raise GateBlocked("Grouped NEW requires the explicit group coordinator")
+        return await self._prepare_action(action, registry=registry, readiness=readiness,
+            evidence=evidence, reserve_units=reserve_units, guard=guard, on_event=on_event)
+
+    async def prepare_group_leg(self, action: ExecutionAction, *, group_id, registry,
+                                readiness, evidence: dict, reserve_units=None, guard=None,
+                                on_event=None):
+        """Coordinator-only prepare seam. Plain dispatch_action/plan stay closed."""
+        if (not isinstance(action, ExecutionAction) or not isinstance(group_id, str)
+                or not group_id or action.group_id != group_id):
+            raise GateBlocked("Prepared group leg differs from its explicit group identity")
+        return await self._prepare_action(action, registry=registry, readiness=readiness,
+            evidence=evidence, reserve_units=reserve_units, guard=guard, on_event=on_event,
+            allow_grouped=True)
+
+    async def _prepare_action(self, action: ExecutionAction, *, registry, readiness,
                               evidence: dict, reserve_units=None, guard=None,
-                              on_event=None) -> dict:
+                              on_event=None, allow_grouped=False):
         if self._pending >= self.budgets.max_pending:
             raise GateBlocked("Execution admission budget exhausted")
         self._pending += 1
         try:
             async with self._lock:
                 if action.action not in (ActionKind.NEW, ActionKind.REPLACE):
-                    raise GateBlocked("dispatch_action accepts NEW/REPLACE only")
+                    raise GateBlocked("prepare_action accepts NEW/REPLACE only")
                 if action.action is ActionKind.REPLACE:
                     raise GateBlocked("REPLACE requires a proven adapter replace path")
+                if action.group_id is not None and not allow_grouped:
+                    raise GateBlocked("Grouped NEW requires the explicit group coordinator")
                 intent = action.intent
                 route_id = self._resolve_new_alias(registry, action)
                 binding = self._binding(registry, route_id, action)
                 self._evidence(intent, evidence, action.scope.environment)
                 evidence = json.loads(canonical(evidence))
                 old = self.ledger.existing(intent)
+                duplicate = None
                 if old:
                     if old["evidence"] != canonical(evidence) or old["expiry_ns"] != action.expiry_ns:
                         raise GateBlocked("Intent identity conflicts with its original evidence/expiry")
-                    return {"status": old["state"], "intent_id": intent.intent_id,
-                            "duplicate": True, "route_id": route_id}
-                for row in self.ledger.unresolved():
-                    if row["state"] in ("UNKNOWN", "LEGACY_UNKNOWN"):
-                        raise GateBlocked("Account UNKNOWN order blocks blind resubmit and new risk")
+                    duplicate = {"status": old["state"], "intent_id": intent.intent_id,
+                                 "duplicate": True, "route_id": route_id}
+                else:
+                    for row in self.ledger.unresolved():
+                        if row["state"] in ("UNKNOWN", "LEGACY_UNKNOWN"):
+                            raise GateBlocked("Account UNKNOWN order blocks blind resubmit and new risk")
                 epochs = dict(evidence["expected_epochs"])
                 unit = None
                 if reserve_units is not None:
@@ -786,36 +865,62 @@ class ExecutionOwner:
                     action, binding, expiry_ns=action.expiry_ns, readiness=readiness,
                     guard=guard, epochs=epochs, native_facts=native_facts)
                 attempt_id = action.action_id + ":attempt:1"
-                try:
-                    _, row = self.ledger.authorize(
-                        intent, evidence=evidence, expiry_ns=action.expiry_ns, epochs=epochs,
-                        reserve_unit=reserve_unit, route_id=route_id,
-                        strategy_id=action.strategy_id, config_version=action.config_version,
-                        attempt_id=attempt_id, action=action.action.value,
-                        contract_multiplier=native_facts["multiplier"])
-                except BaseException:
-                    self.control.fail_closed()
-                    raise
+                if duplicate is None:
+                    try:
+                        _, row = self.ledger.authorize(
+                            intent, evidence=evidence, expiry_ns=action.expiry_ns, epochs=epochs,
+                            reserve_unit=reserve_unit, route_id=route_id,
+                            strategy_id=action.strategy_id, config_version=action.config_version,
+                            attempt_id=attempt_id, action=action.action.value,
+                            contract_multiplier=native_facts["multiplier"])
+                    except BaseException:
+                        self.control.fail_closed()
+                        raise
                 candidate = submit_candidate(binding, action, intent)
+                prepared = _PreparedAction(self, action, registry, readiness, evidence,
+                    reserve_units, guard, on_event, route_id, binding, intent, epochs,
+                    native_facts, reserve_unit, candidate, attempt_id, duplicate)
+                self._prepared_inventory[id(prepared)] = (prepared, self._prepared_fingerprint(prepared), False)
+                return prepared
+        except BaseException:
+            self._pending -= 1
+            raise
+
+    async def dispatch_prepared(self, prepared, *, on_event=None) -> dict:
+        """Send one prepared owner action; the token is opaque and single-use."""
+        inventory = self._prepared_inventory.get(id(prepared)) if isinstance(prepared, _PreparedAction) else None
+        if (inventory is None or inventory[0] is not prepared or prepared.owner is not self
+                or prepared.used or inventory[2] or inventory[1] != self._prepared_fingerprint(prepared)):
+            raise GateBlocked("Prepared owner handoff is foreign or already used")
+        self._prepared_inventory[id(prepared)] = (prepared, inventory[1], True)
+        prepared.used = True
+        action, intent = prepared.action, prepared.intent
+        try:
+            if prepared.duplicate is not None:
+                return dict(prepared.duplicate)
+            async with self._lock:
                 sent = {"value": False}
 
                 def source():
-                    current_native = self._native_facts(binding, action)
-                    self._validate_route(action, binding, expiry_ns=action.expiry_ns,
-                                         readiness=readiness, guard=guard, epochs=epochs,
-                                         native_facts=current_native,
+                    if prepared.group_permit is not None:
+                        prepared.group_permit(prepared)
+                    current_native = self._native_facts(prepared.binding, action)
+                    self._validate_route(action, prepared.binding, expiry_ns=action.expiry_ns,
+                                         readiness=prepared.readiness, guard=prepared.guard,
+                                         epochs=prepared.epochs, native_facts=current_native,
                                          already_reserved=True)
-                    if (Decimal(str(current_native["multiplier"])) != Decimal(str(native_facts["multiplier"]))
-                            or current_native["taker_fee_rate"] != native_facts["taker_fee_rate"]):
+                    if (Decimal(str(current_native["multiplier"])) != Decimal(str(prepared.native_facts["multiplier"]))
+                            or current_native["taker_fee_rate"] != prepared.native_facts["taker_fee_rate"]):
                         raise GateBlocked("Native product/fee facts changed after durable authorization")
                     self.ledger.mark_handoff(intent.intent_id)
                     sent["value"] = True
 
+                callback = on_event if on_event is not None else prepared.on_event
                 try:
                     response = await asyncio.wait_for(
-                        registry.invoke(route_id, "submit", candidate, permit=source,
-                                        owner_strategy_id=action.strategy_id,
-                                        owner_account_scope=action.scope),
+                        prepared.registry.invoke(prepared.route_id, "submit", prepared.candidate,
+                            permit=source, owner_strategy_id=action.strategy_id,
+                            owner_account_scope=action.scope),
                         self.budgets.submit_timeout_seconds)
                     order_id = self._response_order_id(response)
                     if order_id is None:
@@ -825,26 +930,39 @@ class ExecutionOwner:
                                         response if isinstance(response, dict) else {})
                     event = self._feedback(action, status="ACCEPTED", order_id=order_id,
                                            intent=intent,
-                                           provenance="SYNTHETIC_ACK" if native_facts.get("quality") == "SYNTHETIC" else "NATIVE_ACK",
-                                           fact_quality=native_facts.get("quality", "VALID"))
+                                           provenance="SYNTHETIC_ACK" if prepared.native_facts.get("quality") == "SYNTHETIC" else "NATIVE_ACK",
+                                           fact_quality=prepared.native_facts.get("quality", "VALID"))
                     self._record_feedback(action, event)
-                    if on_event is not None:
+                    if callback is not None:
                         self._source_dispatch[action.strategy_id] = {
-                            "registry": registry, "readiness": readiness, "evidence": evidence,
-                            "reserve_units": reserve_units, "guard": guard, "callback": on_event}
-                        await self.deliver_feedback(action.strategy_id, on_event)
+                            "registry": prepared.registry, "readiness": prepared.readiness,
+                            "evidence": prepared.evidence,
+                            "reserve_units": prepared.reserve_units,
+                            "guard": prepared.guard, "callback": callback}
+                        await self.deliver_feedback(action.strategy_id, callback)
                     return {"status": self.ledger.get(intent.intent_id)["state"],
-                            "intent_id": intent.intent_id, "route_id": route_id,
+                            "intent_id": intent.intent_id, "route_id": prepared.route_id,
                             "order_id": order_id}
                 except BaseException as error:
-                    state = ("UNKNOWN" if sent["value"] else
+                    cause = error
+                    explicit_rejection = False
+                    root_cause = error
+                    while cause is not None:
+                        root_cause = cause
+                        if isinstance(cause, VenueRejected) or type(cause).__name__ == "VenueRejected":
+                            explicit_rejection = True
+                            break
+                        cause = cause.__cause__
+                    state = ("REJECTED" if sent["value"] and explicit_rejection else
+                             "UNKNOWN" if sent["value"] else
                              ("BLOCKED" if isinstance(error, (GateBlocked, ValueError,
                                                               UnsupportedOperation,
                                                               ForeignOrderError,
                                                               RouteStateError)) else "PRE_SEND_FAILED"))
                     try:
                         self.ledger.outcome(intent.intent_id, state,
-                                            {"error_type": type(error).__name__})
+                                            {"error_type": type(root_cause).__name__,
+                                             "error_detail": str(root_cause)[:200]})
                         if state == "UNKNOWN":
                             self.control.halt(action.strategy_id)
                         event_status = "UNKNOWN" if state == "UNKNOWN" else "REJECTED"
@@ -852,24 +970,63 @@ class ExecutionOwner:
                                                order_id=intent.client_order_id, intent=intent,
                                                provenance="NATIVE_UNKNOWN" if state == "UNKNOWN" else "LOCAL_NOT_SENT")
                         self._record_feedback(action, event)
-                        if on_event is not None:
+                        if callback is not None:
                             self._source_dispatch[action.strategy_id] = {
-                                "registry": registry, "readiness": readiness, "evidence": evidence,
-                                "reserve_units": reserve_units, "guard": guard, "callback": on_event}
-                            await self.deliver_feedback(action.strategy_id, on_event)
+                                "registry": prepared.registry, "readiness": prepared.readiness,
+                                "evidence": prepared.evidence,
+                                "reserve_units": prepared.reserve_units,
+                                "guard": prepared.guard, "callback": callback}
+                            await self.deliver_feedback(action.strategy_id, callback)
                     except BaseException:
                         self.control.fail_closed()
                         raise
                     if not isinstance(error, Exception):
                         raise
                     return {"status": state, "intent_id": intent.intent_id,
-                            "route_id": route_id, "reason": type(error).__name__,
+                            "route_id": prepared.route_id, "reason": type(error).__name__,
                             "detail": str(error)[:200]}
         except (sqlite3.Error, OSError):
             self.control.fail_closed()
             raise
         finally:
+            if prepared.admission_held:
+                prepared.admission_held = False
+                self._pending -= 1
+            self._prepared_inventory.pop(id(prepared), None)
+
+    def abandon_prepared(self, prepared, *, reason="GROUP_PREFLIGHT_FAILED"):
+        """Release a durable admission only while its native send is provably unsent."""
+        inventory = self._prepared_inventory.get(id(prepared)) if isinstance(prepared, _PreparedAction) else None
+        if (inventory is None or inventory[0] is not prepared or prepared.owner is not self
+                or prepared.used or inventory[2] or inventory[1] != self._prepared_fingerprint(prepared)):
+            raise GateBlocked("Only an untouched owned admission can be released")
+        row = self.ledger.get(prepared.intent.intent_id)
+        if row is None or row["state"] not in {"AUTHORIZED", "PREPARED"}:
+            raise GateBlocked("Potentially sent reservation cannot be released")
+        self.ledger.outcome(prepared.intent.intent_id, "BLOCKED", {"reason": reason})
+        self._prepared_inventory[id(prepared)] = (prepared, inventory[1], True)
+        if prepared.admission_held:
+            prepared.admission_held = False
             self._pending -= 1
+        self._prepared_inventory.pop(id(prepared), None)
+
+    @staticmethod
+    def _prepared_fingerprint(prepared):
+        """Bind an in-memory handoff to every mutation-relevant prepared fact."""
+        return canonical({"scope": prepared.action.scope.key, "action": prepared.action.action_id,
+            "intent": prepared.intent.intent_id, "fingerprint": prepared.owner.ledger.fingerprint(prepared.intent),
+            "route": prepared.route_id, "attempt": prepared.attempt_id,
+            "reserve_unit": str(prepared.reserve_unit), "native": prepared.native_facts,
+            "epochs": prepared.epochs, "candidate": repr(prepared.candidate)})
+
+    async def dispatch_action(self, action: ExecutionAction, *, registry, readiness,
+                              evidence: dict, reserve_units=None, guard=None,
+                              on_event=None) -> dict:
+        if not isinstance(action, ExecutionAction) or action.group_id is not None:
+            raise GateBlocked("Grouped NEW requires the explicit group coordinator")
+        prepared = await self.prepare_action(action, registry=registry, readiness=readiness,
+            evidence=evidence, reserve_units=reserve_units, guard=guard, on_event=on_event)
+        return await self.dispatch_prepared(prepared, on_event=on_event)
 
     async def cancel_action(self, action: ExecutionAction, *, registry, readiness,
                             guard=None, on_event=None) -> dict:
@@ -878,6 +1035,7 @@ class ExecutionOwner:
         async with self._lock:
             route_id, row = self._resolve_cancel_alias(registry, action)
             binding = self._binding(registry, route_id, action)
+            self._restore_registry_owned(registry)
             if binding.route.environment == "paper":
                 raise GateBlocked("PAPER cancellation uses the local matcher")
             intent = OrderIntent.model_validate_json(row["payload"])
@@ -941,6 +1099,7 @@ class ExecutionOwner:
         intent = OrderIntent.model_validate_json(row["payload"])
         if action.strategy_id != row["strategy_id"] or action.config_version != row["config_version"]:
             raise ForeignOrderError("Query action differs from the durable source owner")
+        self._restore_registry_owned(registry)
         order_id = row["target_order_id"] or row["client_order_id"]
         day = datetime.fromtimestamp(intent.created_ts_ns / 1_000_000_000,
                                      tz=timezone.utc).strftime("%Y%m%d")
@@ -956,14 +1115,24 @@ class ExecutionOwner:
             raise ForeignOrderError("Native query response belongs to a different account")
         observed_id = self._response_order_id(result)
         if observed_id not in {order_id, row["client_order_id"], row["target_order_id"]}:
-            raise GateBlocked("Native order query identity differs from its durable target")
+            # A crash between the submit and its durable ACK binding can leave
+            # the native venue holding the order under an id the local ledger
+            # never learned.  The query is addressed by the exact durable
+            # client order id; when the venue row echoes it under the same
+            # symbol, binding that native id is the idempotent recovery step.
+            if (observed_id and result.get("symbol") == intent.instrument.raw_symbol
+                    and result.get("client_order_id") == row["client_order_id"]):
+                self.ledger.bind_native_order(row["intent_id"], observed_id)
+            else:
+                raise GateBlocked("Native order query identity differs from its durable target")
         if result.get("identity_proven") is not True and (
                 result.get("symbol") != intent.instrument.raw_symbol or
                 result.get("client_order_id") != row["client_order_id"]):
             raise GateBlocked("Native query lacks a scoped exact client/order identity proof")
         status = result.get("normalized_status", result.get("status"))
         raw = result.get("raw") if isinstance(result.get("raw"), Mapping) else result
-        total = result.get("quantity", raw.get("origQty", raw.get("qty", raw.get("originalSize"))))
+        total = result.get("quantity", raw.get("origQty", raw.get("qty",
+                     raw.get("size", raw.get("originalSize")))))
         filled = result.get("filled_quantity", result.get("cumulative_quantity",
                      raw.get("executedQty", raw.get("cumExecQty", raw.get("filled", 0)))))
         try:
@@ -972,7 +1141,8 @@ class ExecutionOwner:
             raise GateBlocked("Native query lacks exact original/fill quantity facts") from error
         if total != Decimal(OrderIntent.model_validate_json(row["payload"]).quantity) or filled > total:
             raise GateBlocked("Native order query quantity differs from the durable order")
-        if status in {"CANCELED", "CANCELLED", "EXPIRED", "REJECTED"}:
+        if (isinstance(status, str)
+                and status.casefold() in {"canceled", "cancelled", "expired", "rejected"}):
             proof = {"route_id": route_id, "scope": action.scope.key,
                      "strategy_id": action.strategy_id, "intent_id": row["intent_id"],
                      "native_order_id": observed_id, "status": status,
@@ -1028,6 +1198,15 @@ class ExecutionOwner:
         if action.intent is not None and self.ledger.fingerprint(action.intent) != row["fingerprint"]:
             raise GateBlocked("Fill action intent differs from its durable order")
         delta = positive_decimal(quantity, "fill quantity")
+        receipt_identity = canonical([
+            self.ledger.scope.venue.casefold(), self.ledger.native_account_id,
+            self.ledger.scope.product.casefold(), intent.instrument.raw_symbol, fill_id,
+        ])
+        native_receipt_key = "native:" + hashlib.sha256(
+            receipt_identity.encode("utf-8")).hexdigest()
+        if self.ledger.fill_receipt_status(native_receipt_key, identity=row["intent_id"],
+                                           quantity=quantity, price=price, fee=fee):
+            return False
         cumulative = exact_sum(Decimal(row["filled"]), delta)
         event_status = "FILLED" if cumulative == intent.quantity else "PARTIAL_FILL"
         event = self._feedback(action, status=event_status,
@@ -1038,12 +1217,6 @@ class ExecutionOwner:
                                provenance="SYNTHETIC_FILL" if fact_quality == "SYNTHETIC" else "NATIVE_FILL",
                                fact_quality=fact_quality)
         feedback = (row["strategy_id"], event.event_id, self._feedback_document(event))
-        receipt_identity = canonical([
-            self.ledger.scope.venue.casefold(), self.ledger.native_account_id,
-            self.ledger.scope.product.casefold(), intent.instrument.raw_symbol, fill_id,
-        ])
-        native_receipt_key = "native:" + hashlib.sha256(
-            receipt_identity.encode("utf-8")).hexdigest()
         applied = self.ledger.apply_fill_once(row["intent_id"], fill_id, quantity=quantity,
                                               price=price, fee=fee, feedback=feedback,
                                               receipt_key=native_receipt_key)

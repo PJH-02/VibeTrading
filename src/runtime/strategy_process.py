@@ -415,22 +415,72 @@ def action_from_document(document) -> ExecutionAction:
         raise ProtocolError("invalid typed execution action") from exc
 
 
+_PLAN_FIELDS = frozenset({
+    "plan_id", "strategy_id", "config_version", "event_ts_ns", "actions",
+})
+_PLAN_GROUP_FIELDS = frozenset({"group_submit_mode", "group_policy", "group_followup"})
+
+
+def _group_policy_document(policy) -> dict:
+    clean = _walk(policy, budgets=IsolationBudgets(
+        max_message_bytes=16_384, max_items=2048, max_depth=8))
+    # Group cap values are exact native valuation units. Their wire form is a
+    # decimal string, never a float or an inferred common currency.
+    for name in ("notional_caps", "cost_caps"):
+        values = clean.get(name)
+        if type(values) is dict:
+            clean[name] = {key: str(value) for key, value in values.items()}
+    return clean
+
+
 def plan_document(plan: StrategyActionPlan) -> dict:
-    return {"plan_id": plan.plan_id, "strategy_id": plan.strategy_id,
-            "config_version": plan.config_version, "event_ts_ns": plan.event_ts_ns,
-            "actions": [action_document(action) for action in plan.actions]}
+    document = {"plan_id": plan.plan_id, "strategy_id": plan.strategy_id,
+                "config_version": plan.config_version, "event_ts_ns": plan.event_ts_ns,
+                "actions": [action_document(action) for action in plan.actions]}
+    if plan.group_submit_mode is not None:
+        document["group_submit_mode"] = plan.group_submit_mode.value
+        document["group_policy"] = _group_policy_document(plan.group_policy)
+    # The follow-up flag is serialized only when True so every legacy initial
+    # plan (and its fingerprint) keeps its original wire document.
+    if plan.group_followup is True:
+        document["group_followup"] = True
+    return document
 
 
 def plan_from_document(document) -> StrategyActionPlan:
     if type(document) is not dict:
         raise ProtocolError("action plan document must be an object")
+    keys = set(document)
+    if not _PLAN_FIELDS.issubset(keys) or not keys.issubset(_PLAN_FIELDS | _PLAN_GROUP_FIELDS):
+        raise ProtocolError("action plan document schema mismatch")
     actions = document.get("actions")
     if type(actions) is not list:
         raise ProtocolError("action plan actions must be a list")
+    policy = document.get("group_policy")
+    if policy is not None:
+        if type(policy) is not dict:
+            raise ProtocolError("group policy must be an object")
+        for name in ("notional_caps", "cost_caps"):
+            values = policy.get(name)
+            if type(values) is not dict:
+                raise ProtocolError("group policy " + name + " must be an object")
+            converted = {}
+            for key, value in values.items():
+                if type(value) is not str:
+                    raise ProtocolError("group policy " + name + " values must be decimal strings")
+                converted[key] = Decimal(value)
+            policy = {**policy, name: converted}
+    followup = document.get("group_followup", False)
+    # The flag is serialized only when True; any forged False/non-bool value
+    # is a schema violation, not a default.
+    if "group_followup" in document and followup is not True:
+        raise ProtocolError("group_followup must be serialized only as explicit true")
     try:
         return StrategyActionPlan(document["plan_id"], document["strategy_id"],
             document["config_version"], document["event_ts_ns"],
-            tuple(action_from_document(action) for action in actions))
+            tuple(action_from_document(action) for action in actions),
+            group_submit_mode=document.get("group_submit_mode"),
+            group_policy=policy, group_followup=followup)
     except ProtocolError:
         raise
     except Exception as exc:

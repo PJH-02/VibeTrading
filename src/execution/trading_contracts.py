@@ -32,6 +32,13 @@ class ActionKind(str, Enum):
     REPLACE = "REPLACE"
 
 
+class GroupSubmitMode(str, Enum):
+    """Opt-in submission ordering for a source-owned two-venue action group."""
+
+    CONCURRENT = "CONCURRENT"
+    SEQUENTIAL = "SEQUENTIAL"
+
+
 def bounded_identity(value: str, name: str) -> str:
     if not isinstance(value, str) or not value.strip() or len(value.encode("utf-8")) > 512:
         raise ValueError(name + " requires a bounded explicit identity")
@@ -466,6 +473,50 @@ class ExecutionAction:
             bounded_identity(self.group_id, "group_id")
 
 
+_GROUP_POLICY_REQUIRED = frozenset({
+    "base_asset", "deadline_ns", "max_followup_actions", "notional_caps", "cost_caps",
+})
+_GROUP_POLICY_OPTIONAL = frozenset({"ttl_ns", "max_legs"})
+
+
+def _validate_group_policy(policy, *, event_ts_ns):
+    if not isinstance(policy, Mapping):
+        raise ValueError("Group policy must be an explicit bounded mapping")
+    keys = set(policy)
+    if not _GROUP_POLICY_REQUIRED.issubset(keys) or not keys.issubset(
+            _GROUP_POLICY_REQUIRED | _GROUP_POLICY_OPTIONAL):
+        raise ValueError("Group policy requires explicit base_asset/deadline/action/notional/cost caps")
+    bounded_identity(policy["base_asset"], "group policy base_asset")
+    deadline = policy["deadline_ns"]
+    if (isinstance(deadline, bool) or not isinstance(deadline, int)
+            or not event_ts_ns < deadline <= 2**63 - 1):
+        raise ValueError("Group policy requires an explicit bounded deadline after its source event")
+    followup = policy["max_followup_actions"]
+    if isinstance(followup, bool) or not isinstance(followup, int) or followup < 0:
+        raise ValueError("Group policy requires an explicit nonnegative follow-up action budget")
+    if "ttl_ns" in policy:
+        ttl = policy["ttl_ns"]
+        if isinstance(ttl, bool) or not isinstance(ttl, int) or ttl <= 0:
+            raise ValueError("Group policy TTL must be an explicit positive integer")
+    if "max_legs" in policy:
+        legs = policy["max_legs"]
+        if isinstance(legs, bool) or not isinstance(legs, int) or legs != 2:
+            raise ValueError("An initial execution group is exactly two owner legs")
+    for name in ("notional_caps", "cost_caps"):
+        caps = policy[name]
+        if not isinstance(caps, Mapping) or not caps:
+            raise ValueError("Group policy " + name + " must be explicit and nonempty")
+        for key, value in caps.items():
+            bounded_identity(key, "group policy cap key")
+            # Values are exact native/account valuation units, never an inferred
+            # single currency. Floats/bools are rejected before any decimal
+            # math; only exact decimal strings/integers/Decimals survive.
+            if isinstance(value, (bool, float)):
+                raise ValueError("Group policy " + name + " values must be exact "
+                                 "decimal strings/integers, never floats or bools")
+            positive_decimal(Decimal(str(value)), name + " value", zero=name == "cost_caps")
+
+
 @dataclass(frozen=True)
 class StrategyActionPlan:
     plan_id: str
@@ -473,6 +524,9 @@ class StrategyActionPlan:
     config_version: str
     event_ts_ns: int
     actions: tuple[ExecutionAction, ...]
+    group_submit_mode: GroupSubmitMode | None = None
+    group_policy: Mapping[str, Any] | None = None
+    group_followup: bool = False
 
     def __post_init__(self):
         for name in ("plan_id", "strategy_id", "config_version"):
@@ -485,6 +539,67 @@ class StrategyActionPlan:
             raise ValueError("Plan actions must retain the exact source strategy/config")
         if any(a.expiry_ns < self.event_ts_ns for a in self.actions):
             raise ValueError("Action expiry cannot precede its source event")
+        if not isinstance(self.group_followup, bool):
+            raise ValueError("group_followup must be an exact explicit boolean")
+        mode = None if self.group_submit_mode is None else GroupSubmitMode(self.group_submit_mode)
+        object.__setattr__(self, "group_submit_mode", mode)
+        if (mode is None) != (self.group_policy is None):
+            raise ValueError("Group mode and group policy must be supplied together")
+        grouped = [action for action in self.actions if action.group_id is not None]
+        if self.group_followup:
+            # An explicit follow-up plan carries only literal owned actions
+            # against one existing group; it can never introduce a new mode,
+            # policy, or group identity.
+            if mode is not None or self.group_policy is not None:
+                raise ValueError("A group follow-up plan cannot introduce a new group mode or policy")
+            if not self.actions or len(grouped) != len(self.actions):
+                raise ValueError("A group follow-up plan requires every action to carry the original group_id")
+            group_ids = {action.group_id for action in grouped}
+            if len(group_ids) != 1:
+                raise ValueError("A group follow-up plan targets exactly one existing execution group")
+            action_ids = [action.action_id for action in self.actions]
+            if len(set(action_ids)) != len(action_ids):
+                raise ValueError("Group follow-up actions require distinct action IDs")
+            if any(action.action not in (ActionKind.NEW, ActionKind.CANCEL) for action in self.actions):
+                raise ValueError("Group follow-up actions are literal NEW or CANCEL only")
+            return
+        if mode is None:
+            if grouped:
+                raise ValueError("An action group_id requires an explicit opt-in group submit mode")
+            return
+        policy = _freeze_bounded(self.group_policy, name="group policy")
+        _validate_group_policy(policy, event_ts_ns=self.event_ts_ns)
+        object.__setattr__(self, "group_policy", policy)
+        if not self.actions or len(grouped) != len(self.actions):
+            raise ValueError("A grouped plan requires every action to carry the same explicit group_id")
+        group_ids = {action.group_id for action in grouped}
+        if len(group_ids) != 1:
+            raise ValueError("A plan cannot mix execution group identities")
+        action_ids = [action.action_id for action in self.actions]
+        if len(set(action_ids)) != len(action_ids):
+            raise ValueError("Group actions require distinct action IDs")
+        intents = [action.intent for action in self.actions]
+        if any(intent is None for intent in intents):
+            raise ValueError("An initial execution group requires two NEW intents")
+        if len({intent.intent_id for intent in intents}) != len(intents):
+            raise ValueError("Group legs require distinct intent IDs")
+        if len({intent.client_order_id for intent in intents}) != len(intents):
+            raise ValueError("Group legs require distinct client IDs")
+        owners = [(action.scope.venue.casefold(), action.scope.account.casefold())
+                  for action in self.actions]
+        if len(owners) != 2 or len(set(owners)) != 2:
+            raise ValueError("An initial execution group requires exactly two distinct canonical venue/account owners")
+
+    def group_leg(self, action_or_id):
+        """Return the bounded source leg identity for a grouped plan."""
+        if self.group_submit_mode is None:
+            return None
+        identity = (action_or_id.action_id if isinstance(action_or_id, ExecutionAction)
+                    else action_or_id)
+        for action in self.actions:
+            if action.action_id == identity:
+                return action
+        return None
 
 
 @dataclass(frozen=True)
