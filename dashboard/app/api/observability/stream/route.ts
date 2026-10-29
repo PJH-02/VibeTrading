@@ -1,8 +1,13 @@
 import { database, reply, viewerAuthorized } from "../../../../lib/server";
 import { streamHasCapacity } from "../../../../lib/observability";
+import { getRequestCapability } from "../../../../lib/viewer-context";
+import { publicSnapshot } from "../../../../lib/public-projection";
 
 export async function GET(request: Request) {
   if (!viewerAuthorized(request)) return reply({ error: "unauthorized" }, 401);
+  const capability = getRequestCapability();
+  if (!capability) return reply({ error: "unauthorized" }, 401);
+  const owner = capability.owner;
   const encoder = new TextEncoder();
   let timer: ReturnType<typeof setTimeout> | undefined;
   let stopped = false;
@@ -21,15 +26,15 @@ export async function GET(request: Request) {
       request.signal.addEventListener("abort", stop, { once: true });
       const poll = async () => {
         if (stopped) return;
+        if (Date.now() >= capability.expiresAt) { stop(); return; }
         try {
           const row = await database().prepare("SELECT payload, received_ms FROM snapshots WHERE id='server'")
             .first<{ payload: string; received_ms: number }>();
           if (stopped) return;
           const hasCapacity = streamHasCapacity(controller.desiredSize);
           if (row && hasCapacity && row.received_ms !== lastReceived) {
-            const snapshot = JSON.parse(row.payload);
-            snapshot.received_ms = row.received_ms;
-            snapshot.connected = Date.now() - row.received_ms < 15000;
+            const snapshot = publicSnapshot({ ...JSON.parse(row.payload), received_ms: row.received_ms,
+              connected: Date.now() - row.received_ms < 15000 }, owner);
             controller.enqueue(encoder.encode(`data: ${JSON.stringify(snapshot)}\n\n`));
             lastReceived = row.received_ms;
             lastFrame = Date.now();

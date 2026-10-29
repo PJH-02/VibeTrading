@@ -1,6 +1,7 @@
 import { database, browserWriteAuthorized, reply } from "../../../lib/server";
 
-export async function GET() {
+export async function GET(request: Request) {
+  if (!browserWriteAuthorized(request)) return reply({ error: "forbidden" }, 403);
   const rows = await database().prepare("SELECT id,label,active,updated_ms FROM accounts ORDER BY updated_ms DESC LIMIT 50").all();
   return reply({ rows: rows.results });
 }
