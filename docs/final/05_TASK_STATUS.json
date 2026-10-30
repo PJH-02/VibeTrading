@@ -38,10 +38,10 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 28,
+    "accepted": 29,
     "in_progress": 1,
     "blocked": 0,
-    "not_started": 4,
+    "not_started": 3,
     "external_not_authorized": 2
   },
   "next_ready_candidate": [],
@@ -428,8 +428,8 @@
     ],
     "missing_required_local_code_blocks_feature_release": true
   },
-  "active_task_id": "QA-01",
-  "last_accepted_task_id": "CLN-03",
+  "active_task_id": "PERF-01",
+  "last_accepted_task_id": "QA-01",
   "stop_requested": false,
   "tickets": [
     {
@@ -1656,7 +1656,7 @@
     {
       "task_id": "QA-01",
       "wave": "W5",
-      "status": "IN_PROGRESS",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "MOV-07",
         "CLN-02",
@@ -1680,9 +1680,9 @@
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
       "base_sha": "ab248ab315ee9207838db1d2b324610169a26cb8",
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "actual_commit_sha": "542dadc5250db5d6b43141aa0fe70440faa2e23e",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/QA01.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "QA-01",
@@ -1690,27 +1690,30 @@
         {
           "id": "DATA-BARRIER-FINDING",
           "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.acceptance.json",
-          "evidence": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.domain-evidence.json"
+          "evidence": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.domain-evidence.json",
+          "qa_resolution": "Verified in QA-01; retain original historical observation. Normal source independence and current Timefolio NATS-free integration PASS; coupled cold root recovery dependency kept safely."
         },
         {
           "id": "TIMEFOLIO_NATS_FREE_PENDING",
           "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-05.acceptance.json",
-          "details": "Timefolio runner NatsJetStreamBus/default md.> source retained move-only; separate NATS-free data integration gates and real browser/live activation remain unverified."
+          "details": "Timefolio runner NatsJetStreamBus/default md.> source retained move-only; separate NATS-free data integration gates and real browser/live activation remain unverified.",
+          "qa_resolution": "Verified in QA-01; retain original historical observation. Normal source independence and current Timefolio NATS-free integration PASS; coupled cold root recovery dependency kept safely."
         }
       ],
-      "implementation_packet": "docs/tickets/QA-01-integration.md"
+      "implementation_packet": "docs/tickets/QA-01-integration.md",
+      "acceptance_receipt_sha256": "ef4e4643a69ee1496dd701d98fd9e3009d4f76131e0d920fc2154eee34562e7c"
     },
     {
       "task_id": "PERF-01",
       "wave": "W5",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "depends_on": [
         "QA-01"
       ],
       "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
+      "base_sha": "542dadc5250db5d6b43141aa0fe70440faa2e23e",
       "actual_commit_sha": null,
       "acceptance_receipt": null,
       "test_exit": null,
@@ -1723,7 +1726,8 @@
           "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.acceptance.json",
           "evidence": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.domain-evidence.json"
         }
-      ]
+      ],
+      "implementation_packet": "docs/tickets/PERF-01-profile.md"
     },
     {
       "task_id": "REL-01",
@@ -2659,7 +2663,8 @@
     ],
     "status": "IN_PROGRESS",
     "accepted": [
-      "CLN-03"
+      "CLN-03",
+      "QA-01"
     ],
     "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030",
     "worker_policy": "Carry forward measured external cache-inclusive stop; sol unchanged + native gpt-6-luna; no new external calls; no exact cost savings claimed",
