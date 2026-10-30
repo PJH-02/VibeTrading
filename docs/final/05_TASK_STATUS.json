@@ -1701,7 +1701,9 @@
         }
       ],
       "implementation_packet": "docs/tickets/QA-01-integration.md",
-      "acceptance_receipt_sha256": "ef4e4643a69ee1496dd701d98fd9e3009d4f76131e0d920fc2154eee34562e7c"
+      "acceptance_receipt_sha256": "ef4e4643a69ee1496dd701d98fd9e3009d4f76131e0d920fc2154eee34562e7c",
+      "scenario_evidence": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/QA01-scenario-evidence.json",
+      "scenario_evidence_sha256": "556bac387ff62a59cfee5e12fba78239298580adf0a8230c806bfbef96efa928"
     },
     {
       "task_id": "PERF-01",

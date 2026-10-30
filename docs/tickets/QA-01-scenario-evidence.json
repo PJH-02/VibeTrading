@@ -1,0 +1,84 @@
+{
+  "ticket": "QA-01",
+  "source_SHA": "542dadc5250db5d6b43141aa0fe70440faa2e23e",
+  "result": "PASS",
+  "full_scenario_evidence": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/QA01-scenario-evidence.json",
+  "sha256": "556bac387ff62a59cfee5e12fba78239298580adf0a8230c806bfbef96efa928",
+  "actual_symbols": {
+    "QA-DATA-01": [
+      "feeds.providers.binance.BinancePerpCollector",
+      "feeds.local_pipeline.SpoolingMarketPublisher",
+      "market.local_engine.LocalMarketEngine"
+    ],
+    "QA-DATA-02": [
+      "runtime.strategy_runtime.PaperStrategyRuntime"
+    ],
+    "QA-DATA-03": [
+      "market.hot_path.HotPathStore",
+      "execution.brokers.BinanceBrokerAdapter",
+      "execution.perp_execution.BinancePerpAdapter"
+    ],
+    "QA-DATA-04": [
+      "storage.local_storage.LocalSpoolStorage",
+      "storage.archive.ArchiveMaintenance",
+      "operations.telegram.TelegramController"
+    ],
+    "QA-DATA-05": [
+      "storage.market_spool.MarketSpool"
+    ],
+    "QA-DATA-06": [
+      "runtime.runtime_checkpoint",
+      "market.local_engine.LocalMarketEngine"
+    ],
+    "QA-BROKER-01": [
+      "execution.venues.dummy_crypto.CryptoDummyAdapter",
+      "execution.venues.dummy_stock.StockDummyAdapter",
+      "execution.execution_owner.ExecutionOwner"
+    ],
+    "QA-BROKER-02": [
+      "execution.brokers.KiwoomBrokerAdapter"
+    ],
+    "QA-BROKER-03": [
+      "execution.kis_execution.KisCashBroker"
+    ],
+    "QA-BROKER-04": [
+      "execution.venues.registry.VenueRegistry"
+    ],
+    "QA-BROKER-05": [
+      "execution.brokers.TossBrokerAdapter",
+      "execution.venues.dummy_stock.StockDummyAdapter"
+    ],
+    "QA-END2END-01": [
+      "execution.perp_execution.BinancePerpAdapter",
+      "execution.perp_execution.BybitPerpAdapter",
+      "execution.execution_groups.CrossVenueExecutionGroups",
+      "execution.execution_owner.ExecutionOwner"
+    ],
+    "QA-FLAT-IMPORT": [
+      "all149canonicalmodules"
+    ],
+    "QA-SOURCE-SINGLE-OWNER": [
+      "execution.venues.registry.EXISTING_ADAPTER_MAPS"
+    ],
+    "QA-LEGACY-LEAN": [
+      "canonical149source-set; no four retired oracles or vibetrading namespace"
+    ],
+    "QA-TIMEFOLIO-CONTEST": [
+      "timefolio.runner.TimefolioStrategyRunner",
+      "timefolio.client.AsyncTimefolioBrowserManager",
+      "storage.sqlite_store.RuntimeStore"
+    ],
+    "QA-DOCKER-BUILD": [
+      "all149canonicalmodules"
+    ],
+    "QA-COMPOSE-NATS-FREE": [
+      "runtime.local_runtime"
+    ],
+    "QA-REPO-ENTRYPOINTS": [
+      "runtime.cli",
+      "runtime.local_runtime",
+      "main.py"
+    ]
+  },
+  "limits": "Synthetic/LOCAL only; no new native provider, production or real browser-contest activation proof."
+}
