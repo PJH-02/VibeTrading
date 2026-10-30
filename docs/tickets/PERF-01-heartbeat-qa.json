@@ -1,0 +1,83 @@
+{
+  "ticket": "PERF-01",
+  "gate": "POST_FUNCTIONAL_REPAIR_FULL_LINUX_QA",
+  "result": "PASS",
+  "timestamp": "2026-10-31T02:32:50.678355+09:00",
+  "source_commit": "992bb757ba4b9c6cf60d47ebe1e58b796b11e225",
+  "base_accepted_qa_source": "542dadc5250db5d6b43141aa0fe70440faa2e23e",
+  "source149_sha256": "42555bccb9d8230a81f3f91b4e157767f4bed86b6d0ed1cef791f0c4f1d15c4f",
+  "src_python_count": 149,
+  "unchanged_src_python_count": 147,
+  "source_byte_equal_tested_snapshot": true,
+  "production_change_paths": [
+    "src/feeds/local_pipeline.py",
+    "src/runtime/local_transport.py"
+  ],
+  "tests": {
+    "full": 3166,
+    "guarded_leases": 25,
+    "distinct_required_python": 3191,
+    "required_skipped": 0,
+    "required_deselected": 0,
+    "external_live_data_deselected": 2,
+    "focused": 132,
+    "capped_focused_including_aux": 220,
+    "auxiliary_fixture": 1
+  },
+  "all_independent_test_exits": 0,
+  "warnings": "Two inherited cgi/fork deprecations, unchanged",
+  "worker_model": "gpt-6-luna",
+  "external_worker_calls": 0,
+  "benchmark_full_capacity_acceptance": "PENDING_SEPARATE_PERF_RECEIPT",
+  "constraints": "No paid route, installation, live account/order, production service/DNS/TLS changes, broker-fee reception, deploy/merge/push",
+  "artifacts": {
+    "PERF01-repair-full.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-repair-full.result.json",
+      "sha256": "caa205b710df47f32dda6a2bcba011a28b5b25cf1f999106709925d638a1dae9"
+    },
+    "PERF01-repair-full.stdout.log": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-repair-full.stdout.log",
+      "sha256": "d1ccd871734344d70c8611f9beadb3bfcd195385841465b37371cc45e815dd55"
+    },
+    "PERF01-repair-full.junit.xml": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-repair-full.junit.xml",
+      "sha256": "1961b3f6deda5fba633d73cf17402a5cddd145c644cd791205a5b8e044dace2b"
+    },
+    "PERF01-repair-leases.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-repair-leases.result.json",
+      "sha256": "e98b1e8307b99e7ec96eb7f9c7bdf0679ec94a85d7a80ce19c7fc26e13157478"
+    },
+    "PERF01-repair-leases.junit.xml": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-repair-leases.junit.xml",
+      "sha256": "fd9eaba532a176ce8d41de731b4aed2979754ab4d8163734b1ebc43cd473cb9f"
+    },
+    "PERF01-lead-heartbeat.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-lead-heartbeat.result.json",
+      "sha256": "6f3b7947213a3962846fde6aed4b71039ff1611e92705f0814ec088c7f4cd24d"
+    },
+    "PERF01-lead-aux-postrepair.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-lead-aux-postrepair.result.json",
+      "sha256": "1974441adaa1dd3df4f1c371120b16596d258aaa9ed83b43a1f713e3f5fdf1dd"
+    },
+    "PERF01-capped-focused-postrepair.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-capped-focused-postrepair.result.json",
+      "sha256": "5a44dba2c78b3094273a84bdca1199d4515e88cc873b003700257bd86646d0d9"
+    },
+    "PERF01-capped-focused-postrepair.stdout": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-capped-focused-postrepair.stdout",
+      "sha256": "e496f0d22f9e16bafe4269b298f818feb94657389575027c6e05ca69e3466730"
+    },
+    "PERF01-repair-tested-inputs.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-repair-tested-inputs.json",
+      "sha256": "f8ac95577430e9946c1f8886cfa7e0708456d93a82ceb513cb9209e7dd95bdb2"
+    },
+    "PERF01-heartbeat-paired.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-heartbeat-paired.json",
+      "sha256": "ee789c98a534715615d287739abd3c7831fa7c996ce433a4b4a1aebc1c2e3cb7"
+    },
+    "PERF01-heartbeat-worker-handoff.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-heartbeat-worker-handoff.json",
+      "sha256": "40e52b9858787ba531174a73f29777ed75e2837e85354aa242cccc05be963bf9"
+    }
+  }
+}

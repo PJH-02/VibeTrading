@@ -38,13 +38,15 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 29,
-    "in_progress": 1,
+    "accepted": 30,
+    "in_progress": 0,
     "blocked": 0,
     "not_started": 3,
     "external_not_authorized": 2
   },
-  "next_ready_candidate": [],
+  "next_ready_candidate": [
+    "REL-01"
+  ],
   "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
   "gate_results": {
     "REPOSITORY_CONSOLIDATED": "NOT_VERIFIED_FOR_NEW_RELEASE",
@@ -428,8 +430,8 @@
     ],
     "missing_required_local_code_blocks_feature_release": true
   },
-  "active_task_id": "PERF-01",
-  "last_accepted_task_id": "QA-01",
+  "active_task_id": null,
+  "last_accepted_task_id": "PERF-01",
   "stop_requested": false,
   "tickets": [
     {
@@ -1703,12 +1705,30 @@
       "implementation_packet": "docs/tickets/QA-01-integration.md",
       "acceptance_receipt_sha256": "ef4e4643a69ee1496dd701d98fd9e3009d4f76131e0d920fc2154eee34562e7c",
       "scenario_evidence": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/QA01-scenario-evidence.json",
-      "scenario_evidence_sha256": "556bac387ff62a59cfee5e12fba78239298580adf0a8230c806bfbef96efa928"
+      "scenario_evidence_sha256": "556bac387ff62a59cfee5e12fba78239298580adf0a8230c806bfbef96efa928",
+      "post_acceptance_revalidations": [
+        {
+          "task_id": "PERF-01",
+          "source_commit": "992bb757ba4b9c6cf60d47ebe1e58b796b11e225",
+          "receipt": "docs/tickets/PERF-01-heartbeat-qa.json",
+          "full_required_python": 3191,
+          "all_exits": 0
+        },
+        {
+          "task_id": "PERF-01",
+          "source_commit": "2fe70d2fb2a5caa0d6e99fbb3d2a05f08813ef61",
+          "receipt": "docs/tickets/PERF-01-local-acceptance.json",
+          "full_required_python": 3196,
+          "capped_focused": 225,
+          "all_exits": 0,
+          "note": "Final repaired source bytes revalidated; historical QA wheel/image receipt retained unchanged."
+        }
+      ]
     },
     {
       "task_id": "PERF-01",
       "wave": "W5",
-      "status": "IN_PROGRESS",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "QA-01"
       ],
@@ -1716,9 +1736,9 @@
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
       "base_sha": "542dadc5250db5d6b43141aa0fe70440faa2e23e",
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "actual_commit_sha": "8c08f9996a25a2cdf947f1ec33225d04209c9b8f",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "PERF-01",
@@ -1726,10 +1746,42 @@
         {
           "id": "DATA-BARRIER-FINDING",
           "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.acceptance.json",
-          "evidence": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.domain-evidence.json"
+          "evidence": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.domain-evidence.json",
+          "perf_resolution": "Normal per-source admission/apply and scoped readiness verified; intentional all-initial-proof/coupled cold checkpoint root recovery fence retained. See PERF-01-findings.md."
+        },
+        {
+          "id": "PERF-HEARTBEAT-ACK",
+          "status": "RESOLVED_VERIFIED",
+          "evidence": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-heartbeat-paired.json",
+          "scope": "Local PONG receipt interleaving; no live accounts or orders",
+          "resolution": "PONG-only bounded drain/skip under unchanged deadline; final full QA and capped profile pass; original historical label collision documented in paired receipt."
+        },
+        {
+          "id": "PERF-NATIVE-PROOF-HEADROOM",
+          "status": "RESOLVED_VERIFIED",
+          "resolution": "Bounded preflight refresh before durable claim; all actual-use expiry/scope/version guards unchanged; actual-clock expiry tests and final profile pass."
+        },
+        {
+          "id": "PERF-64-RECORD-OFFERED-PULSE",
+          "status": "OBSERVED_CAPACITY_LIMIT",
+          "evidence": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-capacity-v6.result.json",
+          "resolution": "64-record pulse safely exceeded unchanged5s group deadline. Accepted1000-event profile explicitly uses16-record drained pulses; no live/1000persecond capacity claim or guard relaxation."
         }
       ],
-      "implementation_packet": "docs/tickets/PERF-01-profile.md"
+      "implementation_packet": "docs/tickets/PERF-01-profile.md",
+      "repair_packet": "docs/tickets/PERF-01-heartbeat-repair.md",
+      "repair_commit_sha": "992bb757ba4b9c6cf60d47ebe1e58b796b11e225",
+      "qa_revalidation_receipt": "docs/tickets/PERF-01-heartbeat-qa.json",
+      "acceptance_receipt_sha256": "570c2755ebd39cd4e78ef7ccd1a831a3a99a24cef591a4e687411cb657816d3e",
+      "public_acceptance_receipt": "docs/tickets/PERF-01-local-acceptance.json",
+      "public_acceptance_receipt_sha256": "6fe5ce5a46c37bb889ef4f6c3595c54fe48098796c2d287c4be7cbc5e952add9",
+      "runtime_source_commit": "2fe70d2fb2a5caa0d6e99fbb3d2a05f08813ef61",
+      "runtime_source149_sha256": "acc56cd077bd3156a3d2f10aab7ff0d4c3af08381886d99cfdd8f0c7c4c90451",
+      "native_proof_repair_commit_sha": "2fe70d2fb2a5caa0d6e99fbb3d2a05f08813ef61",
+      "findings": "docs/tickets/PERF-01-findings.md",
+      "qa_revalidation_final_receipt": "docs/tickets/PERF-01-local-acceptance.json",
+      "numeric_targets": "EXCEEDED_NONBLOCKING_REFERENCE",
+      "profile_result": "PASS_LOCAL_CAPACITY"
     },
     {
       "task_id": "REL-01",
@@ -2557,6 +2609,14 @@
       "tests": "3074full+25guardedleases=3099; actualroutes7, unit/build/browserPASS; wheel153exact/23imports; LinuxDocker153exact/20imports",
       "no_production_activation": true,
       "push_authorized": false
+    },
+    {
+      "date": "2026-10-31",
+      "task_id": "PERF-01",
+      "actual_commit_sha": "8c08f9996a25a2cdf947f1ec33225d04209c9b8f",
+      "reason": "Requested CLN03/QA01/PERF01 batch complete: final3196 required Linux +225 capped checks; raw19763rows/800scriptedT5 independently verified. PONG and native proof headroom repairs retain A1/fail-closed guards. Numeric latency exceeded nonblocking references;64pulse offered-load limit recorded; accepted16pulse profile. Original v7 I/O derived-counter metadata corrected offline with raw evidence preserved. No production gate promotion/push.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01.acceptance.json",
+      "receipt_sha256": "570c2755ebd39cd4e78ef7ccd1a831a3a99a24cef591a4e687411cb657816d3e"
     }
   ],
   "requirements_revision": {
@@ -2663,15 +2723,18 @@
       "QA-01",
       "PERF-01"
     ],
-    "status": "IN_PROGRESS",
+    "status": "COMPLETED_REQUESTED_THREE_TICKETS",
     "accepted": [
       "CLN-03",
-      "QA-01"
+      "QA-01",
+      "PERF-01"
     ],
     "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030",
     "worker_policy": "Carry forward measured external cache-inclusive stop; sol unchanged + native gpt-6-luna; no new external calls; no exact cost savings claimed",
     "push_authorized": false,
-    "target_os": "Ubuntu Linux"
+    "target_os": "Ubuntu Linux",
+    "completed_at": "2026-10-31T03:38:00.995414+09:00",
+    "next_not_started": "REL-01"
   },
   "completed_batches": [
     {
@@ -2893,6 +2956,26 @@
       "completed_utc": "2026-10-29T21:14:31.046577+00:00",
       "ssl_status": "LOCAL_TEST_ONLY",
       "public_url_activated": false
+    },
+    {
+      "requested_tasks": 3,
+      "tasks": [
+        "CLN-03",
+        "QA-01",
+        "PERF-01"
+      ],
+      "status": "COMPLETED_REQUESTED_THREE_TICKETS",
+      "accepted": [
+        "CLN-03",
+        "QA-01",
+        "PERF-01"
+      ],
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030",
+      "worker_policy": "Carry forward measured external cache-inclusive stop; sol unchanged + native gpt-6-luna; no new external calls; no exact cost savings claimed",
+      "push_authorized": false,
+      "target_os": "Ubuntu Linux",
+      "completed_at": "2026-10-31T03:38:00.995414+09:00",
+      "next_not_started": "REL-01"
     }
   ],
   "worker_policy_latest": {
