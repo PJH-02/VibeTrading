@@ -916,6 +916,12 @@ class LocalTransportClient:
         self._ack_bytes -= size
         return ack
 
+    def receive_ack_nowait(self) -> TransportAck:
+        """Remove one already queued ACK without waiting for another frame."""
+        ack, size = self._acks.get_nowait()
+        self._ack_bytes -= size
+        return ack
+
     async def request_resume(self, checkpoint: EngineCursor) -> TransportAck:
         _cursor_valid(checkpoint)
         if (self._closed or self._faulted or len(self._connections) != 2 or self._resume is not None or self._pending

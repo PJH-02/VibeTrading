@@ -270,6 +270,7 @@ class SpoolingMarketPublisher:
             self._delivery_stage="live_spool_read"
             records=await loop.run_in_executor(self._executor,self._read_delivery_batch)
             if not records:
+                self._drain_idle_pongs(transport)
                 await asyncio.sleep(self.delivery_budgets.poll_seconds)
                 continue
             for record in records:
@@ -283,17 +284,13 @@ class SpoolingMarketPublisher:
                 if not transport.try_send(frame):
                     raise RuntimeError("durable delivery send failed")
                 deadline=asyncio.get_running_loop().time()+self.delivery_budgets.io_timeout_seconds
-                remaining=deadline-asyncio.get_running_loop().time()
                 self._delivery_stage="live_received_ack"
-                received=await asyncio.wait_for(transport.receive_ack(),remaining)
+                received=await self._receive_delivery_ack(transport,deadline)
                 if (received.phase!="RECEIVED" or received.cursor!=frame.cursor
                         or received.digest!=frame.digest):
                     raise RuntimeError("durable delivery receipt mismatch")
-                remaining=deadline-asyncio.get_running_loop().time()
-                if remaining<=0:
-                    raise asyncio.TimeoutError("durable delivery acknowledgement deadline exceeded")
                 self._delivery_stage="live_applied_ack"
-                receipt=await asyncio.wait_for(transport.receive_ack(),remaining)
+                receipt=await self._receive_delivery_ack(transport,deadline)
                 self._delivery_inflight_records=0
                 if receipt.phase!="APPLIED" or receipt.cursor!=frame.cursor or receipt.digest!=frame.digest:
                     raise RuntimeError("durable delivery acknowledgement mismatch")
@@ -301,6 +298,30 @@ class SpoolingMarketPublisher:
                 self._last_applied=frame.cursor.sequence
                 self._applied+=1
                 self._track_delivery_lag()
+
+    async def _receive_delivery_ack(self, transport, deadline):
+        """Wait for a non-heartbeat receipt without extending the record deadline."""
+        loop=asyncio.get_running_loop()
+        while True:
+            remaining=deadline-loop.time()
+            if remaining<=0:
+                raise asyncio.TimeoutError("durable delivery acknowledgement deadline exceeded")
+            receipt=await asyncio.wait_for(transport.receive_ack(),remaining)
+            if receipt.phase!="PONG":
+                return receipt
+
+    def _drain_idle_pongs(self, transport):
+        """Boundedly discard only heartbeat responses while no record is in flight."""
+        receive_nowait=getattr(transport,"receive_ack_nowait",None)
+        if not callable(receive_nowait):
+            return
+        for _ in range(self.delivery_budgets.max_batch_records):
+            try:
+                receipt=receive_nowait()
+            except asyncio.QueueEmpty:
+                return
+            if receipt.phase!="PONG":
+                raise RuntimeError("unexpected non-heartbeat receipt while delivery idle")
 
     async def _delivery_loop(self):
         delay=min(self.delivery_budgets.poll_seconds,self.delivery_budgets.reconnect_backoff_cap_seconds)
@@ -358,7 +379,8 @@ class SpoolingMarketPublisher:
                                 if not transport.try_send(frame,replay=True):
                                     raise RuntimeError("durable replay send failed")
                                 self._delivery_stage="replay_applied_ack"
-                                receipt=await asyncio.wait_for(transport.receive_ack(),self.delivery_budgets.io_timeout_seconds)
+                                deadline=asyncio.get_running_loop().time()+self.delivery_budgets.io_timeout_seconds
+                                receipt=await self._receive_delivery_ack(transport,deadline)
                                 self._delivery_inflight_records=0
                                 if receipt.phase!="APPLIED" or receipt.cursor!=frame.cursor or receipt.digest!=frame.digest:
                                     raise RuntimeError("durable replay acknowledgement mismatch")
