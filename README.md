@@ -1,51 +1,40 @@
 # VibeTrading
 
-공유 시장 데이터와 전략 파일, 계좌별 실행 권한을 분리하는 Python 트레이딩 시스템입니다.
-현재 작업의 범위와 수락 여부는 아래 최종 문서에서 확인합니다.
+Python tooling for market data, strategy plugins, and account-scoped execution. The repository contains local code and historical deployment material; documentation or local tests do not establish that a server is running or that an account is enabled.
 
-## 개발 권위와 진행 상태
+## Current authority
 
-- [최종 계획](docs/final/01_FINAL_PLAN.md): 범위, 우선순위, 릴리스 게이트
-- [개발 티켓](docs/final/02_DEVELOPER_TICKETS.md): 구현과 수락 기준
-- [아키텍처 요구사항](docs/final/03_ARCHITECTURE_REQUIREMENTS.md): 안전 계약과 지원 범위
-- [불변 완료 이력](docs/final/04_COMPLETED_MANIFEST.json): 과거 수락 사실
-- [현재 상태와 DAG](docs/final/05_TASK_STATUS.json): 유일한 변경 가능한 작업 상태
+Exactly five files define product scope, work, safety requirements, completed history, and current task state:
 
-[상태 안내](docs/status.md)는 이 문서들로 연결합니다. 과거 계획과 작업자의 실행 지시는
-[보존 인덱스](docs/archive/README.md)에 역사 자료로 분리되어 있습니다.
+- [Final plan](docs/final/01_FINAL_PLAN.md) — scope, priority, sequence, and release gates.
+- [Developer tickets](docs/final/02_DEVELOPER_TICKETS.md) — implementation and acceptance criteria.
+- [Architecture requirements](docs/final/03_ARCHITECTURE_REQUIREMENTS.md) — safety and architecture contracts.
+- [Completed manifest](docs/final/04_COMPLETED_MANIFEST.json) — immutable historical completion record.
+- [Task status](docs/final/05_TASK_STATUS.json) — sole current counters and task DAG.
 
-## 소스와 로컬 확인
+Older plans are historical references indexed in [the archive](docs/archive/README.md). They do not define current scope or status. [Status guide](docs/status.md) links to the authority without copying counters.
 
-Python 3.12 이상과 기존 requirements.txt 의존성을 사용하는 환경이 필요합니다.
-정식 소스는 `src/` 아래의 `core`, `feeds`, `market`, `storage`, `strategies`, `execution`,
-`portfolio`, `runtime`, `operations`, `timefolio`의 열 개 도메인에 있습니다.
-`src/vibetrading` 호환 패키지는 배포하지 않습니다. 과거 연구 모듈은 pytest에서만
-명시적으로 접근하는 [검증용 원본](docs/archive/MOV-05-legacy-oracles/README.md)으로 보존합니다.
+## Runtime and local checks
+
+The package uses Python 3.12+ and the dependencies declared by `pyproject.toml`; prepare an environment with those dependencies before running the CLI. No dependency installation is performed by these documentation instructions. Source packages live directly under `src/`: `core`, `feeds`, `market`, `storage`, `strategies`, `execution`, `portfolio`, `runtime`, `operations`, and `timefolio`.
 
 ```bash
 PYTHONPATH=src python3 -m runtime.cli --help
 python3 scripts/dev/status.py --root . --json
 ```
 
-`status.py`는 최종 문서가 존재하면 05의 상태를 투영합니다. 전략 경제 규칙은 전략 파일이,
-실행 사실과 계좌 안전은 실행 영역이 소유합니다. C3/KP/KD와 KIS Mock/Mock2는 기존
-계산·운용 경로를 보존하며, TOSS 데이터 수집은 유지하고 주문은 DATA_ONLY로 차단합니다.
-실제 파일 전략·공통 Owner 연결의 완성 여부는 각 후속 티켓과 지원 범위를 확인합니다.
+The CLI help describes available commands. The status command reads the current documentation state; it does not report remote server health. Strategy plugins own economic choices and expose action/result callbacks; execution owns order, fill, account facts, reservations, and pre-trade safety. A1 persists each source to its durable spool before delivery through UDS to market state and then strategy callbacks. Sources progress independently; a quiet or stalled source must not hold another source behind a shared barrier. Crypto and domestic market/order routes remain separately configured. C3/KP/KD and KIS Mock/Mock2 retain their established behavior. TOSS remains a market-data source in `DATA_ONLY` mode, with order mutation blocked.
 
-## 로컬 검증과 운영 경계
+KR-DATA-01 is optional and remains off unless selected and separately supported. Timefolio has an NATS-free local injection path; submission defaults to false and remains gated. No real browser login, contest submission, or order is proven by local documentation or dry-run checks.
 
-명시적인 NATS-free primary는 [deploy/primary-compose.yml](deploy/primary-compose.yml)입니다.
-역할별 프로파일과 검증된 이미지·로컬 설정을 선택해야 하며, 문서에 명령이 있다는 사실이
-계좌 활성화나 배포 승인을 의미하지 않습니다. Timefolio 주문·모니터는 별도 경로이며
-기본 제출 차단과 계좌별 승인을 유지합니다.
+## Deployment states
 
-과거 NATS 배치의 [고정 롤백 목록](deploy/rollback/MOV-06/manifest.json), 수락 기록,
-Golden, 원본 검증 자료를 보존합니다. 로컬 fake 테스트·이미지 기동은 실제 거래소 주문,
-현재 서버 상태나 운영 준비 완료의 증거와 구분합니다.
+There are three distinct states:
 
-## 증거 저장
+1. **Historical deployment:** NATS was used in the documented prior deployment. The current server state is **UNKNOWN**; no current-server inspection is claimed here.
+2. **Accepted local candidate:** the local NATS-free candidate and its acceptance evidence describe local work only. The candidate is not deployed.
+3. **Future server:** any new server installation requires explicit user approval and the applicable release, access, and operational gates. No deployment is authorized by this README.
 
-새 원시 로그와 JUnit·AI 응답은 `.local/artifacts/` 또는 CI/private run artifacts에 두고,
-Git에는 소스와 검토 가능한 compact 수락 기록·보존 manifest를 남깁니다. 기존 자료의
-분류·해시·복구 경로·보존 예외는 [CLN-01 보존 목록](docs/archive/CLN-01-retention.json)을
-따릅니다. 운영 데이터는 문서 정리 대상이 아닙니다.
+The local primary Compose definition is [deploy/primary-compose.yml](deploy/primary-compose.yml). The [WEB-01 access guide](deploy/WEB-01-access.md) describes a read-only HTTPS viewer design; the private ingest service and external access remain separately gated. Historical NATS configuration and rollback evidence are retained for reference and are not evidence of the current server state.
+
+Research strategies and the archived CLN-02 oracle remain available as historical/test references. The oracle is used only when explicitly selected in pytest; retained research strategies are not rewritten by this documentation update. Consult the five authority files for actual support and acceptance status.
