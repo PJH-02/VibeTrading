@@ -479,6 +479,23 @@ class NativeSelectionDispatcher:
                 return False
         return True
 
+    def _promotion_refresh_due(self):
+        """Refresh an invalid or low-headroom proof once before durable dispatch work."""
+        scoped=getattr(self,"_scope_dispatchers",{})
+        if len(scoped)>1:
+            return any(item._promotion_refresh_due_one() for item in scoped.values())
+        return self._promotion_refresh_due_one()
+
+    def _promotion_refresh_due_one(self):
+        if not self._promotion_guard_one():
+            return True
+        receipt=self._promotion_receipt
+        owner=self.binding.owner
+        proof_window_ns=receipt.expires_ns-receipt.observed_ns
+        prepare_timeout_ns=max(1,int(owner.budgets.prepare_timeout_seconds*1_000_000_000))
+        headroom_ns=min(1_000_000_000,(proof_window_ns+3)//4,prepare_timeout_ns)
+        return receipt.expires_ns-owner.clock()<=headroom_ns
+
     def _activation_context_valid(self):
         if len(getattr(self, "_scope_dispatchers", ())) > 1:
             return all(item._activation_context_valid_one() for item in self._scope_dispatchers.values())
@@ -1170,7 +1187,7 @@ class NativeSelectionDispatcher:
                     continue
                 if not self._inputs_ready(item.snapshot, at_ns=self.binding.owner.clock()):
                     self._fail_closed(); continue
-                if not self._promotion_guard():
+                if self._promotion_refresh_due():
                     await self.prepare_promotion()
                 if (not self._activation_context_valid() or not self._promotion_guard()
                         or time.monotonic_ns() - item.queued_ns > self.selection.max_queue_age_ns
