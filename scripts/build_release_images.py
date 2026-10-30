@@ -126,7 +126,9 @@ def main() -> int:
     source_hash = _digest(files)
     config_paths = [path for path in files if (
         path.is_relative_to(ROOT / "config")
-        or path.name in {"docker-compose.yml", "crypto-profile.yml", "release1-overlay.yml", "nats.conf"}
+        or path == ROOT / "docker-compose.yml"
+        or path == ROOT / "deploy" / "nats.conf"
+        or (path.parent == ROOT / "deploy" and path.suffix in {".yaml", ".yml"})
     )]
     config_hash = _digest(config_paths)
     app_base = os.getenv("VIBETRADING_RELEASE_APP_BASE", "python:3.12-slim")
@@ -174,6 +176,11 @@ def main() -> int:
         "build_revision": revision,
         "config_hash": config_hash,
         "source_hash": source_hash,
+        "source_hashes": {
+            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in files if path.relative_to(ROOT).parts[0] == "src"
+        },
+        "primary_compose": "deploy/primary-compose.yml",
         "base_images": {
             "app": {"tag": app_base, "id": app_base_id},
             "crypto": {"tag": crypto_base, "id": crypto_base_id},

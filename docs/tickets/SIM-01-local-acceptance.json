@@ -1,0 +1,83 @@
+{
+  "acceptance": "PASS",
+  "status": "ACCEPTED_LOCAL",
+  "completed_utc": "2026-10-29T21:14:31.046577+00:00",
+  "scope": "LOCAL/PAPER/FAKE/offline only",
+  "independent_tests": {
+    "full_passed": 3096,
+    "full_exit": 0,
+    "guarded_lease_passed": 25,
+    "lease_exit": 0,
+    "distinct_offline_python_cases": 3121,
+    "inherited_live_data_deselected": 2,
+    "new_required_local_exclusions": 0,
+    "test_profile": "credential-free public snapshot, netless bwrap, public dependency roots, numeric thread budgets1, source-checked normal CPython bytecode in private snapshot; process tests serialized",
+    "logs": [
+      "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030/batch-lead-full-accepted.stdout.log",
+      "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030/batch-lead-leases-final.stdout.log"
+    ]
+  },
+  "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030",
+  "worker": "sol lead unchanged + gpt-6-luna; external routes stopped at user overhead threshold; no exact counterfactual saving claimed",
+  "external_actions": "No live accounts/orders/cancels/server edits/new services/packages/push/merge/deploy",
+  "immutable04_unchanged": true,
+  "source_packaging": {
+    "python_files_byte_exact": 149,
+    "wheel_imports": 23,
+    "wheel_exit": 0,
+    "docker_imports": 20,
+    "docker_exit": 0,
+    "wheel_sha256": "87707f92c1badc77d813261e31bb88c1e20e7c4bf6e6a0e7bd12a0fb8e8b64c5",
+    "network": "none"
+  },
+  "task_id": "SIM-01",
+  "base_sha": "61e17079228a",
+  "source_commit": "ef5947ee480545ba8599155b884b0a4c83da87de",
+  "fixture_commit": "26809c778e9d04ac3f9cddb3abbbf99668045007",
+  "source_diff_sha256": "e36b4fa512137263e38ef52ce7d73711377777f3540570fce88be974b2a360c4",
+  "bounded_packet": "docs/tickets/SIM-01-ponytail.md",
+  "ponytail": {
+    "installed_version": "4.8.4",
+    "mode": "ponytail-review instructions actually read/applied; no hooks executed",
+    "skill_path": "/home/pjh/.codex/plugins/cache/ponytail/ponytail/4.8.4/skills/ponytail-review/SKILL.md",
+    "skill_sha256": "40df33b58fc6ef889b93585733feb9566b76e9586efa7f376785c1e995197ac0",
+    "official_source": "https://github.com/DietrichGebert/ponytail",
+    "installation_changed": false,
+    "permission_review": "plugin metadata and local hook sources reviewed; hooks not invoked; no network/package/account actions"
+  },
+  "findings": {
+    "REMOVE_REUSE": "pnl.py::_exact_add/_exact_product -> already imported exact_sum/exact_product",
+    "KEEP_WITH_REASON": [
+      "selected_execution freeze/thaw deep immutability",
+      "portfolio divide precision128",
+      "portfolio reserve_product precision128/ROUND_CEILING",
+      "native project_position transition/fee/funding/missing mark guards"
+    ],
+    "deferred_applicable_candidates": 0
+  },
+  "metrics": {
+    "whole_module_normalized_ast_equal": true,
+    "removed_forwarding_functions": 2,
+    "before_sha256": "c9be0c803c09f688ed898d625d9c8f0f2bf5e8d731a655b922d119933cd716fe",
+    "after_sha256": "a9fcfe9832fc1392ad5c4ff9452154f8c17df2811b59f0160d5947cc6f83f497",
+    "production_loc_delta": -7
+  },
+  "test_fixture": {
+    "scope": "two existing adversarial process scenarios only",
+    "reason": "separate real init identity/control-plane readiness from callback timing; observed startup0.6-1.5s exceeded nominal500ms mixed startup loop",
+    "init_contract_seconds": 2,
+    "init_poll_ms": 10,
+    "new_zero_order_preconditions": 2,
+    "all_original_assertions_preserved": true,
+    "callback_timeout_ms": 50,
+    "other_feed_ack_limit_ms": 100,
+    "callback_poll_iterations": 500,
+    "fence_cancel_limit_seconds": 3,
+    "runtime_process_engine_source_changed": false,
+    "focused_exit": 0,
+    "broader27_exit": 0,
+    "full_exit": 0,
+    "preliminary_failures": "All original timing/fence failures and failed2s fixture attempt retained privately; passing diagnostic alone was never accepted."
+  },
+  "economic_validation": "whole-module normalized AST exact; nesting/order/guards unchanged; independent low-precision Decimal fee/funding, duplicate replay, NaN tests passed"
+}

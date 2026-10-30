@@ -6,15 +6,12 @@ from decimal import Decimal
 import pytest
 import pyarrow.parquet as pq
 
-from vibetrading.market_policy import MarketDataPolicyBus
-from vibetrading.models import EventType, Venue
-from vibetrading.parquet_store import ParquetBatchWriter
-from vibetrading.providers.ls_market import (
-    LSReadOnlyClient, krx_futures_session, parse_dbt_foreign,
-    parse_delayed_future_trade,
-)
-from vibetrading.settings import RuntimeSettings
-from vibetrading.sqlite_store import RuntimeStore
+from market.market_policy import MarketDataPolicyBus
+from core.models import EventType, Venue
+from storage.parquet_store import ParquetBatchWriter
+from feeds.providers.ls_market import LSReadOnlyClient, krx_futures_session, parse_dbt_foreign, parse_delayed_future_trade
+from runtime.settings import RuntimeSettings
+from storage.sqlite_store import RuntimeStore
 
 
 KST = timezone(timedelta(hours=9))

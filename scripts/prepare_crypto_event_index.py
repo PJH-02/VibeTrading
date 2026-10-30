@@ -14,8 +14,8 @@ import struct
 import time
 from pathlib import Path
 
-from vibetrading.event_index_runs import RECORD, MAX_RUN_ENTRIES, append_runs, ensure_schema
-from vibetrading.delivery_recovery import attach_coverage, ensure_schema as ensure_recovery_schema
+from storage.event_index_runs import RECORD, MAX_RUN_ENTRIES, append_runs, ensure_schema
+from storage.delivery_recovery import attach_coverage, ensure_schema as ensure_recovery_schema
 
 
 DELIVERY_SQL = ('SELECT rowid,stream_id,stream_sequence,event_key,file_rowid,persisted_ts_ns '

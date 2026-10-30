@@ -12,9 +12,9 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from vibetrading.brokers import TossBrokerAdapter
-from vibetrading.providers.toss import TossAuthClient, TossUnauthorized
-from vibetrading.settings import RuntimeSettings
+from execution.brokers import TossBrokerAdapter
+from feeds.providers.toss import TossAuthClient, TossUnauthorized
+from runtime.settings import RuntimeSettings
 
 
 MUTATING_METHODS = ["POST", "PUT", "PATCH", "DELETE", "HEAD", "post", "Put", "PaTcH"]
@@ -101,7 +101,7 @@ class _FakeSession:
 
 def _patch_session(monkeypatch, session) -> None:
     monkeypatch.setattr(
-        "vibetrading.providers.toss.aiohttp.ClientSession",
+        "feeds.providers.toss.aiohttp.ClientSession",
         lambda **kwargs: session,
     )
 
@@ -238,7 +238,7 @@ def test_auth_client_request_once_rejects_mutating_methods_before_session(monkey
     """_request_once must reject mutations before any ClientSession exists."""
     client = _client()
     factory = _CountingBomb("aiohttp.ClientSession factory")
-    monkeypatch.setattr("vibetrading.providers.toss.aiohttp.ClientSession", factory)
+    monkeypatch.setattr("feeds.providers.toss.aiohttp.ClientSession", factory)
     with pytest.raises(RuntimeError, match="TOSS DATA_ONLY: _request_once rejected"):
         asyncio.run(
             client._request_once(
@@ -258,7 +258,7 @@ def test_auth_client_request_once_rejects_invalid_methods_before_session(monkeyp
     """Invalid non-string methods are rejected before any ClientSession exists."""
     client = _client()
     factory = _CountingBomb("aiohttp.ClientSession factory")
-    monkeypatch.setattr("vibetrading.providers.toss.aiohttp.ClientSession", factory)
+    monkeypatch.setattr("feeds.providers.toss.aiohttp.ClientSession", factory)
     with pytest.raises(RuntimeError, match="TOSS DATA_ONLY: _request_once rejected"):
         asyncio.run(
             client._request_once(
@@ -349,7 +349,7 @@ def test_oauth_token_post_is_preserved_outside_generic_request(monkeypatch, tmp_
 
 import asyncio
 import pytest
-from vibetrading.providers.toss import TossAuthClient
+from feeds.providers.toss import TossAuthClient
 class Flip(str):
  def upper(self):
   self.calls=getattr(self,'calls',0)+1
@@ -366,7 +366,7 @@ def test_data_only_dispatch_cannot_reinterpret_a_validated_method(monkeypatch):
   async def __aexit__(self,*a):pass
   def get(self,*a,**k):methods.append('GET');return Response()
   def post(self,*a,**k):methods.append('POST');return Response()
- monkeypatch.setattr('vibetrading.providers.toss.aiohttp.ClientSession',lambda **k:Session())
+ monkeypatch.setattr("feeds.providers.toss.aiohttp.ClientSession",lambda **k:Session())
  client=object.__new__(TossAuthClient);client.rest_url='http://synthetic.invalid'
  asyncio.run(client._request_once(Flip('GET'),'/api/v1/orders',token='synthetic',params=None,json_body={},account_seq=None))
  assert methods==['GET']

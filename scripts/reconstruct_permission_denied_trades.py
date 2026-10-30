@@ -8,10 +8,10 @@ from decimal import Decimal
 sys.path.insert(0,'/app')
 import pandas as pd
 import pyarrow.dataset as ds
-from vibetrading.etf_history import EtfHistory
-from vibetrading.etf_trading import intraday_decision
-from vibetrading.providers.kiwoom import KiwoomAuthClient
-from vibetrading.settings import get_settings
+from strategies.kr.etf_history import EtfHistory
+from runtime.etf_trading import intraday_decision
+from feeds.providers.kiwoom import KiwoomAuthClient
+from runtime.settings import get_settings
 
 async def main():
     settings=get_settings(); day='2026-10-14'

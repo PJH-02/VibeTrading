@@ -10,7 +10,7 @@ from decimal import Decimal
 from typing import Dict, List, Optional
 
 from shared.config import get_settings
-from shared.models import Fill, Market, Order, OrderSide, OrderStatus, OrderType, TradingMode
+from strategies.legacy.models import Fill, Market, Order, OrderSide, OrderStatus, OrderType, TradingMode
 
 from .base import BrokerAdapter, OrderError
 

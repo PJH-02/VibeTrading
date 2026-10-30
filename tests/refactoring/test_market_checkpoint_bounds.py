@@ -5,9 +5,9 @@ import os
 
 import pytest
 
-from vibetrading.feed_recovery import EngineCursor
-from vibetrading.hot_path import HotPathStore
-from vibetrading.market_checkpoint import CheckpointCodec, CheckpointError, CheckpointProducer
+from feeds.feed_recovery import EngineCursor
+from market.hot_path import HotPathStore
+from storage.market_checkpoint import CheckpointCodec, CheckpointError, CheckpointProducer
 
 
 CONFIG_SHA256 = "a" * 64
@@ -183,8 +183,8 @@ def test_write_fails_closed_when_directory_fsync_is_unavailable(tmp_path, monkey
         replace_calls.append((source, destination))
         return real_replace(source, destination)
 
-    monkeypatch.setattr("vibetrading.market_checkpoint.os.fsync", unavailable_fsync)
-    monkeypatch.setattr("vibetrading.market_checkpoint.os.replace", record_replace)
+    monkeypatch.setattr("storage.market_checkpoint.os.fsync", unavailable_fsync)
+    monkeypatch.setattr("storage.market_checkpoint.os.replace", record_replace)
 
     with pytest.raises(OSError):
         codec.write(target, payload)

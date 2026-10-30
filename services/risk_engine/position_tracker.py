@@ -12,7 +12,7 @@ from nats.aio.msg import Msg
 
 from shared.database import get_postgres
 from shared.messaging import Subjects, deserialize_message, ensure_connected
-from shared.models import Fill, Market, OrderSide, Position, TradingMode
+from strategies.legacy.models import Fill, Market, OrderSide, Position, TradingMode
 
 logger = logging.getLogger(__name__)
 

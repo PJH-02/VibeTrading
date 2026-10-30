@@ -5,3 +5,4 @@ ENV PLAYWRIGHT_BROWSERS_PATH=/opt/dashboard-browsers
 RUN python -m playwright install --with-deps chromium --only-shell \
     && rm -rf /var/lib/apt/lists/*
 USER vibetrading
+CMD ["python", "-m", "operations.dashboard.timefolio_monitor"]

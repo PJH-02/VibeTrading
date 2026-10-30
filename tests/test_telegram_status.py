@@ -7,10 +7,10 @@ import pytest
 from dataclasses import replace
 from types import SimpleNamespace
 
-from vibetrading.health import touch
-from vibetrading.health import check
-from vibetrading.settings import RuntimeSettings
-from vibetrading.telegram import TelegramController
+from operations.health import touch
+from operations.health import check
+from runtime.settings import RuntimeSettings
+from operations.telegram import TelegramController
 
 
 @pytest.mark.asyncio
@@ -26,7 +26,7 @@ async def test_poll_timeout_does_not_restart_bot_or_lose_offset(tmp_path,monkeyp
     async def handle(session,update): handled.append(update)
     async def sleep(delay): delays.append(delay)
     bot._api=api; bot._handle=handle
-    monkeypatch.setattr('vibetrading.telegram.asyncio.sleep',sleep)
+    monkeypatch.setattr("operations.telegram.asyncio.sleep",sleep)
     with pytest.raises(asyncio.CancelledError): await bot._poll_loop(None,25)
     assert handled==[{'update_id':42}] and calls[-1]['offset']==43
     assert delays==[2]
@@ -137,7 +137,7 @@ def test_status_command_and_crypto_alert_deduplication(tmp_path):
 
 def test_status_warns_when_crypto_storage_is_down(tmp_path, monkeypatch):
     # Exercise storage state independently of the test PC's available RAM.
-    monkeypatch.setattr('vibetrading.telegram.psutil.virtual_memory',
+    monkeypatch.setattr("operations.telegram.psutil.virtual_memory",
                         lambda: SimpleNamespace(total=4 * 1024**3, available=2 * 1024**3))
     bot = _controller(tmp_path)
     for name in ("collectors", "storage", "maintenance"):
@@ -159,7 +159,7 @@ def test_status_warns_when_crypto_storage_is_down(tmp_path, monkeypatch):
 
 def test_retired_heartbeats_and_legacy_group_do_not_trigger_errors(tmp_path,monkeypatch):
     import json
-    monkeypatch.setattr('vibetrading.telegram.psutil.virtual_memory',
+    monkeypatch.setattr("operations.telegram.psutil.virtual_memory",
         lambda:SimpleNamespace(total=4*1024**3,available=2*1024**3))
     bot=_controller(tmp_path)
     for name in ('collectors','storage','maintenance','collectors-binance'):

@@ -4,8 +4,8 @@ from types import SimpleNamespace as NS
 
 import pytest
 
-from vibetrading.bus import ConfirmedAckFloor, NatsJetStreamBus
-from vibetrading.sqlite_store import RuntimeStore
+from runtime.bus import ConfirmedAckFloor, NatsJetStreamBus
+from storage.sqlite_store import RuntimeStore
 from test_storage_pipeline import _settings
 
 

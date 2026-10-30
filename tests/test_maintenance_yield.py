@@ -5,9 +5,9 @@ from pathlib import Path
 
 import pytest
 
-from vibetrading.archive import ArchiveMaintenance
-from vibetrading.settings import RuntimeSettings
-from vibetrading.sqlite_store import MaintenanceDeferred, RuntimeStore
+from storage.archive import ArchiveMaintenance
+from runtime.settings import RuntimeSettings
+from storage.sqlite_store import MaintenanceDeferred, RuntimeStore
 
 
 def settings_for(path: Path, domain: str = 'market') -> RuntimeSettings:
@@ -37,7 +37,7 @@ def test_busy_cycle_never_opens_sqlite(tmp_path, monkeypatch, domain, force):
         return original_read(path, *args, **kwargs)
 
     monkeypatch.setattr(Path, 'read_text', read)
-    monkeypatch.setattr('vibetrading.archive.RuntimeStore', no_database)
+    monkeypatch.setattr("storage.archive.RuntimeStore", no_database)
     result = ArchiveMaintenance(settings).run_once(force=force)
     assert result['ran'] is False
     assert result['reason'] == 'storage_or_io_busy'
@@ -134,7 +134,7 @@ def test_delivery_prune_is_blocked_until_ack_floor_provenance_is_trusted(tmp_pat
 def test_sqlite_scan_can_yield_and_connection_still_commits(tmp_path, monkeypatch, cause):
     store = RuntimeStore(settings_for(tmp_path))
     ticks = iter([0.0, 0.3, 0.6, 0.9])
-    monkeypatch.setattr('vibetrading.sqlite_store.time.monotonic', lambda: next(ticks, 2.0))
+    monkeypatch.setattr("storage.sqlite_store.time.monotonic", lambda: next(ticks, 2.0))
     checks = 0
     def check():
         nonlocal checks

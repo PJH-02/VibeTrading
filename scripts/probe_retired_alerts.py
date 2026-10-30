@@ -1,8 +1,8 @@
 """Inspect alert scope without revealing Telegram credentials."""
 import json
-from vibetrading.settings import get_settings
-from vibetrading.health import check
-from vibetrading.telegram import TelegramController
+from runtime.settings import get_settings
+from operations.health import check
+from operations.telegram import TelegramController
 
 settings=get_settings()
 group=check(settings,'crypto-collectors',90)

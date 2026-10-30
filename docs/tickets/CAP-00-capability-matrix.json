@@ -1,0 +1,3699 @@
+{
+  "schema_version": 1,
+  "task_id": "CAP-00",
+  "artifact_role": "Frozen documentation evidence only; never runtime registry/activation config",
+  "decision_authority": "docs/final/03_ARCHITECTURE_REQUIREMENTS.md ARCH-00A/B",
+  "code_source_sha": "6789d51d119ade81de8768c18ba23a611da42e84",
+  "captured_on": "2026-10-27",
+  "all_external_mutations_authorized": false,
+  "requirements_default_not_narrowed": true,
+  "new_product_code_files": 0,
+  "blanket_connector_rebuilds": 0,
+  "selection": "Default required code scope frozen; actual account/strategy/live selection remains separately unauthorized",
+  "claim_values": [
+    "DATA_ONLY",
+    "PAPER",
+    "MOCK",
+    "MOCK2",
+    "TESTNET",
+    "LIVE",
+    "CONTEST_DRY_RUN",
+    "EXTENSION_FIXTURE_ONLY",
+    "UNSUPPORTED",
+    "LEGACY_UNVERIFIED"
+  ],
+  "prior_reuse_audit": {
+    "path": "docs/refactoring/vnext/reuse_audit/function_inventory.json",
+    "sha256": "4941b7fc575444af86f3bfa8a9f42735384c8b88ef6ff9bff2d699c4a802f861",
+    "source_sha": "4977ab509490173e312183f32d47f862d94ee0bf",
+    "scope_paths": 47,
+    "enumerated_functions": 692,
+    "core_audited_functions": 601,
+    "note": "Ticket prose mentions712; actual frozen JSON enumerates692 (601 core +91 namespace entries). No broad re-audit or silently invented functions."
+  },
+  "source_files": {
+    "src/execution/kis_execution.py": "2459fa2340634cf2ec9497abee179542af5c370c1e3b6274bb4ae8d1114c12d0",
+    "src/runtime/etf_trading.py": "d07bca817a64ffb062dc04b2686e5d77b98a5f2d43a3a621ae9a284adb5319d8",
+    "src/execution/perp_execution.py": "2e7ab8cc7cbc9183fda06df77f7df561cfaebaf1d5e655dfc1e09b0620ed5498",
+    "src/execution/execution_owner.py": "37103c3adabb6efdd0897380a11afbc4a2cd0914934ba58539f8399164c19826",
+    "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py": "e74ef31abce75eb2579fb48a0dfd852bd1519057d26840d444ab441d7cbf8eec",
+    "src/execution/brokers.py": "ff7d7a1b7b2ef9e6f77547950ddac78fe05072a5ca15e5b97122c3afc7d4a0a0",
+    "src/feeds/providers/kiwoom.py": "c02123763857404867f768ca0b37b4bf20b515e32b3fe4eb760a6e0f55a0adbe",
+    "services/execution/kiwoom_broker.py": "b940950bf0f3ba2c2e23066d634bf03ed684ea475270cce410d304cc2bfa0e9b",
+    "src/feeds/providers/toss.py": "e3cadbe5738f25482f129e63cdeaf5bec2f591c2a471bade09983f262a3bf357",
+    "src/runtime/strategy_runtime.py": "5849a5dc5a4fe0c084dc98b948ea8c2b05b1bf11a6055a3bfd6bcae886bc53be",
+    "src/execution/paper_execution.py": "a024917deaeb04ca66d9aec1ae0ad015c80cbceed1028bb727f23e255a0a7bc1",
+    "src/execution/execution_groups.py": "c4a67357e3160309ad224ea256ac22ed78e5a5b0fe300cbaaafaf7594a38fc26",
+    "src/timefolio/client.py": "695bd3afbfff1448f043c7888cf4e2034968739a54070b7a68107c5adf8a007b",
+    "src/timefolio/runner.py": "44576e42873184faa7019de75b65a363a0bccc9022ca62ff0dd90806f8e2d552",
+    "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/private.py": "4ba108dbbc4641f3b4eeedfa16968994017e1fac5ced1769134d19b26bbcd49e",
+    "src/execution/bybit_execution.py": "1e0aa2ba1da32426fe87759d03826eaa1452b516954b959048854e1862acbc87",
+    "src/execution/extended_brokers.py": "60ba9c4e1c77a53b9cc7b6624c0723db36eea00fad680640afc8f27ab321ee98",
+    "services/execution/crypto_binance.py": "c70256b7d7a2b3e65ee80deef4f5496384ca978f03c21ae7a0ab77d9ce9f8fcf"
+  },
+  "functions": {
+    "src/execution/kis_execution.py::KisCashBroker.submit_order_with_permit": {
+      "path": "src/execution/kis_execution.py",
+      "symbol": "KisCashBroker.submit_order_with_permit",
+      "line": 140,
+      "end_line": 143,
+      "ast_sha256": "86cdb52775e19c41bdbef6e2cb6e9fea8d08a32928e8639a8a41e5766091696a",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/kis_execution.py::KisCashBroker.order_status": {
+      "path": "src/execution/kis_execution.py",
+      "symbol": "KisCashBroker.order_status",
+      "line": 167,
+      "end_line": 183,
+      "ast_sha256": "b2a78d7009c4afc14201afcb4658dc3e493408d677bcaeeb1e1704c96182d813",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/kis_execution.py::KisCashBroker.daily_fills": {
+      "path": "src/execution/kis_execution.py",
+      "symbol": "KisCashBroker.daily_fills",
+      "line": 185,
+      "end_line": 207,
+      "ast_sha256": "85ab391bb78f411acfafe6ad0146238550506950bbb30e166444c5d4214502f0",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/kis_execution.py::KisCashBroker.cancel_order": {
+      "path": "src/execution/kis_execution.py",
+      "symbol": "KisCashBroker.cancel_order",
+      "line": 209,
+      "end_line": 213,
+      "ast_sha256": "0e94b6cd264781c175f9131ba78de4f9719e9caac8293a093bb6a90ef5bc2649",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/kis_execution.py::KisCashBroker.account_state": {
+      "path": "src/execution/kis_execution.py",
+      "symbol": "KisCashBroker.account_state",
+      "line": 115,
+      "end_line": 130,
+      "ast_sha256": "0d8bffacbf74c9fe2874e3f0f9756f9111ba5ecc79d946654536bcb26815e1f1",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/runtime/etf_trading.py::EtfTradingLoop.__init__": {
+      "path": "src/runtime/etf_trading.py",
+      "symbol": "EtfTradingLoop.__init__",
+      "line": 60,
+      "end_line": 95,
+      "ast_sha256": "b07631852156b72f178d9b8a987aeab5ca395d1506b1760dca08564ffb830a0d",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/runtime/etf_trading.py::EtfTradingLoop.broker_for": {
+      "path": "src/runtime/etf_trading.py",
+      "symbol": "EtfTradingLoop.broker_for",
+      "line": 151,
+      "end_line": 153,
+      "ast_sha256": "6ae8759a15d759ca0d017f19dcd61c2c681157034e7afc39ef788237439311e7",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/runtime/etf_trading.py::EtfTradingLoop.reconcile": {
+      "path": "src/runtime/etf_trading.py",
+      "symbol": "EtfTradingLoop.reconcile",
+      "line": 562,
+      "end_line": 587,
+      "ast_sha256": "d0ccc113d78488582e793635ee66e08907e02e9d1bd9d165d268219cd649f6cb",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::BinancePerpAdapter.submit_with_permit": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "BinancePerpAdapter.submit_with_permit",
+      "line": 423,
+      "end_line": 433,
+      "ast_sha256": "0144170c547bd8e7786b48748d783516d86940997932462ed9cb55786b603745",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::BinancePerpAdapter.cancel_with_permit": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "BinancePerpAdapter.cancel_with_permit",
+      "line": 435,
+      "end_line": 439,
+      "ast_sha256": "61bde887c607412fcc15db38b9cddb9b42d9e0e1d4c2b9597cec2288a292f778",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::BinancePerpAdapter.order_status": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "BinancePerpAdapter.order_status",
+      "line": 441,
+      "end_line": 447,
+      "ast_sha256": "665f77c98c80330eef3d80bcac4c3aef54470c255cdb1b940b165b1aeb840d4e",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::BinancePerpAdapter.working_orders": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "BinancePerpAdapter.working_orders",
+      "line": 420,
+      "end_line": 421,
+      "ast_sha256": "cd6a1835a69802d99e2acd342dcf820d921c0e8fa51adf7687b9a228218722ea",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::BinancePerpAdapter.fills": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "BinancePerpAdapter.fills",
+      "line": 457,
+      "end_line": 469,
+      "ast_sha256": "8126425e27303ad813f0a627aae3608da2c3d4e1a469587d69cffa0e5c345706",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::BinancePerpAdapter.account_state": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "BinancePerpAdapter.account_state",
+      "line": 397,
+      "end_line": 404,
+      "ast_sha256": "ee809e252cce96c8a432be972fcbb9d66b1c5ccbfef022586075fd7990b3e6b9",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::BinancePerpAdapter.positions": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "BinancePerpAdapter.positions",
+      "line": 406,
+      "end_line": 411,
+      "ast_sha256": "ca55de1d64ff176fc79ede91fa02dac3a98f8dd7c4b50746a89e7cea3d87ddd2",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::BinancePerpAdapter.funding": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "BinancePerpAdapter.funding",
+      "line": 471,
+      "end_line": 479,
+      "ast_sha256": "6544f3421fc5473848d3e1cb69be659e3ae5ea7209024dbf4f1f8bc338874de4",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::BinancePerpAdapter.normalize_private_event": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "BinancePerpAdapter.normalize_private_event",
+      "line": 481,
+      "end_line": 494,
+      "ast_sha256": "bb5a812aa7baeb5cb4f10f6ce50807fe22ade1776e3b630408fe555d85904414",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::_Adapter.reconcile": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "_Adapter.reconcile",
+      "line": 344,
+      "end_line": 354,
+      "ast_sha256": "48524adf25c2e160ac385957db154cd38f0e2758854f8cbd03241244012c3d9c",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::capability_for": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "capability_for",
+      "line": 115,
+      "end_line": 121,
+      "ast_sha256": "dcff5dc7a7a96c89e7538905b491cbd97f019c08b16f8a3d6083cd6e97a29866",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::make_perp_adapter": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "make_perp_adapter",
+      "line": 1308,
+      "end_line": 1313,
+      "ast_sha256": "319bb09f65a6d8783f89433e6f6ec55ad855207be48797810beeaec0d27e43f0",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/execution_owner.py::ExecutionOwner.supports_offline_handoff": {
+      "path": "src/execution/execution_owner.py",
+      "symbol": "ExecutionOwner.supports_offline_handoff",
+      "line": 94,
+      "end_line": 99,
+      "ast_sha256": "dedb1dd33ca7027ceb51371767b1a7224af0791f012f20876e8bb909d24a3315",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::BybitPerpAdapter.submit_with_permit": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "BybitPerpAdapter.submit_with_permit",
+      "line": 579,
+      "end_line": 590,
+      "ast_sha256": "90b4c2bbc86e635634ac35f70619270d2940f6220709bd29659fa72dbd45ca74",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::BybitPerpAdapter.cancel_with_permit": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "BybitPerpAdapter.cancel_with_permit",
+      "line": 592,
+      "end_line": 596,
+      "ast_sha256": "5d0a5e0c2d59540147ec6921403cc74ecb40d4fadcbe25018768452c3a88f6bb",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::BybitPerpAdapter.order_status": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "BybitPerpAdapter.order_status",
+      "line": 598,
+      "end_line": 604,
+      "ast_sha256": "87a795c82e30493f3040b877fca33c9d32ee9e39cd574da3c18b944b23f9fece",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::BybitPerpAdapter.working_orders": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "BybitPerpAdapter.working_orders",
+      "line": 576,
+      "end_line": 577,
+      "ast_sha256": "04e66d3c43a10620032101506f41df5dbac508ce8c1d8018c6f9112998c4b2d8",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::BybitPerpAdapter.fills": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "BybitPerpAdapter.fills",
+      "line": 639,
+      "end_line": 640,
+      "ast_sha256": "083a60c077d543167c61f1f5659d86a7000f68eb918059ad618a39ea3919a086",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::BybitPerpAdapter.account_state": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "BybitPerpAdapter.account_state",
+      "line": 551,
+      "end_line": 560,
+      "ast_sha256": "076ba72d1ac5237d2c4b816011660813b619072378e44042a2c3583aecaef324",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::BybitPerpAdapter.positions": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "BybitPerpAdapter.positions",
+      "line": 562,
+      "end_line": 568,
+      "ast_sha256": "12275016ede4062dc3ceb870b923886500c999cbc69437ae748df3447ff813e0",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::BybitPerpAdapter.funding": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "BybitPerpAdapter.funding",
+      "line": 642,
+      "end_line": 643,
+      "ast_sha256": "75f53af6a701d49ac9599a8b1c4a46e1b28abb7f9de88dd41c047683be2ad1fb",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::BybitPerpAdapter.normalize_private_event": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "BybitPerpAdapter.normalize_private_event",
+      "line": 645,
+      "end_line": 653,
+      "ast_sha256": "18d63f5e37fddd30112f0b94ea3dc30c637643744647ea8fbcc13dc0d435039a",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Bybit.create": {
+      "path": "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py",
+      "symbol": "Bybit.create",
+      "line": 76,
+      "end_line": 83,
+      "ast_sha256": "2f8d43a7d353cdf008719e5bb9e9da08a50aaeb96aa7f5c7e5838b122cb5fa67",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Bybit.cancel": {
+      "path": "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py",
+      "symbol": "Bybit.cancel",
+      "line": 85,
+      "end_line": 86,
+      "ast_sha256": "f560eac3b61efca2805b51c527929ae1c75aef12c48400e21a98a9d8702a45bf",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Bybit.fills": {
+      "path": "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py",
+      "symbol": "Bybit.fills",
+      "line": 98,
+      "end_line": 99,
+      "ast_sha256": "d3345a33a2442ec118c81bfc349313db3b3ec265836c36a2a99c8351388f28d1",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Bybit.positions": {
+      "path": "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py",
+      "symbol": "Bybit.positions",
+      "line": 67,
+      "end_line": 71,
+      "ast_sha256": "67e65aa83c49d6d91ff5ee363fa0bcbe7991ec55d6378250bfc8ce555c84b785",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::GrvtPerpAdapter.submit_with_permit": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "GrvtPerpAdapter.submit_with_permit",
+      "line": 724,
+      "end_line": 750,
+      "ast_sha256": "6ce51b3887448050011750df2309e1f09cb6d2bc879ea55a52d069dea3ced13e",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::GrvtPerpAdapter.cancel_with_permit": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "GrvtPerpAdapter.cancel_with_permit",
+      "line": 752,
+      "end_line": 757,
+      "ast_sha256": "7e02e5dccc697388632f87551a8302449ff172589b251e833ef5265cf7b2c7d7",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::GrvtPerpAdapter.order_status": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "GrvtPerpAdapter.order_status",
+      "line": 759,
+      "end_line": 766,
+      "ast_sha256": "37a10e515162f6d5916cc00b1a4bd5c9ce1dcb8364e7846c88790b24d2a5945b",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::GrvtPerpAdapter.working_orders": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "GrvtPerpAdapter.working_orders",
+      "line": 720,
+      "end_line": 722,
+      "ast_sha256": "39a79e8eb914e84400480fe8f921f45cb41bb91f6187f482e2be683051276ec9",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::GrvtPerpAdapter.fills": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "GrvtPerpAdapter.fills",
+      "line": 796,
+      "end_line": 797,
+      "ast_sha256": "083a60c077d543167c61f1f5659d86a7000f68eb918059ad618a39ea3919a086",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::GrvtPerpAdapter.account_state": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "GrvtPerpAdapter.account_state",
+      "line": 697,
+      "end_line": 703,
+      "ast_sha256": "02f28081b9c34f7f7320b9ddbf935df369c8dd33457187a295731ae705caa533",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::GrvtPerpAdapter.positions": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "GrvtPerpAdapter.positions",
+      "line": 705,
+      "end_line": 708,
+      "ast_sha256": "5f9bb757e1c246693f7d2683273f1144d2dc31aab2d263fb8179de4f6913adb7",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::GrvtPerpAdapter.funding": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "GrvtPerpAdapter.funding",
+      "line": 799,
+      "end_line": 800,
+      "ast_sha256": "75f53af6a701d49ac9599a8b1c4a46e1b28abb7f9de88dd41c047683be2ad1fb",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::GrvtPerpAdapter.normalize_private_event": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "GrvtPerpAdapter.normalize_private_event",
+      "line": 802,
+      "end_line": 809,
+      "ast_sha256": "38e3793b75858f9cbd914df832ddccf626e02f144f3c1f275cad27f83e85e3d2",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Grvt.create": {
+      "path": "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py",
+      "symbol": "Grvt.create",
+      "line": 195,
+      "end_line": 196,
+      "ast_sha256": "91e4c6436d9312d01e92c10e61bd5d5b1c69c313d2dc4893cb83e66d4aaeed87",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Grvt.cancel": {
+      "path": "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py",
+      "symbol": "Grvt.cancel",
+      "line": 198,
+      "end_line": 199,
+      "ast_sha256": "c3f7e915d8db8873b2d1692dffd51e9e48eac4b4d4568fd8dc468a8d6c931bc1",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Grvt.fills": {
+      "path": "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py",
+      "symbol": "Grvt.fills",
+      "line": 224,
+      "end_line": 225,
+      "ast_sha256": "014045406c09f5b9baba4f18ac897c132ffcb629f091ea10c9efa02305b0a506",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Grvt.positions": {
+      "path": "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py",
+      "symbol": "Grvt.positions",
+      "line": 175,
+      "end_line": 177,
+      "ast_sha256": "45f2e044c5f00cf5bcb7c7512ecd21b2098fa87a88bced2183754a53d8843c8e",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::ArcusPerpAdapter.submit_with_permit": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "ArcusPerpAdapter.submit_with_permit",
+      "line": 951,
+      "end_line": 981,
+      "ast_sha256": "10e0b078f2d9e4cb90fe22072e2a6af2b61d8bac00654bfb52d6850d92547804",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::ArcusPerpAdapter.cancel_with_permit": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "ArcusPerpAdapter.cancel_with_permit",
+      "line": 983,
+      "end_line": 1003,
+      "ast_sha256": "65d1f7b05876a00555e514c06a9f44139a89fbe54ad9f9e5a39542889b49550b",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::ArcusPerpAdapter.order_status": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "ArcusPerpAdapter.order_status",
+      "line": 1005,
+      "end_line": 1021,
+      "ast_sha256": "32999732fc1bc82063aab8cd44edae26f043fab330d828e54755e27b957383a4",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::ArcusPerpAdapter.working_orders": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "ArcusPerpAdapter.working_orders",
+      "line": 927,
+      "end_line": 933,
+      "ast_sha256": "67943d67ac3e2718ce930ce92239f74607d3df21295a3dd1ac121ba5f97a3743",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::ArcusPerpAdapter.fills": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "ArcusPerpAdapter.fills",
+      "line": 1053,
+      "end_line": 1054,
+      "ast_sha256": "083a60c077d543167c61f1f5659d86a7000f68eb918059ad618a39ea3919a086",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::ArcusPerpAdapter.account_state": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "ArcusPerpAdapter.account_state",
+      "line": 898,
+      "end_line": 905,
+      "ast_sha256": "88bda58b4d9c69761321208e68706b2817b40fc6ecd51566f46c6ed5dd23519f",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::ArcusPerpAdapter.positions": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "ArcusPerpAdapter.positions",
+      "line": 907,
+      "end_line": 917,
+      "ast_sha256": "b93bf33c44d125ca5c7905ff03fcb3373d0cfe2bd2da3eb52d70a7b7444fe55d",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::ArcusPerpAdapter.funding": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "ArcusPerpAdapter.funding",
+      "line": 1056,
+      "end_line": 1057,
+      "ast_sha256": "75f53af6a701d49ac9599a8b1c4a46e1b28abb7f9de88dd41c047683be2ad1fb",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::ArcusPerpAdapter.normalize_private_event": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "ArcusPerpAdapter.normalize_private_event",
+      "line": 1059,
+      "end_line": 1082,
+      "ast_sha256": "178610b460d9c96735556972487e6c94476293cb70505ebb18bd291fcf956006",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::HyperliquidPerpAdapter.submit_with_permit": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "HyperliquidPerpAdapter.submit_with_permit",
+      "line": 1210,
+      "end_line": 1227,
+      "ast_sha256": "3aed722b50b507b3e50653840ba308201043ff897a9bee7005d99eb64ac74434",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::HyperliquidPerpAdapter.cancel_with_permit": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "HyperliquidPerpAdapter.cancel_with_permit",
+      "line": 1229,
+      "end_line": 1237,
+      "ast_sha256": "528656d17638aa0e8eb9a1f0819ff40c859f3fe6ae950087933904c08a9af9df",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::HyperliquidPerpAdapter.order_status": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "HyperliquidPerpAdapter.order_status",
+      "line": 1239,
+      "end_line": 1247,
+      "ast_sha256": "6758b6715fc4d11dec8e12a641355f5931b83c330f8e2b34ffb292ed2cc660fd",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::HyperliquidPerpAdapter.working_orders": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "HyperliquidPerpAdapter.working_orders",
+      "line": 1169,
+      "end_line": 1171,
+      "ast_sha256": "be82c12f00e1f2dfc7cdfbc52c03e772759eaa94cca61ecf8fb29785efe06c8b",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::HyperliquidPerpAdapter.fills": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "HyperliquidPerpAdapter.fills",
+      "line": 1282,
+      "end_line": 1283,
+      "ast_sha256": "083a60c077d543167c61f1f5659d86a7000f68eb918059ad618a39ea3919a086",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::HyperliquidPerpAdapter.account_state": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "HyperliquidPerpAdapter.account_state",
+      "line": 1148,
+      "end_line": 1155,
+      "ast_sha256": "77757a8043c5d5931d43657c93ddc4d5c34fe57a286d53aca348c1725a438ce0",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::HyperliquidPerpAdapter.positions": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "HyperliquidPerpAdapter.positions",
+      "line": 1157,
+      "end_line": 1161,
+      "ast_sha256": "5429b23907934fae1dfc2d45580acd084603fddf0ab2675af48c8bbb646c7d83",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::HyperliquidPerpAdapter.funding": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "HyperliquidPerpAdapter.funding",
+      "line": 1285,
+      "end_line": 1286,
+      "ast_sha256": "75f53af6a701d49ac9599a8b1c4a46e1b28abb7f9de88dd41c047683be2ad1fb",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::HyperliquidPerpAdapter.normalize_private_event": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "HyperliquidPerpAdapter.normalize_private_event",
+      "line": 1288,
+      "end_line": 1305,
+      "ast_sha256": "355358a3c58f964e56a457133b818748743c121223c30028defadad54ac496dc",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/brokers.py::BinanceBrokerAdapter.submit_order": {
+      "path": "src/execution/brokers.py",
+      "symbol": "BinanceBrokerAdapter.submit_order",
+      "line": 70,
+      "end_line": 85,
+      "ast_sha256": "2d73c22eea1414e360dfb1a7881ff701b361ac851e4041470f32de532c1a859b",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/brokers.py::BinanceBrokerAdapter.order_status": {
+      "path": "src/execution/brokers.py",
+      "symbol": "BinanceBrokerAdapter.order_status",
+      "line": 87,
+      "end_line": 88,
+      "ast_sha256": "724fb2acc8d43ef179bb67d7423d7112006520de99ab656ee421963a053f1d33",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/brokers.py::BinanceBrokerAdapter.account_state": {
+      "path": "src/execution/brokers.py",
+      "symbol": "BinanceBrokerAdapter.account_state",
+      "line": 56,
+      "end_line": 68,
+      "ast_sha256": "805cc07d0ab78844b3eeda20c63b76ca73b2b3a16672c69771338fae9f0cd995",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/brokers.py::broker_for_name": {
+      "path": "src/execution/brokers.py",
+      "symbol": "broker_for_name",
+      "line": 300,
+      "end_line": 314,
+      "ast_sha256": "e1e92a3db00126f2e296fe59295cb56f5f98cc73d4a23a6dce6ac53b51963bf1",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/brokers.py::KiwoomBrokerAdapter.submit_order": {
+      "path": "src/execution/brokers.py",
+      "symbol": "KiwoomBrokerAdapter.submit_order",
+      "line": 143,
+      "end_line": 157,
+      "ast_sha256": "39d61c69dffd031ae7c4d4a08bcb3f50ec5e297d27baddf3ce7e6f7952ad984d",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/brokers.py::KiwoomBrokerAdapter.order_status": {
+      "path": "src/execution/brokers.py",
+      "symbol": "KiwoomBrokerAdapter.order_status",
+      "line": 159,
+      "end_line": 160,
+      "ast_sha256": "801e557c9fce4ee198df0099d75e1b759e42b98cf7c35fd8644398650f677fe0",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/brokers.py::KiwoomBrokerAdapter.account_state": {
+      "path": "src/execution/brokers.py",
+      "symbol": "KiwoomBrokerAdapter.account_state",
+      "line": 126,
+      "end_line": 141,
+      "ast_sha256": "9bb409dd01c012523e83e5acc5882770d534a5715b6629f62d27b2a2d589c30d",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/brokers.py::KiwoomBrokerAdapter._write_token_cache": {
+      "path": "src/execution/brokers.py",
+      "symbol": "KiwoomBrokerAdapter._write_token_cache",
+      "line": 219,
+      "end_line": 224,
+      "ast_sha256": "bd48c9400f746e4ab230671fccec6f9d795019752308dd96d239545be662a752",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/feeds/providers/kiwoom.py::KiwoomAuthClient.post_api_page": {
+      "path": "src/feeds/providers/kiwoom.py",
+      "symbol": "KiwoomAuthClient.post_api_page",
+      "line": 234,
+      "end_line": 248,
+      "ast_sha256": "48758b8dfbffe201e8bd17f63558f0832c2695bc7b92d16fbb736910e157ee93",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "services/execution/kiwoom_broker.py::KiwoomBrokerAdapter.connect": {
+      "path": "services/execution/kiwoom_broker.py",
+      "symbol": "KiwoomBrokerAdapter.connect",
+      "line": 262,
+      "end_line": 291,
+      "ast_sha256": "437fd328952035bb6b493346c14b023a72890d65694fba7e8ae6ffa265507ffe",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "services/execution/kiwoom_broker.py::KiwoomBrokerAdapter.submit_order": {
+      "path": "services/execution/kiwoom_broker.py",
+      "symbol": "KiwoomBrokerAdapter.submit_order",
+      "line": 370,
+      "end_line": 426,
+      "ast_sha256": "38cd4376d4d660ec8d4bcf182fe0b7c401da4a5102d150c0a93d58d890282a59",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "services/execution/kiwoom_broker.py::KiwoomBrokerAdapter.get_order_status": {
+      "path": "services/execution/kiwoom_broker.py",
+      "symbol": "KiwoomBrokerAdapter.get_order_status",
+      "line": 469,
+      "end_line": 478,
+      "ast_sha256": "8f84049e80943442c2f942db9d4bdf55aa58df277d15560682bbfcc9f9fbb965",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "services/execution/kiwoom_broker.py::KiwoomBrokerAdapter.get_open_orders": {
+      "path": "services/execution/kiwoom_broker.py",
+      "symbol": "KiwoomBrokerAdapter.get_open_orders",
+      "line": 480,
+      "end_line": 486,
+      "ast_sha256": "638f5cdb8a9165a20f18522ff5aff2129fb8ed17f07aaf7d47ef2892b44b23f0",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "services/execution/kiwoom_broker.py::KiwoomBrokerAdapter._get_balance_sync": {
+      "path": "services/execution/kiwoom_broker.py",
+      "symbol": "KiwoomBrokerAdapter._get_balance_sync",
+      "line": 501,
+      "end_line": 511,
+      "ast_sha256": "ab763d412607d9ce6f2f9e6637c5b597ca1423679a9150ff3688cf20ca06fdb8",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/feeds/providers/toss.py::TossCollector.run": {
+      "path": "src/feeds/providers/toss.py",
+      "symbol": "TossCollector.run",
+      "line": 338,
+      "end_line": 352,
+      "ast_sha256": "ec8be41366712c7062c47a52ec22413c5b04ac9f675f0b5f56dcea7f9e0fed2b",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/feeds/providers/toss.py::TossCollector.parse_ws_frame": {
+      "path": "src/feeds/providers/toss.py",
+      "symbol": "TossCollector.parse_ws_frame",
+      "line": 495,
+      "end_line": 517,
+      "ast_sha256": "1cc6793ac5e652c280ccd6a3669b2bf6a5758c0328f43c170ecb63ef22a68063",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/feeds/providers/toss.py::TossCollector.candle_event_from_payload": {
+      "path": "src/feeds/providers/toss.py",
+      "symbol": "TossCollector.candle_event_from_payload",
+      "line": 427,
+      "end_line": 456,
+      "ast_sha256": "21446ac2b14fa3c1b39b9bea58d75aa863eac87a98f56491d3b9ff508d445d3a",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/feeds/providers/toss.py::TossAuthClient.request": {
+      "path": "src/feeds/providers/toss.py",
+      "symbol": "TossAuthClient.request",
+      "line": 221,
+      "end_line": 247,
+      "ast_sha256": "5760780e88cd56253c200e9321e4ff066d458eb2e89a2e33147f519f31475f0b",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/brokers.py::TossBrokerAdapter.submit_order": {
+      "path": "src/execution/brokers.py",
+      "symbol": "TossBrokerAdapter.submit_order",
+      "line": 285,
+      "end_line": 286,
+      "ast_sha256": "d3e2fdd8dacab5374d8f90ab64c4a250862599560ec72191b8146c974ae038b4",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/runtime/strategy_runtime.py::PaperStrategyRuntime.register_configured": {
+      "path": "src/runtime/strategy_runtime.py",
+      "symbol": "PaperStrategyRuntime.register_configured",
+      "line": 431,
+      "end_line": 478,
+      "ast_sha256": "ff8c9ee34cf36c3539b80537c3812628e38afe051a73935af6389bbcb932e5eb",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/runtime/strategy_runtime.py::PaperStrategyRuntime.process_event": {
+      "path": "src/runtime/strategy_runtime.py",
+      "symbol": "PaperStrategyRuntime.process_event",
+      "line": 508,
+      "end_line": 517,
+      "ast_sha256": "7c31b358698efd9f44dd96420081c5d28c45184842297e0177951c3eb0f37a3c",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/paper_execution.py::PaperExecution.submit": {
+      "path": "src/execution/paper_execution.py",
+      "symbol": "PaperExecution.submit",
+      "line": 143,
+      "end_line": 197,
+      "ast_sha256": "b47c7322fc9c5845032874df2ba041b086a928d6b74c3e0a176e3b26c9d3d6c4",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/paper_execution.py::PaperExecution.cancel": {
+      "path": "src/execution/paper_execution.py",
+      "symbol": "PaperExecution.cancel",
+      "line": 199,
+      "end_line": 213,
+      "ast_sha256": "6d57d6a412709e848965e996dae5ec5c444d120b753a615128a1dc528b474916",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/execution_groups.py::PaperExecutionGroups.create": {
+      "path": "src/execution/execution_groups.py",
+      "symbol": "PaperExecutionGroups.create",
+      "line": 134,
+      "end_line": 140,
+      "ast_sha256": "1378c91e8f7a57411b1c86e3aad58853826fbad16f952fa62810a8503bfa95a1",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/execution_groups.py::PaperExecutionGroups.observe": {
+      "path": "src/execution/execution_groups.py",
+      "symbol": "PaperExecutionGroups.observe",
+      "line": 175,
+      "end_line": 195,
+      "ast_sha256": "a5f20b60633696dc14bb2234bb8d21e957467a0898e1453cbfb0e3a7ec9cbc0c",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/execution_groups.py::PaperExecutionGroups.report": {
+      "path": "src/execution/execution_groups.py",
+      "symbol": "PaperExecutionGroups.report",
+      "line": 197,
+      "end_line": 270,
+      "ast_sha256": "d05d9fe13e41f92275afd3651b33acd372ed958f513898ea9d670f422f407ace",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/timefolio/client.py::AsyncTimefolioBrowserManager.prepare_order": {
+      "path": "src/timefolio/client.py",
+      "symbol": "AsyncTimefolioBrowserManager.prepare_order",
+      "line": 152,
+      "end_line": 202,
+      "ast_sha256": "2c1936edaffa7b5a6bcea7a73c7ffdb957f6ea1888d9a07e71161a829f4a5b88",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/timefolio/runner.py::TimefolioStrategyRunner.run": {
+      "path": "src/timefolio/runner.py",
+      "symbol": "TimefolioStrategyRunner.run",
+      "line": 84,
+      "end_line": 163,
+      "ast_sha256": "c42bc944582ce70cb534639f416b4ce429eefcd4d65800dc9913fde80dc16be0",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/timefolio/runner.py::TimefolioStrategyRunner._handle_signal": {
+      "path": "src/timefolio/runner.py",
+      "symbol": "TimefolioStrategyRunner._handle_signal",
+      "line": 165,
+      "end_line": 222,
+      "ast_sha256": "c1cecb3575daa4dbd9fd756f6112db85f0add9fea96d6efb255eacb711ed431a",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/timefolio/runner.py::TimefolioStrategyRunner._record_result": {
+      "path": "src/timefolio/runner.py",
+      "symbol": "TimefolioStrategyRunner._record_result",
+      "line": 224,
+      "end_line": 231,
+      "ast_sha256": "c461d4300bd9304db42af17f64f2c240f7e18c9de7505c24a8dfcd7088d3159a",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/perp_execution.py::PerpScope.__post_init__": {
+      "path": "src/execution/perp_execution.py",
+      "symbol": "PerpScope.__post_init__",
+      "line": 54,
+      "end_line": 68,
+      "ast_sha256": "661d1f72a7b7a6197c8efbc213d045393fdd231b55f6ecb0b423ef9e3bd5d236",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/private.py::bybit_private": {
+      "path": "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/private.py",
+      "symbol": "bybit_private",
+      "line": 9,
+      "end_line": 32,
+      "ast_sha256": "9095b2a919e4097fda9fedee95b8655255d1fa2bd6f75d2a6974295f5c70b9e4",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/bybit_execution.py::BybitOrderClient.request": {
+      "path": "src/execution/bybit_execution.py",
+      "symbol": "BybitOrderClient.request",
+      "line": 220,
+      "end_line": 236,
+      "ast_sha256": "c23b875896f9052b093a81833bcc61d46f5d8a35e5bb0d40ef8fe0989e205e2c",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/bybit_execution.py::BybitExecutionProbe.run": {
+      "path": "src/execution/bybit_execution.py",
+      "symbol": "BybitExecutionProbe.run",
+      "line": 419,
+      "end_line": 518,
+      "ast_sha256": "d160dcf42bac393f084eb6a3cdb5fc670e00f0aacd95b2f673b49f0419c27c21",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/private.py::grvt_private": {
+      "path": "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/private.py",
+      "symbol": "grvt_private",
+      "line": 35,
+      "end_line": 58,
+      "ast_sha256": "2caed8d5b02e36bbd12fc88d0634c4e338b28f1caf9820a14b3a12acd02be1b9",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/extended_brokers.py::GrvtBrokerAdapter.prepare_order": {
+      "path": "src/execution/extended_brokers.py",
+      "symbol": "GrvtBrokerAdapter.prepare_order",
+      "line": 262,
+      "end_line": 304,
+      "ast_sha256": "202d3a0c7afa7bd4174d75146b52f8dba5aa9450e29f0c8bbd803ac7fbc497b1",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/extended_brokers.py::GrvtBrokerAdapter.submit_order": {
+      "path": "src/execution/extended_brokers.py",
+      "symbol": "GrvtBrokerAdapter.submit_order",
+      "line": 306,
+      "end_line": 310,
+      "ast_sha256": "a6c4328bfa0bf400bf9fdab12df3b99e64a2d246ef0260625b851aabc8f3d979",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/extended_brokers.py::GrvtBrokerAdapter.order_status": {
+      "path": "src/execution/extended_brokers.py",
+      "symbol": "GrvtBrokerAdapter.order_status",
+      "line": 316,
+      "end_line": 319,
+      "ast_sha256": "5097356af0231e8d1624636f2039b44530be4dd90dd7343033c253ef47b693a6",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/extended_brokers.py::ArcusBrokerAdapter.prepare_order": {
+      "path": "src/execution/extended_brokers.py",
+      "symbol": "ArcusBrokerAdapter.prepare_order",
+      "line": 148,
+      "end_line": 185,
+      "ast_sha256": "c06736a95209d26d045795df33e429620a60ebf06a61f3df3ecbed41bc2300b4",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/extended_brokers.py::ArcusBrokerAdapter.submit_order": {
+      "path": "src/execution/extended_brokers.py",
+      "symbol": "ArcusBrokerAdapter.submit_order",
+      "line": 187,
+      "end_line": 190,
+      "ast_sha256": "910de824d6d8e4e93d8a78d8fb22d7ce2bd17308b4eccd882102e5eb3df8b3fb",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "src/execution/extended_brokers.py::ArcusBrokerAdapter.order_status": {
+      "path": "src/execution/extended_brokers.py",
+      "symbol": "ArcusBrokerAdapter.order_status",
+      "line": 197,
+      "end_line": 205,
+      "ast_sha256": "ef7d3dd79710da05aa8d3533acec7f4f5a8cab11490fd70a2fa7210dabef3764",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "services/execution/crypto_binance.py::CryptoBinanceAdapter.submit_order": {
+      "path": "services/execution/crypto_binance.py",
+      "symbol": "CryptoBinanceAdapter.submit_order",
+      "line": 134,
+      "end_line": 183,
+      "ast_sha256": "7fd5796fd39e2c360e55c3d0c2f8b787da3722ed8a4511d6eeeb051ea636c51b",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "services/execution/crypto_binance.py::CryptoBinanceAdapter.cancel_order": {
+      "path": "services/execution/crypto_binance.py",
+      "symbol": "CryptoBinanceAdapter.cancel_order",
+      "line": 185,
+      "end_line": 206,
+      "ast_sha256": "aec3e1a4198606899acd567546ef861f5a15d9925380ee2d45ac095567ce9735",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "services/execution/crypto_binance.py::CryptoBinanceAdapter.get_order_status": {
+      "path": "services/execution/crypto_binance.py",
+      "symbol": "CryptoBinanceAdapter.get_order_status",
+      "line": 208,
+      "end_line": 226,
+      "ast_sha256": "fa1256a563f081a34eacbc24c3c05b5195094cae8dbea0749a2bcc2d305192fc",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    },
+    "services/execution/crypto_binance.py::CryptoBinanceAdapter.get_open_orders": {
+      "path": "services/execution/crypto_binance.py",
+      "symbol": "CryptoBinanceAdapter.get_open_orders",
+      "line": 228,
+      "end_line": 260,
+      "ast_sha256": "549b5684a55b1541e6780e5ee8b39a79f4e1ebda8d9f364ac8273e1af42b5f5b",
+      "source_sha": "6789d51d119ade81de8768c18ba23a611da42e84"
+    }
+  },
+  "accepted_local_test_evidence": {
+    "tests/refactoring/test_perp_execution.py::test_product_environment_capability_is_explicit_and_toss_rejected": {
+      "path": "tests/refactoring/test_perp_execution.py",
+      "function": "test_product_environment_capability_is_explicit_and_toss_rejected",
+      "proves": "Explicit product/environment/settlement boundaries; request_mapping_complete is not code_complete/owner/live proof",
+      "acceptance": "CLN-01 fresh-clone2517 main+25 guarded lease PASS on 6789d51d119ade81de8768c18ba23a611da42e84",
+      "does_not_prove": "External account/API/live operation or revised complete venue/owner integration"
+    },
+    "tests/test_etf_mock_trading.py::test_mock_never_uses_real_credentials_and_caches": {
+      "path": "tests/test_etf_mock_trading.py",
+      "function": "test_mock_never_uses_real_credentials_and_caches",
+      "proves": "KIS auth namespace separation",
+      "acceptance": "CLN-01 fresh-clone2517 main+25 guarded lease PASS on 6789d51d119ade81de8768c18ba23a611da42e84",
+      "does_not_prove": "External account/API/live operation or revised complete venue/owner integration"
+    },
+    "tests/test_etf_mock_trading.py::test_mock_and_real_order_tr_ids_and_integer_validation": {
+      "path": "tests/test_etf_mock_trading.py",
+      "function": "test_mock_and_real_order_tr_ids_and_integer_validation",
+      "proves": "KisCashBroker request mapping with synthetic responses",
+      "acceptance": "CLN-01 fresh-clone2517 main+25 guarded lease PASS on 6789d51d119ade81de8768c18ba23a611da42e84",
+      "does_not_prove": "External account/API/live operation or revised complete venue/owner integration"
+    },
+    "tests/test_etf_mock_trading.py::test_frozen_kp_kd_sizing_and_stops": {
+      "path": "tests/test_etf_mock_trading.py",
+      "function": "test_frozen_kp_kd_sizing_and_stops",
+      "proves": "Frozen KP/KD pure decision math",
+      "acceptance": "CLN-01 fresh-clone2517 main+25 guarded lease PASS on 6789d51d119ade81de8768c18ba23a611da42e84",
+      "does_not_prove": "External account/API/live operation or revised complete venue/owner integration"
+    },
+    "tests/refactoring/test_etf_dispatch_guards.py::test_adapter_without_concrete_paired_capability_is_blocked": {
+      "path": "tests/refactoring/test_etf_dispatch_guards.py",
+      "function": "test_adapter_without_concrete_paired_capability_is_blocked",
+      "proves": "EtfTradingLoop uses a synthetic Broker seam; not actual KIS transport composition",
+      "acceptance": "CLN-01 fresh-clone2517 main+25 guarded lease PASS on 6789d51d119ade81de8768c18ba23a611da42e84",
+      "does_not_prove": "External account/API/live operation or revised complete venue/owner integration"
+    },
+    "tests/refactoring/test_tx00_toss_data_only.py::test_broker_submit_order_rejects_before_intent_processing": {
+      "path": "tests/refactoring/test_tx00_toss_data_only.py",
+      "function": "test_broker_submit_order_rejects_before_intent_processing",
+      "proves": "TOSS order blocked before auth/transport",
+      "acceptance": "CLN-01 fresh-clone2517 main+25 guarded lease PASS on 6789d51d119ade81de8768c18ba23a611da42e84",
+      "does_not_prove": "External account/API/live operation or revised complete venue/owner integration"
+    },
+    "tests/refactoring/test_tx00_toss_data_only.py::test_existing_get_behavior_is_preserved_end_to_end": {
+      "path": "tests/refactoring/test_tx00_toss_data_only.py",
+      "function": "test_existing_get_behavior_is_preserved_end_to_end",
+      "proves": "TOSS GET auth/response behavior via fake HTTP",
+      "acceptance": "CLN-01 fresh-clone2517 main+25 guarded lease PASS on 6789d51d119ade81de8768c18ba23a611da42e84",
+      "does_not_prove": "External account/API/live operation or revised complete venue/owner integration"
+    },
+    "tests/test_timefolio.py::test_timefolio_intent_defaults_to_no_submit": {
+      "path": "tests/test_timefolio.py",
+      "function": "test_timefolio_intent_defaults_to_no_submit",
+      "proves": "Default submit false",
+      "acceptance": "CLN-01 fresh-clone2517 main+25 guarded lease PASS on 6789d51d119ade81de8768c18ba23a611da42e84",
+      "does_not_prove": "External account/API/live operation or revised complete venue/owner integration"
+    },
+    "tests/refactoring/test_mov06_timefolio_wiring.py::test_real_durable_spool_uds_engine_drives_fake_timefolio_without_nats": {
+      "path": "tests/refactoring/test_mov06_timefolio_wiring.py",
+      "function": "test_real_durable_spool_uds_engine_drives_fake_timefolio_without_nats",
+      "proves": "Real local durable spool/UDS/engine with fake browser; no competition login/order",
+      "acceptance": "CLN-01 fresh-clone2517 main+25 guarded lease PASS on 6789d51d119ade81de8768c18ba23a611da42e84",
+      "does_not_prove": "External account/API/live operation or revised complete venue/owner integration"
+    },
+    "tests/refactoring/test_execution_groups.py::test_group_plan_validation_is_explicit_and_paper_only": {
+      "path": "tests/refactoring/test_execution_groups.py",
+      "function": "test_group_plan_validation_is_explicit_and_paper_only",
+      "proves": "Paper group plan/observation invariants; no actual two-venue dispatch",
+      "acceptance": "CLN-01 fresh-clone2517 main+25 guarded lease PASS on 6789d51d119ade81de8768c18ba23a611da42e84",
+      "does_not_prove": "External account/API/live operation or revised complete venue/owner integration"
+    },
+    "tests/refactoring/test_execution_groups.py::test_partial_unknown_and_timeout_preserve_child_reservations": {
+      "path": "tests/refactoring/test_execution_groups.py",
+      "function": "test_partial_unknown_and_timeout_preserve_child_reservations",
+      "proves": "Observational child risk facts/UNKNOWN do not invent fills",
+      "acceptance": "CLN-01 fresh-clone2517 main+25 guarded lease PASS on 6789d51d119ade81de8768c18ba23a611da42e84",
+      "does_not_prove": "External account/API/live operation or revised complete venue/owner integration"
+    },
+    "tests/refactoring/test_tx05_file_paper_e2e.py::test_real_file_economic_uninterrupted_restored_parity": {
+      "path": "tests/refactoring/test_tx05_file_paper_e2e.py",
+      "function": "test_real_file_economic_uninterrupted_restored_parity",
+      "proves": "Existing file/Paper economic signal/matcher/ledger fixture; revised action-feedback still separate",
+      "acceptance": "CLN-01 fresh-clone2517 main+25 guarded lease PASS on 6789d51d119ade81de8768c18ba23a611da42e84",
+      "does_not_prove": "External account/API/live operation or revised complete venue/owner integration"
+    },
+    "tests/refactoring/test_perp_execution.py::test_binance_perp_metadata_submit_delete_and_signature": {
+      "path": "tests/refactoring/test_perp_execution.py",
+      "function": "test_binance_perp_metadata_submit_delete_and_signature",
+      "proves": "Scripted transport/signing/native mapping only, no concrete owner/private lifecycle/live connection",
+      "acceptance": "CLN-01 fresh-clone2517 main+25 guarded lease PASS on 6789d51d119ade81de8768c18ba23a611da42e84",
+      "does_not_prove": "External account/API/live operation or revised complete venue/owner integration"
+    },
+    "tests/refactoring/test_perp_execution.py::test_bybit_linear_wire_signed_exact_body_and_private_rest_same_fill_identity": {
+      "path": "tests/refactoring/test_perp_execution.py",
+      "function": "test_bybit_linear_wire_signed_exact_body_and_private_rest_same_fill_identity",
+      "proves": "Scripted transport/signing/native mapping only, no concrete owner/private lifecycle/live connection",
+      "acceptance": "CLN-01 fresh-clone2517 main+25 guarded lease PASS on 6789d51d119ade81de8768c18ba23a611da42e84",
+      "does_not_prove": "External account/API/live operation or revised complete venue/owner integration"
+    },
+    "tests/refactoring/test_perp_execution.py::test_grvt_uint32_nonce_uint64_client_id_and_existing_signer_composition": {
+      "path": "tests/refactoring/test_perp_execution.py",
+      "function": "test_grvt_uint32_nonce_uint64_client_id_and_existing_signer_composition",
+      "proves": "Scripted transport/signing/native mapping only, no concrete owner/private lifecycle/live connection",
+      "acceptance": "CLN-01 fresh-clone2517 main+25 guarded lease PASS on 6789d51d119ade81de8768c18ba23a611da42e84",
+      "does_not_prove": "External account/API/live operation or revised complete venue/owner integration"
+    },
+    "tests/refactoring/test_perp_execution.py::test_arcus_existing_ed25519_composition_exact_order_and_cancel_signature": {
+      "path": "tests/refactoring/test_perp_execution.py",
+      "function": "test_arcus_existing_ed25519_composition_exact_order_and_cancel_signature",
+      "proves": "Scripted transport/signing/native mapping only, no concrete owner/private lifecycle/live connection",
+      "acceptance": "CLN-01 fresh-clone2517 main+25 guarded lease PASS on 6789d51d119ade81de8768c18ba23a611da42e84",
+      "does_not_prove": "External account/API/live operation or revised complete venue/owner integration"
+    },
+    "tests/refactoring/test_perp_execution.py::test_hyperliquid_sdk_composition_durable_signer_nonce_shared_across_accounts_restart": {
+      "path": "tests/refactoring/test_perp_execution.py",
+      "function": "test_hyperliquid_sdk_composition_durable_signer_nonce_shared_across_accounts_restart",
+      "proves": "Scripted transport/signing/native mapping only, no concrete owner/private lifecycle/live connection",
+      "acceptance": "CLN-01 fresh-clone2517 main+25 guarded lease PASS on 6789d51d119ade81de8768c18ba23a611da42e84",
+      "does_not_prove": "External account/API/live operation or revised complete venue/owner integration"
+    },
+    "tests/refactoring/test_cap00_contract.py::test_kiwoom_contract_freezes_missing_lifecycle_without_com_substitution": {
+      "path": "tests/refactoring/test_cap00_contract.py",
+      "function": "test_kiwoom_contract_freezes_missing_lifecycle_without_com_substitution",
+      "proves": "CAP00 frozen source/required-route gap proof only; no positive Kiwoom order E2E",
+      "acceptance": "CAP-00 independent scoped test run; actual exit/result in CAP-00 receipt (not a prior CLN-01 test)",
+      "does_not_prove": "External account/API/live operation or revised complete venue/owner integration"
+    },
+    "tests/refactoring/test_cap00_contract.py::test_spot_and_perp_frozen_paths_are_not_aliased": {
+      "path": "tests/refactoring/test_cap00_contract.py",
+      "function": "test_spot_and_perp_frozen_paths_are_not_aliased",
+      "proves": "CAP00 frozen Spot vs Perp code/API namespace evidence only; no positive Spot account E2E",
+      "acceptance": "CAP-00 independent scoped test run; actual exit/result in CAP-00 receipt (not a prior CLN-01 test)",
+      "does_not_prove": "External account/API/live operation or revised complete venue/owner integration"
+    }
+  },
+  "capabilities": [
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "MOCK",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/test_etf_mock_trading.py::test_mock_never_uses_real_credentials_and_caches",
+        "tests/test_etf_mock_trading.py::test_mock_and_real_order_tr_ids_and_integer_validation",
+        "tests/test_etf_mock_trading.py::test_frozen_kp_kd_sizing_and_stops",
+        "tests/refactoring/test_etf_dispatch_guards.py::test_adapter_without_concrete_paired_capability_is_blocked"
+      ],
+      "source_functions": [
+        "src/execution/kis_execution.py::KisCashBroker.submit_order_with_permit",
+        "src/execution/kis_execution.py::KisCashBroker.order_status",
+        "src/execution/kis_execution.py::KisCashBroker.daily_fills",
+        "src/execution/kis_execution.py::KisCashBroker.cancel_order",
+        "src/execution/kis_execution.py::KisCashBroker.account_state",
+        "src/runtime/etf_trading.py::EtfTradingLoop.__init__",
+        "src/runtime/etf_trading.py::EtfTradingLoop.broker_for",
+        "src/runtime/etf_trading.py::EtfTradingLoop.reconcile"
+      ],
+      "gaps": [
+        "KIS-FILE-BRIDGE",
+        "COMMON-OWNER-BRIDGE"
+      ],
+      "id": "KIS-ETF-MOCK-C3",
+      "venue": "kis",
+      "market_segment": "KR_CASH_ETF",
+      "product": "KR_CASH_ETF",
+      "environment": "mock",
+      "account_scope": "SYMBOLIC_KIS_MOCK_ACCOUNT",
+      "strategy_id": "C3",
+      "code_required": true,
+      "order_mode": [
+        "existing ETF LIMIT/MARKET semantics; exact C3/KP/KD sizing/cutoff/side preserved"
+      ],
+      "transport_owner": "KisCashBroker + existing EtfTradingLoop leases/journal; no BrokerStub substitution",
+      "private_stream": "Existing daily fill/order status polling, not CEX private WS",
+      "reconcile_path": "EtfTradingLoop.reconcile -> KisCashBroker daily_fills/order_status",
+      "classification": "REUSE",
+      "evidence_limit": "Broker constructor is source-verified; stage/permit tests inject a fake Broker and are not an actual KIS owner E2E"
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "MOCK",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/test_etf_mock_trading.py::test_mock_never_uses_real_credentials_and_caches",
+        "tests/test_etf_mock_trading.py::test_mock_and_real_order_tr_ids_and_integer_validation",
+        "tests/test_etf_mock_trading.py::test_frozen_kp_kd_sizing_and_stops",
+        "tests/refactoring/test_etf_dispatch_guards.py::test_adapter_without_concrete_paired_capability_is_blocked"
+      ],
+      "source_functions": [
+        "src/execution/kis_execution.py::KisCashBroker.submit_order_with_permit",
+        "src/execution/kis_execution.py::KisCashBroker.order_status",
+        "src/execution/kis_execution.py::KisCashBroker.daily_fills",
+        "src/execution/kis_execution.py::KisCashBroker.cancel_order",
+        "src/execution/kis_execution.py::KisCashBroker.account_state",
+        "src/runtime/etf_trading.py::EtfTradingLoop.__init__",
+        "src/runtime/etf_trading.py::EtfTradingLoop.broker_for",
+        "src/runtime/etf_trading.py::EtfTradingLoop.reconcile"
+      ],
+      "gaps": [
+        "KIS-FILE-BRIDGE",
+        "COMMON-OWNER-BRIDGE"
+      ],
+      "id": "KIS-ETF-MOCK-KP",
+      "venue": "kis",
+      "market_segment": "KR_CASH_ETF",
+      "product": "KR_CASH_ETF",
+      "environment": "mock",
+      "account_scope": "SYMBOLIC_KIS_MOCK_ACCOUNT",
+      "strategy_id": "KP",
+      "code_required": true,
+      "order_mode": [
+        "existing ETF LIMIT/MARKET semantics; exact C3/KP/KD sizing/cutoff/side preserved"
+      ],
+      "transport_owner": "KisCashBroker + existing EtfTradingLoop leases/journal; no BrokerStub substitution",
+      "private_stream": "Existing daily fill/order status polling, not CEX private WS",
+      "reconcile_path": "EtfTradingLoop.reconcile -> KisCashBroker daily_fills/order_status",
+      "classification": "REUSE",
+      "evidence_limit": "Broker constructor is source-verified; stage/permit tests inject a fake Broker and are not an actual KIS owner E2E"
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "MOCK",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/test_etf_mock_trading.py::test_mock_never_uses_real_credentials_and_caches",
+        "tests/test_etf_mock_trading.py::test_mock_and_real_order_tr_ids_and_integer_validation",
+        "tests/test_etf_mock_trading.py::test_frozen_kp_kd_sizing_and_stops",
+        "tests/refactoring/test_etf_dispatch_guards.py::test_adapter_without_concrete_paired_capability_is_blocked"
+      ],
+      "source_functions": [
+        "src/execution/kis_execution.py::KisCashBroker.submit_order_with_permit",
+        "src/execution/kis_execution.py::KisCashBroker.order_status",
+        "src/execution/kis_execution.py::KisCashBroker.daily_fills",
+        "src/execution/kis_execution.py::KisCashBroker.cancel_order",
+        "src/execution/kis_execution.py::KisCashBroker.account_state",
+        "src/runtime/etf_trading.py::EtfTradingLoop.__init__",
+        "src/runtime/etf_trading.py::EtfTradingLoop.broker_for",
+        "src/runtime/etf_trading.py::EtfTradingLoop.reconcile"
+      ],
+      "gaps": [
+        "KIS-FILE-BRIDGE",
+        "COMMON-OWNER-BRIDGE"
+      ],
+      "id": "KIS-ETF-MOCK-KD",
+      "venue": "kis",
+      "market_segment": "KR_CASH_ETF",
+      "product": "KR_CASH_ETF",
+      "environment": "mock",
+      "account_scope": "SYMBOLIC_KIS_MOCK_ACCOUNT",
+      "strategy_id": "KD",
+      "code_required": true,
+      "order_mode": [
+        "existing ETF LIMIT/MARKET semantics; exact C3/KP/KD sizing/cutoff/side preserved"
+      ],
+      "transport_owner": "KisCashBroker + existing EtfTradingLoop leases/journal; no BrokerStub substitution",
+      "private_stream": "Existing daily fill/order status polling, not CEX private WS",
+      "reconcile_path": "EtfTradingLoop.reconcile -> KisCashBroker daily_fills/order_status",
+      "classification": "REUSE",
+      "evidence_limit": "Broker constructor is source-verified; stage/permit tests inject a fake Broker and are not an actual KIS owner E2E"
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "MOCK",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/test_etf_mock_trading.py::test_mock_never_uses_real_credentials_and_caches",
+        "tests/test_etf_mock_trading.py::test_mock_and_real_order_tr_ids_and_integer_validation",
+        "tests/test_etf_mock_trading.py::test_frozen_kp_kd_sizing_and_stops",
+        "tests/refactoring/test_etf_dispatch_guards.py::test_adapter_without_concrete_paired_capability_is_blocked"
+      ],
+      "source_functions": [
+        "src/execution/kis_execution.py::KisCashBroker.submit_order_with_permit",
+        "src/execution/kis_execution.py::KisCashBroker.order_status",
+        "src/execution/kis_execution.py::KisCashBroker.daily_fills",
+        "src/execution/kis_execution.py::KisCashBroker.cancel_order",
+        "src/execution/kis_execution.py::KisCashBroker.account_state",
+        "src/runtime/etf_trading.py::EtfTradingLoop.__init__",
+        "src/runtime/etf_trading.py::EtfTradingLoop.broker_for",
+        "src/runtime/etf_trading.py::EtfTradingLoop.reconcile"
+      ],
+      "gaps": [
+        "KIS-FILE-BRIDGE",
+        "COMMON-OWNER-BRIDGE"
+      ],
+      "id": "KIS-STOCK-MOCK",
+      "venue": "kis",
+      "market_segment": "KR_CASH_STOCK",
+      "product": "KR_CASH_STOCK",
+      "environment": "mock",
+      "account_scope": "SYMBOLIC_KIS_MOCK_ACCOUNT",
+      "strategy_id": "LOCAL_CONTRACT_FIXTURE_NO_NEW_ALPHA",
+      "code_required": true,
+      "order_mode": [
+        "existing domestic cash LIMIT/MARKET supported input contract only"
+      ],
+      "transport_owner": "Existing KisCashBroker namespace; runtime strategy input is explicit fixture, no invented stock alpha",
+      "private_stream": "Native private event or bounded polling; current scope stated in source evidence",
+      "reconcile_path": "Existing path only; gaps must be implemented before route completion",
+      "classification": "REUSE"
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "MOCK2",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/test_etf_mock_trading.py::test_mock_never_uses_real_credentials_and_caches",
+        "tests/test_etf_mock_trading.py::test_mock_and_real_order_tr_ids_and_integer_validation",
+        "tests/test_etf_mock_trading.py::test_frozen_kp_kd_sizing_and_stops",
+        "tests/refactoring/test_etf_dispatch_guards.py::test_adapter_without_concrete_paired_capability_is_blocked"
+      ],
+      "source_functions": [
+        "src/execution/kis_execution.py::KisCashBroker.submit_order_with_permit",
+        "src/execution/kis_execution.py::KisCashBroker.order_status",
+        "src/execution/kis_execution.py::KisCashBroker.daily_fills",
+        "src/execution/kis_execution.py::KisCashBroker.cancel_order",
+        "src/execution/kis_execution.py::KisCashBroker.account_state",
+        "src/runtime/etf_trading.py::EtfTradingLoop.__init__",
+        "src/runtime/etf_trading.py::EtfTradingLoop.broker_for",
+        "src/runtime/etf_trading.py::EtfTradingLoop.reconcile"
+      ],
+      "gaps": [
+        "KIS-FILE-BRIDGE",
+        "COMMON-OWNER-BRIDGE"
+      ],
+      "id": "KIS-ETF-MOCK2-C3",
+      "venue": "kis",
+      "market_segment": "KR_CASH_ETF",
+      "product": "KR_CASH_ETF",
+      "environment": "mock2",
+      "account_scope": "SYMBOLIC_KIS_MOCK2_ACCOUNT",
+      "strategy_id": "C3",
+      "code_required": true,
+      "order_mode": [
+        "existing ETF LIMIT/MARKET semantics; exact C3/KP/KD sizing/cutoff/side preserved"
+      ],
+      "transport_owner": "KisCashBroker + existing EtfTradingLoop leases/journal; no BrokerStub substitution",
+      "private_stream": "Existing daily fill/order status polling, not CEX private WS",
+      "reconcile_path": "EtfTradingLoop.reconcile -> KisCashBroker daily_fills/order_status",
+      "classification": "REUSE",
+      "evidence_limit": "Broker constructor is source-verified; stage/permit tests inject a fake Broker and are not an actual KIS owner E2E"
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "MOCK2",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/test_etf_mock_trading.py::test_mock_never_uses_real_credentials_and_caches",
+        "tests/test_etf_mock_trading.py::test_mock_and_real_order_tr_ids_and_integer_validation",
+        "tests/test_etf_mock_trading.py::test_frozen_kp_kd_sizing_and_stops",
+        "tests/refactoring/test_etf_dispatch_guards.py::test_adapter_without_concrete_paired_capability_is_blocked"
+      ],
+      "source_functions": [
+        "src/execution/kis_execution.py::KisCashBroker.submit_order_with_permit",
+        "src/execution/kis_execution.py::KisCashBroker.order_status",
+        "src/execution/kis_execution.py::KisCashBroker.daily_fills",
+        "src/execution/kis_execution.py::KisCashBroker.cancel_order",
+        "src/execution/kis_execution.py::KisCashBroker.account_state",
+        "src/runtime/etf_trading.py::EtfTradingLoop.__init__",
+        "src/runtime/etf_trading.py::EtfTradingLoop.broker_for",
+        "src/runtime/etf_trading.py::EtfTradingLoop.reconcile"
+      ],
+      "gaps": [
+        "KIS-FILE-BRIDGE",
+        "COMMON-OWNER-BRIDGE"
+      ],
+      "id": "KIS-ETF-MOCK2-KP",
+      "venue": "kis",
+      "market_segment": "KR_CASH_ETF",
+      "product": "KR_CASH_ETF",
+      "environment": "mock2",
+      "account_scope": "SYMBOLIC_KIS_MOCK2_ACCOUNT",
+      "strategy_id": "KP",
+      "code_required": true,
+      "order_mode": [
+        "existing ETF LIMIT/MARKET semantics; exact C3/KP/KD sizing/cutoff/side preserved"
+      ],
+      "transport_owner": "KisCashBroker + existing EtfTradingLoop leases/journal; no BrokerStub substitution",
+      "private_stream": "Existing daily fill/order status polling, not CEX private WS",
+      "reconcile_path": "EtfTradingLoop.reconcile -> KisCashBroker daily_fills/order_status",
+      "classification": "REUSE",
+      "evidence_limit": "Broker constructor is source-verified; stage/permit tests inject a fake Broker and are not an actual KIS owner E2E"
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "MOCK2",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/test_etf_mock_trading.py::test_mock_never_uses_real_credentials_and_caches",
+        "tests/test_etf_mock_trading.py::test_mock_and_real_order_tr_ids_and_integer_validation",
+        "tests/test_etf_mock_trading.py::test_frozen_kp_kd_sizing_and_stops",
+        "tests/refactoring/test_etf_dispatch_guards.py::test_adapter_without_concrete_paired_capability_is_blocked"
+      ],
+      "source_functions": [
+        "src/execution/kis_execution.py::KisCashBroker.submit_order_with_permit",
+        "src/execution/kis_execution.py::KisCashBroker.order_status",
+        "src/execution/kis_execution.py::KisCashBroker.daily_fills",
+        "src/execution/kis_execution.py::KisCashBroker.cancel_order",
+        "src/execution/kis_execution.py::KisCashBroker.account_state",
+        "src/runtime/etf_trading.py::EtfTradingLoop.__init__",
+        "src/runtime/etf_trading.py::EtfTradingLoop.broker_for",
+        "src/runtime/etf_trading.py::EtfTradingLoop.reconcile"
+      ],
+      "gaps": [
+        "KIS-FILE-BRIDGE",
+        "COMMON-OWNER-BRIDGE"
+      ],
+      "id": "KIS-ETF-MOCK2-KD",
+      "venue": "kis",
+      "market_segment": "KR_CASH_ETF",
+      "product": "KR_CASH_ETF",
+      "environment": "mock2",
+      "account_scope": "SYMBOLIC_KIS_MOCK2_ACCOUNT",
+      "strategy_id": "KD",
+      "code_required": true,
+      "order_mode": [
+        "existing ETF LIMIT/MARKET semantics; exact C3/KP/KD sizing/cutoff/side preserved"
+      ],
+      "transport_owner": "KisCashBroker + existing EtfTradingLoop leases/journal; no BrokerStub substitution",
+      "private_stream": "Existing daily fill/order status polling, not CEX private WS",
+      "reconcile_path": "EtfTradingLoop.reconcile -> KisCashBroker daily_fills/order_status",
+      "classification": "REUSE",
+      "evidence_limit": "Broker constructor is source-verified; stage/permit tests inject a fake Broker and are not an actual KIS owner E2E"
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "MOCK2",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/test_etf_mock_trading.py::test_mock_never_uses_real_credentials_and_caches",
+        "tests/test_etf_mock_trading.py::test_mock_and_real_order_tr_ids_and_integer_validation",
+        "tests/test_etf_mock_trading.py::test_frozen_kp_kd_sizing_and_stops",
+        "tests/refactoring/test_etf_dispatch_guards.py::test_adapter_without_concrete_paired_capability_is_blocked"
+      ],
+      "source_functions": [
+        "src/execution/kis_execution.py::KisCashBroker.submit_order_with_permit",
+        "src/execution/kis_execution.py::KisCashBroker.order_status",
+        "src/execution/kis_execution.py::KisCashBroker.daily_fills",
+        "src/execution/kis_execution.py::KisCashBroker.cancel_order",
+        "src/execution/kis_execution.py::KisCashBroker.account_state",
+        "src/runtime/etf_trading.py::EtfTradingLoop.__init__",
+        "src/runtime/etf_trading.py::EtfTradingLoop.broker_for",
+        "src/runtime/etf_trading.py::EtfTradingLoop.reconcile"
+      ],
+      "gaps": [
+        "KIS-FILE-BRIDGE",
+        "COMMON-OWNER-BRIDGE"
+      ],
+      "id": "KIS-STOCK-MOCK2",
+      "venue": "kis",
+      "market_segment": "KR_CASH_STOCK",
+      "product": "KR_CASH_STOCK",
+      "environment": "mock2",
+      "account_scope": "SYMBOLIC_KIS_MOCK2_ACCOUNT",
+      "strategy_id": "LOCAL_CONTRACT_FIXTURE_NO_NEW_ALPHA",
+      "code_required": true,
+      "order_mode": [
+        "existing domestic cash LIMIT/MARKET supported input contract only"
+      ],
+      "transport_owner": "Existing KisCashBroker namespace; runtime strategy input is explicit fixture, no invented stock alpha",
+      "private_stream": "Native private event or bounded polling; current scope stated in source evidence",
+      "reconcile_path": "Existing path only; gaps must be implemented before route completion",
+      "classification": "REUSE"
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "TESTNET",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/refactoring/test_perp_execution.py::test_product_environment_capability_is_explicit_and_toss_rejected",
+        "tests/refactoring/test_perp_execution.py::test_binance_perp_metadata_submit_delete_and_signature"
+      ],
+      "source_functions": [
+        "src/execution/perp_execution.py::BinancePerpAdapter.submit_with_permit",
+        "src/execution/perp_execution.py::BinancePerpAdapter.cancel_with_permit",
+        "src/execution/perp_execution.py::BinancePerpAdapter.order_status",
+        "src/execution/perp_execution.py::BinancePerpAdapter.working_orders",
+        "src/execution/perp_execution.py::BinancePerpAdapter.fills",
+        "src/execution/perp_execution.py::BinancePerpAdapter.account_state",
+        "src/execution/perp_execution.py::BinancePerpAdapter.positions",
+        "src/execution/perp_execution.py::BinancePerpAdapter.funding",
+        "src/execution/perp_execution.py::BinancePerpAdapter.normalize_private_event",
+        "src/execution/perp_execution.py::_Adapter.reconcile",
+        "src/execution/perp_execution.py::capability_for",
+        "src/execution/perp_execution.py::make_perp_adapter",
+        "src/execution/execution_owner.py::ExecutionOwner.supports_offline_handoff"
+      ],
+      "gaps": [
+        "CONCRETE-TRANSPORT",
+        "PRIVATE-LIFECYCLE",
+        "COMMON-OWNER-BRIDGE",
+        "UNSUPPORTED-PRODUCT-MODES"
+      ],
+      "id": "BINANCE-PERP-SANDBOX",
+      "venue": "binance",
+      "market_segment": "linear_perpetual",
+      "product": "linear_perpetual",
+      "environment": "sandbox",
+      "account_scope": "SYMBOLIC_BINANCE_SANDBOX_ACCOUNT",
+      "strategy_id": "EXPLICIT_STRATEGY_FILE_NO_NEW_ALPHA_REQUIRED",
+      "code_required": true,
+      "order_mode": [
+        "PARK_GTC/POST_ONLY maker or FOK/IOC taker only when concrete venue advertises native support; otherwise pre-send rejection"
+      ],
+      "transport_owner": "Injected permit-protocol transport only; ExecutionOwner currently offline-only; concrete owner/signing/account composition pending",
+      "private_stream": "Native frame normalizer only; authenticated connection/reconnect/gap lifecycle missing",
+      "reconcile_path": "_Adapter.reconcile primitive exists; route owner composition missing",
+      "classification": "ADAPT",
+      "settlement_currency": "USDT",
+      "native_historical_reuse": [],
+      "native_reuse_shipped": false,
+      "environment_note": "sandbox is the exact PerpScope code spelling; it does not prove a documented operational venue testnet"
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "LIVE",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/refactoring/test_perp_execution.py::test_product_environment_capability_is_explicit_and_toss_rejected",
+        "tests/refactoring/test_perp_execution.py::test_binance_perp_metadata_submit_delete_and_signature"
+      ],
+      "source_functions": [
+        "src/execution/perp_execution.py::BinancePerpAdapter.submit_with_permit",
+        "src/execution/perp_execution.py::BinancePerpAdapter.cancel_with_permit",
+        "src/execution/perp_execution.py::BinancePerpAdapter.order_status",
+        "src/execution/perp_execution.py::BinancePerpAdapter.working_orders",
+        "src/execution/perp_execution.py::BinancePerpAdapter.fills",
+        "src/execution/perp_execution.py::BinancePerpAdapter.account_state",
+        "src/execution/perp_execution.py::BinancePerpAdapter.positions",
+        "src/execution/perp_execution.py::BinancePerpAdapter.funding",
+        "src/execution/perp_execution.py::BinancePerpAdapter.normalize_private_event",
+        "src/execution/perp_execution.py::_Adapter.reconcile",
+        "src/execution/perp_execution.py::capability_for",
+        "src/execution/perp_execution.py::make_perp_adapter",
+        "src/execution/execution_owner.py::ExecutionOwner.supports_offline_handoff"
+      ],
+      "gaps": [
+        "CONCRETE-TRANSPORT",
+        "PRIVATE-LIFECYCLE",
+        "COMMON-OWNER-BRIDGE",
+        "UNSUPPORTED-PRODUCT-MODES"
+      ],
+      "id": "BINANCE-PERP-LIVE",
+      "venue": "binance",
+      "market_segment": "linear_perpetual",
+      "product": "linear_perpetual",
+      "environment": "live",
+      "account_scope": "SYMBOLIC_BINANCE_LIVE_ACCOUNT",
+      "strategy_id": "EXPLICIT_STRATEGY_FILE_NO_NEW_ALPHA_REQUIRED",
+      "code_required": true,
+      "order_mode": [
+        "PARK_GTC/POST_ONLY maker or FOK/IOC taker only when concrete venue advertises native support; otherwise pre-send rejection"
+      ],
+      "transport_owner": "Injected permit-protocol transport only; ExecutionOwner currently offline-only; concrete owner/signing/account composition pending",
+      "private_stream": "Native frame normalizer only; authenticated connection/reconnect/gap lifecycle missing",
+      "reconcile_path": "_Adapter.reconcile primitive exists; route owner composition missing",
+      "classification": "ADAPT",
+      "settlement_currency": "USDT",
+      "native_historical_reuse": [],
+      "native_reuse_shipped": false,
+      "environment_note": "sandbox is the exact PerpScope code spelling; it does not prove a documented operational venue testnet"
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "TESTNET",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/refactoring/test_perp_execution.py::test_product_environment_capability_is_explicit_and_toss_rejected",
+        "tests/refactoring/test_perp_execution.py::test_bybit_linear_wire_signed_exact_body_and_private_rest_same_fill_identity"
+      ],
+      "source_functions": [
+        "src/execution/perp_execution.py::BybitPerpAdapter.submit_with_permit",
+        "src/execution/perp_execution.py::BybitPerpAdapter.cancel_with_permit",
+        "src/execution/perp_execution.py::BybitPerpAdapter.order_status",
+        "src/execution/perp_execution.py::BybitPerpAdapter.working_orders",
+        "src/execution/perp_execution.py::BybitPerpAdapter.fills",
+        "src/execution/perp_execution.py::BybitPerpAdapter.account_state",
+        "src/execution/perp_execution.py::BybitPerpAdapter.positions",
+        "src/execution/perp_execution.py::BybitPerpAdapter.funding",
+        "src/execution/perp_execution.py::BybitPerpAdapter.normalize_private_event",
+        "src/execution/perp_execution.py::_Adapter.reconcile",
+        "src/execution/perp_execution.py::capability_for",
+        "src/execution/perp_execution.py::make_perp_adapter",
+        "src/execution/execution_owner.py::ExecutionOwner.supports_offline_handoff"
+      ],
+      "gaps": [
+        "CONCRETE-TRANSPORT",
+        "PRIVATE-LIFECYCLE",
+        "COMMON-OWNER-BRIDGE",
+        "UNSUPPORTED-PRODUCT-MODES"
+      ],
+      "id": "BYBIT-PERP-SANDBOX",
+      "venue": "bybit",
+      "market_segment": "linear_perpetual",
+      "product": "linear_perpetual",
+      "environment": "sandbox",
+      "account_scope": "SYMBOLIC_BYBIT_SANDBOX_ACCOUNT",
+      "strategy_id": "EXPLICIT_STRATEGY_FILE_NO_NEW_ALPHA_REQUIRED",
+      "code_required": true,
+      "order_mode": [
+        "PARK_GTC/POST_ONLY maker or FOK/IOC taker only when concrete venue advertises native support; otherwise pre-send rejection"
+      ],
+      "transport_owner": "Injected permit-protocol transport only; ExecutionOwner currently offline-only; concrete owner/signing/account composition pending",
+      "private_stream": "Native frame normalizer only; authenticated connection/reconnect/gap lifecycle missing",
+      "reconcile_path": "_Adapter.reconcile primitive exists; route owner composition missing",
+      "classification": "ADAPT",
+      "settlement_currency": "USDT",
+      "native_historical_reuse": [
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Bybit.create",
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Bybit.cancel",
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Bybit.fills",
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Bybit.positions",
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/private.py::bybit_private",
+        "src/execution/bybit_execution.py::BybitOrderClient.request",
+        "src/execution/bybit_execution.py::BybitExecutionProbe.run",
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/private.py::bybit_private",
+        "src/execution/bybit_execution.py::BybitOrderClient.request",
+        "src/execution/bybit_execution.py::BybitExecutionProbe.run"
+      ],
+      "native_reuse_shipped": false,
+      "environment_note": "sandbox is the exact PerpScope code spelling; it does not prove a documented operational venue testnet"
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "LIVE",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/refactoring/test_perp_execution.py::test_product_environment_capability_is_explicit_and_toss_rejected",
+        "tests/refactoring/test_perp_execution.py::test_bybit_linear_wire_signed_exact_body_and_private_rest_same_fill_identity"
+      ],
+      "source_functions": [
+        "src/execution/perp_execution.py::BybitPerpAdapter.submit_with_permit",
+        "src/execution/perp_execution.py::BybitPerpAdapter.cancel_with_permit",
+        "src/execution/perp_execution.py::BybitPerpAdapter.order_status",
+        "src/execution/perp_execution.py::BybitPerpAdapter.working_orders",
+        "src/execution/perp_execution.py::BybitPerpAdapter.fills",
+        "src/execution/perp_execution.py::BybitPerpAdapter.account_state",
+        "src/execution/perp_execution.py::BybitPerpAdapter.positions",
+        "src/execution/perp_execution.py::BybitPerpAdapter.funding",
+        "src/execution/perp_execution.py::BybitPerpAdapter.normalize_private_event",
+        "src/execution/perp_execution.py::_Adapter.reconcile",
+        "src/execution/perp_execution.py::capability_for",
+        "src/execution/perp_execution.py::make_perp_adapter",
+        "src/execution/execution_owner.py::ExecutionOwner.supports_offline_handoff"
+      ],
+      "gaps": [
+        "CONCRETE-TRANSPORT",
+        "PRIVATE-LIFECYCLE",
+        "COMMON-OWNER-BRIDGE",
+        "UNSUPPORTED-PRODUCT-MODES"
+      ],
+      "id": "BYBIT-PERP-LIVE",
+      "venue": "bybit",
+      "market_segment": "linear_perpetual",
+      "product": "linear_perpetual",
+      "environment": "live",
+      "account_scope": "SYMBOLIC_BYBIT_LIVE_ACCOUNT",
+      "strategy_id": "EXPLICIT_STRATEGY_FILE_NO_NEW_ALPHA_REQUIRED",
+      "code_required": true,
+      "order_mode": [
+        "PARK_GTC/POST_ONLY maker or FOK/IOC taker only when concrete venue advertises native support; otherwise pre-send rejection"
+      ],
+      "transport_owner": "Injected permit-protocol transport only; ExecutionOwner currently offline-only; concrete owner/signing/account composition pending",
+      "private_stream": "Native frame normalizer only; authenticated connection/reconnect/gap lifecycle missing",
+      "reconcile_path": "_Adapter.reconcile primitive exists; route owner composition missing",
+      "classification": "ADAPT",
+      "settlement_currency": "USDT",
+      "native_historical_reuse": [
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Bybit.create",
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Bybit.cancel",
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Bybit.fills",
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Bybit.positions",
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/private.py::bybit_private",
+        "src/execution/bybit_execution.py::BybitOrderClient.request",
+        "src/execution/bybit_execution.py::BybitExecutionProbe.run",
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/private.py::bybit_private",
+        "src/execution/bybit_execution.py::BybitOrderClient.request",
+        "src/execution/bybit_execution.py::BybitExecutionProbe.run"
+      ],
+      "native_reuse_shipped": false,
+      "environment_note": "sandbox is the exact PerpScope code spelling; it does not prove a documented operational venue testnet"
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "TESTNET",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/refactoring/test_perp_execution.py::test_product_environment_capability_is_explicit_and_toss_rejected",
+        "tests/refactoring/test_perp_execution.py::test_grvt_uint32_nonce_uint64_client_id_and_existing_signer_composition"
+      ],
+      "source_functions": [
+        "src/execution/perp_execution.py::GrvtPerpAdapter.submit_with_permit",
+        "src/execution/perp_execution.py::GrvtPerpAdapter.cancel_with_permit",
+        "src/execution/perp_execution.py::GrvtPerpAdapter.order_status",
+        "src/execution/perp_execution.py::GrvtPerpAdapter.working_orders",
+        "src/execution/perp_execution.py::GrvtPerpAdapter.fills",
+        "src/execution/perp_execution.py::GrvtPerpAdapter.account_state",
+        "src/execution/perp_execution.py::GrvtPerpAdapter.positions",
+        "src/execution/perp_execution.py::GrvtPerpAdapter.funding",
+        "src/execution/perp_execution.py::GrvtPerpAdapter.normalize_private_event",
+        "src/execution/perp_execution.py::_Adapter.reconcile",
+        "src/execution/perp_execution.py::capability_for",
+        "src/execution/perp_execution.py::make_perp_adapter",
+        "src/execution/execution_owner.py::ExecutionOwner.supports_offline_handoff"
+      ],
+      "gaps": [
+        "CONCRETE-TRANSPORT",
+        "PRIVATE-LIFECYCLE",
+        "COMMON-OWNER-BRIDGE",
+        "UNSUPPORTED-PRODUCT-MODES"
+      ],
+      "id": "GRVT-PERP-SANDBOX",
+      "venue": "grvt",
+      "market_segment": "linear_perpetual",
+      "product": "linear_perpetual",
+      "environment": "sandbox",
+      "account_scope": "SYMBOLIC_GRVT_SANDBOX_ACCOUNT",
+      "strategy_id": "EXPLICIT_STRATEGY_FILE_NO_NEW_ALPHA_REQUIRED",
+      "code_required": true,
+      "order_mode": [
+        "PARK_GTC/POST_ONLY maker or FOK/IOC taker only when concrete venue advertises native support; otherwise pre-send rejection"
+      ],
+      "transport_owner": "Injected permit-protocol transport only; ExecutionOwner currently offline-only; concrete owner/signing/account composition pending",
+      "private_stream": "Native frame normalizer only; authenticated connection/reconnect/gap lifecycle missing",
+      "reconcile_path": "_Adapter.reconcile primitive exists; route owner composition missing",
+      "classification": "ADAPT",
+      "settlement_currency": "USDT",
+      "native_historical_reuse": [
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Grvt.create",
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Grvt.cancel",
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Grvt.fills",
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Grvt.positions",
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/private.py::grvt_private",
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/private.py::grvt_private"
+      ],
+      "native_reuse_shipped": false,
+      "environment_note": "sandbox is the exact PerpScope code spelling; it does not prove a documented operational venue testnet",
+      "existing_extended_signing_reuse": [
+        "src/execution/extended_brokers.py::GrvtBrokerAdapter.prepare_order",
+        "src/execution/extended_brokers.py::GrvtBrokerAdapter.submit_order",
+        "src/execution/extended_brokers.py::GrvtBrokerAdapter.order_status"
+      ]
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "LIVE",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/refactoring/test_perp_execution.py::test_product_environment_capability_is_explicit_and_toss_rejected",
+        "tests/refactoring/test_perp_execution.py::test_grvt_uint32_nonce_uint64_client_id_and_existing_signer_composition"
+      ],
+      "source_functions": [
+        "src/execution/perp_execution.py::GrvtPerpAdapter.submit_with_permit",
+        "src/execution/perp_execution.py::GrvtPerpAdapter.cancel_with_permit",
+        "src/execution/perp_execution.py::GrvtPerpAdapter.order_status",
+        "src/execution/perp_execution.py::GrvtPerpAdapter.working_orders",
+        "src/execution/perp_execution.py::GrvtPerpAdapter.fills",
+        "src/execution/perp_execution.py::GrvtPerpAdapter.account_state",
+        "src/execution/perp_execution.py::GrvtPerpAdapter.positions",
+        "src/execution/perp_execution.py::GrvtPerpAdapter.funding",
+        "src/execution/perp_execution.py::GrvtPerpAdapter.normalize_private_event",
+        "src/execution/perp_execution.py::_Adapter.reconcile",
+        "src/execution/perp_execution.py::capability_for",
+        "src/execution/perp_execution.py::make_perp_adapter",
+        "src/execution/execution_owner.py::ExecutionOwner.supports_offline_handoff"
+      ],
+      "gaps": [
+        "CONCRETE-TRANSPORT",
+        "PRIVATE-LIFECYCLE",
+        "COMMON-OWNER-BRIDGE",
+        "UNSUPPORTED-PRODUCT-MODES"
+      ],
+      "id": "GRVT-PERP-LIVE",
+      "venue": "grvt",
+      "market_segment": "linear_perpetual",
+      "product": "linear_perpetual",
+      "environment": "live",
+      "account_scope": "SYMBOLIC_GRVT_LIVE_ACCOUNT",
+      "strategy_id": "EXPLICIT_STRATEGY_FILE_NO_NEW_ALPHA_REQUIRED",
+      "code_required": true,
+      "order_mode": [
+        "PARK_GTC/POST_ONLY maker or FOK/IOC taker only when concrete venue advertises native support; otherwise pre-send rejection"
+      ],
+      "transport_owner": "Injected permit-protocol transport only; ExecutionOwner currently offline-only; concrete owner/signing/account composition pending",
+      "private_stream": "Native frame normalizer only; authenticated connection/reconnect/gap lifecycle missing",
+      "reconcile_path": "_Adapter.reconcile primitive exists; route owner composition missing",
+      "classification": "ADAPT",
+      "settlement_currency": "USDT",
+      "native_historical_reuse": [
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Grvt.create",
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Grvt.cancel",
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Grvt.fills",
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/venues.py::Grvt.positions",
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/private.py::grvt_private",
+        "docs/archive/MOV-05-legacy-oracles/vibetrading/fv_mm/private.py::grvt_private"
+      ],
+      "native_reuse_shipped": false,
+      "environment_note": "sandbox is the exact PerpScope code spelling; it does not prove a documented operational venue testnet",
+      "existing_extended_signing_reuse": [
+        "src/execution/extended_brokers.py::GrvtBrokerAdapter.prepare_order",
+        "src/execution/extended_brokers.py::GrvtBrokerAdapter.submit_order",
+        "src/execution/extended_brokers.py::GrvtBrokerAdapter.order_status"
+      ]
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "TESTNET",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/refactoring/test_perp_execution.py::test_product_environment_capability_is_explicit_and_toss_rejected",
+        "tests/refactoring/test_perp_execution.py::test_arcus_existing_ed25519_composition_exact_order_and_cancel_signature"
+      ],
+      "source_functions": [
+        "src/execution/perp_execution.py::ArcusPerpAdapter.submit_with_permit",
+        "src/execution/perp_execution.py::ArcusPerpAdapter.cancel_with_permit",
+        "src/execution/perp_execution.py::ArcusPerpAdapter.order_status",
+        "src/execution/perp_execution.py::ArcusPerpAdapter.working_orders",
+        "src/execution/perp_execution.py::ArcusPerpAdapter.fills",
+        "src/execution/perp_execution.py::ArcusPerpAdapter.account_state",
+        "src/execution/perp_execution.py::ArcusPerpAdapter.positions",
+        "src/execution/perp_execution.py::ArcusPerpAdapter.funding",
+        "src/execution/perp_execution.py::ArcusPerpAdapter.normalize_private_event",
+        "src/execution/perp_execution.py::_Adapter.reconcile",
+        "src/execution/perp_execution.py::capability_for",
+        "src/execution/perp_execution.py::make_perp_adapter",
+        "src/execution/execution_owner.py::ExecutionOwner.supports_offline_handoff"
+      ],
+      "gaps": [
+        "CONCRETE-TRANSPORT",
+        "PRIVATE-LIFECYCLE",
+        "COMMON-OWNER-BRIDGE",
+        "UNSUPPORTED-PRODUCT-MODES"
+      ],
+      "id": "ARCUS-PERP-SANDBOX",
+      "venue": "arcus",
+      "market_segment": "linear_perpetual",
+      "product": "linear_perpetual",
+      "environment": "sandbox",
+      "account_scope": "SYMBOLIC_ARCUS_SANDBOX_ACCOUNT",
+      "strategy_id": "EXPLICIT_STRATEGY_FILE_NO_NEW_ALPHA_REQUIRED",
+      "code_required": true,
+      "order_mode": [
+        "PARK_GTC/POST_ONLY maker or FOK/IOC taker only when concrete venue advertises native support; otherwise pre-send rejection"
+      ],
+      "transport_owner": "Injected permit-protocol transport only; ExecutionOwner currently offline-only; concrete owner/signing/account composition pending",
+      "private_stream": "Native frame normalizer only; authenticated connection/reconnect/gap lifecycle missing",
+      "reconcile_path": "_Adapter.reconcile primitive exists; route owner composition missing",
+      "classification": "ADAPT",
+      "settlement_currency": "USDG",
+      "native_historical_reuse": [],
+      "native_reuse_shipped": false,
+      "environment_note": "sandbox is the exact PerpScope code spelling; it does not prove a documented operational venue testnet",
+      "existing_extended_signing_reuse": [
+        "src/execution/extended_brokers.py::ArcusBrokerAdapter.prepare_order",
+        "src/execution/extended_brokers.py::ArcusBrokerAdapter.submit_order",
+        "src/execution/extended_brokers.py::ArcusBrokerAdapter.order_status"
+      ]
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "LIVE",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/refactoring/test_perp_execution.py::test_product_environment_capability_is_explicit_and_toss_rejected",
+        "tests/refactoring/test_perp_execution.py::test_arcus_existing_ed25519_composition_exact_order_and_cancel_signature"
+      ],
+      "source_functions": [
+        "src/execution/perp_execution.py::ArcusPerpAdapter.submit_with_permit",
+        "src/execution/perp_execution.py::ArcusPerpAdapter.cancel_with_permit",
+        "src/execution/perp_execution.py::ArcusPerpAdapter.order_status",
+        "src/execution/perp_execution.py::ArcusPerpAdapter.working_orders",
+        "src/execution/perp_execution.py::ArcusPerpAdapter.fills",
+        "src/execution/perp_execution.py::ArcusPerpAdapter.account_state",
+        "src/execution/perp_execution.py::ArcusPerpAdapter.positions",
+        "src/execution/perp_execution.py::ArcusPerpAdapter.funding",
+        "src/execution/perp_execution.py::ArcusPerpAdapter.normalize_private_event",
+        "src/execution/perp_execution.py::_Adapter.reconcile",
+        "src/execution/perp_execution.py::capability_for",
+        "src/execution/perp_execution.py::make_perp_adapter",
+        "src/execution/execution_owner.py::ExecutionOwner.supports_offline_handoff"
+      ],
+      "gaps": [
+        "CONCRETE-TRANSPORT",
+        "PRIVATE-LIFECYCLE",
+        "COMMON-OWNER-BRIDGE",
+        "UNSUPPORTED-PRODUCT-MODES"
+      ],
+      "id": "ARCUS-PERP-LIVE",
+      "venue": "arcus",
+      "market_segment": "linear_perpetual",
+      "product": "linear_perpetual",
+      "environment": "live",
+      "account_scope": "SYMBOLIC_ARCUS_LIVE_ACCOUNT",
+      "strategy_id": "EXPLICIT_STRATEGY_FILE_NO_NEW_ALPHA_REQUIRED",
+      "code_required": true,
+      "order_mode": [
+        "PARK_GTC/POST_ONLY maker or FOK/IOC taker only when concrete venue advertises native support; otherwise pre-send rejection"
+      ],
+      "transport_owner": "Injected permit-protocol transport only; ExecutionOwner currently offline-only; concrete owner/signing/account composition pending",
+      "private_stream": "Native frame normalizer only; authenticated connection/reconnect/gap lifecycle missing",
+      "reconcile_path": "_Adapter.reconcile primitive exists; route owner composition missing",
+      "classification": "ADAPT",
+      "settlement_currency": "USDG",
+      "native_historical_reuse": [],
+      "native_reuse_shipped": false,
+      "environment_note": "sandbox is the exact PerpScope code spelling; it does not prove a documented operational venue testnet",
+      "existing_extended_signing_reuse": [
+        "src/execution/extended_brokers.py::ArcusBrokerAdapter.prepare_order",
+        "src/execution/extended_brokers.py::ArcusBrokerAdapter.submit_order",
+        "src/execution/extended_brokers.py::ArcusBrokerAdapter.order_status"
+      ]
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "TESTNET",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/refactoring/test_perp_execution.py::test_product_environment_capability_is_explicit_and_toss_rejected",
+        "tests/refactoring/test_perp_execution.py::test_hyperliquid_sdk_composition_durable_signer_nonce_shared_across_accounts_restart"
+      ],
+      "source_functions": [
+        "src/execution/perp_execution.py::HyperliquidPerpAdapter.submit_with_permit",
+        "src/execution/perp_execution.py::HyperliquidPerpAdapter.cancel_with_permit",
+        "src/execution/perp_execution.py::HyperliquidPerpAdapter.order_status",
+        "src/execution/perp_execution.py::HyperliquidPerpAdapter.working_orders",
+        "src/execution/perp_execution.py::HyperliquidPerpAdapter.fills",
+        "src/execution/perp_execution.py::HyperliquidPerpAdapter.account_state",
+        "src/execution/perp_execution.py::HyperliquidPerpAdapter.positions",
+        "src/execution/perp_execution.py::HyperliquidPerpAdapter.funding",
+        "src/execution/perp_execution.py::HyperliquidPerpAdapter.normalize_private_event",
+        "src/execution/perp_execution.py::_Adapter.reconcile",
+        "src/execution/perp_execution.py::capability_for",
+        "src/execution/perp_execution.py::make_perp_adapter",
+        "src/execution/execution_owner.py::ExecutionOwner.supports_offline_handoff"
+      ],
+      "gaps": [
+        "CONCRETE-TRANSPORT",
+        "PRIVATE-LIFECYCLE",
+        "COMMON-OWNER-BRIDGE",
+        "UNSUPPORTED-PRODUCT-MODES"
+      ],
+      "id": "HYPERLIQUID-PERP-SANDBOX",
+      "venue": "hyperliquid",
+      "market_segment": "linear_perpetual",
+      "product": "linear_perpetual",
+      "environment": "sandbox",
+      "account_scope": "SYMBOLIC_HYPERLIQUID_SANDBOX_ACCOUNT",
+      "strategy_id": "EXPLICIT_STRATEGY_FILE_NO_NEW_ALPHA_REQUIRED",
+      "code_required": true,
+      "order_mode": [
+        "PARK_GTC/POST_ONLY maker or FOK/IOC taker only when concrete venue advertises native support; otherwise pre-send rejection"
+      ],
+      "transport_owner": "Injected permit-protocol transport only; ExecutionOwner currently offline-only; concrete owner/signing/account composition pending",
+      "private_stream": "Native frame normalizer only; authenticated connection/reconnect/gap lifecycle missing",
+      "reconcile_path": "_Adapter.reconcile primitive exists; route owner composition missing",
+      "classification": "ADAPT",
+      "settlement_currency": "USDC",
+      "native_historical_reuse": [],
+      "native_reuse_shipped": false,
+      "environment_note": "sandbox is the exact PerpScope code spelling; it does not prove a documented operational venue testnet"
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "LIVE",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/refactoring/test_perp_execution.py::test_product_environment_capability_is_explicit_and_toss_rejected",
+        "tests/refactoring/test_perp_execution.py::test_hyperliquid_sdk_composition_durable_signer_nonce_shared_across_accounts_restart"
+      ],
+      "source_functions": [
+        "src/execution/perp_execution.py::HyperliquidPerpAdapter.submit_with_permit",
+        "src/execution/perp_execution.py::HyperliquidPerpAdapter.cancel_with_permit",
+        "src/execution/perp_execution.py::HyperliquidPerpAdapter.order_status",
+        "src/execution/perp_execution.py::HyperliquidPerpAdapter.working_orders",
+        "src/execution/perp_execution.py::HyperliquidPerpAdapter.fills",
+        "src/execution/perp_execution.py::HyperliquidPerpAdapter.account_state",
+        "src/execution/perp_execution.py::HyperliquidPerpAdapter.positions",
+        "src/execution/perp_execution.py::HyperliquidPerpAdapter.funding",
+        "src/execution/perp_execution.py::HyperliquidPerpAdapter.normalize_private_event",
+        "src/execution/perp_execution.py::_Adapter.reconcile",
+        "src/execution/perp_execution.py::capability_for",
+        "src/execution/perp_execution.py::make_perp_adapter",
+        "src/execution/execution_owner.py::ExecutionOwner.supports_offline_handoff"
+      ],
+      "gaps": [
+        "CONCRETE-TRANSPORT",
+        "PRIVATE-LIFECYCLE",
+        "COMMON-OWNER-BRIDGE",
+        "UNSUPPORTED-PRODUCT-MODES"
+      ],
+      "id": "HYPERLIQUID-PERP-LIVE",
+      "venue": "hyperliquid",
+      "market_segment": "linear_perpetual",
+      "product": "linear_perpetual",
+      "environment": "live",
+      "account_scope": "SYMBOLIC_HYPERLIQUID_LIVE_ACCOUNT",
+      "strategy_id": "EXPLICIT_STRATEGY_FILE_NO_NEW_ALPHA_REQUIRED",
+      "code_required": true,
+      "order_mode": [
+        "PARK_GTC/POST_ONLY maker or FOK/IOC taker only when concrete venue advertises native support; otherwise pre-send rejection"
+      ],
+      "transport_owner": "Injected permit-protocol transport only; ExecutionOwner currently offline-only; concrete owner/signing/account composition pending",
+      "private_stream": "Native frame normalizer only; authenticated connection/reconnect/gap lifecycle missing",
+      "reconcile_path": "_Adapter.reconcile primitive exists; route owner composition missing",
+      "classification": "ADAPT",
+      "settlement_currency": "USDC",
+      "native_historical_reuse": [],
+      "native_reuse_shipped": false,
+      "environment_note": "sandbox is the exact PerpScope code spelling; it does not prove a documented operational venue testnet"
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "TESTNET",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/refactoring/test_cap00_contract.py::test_spot_and_perp_frozen_paths_are_not_aliased"
+      ],
+      "source_functions": [
+        "src/execution/brokers.py::BinanceBrokerAdapter.submit_order",
+        "src/execution/brokers.py::BinanceBrokerAdapter.order_status",
+        "src/execution/brokers.py::BinanceBrokerAdapter.account_state",
+        "src/execution/brokers.py::broker_for_name"
+      ],
+      "gaps": [
+        "SPOT-ROUTE-INTEGRATION",
+        "COMMON-OWNER-BRIDGE"
+      ],
+      "id": "BINANCE-SPOT-SANDBOX",
+      "venue": "binance",
+      "market_segment": "crypto_spot",
+      "product": "crypto_spot",
+      "environment": "sandbox",
+      "account_scope": "SYMBOLIC_BINANCE_SANDBOX_ACCOUNT",
+      "strategy_id": "EXPLICIT_FILE_STRATEGY_OR_LOCAL_FIXTURE",
+      "code_required": true,
+      "order_mode": [
+        "Existing Spot REST mapping only; Perp/margin/inverse not inferred"
+      ],
+      "transport_owner": "Existing factual account owner; revised concrete route wiring remains unaccepted",
+      "private_stream": "Native private event or bounded polling; current scope stated in source evidence",
+      "reconcile_path": "Existing path only; gaps must be implemented before route completion",
+      "classification": "REUSE",
+      "evidence_limit": "Existing selected negative product-separation test only; missing concrete Spot owner/cancel/fill integration must get positive fixtures in VEN-01/CAP-01",
+      "native_historical_reuse": [
+        "services/execution/crypto_binance.py::CryptoBinanceAdapter.submit_order",
+        "services/execution/crypto_binance.py::CryptoBinanceAdapter.cancel_order",
+        "services/execution/crypto_binance.py::CryptoBinanceAdapter.get_order_status",
+        "services/execution/crypto_binance.py::CryptoBinanceAdapter.get_open_orders"
+      ],
+      "native_reuse_shipped": false
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "LIVE",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/refactoring/test_cap00_contract.py::test_spot_and_perp_frozen_paths_are_not_aliased"
+      ],
+      "source_functions": [
+        "src/execution/brokers.py::BinanceBrokerAdapter.submit_order",
+        "src/execution/brokers.py::BinanceBrokerAdapter.order_status",
+        "src/execution/brokers.py::BinanceBrokerAdapter.account_state",
+        "src/execution/brokers.py::broker_for_name"
+      ],
+      "gaps": [
+        "SPOT-ROUTE-INTEGRATION",
+        "COMMON-OWNER-BRIDGE"
+      ],
+      "id": "BINANCE-SPOT-LIVE",
+      "venue": "binance",
+      "market_segment": "crypto_spot",
+      "product": "crypto_spot",
+      "environment": "live",
+      "account_scope": "SYMBOLIC_BINANCE_LIVE_ACCOUNT",
+      "strategy_id": "EXPLICIT_FILE_STRATEGY_OR_LOCAL_FIXTURE",
+      "code_required": true,
+      "order_mode": [
+        "Existing Spot REST mapping only; Perp/margin/inverse not inferred"
+      ],
+      "transport_owner": "Existing factual account owner; revised concrete route wiring remains unaccepted",
+      "private_stream": "Native private event or bounded polling; current scope stated in source evidence",
+      "reconcile_path": "Existing path only; gaps must be implemented before route completion",
+      "classification": "REUSE",
+      "evidence_limit": "Existing selected negative product-separation test only; missing concrete Spot owner/cancel/fill integration must get positive fixtures in VEN-01/CAP-01",
+      "native_historical_reuse": [
+        "services/execution/crypto_binance.py::CryptoBinanceAdapter.submit_order",
+        "services/execution/crypto_binance.py::CryptoBinanceAdapter.cancel_order",
+        "services/execution/crypto_binance.py::CryptoBinanceAdapter.get_order_status",
+        "services/execution/crypto_binance.py::CryptoBinanceAdapter.get_open_orders"
+      ],
+      "native_reuse_shipped": false
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "MOCK",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/refactoring/test_cap00_contract.py::test_kiwoom_contract_freezes_missing_lifecycle_without_com_substitution"
+      ],
+      "source_functions": [
+        "src/execution/brokers.py::KiwoomBrokerAdapter.submit_order",
+        "src/execution/brokers.py::KiwoomBrokerAdapter.order_status",
+        "src/execution/brokers.py::KiwoomBrokerAdapter.account_state",
+        "src/execution/brokers.py::KiwoomBrokerAdapter._write_token_cache",
+        "src/execution/brokers.py::broker_for_name",
+        "src/feeds/providers/kiwoom.py::KiwoomAuthClient.post_api_page"
+      ],
+      "gaps": [
+        "KIWOOM-LOCAL-LIFECYCLE",
+        "KIWOOM-API-SCHEMAS",
+        "COMMON-OWNER-BRIDGE",
+        "TOKEN-CACHE-REVIEW"
+      ],
+      "id": "KIWOOM-REST-KR_CASH_STOCK-MOCK",
+      "venue": "kiwoom",
+      "market_segment": "KR_CASH_STOCK",
+      "product": "KR_CASH_STOCK",
+      "environment": "mock",
+      "account_scope": "SYMBOLIC_KIWOOM_MOCK_ACCOUNT",
+      "strategy_id": "EXPLICIT_FILE_STRATEGY_OR_LOCAL_FIXTURE",
+      "code_required": true,
+      "order_mode": [
+        "Existing REST BUY/SELL LIMIT/MARKET shape; additional semantics require pinned API schema"
+      ],
+      "transport_owner": "Existing KiwoomBrokerAdapter REST submit only; new common owner bridge is missing",
+      "private_stream": "Provider market-data websocket is not account/order private proof; bounded fill/order polling missing",
+      "reconcile_path": "order_status is NOT_IMPLEMENTED; no cancel/open/fills/reconcile methods",
+      "classification": "ADAPT",
+      "api_contract_status": "OFFICIAL_CATALOGUE_FOUND; per-operation request/response/pagination/order/fill identity schemas not pinned; BLOCKED_API_SPEC_REQUIRED for new mapping",
+      "evidence_limit": "No Kiwoom submit/cancel owner E2E accepted. A negative different-product test is not a Kiwoom positive implementation test."
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "LIVE",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/refactoring/test_cap00_contract.py::test_kiwoom_contract_freezes_missing_lifecycle_without_com_substitution"
+      ],
+      "source_functions": [
+        "src/execution/brokers.py::KiwoomBrokerAdapter.submit_order",
+        "src/execution/brokers.py::KiwoomBrokerAdapter.order_status",
+        "src/execution/brokers.py::KiwoomBrokerAdapter.account_state",
+        "src/execution/brokers.py::KiwoomBrokerAdapter._write_token_cache",
+        "src/execution/brokers.py::broker_for_name",
+        "src/feeds/providers/kiwoom.py::KiwoomAuthClient.post_api_page"
+      ],
+      "gaps": [
+        "KIWOOM-LOCAL-LIFECYCLE",
+        "KIWOOM-API-SCHEMAS",
+        "COMMON-OWNER-BRIDGE",
+        "TOKEN-CACHE-REVIEW"
+      ],
+      "id": "KIWOOM-REST-KR_CASH_STOCK-LIVE",
+      "venue": "kiwoom",
+      "market_segment": "KR_CASH_STOCK",
+      "product": "KR_CASH_STOCK",
+      "environment": "live",
+      "account_scope": "SYMBOLIC_KIWOOM_LIVE_ACCOUNT",
+      "strategy_id": "EXPLICIT_FILE_STRATEGY_OR_LOCAL_FIXTURE",
+      "code_required": true,
+      "order_mode": [
+        "Existing REST BUY/SELL LIMIT/MARKET shape; additional semantics require pinned API schema"
+      ],
+      "transport_owner": "Existing KiwoomBrokerAdapter REST submit only; new common owner bridge is missing",
+      "private_stream": "Provider market-data websocket is not account/order private proof; bounded fill/order polling missing",
+      "reconcile_path": "order_status is NOT_IMPLEMENTED; no cancel/open/fills/reconcile methods",
+      "classification": "ADAPT",
+      "api_contract_status": "OFFICIAL_CATALOGUE_FOUND; per-operation request/response/pagination/order/fill identity schemas not pinned; BLOCKED_API_SPEC_REQUIRED for new mapping",
+      "evidence_limit": "No Kiwoom submit/cancel owner E2E accepted. A negative different-product test is not a Kiwoom positive implementation test."
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "MOCK",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/refactoring/test_cap00_contract.py::test_kiwoom_contract_freezes_missing_lifecycle_without_com_substitution"
+      ],
+      "source_functions": [
+        "src/execution/brokers.py::KiwoomBrokerAdapter.submit_order",
+        "src/execution/brokers.py::KiwoomBrokerAdapter.order_status",
+        "src/execution/brokers.py::KiwoomBrokerAdapter.account_state",
+        "src/execution/brokers.py::KiwoomBrokerAdapter._write_token_cache",
+        "src/execution/brokers.py::broker_for_name",
+        "src/feeds/providers/kiwoom.py::KiwoomAuthClient.post_api_page"
+      ],
+      "gaps": [
+        "KIWOOM-LOCAL-LIFECYCLE",
+        "KIWOOM-API-SCHEMAS",
+        "COMMON-OWNER-BRIDGE",
+        "TOKEN-CACHE-REVIEW"
+      ],
+      "id": "KIWOOM-REST-KR_CASH_ETF-MOCK",
+      "venue": "kiwoom",
+      "market_segment": "KR_CASH_ETF",
+      "product": "KR_CASH_ETF",
+      "environment": "mock",
+      "account_scope": "SYMBOLIC_KIWOOM_MOCK_ACCOUNT",
+      "strategy_id": "EXPLICIT_FILE_STRATEGY_OR_LOCAL_FIXTURE",
+      "code_required": true,
+      "order_mode": [
+        "Existing REST BUY/SELL LIMIT/MARKET shape; additional semantics require pinned API schema"
+      ],
+      "transport_owner": "Existing KiwoomBrokerAdapter REST submit only; new common owner bridge is missing",
+      "private_stream": "Provider market-data websocket is not account/order private proof; bounded fill/order polling missing",
+      "reconcile_path": "order_status is NOT_IMPLEMENTED; no cancel/open/fills/reconcile methods",
+      "classification": "ADAPT",
+      "api_contract_status": "OFFICIAL_CATALOGUE_FOUND; per-operation request/response/pagination/order/fill identity schemas not pinned; BLOCKED_API_SPEC_REQUIRED for new mapping",
+      "evidence_limit": "No Kiwoom submit/cancel owner E2E accepted. A negative different-product test is not a Kiwoom positive implementation test."
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "LIVE",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/refactoring/test_cap00_contract.py::test_kiwoom_contract_freezes_missing_lifecycle_without_com_substitution"
+      ],
+      "source_functions": [
+        "src/execution/brokers.py::KiwoomBrokerAdapter.submit_order",
+        "src/execution/brokers.py::KiwoomBrokerAdapter.order_status",
+        "src/execution/brokers.py::KiwoomBrokerAdapter.account_state",
+        "src/execution/brokers.py::KiwoomBrokerAdapter._write_token_cache",
+        "src/execution/brokers.py::broker_for_name",
+        "src/feeds/providers/kiwoom.py::KiwoomAuthClient.post_api_page"
+      ],
+      "gaps": [
+        "KIWOOM-LOCAL-LIFECYCLE",
+        "KIWOOM-API-SCHEMAS",
+        "COMMON-OWNER-BRIDGE",
+        "TOKEN-CACHE-REVIEW"
+      ],
+      "id": "KIWOOM-REST-KR_CASH_ETF-LIVE",
+      "venue": "kiwoom",
+      "market_segment": "KR_CASH_ETF",
+      "product": "KR_CASH_ETF",
+      "environment": "live",
+      "account_scope": "SYMBOLIC_KIWOOM_LIVE_ACCOUNT",
+      "strategy_id": "EXPLICIT_FILE_STRATEGY_OR_LOCAL_FIXTURE",
+      "code_required": true,
+      "order_mode": [
+        "Existing REST BUY/SELL LIMIT/MARKET shape; additional semantics require pinned API schema"
+      ],
+      "transport_owner": "Existing KiwoomBrokerAdapter REST submit only; new common owner bridge is missing",
+      "private_stream": "Provider market-data websocket is not account/order private proof; bounded fill/order polling missing",
+      "reconcile_path": "order_status is NOT_IMPLEMENTED; no cancel/open/fills/reconcile methods",
+      "classification": "ADAPT",
+      "api_contract_status": "OFFICIAL_CATALOGUE_FOUND; per-operation request/response/pagination/order/fill identity schemas not pinned; BLOCKED_API_SPEC_REQUIRED for new mapping",
+      "evidence_limit": "No Kiwoom submit/cancel owner E2E accepted. A negative different-product test is not a Kiwoom positive implementation test."
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "LEGACY_SEPARATE_OS_NOT_REST_SUBSTITUTE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "LEGACY_UNVERIFIED",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "Windows COM control and licensed installation",
+          "explicit account login/permissions and cache/fill/balance proof"
+        ]
+      },
+      "local_test_nodeids": [],
+      "source_functions": [
+        "services/execution/kiwoom_broker.py::KiwoomBrokerAdapter.connect",
+        "services/execution/kiwoom_broker.py::KiwoomBrokerAdapter.submit_order",
+        "services/execution/kiwoom_broker.py::KiwoomBrokerAdapter.get_order_status",
+        "services/execution/kiwoom_broker.py::KiwoomBrokerAdapter.get_open_orders",
+        "services/execution/kiwoom_broker.py::KiwoomBrokerAdapter._get_balance_sync"
+      ],
+      "gaps": [
+        "COM-LOCAL-CACHE"
+      ],
+      "id": "KIWOOM-WINDOWS-COM",
+      "venue": "kiwoom",
+      "market_segment": "KR_CASH_STOCK_ETF_COM",
+      "product": "KR_CASH_STOCK_ETF_COM",
+      "environment": "windows_com",
+      "account_scope": "SYMBOLIC_KIWOOM_WINDOWS_COM_ACCOUNT",
+      "strategy_id": "HISTORICAL_COM_STRATEGY",
+      "code_required": false,
+      "order_mode": [
+        "strategy-selected native mode; unsupported mode rejects before mutation"
+      ],
+      "transport_owner": "Existing factual account owner; revised concrete route wiring remains unaccepted",
+      "private_stream": "Native private event or bounded polling; current scope stated in source evidence",
+      "reconcile_path": "Existing path only; gaps must be implemented before route completion",
+      "classification": "KEEP",
+      "evidence_limit": "Cache-only order status/open-orders and placeholder balance are not a full reconciliation implementation; Linux does not validate COM",
+      "claim_scope": "Windows COM historical code only; actual account environment not verified; no MOCK/REST/Linux substitution"
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "DATA_ONLY",
+      "required_mutations": [],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/refactoring/test_tx00_toss_data_only.py::test_broker_submit_order_rejects_before_intent_processing",
+        "tests/refactoring/test_tx00_toss_data_only.py::test_existing_get_behavior_is_preserved_end_to_end"
+      ],
+      "source_functions": [
+        "src/feeds/providers/toss.py::TossCollector.run",
+        "src/feeds/providers/toss.py::TossCollector.parse_ws_frame",
+        "src/feeds/providers/toss.py::TossCollector.candle_event_from_payload",
+        "src/feeds/providers/toss.py::TossAuthClient.request",
+        "src/execution/brokers.py::TossBrokerAdapter.submit_order"
+      ],
+      "gaps": [
+        "FEED-ORDER-SEPARATION"
+      ],
+      "id": "TOSS-DATA",
+      "venue": "toss",
+      "market_segment": "KR_ETF_INDEX_MARKET_DATA",
+      "product": "KR_ETF_INDEX_MARKET_DATA",
+      "environment": "data_only",
+      "account_scope": "SYMBOLIC_TOSS_DATA_ONLY_ACCOUNT",
+      "strategy_id": "EXPLICIT_SOURCE_SUBSCRIBER",
+      "code_required": true,
+      "order_mode": [
+        "NO_ORDER_MUTATION"
+      ],
+      "transport_owner": "TossCollector + existing read-only auth/GET path; no order signer",
+      "private_stream": "Market feed only; no order-private lifecycle required",
+      "reconcile_path": "Not an order route",
+      "classification": "REUSE",
+      "existing_data_collection_required": true
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "UNSUPPORTED_BLOCKED",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "DATA_ONLY",
+      "required_mutations": [],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/refactoring/test_tx00_toss_data_only.py::test_broker_submit_order_rejects_before_intent_processing",
+        "tests/refactoring/test_tx00_toss_data_only.py::test_existing_get_behavior_is_preserved_end_to_end"
+      ],
+      "source_functions": [
+        "src/execution/brokers.py::TossBrokerAdapter.submit_order"
+      ],
+      "gaps": [],
+      "id": "TOSS-ORDERS-BLOCKED",
+      "venue": "toss",
+      "market_segment": "ORDER_MUTATION",
+      "product": "ORDER_MUTATION",
+      "environment": "data_only",
+      "account_scope": "SYMBOLIC_TOSS_DATA_ONLY_ACCOUNT",
+      "strategy_id": "NONE",
+      "code_required": false,
+      "order_mode": [
+        "REJECT_BEFORE_AUTH_OR_TRANSPORT"
+      ],
+      "transport_owner": "Existing factual account owner; revised concrete route wiring remains unaccepted",
+      "private_stream": "Native private event or bounded polling; current scope stated in source evidence",
+      "reconcile_path": "Existing path only; gaps must be implemented before route completion",
+      "classification": "KEEP"
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "PAPER",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_APPLICABLE_TO_INTERNAL_PAPER",
+        "requires": [
+          "No remote mutations; any future external claim is a separately selected route"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/refactoring/test_tx05_file_paper_e2e.py::test_real_file_economic_uninterrupted_restored_parity"
+      ],
+      "source_functions": [
+        "src/runtime/strategy_runtime.py::PaperStrategyRuntime.register_configured",
+        "src/runtime/strategy_runtime.py::PaperStrategyRuntime.process_event",
+        "src/execution/paper_execution.py::PaperExecution.submit",
+        "src/execution/paper_execution.py::PaperExecution.cancel"
+      ],
+      "gaps": [
+        "STRATEGY-ACTION-FEEDBACK"
+      ],
+      "id": "GENERIC-PAPER",
+      "venue": "paper",
+      "market_segment": "EXPLICIT_KR_CASH_SPOT_LINEAR_PERP",
+      "product": "EXPLICIT_KR_CASH_SPOT_LINEAR_PERP",
+      "environment": "paper",
+      "account_scope": "SYMBOLIC_PAPER_PAPER_ACCOUNT",
+      "strategy_id": "EXPLICIT_STRATEGY_FILE",
+      "code_required": true,
+      "order_mode": [
+        "strategy-selected native mode; unsupported mode rejects before mutation"
+      ],
+      "transport_owner": "Existing Paper matcher/ledger/runtime only",
+      "private_stream": "Synthetic/replay factual events",
+      "reconcile_path": "Existing paper ledger/checkpoint; no broker account",
+      "classification": "REUSE"
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "PAPER",
+      "required_mutations": [
+        "CONCURRENT_TWO_VENUE_DISPATCH",
+        "SEQUENTIAL_TWO_VENUE_DISPATCH",
+        "leg_submit_cancel_query_fill",
+        "partial_unknown_residual_reconcile_restart"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/refactoring/test_execution_groups.py::test_group_plan_validation_is_explicit_and_paper_only",
+        "tests/refactoring/test_execution_groups.py::test_partial_unknown_and_timeout_preserve_child_reservations"
+      ],
+      "source_functions": [
+        "src/execution/execution_groups.py::PaperExecutionGroups.create",
+        "src/execution/execution_groups.py::PaperExecutionGroups.observe",
+        "src/execution/execution_groups.py::PaperExecutionGroups.report"
+      ],
+      "gaps": [
+        "CROSS-VENUE-EXECUTION"
+      ],
+      "id": "CROSS-VENUE-REQUIRED-CODE",
+      "venue": "MULTI_SUPPORTED_VENUE",
+      "market_segment": "linear_perpetual_group",
+      "product": "linear_perpetual_group",
+      "environment": "local_scripted",
+      "account_scope": "SYMBOLIC_MULTI_SUPPORTED_VENUE_LOCAL_SCRIPTED_ACCOUNT",
+      "strategy_id": "EXPLICIT_GROUP_STRATEGY_FIXTURE_NO_ALPHA",
+      "code_required": true,
+      "order_mode": [
+        "Strategy-declared CONCURRENT or SEQUENTIAL; engine cannot invent hedge policy"
+      ],
+      "transport_owner": "Current PaperExecutionGroups observes existing child facts; actual concrete two-adapter owner execution missing",
+      "private_stream": "Per-leg factual feedback needed",
+      "reconcile_path": "Current observation is not execution or hedging",
+      "classification": "ADAPT",
+      "code_requirement": "REQUIRED_CORE_CODE_EVEN_WITHOUT_ACTUAL_PAIR",
+      "actual_live_pair_selected": false
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "CONTEST_DRY_RUN",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/test_timefolio.py::test_timefolio_intent_defaults_to_no_submit",
+        "tests/refactoring/test_mov06_timefolio_wiring.py::test_real_durable_spool_uds_engine_drives_fake_timefolio_without_nats"
+      ],
+      "source_functions": [
+        "src/timefolio/client.py::AsyncTimefolioBrowserManager.prepare_order",
+        "src/timefolio/runner.py::TimefolioStrategyRunner.run",
+        "src/timefolio/runner.py::TimefolioStrategyRunner._handle_signal",
+        "src/timefolio/runner.py::TimefolioStrategyRunner._record_result"
+      ],
+      "gaps": [
+        "TIMEFOLIO-STATUS-INTERPRETATION"
+      ],
+      "id": "TIMEFOLIO-LOCAL_DRY_RUN",
+      "venue": "timefolio",
+      "market_segment": "BROWSER_COMPETITION_WEIGHT_ORDER",
+      "product": "BROWSER_COMPETITION_WEIGHT_ORDER",
+      "environment": "local_dry_run",
+      "account_scope": "SYMBOLIC_TIMEFOLIO_LOCAL_DRY_RUN_ACCOUNT",
+      "strategy_id": "EXPLICIT_TIMEFOLIO_STRATEGY",
+      "code_required": true,
+      "order_mode": [
+        "Existing competition BUY/SELL weight order forms; no generic venue TIF invented"
+      ],
+      "transport_owner": "Existing dedicated Timefolio runner/browser, submit false by default and account arm + live-enable fences",
+      "private_stream": "Competition page/status, not a CEX private signer",
+      "reconcile_path": "Existing result/duplicate/UNKNOWN observations; external competition proof unrun",
+      "classification": "REUSE",
+      "evidence_limit": "Dry-run string ACCEPTED accompanies accepted=false/filled=false; preserved Golden does not prove a submitted or filled competition order"
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "DEFAULT_REQUIRED_LOCAL_CODE",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "LIVE",
+      "required_mutations": [
+        "submit",
+        "cancel",
+        "query_order",
+        "list_open_orders",
+        "get_fills",
+        "account_state",
+        "positions",
+        "reconcile",
+        "private_or_bounded_poll"
+      ],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/test_timefolio.py::test_timefolio_intent_defaults_to_no_submit",
+        "tests/refactoring/test_mov06_timefolio_wiring.py::test_real_durable_spool_uds_engine_drives_fake_timefolio_without_nats"
+      ],
+      "source_functions": [
+        "src/timefolio/client.py::AsyncTimefolioBrowserManager.prepare_order",
+        "src/timefolio/runner.py::TimefolioStrategyRunner.run",
+        "src/timefolio/runner.py::TimefolioStrategyRunner._handle_signal",
+        "src/timefolio/runner.py::TimefolioStrategyRunner._record_result"
+      ],
+      "gaps": [
+        "TIMEFOLIO-STATUS-INTERPRETATION"
+      ],
+      "id": "TIMEFOLIO-LIVE",
+      "venue": "timefolio",
+      "market_segment": "BROWSER_COMPETITION_WEIGHT_ORDER",
+      "product": "BROWSER_COMPETITION_WEIGHT_ORDER",
+      "environment": "live",
+      "account_scope": "SYMBOLIC_TIMEFOLIO_LIVE_ACCOUNT",
+      "strategy_id": "EXPLICIT_TIMEFOLIO_STRATEGY",
+      "code_required": true,
+      "order_mode": [
+        "Existing competition BUY/SELL weight order forms; no generic venue TIF invented"
+      ],
+      "transport_owner": "Existing dedicated Timefolio runner/browser, submit false by default and account arm + live-enable fences",
+      "private_stream": "Competition page/status, not a CEX private signer",
+      "reconcile_path": "Existing result/duplicate/UNKNOWN observations; external competition proof unrun",
+      "classification": "REUSE",
+      "evidence_limit": "Dry-run string ACCEPTED accompanies accepted=false/filled=false; preserved Golden does not prove a submitted or filled competition order"
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "FUTURE_EXTENSION_ONLY_NOT_REAL_API_REQUIRED",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "EXTENSION_FIXTURE_ONLY",
+      "required_mutations": [],
+      "external_gate": {
+        "status": "NOT_SELECTED",
+        "requires": [
+          "Separate adapter/API/permission contract and explicit selection before real support claims"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/refactoring/test_perp_execution.py::test_product_environment_capability_is_explicit_and_toss_rejected"
+      ],
+      "source_functions": [
+        "src/execution/brokers.py::broker_for_name",
+        "src/execution/perp_execution.py::make_perp_adapter"
+      ],
+      "gaps": [
+        "EXTENSION-FIXTURE-SEAM"
+      ],
+      "id": "NH-NAMOO-FUTURE",
+      "venue": "nh_namoo",
+      "market_segment": "FUTURE_EXPLICIT_PRODUCT",
+      "product": "FUTURE_EXPLICIT_PRODUCT",
+      "environment": "extension_fixture_only",
+      "account_scope": "SYMBOLIC_NH_NAMOO_EXTENSION_FIXTURE_ONLY_ACCOUNT",
+      "strategy_id": "LOCAL_EXTENSION_FIXTURE",
+      "code_required": false,
+      "order_mode": [
+        "Dummy Add/Disable/Remove seam only; never real broker/venue submission"
+      ],
+      "transport_owner": "Existing factual account owner; revised concrete route wiring remains unaccepted",
+      "private_stream": "Native private event or bounded polling; current scope stated in source evidence",
+      "reconcile_path": "Existing path only; gaps must be implemented before route completion",
+      "classification": "MISSING",
+      "extension_seam_required": true,
+      "real_api_code_required": false
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "FUTURE_EXTENSION_ONLY_NOT_REAL_API_REQUIRED",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "EXTENSION_FIXTURE_ONLY",
+      "required_mutations": [],
+      "external_gate": {
+        "status": "NOT_SELECTED",
+        "requires": [
+          "Separate adapter/API/permission contract and explicit selection before real support claims"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/refactoring/test_perp_execution.py::test_product_environment_capability_is_explicit_and_toss_rejected"
+      ],
+      "source_functions": [
+        "src/execution/brokers.py::broker_for_name",
+        "src/execution/perp_execution.py::make_perp_adapter"
+      ],
+      "gaps": [
+        "EXTENSION-FIXTURE-SEAM"
+      ],
+      "id": "NEW-CEX-FUTURE",
+      "venue": "future_cex",
+      "market_segment": "FUTURE_EXPLICIT_PRODUCT",
+      "product": "FUTURE_EXPLICIT_PRODUCT",
+      "environment": "extension_fixture_only",
+      "account_scope": "SYMBOLIC_FUTURE_CEX_EXTENSION_FIXTURE_ONLY_ACCOUNT",
+      "strategy_id": "LOCAL_EXTENSION_FIXTURE",
+      "code_required": false,
+      "order_mode": [
+        "Dummy Add/Disable/Remove seam only; never real broker/venue submission"
+      ],
+      "transport_owner": "Existing factual account owner; revised concrete route wiring remains unaccepted",
+      "private_stream": "Native private event or bounded polling; current scope stated in source evidence",
+      "reconcile_path": "Existing path only; gaps must be implemented before route completion",
+      "classification": "MISSING",
+      "extension_seam_required": true,
+      "real_api_code_required": false
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "UNSUPPORTED_BLOCKED",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "UNSUPPORTED",
+      "required_mutations": [],
+      "external_gate": {
+        "status": "NOT_RUN",
+        "requires": [
+          "explicit account/strategy/environment selection and authorization",
+          "actual auth/permissions/account identity",
+          "real transport/private/polling/position reconciliation and recovery proof"
+        ]
+      },
+      "local_test_nodeids": [
+        "tests/refactoring/test_perp_execution.py::test_product_environment_capability_is_explicit_and_toss_rejected"
+      ],
+      "source_functions": [
+        "src/execution/perp_execution.py::PerpScope.__post_init__"
+      ],
+      "gaps": [
+        "UNSUPPORTED-PRODUCT-MODES"
+      ],
+      "id": "UNSUPPORTED-PRODUCTS",
+      "venue": "SELECTED_VENUES",
+      "market_segment": "INVERSE_COINM_MARGIN_HEDGE_HIP3_HLSPOT",
+      "product": "INVERSE_COINM_MARGIN_HEDGE_HIP3_HLSPOT",
+      "environment": "all",
+      "account_scope": "SYMBOLIC_SELECTED_VENUES_ALL_ACCOUNT",
+      "strategy_id": "NONE",
+      "code_required": false,
+      "order_mode": [
+        "Explicit reject; no linear/spot/position-mode aliasing"
+      ],
+      "transport_owner": "Existing factual account owner; revised concrete route wiring remains unaccepted",
+      "private_stream": "Native private event or bounded polling; current scope stated in source evidence",
+      "reconcile_path": "Existing path only; gaps must be implemented before route completion",
+      "classification": "KEEP"
+    },
+    {
+      "decision_owner": "Codex: final03 ARCH-00A/B default required scope; user has not authorized an exclusion",
+      "activation_authorized": false,
+      "capability_code_complete": false,
+      "local_integration_verified": false,
+      "external_validation_pending": true,
+      "production_verified": false,
+      "source_independence": "Execution venue/account and market-data provider are independent; no required broker-specific producer/all-feed readiness barrier",
+      "decision_status": "NOT_SELECTED_OPT_IN",
+      "execution_mode": "LOCAL_SCRIPTED_ACCEPTANCE_ONLY",
+      "claim": "DATA_ONLY",
+      "required_mutations": [],
+      "external_gate": {
+        "status": "NOT_SELECTED",
+        "requires": [
+          "User selection plus separate local/provider/soak proof"
+        ]
+      },
+      "local_test_nodeids": [],
+      "source_functions": [],
+      "gaps": [],
+      "id": "KR350-OPT-IN",
+      "venue": "KR_DATA",
+      "market_segment": "350_MINUTE_DAILY_UNIVERSE",
+      "product": "350_MINUTE_DAILY_UNIVERSE",
+      "environment": "opt_in_not_selected",
+      "account_scope": "SYMBOLIC_KR_DATA_OPT_IN_NOT_SELECTED_ACCOUNT",
+      "strategy_id": "NONE",
+      "code_required": false,
+      "order_mode": [
+        "No activation; KR-DATA-01 not required for base release"
+      ],
+      "transport_owner": "Existing factual account owner; revised concrete route wiring remains unaccepted",
+      "private_stream": "Native private event or bounded polling; current scope stated in source evidence",
+      "reconcile_path": "Existing path only; gaps must be implemented before route completion",
+      "classification": "KEEP"
+    }
+  ],
+  "function_level_gaps": [
+    {
+      "id": "CONCRETE-TRANSPORT",
+      "owner_tickets": [
+        "VEN-01",
+        "CAP-01",
+        "CAP-02"
+      ],
+      "status": "MISSING_LOCAL_COMPOSITION",
+      "source_functions": [
+        "src/execution/perp_execution.py::capability_for"
+      ],
+      "missing_or_review": [
+        "concrete transport dispatch permit seam",
+        "runtime signer/account binding"
+      ],
+      "local_or_external": "LOCAL_CODE_OR_CONTRACT_WORK",
+      "reason": "Injected ScriptedTransport and request mappings are reusable; no blanket five-client rewrite",
+      "no_rebuild_instruction": true
+    },
+    {
+      "id": "PRIVATE-LIFECYCLE",
+      "owner_tickets": [
+        "CAP-03",
+        "QA-01"
+      ],
+      "status": "MISSING_LOCAL_COMPOSITION",
+      "source_functions": [
+        "src/execution/perp_execution.py::capability_for"
+      ],
+      "missing_or_review": [
+        "authenticated private subscription",
+        "bounded reconnect/gap recovery",
+        "normalizer-to-owner durable feedback"
+      ],
+      "local_or_external": "LOCAL_CODE_OR_CONTRACT_WORK",
+      "reason": "Native frame normalizers alone do not implement connection lifecycle",
+      "no_rebuild_instruction": true
+    },
+    {
+      "id": "COMMON-OWNER-BRIDGE",
+      "owner_tickets": [
+        "EXEC-01",
+        "VEN-01"
+      ],
+      "status": "MISSING_LOCAL_COMPOSITION",
+      "source_functions": [
+        "src/execution/execution_owner.py::ExecutionOwner.supports_offline_handoff"
+      ],
+      "missing_or_review": [
+        "selected real-native adapter to factual owner/reconciliation seam"
+      ],
+      "local_or_external": "LOCAL_CODE_OR_CONTRACT_WORK",
+      "reason": "Existing owner deliberately accepts offline-only adapters; preserve safety until explicit bridge tests",
+      "no_rebuild_instruction": true
+    },
+    {
+      "id": "KIWOOM-LOCAL-LIFECYCLE",
+      "owner_tickets": [
+        "CAP-01",
+        "VEN-01",
+        "EXEC-01"
+      ],
+      "status": "MISSING_LOCAL_CODE",
+      "source_functions": [
+        "src/execution/brokers.py::KiwoomBrokerAdapter.order_status"
+      ],
+      "missing_or_review": [
+        "cancel_order",
+        "query_order complete status",
+        "list_open_orders",
+        "get_fills",
+        "full account/position facts",
+        "reconcile"
+      ],
+      "local_or_external": "LOCAL_CODE_OR_CONTRACT_WORK",
+      "reason": "REST order_status returns NOT_IMPLEMENTED; account_state only counts positions",
+      "no_rebuild_instruction": true
+    },
+    {
+      "id": "KIWOOM-API-SCHEMAS",
+      "owner_tickets": [
+        "CAP-01",
+        "VEN-01"
+      ],
+      "status": "BLOCKED_API_SPEC_REQUIRED",
+      "source_functions": [
+        "src/execution/brokers.py::KiwoomBrokerAdapter.submit_order",
+        "src/execution/brokers.py::KiwoomBrokerAdapter.order_status",
+        "src/execution/brokers.py::KiwoomBrokerAdapter.account_state"
+      ],
+      "missing_or_review": [
+        "per-operation request/response schema",
+        "continuation and exact order/fill identity",
+        "mock/live capability checks"
+      ],
+      "local_or_external": "LOCAL_CODE_OR_CONTRACT_WORK",
+      "reason": "Official catalogue exists; catalogue IDs are not a frozen protocol fixture. Do not guess missing endpoint/TR/payload",
+      "no_rebuild_instruction": true
+    },
+    {
+      "id": "TOKEN-CACHE-REVIEW",
+      "owner_tickets": [
+        "VEN-01",
+        "FEED-01"
+      ],
+      "status": "SOURCE_ONLY_SECURITY_REVIEW",
+      "source_functions": [
+        "src/execution/brokers.py::KiwoomBrokerAdapter._write_token_cache"
+      ],
+      "missing_or_review": [
+        "explicit cache permissions",
+        "credential fingerprint/schema separation",
+        "KST expiry interpretation",
+        "refresh serialization"
+      ],
+      "local_or_external": "LOCAL_CODE_OR_CONTRACT_WORK",
+      "reason": "Source lacks explicit matching protections of KiwoomAuthClient; actual cache/umask exposure not inspected or claimed",
+      "no_rebuild_instruction": true
+    },
+    {
+      "id": "KIS-FILE-BRIDGE",
+      "owner_tickets": [
+        "STR-01",
+        "STR-02"
+      ],
+      "status": "MISSING_REVISED_PLUGIN_WIRING",
+      "source_functions": [
+        "src/runtime/etf_trading.py::EtfTradingLoop.__init__"
+      ],
+      "missing_or_review": [
+        "C3/KP/KD real file plugin/action feedback reuse"
+      ],
+      "local_or_external": "LOCAL_CODE_OR_CONTRACT_WORK",
+      "reason": "Existing KIS mock/mock2 and pure helper Golden stay accepted; do not substitute BrokerStub or invent stock alpha",
+      "no_rebuild_instruction": true
+    },
+    {
+      "id": "SPOT-ROUTE-INTEGRATION",
+      "owner_tickets": [
+        "VEN-01",
+        "CAP-01",
+        "EXEC-01"
+      ],
+      "status": "MISSING_LOCAL_INTEGRATION",
+      "source_functions": [
+        "src/execution/brokers.py::BinanceBrokerAdapter.submit_order"
+      ],
+      "missing_or_review": [
+        "positive selected Spot cancel/fill/reconcile/owner fixtures"
+      ],
+      "local_or_external": "LOCAL_CODE_OR_CONTRACT_WORK",
+      "reason": "Spot REST primitives exist; negative Perp rejection is not positive Spot route completeness",
+      "no_rebuild_instruction": true
+    },
+    {
+      "id": "COM-LOCAL-CACHE",
+      "owner_tickets": [
+        "VEN-01",
+        "CAP-01"
+      ],
+      "status": "LEGACY_SEPARATE_OS_LOCAL_GAPS",
+      "source_functions": [
+        "services/execution/kiwoom_broker.py::KiwoomBrokerAdapter.get_order_status",
+        "services/execution/kiwoom_broker.py::KiwoomBrokerAdapter._get_balance_sync"
+      ],
+      "missing_or_review": [
+        "order-map population proof",
+        "real balance mapping",
+        "restart/open/fill reconciliation"
+      ],
+      "local_or_external": "LOCAL_CODE_OR_CONTRACT_WORK",
+      "reason": "COM cache status and placeholder balance do not replace the selected REST route; no COM refactor authorized here",
+      "no_rebuild_instruction": true
+    },
+    {
+      "id": "FEED-ORDER-SEPARATION",
+      "owner_tickets": [
+        "FEED-01",
+        "VEN-01",
+        "QA-01"
+      ],
+      "status": "REUSE_AND_VERIFY_SELECTED_RUNTIME",
+      "source_functions": [
+        "src/feeds/providers/toss.py::TossCollector.run"
+      ],
+      "missing_or_review": [
+        "explicit producer activation and strategy subscription",
+        "broker-only route independent of market data source"
+      ],
+      "local_or_external": "LOCAL_CODE_OR_CONTRACT_WORK",
+      "reason": "TOSS collection required and current GET/Golden preserved; order mutation remains blocked",
+      "no_rebuild_instruction": true
+    },
+    {
+      "id": "STRATEGY-ACTION-FEEDBACK",
+      "owner_tickets": [
+        "STR-02",
+        "EXEC-01"
+      ],
+      "status": "MISSING_REVISED_ACTION_CONTRACT",
+      "source_functions": [
+        "src/runtime/strategy_runtime.py::PaperStrategyRuntime.process_event"
+      ],
+      "missing_or_review": [
+        "NEW/CANCEL/REPLACE strategy plans",
+        "same-strategy callback and factual context"
+      ],
+      "local_or_external": "LOCAL_CODE_OR_CONTRACT_WORK",
+      "reason": "Existing paper matcher/signal/recovery behavior is reused, not rebuilt",
+      "no_rebuild_instruction": true
+    },
+    {
+      "id": "CROSS-VENUE-EXECUTION",
+      "owner_tickets": [
+        "CAP-05",
+        "EXEC-01",
+        "QA-01"
+      ],
+      "status": "MISSING_REQUIRED_CORE_CODE",
+      "source_functions": [
+        "src/execution/execution_groups.py::PaperExecutionGroups.observe"
+      ],
+      "missing_or_review": [
+        "concrete two-venue CONCURRENT/SEQUENTIAL dispatch",
+        "leg lifecycle partial/UNKNOWN/cancel/latefill",
+        "restart/residual reconciliation"
+      ],
+      "local_or_external": "LOCAL_CODE_OR_CONTRACT_WORK",
+      "reason": "No actual pair selection is needed to implement/test required code; no automatic economic hedge policy in engine",
+      "no_rebuild_instruction": true
+    },
+    {
+      "id": "TIMEFOLIO-STATUS-INTERPRETATION",
+      "owner_tickets": [
+        "EXEC-01",
+        "OBS-01"
+      ],
+      "status": "PRESERVED_DRY_RUN_SEMANTICS_REVIEW",
+      "source_functions": [
+        "src/timefolio/runner.py::TimefolioStrategyRunner._record_result"
+      ],
+      "missing_or_review": [
+        "viewer/caller interpretation of dry-run accepted=false"
+      ],
+      "local_or_external": "LOCAL_CODE_OR_CONTRACT_WORK",
+      "reason": "Preserve current byte-exact oracle; internal dry-run ACCEPTED is not exchange ACK/fill. No new defect reproducer or product repair claimed here",
+      "no_rebuild_instruction": true
+    },
+    {
+      "id": "EXTENSION-FIXTURE-SEAM",
+      "owner_tickets": [
+        "VEN-01",
+        "QA-01"
+      ],
+      "status": "MISSING_LOCAL_EXTENSION_FIXTURE",
+      "source_functions": [
+        "src/execution/brokers.py::broker_for_name"
+      ],
+      "missing_or_review": [
+        "Add/Disable/Remove Dummy Broker and CEX fixture without common-core branches"
+      ],
+      "local_or_external": "LOCAL_CODE_OR_CONTRACT_WORK",
+      "reason": "NH real API is a future extension, not current local API implementation obligation",
+      "no_rebuild_instruction": true
+    },
+    {
+      "id": "UNSUPPORTED-PRODUCT-MODES",
+      "owner_tickets": [
+        "CAP-02",
+        "VEN-01"
+      ],
+      "status": "VERIFY_SELECTED_GUARDS_BEFORE_SEND",
+      "source_functions": [
+        "src/execution/perp_execution.py::PerpScope.__post_init__"
+      ],
+      "missing_or_review": [
+        "unsupported inverse/COINM/margin/hedge/HIP3/HLspot rejection and native TIF capability checks"
+      ],
+      "local_or_external": "LOCAL_CODE_OR_CONTRACT_WORK",
+      "reason": "Current linear-product guard is tested; do not claim all undocumented venue position modes are certified",
+      "no_rebuild_instruction": true
+    }
+  ],
+  "direct_callers_one_hop": {
+    "KisCashBroker": [
+      "src/execution/brokers.py",
+      "src/runtime/etf_recovery.py",
+      "src/runtime/etf_trading.py"
+    ],
+    "TimefolioStrategyRunner": [
+      "src/runtime/cli.py",
+      "src/runtime/local_runtime.py",
+      "src/timefolio/__init__.py"
+    ],
+    "BinanceBrokerAdapter": [
+      "src/execution/brokers.py"
+    ],
+    "PaperExecutionGroups": [],
+    "ExecutionOwner": [
+      "src/runtime/real_runner.py"
+    ],
+    "TossCollector": [
+      "src/runtime/cli.py"
+    ],
+    "KiwoomBrokerAdapter": [
+      "src/execution/brokers.py"
+    ],
+    "make_perp_adapter": []
+  },
+  "direct_caller_limit": "AST Name/import evidence only; not a complete dynamic runtime callgraph or proof of activation",
+  "official_contract_sources": [
+    {
+      "url": "https://openapi.kiwoom.com/m/guide/apiguide",
+      "checked_on": "2026-10-27",
+      "verified_level": "PUBLIC_OAUTH_PAGE_AND_OPERATION_CATALOGUE_ONLY",
+      "catalogue_ids": [
+        "kt10000",
+        "kt10001",
+        "kt10002",
+        "ka10075",
+        "ka10076",
+        "kt00018"
+      ],
+      "not_verified": "Selected cancel/query/open/fill pagination schemas, mutation permit transport and owner local fixtures remain unpinned; BLOCKED_API_SPEC_REQUIRED before new mapping"
+    },
+    {
+      "url": "https://github.com/koreainvestment/open-trading-api/blob/main/examples_llm/domestic_stock/order_cash/order_cash.py",
+      "checked_on": "2026-10-27",
+      "verified_level": "OFFICIAL_KIS_EXAMPLE_REFERENCE; no account request or imported code"
+    }
+  ],
+  "global_feature_completion": false,
+  "deployment_authorized": false
+}

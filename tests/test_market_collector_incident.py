@@ -7,8 +7,8 @@ import aiohttp
 import pytest
 
 from test_telegram_status import _controller
-from vibetrading.health import touch
-from vibetrading.providers.kiwoom import KiwoomAuthClient, KiwoomCollector
+from operations.health import touch
+from feeds.providers.kiwoom import KiwoomAuthClient, KiwoomCollector
 
 
 def client(tmp_path):
@@ -156,7 +156,7 @@ async def test_failed_delivery_is_not_marked_sent_and_closed_session_is_quiet(tm
 @pytest.mark.asyncio
 async def test_connecting_and_wrong_market_closed_phase_cannot_silently_persist(tmp_path, monkeypatch):
     bot = _controller(tmp_path); sent = []; clock = [1000.]
-    monkeypatch.setattr('vibetrading.telegram.time.monotonic', lambda:clock[0])
+    monkeypatch.setattr("operations.telegram.time.monotonic", lambda:clock[0])
     async def send(session, chat, text): sent.append(text)
     bot._send = send
     await bot._market_health_once(None, {'kiwoom':True})
@@ -168,7 +168,7 @@ async def test_connecting_and_wrong_market_closed_phase_cannot_silently_persist(
 
 @pytest.mark.asyncio
 async def test_kiwoom_does_not_connect_or_report_stall_during_futures_only_session(tmp_path, monkeypatch):
-    from vibetrading import runtime
+    from runtime import runtime
     settings = _controller(tmp_path).settings; phases = []
     monkeypatch.setattr(runtime, 'session_state', lambda group:(group=='KR_DERIVATIVES','2026-10-15'))
     monkeypatch.setattr(runtime, 'health_touch', lambda *args, **kwargs:phases.append(kwargs['detail']['phase']))

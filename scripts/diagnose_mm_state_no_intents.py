@@ -17,7 +17,7 @@ models={};instruments={};counts={k:Counter() for k in targets};last={};prices={k
 for key,(sid,module) in targets.items():
     v,a=key;c=fits[v+':'+sid].get('calibration',{});r=raw[v][a]
     i=Instrument(**{k:D(x) if k in ('tick','lot','minimum','min_notional','maker_fee','taker_fee') else x for k,x in r.items()})
-    instruments[key]=i;models[key]=importlib.import_module('vibetrading.strategies.research.state.'+module).Strategy(mode='state',calibration=c,tick=float(i.tick))
+    instruments[key]=i;models[key]=importlib.import_module('strategies.research.state.'+module).Strategy(mode='state',calibration=c,tick=float(i.tick))
 path=src/'pilot_30min_20261004/run.sqlite';decoder=NativeReplay(path)
 for t,_,kind,r in sqlite_events(path):
     key=r['venue'],r.get('asset','')

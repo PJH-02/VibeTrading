@@ -6,9 +6,8 @@ from pathlib import Path
 
 import pytest
 from test_spool_recovery import writer, read_limits, bytes_on_disk
-from vibetrading import market_spool as spool
-from vibetrading.market_spool import (SpoolCursor, SpoolReader, SpoolError, SpoolCorruption,
-    RetainedPrefix, capture_retained_prefix, read_spool_records, scan_spool)
+from storage import market_spool as spool
+from storage.market_spool import SpoolCursor, SpoolReader, SpoolError, SpoolCorruption, RetainedPrefix, capture_retained_prefix, read_spool_records, scan_spool
 
 P, I = "grvt-collector", "incarnation-A"
 

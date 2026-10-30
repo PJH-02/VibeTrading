@@ -3,8 +3,8 @@ import sqlite3
 
 import pytest
 
-from vibetrading.process_lease import ProcessLease
-from vibetrading.telegram_state import OutboxFull, TelegramState
+from execution.process_lease import ProcessLease
+from operations.telegram_state import OutboxFull, TelegramState
 
 
 def test_receive_is_durable_before_offset_and_duplicate_identity_conflicts(tmp_path):

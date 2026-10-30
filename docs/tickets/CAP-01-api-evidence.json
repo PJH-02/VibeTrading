@@ -1,0 +1,2375 @@
+{
+  "verification_date": "2026-10-27",
+  "target_os": "Ubuntu Linux",
+  "official_github_ref": "953e5dbff123f437ab4d11a78a95191a685eb51f",
+  "scope": "Public API schema evidence only; no account API calls. Synthetic response fixtures must be labelled synthetic.",
+  "erratum": "kt10002 is MODIFY; kt10003 is CANCEL. Do not change immutable historical CAP00 receipts.",
+  "kiwoom": {
+    "kt10000": {
+      "url": "https://openapi.kiwoom.com/m/guide/apiguide/13/kt10000",
+      "html_sha256": "fdb2b1b5c8e103dfa05385512af86af8031c84bc749c017bcb4b9c9d453cc2a7",
+      "tables_sha256": "f56724b290c460e2168a29ac7d498736c937e73401510a6a512fab0e808d1b06",
+      "tables": [
+        [
+          [
+            "Method",
+            "POST"
+          ],
+          [
+            "운영 도메인",
+            "https://api.kiwoom.com"
+          ],
+          [
+            "모의투자도메인",
+            "https://mockapi.kiwoom.com (KRX만 지원가능)"
+          ],
+          [
+            "URL",
+            "/api/dostk/ordr"
+          ],
+          [
+            "Format",
+            "JSON"
+          ],
+          [
+            "Content-Type",
+            "application/json;charset=UTF-8"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "Type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "authorization",
+            "접근토큰",
+            "String",
+            "Y",
+            "1000",
+            "토큰 지정시 토큰타입(\"Bearer\") 붙혀서 호출 <br/> 예) Bearer Egicyx..."
+          ],
+          [
+            "cont-yn",
+            "연속조회여부",
+            "String",
+            "N",
+            "1",
+            "응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅"
+          ],
+          [
+            "next-key",
+            "연속조회키",
+            "String",
+            "N",
+            "50",
+            "응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅"
+          ],
+          [
+            "api-id",
+            "TR명",
+            "String",
+            "Y",
+            "10",
+            "8자리 TR코드, ex) ka00001, usa10099"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "dmst_stex_tp",
+            "국내거래소구분",
+            "String",
+            "Y",
+            "3",
+            "KRX,NXT,SOR"
+          ],
+          [
+            "stk_cd",
+            "종목코드",
+            "String",
+            "Y",
+            "12",
+            ""
+          ],
+          [
+            "ord_qty",
+            "주문수량",
+            "String",
+            "Y",
+            "12",
+            "단위: 1주"
+          ],
+          [
+            "ord_uv",
+            "주문단가",
+            "String",
+            "N",
+            "12",
+            "단위: 원"
+          ],
+          [
+            "trde_tp",
+            "매매구분",
+            "String",
+            "Y",
+            "2",
+            "0:보통, 3:시장가, 5:조건부지정가, 81:장마감후시간외, 61:장시작전시간외, 6:최유리지정가, 7:최우선지정가, 10:보통(IOC), 13:시장가(IOC), 16:최유리(IOC), 20:보통(FOK), 23:시장가(FOK), 26:최유리(FOK), 28:스톱지정가, 29:중간가, 30:중간가(IOC), 31:중간가(FOK), 40:보통(GTP), 46:최유리(GTP), 47:최우선(GTP)"
+          ],
+          [
+            "cond_uv",
+            "조건단가",
+            "String",
+            "N",
+            "12",
+            "단위: 원"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "cont-yn",
+            "연속조회여부",
+            "다음 데이터가 있을시 Y값 전달",
+            "N",
+            "1",
+            "다음 데이터가 있을시 Y값 전달"
+          ],
+          [
+            "next-key",
+            "연속조회키",
+            "다음 데이터가 있을시 다음 키값 전달",
+            "N",
+            "50",
+            "다음 데이터가 있을시 다음 키값 전달"
+          ],
+          [
+            "api-id",
+            "TR명",
+            "8자리 TR코드, ex) ka00001, usa10099",
+            "Y",
+            "10",
+            "8자리 TR코드, ex) ka00001, usa10099"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "ord_no",
+            "주문번호",
+            "7자리 주문번호",
+            "N",
+            "7",
+            "7자리 주문번호"
+          ],
+          [
+            "dmst_stex_tp",
+            "국내거래소구분",
+            "KRX, NXT, SOR",
+            "N",
+            "6",
+            "KRX, NXT, SOR"
+          ]
+        ]
+      ]
+    },
+    "kt10002": {
+      "url": "https://openapi.kiwoom.com/m/guide/apiguide/13/kt10002",
+      "html_sha256": "2d883a66c4bb51ab3466939f05d52b9b6131466ccbb23a23d2c62f057998fc67",
+      "tables_sha256": "3be1f95f64a179644c4d920a7a66ec5feb0b69b2f79ee3785b69195043db3379",
+      "tables": [
+        [
+          [
+            "Method",
+            "POST"
+          ],
+          [
+            "운영 도메인",
+            "https://api.kiwoom.com"
+          ],
+          [
+            "모의투자도메인",
+            "https://mockapi.kiwoom.com (KRX만 지원가능)"
+          ],
+          [
+            "URL",
+            "/api/dostk/ordr"
+          ],
+          [
+            "Format",
+            "JSON"
+          ],
+          [
+            "Content-Type",
+            "application/json;charset=UTF-8"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "Type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "authorization",
+            "접근토큰",
+            "String",
+            "Y",
+            "1000",
+            "토큰 지정시 토큰타입(\"Bearer\") 붙혀서 호출 <br/> 예) Bearer Egicyx..."
+          ],
+          [
+            "cont-yn",
+            "연속조회여부",
+            "String",
+            "N",
+            "1",
+            "응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅"
+          ],
+          [
+            "next-key",
+            "연속조회키",
+            "String",
+            "N",
+            "50",
+            "응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅"
+          ],
+          [
+            "api-id",
+            "TR명",
+            "String",
+            "Y",
+            "10",
+            "8자리 TR코드, ex) ka00001, usa10099"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "dmst_stex_tp",
+            "국내거래소구분",
+            "String",
+            "Y",
+            "3",
+            "KRX,NXT,SOR"
+          ],
+          [
+            "orig_ord_no",
+            "원주문번호",
+            "String",
+            "Y",
+            "7",
+            "매수/매도 주문 요청 응답 결과로 받은 7자리 주문번호"
+          ],
+          [
+            "stk_cd",
+            "종목코드",
+            "String",
+            "Y",
+            "12",
+            "종목코드 6자리"
+          ],
+          [
+            "mdfy_qty",
+            "정정수량",
+            "String",
+            "Y",
+            "12",
+            "단위: 1주, '0' 입력 시 잔량 전부 정정"
+          ],
+          [
+            "mdfy_uv",
+            "정정단가",
+            "String",
+            "Y",
+            "12",
+            "단위: 원"
+          ],
+          [
+            "mdfy_cond_uv",
+            "정정조건단가",
+            "String",
+            "N",
+            "12",
+            "단위: 원"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "cont-yn",
+            "연속조회여부",
+            "다음 데이터가 있을시 Y값 전달",
+            "N",
+            "1",
+            "다음 데이터가 있을시 Y값 전달"
+          ],
+          [
+            "next-key",
+            "연속조회키",
+            "다음 데이터가 있을시 다음 키값 전달",
+            "N",
+            "50",
+            "다음 데이터가 있을시 다음 키값 전달"
+          ],
+          [
+            "api-id",
+            "TR명",
+            "8자리 TR코드, ex) ka00001, usa10099",
+            "Y",
+            "10",
+            "8자리 TR코드, ex) ka00001, usa10099"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "ord_no",
+            "주문번호",
+            "새 주문번호",
+            "N",
+            "7",
+            "새 주문번호"
+          ],
+          [
+            "base_orig_ord_no",
+            "모주문번호",
+            "원 주문번호",
+            "N",
+            "7",
+            "원 주문번호"
+          ],
+          [
+            "mdfy_qty",
+            "정정수량",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 12자리 숫자",
+            "N",
+            "12",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 12자리 숫자"
+          ],
+          [
+            "dmst_stex_tp",
+            "국내거래소구분",
+            "KRX, NXT, SOR",
+            "N",
+            "6",
+            "KRX, NXT, SOR"
+          ]
+        ]
+      ]
+    },
+    "kt10003": {
+      "url": "https://openapi.kiwoom.com/m/guide/apiguide/13/kt10003",
+      "html_sha256": "e09f35b500af597aca63561a1df0a765fcdf0584076994a6f0e65852ab6ebee8",
+      "tables_sha256": "5158289882d4d20da6c50f382f41b9e99b90e7ee23f478548afb6001b4cafe5e",
+      "tables": [
+        [
+          [
+            "Method",
+            "POST"
+          ],
+          [
+            "운영 도메인",
+            "https://api.kiwoom.com"
+          ],
+          [
+            "모의투자 도메인",
+            "https://mockapi.kiwoom.com (KRX만 지원가능)"
+          ],
+          [
+            "URL",
+            "/api/dostk/ordr"
+          ],
+          [
+            "Format",
+            "JSON"
+          ],
+          [
+            "Content-Type",
+            "application/json;charset=UTF-8"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "Type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "authorization",
+            "접근토큰",
+            "String",
+            "Y",
+            "1000",
+            "토큰 지정시 토큰타입(\"Bearer\") 붙혀서 호출 <br/> 예) Bearer Egicyx..."
+          ],
+          [
+            "cont-yn",
+            "연속조회여부",
+            "String",
+            "N",
+            "1",
+            "응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅"
+          ],
+          [
+            "next-key",
+            "연속조회키",
+            "String",
+            "N",
+            "50",
+            "응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅"
+          ],
+          [
+            "api-id",
+            "TR명",
+            "String",
+            "Y",
+            "10",
+            "8자리 TR코드, ex) ka00001, usa10099"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "dmst_stex_tp",
+            "국내거래소구분",
+            "String",
+            "Y",
+            "3",
+            "KRX,NXT,SOR"
+          ],
+          [
+            "orig_ord_no",
+            "원주문번호",
+            "String",
+            "Y",
+            "7",
+            "매수/매도 주문 요청 응답 결과로 받은 7자리 주문번호"
+          ],
+          [
+            "stk_cd",
+            "종목코드",
+            "String",
+            "Y",
+            "12",
+            "종목코드 6자리"
+          ],
+          [
+            "cncl_qty",
+            "취소수량",
+            "String",
+            "Y",
+            "12",
+            "단위: 1주, '0' 입력시 잔량 전부 취소"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "cont-yn",
+            "연속조회여부",
+            "다음 데이터가 있을시 Y값 전달",
+            "N",
+            "1",
+            "다음 데이터가 있을시 Y값 전달"
+          ],
+          [
+            "next-key",
+            "연속조회키",
+            "다음 데이터가 있을시 다음 키값 전달",
+            "N",
+            "50",
+            "다음 데이터가 있을시 다음 키값 전달"
+          ],
+          [
+            "api-id",
+            "TR명",
+            "8자리 TR코드, ex) ka00001, usa10099",
+            "Y",
+            "10",
+            "8자리 TR코드, ex) ka00001, usa10099"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "ord_no",
+            "주문번호",
+            "새 주문번호",
+            "N",
+            "7",
+            "새 주문번호"
+          ],
+          [
+            "base_orig_ord_no",
+            "모주문번호",
+            "원 주문번호",
+            "N",
+            "7",
+            "원 주문번호"
+          ],
+          [
+            "cncl_qty",
+            "취소수량",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 12자리 숫자",
+            "N",
+            "12",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 12자리 숫자"
+          ]
+        ]
+      ]
+    },
+    "ka10075": {
+      "url": "https://openapi.kiwoom.com/m/guide/apiguide/08/ka10075",
+      "html_sha256": "a4e72d80fff09447af624d5bb873facb96ea96d0aed53035dc497e54ca73a264",
+      "tables_sha256": "1152c947302232c9f78c4c00c80da6e0558f9b377493e18c9677316c489558c7",
+      "tables": [
+        [
+          [
+            "Method",
+            "POST"
+          ],
+          [
+            "운영 도메인",
+            "https://api.kiwoom.com"
+          ],
+          [
+            "모의투자도메인",
+            "https://mockapi.kiwoom.com (KRX만 지원가능)"
+          ],
+          [
+            "URL",
+            "/api/dostk/acnt"
+          ],
+          [
+            "Format",
+            "JSON"
+          ],
+          [
+            "Content-Type",
+            "application/json;charset=UTF-8"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "Type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "authorization",
+            "접근토큰",
+            "String",
+            "Y",
+            "1000",
+            "토큰 지정시 토큰타입(\"Bearer\") 붙혀서 호출 <br/> 예) Bearer Egicyx..."
+          ],
+          [
+            "cont-yn",
+            "연속조회여부",
+            "String",
+            "N",
+            "1",
+            "응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅"
+          ],
+          [
+            "next-key",
+            "연속조회키",
+            "String",
+            "N",
+            "50",
+            "응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅"
+          ],
+          [
+            "api-id",
+            "TR명",
+            "String",
+            "Y",
+            "10",
+            "8자리 TR코드, ex) ka00001, usa10099"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "all_stk_tp",
+            "전체종목구분",
+            "String",
+            "Y",
+            "1",
+            "0:전체, 1:종목"
+          ],
+          [
+            "trde_tp",
+            "매매구분",
+            "String",
+            "Y",
+            "1",
+            "0:전체, 1:매도, 2:매수"
+          ],
+          [
+            "stk_cd",
+            "종목코드",
+            "String",
+            "N",
+            "6",
+            "종목코드 6자리"
+          ],
+          [
+            "stex_tp",
+            "거래소구분",
+            "String",
+            "Y",
+            "1",
+            "0 : 통합, 1 : KRX, 2 : NXT"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "cont-yn",
+            "연속조회여부",
+            "다음 데이터가 있을시 Y값 전달",
+            "N",
+            "1",
+            "다음 데이터가 있을시 Y값 전달"
+          ],
+          [
+            "next-key",
+            "연속조회키",
+            "다음 데이터가 있을시 다음 키값 전달",
+            "N",
+            "50",
+            "다음 데이터가 있을시 다음 키값 전달"
+          ],
+          [
+            "api-id",
+            "TR명",
+            "8자리 TR코드, ex) ka00001, usa10099",
+            "Y",
+            "10",
+            "8자리 TR코드, ex) ka00001, usa10099"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "oso",
+            "미체결",
+            "Data List (Array)",
+            "N",
+            "",
+            "Data List (Array)"
+          ],
+          [
+            "- acnt_no",
+            "계좌번호",
+            "고유 계좌번호 10자리 숫자",
+            "N",
+            "20",
+            "고유 계좌번호 10자리 숫자"
+          ],
+          [
+            "- ord_no",
+            "주문번호",
+            "고유 주문번호 7자리 숫자",
+            "N",
+            "20",
+            "고유 주문번호 7자리 숫자"
+          ],
+          [
+            "- mang_empno",
+            "관리사번",
+            "관리자 사원 번호",
+            "N",
+            "20",
+            "관리자 사원 번호"
+          ],
+          [
+            "- stk_cd",
+            "종목코드",
+            "종목코드 6자리",
+            "N",
+            "20",
+            "종목코드 6자리"
+          ],
+          [
+            "- tsk_tp",
+            "업무구분",
+            "업무 구분명",
+            "N",
+            "20",
+            "업무 구분명"
+          ],
+          [
+            "- ord_stt",
+            "주문상태",
+            "접수",
+            "N",
+            "20",
+            "접수"
+          ],
+          [
+            "- stk_nm",
+            "종목명",
+            "stk_cd의 종목명",
+            "N",
+            "40",
+            "stk_cd의 종목명"
+          ],
+          [
+            "- ord_qty",
+            "주문수량",
+            "단위: 1주",
+            "N",
+            "20",
+            "단위: 1주"
+          ],
+          [
+            "- ord_pric",
+            "주문가격",
+            "단위: 원",
+            "N",
+            "20",
+            "단위: 원"
+          ],
+          [
+            "- oso_qty",
+            "미체결수량",
+            "단위: 1주",
+            "N",
+            "20",
+            "단위: 1주"
+          ],
+          [
+            "- cntr_tot_amt",
+            "체결누계금액",
+            "단위: 원",
+            "N",
+            "20",
+            "단위: 원"
+          ],
+          [
+            "- orig_ord_no",
+            "원주문번호",
+            "원 주문이 없는 경우 '0000000'으로 출력",
+            "N",
+            "20",
+            "원 주문이 없는 경우 '0000000'으로 출력"
+          ],
+          [
+            "- io_tp_nm",
+            "주문구분",
+            "매수, 매도, 매수정정, 매도정정<br/> ※ +, - 표시는 색상 처리가 필요한 경우 사용 바랍니다.",
+            "N",
+            "20",
+            "매수, 매도, 매수정정, 매도정정<br/> ※ +, - 표시는 색상 처리가 필요한 경우 사용 바랍니다."
+          ],
+          [
+            "- trde_tp",
+            "매매구분",
+            "보통, 시장가, 조건부지정가, 장마감후시간외, 장시작전시간외, 시간외단일가, 최유리지정가, 최우선지정가, 보통(IOC), 시장가(IOC), 최유리(IOC), 보통(FOK), 시장가(FOK), 최유리(FOK), 스톱지정가, 중간가, 중간가(IOC), 중간가(FOK)",
+            "N",
+            "20",
+            "보통, 시장가, 조건부지정가, 장마감후시간외, 장시작전시간외, 시간외단일가, 최유리지정가, 최우선지정가, 보통(IOC), 시장가(IOC), 최유리(IOC), 보통(FOK), 시장가(FOK), 최유리(FOK), 스톱지정가, 중간가, 중간가(IOC), 중간가(FOK)"
+          ],
+          [
+            "- tm",
+            "시간",
+            "주문 시간, HHmmss",
+            "N",
+            "20",
+            "주문 시간, HHmmss"
+          ],
+          [
+            "- cntr_no",
+            "체결번호",
+            "미체결 내역은 빈값(\"\")",
+            "N",
+            "20",
+            "미체결 내역은 빈값(\"\")"
+          ],
+          [
+            "- cntr_pric",
+            "체결가",
+            "단위: 원",
+            "N",
+            "20",
+            "단위: 원"
+          ],
+          [
+            "- cntr_qty",
+            "체결량",
+            "단위: 1주",
+            "N",
+            "20",
+            "단위: 1주"
+          ],
+          [
+            "- cur_prc",
+            "현재가",
+            "단위: 원",
+            "N",
+            "20",
+            "단위: 원"
+          ],
+          [
+            "- sel_bid",
+            "매도호가",
+            "단위: 원, 현재 첫번째 매도호가",
+            "N",
+            "20",
+            "단위: 원, 현재 첫번째 매도호가"
+          ],
+          [
+            "- buy_bid",
+            "매수호가",
+            "단위: 원, 현재 첫번째 매수호가",
+            "N",
+            "20",
+            "단위: 원, 현재 첫번째 매수호가"
+          ],
+          [
+            "- unit_cntr_pric",
+            "단위체결가",
+            "단위: 원",
+            "N",
+            "20",
+            "단위: 원"
+          ],
+          [
+            "- unit_cntr_qty",
+            "단위체결량",
+            "단위: 1주",
+            "N",
+            "20",
+            "단위: 1주"
+          ],
+          [
+            "- tdy_trde_cmsn",
+            "당일매매수수료",
+            "단위: 원",
+            "N",
+            "20",
+            "단위: 원"
+          ],
+          [
+            "- tdy_trde_tax",
+            "당일매매세금",
+            "단위: 원",
+            "N",
+            "20",
+            "단위: 원"
+          ],
+          [
+            "- ind_invsr",
+            "개인투자자",
+            "미체결 내역은 빈값",
+            "N",
+            "20",
+            "미체결 내역은 빈값"
+          ],
+          [
+            "- stex_tp",
+            "거래소구분",
+            "0 : 통합, 1 : KRX, 2 : NXT",
+            "N",
+            "20",
+            "0 : 통합, 1 : KRX, 2 : NXT"
+          ],
+          [
+            "- stex_tp_txt",
+            "거래소구분텍스트",
+            "통합,KRX,NXT",
+            "N",
+            "20",
+            "통합,KRX,NXT"
+          ],
+          [
+            "- sor_yn",
+            "SOR 여부값",
+            "Y,N",
+            "N",
+            "20",
+            "Y,N"
+          ],
+          [
+            "- stop_pric",
+            "스톱가",
+            "스톱지정가주문 스톱가",
+            "N",
+            "20",
+            "스톱지정가주문 스톱가"
+          ]
+        ]
+      ]
+    },
+    "ka10076": {
+      "url": "https://openapi.kiwoom.com/m/guide/apiguide/08/ka10076",
+      "html_sha256": "0ce47148c108f6286674d06831c328c35f7ed3fb061a37e28b4a2bd64b1ec9db",
+      "tables_sha256": "70add27f5c83b886f93b5a65dedb22dd43374f67127d6ccee411e35c23cbdbeb",
+      "tables": [
+        [
+          [
+            "Method",
+            "POST"
+          ],
+          [
+            "운영 도메인",
+            "https://api.kiwoom.com"
+          ],
+          [
+            "모의투자 도메인",
+            "https://mockapi.kiwoom.com (KRX만 지원가능)"
+          ],
+          [
+            "URL",
+            "/api/dostk/acnt"
+          ],
+          [
+            "Format",
+            "JSON"
+          ],
+          [
+            "Content-Type",
+            "application/json;charset=UTF-8"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "Type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "authorization",
+            "접근토큰",
+            "String",
+            "Y",
+            "1000",
+            "토큰 지정시 토큰타입(\"Bearer\") 붙혀서 호출 <br/> 예) Bearer Egicyx..."
+          ],
+          [
+            "cont-yn",
+            "연속조회여부",
+            "String",
+            "N",
+            "1",
+            "응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅"
+          ],
+          [
+            "next-key",
+            "연속조회키",
+            "String",
+            "N",
+            "50",
+            "응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅"
+          ],
+          [
+            "api-id",
+            "TR명",
+            "String",
+            "Y",
+            "10",
+            "8자리 TR코드, ex) ka00001, usa10099"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "stk_cd",
+            "종목코드",
+            "String",
+            "N",
+            "6",
+            "종목코드 6자리"
+          ],
+          [
+            "qry_tp",
+            "조회구분",
+            "String",
+            "Y",
+            "1",
+            "0:전체, 1:종목"
+          ],
+          [
+            "sell_tp",
+            "매도수구분",
+            "String",
+            "Y",
+            "1",
+            "0:전체, 1:매도, 2:매수"
+          ],
+          [
+            "ord_no",
+            "주문번호",
+            "String",
+            "N",
+            "10",
+            "검색 기준 값으로 입력한 주문번호 보다 과거에 체결된 내역이 조회됩니다."
+          ],
+          [
+            "stex_tp",
+            "거래소구분",
+            "String",
+            "Y",
+            "1",
+            "0 : 통합, 1 : KRX, 2 : NXT"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "cont-yn",
+            "연속조회여부",
+            "다음 데이터가 있을시 Y값 전달",
+            "N",
+            "1",
+            "다음 데이터가 있을시 Y값 전달"
+          ],
+          [
+            "next-key",
+            "연속조회키",
+            "다음 데이터가 있을시 다음 키값 전달",
+            "N",
+            "50",
+            "다음 데이터가 있을시 다음 키값 전달"
+          ],
+          [
+            "api-id",
+            "TR명",
+            "8자리 TR코드, ex) ka00001, usa10099",
+            "Y",
+            "10",
+            "8자리 TR코드, ex) ka00001, usa10099"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "cntr",
+            "체결",
+            "Data List (Array)",
+            "N",
+            "",
+            "Data List (Array)"
+          ],
+          [
+            "- ord_no",
+            "주문번호",
+            "주문번호 7자리",
+            "N",
+            "20",
+            "주문번호 7자리"
+          ],
+          [
+            "- stk_nm",
+            "종목명",
+            "stk_cd의 종목명",
+            "N",
+            "40",
+            "stk_cd의 종목명"
+          ],
+          [
+            "- io_tp_nm",
+            "주문구분",
+            "매수, 매도, 매수정정, 매도정정, 매수취소, 매도취소, 매수신용, 매도신용<br/> ※ +, - 표시는 색상 처리가 필요한 경우 사용 바랍니다.",
+            "N",
+            "20",
+            "매수, 매도, 매수정정, 매도정정, 매수취소, 매도취소, 매수신용, 매도신용<br/> ※ +, - 표시는 색상 처리가 필요한 경우 사용 바랍니다."
+          ],
+          [
+            "- ord_pric",
+            "주문가격",
+            "단위: 원",
+            "N",
+            "20",
+            "단위: 원"
+          ],
+          [
+            "- ord_qty",
+            "주문수량",
+            "단위: 1주",
+            "N",
+            "20",
+            "단위: 1주"
+          ],
+          [
+            "- cntr_pric",
+            "체결가",
+            "단위: 원",
+            "N",
+            "20",
+            "단위: 원"
+          ],
+          [
+            "- cntr_qty",
+            "체결량",
+            "단위: 1주",
+            "N",
+            "20",
+            "단위: 1주"
+          ],
+          [
+            "- oso_qty",
+            "미체결수량",
+            "단위: 1주",
+            "N",
+            "20",
+            "단위: 1주"
+          ],
+          [
+            "- tdy_trde_cmsn",
+            "당일매매수수료",
+            "단위: 원",
+            "N",
+            "20",
+            "단위: 원"
+          ],
+          [
+            "- tdy_trde_tax",
+            "당일매매세금",
+            "단위: 원",
+            "N",
+            "20",
+            "단위: 원"
+          ],
+          [
+            "- ord_stt",
+            "주문상태",
+            "접수, 확인, 체결",
+            "N",
+            "20",
+            "접수, 확인, 체결"
+          ],
+          [
+            "- trde_tp",
+            "매매구분",
+            "보통, 시장가, 조건부지정가, 장마감후시간외, 장시작전시간외, 시간외단일가, 최유리지정가, 최우선지정가, 보통(IOC), 시장가(IOC), 최유리(IOC), 보통(FOK), 시장가(FOK), 최유리(FOK), 스톱지정가, 중간가, 중간가(IOC), 중간가(FOK)",
+            "N",
+            "20",
+            "보통, 시장가, 조건부지정가, 장마감후시간외, 장시작전시간외, 시간외단일가, 최유리지정가, 최우선지정가, 보통(IOC), 시장가(IOC), 최유리(IOC), 보통(FOK), 시장가(FOK), 최유리(FOK), 스톱지정가, 중간가, 중간가(IOC), 중간가(FOK)"
+          ],
+          [
+            "- orig_ord_no",
+            "원주문번호",
+            "원 주문이 없는 경우 '0000000'으로 출력",
+            "N",
+            "20",
+            "원 주문이 없는 경우 '0000000'으로 출력"
+          ],
+          [
+            "- ord_tm",
+            "주문시간",
+            "HHmmss",
+            "N",
+            "20",
+            "HHmmss"
+          ],
+          [
+            "- stk_cd",
+            "종목코드",
+            "종목코드 6자리",
+            "N",
+            "20",
+            "종목코드 6자리"
+          ],
+          [
+            "- stex_tp",
+            "거래소구분",
+            "0 : 통합, 1 : KRX, 2 : NXT",
+            "N",
+            "20",
+            "0 : 통합, 1 : KRX, 2 : NXT"
+          ],
+          [
+            "- stex_tp_txt",
+            "거래소구분텍스트",
+            "통합,KRX,NXT",
+            "N",
+            "20",
+            "통합,KRX,NXT"
+          ],
+          [
+            "- sor_yn",
+            "SOR 여부값",
+            "Y,N",
+            "N",
+            "20",
+            "Y,N"
+          ],
+          [
+            "- stop_pric",
+            "스톱가",
+            "스톱지정가주문 스톱가",
+            "N",
+            "20",
+            "스톱지정가주문 스톱가"
+          ]
+        ]
+      ]
+    },
+    "kt00007": {
+      "url": "https://openapi.kiwoom.com/m/guide/apiguide/08/kt00007",
+      "html_sha256": "2ed73c6792fcd825aa4ef0e1820204dff4ac370135fe5b4e5c534b7708f71fa6",
+      "tables_sha256": "81f5b114da39f55da18f763b8f1f55f53553191096181797d7b9ebcb73f9fb47",
+      "tables": [
+        [
+          [
+            "Method",
+            "POST"
+          ],
+          [
+            "운영 도메인",
+            "https://api.kiwoom.com"
+          ],
+          [
+            "모의투자 도메인",
+            "https://mockapi.kiwoom.com (KRX만 지원가능)"
+          ],
+          [
+            "URL",
+            "/api/dostk/acnt"
+          ],
+          [
+            "Format",
+            "JSON"
+          ],
+          [
+            "Content-Type",
+            "application/json;charset=UTF-8"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "Type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "authorization",
+            "접근토큰",
+            "String",
+            "Y",
+            "1000",
+            "토큰 지정시 토큰타입(\"Bearer\") 붙혀서 호출 <br/> 예) Bearer Egicyx..."
+          ],
+          [
+            "cont-yn",
+            "연속조회여부",
+            "String",
+            "N",
+            "1",
+            "응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅"
+          ],
+          [
+            "next-key",
+            "연속조회키",
+            "String",
+            "N",
+            "50",
+            "응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅"
+          ],
+          [
+            "api-id",
+            "TR명",
+            "String",
+            "Y",
+            "10",
+            "8자리 TR코드, ex) ka00001, usa10099"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "ord_dt",
+            "주문일자",
+            "String",
+            "N",
+            "8",
+            "YYYYMMDD"
+          ],
+          [
+            "qry_tp",
+            "조회구분",
+            "String",
+            "Y",
+            "1",
+            "1:주문순, 2:역순, 3:미체결, 4:체결내역만"
+          ],
+          [
+            "stk_bond_tp",
+            "주식채권구분",
+            "String",
+            "Y",
+            "1",
+            "0:전체, 1:주식, 2:채권"
+          ],
+          [
+            "sell_tp",
+            "매도수구분",
+            "String",
+            "Y",
+            "1",
+            "0:전체, 1:매도, 2:매수"
+          ],
+          [
+            "stk_cd",
+            "종목코드",
+            "String",
+            "N",
+            "12",
+            "전체 종목 조회는 빈값('')으로 설정"
+          ],
+          [
+            "fr_ord_no",
+            "시작주문번호",
+            "String",
+            "N",
+            "7",
+            "시작주문번호 입력 시 이전 주문은 조회되지 않음, 전체 조회는 빈값('')으로 설정"
+          ],
+          [
+            "dmst_stex_tp",
+            "국내거래소구분",
+            "String",
+            "Y",
+            "6",
+            "%:(전체),KRX:한국거래소,NXT:넥스트트레이드,SOR:최선주문집행"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "cont-yn",
+            "연속조회여부",
+            "다음 데이터가 있을시 Y값 전달",
+            "N",
+            "1",
+            "다음 데이터가 있을시 Y값 전달"
+          ],
+          [
+            "next-key",
+            "연속조회키",
+            "다음 데이터가 있을시 다음 키값 전달",
+            "N",
+            "50",
+            "다음 데이터가 있을시 다음 키값 전달"
+          ],
+          [
+            "api-id",
+            "TR명",
+            "8자리 TR코드, ex) ka00001, usa10099",
+            "Y",
+            "10",
+            "8자리 TR코드, ex) ka00001, usa10099"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "acnt_ord_cntr_prps_dtl",
+            "계좌별주문체결내역상세",
+            "Data List (Array)",
+            "N",
+            "",
+            "Data List (Array)"
+          ],
+          [
+            "- ord_no",
+            "주문번호",
+            "고유 주문번호 7자리",
+            "N",
+            "7",
+            "고유 주문번호 7자리"
+          ],
+          [
+            "- stk_cd",
+            "종목번호",
+            "접두어 1자리 + 종목코드 6자리, 접두어(A: 주식 / J: ELW / Q: ETN)",
+            "N",
+            "12",
+            "접두어 1자리 + 종목코드 6자리, 접두어(A: 주식 / J: ELW / Q: ETN)"
+          ],
+          [
+            "- trde_tp",
+            "매매구분",
+            "지정가, 시장가, 조건부지정가, 장마감후시간외, 장시작전시간외, 최유리지정가, 최우선지정가, 지정가(IOC), 시장가(IOC), 최유리(IOC), 지정가(FOK), 시장가(FOK), 최유리(FOK), 스톱지정가, 중간가, 중간가(IOC), 중간가(FOK)",
+            "N",
+            "20",
+            "지정가, 시장가, 조건부지정가, 장마감후시간외, 장시작전시간외, 최유리지정가, 최우선지정가, 지정가(IOC), 시장가(IOC), 최유리(IOC), 지정가(FOK), 시장가(FOK), 최유리(FOK), 스톱지정가, 중간가, 중간가(IOC), 중간가(FOK)"
+          ],
+          [
+            "- crd_tp",
+            "신용구분",
+            "보통매매, 자기융자매수",
+            "N",
+            "20",
+            "보통매매, 자기융자매수"
+          ],
+          [
+            "- ord_qty",
+            "주문수량",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 10자리 숫자",
+            "N",
+            "10",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 10자리 숫자"
+          ],
+          [
+            "- ord_uv",
+            "주문단가",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 10자리 숫자",
+            "N",
+            "10",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 10자리 숫자"
+          ],
+          [
+            "- cnfm_qty",
+            "확인수량",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 10자리 숫자",
+            "N",
+            "10",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 10자리 숫자"
+          ],
+          [
+            "- acpt_tp",
+            "접수구분",
+            "접수",
+            "N",
+            "20",
+            "접수"
+          ],
+          [
+            "- rsrv_tp",
+            "반대여부",
+            "반대 매매인 경우 출력",
+            "N",
+            "20",
+            "반대 매매인 경우 출력"
+          ],
+          [
+            "- ord_tm",
+            "주문시간",
+            "HH:mm:ss",
+            "N",
+            "8",
+            "HH:mm:ss"
+          ],
+          [
+            "- ori_ord",
+            "원주문",
+            "원 주문이 없는 경우 '0000000'으로 출력",
+            "N",
+            "7",
+            "원 주문이 없는 경우 '0000000'으로 출력"
+          ],
+          [
+            "- stk_nm",
+            "종목명",
+            "stk_cd의 종목명",
+            "N",
+            "40",
+            "stk_cd의 종목명"
+          ],
+          [
+            "- io_tp_nm",
+            "주문구분",
+            "현금매수, 현금매도, 융자매수, 융자매도",
+            "N",
+            "20",
+            "현금매수, 현금매도, 융자매수, 융자매도"
+          ],
+          [
+            "- loan_dt",
+            "대출일",
+            "YYYYMMDD",
+            "N",
+            "8",
+            "YYYYMMDD"
+          ],
+          [
+            "- cntr_qty",
+            "체결수량",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 10자리 숫자",
+            "N",
+            "10",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 10자리 숫자"
+          ],
+          [
+            "- cntr_uv",
+            "체결단가",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 10자리 숫자",
+            "N",
+            "10",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 10자리 숫자"
+          ],
+          [
+            "- ord_remnq",
+            "주문잔량",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 10자리 숫자",
+            "N",
+            "10",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 10자리 숫자"
+          ],
+          [
+            "- comm_ord_tp",
+            "통신구분",
+            "영웅문4, 영웅문S#, REST API",
+            "N",
+            "20",
+            "영웅문4, 영웅문S#, REST API"
+          ],
+          [
+            "- mdfy_cncl",
+            "정정취소",
+            "정정확인, 취소확인",
+            "N",
+            "20",
+            "정정확인, 취소확인"
+          ],
+          [
+            "- cnfm_tm",
+            "확인시간",
+            "HH:mm:ss",
+            "N",
+            "8",
+            "HH:mm:ss"
+          ],
+          [
+            "- dmst_stex_tp",
+            "국내거래소구분",
+            "KRX, NXT, SOR",
+            "N",
+            "8",
+            "KRX, NXT, SOR"
+          ],
+          [
+            "- cond_uv",
+            "스톱가",
+            "스톱지정가주문 스톱가",
+            "N",
+            "10",
+            "스톱지정가주문 스톱가"
+          ]
+        ]
+      ]
+    },
+    "kt00018": {
+      "url": "https://openapi.kiwoom.com/m/guide/apiguide/08/kt00018",
+      "html_sha256": "42a3f252812fb5a30a9b18b9bbf3c9ddc3161a6d3aeb7f359ba0ff1189b0d07e",
+      "tables_sha256": "012544b2178724489240a5be74b29620bda345aa175255d2c49cb6cba80461e9",
+      "tables": [
+        [
+          [
+            "Method",
+            "POST"
+          ],
+          [
+            "운영 도메인",
+            "https://api.kiwoom.com"
+          ],
+          [
+            "모의투자 도메인",
+            "https://mockapi.kiwoom.com (KRX만 지원가능)"
+          ],
+          [
+            "URL",
+            "/api/dostk/acnt"
+          ],
+          [
+            "Format",
+            "JSON"
+          ],
+          [
+            "Content-Type",
+            "application/json;charset=UTF-8"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "Type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "authorization",
+            "접근토큰",
+            "String",
+            "Y",
+            "1000",
+            "토큰 지정시 토큰타입(\"Bearer\") 붙혀서 호출 <br/> 예) Bearer Egicyx..."
+          ],
+          [
+            "cont-yn",
+            "연속조회여부",
+            "String",
+            "N",
+            "1",
+            "응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅"
+          ],
+          [
+            "next-key",
+            "연속조회키",
+            "String",
+            "N",
+            "50",
+            "응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅"
+          ],
+          [
+            "api-id",
+            "TR명",
+            "String",
+            "Y",
+            "10",
+            "8자리 TR코드, ex) ka00001, usa10099"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "qry_tp",
+            "조회구분",
+            "String",
+            "Y",
+            "1",
+            "1:합산, 2:개별"
+          ],
+          [
+            "dmst_stex_tp",
+            "국내거래소구분",
+            "String",
+            "Y",
+            "6",
+            "KRX:한국거래소,NXT:넥스트트레이드"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "cont-yn",
+            "연속조회여부",
+            "다음 데이터가 있을시 Y값 전달",
+            "N",
+            "1",
+            "다음 데이터가 있을시 Y값 전달"
+          ],
+          [
+            "next-key",
+            "연속조회키",
+            "다음 데이터가 있을시 다음 키값 전달",
+            "N",
+            "50",
+            "다음 데이터가 있을시 다음 키값 전달"
+          ],
+          [
+            "api-id",
+            "TR명",
+            "8자리 TR코드, ex) ka00001, usa10099",
+            "Y",
+            "10",
+            "8자리 TR코드, ex) ka00001, usa10099"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "tot_pur_amt",
+            "총매입금액",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자",
+            "N",
+            "15",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자"
+          ],
+          [
+            "tot_evlt_amt",
+            "총평가금액",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자",
+            "N",
+            "15",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자"
+          ],
+          [
+            "tot_evlt_pl",
+            "총평가손익금액",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자",
+            "N",
+            "15",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자"
+          ],
+          [
+            "tot_prft_rt",
+            "총수익률(%)",
+            "단위: %, 소수점 둘째 자리까지 포맷된 백분율",
+            "N",
+            "12",
+            "단위: %, 소수점 둘째 자리까지 포맷된 백분율"
+          ],
+          [
+            "prsm_dpst_aset_amt",
+            "추정예탁자산",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자",
+            "N",
+            "15",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자"
+          ],
+          [
+            "tot_loan_amt",
+            "총대출금",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자",
+            "N",
+            "15",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자"
+          ],
+          [
+            "tot_crd_loan_amt",
+            "총융자금액",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자",
+            "N",
+            "15",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자"
+          ],
+          [
+            "tot_crd_ls_amt",
+            "총대주금액",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자",
+            "N",
+            "15",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자"
+          ],
+          [
+            "acnt_evlt_remn_indv_tot",
+            "계좌평가잔고개별합산",
+            "Data List (Array)",
+            "N",
+            "",
+            "Data List (Array)"
+          ],
+          [
+            "- stk_cd",
+            "종목번호",
+            "접두어 1자리 + 종목코드 6자리, 접두어(A: 주식 / J: ELW / Q: ETN)",
+            "N",
+            "12",
+            "접두어 1자리 + 종목코드 6자리, 접두어(A: 주식 / J: ELW / Q: ETN)"
+          ],
+          [
+            "- stk_nm",
+            "종목명",
+            "stk_cd의 종목명",
+            "N",
+            "40",
+            "stk_cd의 종목명"
+          ],
+          [
+            "- evltv_prft",
+            "평가손익",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자",
+            "N",
+            "15",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자"
+          ],
+          [
+            "- prft_rt",
+            "수익률(%)",
+            "단위: %, 소수점 둘째 자리까지 포맷된 백분율",
+            "N",
+            "12",
+            "단위: %, 소수점 둘째 자리까지 포맷된 백분율"
+          ],
+          [
+            "- pur_pric",
+            "매입가",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자",
+            "N",
+            "15",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자"
+          ],
+          [
+            "- pred_close_pric",
+            "전일종가",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 12자리 숫자",
+            "N",
+            "12",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 12자리 숫자"
+          ],
+          [
+            "- rmnd_qty",
+            "보유수량",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 15자리 숫자",
+            "N",
+            "15",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 15자리 숫자"
+          ],
+          [
+            "- trde_able_qty",
+            "매매가능수량",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 15자리 숫자",
+            "N",
+            "15",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 15자리 숫자"
+          ],
+          [
+            "- cur_prc",
+            "현재가",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 12자리 숫자",
+            "N",
+            "12",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 12자리 숫자"
+          ],
+          [
+            "- pred_buyq",
+            "전일매수수량",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 15자리 숫자",
+            "N",
+            "15",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 15자리 숫자"
+          ],
+          [
+            "- pred_sellq",
+            "전일매도수량",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 15자리 숫자",
+            "N",
+            "15",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 15자리 숫자"
+          ],
+          [
+            "- tdy_buyq",
+            "금일매수수량",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 15자리 숫자",
+            "N",
+            "15",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 15자리 숫자"
+          ],
+          [
+            "- tdy_sellq",
+            "금일매도수량",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 15자리 숫자",
+            "N",
+            "15",
+            "단위: 1주, 좌측 0-padding 처리된 부호 포함 15자리 숫자"
+          ],
+          [
+            "- pur_amt",
+            "매입금액",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자",
+            "N",
+            "15",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자"
+          ],
+          [
+            "- pur_cmsn",
+            "매입수수료",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자",
+            "N",
+            "15",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자"
+          ],
+          [
+            "- evlt_amt",
+            "평가금액",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자",
+            "N",
+            "15",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자"
+          ],
+          [
+            "- sell_cmsn",
+            "평가수수료",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자",
+            "N",
+            "15",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자"
+          ],
+          [
+            "- tax",
+            "세금",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자",
+            "N",
+            "15",
+            "단위: 원, 좌측 0-padding 처리된 부호 포함 15자리 숫자"
+          ],
+          [
+            "- sum_cmsn",
+            "수수료합",
+            "매입수수료 + 평가수수료",
+            "N",
+            "15",
+            "매입수수료 + 평가수수료"
+          ],
+          [
+            "- poss_rt",
+            "보유비중(%)",
+            "단위: %, 소수점 둘째 자리까지 포맷된 백분율",
+            "N",
+            "12",
+            "단위: %, 소수점 둘째 자리까지 포맷된 백분율"
+          ],
+          [
+            "- crd_tp",
+            "신용구분",
+            "00: 현금잔고, 03:자기융자",
+            "N",
+            "2",
+            "00: 현금잔고, 03:자기융자"
+          ],
+          [
+            "- crd_tp_nm",
+            "신용구분명",
+            "신용구분 설명",
+            "N",
+            "4",
+            "신용구분 설명"
+          ],
+          [
+            "- crd_loan_dt",
+            "대출일",
+            "YYYYMMDD",
+            "N",
+            "8",
+            "YYYYMMDD"
+          ]
+        ]
+      ]
+    },
+    "ka00001": {
+      "url": "https://openapi.kiwoom.com/m/guide/apiguide/08/ka00001",
+      "html_sha256": "0fb86ab2c29aae8db0be6b5045b37d1c926d78f1916be9b462f87876c5ecfc57",
+      "tables_sha256": "1291a70c853a54df1d549f258754f552bb94e6c3545b1fe667e6ffe1d2e12cdc",
+      "tables": [
+        [
+          [
+            "Method",
+            "POST"
+          ],
+          [
+            "운영 도메인",
+            "https://api.kiwoom.com"
+          ],
+          [
+            "모의투자 도메인",
+            "https://mockapi.kiwoom.com (KRX만 지원가능)"
+          ],
+          [
+            "URL",
+            "/api/dostk/acnt"
+          ],
+          [
+            "Format",
+            "JSON"
+          ],
+          [
+            "Content-Type",
+            "application/json;charset=UTF-8"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "Type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "authorization",
+            "접근토큰",
+            "String",
+            "Y",
+            "1000",
+            "토큰 지정시 토큰타입(\"Bearer\") 붙혀서 호출 <br/> 예) Bearer Egicyx..."
+          ],
+          [
+            "cont-yn",
+            "연속조회여부",
+            "String",
+            "N",
+            "1",
+            "응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅"
+          ],
+          [
+            "next-key",
+            "연속조회키",
+            "String",
+            "N",
+            "50",
+            "응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅"
+          ],
+          [
+            "api-id",
+            "TR명",
+            "String",
+            "Y",
+            "10",
+            "8자리 TR코드, ex) ka00001, usa10099"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "cont-yn",
+            "연속조회여부",
+            "다음 데이터가 있을시 Y값 전달",
+            "N",
+            "1",
+            "다음 데이터가 있을시 Y값 전달"
+          ],
+          [
+            "next-key",
+            "연속조회키",
+            "다음 데이터가 있을시 다음 키값 전달",
+            "N",
+            "50",
+            "다음 데이터가 있을시 다음 키값 전달"
+          ],
+          [
+            "api-id",
+            "TR명",
+            "8자리 TR코드, ex) ka00001, usa10099",
+            "Y",
+            "10",
+            "8자리 TR코드, ex) ka00001, usa10099"
+          ]
+        ],
+        [
+          [
+            "Element",
+            "한글명",
+            "type",
+            "Required",
+            "Length",
+            "Description"
+          ],
+          [
+            "acctNo",
+            "계좌번호",
+            "10자리 숫자가 출력됩니다. 뒤에 2자리는 당사에서 계좌를 분류하기 위한 값입니다.",
+            "N",
+            "20",
+            "10자리 숫자가 출력됩니다. 뒤에 2자리는 당사에서 계좌를 분류하기 위한 값입니다."
+          ]
+        ]
+      ]
+    }
+  },
+  "official_examples": [
+    {
+      "url": "https://github.com/Kiwoom-Securities/Kiwoom-REST-API/blob/953e5dbff123f437ab4d11a78a95191a685eb51f/examples/%EA%B5%AD%EB%82%B4%EC%A3%BC%EC%8B%9D/%EC%A3%BC%EB%AC%B8/cancel_domestic_stock_order.py",
+      "blob_sha": "6e432ab24b38396be9c8f80ccff04322dd123a91",
+      "API_ID": "kt10003",
+      "API_URL": "/api/dostk/ordr",
+      "TABLE_KEYS": {},
+      "COLUMNS": {
+        "ord_no": "주문번호",
+        "base_orig_ord_no": "모주문번호",
+        "cncl_qty": "취소수량"
+      }
+    },
+    {
+      "url": "https://github.com/Kiwoom-Securities/Kiwoom-REST-API/blob/953e5dbff123f437ab4d11a78a95191a685eb51f/examples/%EA%B5%AD%EB%82%B4%EC%A3%BC%EC%8B%9D/%EA%B3%84%EC%A2%8C/get_domestic_unfilled_orders.py",
+      "blob_sha": "c0c32d901c41f2b8283ce71b5310b9d62b6755dd",
+      "API_ID": "ka10075",
+      "API_URL": "/api/dostk/acnt",
+      "TABLE_KEYS": {
+        "oso": "미체결"
+      },
+      "COLUMNS": {
+        "acnt_no": "계좌번호",
+        "ord_no": "주문번호",
+        "mang_empno": "관리사번",
+        "stk_cd": "종목코드",
+        "tsk_tp": "업무구분",
+        "ord_stt": "주문상태",
+        "stk_nm": "종목명",
+        "ord_qty": "주문수량",
+        "ord_pric": "주문가격",
+        "oso_qty": "미체결수량",
+        "cntr_tot_amt": "체결누계금액",
+        "orig_ord_no": "원주문번호",
+        "io_tp_nm": "주문구분",
+        "trde_tp": "매매구분",
+        "tm": "시간",
+        "cntr_no": "체결번호",
+        "cntr_pric": "체결가",
+        "cntr_qty": "체결량",
+        "cur_prc": "현재가",
+        "sel_bid": "매도호가",
+        "buy_bid": "매수호가",
+        "unit_cntr_pric": "단위체결가",
+        "unit_cntr_qty": "단위체결량",
+        "tdy_trde_cmsn": "당일매매수수료",
+        "tdy_trde_tax": "당일매매세금",
+        "ind_invsr": "개인투자자",
+        "stex_tp": "거래소구분",
+        "stex_tp_txt": "거래소구분텍스트",
+        "sor_yn": "SOR 여부값",
+        "stop_pric": "스톱가"
+      }
+    },
+    {
+      "url": "https://github.com/Kiwoom-Securities/Kiwoom-REST-API/blob/953e5dbff123f437ab4d11a78a95191a685eb51f/examples/%EA%B5%AD%EB%82%B4%EC%A3%BC%EC%8B%9D/%EA%B3%84%EC%A2%8C/get_domestic_filled_orders.py",
+      "blob_sha": "6bfc9a2fa57be62f0f1478849c0e7524fa7238d5",
+      "API_ID": "ka10076",
+      "API_URL": "/api/dostk/acnt",
+      "TABLE_KEYS": {
+        "cntr": "체결"
+      },
+      "COLUMNS": {
+        "ord_no": "주문번호",
+        "stk_nm": "종목명",
+        "io_tp_nm": "주문구분",
+        "ord_pric": "주문가격",
+        "ord_qty": "주문수량",
+        "cntr_pric": "체결가",
+        "cntr_qty": "체결량",
+        "oso_qty": "미체결수량",
+        "tdy_trde_cmsn": "당일매매수수료",
+        "tdy_trde_tax": "당일매매세금",
+        "ord_stt": "주문상태",
+        "trde_tp": "매매구분",
+        "orig_ord_no": "원주문번호",
+        "ord_tm": "주문시간",
+        "stk_cd": "종목코드",
+        "stex_tp": "거래소구분",
+        "stex_tp_txt": "거래소구분텍스트",
+        "sor_yn": "SOR 여부값",
+        "stop_pric": "스톱가"
+      }
+    },
+    {
+      "url": "https://github.com/Kiwoom-Securities/Kiwoom-REST-API/blob/953e5dbff123f437ab4d11a78a95191a685eb51f/examples/%EA%B5%AD%EB%82%B4%EC%A3%BC%EC%8B%9D/%EA%B3%84%EC%A2%8C/get_domestic_account_order_fill_detail.py",
+      "blob_sha": "4fff9dc625383b379b0ac326e3d90ceee31cabdf",
+      "API_ID": "kt00007",
+      "API_URL": "/api/dostk/acnt",
+      "TABLE_KEYS": {
+        "acnt_ord_cntr_prps_dtl": "계좌별주문체결내역상세"
+      },
+      "COLUMNS": {
+        "ord_no": "주문번호",
+        "stk_cd": "종목번호",
+        "trde_tp": "매매구분",
+        "crd_tp": "신용구분",
+        "ord_qty": "주문수량",
+        "ord_uv": "주문단가",
+        "cnfm_qty": "확인수량",
+        "acpt_tp": "접수구분",
+        "rsrv_tp": "반대여부",
+        "ord_tm": "주문시간",
+        "ori_ord": "원주문",
+        "stk_nm": "종목명",
+        "io_tp_nm": "주문구분",
+        "loan_dt": "대출일",
+        "cntr_qty": "체결수량",
+        "cntr_uv": "체결단가",
+        "ord_remnq": "주문잔량",
+        "comm_ord_tp": "통신구분",
+        "mdfy_cncl": "정정취소",
+        "cnfm_tm": "확인시간",
+        "dmst_stex_tp": "국내거래소구분",
+        "cond_uv": "스톱가"
+      }
+    }
+  ],
+  "binance_spot": {
+    "sources": [
+      "https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints",
+      "https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints",
+      "https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-endpoints"
+    ],
+    "facts": {
+      "submit": "POST /api/v3/order",
+      "cancel": "DELETE /api/v3/order; symbol + origClientOrderId or orderId required",
+      "query": "GET /api/v3/order; symbol + origClientOrderId or orderId required",
+      "open": "GET /api/v3/openOrders",
+      "fills": "GET /api/v3/myTrades; symbol required; limit max1000; fromId inclusive; startTime/endTime at most24h; permitted combinations exclude combining fromId and time window; exact row id/orderId/qty/price/quoteQty/commission/commissionAsset/time/isBuyer/isMaker",
+      "metadata": "GET /api/v3/exchangeInfo; explicit symbol filters; isSpotTradingAllowed/status/TRADING; spot has no reduce_only/funding",
+      "account": "GET /api/v3/account balances free/locked and canTrade"
+    }
+  }
+}

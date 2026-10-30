@@ -13,7 +13,7 @@ from datetime import datetime, timedelta
 from decimal import Decimal
 from typing import Iterator, List, Optional, Tuple
 
-from shared.models import Candle, Market, TeamType
+from strategies.legacy.models import Candle, Market, TeamType
 
 from .engine import BacktestConfig, BacktestResult
 from .engine_router import resolve_backtest_engine

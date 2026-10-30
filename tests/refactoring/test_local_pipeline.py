@@ -6,11 +6,10 @@ from types import SimpleNamespace
 
 import pytest
 
-from vibetrading.feed_recovery import EngineCursor
-from vibetrading.local_pipeline import DeliveryBudgets, PipelineBudgets, SpoolingMarketPublisher
-from vibetrading.local_transport import (AppliedReceipt, LocalTransportClient, LocalTransportServer,
-                                         TransportAck, TransportBudgets)
-from vibetrading.market_spool import MarketSpool, SpoolCursor, SpoolReader, read_spool_records
+from feeds.feed_recovery import EngineCursor
+from feeds.local_pipeline import DeliveryBudgets, PipelineBudgets, SpoolingMarketPublisher
+from runtime.local_transport import AppliedReceipt, LocalTransportClient, LocalTransportServer, TransportAck, TransportBudgets
+from storage.market_spool import MarketSpool, SpoolCursor, SpoolReader, read_spool_records
 
 
 def budgets(**updates):
@@ -117,7 +116,7 @@ def capture_group_deadlines(monkeypatch):
             if group.expired:raise asyncio.TimeoutError
             raise
 
-    monkeypatch.setattr('vibetrading.local_pipeline.asyncio.wait_for',capture)
+    monkeypatch.setattr("feeds.local_pipeline.asyncio.wait_for",capture)
     return deadlines
 
 
@@ -242,7 +241,7 @@ async def test_existing_spool_needs_explicit_engine_checkpoint_handoff():
 
 @pytest.mark.asyncio
 async def test_delivery_recovers_fixed_durable_high_water_after_resume_rejection(tmp_path):
-    from vibetrading.feed_recovery import RecoveryFrame
+    from feeds.feed_recovery import RecoveryFrame
 
     producer,incarnation='collector','run'
     spool_args=dict(max_disk_bytes=8192,max_records=64,max_frame_bytes=512,max_header_bytes=128,
@@ -428,7 +427,7 @@ async def test_received_ack_keeps_payload_owned_until_exact_applied_ack():
 @pytest.mark.asyncio
 async def test_bad_applied_digest_invalidates_without_false_release(monkeypatch):
     now = [1_000]
-    monkeypatch.setattr('vibetrading.local_pipeline.time.monotonic_ns',lambda:now[0])
+    monkeypatch.setattr("feeds.local_pipeline.time.monotonic_ns",lambda:now[0])
     transport = Transport(auto_ack=False)
     local = publisher(Spool,transport)
     await local.connect()
@@ -453,7 +452,7 @@ async def test_bad_applied_digest_invalidates_without_false_release(monkeypatch)
 @pytest.mark.asyncio
 async def test_latency_evidence_uses_monotonic_age_and_exact_applied_ack(monkeypatch):
     now = [1_000]
-    monkeypatch.setattr('vibetrading.local_pipeline.time.monotonic_ns',lambda:now[0])
+    monkeypatch.setattr("feeds.local_pipeline.time.monotonic_ns",lambda:now[0])
     transport = Transport(auto_ack=False)
     local = publisher(Spool,transport)
     await local.connect()
@@ -487,7 +486,7 @@ async def test_latency_evidence_uses_monotonic_age_and_exact_applied_ack(monkeyp
 @pytest.mark.asyncio
 async def test_persistence_failure_has_bounded_evidence_without_false_durability(monkeypatch):
     now = [1_000]
-    monkeypatch.setattr('vibetrading.local_pipeline.time.monotonic_ns',lambda:now[0])
+    monkeypatch.setattr("feeds.local_pipeline.time.monotonic_ns",lambda:now[0])
     class FailingSpool(Spool):
         def flush(self):
             now[0] = 6_000

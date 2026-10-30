@@ -1,0 +1,300 @@
+{
+  "baseline_sha": "ab3e5148874245f5ea31b359a7636b2e3b0468e1",
+  "owners": [
+    {
+      "path": "src/execution/perp_execution.py",
+      "class": "BinancePerpAdapter",
+      "source_sha256": "2e7ab8cc7cbc9183fda06df77f7df561cfaebaf1d5e655dfc1e09b0620ed5498",
+      "methods": [
+        "__init__",
+        "_call",
+        "instrument_metadata",
+        "account_state",
+        "positions",
+        "_normalize_order",
+        "working_orders",
+        "submit_with_permit",
+        "cancel_with_permit",
+        "order_status",
+        "_fill",
+        "fills",
+        "funding",
+        "normalize_private_event"
+      ],
+      "bases": [
+        "_Adapter"
+      ],
+      "claim": "SOURCE_INVENTORY_ONLY_NOT_OWNER_OR_LIVE_PROOF"
+    },
+    {
+      "path": "src/execution/perp_execution.py",
+      "class": "BybitPerpAdapter",
+      "source_sha256": "2e7ab8cc7cbc9183fda06df77f7df561cfaebaf1d5e655dfc1e09b0620ed5498",
+      "methods": [
+        "__init__",
+        "_call",
+        "_rows",
+        "instrument_metadata",
+        "account_state",
+        "positions",
+        "_normalize_order",
+        "working_orders",
+        "submit_with_permit",
+        "cancel_with_permit",
+        "order_status",
+        "_fill",
+        "_history",
+        "fills",
+        "funding",
+        "normalize_private_event"
+      ],
+      "bases": [
+        "_Adapter"
+      ],
+      "claim": "SOURCE_INVENTORY_ONLY_NOT_OWNER_OR_LIVE_PROOF"
+    },
+    {
+      "path": "src/execution/perp_execution.py",
+      "class": "GrvtPerpAdapter",
+      "source_sha256": "2e7ab8cc7cbc9183fda06df77f7df561cfaebaf1d5e655dfc1e09b0620ed5498",
+      "methods": [
+        "__init__",
+        "_client_id",
+        "_call",
+        "instrument_metadata",
+        "account_state",
+        "positions",
+        "_normalize_order",
+        "working_orders",
+        "submit_with_permit",
+        "cancel_with_permit",
+        "order_status",
+        "_fill",
+        "_history",
+        "fills",
+        "funding",
+        "normalize_private_event"
+      ],
+      "bases": [
+        "_Adapter"
+      ],
+      "claim": "SOURCE_INVENTORY_ONLY_NOT_OWNER_OR_LIVE_PROOF"
+    },
+    {
+      "path": "src/execution/perp_execution.py",
+      "class": "ArcusPerpAdapter",
+      "source_sha256": "2e7ab8cc7cbc9183fda06df77f7df561cfaebaf1d5e655dfc1e09b0620ed5498",
+      "methods": [
+        "__init__",
+        "_client_id",
+        "_get",
+        "_account_identity",
+        "instrument_metadata",
+        "account_state",
+        "positions",
+        "_normalize_order",
+        "working_orders",
+        "_rpc",
+        "submit_with_permit",
+        "cancel_with_permit",
+        "order_status",
+        "_fill",
+        "_funding",
+        "_history",
+        "fills",
+        "funding",
+        "normalize_private_event"
+      ],
+      "bases": [
+        "_Adapter"
+      ],
+      "claim": "SOURCE_INVENTORY_ONLY_NOT_OWNER_OR_LIVE_PROOF"
+    },
+    {
+      "path": "src/execution/perp_execution.py",
+      "class": "HyperliquidPerpAdapter",
+      "source_sha256": "2e7ab8cc7cbc9183fda06df77f7df561cfaebaf1d5e655dfc1e09b0620ed5498",
+      "methods": [
+        "__init__",
+        "_client_id",
+        "_info",
+        "instrument_metadata",
+        "account_state",
+        "positions",
+        "_normalize_order",
+        "working_orders",
+        "_exchange",
+        "submit_with_permit",
+        "cancel_with_permit",
+        "order_status",
+        "_fill",
+        "_funding",
+        "_history",
+        "fills",
+        "funding",
+        "normalize_private_event"
+      ],
+      "bases": [
+        "_Adapter"
+      ],
+      "claim": "SOURCE_INVENTORY_ONLY_NOT_OWNER_OR_LIVE_PROOF"
+    },
+    {
+      "path": "src/execution/brokers.py",
+      "class": "BinanceBrokerAdapter",
+      "source_sha256": "ff7d7a1b7b2ef9e6f77547950ddac78fe05072a5ca15e5b97122c3afc7d4a0a0",
+      "methods": [
+        "__init__",
+        "connect",
+        "account_state",
+        "submit_order",
+        "order_status",
+        "_signed_request"
+      ],
+      "bases": [],
+      "claim": "SOURCE_INVENTORY_ONLY_NOT_OWNER_OR_LIVE_PROOF"
+    },
+    {
+      "path": "src/execution/brokers.py",
+      "class": "KiwoomBrokerAdapter",
+      "source_sha256": "ff7d7a1b7b2ef9e6f77547950ddac78fe05072a5ca15e5b97122c3afc7d4a0a0",
+      "methods": [
+        "__init__",
+        "connect",
+        "account_state",
+        "submit_order",
+        "order_status",
+        "_post_api",
+        "_access_token",
+        "_cache_path",
+        "_read_token_cache",
+        "_write_token_cache"
+      ],
+      "bases": [],
+      "claim": "SOURCE_INVENTORY_ONLY_NOT_OWNER_OR_LIVE_PROOF"
+    },
+    {
+      "path": "src/execution/brokers.py",
+      "class": "KisBrokerAdapter",
+      "source_sha256": "ff7d7a1b7b2ef9e6f77547950ddac78fe05072a5ca15e5b97122c3afc7d4a0a0",
+      "methods": [
+        "__init__"
+      ],
+      "bases": [
+        "KisCashBroker"
+      ],
+      "claim": "SOURCE_INVENTORY_ONLY_NOT_OWNER_OR_LIVE_PROOF"
+    },
+    {
+      "path": "src/execution/brokers.py",
+      "class": "HyperliquidBrokerAdapter",
+      "source_sha256": "ff7d7a1b7b2ef9e6f77547950ddac78fe05072a5ca15e5b97122c3afc7d4a0a0",
+      "methods": [
+        "__init__",
+        "connect",
+        "account_state",
+        "submit_order",
+        "order_status"
+      ],
+      "bases": [],
+      "claim": "SOURCE_INVENTORY_ONLY_NOT_OWNER_OR_LIVE_PROOF"
+    },
+    {
+      "path": "src/execution/kis_execution.py",
+      "class": "KisCashBroker",
+      "source_sha256": "2459fa2340634cf2ec9497abee179542af5c370c1e3b6274bb4ae8d1114c12d0",
+      "methods": [
+        "__init__",
+        "account_params",
+        "authority_check",
+        "authority_check",
+        "tr",
+        "connect",
+        "request",
+        "account_state",
+        "buying_power",
+        "submit_order",
+        "submit_order_with_permit",
+        "_submit_order",
+        "order_status",
+        "daily_fills",
+        "cancel_order"
+      ],
+      "bases": [],
+      "claim": "SOURCE_INVENTORY_ONLY_NOT_OWNER_OR_LIVE_PROOF"
+    },
+    {
+      "path": "src/execution/extended_brokers.py",
+      "class": "ArcusBrokerAdapter",
+      "source_sha256": "c86117c157b3290223ac60e55b282cac8aa753c6e907ff32bfea056f2a290246",
+      "methods": [
+        "__init__",
+        "connect",
+        "_signer",
+        "prepare_order",
+        "submit_order",
+        "account_state",
+        "order_status"
+      ],
+      "bases": [
+        "_WebSocketBroker"
+      ],
+      "claim": "SOURCE_INVENTORY_ONLY_NOT_OWNER_OR_LIVE_PROOF"
+    },
+    {
+      "path": "src/execution/extended_brokers.py",
+      "class": "GrvtBrokerAdapter",
+      "source_sha256": "c86117c157b3290223ac60e55b282cac8aa753c6e907ff32bfea056f2a290246",
+      "methods": [
+        "__init__",
+        "native_client_id",
+        "connect",
+        "prepare_order",
+        "submit_order",
+        "account_state",
+        "order_status"
+      ],
+      "bases": [
+        "_WebSocketBroker"
+      ],
+      "claim": "SOURCE_INVENTORY_ONLY_NOT_OWNER_OR_LIVE_PROOF"
+    },
+    {
+      "path": "src/execution/bybit_execution.py",
+      "class": "BybitOrderClient",
+      "source_sha256": "8a53335e41d9f5d303f2175510c0785516c476bece46799f7f7cf89af912817b",
+      "methods": [
+        "__init__",
+        "sync_clock",
+        "now_ms",
+        "request"
+      ],
+      "bases": [],
+      "claim": "SOURCE_INVENTORY_ONLY_NOT_OWNER_OR_LIVE_PROOF"
+    },
+    {
+      "path": "src/execution/bybit_execution.py",
+      "class": "BybitExecutionProbe",
+      "source_sha256": "8a53335e41d9f5d303f2175510c0785516c476bece46799f7f7cf89af912817b",
+      "methods": [
+        "__init__",
+        "_market_trigger",
+        "_listen",
+        "_reconcile",
+        "activate_kill_switch",
+        "_run_market_trigger_order",
+        "run"
+      ],
+      "bases": [],
+      "claim": "SOURCE_INVENTORY_ONLY_NOT_OWNER_OR_LIVE_PROOF"
+    }
+  ],
+  "native_gaps_owner": [
+    "CAP-01",
+    "CAP-02",
+    "EXEC-01",
+    "CLN-02"
+  ],
+  "registry_scope": "Local explicit registration and lifecycle harness only; no strategy callback owner E2E until EXEC01",
+  "no_source_api_activation": true
+}

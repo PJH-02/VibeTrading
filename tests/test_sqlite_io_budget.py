@@ -4,8 +4,8 @@ import sys
 
 import pytest
 
-from vibetrading.settings import RuntimeSettings
-from vibetrading.sqlite_store import RuntimeStore
+from runtime.settings import RuntimeSettings
+from storage.sqlite_store import RuntimeStore
 
 
 def settings(tmp_path, extra=''):
@@ -37,8 +37,8 @@ def test_full_wal_commit_recovers_after_process_exit_without_checkpoint(tmp_path
     code='''
 import os,sys
 from pathlib import Path
-from vibetrading.settings import RuntimeSettings
-from vibetrading.sqlite_store import RuntimeStore
+from runtime.settings import RuntimeSettings
+from storage.sqlite_store import RuntimeStore
 s=RuntimeStore(RuntimeSettings.from_env(Path(sys.argv[1])))
 with s.transaction() as db:
     db.execute("INSERT INTO runtime_metadata VALUES('crash-probe','committed',1)")

@@ -6,9 +6,9 @@ import time
 from pathlib import Path
 
 import nats
-from vibetrading.settings import get_settings
-from vibetrading.telegram_trade import trade_report
-from vibetrading.etf_journal import EtfJournal
+from runtime.settings import get_settings
+from operations.telegram_trade import trade_report
+from portfolio.etf_journal import EtfJournal
 
 async def main():
     settings=get_settings(); root=settings.state_dir

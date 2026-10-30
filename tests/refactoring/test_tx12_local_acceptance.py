@@ -24,10 +24,13 @@ def test_predecessors_have_actual_independent_execution_and_pinned_sources(ticke
         assert receipt['worker_exit']!=0
     else:assert receipt['worker_exit'] is None
     assert receipt['product_and_test_sha256']
+    # Historical receipts pin their completed batch, not today's moved callers.
+    # Verify every original byte against that immutable Git snapshot.
+    pinned = receipt['full_batch_validation']['source_sha']
+    assert len(pinned) == 40 and all(c in '0123456789abcdef' for c in pinned)
     for relative,expected in receipt['product_and_test_sha256'].items():
-        path=ROOT/relative
-        assert path.is_file() and not path.is_symlink()
-        assert hashlib.sha256(path.read_bytes()).hexdigest()==expected
+        payload = subprocess.check_output(['git', 'show', pinned + ':' + relative], cwd=ROOT)
+        assert hashlib.sha256(payload).hexdigest()==expected
 
 
 def test_local_review_package_cannot_accept_dirty_copy_or_stale_commit(tmp_git_repo_src):
@@ -49,12 +52,16 @@ def test_local_review_package_cannot_accept_dirty_copy_or_stale_commit(tmp_git_r
 def test_runbook_matrix_resolves_existing_roles_and_external_gates():
     root=ROOT/'docs/refactoring/vnext/reuse_audit'
     document=(root/'local_acceptance_tx12.md').read_text()
+    move_map = json.loads((ROOT/'scripts/refactoring/final_path_map.json').read_text())
+    targets = {row['old_path']: row['new_path'] for row in move_map['files']
+               if row['disposition'] == 'MOVE_ONLY_CANDIDATE'}
     for name in ('local_paper_assembly.md','local_cutover_vn19.md','local_rollback_vn19.md'):
         assert name in document and (root/name).is_file()
     for relative in ('src/vibetrading/local_runtime.py','src/vibetrading/runtime_checkpoint.py',
             'src/vibetrading/strategy_runtime.py','src/vibetrading/local_storage.py',
             'src/vibetrading/dashboard/projection.py','src/vibetrading/telegram.py'):
-        assert relative in document and (ROOT/relative).is_file()
+        assert relative in document and relative in targets
+        assert (ROOT/targets[relative]).is_file()
     for gate in ('server_deployed=false','live_active=false','VN20_APPLIED=false',
                  'NOT_RUN','exact-cut','Codex','worker'):
         assert gate in document

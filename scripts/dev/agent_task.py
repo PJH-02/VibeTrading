@@ -203,7 +203,7 @@ def _blocked_component(part):
     return False
 
 
-def _validate_path_string(path, label="path"):
+def _validate_path_string(path, label="path", *, allow_blocked=False):
     if not isinstance(path, str) or not path.strip():
         raise ValueError(f"{label} must be a non-empty string")
     if path != path.strip():
@@ -223,10 +223,17 @@ def _validate_path_string(path, label="path"):
         raise ValueError(f"{label} must be normalized and traversal-free: {path!r}")
     if posixpath.normpath(path) != path:
         raise ValueError(f"{label} must be normalized: {path!r}")
-    for part in parts:
-        if _blocked_component(part):
-            raise ValueError(f"{label} references a blocked path component: {path!r}")
+    if not allow_blocked:
+        for part in parts:
+            if _blocked_component(part):
+                raise ValueError(
+                    f"{label} references a blocked path component: {path!r}"
+                )
     return path
+
+
+def _is_blocked_path(path):
+    return any(_blocked_component(part) for part in path.split("/"))
 
 
 def _check_no_symlink(root, rel, label):
@@ -838,20 +845,34 @@ def check_scope(snapshot, after, allowed):
 
     allowed_set = set()
     for rel in allowed:
-        _validate_path_string(rel, "allowed[]")
+        # A protected path may be listed, but any change to it is rejected
+        # below even when it appears here.
+        _validate_path_string(rel, "allowed[]", allow_blocked=True)
         allowed_set.add(rel)
 
     values = {}
     for label, mapping in (("snapshot", snapshot), ("after", after)):
         for rel, digest in mapping.items():
-            _validate_path_string(rel, f"{label} key")
+            # Baseline/after manifests may legitimately contain an unchanged
+            # protected key (for example .env.example). Structural syntax and
+            # digest types are still checked for every key.
+            _validate_path_string(rel, f"{label} key", allow_blocked=True)
             if digest is not None and not isinstance(digest, str):
                 raise ValueError(f"{label}[{rel!r}] must be a string or null")
             values.setdefault(rel, None)
 
     changed = sorted(
-        rel for rel in values if snapshot.get(rel) != after.get(rel)
+        rel
+        for rel in values
+        if (rel in snapshot) != (rel in after)
+        or snapshot.get(rel) != after.get(rel)
     )
+    protected_changed = [rel for rel in changed if _is_blocked_path(rel)]
+    if protected_changed:
+        raise ValueError(
+            "protected path changed: "
+            + json.dumps(protected_changed, ensure_ascii=False)
+        )
     out_of_scope = [rel for rel in changed if rel not in allowed_set]
     if out_of_scope:
         raise ValueError(

@@ -2,9 +2,9 @@ import time
 from types import SimpleNamespace
 from unittest.mock import patch
 import pytest
-from vibetrading.settings import RuntimeSettings
-from vibetrading.sqlite_store import RuntimeStore,MaintenanceDeferred
-from vibetrading.archive import ArchiveMaintenance
+from runtime.settings import RuntimeSettings
+from storage.sqlite_store import RuntimeStore, MaintenanceDeferred
+from storage.archive import ArchiveMaintenance
 
 def store_for(tmp_path):
     p=tmp_path/'.env';p.write_text(f'VIBETRADING_DATA_ROOT={tmp_path}\n',encoding='utf-8');return RuntimeStore(RuntimeSettings.from_env(p))

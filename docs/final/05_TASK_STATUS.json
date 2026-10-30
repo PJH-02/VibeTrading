@@ -1,0 +1,2990 @@
+{
+  "schema_version": 1,
+  "purpose": "Only mutable status and DAG for newly defined not-yet-executed tasks; no historical state mutation.",
+  "authority_docs": [
+    "01_FINAL_PLAN.md",
+    "02_DEVELOPER_TICKETS.md",
+    "03_ARCHITECTURE_REQUIREMENTS.md",
+    "04_COMPLETED_MANIFEST.json",
+    "05_TASK_STATUS.json"
+  ],
+  "baseline": {
+    "repository": "PJH-02/VibeTrading",
+    "branch": "main",
+    "observed_head": "2c1a82a52a6a2eed0c304f324f6c49e2987edfac",
+    "observed_on": "2026-10-25",
+    "installation_in_repo": "PRESENT_USER_SUPPLIED_UNTRACKED_DOCS_FINAL",
+    "remote_server_changed": false,
+    "user_deploy_authorization": false,
+    "old_status_reconciliation_required": false,
+    "target_package_layout": "src/{core,feeds,market,storage,strategies,execution,portfolio,runtime,operations,timefolio}/",
+    "prior_code_head_only_not_modified": true,
+    "execution_baseline": {
+      "head": "2ddaf81eff6612d673dd264a3b3b8a9e2992fe19",
+      "branch": "codex/v3-local-candidate",
+      "worktree_dirty": true,
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z",
+      "historical_main_object_available": false,
+      "last_local_candidate_is_ancestor": true
+    }
+  },
+  "historical_work": {
+    "accepted_local_vn_tx": 38,
+    "incomplete_vn_tx": 10,
+    "not_started_vn_tx": 3,
+    "accepted_r_o": 7,
+    "last_local_regression_passed": 2480,
+    "source_manifest": "04_COMPLETED_MANIFEST.json"
+  },
+  "new_task_counts": {
+    "total": 35,
+    "accepted": 30,
+    "in_progress": 0,
+    "blocked": 0,
+    "not_started": 3,
+    "external_not_authorized": 2
+  },
+  "next_ready_candidate": [
+    "REL-01"
+  ],
+  "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
+  "gate_results": {
+    "REPOSITORY_CONSOLIDATED": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "NATS_FREE_LOCAL_CORE_COMPLETE_ON_NEW_SHA": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "ORIGINAL_PLATFORM_REQUIRED_FEATURES_COMPLETE": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "FULL_LOCAL_REGRESSION_PASS": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "SINGLE_RELEASE_PACKAGE_READY": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "SERVER_DEPLOYED": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "OPERATIONAL_VALIDATION_PASS": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "LEGACY_RETIRE_COMPLETE": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "STRATEGY_FILE_FULL_ORDER_ACTION_FEEDBACK": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "EXTENSIBLE_VENUE_LIFECYCLE": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "PONYTAIL_SIMPLIFICATION_COMPLETE": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "PYTHON_FEW_MS_END_TO_END_LOCAL": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "FLAT_SRC_DIRECT_IMPORTS": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "SINGLE_CANONICAL_ADAPTER_OWNERS": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "TIMEFOLIO_CONTEST_ORDER_PRESERVED": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "DOCKER_ALL_ROLES_FLAT_SRC_PACKAGING": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "LEGACY_BUNDLE_RETIRED_OR_EVIDENCED": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "VENUE_OWNED_FEED_COLLECTORS": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "TOSS_DATA_ONLY_COLLECTOR_RETAINED": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "PER_STRATEGY_PNL_DASHBOARD": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "REALTIME_LATENCY_DASHBOARD": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "SECURE_REMOTE_DASHBOARD": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "ORDER_ONLY_BROKER_ROUTE": "NOT_VERIFIED_FOR_NEW_RELEASE",
+    "KR350_STAGED_OPTIONAL": "NOT_VERIFIED_FOR_NEW_RELEASE"
+  },
+  "legacy_gap_coverage": {
+    "TX03A": [
+      "CAP-03"
+    ],
+    "TX03B": [
+      "CAP-03"
+    ],
+    "TX03": [
+      "CAP-03"
+    ],
+    "TX06A": [
+      "CAP-01"
+    ],
+    "TX06B": [
+      "CAP-01"
+    ],
+    "TX06C": [
+      "CAP-01",
+      "CAP-02"
+    ],
+    "TX06D": [
+      "CAP-01",
+      "CAP-02"
+    ],
+    "TX06E": [
+      "CAP-01"
+    ],
+    "TX06": [
+      "CAP-00",
+      "CAP-01"
+    ],
+    "TX07B": [
+      "CAP-02"
+    ],
+    "TX07": [
+      "CAP-02"
+    ],
+    "TX08B": [
+      "CAP-05"
+    ],
+    "VN20": [
+      "RET-01"
+    ],
+    "O01": [
+      "OPS-01"
+    ],
+    "R06": [
+      "CLN-01",
+      "CLN-02",
+      "CLN-03"
+    ]
+  },
+  "capability_scope_decisions": {
+    "source_of_truth": "03_ARCHITECTURE_REQUIREMENTS.md ARCH-00A",
+    "status": "DEFAULT_REQUIRED_CODE_SCOPE_FROZEN",
+    "selected_required_routes": [
+      "KIS-ETF-MOCK-C3",
+      "KIS-ETF-MOCK-KP",
+      "KIS-ETF-MOCK-KD",
+      "KIS-STOCK-MOCK",
+      "KIS-ETF-MOCK2-C3",
+      "KIS-ETF-MOCK2-KP",
+      "KIS-ETF-MOCK2-KD",
+      "KIS-STOCK-MOCK2",
+      "BINANCE-PERP-SANDBOX",
+      "BINANCE-PERP-LIVE",
+      "BYBIT-PERP-SANDBOX",
+      "BYBIT-PERP-LIVE",
+      "GRVT-PERP-SANDBOX",
+      "GRVT-PERP-LIVE",
+      "ARCUS-PERP-SANDBOX",
+      "ARCUS-PERP-LIVE",
+      "HYPERLIQUID-PERP-SANDBOX",
+      "HYPERLIQUID-PERP-LIVE",
+      "BINANCE-SPOT-SANDBOX",
+      "BINANCE-SPOT-LIVE",
+      "KIWOOM-REST-KR_CASH_STOCK-MOCK",
+      "KIWOOM-REST-KR_CASH_STOCK-LIVE",
+      "KIWOOM-REST-KR_CASH_ETF-MOCK",
+      "KIWOOM-REST-KR_CASH_ETF-LIVE",
+      "TOSS-DATA",
+      "GENERIC-PAPER",
+      "CROSS-VENUE-REQUIRED-CODE",
+      "TIMEFOLIO-LOCAL_DRY_RUN",
+      "TIMEFOLIO-LIVE"
+    ],
+    "explicitly_unsupported_routes": [
+      "TOSS_ORDER_MUTATION",
+      "INVERSE_COIN_M",
+      "UNSELECTED_MARGIN_OR_HEDGE_MODES",
+      "HIP3",
+      "HYPERLIQUID_SPOT"
+    ],
+    "user_approved_exclusions": [],
+    "note": "Default required scope frozen without exclusions; proof/source gaps assigned to existing tickets. This is no production/route activation or blanket external-only waiver. No new alpha/NH real API requirement or KR350 activation.",
+    "default_required_code_targets": [
+      {
+        "venue": "binance",
+        "product": "USD-M linear perpetual",
+        "code_requirement": "submit_cancel_query_fills_positions_funding_private_reconcile_owner",
+        "activation": "BLOCKED_PENDING_EXTERNAL_APPROVAL"
+      },
+      {
+        "venue": "bybit",
+        "product": "USDT linear perpetual",
+        "code_requirement": "submit_cancel_query_fills_positions_funding_private_reconcile_owner",
+        "activation": "BLOCKED_PENDING_EXTERNAL_APPROVAL"
+      },
+      {
+        "venue": "grvt",
+        "product": "perpetual",
+        "code_requirement": "submit_cancel_query_fills_positions_funding_private_reconcile_owner",
+        "activation": "BLOCKED_PENDING_EXTERNAL_APPROVAL"
+      },
+      {
+        "venue": "arcus",
+        "product": "perpetual",
+        "code_requirement": "submit_cancel_query_fills_positions_funding_private_reconcile_owner",
+        "activation": "BLOCKED_PENDING_EXTERNAL_APPROVAL"
+      },
+      {
+        "venue": "hyperliquid",
+        "product": "first-dex USDC perpetual",
+        "code_requirement": "submit_cancel_query_fills_positions_funding_private_reconcile_owner",
+        "activation": "BLOCKED_PENDING_EXTERNAL_APPROVAL"
+      }
+    ],
+    "cross_venue_default": "REQUIRED_CORE_CODE_AND_LOCAL_E2E; pair_activation_is_opt_in_external; no strategy-selection prerequisite; no NOT_APPLICABLE_APPROVED for CAP-05",
+    "source_ref": "03_ARCHITECTURE_REQUIREMENTS.md ARCH-00B",
+    "cross_venue_execution": {
+      "code_implementation": "REQUIRED_FOR_OFFLINE_RELEASE",
+      "local_verification": "REQUIRED",
+      "supported_direction": "VENUE_A_BUY_VENUE_B_SELL_AND_REVERSE",
+      "submit_modes_required": [
+        "CONCURRENT",
+        "SEQUENTIAL"
+      ],
+      "minimum_local_adapter_routes": 2,
+      "adapter_test_policy": "TWO_DISTINCT_CONCRETE_SUPPORTED_VENUE_ADAPTER_CODE_PATHS_WITH_CREDENTIAL_FREE_SCRIPTED_TRANSPORT",
+      "mandatory_faults": [
+        "A_FILLED_B_REJECTED",
+        "PARTIAL_BOTH",
+        "ACK_LOSS_UNKNOWN",
+        "PRIVATE_GAP",
+        "STALE_FEED",
+        "CANCEL_LATE_FILL",
+        "CRASH_RESTART",
+        "HEDGE_LIMIT_FAIL_CLOSED"
+      ],
+      "specific_venue_pair_activation": "OPT_IN_EXTERNAL_APPROVAL_ONLY",
+      "configured_live_pairs": [],
+      "no_live_mutation_without_explicit_approval": true,
+      "skip_or_not_applicable_without_implementation": false,
+      "implementation_acceptance": "CAP-05 ACCEPTED_LOCAL requires executable two-leg dispatch + persistence/reconcile + independent fault tests; not paper observation only",
+      "code_status": "ACCEPTED_LOCAL",
+      "local_e2e_status": "PASS",
+      "verified_local_adapters": [
+        "execution.perp_execution.BinancePerpAdapter",
+        "execution.perp_execution.BybitPerpAdapter"
+      ],
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/CAP05.acceptance.json"
+    },
+    "strategy_action_routing": {
+      "code_requirement": "REQUIRED_FOR_OFFLINE_RELEASE",
+      "policy_owner": "STRATEGY_FILE_ONLY",
+      "execution_owner": "COMMON_RISK_AND_ORDER_OWNER",
+      "order_modes": [
+        "NEW",
+        "CANCEL",
+        "REPLACE",
+        "MAKER_POST_ONLY",
+        "TAKER",
+        "FOK",
+        "IOC",
+        "PARK_GTC"
+      ],
+      "failure_response": "STRATEGY_FILE_ON_ORDER_EVENT",
+      "feedback": [
+        "REJECTED",
+        "ACK",
+        "PARTIAL_FILL",
+        "FILLED",
+        "CANCELLED",
+        "UNKNOWN"
+      ],
+      "required_modes": [
+        "PAPER",
+        "KIS_MOCK_AND_MOCK2",
+        "CRYPTO_SCRIPTED_VENUE_ADAPTER"
+      ],
+      "live_activation": "USER_APPROVAL_ONLY",
+      "tickets": [
+        "STR-01",
+        "STR-02",
+        "EXEC-01",
+        "CAP-06"
+      ]
+    },
+    "venue_registry": {
+      "code_requirement": "REQUIRED_FOR_OFFLINE_RELEASE",
+      "new_perp_venue": "ADD_MODULE_AND_CONFIG_WITHOUT_CORE_STRATEGY_PATCH",
+      "disable": "NO_NEW_RISK_BUT_KEEP_RECONCILE",
+      "remove": "ONLY_WITH_NO_ORDERS_DEPENDENCIES_ROLLBACK",
+      "tickets": [
+        "VEN-01",
+        "CAP-01"
+      ],
+      "stock_broker_extension": "DUMMY_STOCK_NOW_KIS_KIWOOM_SELECTED_NH_FUTURE",
+      "adapter_dedup": "SINGLE_CANONICAL_MUTATION_OWNER_PER_ROUTE",
+      "feed_registration": "SEPARATE_FROM_EXECUTION_REGISTRATION"
+    },
+    "ponytail_review": {
+      "ticket": "SIM-01",
+      "skill": "DietrichGebert/ponytail",
+      "skill_installed_here": false,
+      "required_to_pass": true,
+      "require_actual_skill_load_receipt": true,
+      "manual_review_is_not_ponytail": true
+    },
+    "python_low_latency": {
+      "ticket": "PERF-01",
+      "local_chain": "T0_PROVIDER_CALLBACK_TO_T5_ADAPTER_SEND_INVOCATION",
+      "p50_ms_max": 2,
+      "p95_ms_max": 5,
+      "p99_ms_max": 10,
+      "same_monotonic_clock_only": true,
+      "host": "2vCPU_3.8GiB representative candidate",
+      "include": [
+        "strategy_cb",
+        "dispatch",
+        "journal_commit",
+        "venue_router",
+        "concurrent_spool_storage_load",
+        "python_provider_ingress_to_normalization_and_A1_durable_spool"
+      ],
+      "exclude": [
+        "external_wan_rtt",
+        "exchange_ack",
+        "exchange_fill"
+      ],
+      "not_measured_status": "NOT_RUN_OR_NOT_VERIFIED",
+      "secondary_trace": "T1_NORMALIZED_AVAILABLE_TO_T5_ADAPTER_SEND_INVOCATION",
+      "gate_type": "MEASUREMENT_REQUIRED_NUMERIC_TARGET_NON_BLOCKING",
+      "numeric_exceedance_causes_ticket_failure": false,
+      "numeric_exceedance_causes_release_block": false,
+      "acceptance_condition": "REPRODUCIBLE_PROFILE_AND_STRUCTURAL_NONBLOCKING_REVIEW_WITH_DURABILITY_AND_QUEUE_SAFETY",
+      "legacy_gate_key_policy": "PYTHON_FEW_MS_END_TO_END_LOCAL is observational only; numeric threshold not a release gate",
+      "numeric_target_fields_are_reference_only": true
+    },
+    "strategy_policy_ownership": {
+      "policy_owner": "STRATEGY_FILE_ONLY",
+      "crossvenue_economic_equivalence_and_leg_size": "STRATEGY_ONLY",
+      "crossvenue_inventory_and_hedge_order": "STRATEGY_ONLY",
+      "mm_fair_value_quote_cancel_reprice_target_inventory_hedge": "STRATEGY_ONLY",
+      "execution_owner": "ORDER_AND_FILL_FACTS_ACCOUNT_POSITION_BALANCE_RESERVATION_PRETRADE_SAFETY",
+      "feedback": "ORDER_EVENT_PLUS_READ_ONLY_ACCOUNT_AND_STRATEGY_ATTRIBUTION_FACTS",
+      "instrument_resolution": "STRATEGY_CONFIG_ALIAS_TO_VENUE_MARKET_SEGMENT_SYMBOL_ACCOUNT_VIA_EXISTING_ADAPTER",
+      "new_mm_ticket_or_service": false,
+      "coverage_tickets": [
+        "STR-02",
+        "VEN-01",
+        "EXEC-01",
+        "CAP-02",
+        "CAP-03",
+        "CAP-05",
+        "QA-01"
+      ]
+    },
+    "repo_layout": {
+      "target": "DIRECT_SRC_DOMAIN_PACKAGES",
+      "old_import_namespace": "vibetrading.*",
+      "final_import_namespace": "{core,feeds,market,storage,strategies,execution,portfolio,runtime,operations,timefolio}.*",
+      "old_root_strategies_collision": "MUST_RESOLVE",
+      "keep_compat_namespace_in_release": false
+    },
+    "legacy_policy": {
+      "keep": [
+        "C3/KP/KD valid strategies",
+        "Timefolio browser contest submission/monitor",
+        "verified reusable API source functions",
+        "necessary golden oracle/rollback immutable evidence"
+      ],
+      "retire_when_unreferenced": [
+        "fv_mm",
+        "liquidity_mm",
+        "fv_pilot",
+        "mm_state",
+        "bybit_execution independent probe wrapper",
+        "kis_execution independent wrapper"
+      ]
+    },
+    "deployment_inputs": [
+      "Dockerfile",
+      "Dockerfile.crypto",
+      "docker-compose.yml",
+      "pyproject.toml",
+      "scripts/build_release_images.py",
+      "deploy/crypto-profile.yml",
+      "deploy/dashboard-compose.yml",
+      "deploy/ls-market-profile.yml",
+      "deploy/release1-overlay.yml",
+      "deploy/Dockerfile.dashboard-timefolio",
+      "deploy/Dockerfile.crypto-ledger",
+      "deploy/vibetrading.service"
+    ],
+    "toss_market_data": "REQUIRED_ACTIVE_CAPABLE_FEED_ORDER_BLOCKED",
+    "independent_feed_execution": {
+      "data_only": "toss",
+      "execution_only": "dummy_nh_offline",
+      "both": [
+        "kis_selected",
+        "kiwoom_selected"
+      ],
+      "future_nh_real": "UNVERIFIED_EXTERNAL",
+      "provider_venue_files": "REQUIRED_FEED-01"
+    },
+    "dashboard": {
+      "latency_per_stage": "REQUIRED_OBS-01",
+      "strategy_pnl_tabs": "REQUIRED_OBS-01",
+      "public_https_readonly": "REQUIRED_WEB-01",
+      "production_external_access": "EXTERNAL_APPROVAL_CUT-01",
+      "new_order_api_exposure": "FORBIDDEN"
+    },
+    "kr350": {
+      "required_for_base_release": false,
+      "implementation": "CONDITIONAL_IF_SELECTED",
+      "default": "DISABLED",
+      "offline_ticket": "KR-DATA-01",
+      "live_activation": "EXTERNAL_PROVIDER_API_AND_CAPACITY_EVIDENCE_REQUIRED",
+      "scope": "KOSPI200+KOSDAQ150 minute/daily, max 350"
+    },
+    "selected_required_routes_meaning": "Required local-code contract IDs only, not activated deployment routes",
+    "activated_deployment_routes": [],
+    "actual_account_strategy_activation": "NOT_SELECTED_NOT_AUTHORIZED",
+    "matrix_evidence": "docs/tickets/CAP-00-capability-matrix.json",
+    "matrix_evidence_sha256": "7a76ec2e186b01e361fb5865eb7daae4d56bb6abdf8cdd17532e8075650acbb6",
+    "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN-01-CAP-00-20261026T173148Z/CAP-00.acceptance.json",
+    "implementation_gap_ids": [
+      "CONCRETE-TRANSPORT",
+      "PRIVATE-LIFECYCLE",
+      "COMMON-OWNER-BRIDGE",
+      "KIWOOM-LOCAL-LIFECYCLE",
+      "KIWOOM-API-SCHEMAS",
+      "TOKEN-CACHE-REVIEW",
+      "KIS-FILE-BRIDGE",
+      "SPOT-ROUTE-INTEGRATION",
+      "COM-LOCAL-CACHE",
+      "FEED-ORDER-SEPARATION",
+      "STRATEGY-ACTION-FEEDBACK",
+      "CROSS-VENUE-EXECUTION",
+      "TIMEFOLIO-STATUS-INTERPRETATION",
+      "EXTENSION-FIXTURE-SEAM",
+      "UNSUPPORTED-PRODUCT-MODES"
+    ],
+    "missing_required_local_code_blocks_feature_release": true
+  },
+  "active_task_id": null,
+  "last_accepted_task_id": "PERF-01",
+  "stop_requested": false,
+  "tickets": [
+    {
+      "task_id": "GOV-01",
+      "wave": "W0",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "2ddaf81eff6612d673dd264a3b3b8a9e2992fe19",
+      "actual_commit_sha": null,
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/GOV-01.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "GOV-01",
+      "acceptance_receipt_sha256": "c00eb3af0baa4c6f79909d568daee3245a3ecb359943416e99132b8cc9e6ffb9",
+      "worktree_delta_sha256": "7d0f8225c19a765c34e9019852135b3418797e3f9685a15f0f5ffb7df9dd680e"
+    },
+    {
+      "task_id": "OPS-01",
+      "wave": "W0",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "GOV-01"
+      ],
+      "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "2ddaf81eff6612d673dd264a3b3b8a9e2992fe19",
+      "actual_commit_sha": "9ab1d7f9899179c442eaa533353c8ee552f88b79",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/recheck-20261026T033056Z/OPS-01.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "OPS-01",
+      "implementation_packet": "docs/tickets/OPS-01-repair-1.md",
+      "execution_receipt": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/recheck-20261026T033056Z/OPS-01.acceptance.json",
+      "execution_receipt_sha256": "43a3359ad70ea8dec310a477d1f98cd7ec8b8fcb3ffcd96e8c97d9d8132d1133",
+      "selected_worker_model": "opencode/deepseek-v4.1-flash-free",
+      "resume_artifacts": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/recheck-20261026T033056Z",
+      "worker_attempt_receipts": [
+        "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/OPS-01.blocked.json",
+        "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/resume-20261025T172041Z/OPS-01.deepseek-failure.json",
+        "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/resume-20261025T172041Z/OPS-01.gemini-failure.json"
+      ],
+      "repair_delegations": 1,
+      "acceptance_receipt_sha256": "43a3359ad70ea8dec310a477d1f98cd7ec8b8fcb3ffcd96e8c97d9d8132d1133"
+    },
+    {
+      "task_id": "MOV-00",
+      "wave": "W1",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "GOV-01"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "dd2e776c35ca18523546a2491213e7c3026505c4",
+      "actual_commit_sha": "7c595d1a33c5ddb7aded82d6fec86439bc2b7d2d",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-00.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "MOV-00",
+      "implementation_packet": "docs/tickets/MOV-00-repair-1.md",
+      "selected_worker_model": "opencode/deepseek-v4.1-flash-free",
+      "resume_artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z",
+      "repair_delegations": 1,
+      "acceptance_receipt_sha256": "9bcab53771223914c4666163bf458cd6ad072f170019408f4c224ae7609b1e06"
+    },
+    {
+      "task_id": "MOV-01",
+      "wave": "W1",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "MOV-00"
+      ],
+      "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "c9e9a8dc3ecaaa6dcb235ac56c8083aba2a80eff",
+      "actual_commit_sha": "ec08b222642b2f64cc43a528327b513c112bcf0e",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-01.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "MOV-01",
+      "implementation_packet": "docs/tickets/MOV-01-core-move.md",
+      "selected_worker_model": "opencode/deepseek-v4.1-flash-free",
+      "resume_artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z"
+    },
+    {
+      "task_id": "MOV-02",
+      "wave": "W1",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "MOV-01"
+      ],
+      "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "0577a2fd2cb18ad512a92fa74b007043675ffdef",
+      "actual_commit_sha": "0ed95ef488cc0a8bdf30877579d2cb702d79169c",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "MOV-02",
+      "implementation_packet": "docs/tickets/MOV-02-feeds-market-move.md",
+      "resume_artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z",
+      "selected_worker_model": "opencode/deepseek-v4.1-flash-free",
+      "worker_route_attempts": [
+        {
+          "model": "freellmapi/glm-4.5-flash",
+          "smoke_http": 200,
+          "worker_exit": 1,
+          "launcher_exit": 1,
+          "reason": "provider stream interrupted before edits",
+          "changed_paths": []
+        },
+        {
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "worker_exit": 0,
+          "launcher_exit": 0,
+          "tests_passed": 3,
+          "test_exit": 0,
+          "changed_paths": [
+            "Dockerfile.crypto",
+            "tests/refactoring/test_mov02_native_golden.py"
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "MOV-03",
+      "wave": "W1",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "MOV-02"
+      ],
+      "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "ad4454c172545ccfab5c174ec5a03887cebf7e6a",
+      "actual_commit_sha": "f49d97da8f4e07edc74fe61b8654e5136666d513",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-03.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "MOV-03",
+      "selected_worker_model": "opencode/mimo-v2.6-flash-free",
+      "implementation_packet": "docs/tickets/MOV-03-storage-move.md",
+      "resume_artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z"
+    },
+    {
+      "task_id": "MOV-04",
+      "wave": "W1",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "MOV-01",
+        "MOV-03"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "c5ace70c159eb9206ea5e7ff23a79552d1a5b3b7",
+      "actual_commit_sha": "7f0814f864325f4a1fe2ff3361cf9dbc6c250207",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-04.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "MOV-04",
+      "selected_worker_model": "opencode/glm-5.3-flash-free",
+      "resume_artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z",
+      "implementation_packet": "docs/tickets/MOV-04-execution-portfolio-move.md",
+      "worker_route_attempts": [
+        {
+          "model": "freellmapi/gemini-3.1-flash-lite",
+          "dispatcher_exit": 1,
+          "termination": "outer subprocess TimeoutExpired after645 seconds; bwrap terminated by subprocess.run",
+          "worker_exit": null,
+          "worker_exit_reason": "no worker-exit receipt was written",
+          "observed_test_exit": 1,
+          "test_failures": 1,
+          "changed_paths": [
+            "tests/refactoring/test_mov04_execution_golden.py"
+          ],
+          "partial_sha256": "f70acf83376303b87d68d71e4a28bce8675cb1e2a71f73c8081921c3ca140a8c",
+          "applied_to_active_repo": false,
+          "review_findings": [
+            "ExecutionOwner.close coroutine not awaited",
+            "NonceStore owner_root treated as a file; directory matched by sqlite glob",
+            "Only sqlite3 suffix captured; portfolio.sqlite omitted",
+            "Missing full SQL parity assertions and second safety test",
+            "Broad path masking helper violates bounded normalization; not used consistently",
+            "Docker copy additions missing"
+          ]
+        },
+        {
+          "model": "opencode/mimo-v2.6-flash-free",
+          "role": "test",
+          "launcher_exit": 124,
+          "real_exits": {
+            "diff-check-before-exit.txt": 0,
+            "worker-exit.txt": 124,
+            "diff-check-exit.txt": 0
+          },
+          "changed_paths": [],
+          "scope_pass": true,
+          "relay": null,
+          "applied_to_active_repo": false
+        },
+        {
+          "model": "opencode/glm-5.3-flash-free",
+          "role": "test",
+          "launcher_exit": 124,
+          "real_exits": {
+            "diff-check-before-exit.txt": 0,
+            "worker-exit.txt": 124,
+            "diff-check-exit.txt": 0
+          },
+          "changed_paths": [],
+          "scope_pass": true,
+          "relay": null,
+          "applied_to_active_repo": false
+        }
+      ],
+      "worker_helper_status": "NOT_DELIVERED_NOT_APPLIED",
+      "independent_acceptance": "279 existing tests plus complete unmasked SQLite/economic oracle, wheel16/canonical62 imports passed"
+    },
+    {
+      "task_id": "MOV-05",
+      "wave": "W1",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "MOV-02",
+        "MOV-04"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "7f0814f864325f4a1fe2ff3361cf9dbc6c250207",
+      "actual_commit_sha": "47e11a56b707e8df972d2b81c4ba292fcdf63acf",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-05.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "MOV-05",
+      "resume_artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z",
+      "implementation_packet": "docs/tickets/MOV-05-strategy-timefolio-move.md",
+      "selected_worker_model": "opencode/deepseek-v4.1-flash-free",
+      "ownership_exceptions": {
+        "mm_state": "All286 four-bundle functions audited; preserve mixed/inactive source namespace until STR/CAP/CLN reuse gates, no blanket whole bundle move",
+        "root_strategies": "2 inert exact alias archives + existing turtle identity alias moves; canonical implementation sole source"
+      },
+      "supplemental_map": "scripts/refactoring/MOV-05-path-resolution.json",
+      "worker_route_attempts": [
+        {
+          "model": "opencode/flint-40b-free",
+          "role": "debug",
+          "launcher_exit": 1,
+          "real_exits": {
+            "diff-check-before-exit.txt": 0,
+            "worker-exit.txt": 1,
+            "diff-check-exit.txt": 0
+          },
+          "changed_paths": [],
+          "scope_pass": true,
+          "relay": null,
+          "applied_to_active_repo": false,
+          "error_summary": [
+            {
+              "name": "APIError",
+              "http_status_tokens": [
+                "503"
+              ],
+              "message_sha256": "9eec5832b8a3be9a2d14c0a33de797534fcdd88895f6b17e0fd833cf5abe22c8",
+              "category": "tool_permission_errors_then_provider_error"
+            }
+          ],
+          "test_run_completed": false
+        },
+        {
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "role": "debug",
+          "launcher_exit": 0,
+          "real_exits": {
+            "diff-check-before-exit.txt": 0,
+            "worker-exit.txt": 0,
+            "diff-check-exit.txt": 0
+          },
+          "changed_paths": [
+            "scripts/refactoring/flat_domain_move.py",
+            "tests/refactoring/test_flat_domain_move.py"
+          ],
+          "scope_pass": true,
+          "relay": null,
+          "applied_to_active_repo": false
+        }
+      ],
+      "legacy_function_disposition": "286/286 DEFER with owners/callers/oracles/tests/rollback; originals preserved",
+      "required_acceptance_complete": true
+    },
+    {
+      "task_id": "MOV-06",
+      "wave": "W1",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "MOV-02",
+        "MOV-03",
+        "MOV-04",
+        "MOV-05"
+      ],
+      "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "9478c02a39ff85bc527fa7fe32f2f2508a59dcc0",
+      "actual_commit_sha": "38e38aa78dbc08bac0bc3ffca980da10b9f5f836",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/MOV-06-image-completion-20261026T153318Z/MOV-06.complete.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "MOV-06",
+      "follow_up_findings": [
+        {
+          "id": "HISTORICAL-RELEASE-INPUTS",
+          "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.acceptance.json",
+          "evidence": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.domain-evidence.json",
+          "resolution": "Resolved for local MOV-06; see complete acceptance receipt. Global MOV-07 gate remains required."
+        },
+        {
+          "id": "TIMEFOLIO_NATS_FREE_PENDING",
+          "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-05.acceptance.json",
+          "details": "Timefolio runner NatsJetStreamBus/default md.> source retained move-only; separate NATS-free data integration gates and real browser/live activation remain unverified.",
+          "resolution": "Resolved for local MOV-06; see complete acceptance receipt. Global MOV-07 gate remains required."
+        },
+        {
+          "id": "CURRENT_MOVE_MAP_INIT_COLLISIONS",
+          "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-05.acceptance.json",
+          "details": "Use accepted MOV-05 supplemental map so already-moved monitor is not selected twice; operations/dashboard empty seed init exists. Prove source/target init identity before any resolution; never overwrite existing target.",
+          "resolution": "Resolved for local MOV-06; see complete acceptance receipt. Global MOV-07 gate remains required."
+        }
+      ],
+      "resume_move_map": "scripts/refactoring/MOV-06-path-resolution.json",
+      "acceptance_receipt_sha256": "0c4cb53c973825bb2804f6e3cbab51d2cc8920f3f70b9ecd2c0c123ea85dc141",
+      "source_diff_sha256": "31a7d6c5850b1f5345b0bdd302be04745e01998a3ab7e1d6161c5f9544e392df",
+      "local_implementation": "LOCAL_INTEGRATION_VERIFIED",
+      "resume_instructions": "MOV-06 locally complete. Resume MOV-07 at current HEAD; no repeat of moves or worker repairs. Production/live/server actions remain unapproved.",
+      "environment_repairs": [
+        {
+          "date": "2026-10-27",
+          "status": "PASS_LOCAL",
+          "issue": "Docker Desktop default Ubuntu WSL integration disabled",
+          "receipt": "/home/pjh/.local/state/codex-opencode/runs/docker-wsl-repair-20261026T150735Z/docker-wsl-repair.acceptance.json",
+          "receipt_sha256": "05ce7e640675255c8c7f003623654d6701472c923b07f054f40ba52e98afbf58",
+          "daemon_connection": "RESOLVED",
+          "full_application_image_gate": "BLOCKED_OFFLINE_BUILD_DEPENDENCY_CACHE"
+        }
+      ],
+      "local_ticket_completion_percent": 100
+    },
+    {
+      "task_id": "MOV-07",
+      "wave": "W1",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "MOV-01",
+        "MOV-02",
+        "MOV-03",
+        "MOV-04",
+        "MOV-05",
+        "MOV-06"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "7dfbbc9d5834603a3c565dcd70d98da5cbed8172",
+      "actual_commit_sha": "4bb5e255920df1db6ce77298835f2588116c2609",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/MOV-07-flat-gate-20261026T163740Z/MOV-07.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "MOV-07",
+      "follow_up_findings": [
+        {
+          "id": "HISTORICAL-RELEASE-INPUTS",
+          "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.acceptance.json",
+          "evidence": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.domain-evidence.json",
+          "resolution": "Resolved locally by accepted MOV-07 gate; complete 201-row mapping, 45-file archive/helper provenance and historical-builder fail-closed evidence in receipt."
+        },
+        {
+          "id": "CURRENT_MOVE_MAP_INIT_COLLISIONS",
+          "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-05.acceptance.json",
+          "details": "Use accepted MOV-05 supplemental map so already-moved monitor is not selected twice; operations/dashboard empty seed init exists. Prove source/target init identity before any resolution; never overwrite existing target.",
+          "resolution": "Resolved locally by accepted MOV-07 gate; complete 201-row mapping, 45-file archive/helper provenance and historical-builder fail-closed evidence in receipt."
+        }
+      ],
+      "resume_move_map": "scripts/refactoring/MOV-07-resolved-paths.json",
+      "bounded_packet": "docs/tickets/MOV-07-flat-gate.md",
+      "acceptance_receipt_sha256": "d487a6d2564ead47324b129b5d018e918a01af2373f2e1adedd65d3e333099a6",
+      "local_ticket_completion_percent": 100,
+      "source_diff_sha256": "32d18da50d6c28f206882b3841d1ce477f6b9e91a9866e07d5c232227b0f2820",
+      "local_gate_results": {
+        "A": "PASS_LOCAL: zero retired src namespace/imports;201 original map rows resolved; source/wheel/editable134 outside imports and origins; compileall0; trusted old artifacts forward-converted",
+        "B": "PASS_LOCAL: no new active owner/signer/registration;9 non-strategy domains byte-identical;286 economic/helper function ASTs preserved; no runtime/apps bundles; frozen Golden unchanged; shared-account lease25 PASS; Timefolio fake oracle byte-identical",
+        "C": "PASS_LOCAL:4 final-SHA images,8x134 imports,UID10001,7 Compose combinations,primary NATS dependency0,default CMD/help and actual network-none startup; blank Chromium;8 rollback copies verified"
+      },
+      "resume_instructions": "MOV-07 complete locally. Resume next ready CLN-01 or CAP-00 from current HEAD/05 and receipt; no repeat moves or old namespace reintroduction. Semantic consolidation and production/external release gates remain separate.",
+      "owning_followup_packets": [
+        "docs/tickets/MOV-05-flat-namespace-resolution.md",
+        "docs/tickets/MOV-06-historical-crypto-inventory.md"
+      ]
+    },
+    {
+      "task_id": "CLN-01",
+      "wave": "W2",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "GOV-01",
+        "MOV-07"
+      ],
+      "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "271a72f9d8544e9a3ca7432e08194b4dad167d55",
+      "actual_commit_sha": "6789d51d119ade81de8768c18ba23a611da42e84",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN-01-CAP-00-20261026T173148Z/CLN-01.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "CLN-01",
+      "bounded_packet": "docs/tickets/CLN-01-doc-hygiene.md",
+      "acceptance_receipt_sha256": "fb9d1b8f62f2ffd67e29ce0e1fdf093adc9f08839332b179ca193a1b5942abbd",
+      "local_ticket_completion_percent": 100,
+      "source_diff_sha256": "be2e9536f8b63a23c93da8afb3e7039a72568d950e29e2062cc223928d972179"
+    },
+    {
+      "task_id": "CLN-02",
+      "wave": "W4",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "MOV-07",
+        "CAP-00"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "2fdf1927a7098e077530698c1e29ab28c6297bac",
+      "actual_commit_sha": "61e17079228aadbe073988d1dc801be79fbb0dfb",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030/CLN02.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "CLN-02",
+      "follow_up_findings": [
+        {
+          "id": "PROVIDER-OWNERSHIP-CANDIDATES",
+          "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.acceptance.json",
+          "evidence": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.domain-evidence.json"
+        },
+        {
+          "id": "LEGACY_BUNDLE_SEMANTIC_REUSE",
+          "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-05.acceptance.json",
+          "details": "286 function statuses remain DEFER; source evidence is not semantic consolidation/retirement."
+        }
+      ],
+      "bounded_packet": "docs/tickets/CLN-02-consolidation.md",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030",
+      "acceptance_receipt_sha256": "eda8f0d0b4ac1a409022d852acb874eeb6794804a5b2097d8ccb32b53fe12047",
+      "local_ticket_completion_percent": 100,
+      "source_diff_sha256": "188b3fb8f9e7ae17fdc21f124213c110b368990a055c41638deee0ebef1bd530"
+    },
+    {
+      "task_id": "CLN-03",
+      "wave": "W4",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "CLN-01",
+        "CLN-02",
+        "MOV-07",
+        "SIM-01",
+        "FEED-01",
+        "OBS-01",
+        "WEB-01"
+      ],
+      "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "9940c8e9c9b505cc34cccf0cb3105775d923027d",
+      "actual_commit_sha": "ab248ab315ee9207838db1d2b324610169a26cb8",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/CLN03.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "CLN-03",
+      "acceptance_receipt_sha256": "fbb15e61adbdf783f9b5d1bde9b0bf8fba46abcd86e04d79560438085608f1da",
+      "implementation_packet": "docs/tickets/CLN-03-doc-consistency.md"
+    },
+    {
+      "task_id": "CAP-00",
+      "wave": "W2",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "GOV-01",
+        "MOV-07"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": true,
+      "base_sha": "6789d51d119ade81de8768c18ba23a611da42e84",
+      "actual_commit_sha": "6a914585e503ca8e0b1f2ebe297fe16d0693c448",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN-01-CAP-00-20261026T173148Z/CAP-00.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "CAP-00",
+      "bounded_packet": "docs/tickets/CAP-00-capability-contract.md",
+      "acceptance_receipt_sha256": "f7198d6864afb40a14976f5daa4be81dff34dc930cd5a69f9a7ecf55e6947b5d",
+      "source_diff_sha256": "aefad909e255b16e9c52443c579f582047117748dfa68d75e9410bdcc09b3f7a",
+      "local_ticket_completion_percent": 100,
+      "capability_contract_evidence": "docs/tickets/CAP-00-capability-matrix.json",
+      "capability_contract_evidence_sha256": "7a76ec2e186b01e361fb5865eb7daae4d56bb6abdf8cdd17532e8075650acbb6",
+      "resume_instructions": "CAP00 local contract/gap freeze complete. Preserve required goals and source reuse; implement only the next ready ticket. Missing local route functions remain explicit, no external/live/global feature promotion."
+    },
+    {
+      "task_id": "STR-01",
+      "wave": "W3",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "MOV-05",
+        "CAP-00"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "af0210f71732d95c8224cce9912717b9fda75600",
+      "actual_commit_sha": "3f2b87fe2524ae73357245b10247a474c0936356",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/STR-01-luna-resume-20261027/STR-01.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "STR-01",
+      "bounded_packet": "docs/tickets/STR-01-file-plugins.md",
+      "worker_attempts": [
+        {
+          "phase": "design_audit",
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "exit": 0,
+          "scope_pass": true,
+          "source_changes": 0
+        },
+        {
+          "phase": "implementation",
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "exit": 143,
+          "scope_pass": true,
+          "acceptance": "FAIL_INITIAL_DRAFT_NOT_APPLIED",
+          "stop_reason": "Codex stopped isolated draft after review; missing test-only oracle environment and incomplete source-owned economic policies",
+          "independent_passed": 282,
+          "independent_failed": 9
+        },
+        {
+          "phase": "repair1",
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "state": "TIMEOUT_NOT_APPLIED",
+          "test_fixture_environment_corrected": true,
+          "exit": 124,
+          "independent_passed": 306,
+          "independent_failed": 1
+        },
+        {
+          "phase": "repair2",
+          "model": "freellmapi/glm-4.5-flash",
+          "state": "PROVIDER_FAILED_NO_EDITS",
+          "model_change_announced": true,
+          "reason": "GLM availability restored HTTP200; reviewed partial DeepSeek timeout and semantic defects",
+          "exit": 143,
+          "changed_paths": [],
+          "gateway_statuses": [
+            200,
+            429,
+            200,
+            429,
+            429,
+            429
+          ],
+          "invalid_tool_call": "ls/invalid unavailable; only bash/edit/read/write allowed"
+        },
+        {
+          "phase": "authorized_luna_owner",
+          "model": "gpt-6-luna",
+          "exit": 0,
+          "scoped_passed": 45,
+          "isolated": true
+        },
+        {
+          "phase": "authorized_luna_runtime",
+          "model": "gpt-6-luna",
+          "exit": 0,
+          "scoped_passed": 91,
+          "isolated": true
+        },
+        {
+          "phase": "authorized_luna_plugins",
+          "model": "gpt-6-luna",
+          "exit": 0,
+          "scoped_passed": 152,
+          "isolated": true
+        }
+      ],
+      "provider_observation": {
+        "priority1": "freellmapi/glm-4.5-flash",
+        "gateway": "CODING_REQUESTS_HTTP_429_AFTER_SMOKE_200",
+        "quota": "RATE_LIMITED_RETRY_AFTER_90_AND_600_SECONDS",
+        "selected": "freellmapi/glm-4.5-flash",
+        "no_paid_route": true,
+        "gemini": "HTTP_502",
+        "alternative": "opencode/glm-5.3-flash-free read-tool smoke passed exit0; not coding proof"
+      },
+      "review_receipt": "/home/pjh/.local/state/codex-opencode/runs/STR-01-20261027T022702Z/STR-01.review.json",
+      "candidate_source_manifest": "/home/pjh/.local/state/codex-opencode/runs/STR-01-20261027T022702Z/STR-01.partial-source-manifest.json",
+      "candidate_source_applied": true,
+      "worker_fallback_authorization": {
+        "date": "2026-10-27",
+        "model": "gpt-6-luna",
+        "trigger": "OpenCode repair allowance exhausted; prior partial work reviewed",
+        "scope": "STR-01 then next ready stage ticket; local only"
+      },
+      "prior_review_receipt": "/home/pjh/.local/state/codex-opencode/runs/STR-01-20261027T022702Z/STR-01.review.json",
+      "acceptance_receipt_sha256": "2e71507ee841f5b82daa6b0855fb16d25265157638fefc4a49c1e9977ffe4eb5"
+    },
+    {
+      "task_id": "CAP-01",
+      "wave": "W3",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "CAP-00",
+        "MOV-04"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "6831db236248d8accdaf93c7d513ad4c647ffa14",
+      "actual_commit_sha": "82128a3a00d615421eaa43d87d0283426d26cb09",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/CAP01.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "CAP-01",
+      "follow_up_findings": [
+        {
+          "id": "LEGACY_BUNDLE_SEMANTIC_REUSE",
+          "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-05.acceptance.json",
+          "details": "286 function statuses remain DEFER; source evidence is not semantic consolidation/retirement."
+        }
+      ],
+      "bounded_packet": "docs/tickets/CAP-01-reuse-integration.md",
+      "worker_attempts": [
+        {
+          "model": "freellmapi/glm-4.5-flash",
+          "role": "implement",
+          "state": "FINISHED",
+          "artifacts": "CAP01-glm",
+          "worker_exit": 1,
+          "source_changes": [],
+          "error": "Temporary inference relay unavailable HTTP502; no quota conclusion"
+        },
+        {
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "role": "refactor",
+          "repair": 1,
+          "state": "FINISHED",
+          "artifacts": "CAP01-deepseek",
+          "worker_exit": 124,
+          "source_changes": [
+            "brokers.py bounded helpers",
+            "extended_brokers.py optional permit/raw",
+            "transports.py draft329lines"
+          ],
+          "accepted": false
+        },
+        {
+          "model": "opencode/mimo-v2.6-flash-free",
+          "role": "debug",
+          "repair": 2,
+          "state": "FINISHED",
+          "scope": [
+            "src/execution/transports.py",
+            "src/execution/extended_brokers.py",
+            "tests/refactoring/test_cap01_transports.py"
+          ],
+          "artifacts": "CAP01-mimo-transport-repair2",
+          "worker_exit": 124,
+          "source_changes": []
+        },
+        {
+          "model": "gpt-6-luna",
+          "role": "bounded broker implementation/test",
+          "state": "FINISHED",
+          "reason": "User-authorized fallback after external allowance allocated; inspected partial work; isolated sole writer with disjoint component files",
+          "scope": [
+            "brokers.py",
+            "registry.py native map only",
+            "test_cap01_brokers.py"
+          ],
+          "first_targeted_passed": 19,
+          "lead_review_packet": "docs/tickets/CAP-01-broker-review-repair.md",
+          "worker_test_exit": 0,
+          "public_plus_existing_etf_passed": 33
+        },
+        {
+          "model": "gpt-6-luna",
+          "role": "bounded transport implementation/test",
+          "state": "FINISHED",
+          "reason": "Final MiMo repair2 timedout124 with no edits; external allowance exhausted; DeepSeek draft preserved",
+          "scope": [
+            "transports.py",
+            "extended_brokers.py _rpc only",
+            "test_cap01_transports.py"
+          ],
+          "public_test_exit": 0,
+          "public_passed": 8,
+          "lead_additional_repairs": [
+            "Arcus post-callback scope recheck",
+            "Custom TLS must verify certificate+hostname"
+          ],
+          "worker_test_exit": 0
+        },
+        {
+          "model": "gpt-6-luna",
+          "role": "private adverse test author",
+          "state": "FINISHED",
+          "execution": "Parent independently executes and corrects harness",
+          "artifact": "test_cap01_independent.py",
+          "private_transport_passed": 5
+        }
+      ],
+      "receipt_sha256": "2f3466ea698ac861edcbf50e92007c3d4caf8a0ac78bfc91fcc3efc5db65be44"
+    },
+    {
+      "task_id": "CAP-02",
+      "wave": "W3",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "CAP-01"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "514f9c1f1b7ebb94ced4310bbcecedb1f6a22e01",
+      "actual_commit_sha": "2e642aa1fe06398e308d922ae04ec8c83217f3a2",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-fee-config-20261028/CAP02-fee-config.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "CAP-02",
+      "follow_up_findings": [
+        {
+          "id": "CAP01-EXPLICIT-REMAINING-SCOPE",
+          "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/CAP01.acceptance.json",
+          "details": "Original broker auth/cache helpers remain unchanged. Private session/auth refresh, vendor aggregate fill identity/quantity and durable reconciliation remain this ticket; CAP01 raw facts are not normalized perfill events."
+        }
+      ],
+      "bounded_packet": "docs/tickets/CAP-02-account-fee-config.md",
+      "worker_attempts": [
+        {
+          "model": "freellmapi/glm-4.5-flash",
+          "role": "implement",
+          "state": "FINISHED",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/CAP02-glm-core",
+          "worker_exit": 1,
+          "source_changes": [],
+          "error": [
+            {
+              "name": "APIError",
+              "status": 502,
+              "relay_unavailable": true
+            }
+          ]
+        },
+        {
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "role": "refactor",
+          "repair": 1,
+          "state": "FINISHED",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/CAP02-deepseek-core",
+          "worker_exit": 124,
+          "source_changes": []
+        },
+        {
+          "model": "freellmapi/gemini-2.5-flash",
+          "role": "implement",
+          "repair": 2,
+          "state": "FINISHED",
+          "scope": [
+            "src/execution/reconciliation_sources.py",
+            "src/execution/brokers.py",
+            "tests/refactoring/test_cap02_sources.py"
+          ],
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/CAP02-gemini-sources",
+          "worker_exit": 1,
+          "source_changes": [],
+          "error": "relay inference unavailable; inspect private error log"
+        },
+        {
+          "model": "gpt-6-luna",
+          "role": "core lifecycle and durable apply",
+          "state": "FINISHED",
+          "scope": [
+            "reconciliation.py",
+            "portfolio_ledger.py metadata methods only",
+            "test_cap02_reconciliation.py"
+          ],
+          "reason": "User-authorized fallback after external allowance allocated; inspected no-edit failures; sole writer in separate core clone",
+          "first_targeted_passed": 28,
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/core-luna",
+          "worker_test_exit": 0,
+          "independent_acceptance": "PASS"
+        },
+        {
+          "model": "gpt-6-luna",
+          "role": "native recovery sources and Kiwoom execution history",
+          "state": "FINISHED",
+          "scope": [
+            "reconciliation_sources.py",
+            "brokers.py Kiwoom execution_fills only",
+            "test_cap02_sources.py"
+          ],
+          "reason": "Gemini repair2 failed without edits; external allowance exhausted; separate isolated source writer",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/sources-luna",
+          "worker_test_exit": 0,
+          "independent_acceptance": "PASS"
+        }
+      ],
+      "independent_verification_progress": {
+        "state": "PASS",
+        "full_passed": 2707,
+        "leases_passed": 25,
+        "focused_passed": 100,
+        "all_test_exits": 0,
+        "wheel_build_exit": 0,
+        "wheel_import_exit": 0,
+        "source_bytes_equal": 146,
+        "status_docs_passed": 78
+      },
+      "receipt_sha256": "27879bd4080c837db8dbb4857ed5d5750b233c839601d26d7815af4ef46fd01c",
+      "public_acceptance": "docs/tickets/CAP-02-account-fee-config-acceptance.md",
+      "acceptance_scope": "Original native order/fill recovery plus human-authorized configured account cost amendment; no broker fee reception or server activation",
+      "acceptance_history": [
+        {
+          "status": "ACCEPTED_LOCAL",
+          "actual_commit_sha": "f4f7c51c91c421cab613d20e5df2bcefd5a4da29",
+          "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/CAP02.acceptance.json",
+          "receipt_sha256": "a042c3c27a67a30f35124833cfeaa25caa0d8ae527c4e6b296517cd0c8b5063f",
+          "test_exit": 0
+        }
+      ],
+      "amendment": {
+        "id": "CAP02-ACCOUNT-FEE-CONFIG",
+        "status": "ACCEPTED_LOCAL",
+        "base_sha": "c5d51f79c2f9dc046ce6abd55daf408dbd32bedc",
+        "user_authority_date": "2026-10-28",
+        "policy": "User account config rate for preflight/PAPER/strategy P&L. No broker fee receipt/subscription/query/reconciliation work.",
+        "worker_model": "gpt-6-luna",
+        "worker_route": "same-ticket external allowance exhausted; authorized native fallback",
+        "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-fee-config-20261028",
+        "source_commit": "2e642aa1fe06398e308d922ae04ec8c83217f3a2",
+        "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-fee-config-20261028/CAP02-fee-config.acceptance.json",
+        "test_exit": 0
+      }
+    },
+    {
+      "task_id": "CAP-03",
+      "wave": "W3",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "CAP-00",
+        "CAP-01",
+        "CAP-02"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": true,
+      "base_sha": "f12589c3ad2da7a79f063eab97dbef04b27b1628",
+      "actual_commit_sha": "0f9303025338174b3069c0b04b6eec9f7b274e33",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/CAP03/CAP03.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "CAP-03",
+      "follow_up_findings": [
+        {
+          "id": "CAP01-EXPLICIT-REMAINING-SCOPE",
+          "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/CAP01.acceptance.json",
+          "details": "CAP01 account_identity_verified is caller attestation only; require actual account/permission/native identity and reservations. Spot MARKET with enabled notional rules needs a trusted owner/market reference fact before dispatch; current guard blocks it rather than inventing a price."
+        },
+        {
+          "id": "CAP02-KIWOOM-UNKNOWN-COST-AND-NATIVE-PERMISSIONS",
+          "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/CAP02.acceptance.json",
+          "details": "Fee dependency resolved by user-owned ACCOUNT_CONFIG model cost policy. No broker fee reception/subscription/query/reconciliation work. Native production permissions/margin/owner boundaries remain CAP03/EXEC01.",
+          "superseded_fee_requirement": "2026-10-28 human directive: configured account rate, no broker fee reception or reconciliation; native permission boundaries remain unchanged.",
+          "historical_details": "Kiwoom kt00009 native execution IDs/quantities and kt00007 cancellation proof are implemented, but per-execution fee is absent. fee=None/known=false stays unknown; labeled provisional PAPER fee zero never clears @private. CAP-03 cost attribution remains PAPER projection freshness only. Native account identity/permissions, private WS wire auth and production activation remain EXTERNAL_ONLY and EXEC-01/CAP-03",
+          "fee_status": "RESOLVED_CONFIG_POLICY",
+          "amended_receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-fee-config-20261028/CAP02-fee-config.acceptance.json"
+        }
+      ],
+      "bounded_packet": "docs/tickets/CAP-03-cashflow-risk.md",
+      "acceptance_receipt_sha256": "b767a342daf8cd6cc96535f44cc0eea7e75300e943cd27857912330b3b6d9a47",
+      "accepted_utc": "2026-10-28T12:03:22.092698+00:00",
+      "worker_model": "gpt-6-luna",
+      "worker_route": "authorized native fallback after initial + two external repair allowance exhausted",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/CAP03",
+      "test_summary": "2811 full + 25 guarded leases; wheel 148 source files exact; exits 0",
+      "acceptance_document": "docs/tickets/CAP-03-acceptance.md"
+    },
+    {
+      "task_id": "CAP-04",
+      "wave": "W3",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "STR-01",
+        "CAP-03",
+        "MOV-06"
+      ],
+      "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": true,
+      "base_sha": "6a3e7aaece592fc517a8c62299890b9262bba3e1",
+      "actual_commit_sha": "f8b515ce44cdf2a78c2d49918f5b0c9e63888f68",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/CAP04/CAP04.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "CAP-04",
+      "bounded_packet": "docs/tickets/CAP-04-process-isolation.md",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/CAP04",
+      "execution_note": "Independent dependency-ready isolated worker runs while EXEC01 is reviewed; integrate only after source/hash conflict review",
+      "worker_attempts": [
+        {
+          "model": "freellmapi/glm-4.5-flash",
+          "role": "implement",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/CAP04/initial-glm",
+          "state": "FINISHED",
+          "worker_exit": 1,
+          "source_changes": [],
+          "scope_pass": true
+        },
+        {
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "role": "debug",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/CAP04/repair1-deepseek",
+          "state": "FINISHED",
+          "worker_exit": 124,
+          "source_changes": [
+            "src/runtime/runtime_checkpoint.py",
+            "src/runtime/strategy_process.py",
+            "src/runtime/strategy_runtime.py",
+            "tests/refactoring/test_cap04_isolation.py",
+            "tests/refactoring/test_cap04_process_contract.py"
+          ],
+          "scope_pass": true
+        },
+        {
+          "model": "freellmapi/gemini-3.1-flash-lite",
+          "role": "implement",
+          "state": "FINISHED",
+          "worker_exit": 1,
+          "source_changes": [
+            "src/runtime/strategy_process.py",
+            "tests/refactoring/test_cap04_isolation.py"
+          ],
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/CAP04/repair2-gemini31"
+        }
+      ],
+      "native_fallback": {
+        "model": "gpt-6-luna",
+        "reason": "external per-ticket allowance exhausted and independent review failed",
+        "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/CAP04/native-fallback.json"
+      },
+      "acceptance_receipt_sha256": "840db11f4f144adfd7bf4fbb7f3d187e124d29a5a4182733b7225de61f5c6731",
+      "accepted_utc": "2026-10-28T18:09:17.265469+00:00",
+      "worker_model": "gpt-6-luna",
+      "test_summary": "2832 full +25 guarded leases; wheel149 exact; actual confined installed-wheel worker; independent exits0",
+      "acceptance_document": "docs/tickets/CAP-04-acceptance.md"
+    },
+    {
+      "task_id": "CAP-05",
+      "wave": "W3",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "CAP-01",
+        "CAP-02",
+        "CAP-03",
+        "STR-02",
+        "VEN-01",
+        "EXEC-01"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "ec518acc98e86a5bffb32c1958e864d6238219c9",
+      "actual_commit_sha": "1d25032b31958099b81dbf226f6176a8cd2f9081",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/CAP05.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "CAP-05",
+      "requirement": "REQUIRED_CORE_CODE; pair activation only opt-in; no NOT_APPLICABLE_APPROVED for task acceptance",
+      "acceptance_requirements": [
+        "TWO_LEG_BUY_SELL_DISPATCH",
+        "CONCURRENT_NON_ACK_BLOCKING_AND_SEQUENTIAL",
+        "TWO_REAL_VENUE_ADAPTER_MAPPING_ROUTES_SCRIPTED_OFFLINE",
+        "DURABLE_GROUP_AND_LEG_RESTART_RECONCILIATION",
+        "PARTIAL_FILL_UNKNOWN_CANCEL_HEDGE_BOUNDS",
+        "OTHER_STRATEGY_ISOLATION_AND_ZERO_LIVE_MUTATION"
+      ],
+      "bounded_packet": "docs/tickets/CAP-05-native-cross-venue-groups.md",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029",
+      "worker_attempts": [
+        {
+          "model": "freellmapi/glm-4.5-flash",
+          "role": "implement",
+          "state": "FINISHED",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/initial-glm",
+          "worker_exit": 1,
+          "source_changes": [],
+          "http_statuses": [
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            200,
+            429,
+            429,
+            429,
+            429,
+            429,
+            429
+          ]
+        },
+        {
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "role": "debug",
+          "state": "FINISHED",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/repair1-deepseek",
+          "worker_exit": 124,
+          "source_changes": [
+            "src/execution/execution_groups.py",
+            "src/execution/execution_ledger.py",
+            "src/execution/execution_owner.py",
+            "src/execution/trading_contracts.py",
+            "src/runtime/real_runner.py",
+            "src/runtime/strategy_process.py",
+            "tests/refactoring/cap05_source_fixture.py",
+            "tests/refactoring/test_cap05_groups.py",
+            "tests/refactoring/test_cap05_native_integration.py"
+          ],
+          "scope_pass": true,
+          "independent_focused": "28passed1failed; expandedadverse4failed2passed; requiredlifecyclegaps"
+        },
+        {
+          "model": "freellmapi/gemini-2.5-flash",
+          "role": "debug",
+          "state": "FINISHED",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/repair2-gemini25",
+          "worker_exit": 1,
+          "source_changes": [],
+          "http_statuses": [
+            429,
+            429,
+            429,
+            429,
+            429,
+            429,
+            429,
+            429,
+            429
+          ]
+        },
+        {
+          "model": "opencode/mimo-v2.6-flash-free",
+          "role": "debug",
+          "state": "FINISHED",
+          "user_authorized_alternative": true,
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/alternative-mimo26",
+          "worker_exit": 124,
+          "source_changes": [
+            "src/execution/execution_groups.py",
+            "src/execution/trading_contracts.py",
+            "src/runtime/real_runner.py",
+            "src/runtime/strategy_process.py"
+          ],
+          "scope_pass": true,
+          "independent_focused": "32 passed; true native lifecycle/funding remaining"
+        },
+        {
+          "model": "opencode/glm-5.3-flash-free",
+          "role": "debug",
+          "state": "STOPPED_USER_AUTHORIZED_LUNA_CONTINUATION",
+          "user_authorized_alternative": true,
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/alternative-glm53",
+          "launcher_exit": -15,
+          "worker_exit": null,
+          "source_changes": [
+            "src/execution/execution_groups.py",
+            "src/execution/execution_ledger.py",
+            "src/execution/execution_owner.py",
+            "tests/refactoring/cap05_source_fixture.py",
+            "tests/refactoring/test_cap05_core_adverse.py"
+          ],
+          "scope_pass": true,
+          "reason": "Lead terminated own isolated worker after1921sec with remaining failing/incomplete tests following explicit user OR Luna instruction; no provider quota inference"
+        },
+        {
+          "model": "opencode/flint-40b-free",
+          "role": "test",
+          "state": "FINISHED_STARTUP_CATALOG_ERROR",
+          "user_authorized_alternative": true,
+          "isolated_test_only": true,
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/alternative-flint-tests",
+          "launcher_exit": 3,
+          "worker_exit": null,
+          "source_changes": [],
+          "reason": "fresh model list initially absent; same isolated catalog subsequently returns exact free ID; no provider quota inference"
+        },
+        {
+          "model": "opencode/flint-40b-free",
+          "role": "test",
+          "state": "STOPPED_TOOL_INCOMPATIBLE",
+          "user_authorized_alternative": true,
+          "isolated_test_only": true,
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/alternative-flint-tests-warm",
+          "startup_public_catalog_warmed": true,
+          "launcher_exit": -15,
+          "worker_exit": null,
+          "source_changes": [],
+          "scope_pass": true,
+          "reason": "Repeated read schema path instead of filePath + forbidden exploration attempts; own isolated worker terminated; no API quota inference"
+        }
+      ],
+      "native_fallback": {
+        "model": "gpt-6-luna",
+        "reason": "Latest direct user: available other models OR Luna; preserved scoped GLM partial; independent review required",
+        "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/CAP05.acceptance.json",
+        "state": "PASS_INDEPENDENTLY_ACCEPTED",
+        "explicit_latest_user_authorization": true,
+        "isolated_writers": {
+          "core": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/luna-final-core",
+          "runtime_wire": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/luna-final-wire"
+        },
+        "lead_acceptance": true,
+        "core_agent": "/root/cap05_final_core_luna",
+        "runtime_agent": "/root/cap05_final_wire_luna",
+        "prior_staging_receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/native-fallback.json"
+      },
+      "user_authorized_alternative_routes": {
+        "date": "2026-10-29",
+        "instruction": "Try othermodels suchasMiMo; Lunaonlyifothermodelsunavailable",
+        "supersedes_exhaustion_only_native_start": true,
+        "additional_free_worker_attempts_authorized": true,
+        "no_paid_routes": true
+      },
+      "acceptance_receipt_sha256": "8f91381621ff35a2edbc12076bf251ad0e9c1bddb04441fe017464bff53f1636",
+      "local_e2e": "PASS",
+      "mandatory_matrix": "ALL_16_PASS",
+      "independent_unique_offline_cases": 3019,
+      "metadata_verification": {
+        "receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/CAP05.metadata-verification.json",
+        "sha256": "859940602ed15bb742dc5a76b4a11361247b8b2aaec3471f57f7322e8937a6f0",
+        "tests_passed": 71,
+        "exit": 0
+      }
+    },
+    {
+      "task_id": "CAP-06",
+      "wave": "W3",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "STR-01",
+        "CAP-01",
+        "CAP-02",
+        "CAP-03",
+        "CAP-04",
+        "CAP-05",
+        "STR-02",
+        "VEN-01",
+        "EXEC-01"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "7ff75f7d77fc97b784dc94b1ff051ad4202bc713",
+      "actual_commit_sha": "6d52bf3801ba17e9df8c04b555d2731479706f0a",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-06-sol-luna-20261029/CAP06.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "CAP-06",
+      "bounded_packet": "docs/tickets/CAP-06-selected-routing.md",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-06-sol-luna-20261029",
+      "worker_policy_override": {
+        "user_instruction": "sol and luna only; do not call opencode; cache/context efficiency",
+        "worker_model": "gpt-6-luna",
+        "opencode_invocations": 0
+      },
+      "acceptance_receipt_sha256": "c793e2f11db6ae330d7e7f598003a3ad19329048764a67915d04997189f72c57",
+      "local_e2e": "PASS",
+      "mandatory_matrix": "ALL_REQUIRED_LOCAL_PASS",
+      "independent_unique_offline_cases": 3059,
+      "selected_worker_model": "gpt-6-luna",
+      "opencode_invocations": 0,
+      "metadata_verification": {
+        "receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-06-sol-luna-20261029/CAP06.metadata-verification.json",
+        "sha256": "e87054cb0a1086fec1048ea5f77023dd4f182c0052b91cf4bf9dddfe3712e2a5",
+        "tests_passed": 71,
+        "exit": 0
+      }
+    },
+    {
+      "task_id": "QA-01",
+      "wave": "W5",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "MOV-07",
+        "CLN-02",
+        "STR-01",
+        "CAP-00",
+        "CAP-01",
+        "CAP-02",
+        "CAP-03",
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "STR-02",
+        "VEN-01",
+        "EXEC-01",
+        "SIM-01",
+        "FEED-01",
+        "OBS-01",
+        "WEB-01"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "ab248ab315ee9207838db1d2b324610169a26cb8",
+      "actual_commit_sha": "542dadc5250db5d6b43141aa0fe70440faa2e23e",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/QA01.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "QA-01",
+      "follow_up_findings": [
+        {
+          "id": "DATA-BARRIER-FINDING",
+          "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.acceptance.json",
+          "evidence": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.domain-evidence.json",
+          "qa_resolution": "Verified in QA-01; retain original historical observation. Normal source independence and current Timefolio NATS-free integration PASS; coupled cold root recovery dependency kept safely."
+        },
+        {
+          "id": "TIMEFOLIO_NATS_FREE_PENDING",
+          "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-05.acceptance.json",
+          "details": "Timefolio runner NatsJetStreamBus/default md.> source retained move-only; separate NATS-free data integration gates and real browser/live activation remain unverified.",
+          "qa_resolution": "Verified in QA-01; retain original historical observation. Normal source independence and current Timefolio NATS-free integration PASS; coupled cold root recovery dependency kept safely."
+        }
+      ],
+      "implementation_packet": "docs/tickets/QA-01-integration.md",
+      "acceptance_receipt_sha256": "ef4e4643a69ee1496dd701d98fd9e3009d4f76131e0d920fc2154eee34562e7c",
+      "scenario_evidence": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/QA01-scenario-evidence.json",
+      "scenario_evidence_sha256": "556bac387ff62a59cfee5e12fba78239298580adf0a8230c806bfbef96efa928",
+      "post_acceptance_revalidations": [
+        {
+          "task_id": "PERF-01",
+          "source_commit": "992bb757ba4b9c6cf60d47ebe1e58b796b11e225",
+          "receipt": "docs/tickets/PERF-01-heartbeat-qa.json",
+          "full_required_python": 3191,
+          "all_exits": 0
+        },
+        {
+          "task_id": "PERF-01",
+          "source_commit": "2fe70d2fb2a5caa0d6e99fbb3d2a05f08813ef61",
+          "receipt": "docs/tickets/PERF-01-local-acceptance.json",
+          "full_required_python": 3196,
+          "capped_focused": 225,
+          "all_exits": 0,
+          "note": "Final repaired source bytes revalidated; historical QA wheel/image receipt retained unchanged."
+        }
+      ]
+    },
+    {
+      "task_id": "PERF-01",
+      "wave": "W5",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "QA-01"
+      ],
+      "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "542dadc5250db5d6b43141aa0fe70440faa2e23e",
+      "actual_commit_sha": "8c08f9996a25a2cdf947f1ec33225d04209c9b8f",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "PERF-01",
+      "follow_up_findings": [
+        {
+          "id": "DATA-BARRIER-FINDING",
+          "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.acceptance.json",
+          "evidence": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.domain-evidence.json",
+          "perf_resolution": "Normal per-source admission/apply and scoped readiness verified; intentional all-initial-proof/coupled cold checkpoint root recovery fence retained. See PERF-01-findings.md."
+        },
+        {
+          "id": "PERF-HEARTBEAT-ACK",
+          "status": "RESOLVED_VERIFIED",
+          "evidence": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-heartbeat-paired.json",
+          "scope": "Local PONG receipt interleaving; no live accounts or orders",
+          "resolution": "PONG-only bounded drain/skip under unchanged deadline; final full QA and capped profile pass; original historical label collision documented in paired receipt."
+        },
+        {
+          "id": "PERF-NATIVE-PROOF-HEADROOM",
+          "status": "RESOLVED_VERIFIED",
+          "resolution": "Bounded preflight refresh before durable claim; all actual-use expiry/scope/version guards unchanged; actual-clock expiry tests and final profile pass."
+        },
+        {
+          "id": "PERF-64-RECORD-OFFERED-PULSE",
+          "status": "OBSERVED_CAPACITY_LIMIT",
+          "evidence": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-capacity-v6.result.json",
+          "resolution": "64-record pulse safely exceeded unchanged5s group deadline. Accepted1000-event profile explicitly uses16-record drained pulses; no live/1000persecond capacity claim or guard relaxation."
+        }
+      ],
+      "implementation_packet": "docs/tickets/PERF-01-profile.md",
+      "repair_packet": "docs/tickets/PERF-01-heartbeat-repair.md",
+      "repair_commit_sha": "992bb757ba4b9c6cf60d47ebe1e58b796b11e225",
+      "qa_revalidation_receipt": "docs/tickets/PERF-01-heartbeat-qa.json",
+      "acceptance_receipt_sha256": "570c2755ebd39cd4e78ef7ccd1a831a3a99a24cef591a4e687411cb657816d3e",
+      "public_acceptance_receipt": "docs/tickets/PERF-01-local-acceptance.json",
+      "public_acceptance_receipt_sha256": "6fe5ce5a46c37bb889ef4f6c3595c54fe48098796c2d287c4be7cbc5e952add9",
+      "runtime_source_commit": "2fe70d2fb2a5caa0d6e99fbb3d2a05f08813ef61",
+      "runtime_source149_sha256": "acc56cd077bd3156a3d2f10aab7ff0d4c3af08381886d99cfdd8f0c7c4c90451",
+      "native_proof_repair_commit_sha": "2fe70d2fb2a5caa0d6e99fbb3d2a05f08813ef61",
+      "findings": "docs/tickets/PERF-01-findings.md",
+      "qa_revalidation_final_receipt": "docs/tickets/PERF-01-local-acceptance.json",
+      "numeric_targets": "EXCEEDED_NONBLOCKING_REFERENCE",
+      "profile_result": "PASS_LOCAL_CAPACITY"
+    },
+    {
+      "task_id": "REL-01",
+      "wave": "W6",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "QA-01",
+        "PERF-01",
+        "CLN-03",
+        "SIM-01"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "REL-01",
+      "follow_up_findings": [
+        {
+          "id": "HISTORICAL-RELEASE-INPUTS",
+          "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.acceptance.json",
+          "evidence": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.domain-evidence.json"
+        }
+      ]
+    },
+    {
+      "task_id": "DEP-01",
+      "wave": "W6",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "REL-01"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "DEP-01"
+    },
+    {
+      "task_id": "CUT-01",
+      "wave": "W7",
+      "status": "EXTERNAL_NOT_AUTHORIZED",
+      "depends_on": [
+        "DEP-01"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": false,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "CUT-01"
+    },
+    {
+      "task_id": "RET-01",
+      "wave": "W7",
+      "status": "EXTERNAL_NOT_AUTHORIZED",
+      "depends_on": [
+        "CUT-01"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": false,
+      "may_need_scope_decision": false,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "RET-01"
+    },
+    {
+      "task_id": "STR-02",
+      "wave": "W3",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "STR-01",
+        "MOV-05",
+        "CAP-00"
+      ],
+      "risk_review": "HIGH",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "52ade034c3c3b2a234743911ea3a021e1b714411",
+      "actual_commit_sha": "f9e830c67330de171647f746d4a25a4e8f70fd22",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/STR-02-resume-20261028/STR02.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "STR-02",
+      "follow_up_findings": [
+        {
+          "id": "LEGACY_BUNDLE_SEMANTIC_REUSE",
+          "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-05.acceptance.json",
+          "details": "286 function statuses remain DEFER; source evidence is not semantic consolidation/retirement."
+        }
+      ],
+      "bounded_packet": "docs/tickets/STR-02-action-feedback.md",
+      "worker_attempts": [
+        {
+          "phase": "A",
+          "model": "freellmapi/glm-4.5-flash",
+          "state": "INTERRUPTED_ENVIRONMENT_IO",
+          "applied": false
+        },
+        {
+          "phase": "A-resume",
+          "model": "freellmapi/glm-4.5-flash",
+          "state": "WRAPPER_EXIT1_FILESYSTEM_IO",
+          "applied": false
+        },
+        {
+          "phase": "C",
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "state": "WRAPPER_EXIT1_FILESYSTEM_IO",
+          "applied": false
+        },
+        {
+          "phase": "A+B+C+independent-adverse",
+          "model": "gpt-6-luna",
+          "state": "FINISHED",
+          "reason": "User-authorized native fallback after prior external allowance exhaustion",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/STR-02-resume-20261028",
+          "lead_independent_acceptance": "PASS"
+        }
+      ],
+      "historical_blocking_reasons": [
+        {
+          "resolved_on": "2026-10-28",
+          "reasons": [
+            "Preserved unfinished after host filesystem I/O failures; user now explicitly requests FEED01→VEN01→CAP01 bypass. No STR02 source adopted."
+          ],
+          "evidence": "/home/pjh/.local/state/codex-opencode/runs/STR-02-readiness-20261028/STR02-readiness.json"
+        }
+      ],
+      "readiness_check": {
+        "date": "2026-10-28",
+        "can_resume": true,
+        "kind": "ENVIRONMENT_AND_PREREQUISITES",
+        "focused_tests_passed": 114,
+        "test_exit": 0,
+        "docker_required": false,
+        "packet_refresh_required": false,
+        "receipt": "/home/pjh/.local/state/codex-opencode/runs/STR-02-readiness-20261028/STR02-readiness.json",
+        "implementation_started": false
+      },
+      "resume_execution": {
+        "date": "2026-10-28",
+        "model": "gpt-6-luna",
+        "reason": "User-authorized fallback after prior STR02 initial plus two resume delegations failed without adopted source; snapshots inspected unchanged.",
+        "artifacts": "/home/pjh/.local/state/codex-opencode/runs/STR-02-resume-20261028",
+        "phases": [
+          "contracts/ledger",
+          "generic PAPER callbacks",
+          "original KIS source callbacks"
+        ],
+        "acceptance": "PASS",
+        "implementation_finished": true
+      },
+      "receipt_sha256": "b372c7dfa455085a31ac06b5e4320c11255baf16e4c3b8b89819092715e6e932",
+      "selected_worker_model": "gpt-6-luna",
+      "public_acceptance": "docs/tickets/STR-02-acceptance.md",
+      "acceptance_scope": "Full local strategy action/feedback contract, generic PAPER plus original C3/KP/KD KIS Mock/Mock2 callbacks; production activation remains separate",
+      "independent_verification_progress": {
+        "state": "PASS",
+        "full_passed": 2756,
+        "leases_passed": 25,
+        "focused_passed": 49,
+        "all_test_exits": 0,
+        "wheel_build_exit": 0,
+        "wheel_import_exit": 0,
+        "source_bytes_equal": 148,
+        "old_test_files_preserved": 172,
+        "status_docs_passed": 78,
+        "status_docs_exit": 0
+      }
+    },
+    {
+      "task_id": "VEN-01",
+      "wave": "W3",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "MOV-04",
+        "CAP-00"
+      ],
+      "risk_review": "HIGH",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "ab3e5148874245f5ea31b359a7636b2e3b0468e1",
+      "actual_commit_sha": "58545cbe6785507be7f4506bc6a32533dd0dc911",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/VEN01.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "VEN-01",
+      "bounded_packet": "docs/tickets/VEN-01-registry.md",
+      "worker_attempts": [
+        {
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "role": "refactor",
+          "worker_exit": 124,
+          "source_draft": "VEN01-deepseek/work",
+          "independent_adverse_failed": 8,
+          "accepted": false
+        },
+        {
+          "model": "opencode/glm-5.3-flash-free",
+          "role": "debug",
+          "repair": 1,
+          "worker_exit": 124,
+          "source_changes": []
+        },
+        {
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "role": "debug",
+          "repair": 2,
+          "state": "FINISHED",
+          "scope": [
+            "registry.py",
+            "local_config.py"
+          ],
+          "worker_exit": 124,
+          "source_changes": []
+        },
+        {
+          "model": "gpt-6-luna",
+          "role": "bounded implementation/test",
+          "state": "FINISHED",
+          "scope": [
+            "src/execution/venues/__init__.py",
+            "src/execution/venues/registry.py",
+            "src/execution/venues/dummy_crypto.py",
+            "src/execution/venues/dummy_stock.py",
+            "src/runtime/local_config.py",
+            "tests/refactoring/test_ven01_registry.py"
+          ],
+          "reason": "User-authorized fallback after external initial + two repairs timed out. Partial work preserved; Luna sole isolated writer after external exit.",
+          "agent": "/root/ven01_finish",
+          "worker_test_exit": 0,
+          "public_passed": 49
+        }
+      ],
+      "receipt_sha256": "df2a75ff4882c368a6013776c9ed994d91724172786c3f481aefa28f50818ac3"
+    },
+    {
+      "task_id": "EXEC-01",
+      "wave": "W3",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "STR-02",
+        "VEN-01",
+        "CAP-01",
+        "CAP-02",
+        "CAP-03"
+      ],
+      "risk_review": "CRITICAL",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "6a3e7aaece592fc517a8c62299890b9262bba3e1",
+      "actual_commit_sha": "a71770dcb0eb932e4f6f1023e09316f1fc25a02e",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/EXEC01-arcus-resume-20261029/EXEC01.complete.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "EXEC-01",
+      "follow_up_findings": [
+        {
+          "id": "LEGACY_BUNDLE_SEMANTIC_REUSE",
+          "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-05.acceptance.json",
+          "details": "286 function statuses remain DEFER; source evidence is not semantic consolidation/retirement."
+        }
+      ],
+      "bounded_packet": "docs/tickets/EXEC-01-common-owner-routing.md",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/EXEC01",
+      "worker_attempts": [
+        {
+          "model": "freellmapi/glm-4.5-flash",
+          "role": "implement",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/EXEC01/initial-glm",
+          "state": "FINISHED",
+          "worker_exit": 1,
+          "source_changes": [
+            "tests/refactoring/test_exec01_owner.py"
+          ],
+          "scope_pass": true
+        },
+        {
+          "model": "opencode/deepseek-v4.1-flash-free",
+          "role": "debug",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/EXEC01/repair1-deepseek",
+          "state": "FINISHED",
+          "worker_exit": 124,
+          "source_changes": [
+            "src/execution/execution_ledger.py",
+            "src/execution/execution_owner.py",
+            "src/execution/process_lease.py",
+            "src/execution/trading_contracts.py",
+            "src/execution/venues/registry.py",
+            "tests/refactoring/test_exec01_native.py",
+            "tests/refactoring/test_exec01_owner.py"
+          ],
+          "scope_pass": true
+        },
+        {
+          "model": "freellmapi/gemini-3.1-flash-lite",
+          "role": "implement",
+          "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/EXEC01/repair2-gemini31",
+          "state": "FINISHED",
+          "worker_exit": 0,
+          "source_changes": [],
+          "scope_pass": true
+        }
+      ],
+      "native_fallback": {
+        "model": "gpt-6-luna",
+        "reason": "external per-ticket allowance exhausted and independent review failed",
+        "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/EXEC01/native-fallback.json"
+      },
+      "acceptance_receipt_sha256": "25e40a3a37ab3b648c7f5d44c1df934ec754dd56463c57657912cf9018f29795",
+      "worker_model": "gpt-6-luna",
+      "test_summary": "2919full+25leases+44independentadverse/focused;150wheel exact+14imports; finalLinuxDocker build/run0,14canonicalimports; allrequiredlocalcriteria PASS",
+      "progress_document": "docs/tickets/EXEC-01-progress.md",
+      "implementation_preserved_utc": "2026-10-28T18:22:46.399834+00:00",
+      "resume_packet": "docs/tickets/EXEC-01-arcus-native-quote-proof.md",
+      "official_api_documentation": "https://docs.arcus.xyz/api-reference/introduction",
+      "accepted_utc": "2026-10-29T00:41:50.083119+00:00",
+      "acceptance_document": "docs/tickets/EXEC-01-acceptance.md",
+      "prior_receipts": [
+        {
+          "path": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/EXEC01/EXEC01.acceptance.json",
+          "sha256": "dd48ba7801a0a72742dc51514e42baec52e0a5dfa2343f398fc114eba26902b2",
+          "decision": "BLOCKED"
+        }
+      ]
+    },
+    {
+      "task_id": "SIM-01",
+      "wave": "W4",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "CLN-02",
+        "STR-02",
+        "EXEC-01",
+        "VEN-01",
+        "CAP-05"
+      ],
+      "risk_review": "HIGH",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "61e17079228aadbe073988d1dc801be79fbb0dfb",
+      "actual_commit_sha": "26809c778e9d04ac3f9cddb3abbbf99668045007",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030/SIM01.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "SIM-01",
+      "bounded_packet": "docs/tickets/SIM-01-ponytail.md",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030",
+      "acceptance_receipt_sha256": "232aab298c3a824d89b5d4b156c009a102ae86a504b93f9b39994ca78bb70108",
+      "local_ticket_completion_percent": 100,
+      "source_diff_sha256": "e36b4fa512137263e38ef52ce7d73711377777f3540570fce88be974b2a360c4",
+      "compact_receipt": "docs/tickets/SIM-01-local-acceptance.json"
+    },
+    {
+      "task_id": "FEED-01",
+      "wave": "W3",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "MOV-07",
+        "CAP-00"
+      ],
+      "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "a0de9111cf4f765019a5fe894fa17ebdba7fab36",
+      "actual_commit_sha": "6eafe31edae8dfb19cde2a6fcab5a9ae33e1e493",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/FEED01.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "FEED-01",
+      "follow_up_findings": [
+        {
+          "id": "PROVIDER-OWNERSHIP-CANDIDATES",
+          "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.acceptance.json",
+          "evidence": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.domain-evidence.json"
+        }
+      ],
+      "bounded_packet": "docs/tickets/FEED-01-provider-split.md",
+      "worker_attempts": [
+        "freellmapi/glm-4.5-flash: relay502/no edits",
+        "opencode/deepseek-v4.1-flash-free: timeout124; reviewed7 source drafts",
+        "freellmapi/gemini-2.5-flash: relay502/no edits",
+        "gpt-6-luna: native7 tests+bounded review repair"
+      ],
+      "receipt_sha256": "c301214b63a5d660e74d9cdaa92a7c45fb896f7944809b4a4884c503fcd1e49a"
+    },
+    {
+      "task_id": "OBS-01",
+      "wave": "W3",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "MOV-07",
+        "STR-02",
+        "CAP-03",
+        "FEED-01"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "593c22bdf30df21c642c7e51a19d5c5125015b27",
+      "actual_commit_sha": "a353fbb65f0d5681e7e827adfaeef8e5bda4b3fc",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/OBS-01-sol-luna-20261029/OBS01.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "OBS-01",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/OBS-01-sol-luna-20261029",
+      "bounded_packet": "docs/tickets/OBS-01-observability.md",
+      "worker_policy_override": {
+        "models": [
+          "sol lead unchanged",
+          "gpt-6-luna"
+        ],
+        "opencode_invocations": 0,
+        "reason": "continue user sol+luna-only model preference"
+      },
+      "acceptance_receipt_sha256": "6e2a843e9c3a0b0af5a486dedeb127f8f162c1d330fe3a29b68907913325497c",
+      "local_e2e": "PASS_SCRIPTED",
+      "mandatory_matrix": "ALL_REQUIRED_LOCAL_PASS",
+      "independent_unique_offline_cases": 3099,
+      "selected_worker_model": "gpt-6-luna",
+      "opencode_invocations": 0
+    },
+    {
+      "task_id": "WEB-01",
+      "wave": "W4",
+      "status": "ACCEPTED_LOCAL",
+      "depends_on": [
+        "OBS-01",
+        "MOV-06"
+      ],
+      "risk_review": "CRITICAL_CODEX",
+      "required_for_offline_release": true,
+      "may_need_scope_decision": false,
+      "base_sha": "ef5947ee480545ba8599155b884b0a4c83da87de",
+      "actual_commit_sha": "eff3412cf105587423756f057438e49187366bda",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030/WEB01.acceptance.json",
+      "test_exit": 0,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "WEB-01",
+      "bounded_packet": "docs/tickets/WEB-01-secure-readonly.md",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030",
+      "acceptance_receipt_sha256": "8404c3d5690b8f40a89ea9d1f10728e4c325f583f0c30cb62399e3d2cf2dfbfe",
+      "local_ticket_completion_percent": 100,
+      "source_diff_sha256": "2d0706c469350cd05fdda224d60cbc58698b54137f415ef5f1117aaef6f77bfb",
+      "compact_receipt": "docs/tickets/WEB-01-local-acceptance.json",
+      "ssl_status": "LOCAL_TEST_ONLY",
+      "production_verified": false,
+      "external_gates_pending": [
+        "real private Sites/gateway routing to named service with independent service credential and original bridge/envelope contract",
+        "real single-owner D1 binding/data evidence",
+        "actual DNS, trusted TLS/renewal, public origin/rate/bypass and firewall configuration approved at DEP/CUT"
+      ]
+    },
+    {
+      "task_id": "KR-DATA-01",
+      "wave": "W5",
+      "status": "NOT_STARTED",
+      "depends_on": [
+        "FEED-01",
+        "MOV-07",
+        "CAP-00"
+      ],
+      "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
+      "required_for_offline_release": false,
+      "may_need_scope_decision": true,
+      "base_sha": null,
+      "actual_commit_sha": null,
+      "acceptance_receipt": null,
+      "test_exit": null,
+      "blocking_reasons": [],
+      "definition_file": "02_DEVELOPER_TICKETS.md",
+      "definition_heading_id": "KR-DATA-01"
+    }
+  ],
+  "acceptance_rule": {
+    "allowed_states": [
+      "NOT_STARTED",
+      "IN_PROGRESS",
+      "BLOCKED",
+      "ACCEPTED_LOCAL",
+      "EXTERNAL_NOT_AUTHORIZED",
+      "EXTERNAL_VERIFICATION_PENDING",
+      "OPERATIONAL_ACCEPTED",
+      "NOT_APPLICABLE_APPROVED"
+    ],
+    "independent_verification_required": true,
+    "test_and_diff_provenance_required": true,
+    "no_self_approval": true,
+    "no_server_mutation_without_user_approval": true
+  },
+  "edit_history": [
+    {
+      "date": "2026-10-25",
+      "reason": "Explicit user correction: CAP-05 mandatory code implementation and offline E2E regardless of selected strategy; live venue-pair activation opt-in",
+      "changed_docs": [
+        "01_FINAL_PLAN.md",
+        "02_DEVELOPER_TICKETS.md",
+        "03_ARCHITECTURE_REQUIREMENTS.md",
+        "05_TASK_STATUS.json"
+      ],
+      "unchanged_docs": [
+        "04_COMPLETED_MANIFEST.json"
+      ],
+      "status_changes": "none; CAP-05 remains NOT_STARTED, no testing or acceptance claimed"
+    },
+    {
+      "date": "2026-10-25",
+      "revision": "v2-strategy-owned-actions-venue-extensibility-ponytail-lowms",
+      "note": "Added four required tickets STR-02 VEN-01 EXEC-01 SIM-01, retained 45 historical accepted as is; all new tickets remain NOT_STARTED and external activation unapproved."
+    },
+    {
+      "date": "2026-10-25",
+      "revision": "minimal-policy-ownership-and-nonblocking-latency",
+      "reason": "User directive: strategy owns economic equivalence/inventory/MM quote and hedging; execution returns order/account facts; config instrument aliases; latency targets observational not blocking",
+      "changed_docs": [
+        "01_FINAL_PLAN.md",
+        "02_DEVELOPER_TICKETS.md",
+        "03_ARCHITECTURE_REQUIREMENTS.md",
+        "05_TASK_STATUS.json"
+      ],
+      "unchanged_docs": [
+        "04_COMPLETED_MANIFEST.json"
+      ],
+      "status_changes": "none; 31 ticket identities, statuses and dependencies unchanged; no implementation or test receipt claimed"
+    },
+    {
+      "date": "2026-10-25",
+      "revision": "multisource-no-barrier-domestic-broker-extension",
+      "reason": "Explicit follow-up: independent data ingress/normalization without cross-venue wait; all new Crypto venues and domestic stock brokers share extensional Adapter/Owner contract",
+      "changed_docs": [
+        "01_FINAL_PLAN.md",
+        "02_DEVELOPER_TICKETS.md",
+        "03_ARCHITECTURE_REQUIREMENTS.md",
+        "05_TASK_STATUS.json"
+      ],
+      "unchanged_docs": [
+        "04_COMPLETED_MANIFEST.json"
+      ],
+      "status_changes": "none; 31 task IDs, statuses, waves, and edges unchanged",
+      "external_actions": "none"
+    },
+    {
+      "date": "2026-10-25",
+      "revision": "2026-10-25-venue-feed-split-pnl-latency-https-orderonly-kr350",
+      "reason": "venue-specific collector files; TOSS collection; live latency and per-strategy PnL; secure mobile URL; order-only broker; optional 350-minute/daily capacity",
+      "added_tickets": [
+        "FEED-01",
+        "OBS-01",
+        "WEB-01",
+        "KR-DATA-01"
+      ],
+      "historical_completed_unchanged": true,
+      "server_or_repo_modified": false
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "GOV-01 independently accepted: installed authority docs/final, legacy authority read-only, DAG and historical38 verified, manifest bytes unchanged",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/GOV-01.acceptance.json"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "OPS-01 BLOCKED on selected GLM provider HTTP 429; actual worker exit 1, zero partial edits, no retry delegation/fallback",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/OPS-01.blocked.json"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "User authorized worker priority GLM > OpenCode DeepSeek > FreeLLMAPI Gemini etc; resume OPS-01 with tier2 after verifying tier1 made no edits",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/resume-20261025T172041Z"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "Inspected DeepSeek quota failure and worker exit143; no partial edits. Advance to authorized tier3 Gemini 2.5 Flash.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/resume-20261025T172041Z/OPS-01.deepseek-failure.json"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "Authorized priority routes inspected; DeepSeek/Gemini unavailable and no partial edits. OPS-01 remains BLOCKED; worker priority persisted.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/resume-20261025T172041Z/OPS-01.blocked.json"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "Explicit user request: live recheck worker routes and implement/independently verify OPS-01 if available. Prior receipt hashes/partial work checked.",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/recheck-20261026T033056Z"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "DeepSeek implementation received; independent exact tests170 PASS, six independent corner-case probes failed; bounded repair1 dispatched without acceptance.",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/recheck-20261026T033056Z"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "OPS-01 independently ACCEPTED_LOCAL after worker implementation, bounded repair, six adverse probes, small root-path fix,180 committed-source tests and214 netless tests.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/final-orchestration-20261025T165251Z/recheck-20261026T033056Z/OPS-01.acceptance.json",
+      "source_sha": "9ab1d7f9899179c442eaa533353c8ee552f88b79"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "User requested3 sequential tickets; selected MOV-00 -> MOV-01 -> MOV-02; MOV-00 ownership inventory dispatched. Trading contract ownership override based on actual execution-ledger dependency.",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "MOV-00 independently accepted; original dirty checkout preserved; all source ownership and explicit deferred exceptions frozen in codegen map.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-00.acceptance.json"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "MOV-01 accepted after exact-plan/AST review, wire and old pickle identity, 131 tests and offline wheel import outside repository; advance third requested ticket MOV-02.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-01.acceptance.json"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "MOV-02 accepted after 27 mechanical moves, AST review118 files, exact packet232 tests, prior Core regressions, native8 full event JSON equality, offline wheel27 imports and static packaging. Requested three-ticket batch complete; MOV-03 ready but not started.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.acceptance.json"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "MOV-03 accepted after 303 tests, persisted spool/archive golden, schema21 and wheel17 import equality; continue MOV-04.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-03.acceptance.json"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "MOV-04 move accepted from independent279 tests, complete3DB16-table economic/nonce/mutation oracle without masking, AST84, nested-import correction proofs, wheel16/canonical62 imports. All three optional helper worker failures recorded and drafts unapplied; no whole failed product rewrite. Continue final requested ticket MOV-05.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-04.acceptance.json"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "MOV-05 accepted after30 source moves, root collision0,507 product regressions+22 tool tests, Timefolio fake before/after hash equality, 286 function dispositions preserved, wheel root/outside import and static packaging; requested MOV03-05 batch complete, MOV06 ready not started.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-05.acceptance.json"
+    },
+    {
+      "date": "2026-10-26",
+      "reason": "MOV-06 implementation committed with separate mechanical/packaging/functional changes. Independent668 regression group + final49 runtime/Timefolio tests, wheel42 imports/131 canonical file hashes, Compose7 passed; actual Docker build1/socket absent. BLOCKED, not accepted; MOV-07 not advanced. Worker GLM interrupted, DeepSeek timeout, Gemini429; two repairs exhausted and reviewed worker draft adopted after independent tests.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/MOV-06-20261026T100253Z/MOV-06.acceptance.json",
+      "receipt_sha256": "9c1bf20873bd71ab4a7cdbb7033828d2d1a8f3a754a039efabc6175dd1539f4d"
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "Docker Desktop was running; Ubuntu integration was disabled. Backed up settings-store.json, changed only EnableIntegrationWithDefaultWslDistro false->true, stopped/started Desktop, verified native default socket, fresh WSL, same Windows/Linux engine and existing containers restored. Offline scratch build/readback passed; actual MOV06 app image reached editable build and failed missing offline setuptools build dependency. Corrected obsolete missing-daemon blocker; MOV06 remains BLOCKED, MOV07 not advanced.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/docker-wsl-repair-20261026T150735Z/docker-wsl-repair.acceptance.json",
+      "receipt_sha256": "05ce7e640675255c8c7f003623654d6701472c923b07f054f40ba52e98afbf58"
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "MOV-06 ACCEPTED_LOCAL 100% local criteria:2495 local tests,4 actual images/8x131 canonical imports, wheel131, Compose7, actual separate-process no-network spool/engine/Parquet startup and credential-disabled roles, local Chromium DOM, Timefolio oracle equality; frozen bytes/04 preserved. Production capacity/mount inputs are external gates, never claimed from synthetic fixtures. MOV-07 ready.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/MOV-06-image-completion-20261026T153318Z/MOV-06.complete.acceptance.json",
+      "receipt_sha256": "0c4cb53c973825bb2804f6e3cbab51d2cc8920f3f70b9ecd2c0c123ea85dc141"
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "MOV-06 accepted; MOV-07 independent final flat-source/image gate started with read-only GLM audit and Codex deterministic verification."
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "MOV-07 ACCEPTED_LOCAL100% after MOV-05/06 bounded follow-up: retired namespace removed from src/wheels/images,45 original files and286 functions preserved,201 map rows resolved,2509 local tests,4 final-SHA images/8x134 imports,Compose7,real network-none subprocess startup/blank Chromium,rollback8 hashes PASS. GLM429 with no edits; announced direct DeepSeek audit/implementation/repair succeeded. Global/production release gates unchanged. Requested MOV-06→MOV-07 batch complete.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/MOV-07-flat-gate-20261026T163740Z/MOV-07.acceptance.json",
+      "receipt_sha256": "d487a6d2564ead47324b129b5d018e918a01af2373f2e1adedd65d3e333099a6",
+      "actual_commit_sha": "4bb5e255920df1db6ce77298835f2588116c2609"
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "User requested next two tickets CLN-01/CAP-00 to completion, then commit and push current branch. MOV-06/07 receipts reverified. CLN-01 starts; immutable historical04 and production gates preserved."
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "CLN-01 accepted100%:1062 retention entries,30 immutable04 receipt hashes,104 byte-exact historical moves,166 recoverable raw untracks,133 required links, fresh-clone2542 tests. CAP-00 starts from unchanged product source; no live/release promotion.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN-01-CAP-00-20261026T173148Z/CLN-01.acceptance.json",
+      "receipt_sha256": "fb9d1b8f62f2ffd67e29ce0e1fdf093adc9f08839332b179ca193a1b5942abbd"
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "CAP00 ACCEPTED_LOCAL100%:35 exact scope tuples,29 required local rows,110 source functions/18 files,19 scoped witnesses,15 assigned local implementation gaps; no trading code/activation changes. Final fresh-checkout2523+25=2548 tests; prior retention1062 entries/30 named04 receipts reverified. Requested CLN01/CAP00 batch complete; commit and authorized current-branch push follow.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN-01-CAP-00-20261026T173148Z/CAP-00.acceptance.json",
+      "receipt_sha256": "f7198d6864afb40a14976f5daa4be81dff34dc930cd5a69f9a7ecf55e6947b5d",
+      "actual_commit_sha": "6a914585e503ca8e0b1f2ebe297fe16d0693c448"
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "User requested next ticket plus whole-plan remaining-work report. Select W3 STR-01 by final01 priority; predecessor receipts verified. Read-only DeepSeek design audit after GLM gateway unreachable; no quota claim."
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "User explicitly chose preserve current state and remaining-work report instead of an extra repair. STR-01 BLOCKED, no source adopted/accepted; only scoped status/report artifacts updated."
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "User authorized GPT-6 Luna fallback on provider unavailability or exhausted OpenCode delegation allowance, and resumed STR01 plus next stage."
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "STR01 accepted on independent2559 Linux+25 guarded lease+41 oracle cases, final offline wheel/removal imports. User-authorized Luna fallback; next stage STR02 now ready."
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "User requests FEED01→VEN01→CAP01 bypass; Ubuntu target mandatory; preserve STR02 unfinished and all prior changes. Local Linux shell is restored, C free8GB observed.",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027"
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "FEED01 ACCEPTED_LOCAL after2566 Linux+25 lease,14 exactAST and26 JSON events,138 wheel source equality. Ubuntu target preserved; advance VEN01.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/FEED01.acceptance.json",
+      "actual_commit_sha": "6eafe31edae8dfb19cde2a6fcab5a9ae33e1e493"
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "VEN01 accepted after independent2615 Linux+25 leases+185 focused; preserved native owners and Ubuntu config. Advance user batch CAP01, preserve STR02.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/VEN01.acceptance.json",
+      "actual_commit_sha": "58545cbe6785507be7f4506bc6a32533dd0dc911"
+    },
+    {
+      "date": "2026-10-27",
+      "reason": "CAP01 accepted after2643 Linux+25 final leases+192 independent focused;143 wheel bytes/source equality. Requested FEED01→VEN01→CAP01 Ubuntu bypass batch complete; STR02 preserved, no later-ticket implementation or server action.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/CAP01.acceptance.json",
+      "actual_commit_sha": "82128a3a00d615421eaa43d87d0283426d26cb09"
+    },
+    {
+      "date": "2026-10-28",
+      "reason": "CAP-02 accepted after2688 Linux+25 final lease+136 focused tests; native adapter/real PAPER ledger restart recovery and145 wheel source equality. Original schema/math/protected tests preserved. No native account or server activation.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/CAP02.acceptance.json",
+      "actual_commit_sha": "f4f7c51c91c421cab613d20e5df2bcefd5a4da29"
+    },
+    {
+      "date": "2026-10-28",
+      "reason": "Human supersedes Kiwoom broker-fee dependency: explicit account config rates for reservation/PAPER/strategy P&L, no broker fee reception/reconciliation. CAP02 bounded amendment in progress; original acceptance receipt preserved."
+    },
+    {
+      "date": "2026-10-28",
+      "reason": "CAP02 account-config fee amendment accepted:2707 Linux+25leases+100focused,146 wheel source equality. Human account rates drive reserve/PAPER/strategy P&L; broker-fee reception/reconciliation excluded. Original acceptance preserved.",
+      "actual_commit_sha": "2e642aa1fe06398e308d922ae04ec8c83217f3a2",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-fee-config-20261028/CAP02-fee-config.acceptance.json"
+    },
+    {
+      "date": "2026-10-28",
+      "reason": "User-requested STR02 readiness-only check: all3 prerequisites accepted, Linux/Windows filesystem fsync and64 process spawns pass, credential-free focused114 tests exit0. Old environment blocker resolved; implementation not started. Docker WSL integration unavailable but not a STR02 local prerequisite.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/STR-02-readiness-20261028/STR02-readiness.json"
+    },
+    {
+      "date": "2026-10-28",
+      "reason": "STR02 full local action-feedback accepted:2756 Linux+25leases+49focused;148 wheel source byte equality,172 original test files preserved. Original ETF source economics/cadence preserved; account-config fee policy unchanged, no broker-fee reception.",
+      "actual_commit_sha": "f9e830c67330de171647f746d4a25a4e8f70fd22",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/STR-02-resume-20261028/STR02.acceptance.json"
+    },
+    {
+      "date": "2026-10-29",
+      "reason": "CAP04 independently accepted:2832 full+25leases,149wheel source byte equality and actual confined child from installed wheel;2CPU synthetic PAPER200events/20actions, actual engine infinite callback watchdog and kernel address-space/process limits. EXEC01 remains unfinished; Arcus required native NEW proof unresolved. No production activation.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/CAP04/CAP04.acceptance.json",
+      "receipt_sha256": "840db11f4f144adfd7bf4fbb7f3d187e124d29a5a4182733b7225de61f5c6731",
+      "actual_commit_sha": "f8b515ce44cdf2a78c2d49918f5b0c9e63888f68"
+    },
+    {
+      "date": "2026-10-29",
+      "reason": "EXEC01 reviewed source partial committed with independent2887+25passes and149wheel exact. Notaccepted: requiredArcusNEW lacks official denomination/margin spec and currentDockerbackend unresponsive. Legacylease/KISlazybinding/falseguard/directsubmit regressions fixed and independentlyretested. Requestedbatch2of3accepted, no downstreamCAP05 advancement.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028/EXEC01/EXEC01.acceptance.json",
+      "receipt_sha256": "dd48ba7801a0a72742dc51514e42baec52e0a5dfa2343f398fc114eba26902b2",
+      "actual_commit_sha": "cecc9e7a754268cc9aa7e19b4089a1e6d350b99b"
+    },
+    {
+      "date": "2026-10-29",
+      "reason": "User supplied official Arcus API introduction and requested EXEC01 completion then next dependency ticket. Direct Mozilla-UA documentation GET200; original web tool unavailable. Reopen bounded native quote proof implementation with authorized Luna fallback (external allowance exhausted); prior receipt remains immutable. Docker Desktop currently stopped; local start requested for final verification.",
+      "official_url": "https://docs.arcus.xyz/api-reference/introduction"
+    },
+    {
+      "date": "2026-10-29",
+      "reason": "EXEC01 allrequiredlocalcriteria accepted after official Arcusquoteproof and nativeavailable/localfillversion guard; independent2919+25+44/wheel150/Docker14 all0. Prior blockedreceipt untouched, original CAP03/EXEC01/CAP04 batch nowcomplete. Advance authorized nextdependency CAP05.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/EXEC01-arcus-resume-20261029/EXEC01.complete.acceptance.json",
+      "receipt_sha256": "25e40a3a37ab3b648c7f5d44c1df934ec754dd56463c57657912cf9018f29795",
+      "actual_commit_sha": "a71770dcb0eb932e4f6f1023e09316f1fc25a02e"
+    },
+    {
+      "date": "2026-10-29",
+      "reason": "CAP05 is dependencyready after EXEC01acceptance; start source-owned group prepare/nativeowners/cancelreconcile implementation in isolatedcredentialfree GLM45worker. No actual pair/accountactivation.",
+      "base_sha": "ec518acc98e86a5bffb32c1958e864d6238219c9"
+    },
+    {
+      "date": "2026-10-29",
+      "reason": "User steer: othermodelsincludingMiMo beforeLuna evenafterprior external allowance exhaustion. No nativeCAP05agent started. Verify exact freecatalogIDs, preserve reviewedDeepSeekseed, proceedadditionaluserauthorizedfreealternative.",
+      "models_catalog": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029/opencode-models-user-alternative.log"
+    },
+    {
+      "date": "2026-10-29",
+      "reason": "CAP-05 accepted after user-authorized alternative models and Luna completion, independent native fault/restart/source/fee/funding validation, full offline suite and exact wheel/Linux Docker source checks",
+      "actual_commit_sha": "1d25032b31958099b81dbf226f6176a8cd2f9081",
+      "receipt_sha256": "8f91381621ff35a2edbc12076bf251ad0e9c1bddb04441fe017464bff53f1636"
+    },
+    {
+      "date": "2026-10-29",
+      "reason": "CAP-06 independent acceptance; current user sol+luna only override respected; user authorizes all local commits push",
+      "task_id": "CAP-06",
+      "actual_commit_sha": "6d52bf3801ba17e9df8c04b555d2731479706f0a",
+      "receipt_sha256": "c793e2f11db6ae330d7e7f598003a3ad19329048764a67915d04997189f72c57",
+      "tests": "3034 full +25 guarded lease, all exit0; wheel151 exact/19 imports; LinuxDocker151 exact/16 imports",
+      "no_production_activation": true
+    },
+    {
+      "date": "2026-10-29",
+      "reason": "OBS-01 independent local acceptance; unchanged sol lead/native luna only, zero OpenCode; one requested ticket completed",
+      "task_id": "OBS-01",
+      "actual_commit_sha": "a353fbb65f0d5681e7e827adfaeef8e5bda4b3fc",
+      "receipt_sha256": "6e2a843e9c3a0b0af5a486dedeb127f8f162c1d330fe3a29b68907913325497c",
+      "tests": "3074full+25guardedleases=3099; actualroutes7, unit/build/browserPASS; wheel153exact/23imports; LinuxDocker153exact/20imports",
+      "no_production_activation": true,
+      "push_authorized": false
+    },
+    {
+      "date": "2026-10-31",
+      "task_id": "PERF-01",
+      "actual_commit_sha": "8c08f9996a25a2cdf947f1ec33225d04209c9b8f",
+      "reason": "Requested CLN03/QA01/PERF01 batch complete: final3196 required Linux +225 capped checks; raw19763rows/800scriptedT5 independently verified. PONG and native proof headroom repairs retain A1/fail-closed guards. Numeric latency exceeded nonblocking references;64pulse offered-load limit recorded; accepted16pulse profile. Original v7 I/O derived-counter metadata corrected offline with raw evidence preserved. No production gate promotion/push.",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01.acceptance.json",
+      "receipt_sha256": "570c2755ebd39cd4e78ef7ccd1a831a3a99a24cef591a4e687411cb657816d3e"
+    }
+  ],
+  "requirements_revision": {
+    "revision": "2026-10-25-venue-feed-split-pnl-latency-https-orderonly-kr350",
+    "base_document": "VibeTrading_FlatSrc_Lean_20261025",
+    "new_ticket_count": 4,
+    "original_ticket_count": 31,
+    "new_tickets": [
+      "FEED-01",
+      "OBS-01",
+      "WEB-01",
+      "KR-DATA-01"
+    ],
+    "original_ticket_statuses_preserved": true,
+    "required_offline_new_tickets": [
+      "FEED-01",
+      "OBS-01",
+      "WEB-01"
+    ],
+    "conditional_new_tickets": [
+      "KR-DATA-01"
+    ],
+    "cut_approval_unchanged": true,
+    "toss": "FEED_REQUIRED_OPERABLE_WHEN_CONFIGURED_ORDER_BLOCKED",
+    "dashboard": "REUSE_EXISTING_READONLY_UI_NO_EXPOSED_ORDER_API",
+    "client": "GLM_DeepSeek_must_follow_ticket_G_and_existing_A1_protocol",
+    "known_gaps": [
+      "production gateway and real server host resources unverified",
+      "KIS 350 WS direct unsupported current quota",
+      "NH real API unverified"
+    ]
+  },
+  "worker_routing_policy": {
+    "user_authorized_on": "2026-10-26",
+    "priority": [
+      "freellmapi/glm-4.5-flash",
+      "opencode/deepseek-v4.1-flash-free",
+      "freellmapi/gemini-2.5-flash"
+    ],
+    "third_tier": "FreeLLMAPI Gemini etc; exact catalog ID pinned per invocation",
+    "switch_owner": "Codex after failure/partial-diff review and disclosure",
+    "worker_auto_fallback": false,
+    "paid_routes_authorized": false,
+    "last_observation": {
+      "date": "2026-10-28",
+      "task_id": "CAP-02",
+      "freellmapi_glm": "HTTP502 relay unavailable; worker1; no edits",
+      "opencode_deepseek": "timeout124; no edits",
+      "freellmapi_gemini": "relay inference unavailable; worker1; no edits",
+      "selected": "gpt-6-luna user-authorized native fallback",
+      "quota_claim": "No permanent quota inference from relay failure/timeout",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-20261028/CAP02.acceptance.json"
+    },
+    "last_live_check": {
+      "date": "2026-10-27",
+      "evidence": "/home/pjh/.local/state/codex-opencode/runs/MOV-07-flat-gate-20261026T163740Z/MOV-07-audit-glm/dispatch-result.json",
+      "glm": "HTTP429_AFTER_READS_NO_EDITS",
+      "deepseek": "AUDIT_AND_REFACTOR_WORKER_EXIT0",
+      "gemini": "NOT_RECHECKED",
+      "selected": "opencode/deepseek-v4.1-flash-free"
+    },
+    "last_worker_result": {
+      "task_id": "STR-02",
+      "model": "gpt-6-luna",
+      "reason": "Previously authorized per-ticket allowance exhaustion fallback; no silent provider/model switch",
+      "independent_final_tests": 2756,
+      "independent_leases": 25,
+      "independent_focused": 49,
+      "independent_test_exit": 0,
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/STR-02-resume-20261028/STR02.acceptance.json"
+    },
+    "current_batch_alternatives": {
+      "gemini_minimax_kimi_requested": true,
+      "catalog": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/alternative-model-catalog.json",
+      "actual_request_results": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/alternative-provider-smoke.json",
+      "current_selected": null,
+      "no_paid_routes": true,
+      "gemini_working_request": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/alternative-provider-smoke2.json"
+    },
+    "user_authorized_native_fallback": {
+      "model": "gpt-6-luna",
+      "trigger": "OpenCode/FreeLLMAPI unavailable OR per-ticket delegation allowance exhausted",
+      "lead_model_unchanged": true,
+      "date": "2026-10-27"
+    },
+    "latest_user_preference": {
+      "date": "2026-10-29",
+      "instruction": "Use available other models (GLM, DeepSeek, Gemini, MiMo etc) OR Luna",
+      "native_luna_explicitly_authorized_now": true,
+      "lead_model_auth_unchanged": true,
+      "paid_routes_authorized": false
+    }
+  },
+  "execution_checkout": {
+    "root": "/home/pjh/.codex/worktrees/move-core-feeds/vibetrading",
+    "branch": "codex/move-core-feeds",
+    "original_checkout": "/mnt/c/users/박제형/desktop/vibetrading",
+    "snapshot_baseline_sha": "dd2e776c35ca18523546a2491213e7c3026505c4"
+  },
+  "active_batch": {
+    "requested_tasks": 3,
+    "tasks": [
+      "CLN-03",
+      "QA-01",
+      "PERF-01"
+    ],
+    "status": "COMPLETED_REQUESTED_THREE_TICKETS",
+    "accepted": [
+      "CLN-03",
+      "QA-01",
+      "PERF-01"
+    ],
+    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030",
+    "worker_policy": "Carry forward measured external cache-inclusive stop; sol unchanged + native gpt-6-luna; no new external calls; no exact cost savings claimed",
+    "push_authorized": false,
+    "target_os": "Ubuntu Linux",
+    "completed_at": "2026-10-31T03:38:00.995414+09:00",
+    "next_not_started": "REL-01"
+  },
+  "completed_batches": [
+    {
+      "requested_tasks": 3,
+      "tasks": [
+        "MOV-03",
+        "MOV-04",
+        "MOV-05"
+      ],
+      "accepted": [
+        "MOV-03",
+        "MOV-04",
+        "MOV-05"
+      ],
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z",
+      "started_utc": "2026-10-26T06:46:53.308401+00:00",
+      "status": "COMPLETED_REQUESTED_THREE_TICKETS",
+      "completed_utc": "2026-10-26T09:11:16.039979+00:00",
+      "next_not_started": "MOV-06"
+    },
+    {
+      "requested_tasks": 2,
+      "tasks": [
+        "MOV-06",
+        "MOV-07"
+      ],
+      "accepted": [
+        "MOV-06",
+        "MOV-07"
+      ],
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/MOV-07-flat-gate-20261026T163740Z",
+      "status": "COMPLETED_REQUESTED_TWO_TICKETS",
+      "next_not_started": "CLN-01",
+      "completed_utc": "2026-10-26T17:27:24.726895+00:00"
+    },
+    {
+      "requested_tasks": 2,
+      "tasks": [
+        "CLN-01",
+        "CAP-00"
+      ],
+      "accepted": [
+        "CLN-01",
+        "CAP-00"
+      ],
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN-01-CAP-00-20261026T173148Z",
+      "status": "COMPLETED_REQUESTED_TWO_TICKETS",
+      "push_authorized": true,
+      "push_target": "origin codex/move-core-feeds",
+      "completed_utc": "2026-10-26T18:35:25.957176+00:00",
+      "next_not_started": "CLN-02"
+    },
+    {
+      "date": "2026-10-27",
+      "tasks": [
+        "FEED-01",
+        "VEN-01",
+        "CAP-01"
+      ],
+      "target_os": "Ubuntu Linux",
+      "status": "ACCEPTED_LOCAL",
+      "source_commits": [
+        "6eafe31edae8dfb19cde2a6fcab5a9ae33e1e493",
+        "58545cbe6785507be7f4506bc6a32533dd0dc911",
+        "82128a3a00d615421eaa43d87d0283426d26cb09"
+      ],
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027",
+      "str02_preserved_unfinished": true,
+      "push_merge_deploy": false
+    },
+    {
+      "requested_tasks": 3,
+      "tasks": [
+        "FEED-01",
+        "VEN-01",
+        "CAP-01"
+      ],
+      "accepted": [
+        "FEED-01",
+        "VEN-01",
+        "CAP-01"
+      ],
+      "status": "COMPLETE",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027",
+      "target_os": "Ubuntu Linux",
+      "str02_preserved": true,
+      "completion_receipts": [
+        "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/FEED01.acceptance.json",
+        "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/VEN01.acceptance.json",
+        "/home/pjh/.local/state/codex-opencode/runs/bypass-feed-venue-cap-20261027/CAP01.acceptance.json"
+      ]
+    },
+    {
+      "requested_tasks": 1,
+      "tasks": [
+        "CAP-02"
+      ],
+      "amendment": "CAP02-ACCOUNT-FEE-CONFIG",
+      "accepted": [
+        "CAP-02"
+      ],
+      "status": "COMPLETE",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-02-fee-config-20261028",
+      "target_os": "Ubuntu Linux",
+      "str02_preserved": true,
+      "completion_receipts": [
+        "/home/pjh/.local/state/codex-opencode/runs/CAP-02-fee-config-20261028/CAP02-fee-config.acceptance.json"
+      ]
+    },
+    {
+      "requested_tasks": 1,
+      "tasks": [
+        "STR-02"
+      ],
+      "accepted": [
+        "STR-02"
+      ],
+      "status": "COMPLETE",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/STR-02-resume-20261028",
+      "target_os": "Ubuntu Linux",
+      "completion_receipts": [
+        "/home/pjh/.local/state/codex-opencode/runs/STR-02-resume-20261028/STR02.acceptance.json"
+      ]
+    },
+    {
+      "requested_tasks": 3,
+      "tasks": [
+        "CAP-03",
+        "EXEC-01",
+        "CAP-04"
+      ],
+      "accepted": [
+        "CAP-03",
+        "EXEC-01",
+        "CAP-04"
+      ],
+      "status": "COMPLETED_REQUESTED_THREE_TICKETS",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/next-three-20261028",
+      "target_os": "Ubuntu Linux",
+      "completed_utc": "2026-10-29T00:41:50.083119+00:00"
+    },
+    {
+      "requested_tasks": 2,
+      "tasks": [
+        "EXEC-01",
+        "CAP-05"
+      ],
+      "accepted": [
+        "EXEC-01",
+        "CAP-05"
+      ],
+      "status": "COMPLETED_LOCAL",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-05-20261029",
+      "target_os": "Ubuntu Linux",
+      "user_request": "OfficialArcusdocs supplied; complete EXEC01 remainder then next dependency ticket CAP05"
+    },
+    {
+      "requested_tasks": 1,
+      "tasks": [
+        "CAP-06"
+      ],
+      "accepted": [
+        "CAP-06"
+      ],
+      "status": "COMPLETED_REQUESTED_ONE_TICKET",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CAP-06-sol-luna-20261029",
+      "target_os": "Ubuntu Linux",
+      "worker_models": [
+        "sol lead unchanged",
+        "gpt-6-luna"
+      ],
+      "user_request": "next ready W3 ticket; sol+luna only, no OpenCode",
+      "completed_utc": "2026-10-29T12:19:10.331939+00:00",
+      "push_authorized": true,
+      "push_target": "origin codex/move-core-feeds",
+      "source_commit": "6d52bf3801ba17e9df8c04b555d2731479706f0a"
+    },
+    {
+      "requested_tasks": 1,
+      "tasks": [
+        "OBS-01"
+      ],
+      "accepted": [
+        "OBS-01"
+      ],
+      "status": "COMPLETED_REQUESTED_ONE_TICKET",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/OBS-01-sol-luna-20261029",
+      "target_os": "Ubuntu Linux",
+      "worker_models": [
+        "sol lead unchanged",
+        "gpt-6-luna"
+      ],
+      "push_authorized": false,
+      "completed_utc": "2026-10-29T15:59:12.455582+00:00",
+      "source_commit": "a353fbb65f0d5681e7e827adfaeef8e5bda4b3fc"
+    },
+    {
+      "requested_tasks": 3,
+      "tasks": [
+        "CLN-02",
+        "SIM-01",
+        "WEB-01"
+      ],
+      "status": "COMPLETED_REQUESTED_THREE_TICKETS",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030",
+      "worker_policy": "external GLM/DeepSeek measured; stopped after cache-inclusive overhead exceeded comparison; sol lead + native gpt-6-luna fallback",
+      "accepted": [
+        "CLN-02",
+        "SIM-01",
+        "WEB-01"
+      ],
+      "target_os": "Ubuntu Linux",
+      "push_authorized": false,
+      "worker_models": [
+        "sol lead unchanged",
+        "opencode/deepseek-v4.1-flash-free (stopped for measured cache-inclusive overhead)",
+        "gpt-6-luna"
+      ],
+      "completed_utc": "2026-10-29T21:14:31.046577+00:00",
+      "ssl_status": "LOCAL_TEST_ONLY",
+      "public_url_activated": false
+    },
+    {
+      "requested_tasks": 3,
+      "tasks": [
+        "CLN-03",
+        "QA-01",
+        "PERF-01"
+      ],
+      "status": "COMPLETED_REQUESTED_THREE_TICKETS",
+      "accepted": [
+        "CLN-03",
+        "QA-01",
+        "PERF-01"
+      ],
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030",
+      "worker_policy": "Carry forward measured external cache-inclusive stop; sol unchanged + native gpt-6-luna; no new external calls; no exact cost savings claimed",
+      "push_authorized": false,
+      "target_os": "Ubuntu Linux",
+      "completed_at": "2026-10-31T03:38:00.995414+09:00",
+      "next_not_started": "REL-01"
+    }
+  ],
+  "worker_policy_latest": {
+    "date": "2026-10-30",
+    "instruction": "User requested external GLM/DeepSeek/Gemini/Kimi/Muse only while total cache-inclusive overhead is not greater than sol+luna; stop and switch when exceeded.",
+    "actual": "GLM timed out; DeepSeek pilot succeeded; implementation stopped after cumulative744285 tokens; Kimi absent; Gemini/Muse catalogued but no extra calls after stop.",
+    "evidence": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030/worker-route-pilot.json",
+    "lead_auth_unchanged": true,
+    "native_fallback": "gpt-6-luna",
+    "comparison_limit": "Matched tiny native171759 is a conservative stop reference, not full-ticket counterfactual; no exact savings claim."
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "ticket": "QA-01",
+  "result": "PASS",
+  "acceptance": "ACCEPTED_LOCAL",
+  "source_SHA": "542dadc5250db5d6b43141aa0fe70440faa2e23e",
+  "actual_commit_sha": "542dadc5250db5d6b43141aa0fe70440faa2e23e",
+  "base_sha": "67a1daeeb2db7a5ff07ba61fa602ccfa2ba6ef49",
+  "worker_model": "gpt-6-luna",
+  "external_worker_calls": 0,
+  "external_worker_policy": "Carry forward measured cache-inclusive stop, sol lead/auth unchanged; conservative stop reference, no full-ticket cost counterfactual or exact savings claim",
+  "python_full": 3152,
+  "python_guarded_leases": 25,
+  "python_distinct": 3177,
+  "required_skipped": 0,
+  "required_deselected": 0,
+  "external_live_data_deselected": 2,
+  "live_data_policy": "Unchanged pytest.ini -m not live_data; tests/test_live_data_smoke.py external credentials/network only",
+  "warnings": "Two inherited deprecations (cgi, multithreaded fork), unchanged baseline",
+  "focused": 125,
+  "frontend_unit": 13,
+  "local_tls_groups": 11,
+  "frontend_source_all133_bytes_equal_tested_archive": true,
+  "tls_status": "LOCAL_TEST_ONLY",
+  "artifacts": {
+    "qa01-final-full.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/qa01-final-full.result.json",
+      "sha256": "74e116ff27d1fd09a8d04c3e3440561162ab84e346157d350df8f799fba98a47"
+    },
+    "qa01-final-full.stdout.log": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/qa01-final-full.stdout.log",
+      "sha256": "da0544e2b226e11e5ba2c2295f50e901f5e42aa66dd8daf55e8b410e98d9382f"
+    },
+    "qa01-final-full.junit.xml": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/qa01-final-full.junit.xml",
+      "sha256": "3bb9050172e54021a6d6434b3627b36266bdc17cfdbc23019f73ebf9d5a7e880"
+    },
+    "qa01-final-leases.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/qa01-final-leases.result.json",
+      "sha256": "51e4365326f9f00ccbae5e1cc75405a05eb104393c72da0b2298a9254e853986"
+    },
+    "qa01-final-leases.junit.xml": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/qa01-final-leases.junit.xml",
+      "sha256": "dece0f52afb6cb98d1777e364a2fc3e53366b0c507931edbadf0bc9cd22718fd"
+    },
+    "qa01-lead-complete-focused.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/qa01-lead-complete-focused.result.json",
+      "sha256": "e5844f0b6d4bfd9dc8c2b8a19566a88e31774e8fb2fd0882ac99ca2bc22fadfd"
+    },
+    "QA01-python-artifacts.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/QA01-python-artifacts.result.json",
+      "sha256": "5dbb1bcd13700e18ac5474498895e447a3f42295a177a88eb260e14751d844ad"
+    },
+    "QA01-packaging-verification.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/QA01-packaging-verification.json",
+      "sha256": "032946e6b764bba54cd8d595bbb1ddc5f85cbf7816591ac7e0909682fc58a263"
+    },
+    "QA01-final-os-startup.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/QA01-final-os-startup.json",
+      "sha256": "84b2e367639d9e4598ddb2828e1e1ce77374e853491bd8762dc745e1e120fbfd"
+    },
+    "QA01-legacy-absence.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/QA01-legacy-absence.json",
+      "sha256": "3d97c0a47936e769dfa71f249b5479a1b9e9a4478060411aff41c68813d5bb25"
+    },
+    "QA01-web-hash-equivalence.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/QA01-web-hash-equivalence.json",
+      "sha256": "1908d8f5a58ffe3d77f810430b496cc584f4cdeead300c1d0519c8dbe6ca7bd4"
+    },
+    "qa01-web-unit.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/qa01-web-unit.result.json",
+      "sha256": "65889579196b8a2c9ba2c05c420ad5c2abdb0fe9b4df347de98d32cbf1c361a0"
+    },
+    "qa01-web-tls.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/qa01-web-tls.result.json",
+      "sha256": "44e99bb204bf497a4f28b9596e47fc9fd85d0bad0522a8e32e0bb6634609b796"
+    }
+  },
+  "immutable04_sha256": "dc87aacc4be82eedd0c7cd85d653cc4e17dcc152ee5b718a8bb2eec2954af5ee",
+  "changes": [
+    "Timefolio durable-before-browser claim, restart/UNKNOWN/account fence and exact result serialization",
+    "Explicit synthetic full-collateral USDT linear Dummy owner integration; native5/cash policy preserved",
+    "Immutable fresh same-cut native-available feedback; unavailable facts never fabricated"
+  ],
+  "cold_recovery": "BLOCKED_RECOVERY_DEPENDENCY retained for coupled root when B proof is missing; explicit None vs empty iterator tested; normal A collection/apply independent",
+  "data04": "Controlled unsatisfied gates represent 60s-stall scenario; wall hold <15s, no elapsed60s claim; actual local storage, local filesystem archive uploader and fake-session Telegram calls; 100 actual PAPER callbacks/101 source records",
+  "spot_source": "Typed native-equivalent spot fixture + real Binance USDM parser; no claim new live spot collector",
+  "packaging_scope": "Four newly source-assembled images from pinned verified MOV07 dependency/browser layers, exact149 current source/config/support hashes, 7 effective Compose profiles; installation layers inherited, not rebuilt; real separate-process netless collector/engine/storage and real blank Chromium lifecycle",
+  "external_not_verified": [
+    "Production/DNS/trusted managed TLS/private gateway wiring",
+    "Live venue/accounts and real Timefolio contest login/orders",
+    "Provider cloud outage and production host capacity; PERF01 independent profile follows"
+  ],
+  "diff_check_exit": 0,
+  "live_mutations": 0,
+  "push_merge_deploy": false,
+  "full_receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/QA01.acceptance.json",
+  "full_receipt_sha256": "ef4e4643a69ee1496dd701d98fd9e3009d4f76131e0d920fc2154eee34562e7c"
+}

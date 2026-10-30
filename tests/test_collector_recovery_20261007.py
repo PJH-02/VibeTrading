@@ -6,15 +6,15 @@ import pytest
 from websockets.exceptions import ConnectionClosedOK, ConnectionClosedError
 from websockets.frames import Close
 
-from vibetrading.bus import NatsJetStreamBus
-from vibetrading.providers.toss import TossAuthClient, TossCollector, TossUnauthorized, parse_toss_symbols
-from vibetrading.runtime import _collector_error_details
-from vibetrading.settings import RuntimeSettings
+from runtime.bus import NatsJetStreamBus
+from feeds.providers.toss import TossAuthClient, TossCollector, TossUnauthorized, parse_toss_symbols
+from runtime.runtime import _collector_error_details
+from runtime.settings import RuntimeSettings
 
 
 def test_publish_rate_is_bounded_without_rate_reads(monkeypatch):
     clock = [100.0]
-    monkeypatch.setattr('vibetrading.bus.time.monotonic', lambda: clock[0])
+    monkeypatch.setattr("runtime.bus.time.monotonic", lambda: clock[0])
     bus = NatsJetStreamBus()
     for second in range(180):
         clock[0] = 100.0 + second

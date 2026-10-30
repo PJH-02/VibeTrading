@@ -2,9 +2,8 @@ from decimal import Decimal
 
 import pytest
 
-from vibetrading.hot_path import HotPathStore
-from vibetrading.models import (AssetClass, BookUpdateType, IndexQuoteEvent, InstrumentId,
-                               OrderBookEvent, OrderBookLevel, Venue)
+from market.hot_path import HotPathStore
+from core.models import AssetClass, BookUpdateType, IndexQuoteEvent, InstrumentId, OrderBookEvent, OrderBookLevel, Venue
 
 NOW = 1_792_281_600_000_000_000
 

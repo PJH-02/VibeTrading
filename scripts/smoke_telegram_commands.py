@@ -5,7 +5,7 @@ import time
 from pathlib import Path
 
 import aiohttp
-from vibetrading.telegram import TelegramController
+from operations.telegram import TelegramController
 
 async def main():
     bot=TelegramController(); assert bot.enabled

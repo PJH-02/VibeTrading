@@ -3,7 +3,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from vibetrading import runtime
+from runtime import runtime
 
 
 @pytest.mark.asyncio

@@ -8,9 +8,9 @@ from types import SimpleNamespace
 import pytest
 
 from scripts.measure_crypto_e2e import distribution, Audit, order_state
-from vibetrading.bus import NatsJetStreamBus
-from vibetrading.models import BaseMarketEvent, TradeEvent, Venue, Side
-from vibetrading.providers.crypto_perp import _instrument
+from runtime.bus import NatsJetStreamBus
+from core.models import BaseMarketEvent, TradeEvent, Venue, Side
+from feeds.providers.perp_common import _instrument
 
 
 def test_latency_distribution_reports_count_and_interpolated_quantiles():

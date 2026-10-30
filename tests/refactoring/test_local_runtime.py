@@ -8,14 +8,14 @@ import sys
 
 import pytest
 
-from vibetrading.hot_path import HotPathStore
-from vibetrading.local_config import LocalRuntimePlan
-from vibetrading.local_engine import EngineBudgets, LocalMarketEngine
-from vibetrading.local_pipeline import DeliveryBudgets, PipelineBudgets, SpoolingMarketPublisher
-from vibetrading.local_runtime import replay_startup
-from vibetrading.local_transport import LocalTransportClient, LocalTransportServer, TransportBudgets
-from vibetrading.market_spool import MarketSpool, SpoolReader
-from vibetrading.models import AssetClass, Bar1mEvent, InstrumentId, TradeEvent, Venue
+from market.hot_path import HotPathStore
+from runtime.local_config import LocalRuntimePlan
+from market.local_engine import EngineBudgets, LocalMarketEngine
+from feeds.local_pipeline import DeliveryBudgets, PipelineBudgets, SpoolingMarketPublisher
+from runtime.local_runtime import replay_startup
+from runtime.local_transport import LocalTransportClient, LocalTransportServer, TransportBudgets
+from storage.market_spool import MarketSpool, SpoolReader
+from core.models import AssetClass, Bar1mEvent, InstrumentId, TradeEvent, Venue
 
 
 def document(tmp_path):
@@ -101,9 +101,9 @@ def test_durable_delivery_is_explicit_and_bounded_by_producer_capacity(tmp_path)
 
 @pytest.mark.asyncio
 async def test_collector_delivery_outage_keeps_durable_records_beyond_ram_capacity(tmp_path,monkeypatch):
-    import vibetrading.local_runtime as runtime
+    import runtime.local_runtime as runtime
     from types import SimpleNamespace
-    from vibetrading.market_spool import read_spool_records
+    from storage.market_spool import read_spool_records
     plan=LocalRuntimePlan.from_document(delivery_document(tmp_path))
     attempts=[];publishers=[]
     class Offline:
@@ -136,8 +136,8 @@ async def test_collector_delivery_outage_keeps_durable_records_beyond_ram_capaci
 
 
 def test_existing_observation_log_must_have_remaining_window_and_is_retained(tmp_path):
-    from vibetrading.local_config import ObservationPlan
-    from vibetrading.local_runtime import create_spool
+    from runtime.local_config import ObservationPlan
+    from runtime.local_runtime import create_spool
     entry=document(tmp_path)['producers'][0]
     entry['spool']['max_records']=1802
     entry.pop('provider');entry.pop('symbols')
@@ -152,8 +152,8 @@ def test_existing_observation_log_must_have_remaining_window_and_is_retained(tmp
 
 @pytest.mark.asyncio
 async def test_etf_disabled_runtime_does_not_build_an_unconsumed_trading_queue(tmp_path,monkeypatch):
-    import vibetrading.local_runtime as runtime
-    from vibetrading.feed_recovery import EngineCursor, RecoveryFrame
+    import runtime.local_runtime as runtime
+    from feeds.feed_recovery import EngineCursor, RecoveryFrame
     plan=LocalRuntimePlan.from_document(document(tmp_path))
     captured=[]
     def factory(**kwargs):
@@ -190,8 +190,8 @@ def event(number):
 
 def test_etf_invalidation_uses_live_provider_dependency_and_shared_authority(tmp_path):
     from types import SimpleNamespace
-    from vibetrading.local_runtime import etf_feed_dependencies
-    from vibetrading.etf_trading import SYMBOLS
+    from runtime.local_runtime import etf_feed_dependencies
+    from runtime.etf_trading import SYMBOLS
     plan=SimpleNamespace(producers=(
         SimpleNamespace(producer='kr',provider='kiwoom',symbols='A069500,122630'),
         SimpleNamespace(producer='crypto',provider='binance-perp',symbols='BTCUSDT'),
@@ -207,7 +207,7 @@ def test_etf_invalidation_uses_live_provider_dependency_and_shared_authority(tmp
 
 @pytest.mark.asyncio
 async def test_etf_wiring_does_not_promote_unrelated_collector_to_global_dependency(tmp_path,monkeypatch):
-    import vibetrading.local_runtime as runtime
+    import runtime.local_runtime as runtime
     from types import SimpleNamespace
     doc=document(tmp_path)
     doc['etf_enabled']=True
@@ -252,9 +252,9 @@ async def test_etf_wiring_does_not_promote_unrelated_collector_to_global_depende
 
 @pytest.mark.asyncio
 async def test_injected_paper_runtime_shares_state_authority_and_receives_replay_phase(tmp_path,monkeypatch):
-    import vibetrading.local_runtime as runtime
+    import runtime.local_runtime as runtime
     from types import SimpleNamespace
-    from vibetrading.feed_recovery import EngineCursor, RecoveryFrame
+    from feeds.feed_recovery import EngineCursor, RecoveryFrame
     plan=LocalRuntimePlan.from_document(document(tmp_path))
     item=plan.producers[0]
     spool=MarketSpool(item.spool_root,item.producer,item.incarnation,**asdict(item.limits))
@@ -306,7 +306,7 @@ async def test_startup_replay_restores_state_without_emitting_old_etf_orders(tmp
     try:
         await replay_startup(engine,(item,))
         assert engine.stats['replayed']==3 and engine.stats['queued_records']==0
-        from vibetrading.feed_recovery import EngineCursor
+        from feeds.feed_recovery import EngineCursor
         assert engine.request_resume(EngineCursor('kiwoom','run',3))
         assert not engine.request_resume(EngineCursor('kiwoom','run',0))
     finally:await engine.close()
@@ -329,8 +329,8 @@ async def test_startup_replay_cannot_relabel_preexisting_state_as_a_virgin_check
 @pytest.mark.asyncio
 async def test_cross_producer_bar_conflict_cannot_choose_an_economic_winner_by_config_order(tmp_path):
     from types import SimpleNamespace
-    from vibetrading.feed_recovery import EngineCursor
-    from vibetrading.local_runtime import restore_etf_startup
+    from feeds.feed_recovery import EngineCursor
+    from runtime.local_runtime import restore_etf_startup
     doc=document(tmp_path)
     second=dict(doc['producers'][0],producer='toss',provider='toss',spool_root=str(tmp_path/'toss'))
     doc['producers'].append(second)
@@ -360,12 +360,12 @@ async def test_cross_producer_bar_conflict_cannot_choose_an_economic_winner_by_c
 @pytest.mark.asyncio
 async def test_failed_etf_initialization_closes_journal_before_run_is_entered(tmp_path,monkeypatch):
     from types import SimpleNamespace
-    from vibetrading.local_runtime import run_engine
+    from runtime.local_runtime import run_engine
     class Server:
         def __init__(self,*args,**kwargs):pass
         async def start(self):raise AssertionError('must initialize ETF before listening')
         async def close(self):pass
-    monkeypatch.setattr('vibetrading.local_runtime.LocalTransportServer',Server)
+    monkeypatch.setattr("runtime.local_runtime.LocalTransportServer",Server)
     doc=document(tmp_path)
     entry={key:value for key,value in doc['producers'][0].items() if key not in {'provider','symbols'}}
     entry=entry|{'producer':'observations','spool_root':str(tmp_path/'observations')}
@@ -432,5 +432,52 @@ async def test_1801_virtual_seconds_with_no_nats_durable_spool_uds_and_local_dec
         if not bus._closing:
             try:await bus.close()
             except RuntimeError:pass
+        await server.close()
+        await engine.close()
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize('fault', [None, 'early_client_close', 'lease_gap_during_close'])
+async def test_collector_orderly_close_requires_complete_durable_and_applied_progress(tmp_path, fault):
+    from dataclasses import replace
+    from types import SimpleNamespace
+    import time
+    from runtime.local_runtime import run_collector
+    plan = replace(LocalRuntimePlan.from_document(document(tmp_path)), allowed_uid=os.getuid())
+    engine = LocalMarketEngine(producer_providers={'kiwoom': 'kiwoom'},
+        budgets=EngineBudgets(**plan.engine), on_invalidate=lambda *args: None,
+        hot_path=HotPathStore(), fresh_starts={'kiwoom': 'run'}, verified_fresh_start=True)
+    server = LocalTransportServer(plan.endpoint, budgets=plan.transport,
+        on_frame=engine.on_frame, on_gap=engine.on_gap, on_resume=engine.request_resume,
+        allowed_uid=os.getuid())
+    await server.start()
+    captured = []
+    class Collector:
+        async def run(self, publisher, *, duration_sec):
+            captured.append(publisher)
+            now = time.time_ns()
+            await publisher.publish_market_event(event(1).model_copy(
+                update={'source_ts_ns': now, 'receive_ts_ns': now}))
+            async with asyncio.timeout(5):
+                while publisher.stats['applied'] != 1:
+                    await asyncio.sleep(.001)
+            if fault == 'early_client_close':
+                await publisher.transport.close()
+            elif fault == 'lease_gap_during_close':
+                publisher._closing = True
+                publisher.transport.on_gap(publisher.transport.cursor, 'control_lease_expired')
+    try:
+        if fault is None:
+            await run_collector(plan, plan.producers[0], SimpleNamespace(env={}), collector=Collector())
+        else:
+            with pytest.raises(RuntimeError, match='closed with unconfirmed work'):
+                await run_collector(plan, plan.producers[0], SimpleNamespace(env={}), collector=Collector())
+        stats = captured[0].stats
+        assert stats['accepted'] == stats['durable'] == stats['applied'] == 1
+        assert stats['invalid'] is (fault is not None)
+        item = plan.producers[0]
+        reader = SpoolReader(item.spool_root, 'kiwoom', 'run', **item.limits.reader_kwargs)
+        assert [row.cursor.sequence for row in reader.read_batch(max_records=1, max_bytes=8192)] == [1]
+    finally:
         await server.close()
         await engine.close()

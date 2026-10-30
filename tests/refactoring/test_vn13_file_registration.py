@@ -7,13 +7,13 @@ import sys
 import pytest
 
 from test_strategy_runtime import T, BTC, book, deliver, ledger_at, matcher_for, runtime
-from vibetrading.models import Bar1mEvent, OrderDestination, OrderIntent, Side
-from vibetrading.trading_contracts import ActionKind, ExecutionAction, TradingMode
+from core.models import Bar1mEvent, OrderDestination, OrderIntent, Side
+from execution.trading_contracts import ActionKind, ExecutionAction, TradingMode
 
 
 def strategy_source(strategy_id, *, warmup=0, action="ENTER_LONG", price="100", extra=""):
     return f'''from decimal import Decimal as D
-from vibetrading.models import Signal, SignalAction
+from core.models import Signal, SignalAction
 
 STRATEGY_ID = {strategy_id!r}
 SUBSCRIPTIONS = [{{"instrument_key": {BTC.key!r}, "event_type": "order_book"}}]
@@ -35,23 +35,23 @@ def create_strategy():
 
 @pytest.fixture
 def strategy_files(tmp_path, monkeypatch):
-    package = importlib.import_module("vibetrading.strategies")
+    package = importlib.import_module("strategies")
     monkeypatch.setattr(package, "__path__", [*package.__path__, str(tmp_path)])
     created = []
 
     def write(name, source):
         (tmp_path / (name + ".py")).write_text(source, encoding="utf-8")
-        monkeypatch.delitem(sys.modules, "vibetrading.strategies." + name, raising=False)
+        monkeypatch.delitem(sys.modules, "strategies." + name, raising=False)
         created.append(name)
         return name
 
     yield write
     for name in created:
-        sys.modules.pop("vibetrading.strategies." + name, None)
+        sys.modules.pop("strategies." + name, None)
 
 
 def loaded(name):
-    return importlib.import_module("vibetrading.strategies." + name)
+    return importlib.import_module("strategies." + name)
 
 
 def configured(ledger, module, job_id, *, config_version="config-1", permission=True,

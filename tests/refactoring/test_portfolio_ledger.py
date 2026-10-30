@@ -5,10 +5,10 @@ import sqlite3
 
 import pytest
 
-from vibetrading.execution_ledger import AccountScope
-from vibetrading.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
-from vibetrading.portfolio_ledger import PortfolioLedger
-from vibetrading.trading_contracts import ActionKind, ExecutionAction, ProductKind, ProductSpec, TradingMode
+from execution.execution_ledger import AccountScope
+from core.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
+from portfolio.portfolio_ledger import PortfolioLedger
+from execution.trading_contracts import ActionKind, ExecutionAction, ProductKind, ProductSpec, TradingMode
 
 
 D = Decimal

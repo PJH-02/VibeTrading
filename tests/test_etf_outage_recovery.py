@@ -5,14 +5,14 @@ from types import SimpleNamespace
 import pandas as pd
 import pytest
 
-from vibetrading.etf_journal import EtfJournal
-from vibetrading.etf_recovery import replay, start_books, apply_plan, digest, normalized_toss
-from vibetrading.etf_recovery_ledger import record_fill, filter_account_report
-from vibetrading.models import OrderIntent, OrderDestination, InstrumentId, AssetClass, Venue, Side, EventType
-from vibetrading.bus import allowed_supplement
-from vibetrading.kis_index import normalize_index_minutes, index_bar
-from vibetrading.providers.kis import kis_row_to_event
-from vibetrading.trade_reporting import report_policy, order_key
+from portfolio.etf_journal import EtfJournal
+from runtime.etf_recovery import replay, start_books, apply_plan, digest, normalized_toss
+from portfolio.etf_recovery_ledger import record_fill, filter_account_report
+from core.models import OrderIntent, OrderDestination, InstrumentId, AssetClass, Venue, Side, EventType
+from runtime.bus import allowed_supplement
+from feeds.kis_index import normalize_index_minutes, index_bar
+from feeds.providers.kis import kis_row_to_event
+from operations.trade_reporting import report_policy, order_key
 
 DAY='2026-10-15'
 

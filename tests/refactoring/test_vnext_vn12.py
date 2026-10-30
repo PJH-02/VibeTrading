@@ -3,8 +3,8 @@ from decimal import Decimal
 
 import pytest
 
-from vibetrading.etf_journal import EtfJournal
-from vibetrading.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
+from portfolio.etf_journal import EtfJournal
+from core.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
 
 
 @pytest.fixture
@@ -37,9 +37,9 @@ def test_fill_before_ack_preserves_accounting_and_completion(journal, filled, no
 
 
 def test_duplicate_ack_cannot_extend_replacement_deadline_or_erase_organization(journal, monkeypatch):
-    monkeypatch.setattr('vibetrading.etf_journal.time.time_ns',lambda:100)
+    monkeypatch.setattr("portfolio.etf_journal.time.time_ns",lambda:100)
     journal.accepted('one',{'ODNO':'native-one','KRX_FWDG_ORD_ORGNO':'org'})
-    monkeypatch.setattr('vibetrading.etf_journal.time.time_ns',lambda:999)
+    monkeypatch.setattr("portfolio.etf_journal.time.time_ns",lambda:999)
     journal.accepted('one',{'ODNO':'native-one'})
     row, _ = snapshot(journal)
     assert row['accepted_ns'] == 100 and row['organization'] == 'org'

@@ -11,7 +11,7 @@ from typing import Dict, List, Optional
 from uuid import uuid4
 
 from shared.fill_logic import FillResult, get_fill_simulator
-from shared.models import Fill, Market, Order, OrderStatus, TradingMode
+from strategies.legacy.models import Fill, Market, Order, OrderStatus, TradingMode
 
 from .base import BrokerAdapter, OrderError
 

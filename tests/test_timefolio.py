@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from vibetrading.timefolio import TimefolioOrderIntent
+from timefolio import TimefolioOrderIntent
 
 
 def test_timefolio_intent_defaults_to_no_submit() -> None:

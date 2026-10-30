@@ -11,7 +11,7 @@ from typing import Literal, Optional
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from shared.models import Market, TradingMode
+from strategies.legacy.models import Market, TradingMode
 
 
 class DatabaseSettings(BaseSettings):

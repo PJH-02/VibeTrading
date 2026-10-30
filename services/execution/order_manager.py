@@ -15,18 +15,7 @@ from nats.aio.msg import Msg
 from shared.config import get_settings
 from shared.database import get_postgres
 from shared.messaging import Subjects, deserialize_message, ensure_connected
-from shared.models import (
-    Fill,
-    Market,
-    Order,
-    OrderEvent,
-    OrderSide,
-    OrderStatus,
-    OrderType,
-    Signal,
-    SignalAction,
-    TradingMode,
-)
+from strategies.legacy.models import Fill, Market, Order, OrderEvent, OrderSide, OrderStatus, OrderType, Signal, SignalAction, TradingMode
 
 from .base import BrokerAdapter
 

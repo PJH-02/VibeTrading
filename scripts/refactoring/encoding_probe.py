@@ -7,12 +7,9 @@ from decimal import Decimal
 from types import SimpleNamespace
 from unittest.mock import patch
 
-from vibetrading import bus as bus_module
-from vibetrading import runtime
-from vibetrading.models import (
-    AssetClass, Bar1mEvent, BookUpdateType, DataGapEvent, EtfNavEvent,
-    IndexQuoteEvent, InstrumentId, OrderBookEvent, OrderBookLevel, TradeEvent, Venue,
-)
+from runtime import bus as bus_module
+from runtime import runtime
+from core.models import AssetClass, Bar1mEvent, BookUpdateType, DataGapEvent, EtfNavEvent, IndexQuoteEvent, InstrumentId, OrderBookEvent, OrderBookLevel, TradeEvent, Venue
 
 NOW = 1792281600000000000
 

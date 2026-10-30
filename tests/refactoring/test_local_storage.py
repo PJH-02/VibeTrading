@@ -11,11 +11,11 @@ from types import SimpleNamespace
 import pyarrow.parquet as pq
 import pytest
 
-from vibetrading.local_storage import LocalSourceError, LocalSpoolStorage, LocalStorageError, StorageBudgets, fact_storage_reserve
-from vibetrading.market_spool import MarketSpool, SpoolCorruption, SpoolCursor, SpoolRecord
-from vibetrading.models import AssetClass, DataGapEvent, InstrumentId, TradeEvent, Venue
-from vibetrading.sqlite_store import RuntimeStore
-from vibetrading.settings import RuntimeSettings
+from storage.local_storage import LocalSourceError, LocalSpoolStorage, LocalStorageError, StorageBudgets, fact_storage_reserve
+from storage.market_spool import MarketSpool, SpoolCorruption, SpoolCursor, SpoolRecord
+from core.models import AssetClass, DataGapEvent, InstrumentId, TradeEvent, Venue
+from storage.sqlite_store import RuntimeStore
+from runtime.settings import RuntimeSettings
 
 
 SPOOL = dict(max_disk_bytes=1024 * 1024, max_records=100, max_frame_bytes=16384,
@@ -316,7 +316,7 @@ def test_attestation_cache_is_bounded_and_eviction_never_invents_alias_proof(con
 
 
 def test_pinned_reader_cannot_grow_wal_through_repeated_storage_restart(context,monkeypatch):
-    from vibetrading import local_storage
+    from storage import local_storage
     original=local_storage._FactLedger._checkpoint_gate
 
     def fast_checkpoint(self):
@@ -364,7 +364,7 @@ def test_wal_capacity_and_free_space_gate_precede_next_transaction(context,monke
 def test_fact_wal_space_reservation_blocks_commit_before_disk_exhaustion(context,monkeypatch):
     write_source(context.source,[wire(gap(1))])
     worker=context.create()
-    monkeypatch.setattr('vibetrading.local_storage.shutil.disk_usage',lambda path:SimpleNamespace(free=0))
+    monkeypatch.setattr("storage.local_storage.shutil.disk_usage",lambda path:SimpleNamespace(free=0))
     with pytest.raises(LocalStorageError,match='insufficient free space'):
         worker.step()
     assert worker._ledger.progress('collector','inc-A') is None

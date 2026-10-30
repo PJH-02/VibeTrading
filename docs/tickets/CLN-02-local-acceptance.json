@@ -1,0 +1,37 @@
+{
+  "task_id": "CLN-02",
+  "acceptance": "PASS",
+  "status": "ACCEPTED_LOCAL",
+  "base_sha": "2fdf1927a7098e077530698c1e29ab28c6297bac",
+  "source_commit": "61e17079228aadbe073988d1dc801be79fbb0dfb",
+  "source_diff_sha256": "188b3fb8f9e7ae17fdc21f124213c110b368990a055c41638deee0ebef1bd530",
+  "independent_tests": {
+    "full_passed": 3085,
+    "full_exit": 0,
+    "strict_guarded_leases_passed": 25,
+    "leases_exit": 0,
+    "distinct_offline_python_cases": 3110,
+    "inherited_live_data_deselected": 2,
+    "new_required_local_exclusions": 0,
+    "environment": "credential-free netless bwrap, public dependency roots, PYTHONUSERBASE and numeric thread budgets1; process-sensitive checks serialized",
+    "preliminary_failures": "Preserved partial canceled harness run, missing path/guard/config trials and monolithic process deadline failures; no source/timeout/test changes. Correct dependency path and serial numeric thread profile produced final full0."
+  },
+  "proof": {
+    "function_resolution": "docs/tickets/CLN-02-function-resolution.json",
+    "old_functions": 286,
+    "old_functions_retired_from_production": 261,
+    "active_canonical_functions": 25,
+    "legacy_map_files": 45,
+    "new_byte_exact_archived_files": 4,
+    "new_archived_functions": 20,
+    "historical_MOV05_archive_unchanged": true,
+    "immutable04_unchanged": true,
+    "all_other_canonical_python_unchanged": true,
+    "docker_imports": 20,
+    "wheel_imports": 23,
+    "wheel_and_image_python_byte_exact": 149,
+    "diff_check_exit": 0
+  },
+  "handoff": "SIM-01 exact arithmetic forwarding wrappers; no validation/economic rules removed",
+  "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030"
+}

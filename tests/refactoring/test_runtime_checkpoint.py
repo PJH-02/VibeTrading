@@ -10,19 +10,15 @@ from types import ModuleType, SimpleNamespace
 
 import pytest
 
-from vibetrading.execution_ledger import AccountScope
-from vibetrading.hot_path import HotPathStore
-from vibetrading.models import (AssetClass, InstrumentId, OrderBookEvent, OrderBookLevel,
-    Side, Signal, SignalAction, Venue)
-from vibetrading.paper_execution import PaperExecution
-from vibetrading.portfolio_ledger import PortfolioLedger
-from vibetrading.runtime_checkpoint import (FORMAT, VERSION, RuntimeCheckpoint,
-                                             RuntimeCheckpointError, _canonical, _etf_evidence,
-                                             _load, _verify_evidence, journal_evidence)
+from execution.execution_ledger import AccountScope
+from market.hot_path import HotPathStore
+from core.models import AssetClass, InstrumentId, OrderBookEvent, OrderBookLevel, Side, Signal, SignalAction, Venue
+from execution.paper_execution import PaperExecution
+from portfolio.portfolio_ledger import PortfolioLedger
+from runtime.runtime_checkpoint import FORMAT, VERSION, RuntimeCheckpoint, RuntimeCheckpointError, _canonical, _etf_evidence, _load, _verify_evidence, journal_evidence
 from vibetrading.strategy_contract import StrategyModule
-from vibetrading.strategy_runtime import (PaperStrategyRuntime, RuntimeBudgets,
-                                          StrategyRegistration, StrategyRisk)
-from vibetrading.trading_contracts import ProductKind, ProductSpec, TradingMode
+from runtime.strategy_runtime import PaperStrategyRuntime, RuntimeBudgets, StrategyRegistration, StrategyRisk
+from execution.trading_contracts import ProductKind, ProductSpec, TradingMode
 
 T = 1_800_000_000_000_000_000
 BTC = InstrumentId(venue=Venue.BYBIT, asset_class=AssetClass.CRYPTO_PERP,
@@ -341,7 +337,7 @@ def test_plugin_restore_binds_full_product_identity_permission_and_saved_lifecyc
 
 @pytest.mark.parametrize("state", ["PREPARED", "HANDOFF", "UNKNOWN"])
 def test_etf_unresolved_dispatch_state_quarantines_before_any_callback(tmp_path, state):
-    from vibetrading.etf_journal import EtfJournal
+    from portfolio.etf_journal import EtfJournal
     journal = EtfJournal(tmp_path/"etf.sqlite")
     try:
         journal.initialize(D(90000), "hashed-account")
@@ -358,7 +354,7 @@ def test_etf_unresolved_dispatch_state_quarantines_before_any_callback(tmp_path,
 
 
 def test_etf_malformed_pending_intent_is_rejected_even_with_pending_status(tmp_path):
-    from vibetrading.etf_journal import EtfJournal
+    from portfolio.etf_journal import EtfJournal
     journal = EtfJournal(tmp_path/"etf.sqlite")
     try:
         journal.initialize(D(90000), "hashed-account")
@@ -377,7 +373,7 @@ def test_etf_malformed_pending_intent_is_rejected_even_with_pending_status(tmp_p
 @pytest.mark.asyncio
 async def test_async_save_is_single_flight_and_shielded_from_caller_cancellation(
         tmp_path, monkeypatch):
-    import vibetrading.runtime_checkpoint as module_under_test
+    import runtime.runtime_checkpoint as module_under_test
     payload = valid_payload()
     codec = type("Codec", (), {"max_bytes": 262144, "capacity": 1})()
     checkpoint = RuntimeCheckpoint(tmp_path/"runtime.json", codec,
@@ -406,7 +402,7 @@ async def test_async_save_is_single_flight_and_shielded_from_caller_cancellation
 
 def test_atomic_writer_failure_preserves_previous_bundle_and_removes_temporary(
         tmp_path, monkeypatch):
-    import vibetrading.market_checkpoint as market
+    import storage.market_checkpoint as market
     path = tmp_path/"market.json"
     path.write_bytes(b"previous")
     temporary = []

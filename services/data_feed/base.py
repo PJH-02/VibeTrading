@@ -8,7 +8,7 @@ from datetime import datetime
 from decimal import Decimal
 from typing import AsyncIterator, List, Optional
 
-from shared.models import Candle, Market, Tick
+from strategies.legacy.models import Candle, Market, Tick
 
 
 class DataFeedProvider(ABC):

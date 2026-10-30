@@ -7,10 +7,10 @@ import json
 
 import pytest
 
-from vibetrading.bus import dumps, subject_for_signal
-from vibetrading.local_observation import LocalObservationBus, ObservationBudgets, encode_observation
-from vibetrading.market_spool import MarketSpool, SpoolReader
-from vibetrading.models import AssetClass, InstrumentId, Signal, SignalAction, Venue
+from runtime.bus import dumps, subject_for_signal
+from operations.local_observation import LocalObservationBus, ObservationBudgets, encode_observation
+from storage.market_spool import MarketSpool, SpoolReader
+from core.models import AssetClass, InstrumentId, Signal, SignalAction, Venue
 
 
 LIMITS=dict(max_disk_bytes=131072,max_records=64,max_frame_bytes=8192,max_header_bytes=512,
@@ -34,7 +34,7 @@ def records(tmp_path):
 async def test_exact_signal_order_and_system_body_durable_receipts_without_nats(tmp_path,monkeypatch):
     async def forbidden(*args,**kwargs):raise AssertionError('NATS must not be used')
     monkeypatch.setattr('nats.connect',forbidden)
-    monkeypatch.setattr('vibetrading.local_observation.time.time_ns',lambda:123456789)
+    monkeypatch.setattr("operations.local_observation.time.time_ns",lambda:123456789)
     bus,errors=make(tmp_path)
     signal=Signal(strategy_id='C3',instrument=InstrumentId(venue=Venue.KIWOOM,asset_class=AssetClass.ETF,
         raw_symbol='069500',std_symbol='069500'),action=SignalAction.ENTER_LONG,event_ts_ns=1,

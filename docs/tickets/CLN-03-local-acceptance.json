@@ -1,0 +1,37 @@
+{
+  "ticket": "CLN-03",
+  "result": "PASS",
+  "acceptance": "ACCEPTED_LOCAL",
+  "base_sha": "9940c8e9c9b505cc34cccf0cb3105775d923027d",
+  "actual_commit_sha": "ab248ab315ee9207838db1d2b324610169a26cb8",
+  "worker_model": "gpt-6-luna",
+  "worker_snapshot": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/cln03-worker",
+  "independent_checks": {
+    "relative_links": "PASS",
+    "operating_rules_unchanged": true,
+    "checks": {
+      "cln03-cli": {
+        "exit": 0,
+        "stdout_file": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/cln03-cli.stdout.log"
+      },
+      "cln03-status": {
+        "exit": 0,
+        "stdout_file": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/cln03-status.stdout.log"
+      }
+    },
+    "files": {
+      "README.md": "1798c504747cdc3c0345f12dec10a219b358b8de9edf7dcbe0acf86fd7efe4a5",
+      "AGENTS.md": "e1d511de6761b32d086598fa09c9c0ddd6b45925cf3f72c8439acda5f3b1ce4f",
+      "docs/architecture.md": "9c3b6f2308801914c24a7ff4f3c86583107bc789f31ac9ee8e4a186d59d1c552",
+      "docs/status.md": "1686c6d0963af6e63a5b335680597b269cbfe680bdd005c9c032378dad8b3d0b"
+    }
+  },
+  "diff_check_exit": 0,
+  "source_changes": false,
+  "operating_rules_changed": false,
+  "final04_unchanged": true,
+  "server_state": "UNKNOWN",
+  "external_actions": 0,
+  "gate_updates": null,
+  "note": "No duplicated status counters; documentation acceptance does not accept product/release gates."
+}

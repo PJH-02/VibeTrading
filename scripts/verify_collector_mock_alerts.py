@@ -8,8 +8,8 @@ from pathlib import Path
 
 sys.path.insert(0,'/app')
 import aiohttp
-from vibetrading.settings import get_settings
-from vibetrading.telegram import TelegramController
+from runtime.settings import get_settings
+from operations.telegram import TelegramController
 
 
 async def main():

@@ -7,9 +7,9 @@ from decimal import Decimal
 from pathlib import Path
 
 import nats
-from vibetrading.kis_execution import KisCashBroker
-from vibetrading.models import AssetClass,InstrumentId,OrderIntent,OrderDestination,Side,Venue
-from vibetrading.settings import get_settings
+from execution.kis_execution import KisCashBroker
+from core.models import AssetClass, InstrumentId, OrderIntent, OrderDestination, Side, Venue
+from runtime.settings import get_settings
 
 async def main():
     settings=get_settings(); broker=KisCashBroker(settings,mode='mock2')

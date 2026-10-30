@@ -1,0 +1,115 @@
+{
+  "acceptance": "PASS",
+  "status": "ACCEPTED_LOCAL",
+  "completed_utc": "2026-10-29T21:14:31.046577+00:00",
+  "scope": "LOCAL/PAPER/FAKE/offline only",
+  "independent_tests": {
+    "full_passed": 3096,
+    "full_exit": 0,
+    "guarded_lease_passed": 25,
+    "lease_exit": 0,
+    "distinct_offline_python_cases": 3121,
+    "inherited_live_data_deselected": 2,
+    "new_required_local_exclusions": 0,
+    "test_profile": "credential-free public snapshot, netless bwrap, public dependency roots, numeric thread budgets1, source-checked normal CPython bytecode in private snapshot; process tests serialized",
+    "logs": [
+      "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030/batch-lead-full-accepted.stdout.log",
+      "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030/batch-lead-leases-final.stdout.log"
+    ]
+  },
+  "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030",
+  "worker": "sol lead unchanged + gpt-6-luna; external routes stopped at user overhead threshold; no exact counterfactual saving claimed",
+  "external_actions": "No live accounts/orders/cancels/server edits/new services/packages/push/merge/deploy",
+  "immutable04_unchanged": true,
+  "source_packaging": {
+    "python_files_byte_exact": 149,
+    "wheel_imports": 23,
+    "wheel_exit": 0,
+    "docker_imports": 20,
+    "docker_exit": 0,
+    "wheel_sha256": "87707f92c1badc77d813261e31bb88c1e20e7c4bf6e6a0e7bd12a0fb8e8b64c5",
+    "network": "none"
+  },
+  "task_id": "WEB-01",
+  "base_sha": "ef5947ee4805",
+  "source_commit": "eff3412cf105587423756f057438e49187366bda",
+  "runtime_source_commit": "772d24ea00ce4ee31753b444b33519fee385cb70",
+  "source_diff_sha256": "2d0706c469350cd05fdda224d60cbc58698b54137f415ef5f1117aaef6f77bfb",
+  "bounded_packet": "docs/tickets/WEB-01-secure-readonly.md",
+  "ingress": "existing Sites/Cloudflare Worker+D1; no additional proxy/service",
+  "ssl_status": "LOCAL_TEST_ONLY",
+  "public_url_activated": false,
+  "production_verified": false,
+  "single_owner_scope": "one configured owner per D1 deployment; no multi-tenant claim; actual binding/data ownership requires external proof",
+  "route_matrix": [
+    {
+      "public": "/viewer/login",
+      "method": "GET",
+      "role": "anonymous form only"
+    },
+    {
+      "public": "/viewer/session",
+      "method": "POST",
+      "role": "same-origin bounded credential exchange only, no application mutation"
+    },
+    {
+      "public": "/, assets, state, pnl, orders, observability/stream",
+      "method": "GET",
+      "role": "signed600s Secure/HttpOnly/SameSiteStrict session + trusted per-request owner capability; fixed redacted projections"
+    },
+    {
+      "public": "/api/accounts, /api/ingest, order mutations, unknown routes/methods",
+      "method": "ALL",
+      "role": "denied before Vinext; forged OAI/service headers do not authorize"
+    },
+    {
+      "private_binding": "PrivateDashboardService",
+      "method": "POST ingest; GET/POST accounts",
+      "role": "non-public named capability + independent service credential; ingest also needs existing bearer; encrypted account response preserved"
+    }
+  ],
+  "independent_web_checks": {
+    "unit_passed": 13,
+    "unit_exit": 0,
+    "tls_integrations_passed": 11,
+    "tls_exit": 0,
+    "actual_api_handlers_and_sqlite_migration": true,
+    "real_loopback_https_selfsigned_ca": true,
+    "sse_clients": 3,
+    "sse_two_frames_at_2s_cadence": true,
+    "same_timestamp_order_rows_without_loss": 205,
+    "public_application_mutations": 0,
+    "backend_failure_restart_and_certificate_context_rotation": true,
+    "strict_api_type_diagnostics_baseline": 0,
+    "strict_api_type_diagnostics_candidate": 0,
+    "full_project_typecheck": "baseline Windows full-project typecheck timed out120s, not claimed PASS; bounded actual API/crypto/context owners use real installed types and both versions have0 diagnostics",
+    "vinext_build_exit": 0,
+    "runtime_build_source_exact": true,
+    "build_log": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030/web01-full-build-frozen.log",
+    "post_build_change": "unit-test file only: mutate real HMAC signature/GCM tag bytes instead of unused base64 padding bits; production crypto unchanged",
+    "compose_config_actual_exits": [
+      0,
+      0
+    ],
+    "compose_env_files_not_read": true
+  },
+  "security_properties": [
+    "no spoofable identity-header fallback",
+    "fixed exact host/origin/method/query allowlist; no credential query redirect",
+    "high-entropy viewer hash and separate session/private service credentials",
+    "fixed scalar field projections; preserve valid scientific Decimal strings and distinct account/process identity",
+    "bounded per-isolate rate state1024, 60s/session-bound pull-based stream with cancellation",
+    "encrypted owner/section-bound keyset order cursor; private Timefolio/admin/envelopes never public"
+  ],
+  "external_gates_pending": [
+    "real private Sites/gateway routing to named service with independent service credential and original bridge/envelope contract",
+    "real single-owner D1 binding/data evidence",
+    "actual DNS, trusted TLS/renewal, public origin/rate/bypass and firewall configuration approved at DEP/CUT"
+  ],
+  "limitations": [
+    "No provider service-binding or real public DNS/TLS check; private dispatch is local binding emulation",
+    "TLS tests execute actual API source/SQL, with a root-HTML fixture; full Vinext build is separately verified",
+    "rate limiting is bounded per isolate, not a global distributed limit",
+    "Ubuntu bridge and current deployment remain unchanged; preflight blocks missing/private-gateway/DNS/auth/TLS/renewal evidence"
+  ]
+}

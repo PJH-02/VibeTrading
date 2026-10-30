@@ -15,8 +15,8 @@ import time
 from pathlib import Path
 from urllib.parse import urlparse
 
-from vibetrading.bus import NatsJetStreamBus
-from vibetrading.settings import get_settings
+from runtime.bus import NatsJetStreamBus
+from runtime.settings import get_settings
 
 
 def _tree_bytes(root: Path, suffix: str) -> tuple[int, int]:

@@ -11,16 +11,16 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
-from vibetrading import parquet_store, storage_backend
-from vibetrading.archive import ArchiveMaintenance
-from vibetrading.bus import BusMessage, ConfirmedAckFloor, InMemoryEventBus
-from vibetrading.compactor import ParquetCompactor
-from vibetrading.models import AssetClass, InstrumentId, TradeEvent, Venue
-from vibetrading.parquet_store import ParquetBatchWriter, ParquetHistoryReader, file_sha256
-from vibetrading.settings import RuntimeSettings
-from vibetrading.sqlite_store import RuntimeStore
-from vibetrading.storage_backend import LocalStorageBackend, NcloudStorageBackend
-from vibetrading.storage_worker import StorageWorker
+from storage import parquet_store, storage_backend
+from storage.archive import ArchiveMaintenance
+from runtime.bus import BusMessage, ConfirmedAckFloor, InMemoryEventBus
+from storage.compactor import ParquetCompactor
+from core.models import AssetClass, InstrumentId, TradeEvent, Venue
+from storage.parquet_store import ParquetBatchWriter, ParquetHistoryReader, file_sha256
+from runtime.settings import RuntimeSettings
+from storage.sqlite_store import RuntimeStore
+from storage.storage_backend import LocalStorageBackend, NcloudStorageBackend
+from storage.storage_worker import StorageWorker
 
 
 class RecordedLocalBackend(LocalStorageBackend):

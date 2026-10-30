@@ -3,12 +3,11 @@ from decimal import Decimal as D
 
 import pytest
 
-from vibetrading.execution_ledger import AccountScope
-from vibetrading.models import (AssetClass, BookUpdateType, InstrumentId, OrderBookEvent,
-                               OrderBookLevel, OrderDestination, OrderIntent, Side, TradeEvent, Venue)
-from vibetrading.paper_execution import PaperExecution
-from vibetrading.portfolio_ledger import PortfolioLedger
-from vibetrading.trading_contracts import ProductKind, ProductSpec, TradingMode
+from execution.execution_ledger import AccountScope
+from core.models import AssetClass, BookUpdateType, InstrumentId, OrderBookEvent, OrderBookLevel, OrderDestination, OrderIntent, Side, TradeEvent, Venue
+from execution.paper_execution import PaperExecution
+from portfolio.portfolio_ledger import PortfolioLedger
+from execution.trading_contracts import ProductKind, ProductSpec, TradingMode
 
 
 T = 1_800_000_000_000_000_000

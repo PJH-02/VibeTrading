@@ -1,8 +1,8 @@
 import pytest
 
-from vibetrading.providers.binance import BinanceCatalog
-from vibetrading.providers.coingecko import CoinGeckoClient
-from vibetrading.providers.hyperliquid import HyperliquidCatalog
+from feeds.providers.binance import BinanceCatalog
+from feeds.providers.coingecko import CoinGeckoClient
+from feeds.providers.hyperliquid import HyperliquidCatalog
 
 
 pytestmark = pytest.mark.live_data

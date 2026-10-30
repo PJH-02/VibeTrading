@@ -9,11 +9,11 @@ import threading
 
 import pytest
 
-from vibetrading.execution_ledger import AccountScope, ExecutionLedger
-from vibetrading.models import (AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue)
-from vibetrading.portfolio_ledger import PortfolioLedger
-from vibetrading.process_lease import ProcessLease
-from vibetrading.trading_contracts import ProductKind, ProductSpec, TradingMode
+from execution.execution_ledger import AccountScope, ExecutionLedger
+from core.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
+from portfolio.portfolio_ledger import PortfolioLedger
+from execution.process_lease import ProcessLease
+from execution.trading_contracts import ProductKind, ProductSpec, TradingMode
 
 
 D = Decimal
@@ -281,8 +281,8 @@ def test_fork_child_cannot_use_or_unlock_parent_portfolio(tmp_path):
     script = """
 import os, sys
 from pathlib import Path
-from vibetrading.execution_ledger import AccountScope
-from vibetrading.portfolio_ledger import PortfolioLedger
+from execution.execution_ledger import AccountScope
+from portfolio.portfolio_ledger import PortfolioLedger
 
 root = Path(sys.argv[1])
 options = dict(owner_root=root, mode='paper', max_orders=30, max_fills=30, max_events=30,

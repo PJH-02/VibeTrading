@@ -9,15 +9,13 @@ import json
 
 import pytest
 
-from vibetrading.etf_journal import EtfJournal
-from vibetrading.execution_ledger import AccountScope, ExecutionLedger
-from vibetrading.execution_owner import ExecutionBudgets, ExecutionOwner, ExecutionReadiness
-from vibetrading.models import (
-    AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue,
-)
-from vibetrading.portfolio_ledger import PortfolioLedger
-from vibetrading.runtime_control import RuntimeControl
-from vibetrading.trading_contracts import ProductKind, ProductSpec
+from portfolio.etf_journal import EtfJournal
+from execution.execution_ledger import AccountScope, ExecutionLedger
+from execution.execution_owner import ExecutionBudgets, ExecutionOwner, ExecutionReadiness
+from core.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
+from portfolio.portfolio_ledger import PortfolioLedger
+from runtime.runtime_control import RuntimeControl
+from execution.trading_contracts import ProductKind, ProductSpec
 
 D = Decimal
 

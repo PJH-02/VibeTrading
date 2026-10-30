@@ -1,4 +1,4 @@
-# Minimal packaging metadata for the canonical src/vibetrading source.
+# Distribution metadata for the canonical src domain packages.
 # Runtime dependencies stay authoritative in requirements.txt and are only
 # referenced dynamically here (they must not be duplicated or changed).
 
@@ -15,28 +15,30 @@ dynamic = ["dependencies"]
 [tool.setuptools.dynamic]
 dependencies = { file = ["requirements.txt"] }
 
-# The canonical import package vibetrading maps to src/vibetrading.
-[tool.setuptools.package-dir]
-vibetrading = "src/vibetrading"
-
-# Hybrid discovery: canonical package under src plus the preserved flat legacy
-# packages at the repository root. Explicit include prefixes keep the legacy
-# namespaces installable without moving or rewriting them.
+# Only the ten canonical domains ship. Historical test oracles live in docs/archive.
 [tool.setuptools.packages.find]
-where = ["src", "."]
+where = ["src"]
 include = [
-    "vibetrading",
-    "vibetrading.*",
-    "strategy",
-    "strategy.*",
     "strategies",
     "strategies.*",
-    "shared",
-    "shared.*",
-    "services",
-    "services.*",
-    "backtest",
-    "backtest.*",
+    "core",
+    "core.*",
+    "feeds",
+    "feeds.*",
+    "market",
+    "market.*",
+    "storage",
+    "storage.*",
+    "execution",
+    "execution.*",
+    "portfolio",
+    "portfolio.*",
+    "operations",
+    "operations.*",
+    "timefolio",
+    "timefolio.*",
+    "runtime",
+    "runtime.*",
 ]
 exclude = [
     "src",

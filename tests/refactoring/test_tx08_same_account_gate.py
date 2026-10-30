@@ -15,10 +15,10 @@ from test_strategy_runtime import (T, BTC, book, ledger_at, matcher_for, runtime
 from test_tx05_file_paper_e2e import (feed_new, live_engine, repeated_frame,
                                       restore_engine, wait_until)
 from test_vn13_file_registration import configured, strategy_files
-from vibetrading.feed_recovery import EngineCursor, RecoveryFrame
-from vibetrading.models import OrderDestination, OrderIntent, Side, SignalAction
-from vibetrading.runtime_checkpoint import RuntimeCheckpoint
-from vibetrading.trading_contracts import ActionKind, ExecutionAction, TradingMode
+from feeds.feed_recovery import EngineCursor, RecoveryFrame
+from core.models import OrderDestination, OrderIntent, Side, SignalAction
+from runtime.runtime_checkpoint import RuntimeCheckpoint
+from execution.trading_contracts import ActionKind, ExecutionAction, TradingMode
 
 ALPHA = "tx08_alpha_file"
 BETA = "tx08_beta_file"
@@ -41,7 +41,7 @@ RISK = {
 def strategy_source(strategy_id, action, price):
     """A real stateful file with explicit synchronous checkpoint hooks."""
     return f'''from decimal import Decimal as D
-from vibetrading.models import Signal, SignalAction
+from core.models import Signal, SignalAction
 
 STRATEGY_ID = {strategy_id!r}
 SUBSCRIPTIONS = [{{"instrument_key": {BTC.key!r}, "event_type": "order_book"}}]

@@ -11,7 +11,7 @@ from datetime import datetime
 from typing import Dict, Optional
 
 from shared.messaging import Subjects, ensure_connected
-from shared.models import HealthStatus, Market
+from strategies.legacy.models import HealthStatus, Market
 
 logger = logging.getLogger(__name__)
 

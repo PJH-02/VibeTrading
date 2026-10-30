@@ -120,7 +120,7 @@ def test_zero_signal_cannot_create_invented_model():
 def test_grvt_xrp_signing_has_exact_integer_size_testnet_chain_no_builder_fee():
     from eth_account import Account
     from eth_account.messages import encode_typed_data
-    from vibetrading.extended_brokers import GRVT_ORDER_TYPES
+    from execution.extended_brokers import GRVT_ORDER_TYPES
     c=object.__new__(Grvt); c.subaccount="123"; c.private_key="0x"+"11"*32
     c.instruments={"XRP":Instrument("XRP_USDT_Perp",D(".0001"),D(".1"),D(".1"),D(5),{"base_decimals":6,"instrument_hash":"0x030f01"})}
     order=c.signed_order("XRP",Intent("Buy",D("1.2345"),D("10.1"),"OPEN",False),str(1<<63),now_ns=1000000000)

@@ -8,8 +8,8 @@ import sys
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 
-from vibetrading.etf_csv_history import CSV_FILES
-from vibetrading.etf_csv_sync import latest_completed_session
+from storage.etf_csv_history import CSV_FILES
+from feeds.etf_csv_sync import latest_completed_session
 from datetime import datetime, timezone
 
 root = Path(__file__).resolve().parents[1]

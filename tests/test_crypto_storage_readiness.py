@@ -5,7 +5,7 @@ from types import SimpleNamespace as NS
 
 import pytest
 
-from vibetrading.market_policy import CollectionPaused, MarketDataPolicyBus, _CryptoPressureLatch, crypto_storage_blocker
+from market.market_policy import CollectionPaused, MarketDataPolicyBus, _CryptoPressureLatch, crypto_storage_blocker
 
 
 def settings(tmp_path):

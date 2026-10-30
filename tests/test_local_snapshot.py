@@ -9,12 +9,9 @@ from types import SimpleNamespace
 
 import pytest
 
-from vibetrading.hot_path import HotPathStore
-from vibetrading.local_snapshot import (
-    LocalSnapshotWriter, SnapshotBudgets, SnapshotError, atomic_write_snapshot,
-    capture_market_snapshot, local_snapshot_config, read_market_snapshot,
-)
-from vibetrading.models import AssetClass, BookUpdateType, DataGapEvent, InstrumentId, OrderBookEvent, OrderBookLevel, TradeEvent, Venue
+from market.hot_path import HotPathStore
+from market.local_snapshot import LocalSnapshotWriter, SnapshotBudgets, SnapshotError, atomic_write_snapshot, capture_market_snapshot, local_snapshot_config, read_market_snapshot
+from core.models import AssetClass, BookUpdateType, DataGapEvent, InstrumentId, OrderBookEvent, OrderBookLevel, TradeEvent, Venue
 
 
 def budgets(**updates):
@@ -154,7 +151,7 @@ def test_empty_prepared_history_does_not_break_latest_market_snapshot():
 
 
 def test_failed_atomic_replace_preserves_previous_file_and_cleans_only_owned_temp(tmp_path, monkeypatch):
-    import vibetrading.local_snapshot as module
+    import market.local_snapshot as module
     path = tmp_path / "market.json"
     path.write_bytes(b"old")
     def fail(*args):
@@ -167,7 +164,7 @@ def test_failed_atomic_replace_preserves_previous_file_and_cleans_only_owned_tem
 
 @pytest.mark.asyncio
 async def test_writer_has_one_io_inflight_and_close_keeps_late_cleanup_tracked(tmp_path, monkeypatch):
-    import vibetrading.local_snapshot as module
+    import market.local_snapshot as module
     owner, _, _ = engine()
     entered, release = threading.Event(), threading.Event()
     calls = []
@@ -200,7 +197,7 @@ async def test_writer_has_one_io_inflight_and_close_keeps_late_cleanup_tracked(t
 @pytest.mark.asyncio
 @pytest.mark.parametrize("stale", [False, True])
 async def test_local_dashboard_uses_snapshot_with_zero_nats_or_duplicate_collectors(tmp_path, monkeypatch, stale):
-    import vibetrading.dashboard.bridge as bridge
+    import operations.dashboard.bridge as bridge
     owner, _, now = engine()
     path = tmp_path / "market.json"
     document = capture_market_snapshot(owner, budgets(), now_ns=now)

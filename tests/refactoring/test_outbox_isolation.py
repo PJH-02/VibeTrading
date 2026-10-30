@@ -4,10 +4,10 @@ from dataclasses import replace
 
 import pytest
 
-from vibetrading.etf_journal import EtfJournal
-from vibetrading.settings import RuntimeSettings
-from vibetrading.telegram import TelegramController
-from vibetrading.telegram_state import OutboxFull, TelegramState
+from portfolio.etf_journal import EtfJournal
+from runtime.settings import RuntimeSettings
+from operations.telegram import TelegramController
+from operations.telegram_state import OutboxFull, TelegramState
 
 
 def _controller(tmp_path):

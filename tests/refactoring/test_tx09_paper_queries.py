@@ -18,7 +18,7 @@ from test_outbox_isolation import _controller
 from test_vnext_vn14b import endpoint, update
 from test_vn15_paper_projection import (T, _write_market_snapshot, book, engine,
                                         open_ledger, submit, trade)
-from vibetrading.telegram import TelegramController
+from operations.telegram import TelegramController
 
 
 def paper_bot(tmp_path, database=None, *, reader=None):

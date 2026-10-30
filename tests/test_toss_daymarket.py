@@ -1,9 +1,9 @@
 import asyncio
 from datetime import datetime, timedelta, timezone
 
-from vibetrading.bus import InMemoryEventBus
-from vibetrading.market_policy import MarketDataPolicyBus
-from vibetrading.providers.toss import TossCollector, parse_toss_symbols
+from runtime.bus import InMemoryEventBus
+from market.market_policy import MarketDataPolicyBus
+from feeds.providers.toss import TossCollector, parse_toss_symbols
 
 
 KST = timezone(timedelta(hours=9))

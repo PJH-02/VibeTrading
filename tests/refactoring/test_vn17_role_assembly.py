@@ -10,14 +10,14 @@ from pathlib import Path
 
 import pytest
 
-import vibetrading.local_runtime as local
-from vibetrading.dashboard.projection import paper_projection
-from vibetrading.feed_recovery import EngineCursor, RecoveryFrame
-from vibetrading.local_config import LocalRuntimePlan
-from vibetrading.local_transport import LocalTransportClient
-from vibetrading.market_spool import MarketSpool
-from vibetrading.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
-from vibetrading.trading_contracts import ActionKind, ExecutionAction, TradingMode
+import runtime.local_runtime as local
+from operations.dashboard.projection import paper_projection
+from feeds.feed_recovery import EngineCursor, RecoveryFrame
+from runtime.local_config import LocalRuntimePlan
+from runtime.local_transport import LocalTransportClient
+from storage.market_spool import MarketSpool
+from core.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
+from execution.trading_contracts import ActionKind, ExecutionAction, TradingMode
 from test_local_runtime import document
 from test_strategy_runtime import T, BTC, ledger_at, matcher_for, runtime, book, trade
 from test_vn13_file_registration import configured, strategy_files, strategy_source, loaded
@@ -138,13 +138,13 @@ def test_main_forwards_same_borrowed_owner_and_preserves_default_call(tmp_path,m
 def test_snapshot_settings_are_given_to_existing_local_observers(tmp_path,monkeypatch,role):
     path,settings=cli_environment(tmp_path,monkeypatch);seen=[]
     if role=='telegram':
-        import vibetrading.telegram as telegram
+        import operations.telegram as telegram
         class Controller:
             def __init__(self,selected,**kwargs):seen.append(dict(selected.env))
             async def run(self):pass
         monkeypatch.setattr(telegram,'TelegramController',Controller)
     else:
-        import vibetrading.dashboard.bridge as bridge
+        import operations.dashboard.bridge as bridge
         async def observer():seen.append(dict(os.environ))
         monkeypatch.setattr(bridge,'run',observer)
     assert local.main([role,'--config',str(path)])==0

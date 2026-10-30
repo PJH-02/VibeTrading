@@ -5,12 +5,12 @@ from pathlib import Path
 
 import pytest
 
-from vibetrading.archive import ArchiveMaintenance
-from vibetrading.models import AssetClass, InstrumentId, TradeEvent, Venue
-from vibetrading.parquet_store import ParquetBatchWriter
-from vibetrading.settings import RuntimeSettings
-from vibetrading.sqlite_store import RuntimeStore
-from vibetrading.storage_backend import archive_backend, sha256_file
+from storage.archive import ArchiveMaintenance
+from core.models import AssetClass, InstrumentId, TradeEvent, Venue
+from storage.parquet_store import ParquetBatchWriter
+from runtime.settings import RuntimeSettings
+from storage.sqlite_store import RuntimeStore
+from storage.storage_backend import archive_backend, sha256_file
 
 
 def relief_settings(tmp_path, monkeypatch, pressure=50, pending=0):
@@ -49,7 +49,7 @@ def test_busy_ingest_still_uploads_verifies_and_reclaims(tmp_path, monkeypatch):
     maintenance = ArchiveMaintenance(settings, store)
     created = []
     factory = archive_backend
-    monkeypatch.setattr('vibetrading.archive.archive_backend', lambda s: created.append(True) or factory(s))
+    monkeypatch.setattr("storage.archive.archive_backend", lambda s: created.append(True) or factory(s))
     rows = store.list_manifest()
     # The unverified file must never become a deletion candidate.
     maintenance._upload(rows[0])

@@ -1,0 +1,16 @@
+# Explicit opt-in override of the single engine, never a second consumer/owner.
+# Requires an ETF-disabled local plan with an observation spool. No live submit.
+services:
+  engine:
+    image: ${DASHBOARD_TIMEFOLIO_IMAGE:?select verified canonical browser image}
+    profiles: ["timefolio-order"]
+    command: ["python", "-m", "runtime.cli", "timefolio-strategy",
+      "--local-config", "/run/config/local.json",
+      "--local-producer", "${TIMEFOLIO_LOCAL_PRODUCER:?select required producer}",
+      "--job", "${TIMEFOLIO_JOB_ID:?select job}",
+      "--account", "${TIMEFOLIO_ACCOUNT_ID:?select account}",
+      "--strategy-module", "${TIMEFOLIO_STRATEGY_MODULE:?select strategy}",
+      "--entry-weight-pct", "${TIMEFOLIO_ENTRY_WEIGHT_PCT:?select strategy weight}",
+      "--max-order-notional", "${TIMEFOLIO_MAX_ORDER_NOTIONAL:?select risk limit}",
+      "--max-position-notional", "${TIMEFOLIO_MAX_POSITION_NOTIONAL:?select risk limit}",
+      "--no-submit"]

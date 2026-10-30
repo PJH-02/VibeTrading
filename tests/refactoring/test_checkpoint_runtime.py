@@ -7,11 +7,11 @@ from types import SimpleNamespace
 
 import pytest
 
-from vibetrading import local_runtime
-from vibetrading.hot_path import HotPathStore
-from vibetrading.local_engine import EngineBudgets, LocalMarketEngine
-from vibetrading.market_checkpoint import CheckpointCodec
-from vibetrading.market_spool import MarketSpool
+from runtime import local_runtime
+from market.hot_path import HotPathStore
+from market.local_engine import EngineBudgets, LocalMarketEngine
+from storage.market_checkpoint import CheckpointCodec
+from storage.market_spool import MarketSpool
 
 
 def checkpoint_options(tmp_path):
@@ -107,7 +107,7 @@ async def test_checkpoint_save_is_single_flight_until_thread_write_finishes(tmp_
             with lock:
                 active_writes -= 1
 
-    monkeypatch.setattr("vibetrading.market_checkpoint._write_checkpoint_file", blocked_write)
+    monkeypatch.setattr("storage.market_checkpoint._write_checkpoint_file", blocked_write)
     engine = FakeEngine()
     caller = asyncio.create_task(
         local_runtime.save_engine_checkpoint(engine, codec, tmp_path / "checkpoint.json")
@@ -255,7 +255,7 @@ async def test_managed_journal_option_conflicts_reject_before_initialization(tmp
 @pytest.mark.asyncio
 @pytest.mark.parametrize('scenario',['periodic_failure','headroom','readiness','corrupt'])
 async def test_managed_failure_stops_before_listen_or_propagates_cadence(tmp_path,monkeypatch,scenario):
-    import vibetrading.local_snapshot as snapshots
+    import market.local_snapshot as snapshots
     from test_checkpoint_startup import capture,producer
     from test_checkpoint_journal import journal
     item=producer(tmp_path);item.delivery=None

@@ -21,3 +21,15 @@ __pycache__/
 /tmp/
 /trashbin/
 *.tsbuildinfo
+
+.omx
+.aws
+# CLN-01: new logs belong in private run artifacts, not source history.
+/.local/artifacts/
+/docs/refactoring/runs/**
+/docs/refactoring/vnext/**
+/docs/tickets/O01*.md
+/docs/tickets/R0*.md
+/docs/tickets/TX*.md
+/docs/tickets/VN*.md
+/docs/tickets/REUSE*.md

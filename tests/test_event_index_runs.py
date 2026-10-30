@@ -3,7 +3,7 @@ import sqlite3
 
 import pytest
 
-from vibetrading.event_index_runs import ExactEventRuns, append_runs, ensure_schema
+from storage.event_index_runs import ExactEventRuns, append_runs, ensure_schema
 
 
 def key(value):
@@ -100,7 +100,7 @@ def test_run_and_manifest_transaction_roll_back_together(tmp_path):
 
 @pytest.mark.parametrize('size,hashes', [(8, 7), (128, 12), (32768, 12)])
 def test_vector_filter_is_byte_identical_to_scalar_algorithm(size, hashes):
-    from vibetrading.event_index_runs import RECORD, _add, _add_records
+    from storage.event_index_runs import RECORD, _add, _add_records
     values = [(key(i), i + 1) for i in range(1024)]
     expected = bytearray(size)
     for event_key, _ in values:

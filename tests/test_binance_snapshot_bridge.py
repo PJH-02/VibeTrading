@@ -4,15 +4,16 @@ from decimal import Decimal
 
 import pytest
 
-from vibetrading.bus import InMemoryEventBus
-from vibetrading.hot_path import HotPathStore
-from vibetrading.models import BookUpdateType, Venue
-from vibetrading.providers.crypto_perp import CryptoPerpCollector, _instrument
+from runtime.bus import InMemoryEventBus
+from market.hot_path import HotPathStore
+from core.models import BookUpdateType, Venue
+from feeds.providers import create_perp_collector
+from feeds.providers.perp_common import _instrument
 
 
 async def snapshot():
     bus = InMemoryEventBus()
-    collector = CryptoPerpCollector(Venue.BINANCE, ('SOLUSDT',))
+    collector = create_perp_collector(Venue.BINANCE, ('SOLUSDT',))
     await collector._book(bus, 'SOLUSDT', None, [['100', '2']], [['101', '3']],
                           BookUpdateType.SNAPSHOT, 100, channel='depth1000_rest_snapshot')
     return collector, bus, {'SOLUSDT': 100}

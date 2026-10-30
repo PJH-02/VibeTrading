@@ -6,23 +6,20 @@ from types import ModuleType, SimpleNamespace
 
 import pytest
 
-from vibetrading.execution_ledger import AccountScope
-from vibetrading.feed_recovery import EngineCursor, RecoveryFrame
-from vibetrading.hot_path import HotPathStore
-from vibetrading.local_engine import EngineBudgets, LocalMarketEngine
-from vibetrading.local_pipeline import PipelineBudgets
-from vibetrading.market_checkpoint import CheckpointCodec
-from vibetrading.market_spool import MarketSpool
-from vibetrading.models import (AssetClass, InstrumentId, OrderBookEvent, OrderBookLevel,
-    OrderDestination, OrderIntent, Side, Signal, SignalAction, TradeEvent, Venue)
-from vibetrading.paper_execution import PaperExecution
-from vibetrading.portfolio_ledger import PortfolioLedger
-from vibetrading.runtime_checkpoint import RuntimeCheckpoint, RuntimeCheckpointError
+from execution.execution_ledger import AccountScope
+from feeds.feed_recovery import EngineCursor, RecoveryFrame
+from market.hot_path import HotPathStore
+from market.local_engine import EngineBudgets, LocalMarketEngine
+from feeds.local_pipeline import PipelineBudgets
+from storage.market_checkpoint import CheckpointCodec
+from storage.market_spool import MarketSpool
+from core.models import AssetClass, InstrumentId, OrderBookEvent, OrderBookLevel, OrderDestination, OrderIntent, Side, Signal, SignalAction, TradeEvent, Venue
+from execution.paper_execution import PaperExecution
+from portfolio.portfolio_ledger import PortfolioLedger
+from runtime.runtime_checkpoint import RuntimeCheckpoint, RuntimeCheckpointError
 from vibetrading.strategy_contract import StrategyModule
-from vibetrading.strategy_runtime import (PaperStrategyRuntime, RuntimeBudgets,
-                                          StrategyRegistration, StrategyRisk)
-from vibetrading.trading_contracts import (ActionKind, ExecutionAction, ProductKind,
-                                           ProductSpec, TradingMode)
+from runtime.strategy_runtime import PaperStrategyRuntime, RuntimeBudgets, StrategyRegistration, StrategyRisk
+from execution.trading_contracts import ActionKind, ExecutionAction, ProductKind, ProductSpec, TradingMode
 
 T = 1_800_000_000_000_000_000
 BTC = InstrumentId(venue=Venue.BYBIT, asset_class=AssetClass.CRYPTO_PERP,
@@ -310,7 +307,7 @@ async def test_corrupt_newest_real_bundle_fences_before_callback_publication(tmp
 
 @pytest.mark.asyncio
 async def test_run_engine_requires_readiness_before_inspecting_runtime_fields(tmp_path):
-    from vibetrading.local_runtime import run_engine
+    from runtime.local_runtime import run_engine
     codec = type("Codec", (), {"max_bytes": 262144, "capacity": 1})()
     checkpoint = RuntimeCheckpoint(tmp_path/"runtime.json", codec, max_bytes=262144,
         max_journal_rows=100, max_journal_bytes=10000)

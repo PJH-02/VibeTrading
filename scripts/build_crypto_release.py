@@ -19,6 +19,8 @@ ROOT = Path(__file__).resolve().parents[1]
 PACKAGE = 'vibetrading'
 SERVICES = ('crypto-storage', 'crypto-maintenance', 'crypto-collector-binance',
             'crypto-collector-bitget', 'crypto-collector-bybit', 'crypto-collector-arcus', 'crypto-collector-grvt')
+CANONICAL_ERROR = ('historical crypto r2 bundle cannot package canonical src sources; '
+                   'use scripts/build_release_images.py to build current images')
 DOCKERFILE = '''ARG CRYPTO_BASE
 FROM ${CRYPTO_BASE}
 ARG REVISION
@@ -53,6 +55,52 @@ def source_package(root=None):
     raise RuntimeError('package source root missing')
 
 
+def canonical_source(root):
+    src = root / 'src'
+    if src.is_symlink():
+        raise RuntimeError('release package source symlink rejected')
+    if not (src / 'runtime').is_dir():
+        return None
+    if (src / 'runtime').is_symlink():
+        raise RuntimeError('release package source symlink rejected')
+    flat, legacy = root / PACKAGE, src / PACKAGE
+    if flat.exists() or flat.is_symlink() or legacy.exists() or legacy.is_symlink():
+        raise RuntimeError('ambiguous canonical and historical source roots; use scripts/build_release_images.py')
+    return src
+
+
+def reject_source_symlinks(base):
+    for current, directories, names in os.walk(base, followlinks=False):
+        current = Path(current)
+        for name in directories + names:
+            if (current / name).is_symlink():
+                raise RuntimeError('release source symlink rejected')
+
+
+def canonical_files(root, src):
+    paths = []
+    for path in (root / 'main.py', root / 'requirements.txt',
+                 root / 'scripts/build_crypto_release.py'):
+        if path.is_symlink():
+            raise RuntimeError('release source symlink rejected')
+        if path.is_file():
+            paths.append(path)
+    reject_source_symlinks(src)
+    paths.extend(p for p in src.rglob('*.py')
+                 if p.is_file() and '__pycache__' not in p.parts)
+    config = root / 'config'
+    if config.is_symlink():
+        raise RuntimeError('release source symlink rejected')
+    if config.is_dir():
+        reject_source_symlinks(config)
+        paths.extend(p for p in config.rglob('*') if p.is_file()
+                     and '__pycache__' not in p.parts
+                     and p.suffix in {'.py', '.yaml', '.yml', '.json'})
+    if any(p.is_symlink() for p in paths):
+        raise RuntimeError('release source symlink rejected')
+    return sorted(paths)
+
+
 def logical_name(path, package, root):
     try:
         relative = path.relative_to(package)
@@ -63,9 +111,16 @@ def logical_name(path, package, root):
 
 def files(root=None):
     root = ROOT if root is None else root
+    src = canonical_source(root)
+    if src is not None:
+        return canonical_files(root, src)
     paths = [root / 'main.py', root / 'requirements.txt',
              root / 'scripts/build_crypto_release.py']
     for base in (source_package(root), root / 'config', root / 'strategies'):
+        if base.is_symlink():
+            raise RuntimeError('release source symlink rejected')
+        if base.is_dir():
+            reject_source_symlinks(base)
         paths.extend(p for p in base.rglob('*') if p.is_file()
                      and '__pycache__' not in p.parts and p.suffix in {'.py', '.yaml', '.yml', '.json'})
     if any(p.is_symlink() for p in paths):
@@ -128,6 +183,8 @@ def compose():
 
 
 def prepare(destination: Path):
+    if canonical_source(ROOT) is not None:
+        raise RuntimeError(CANONICAL_ERROR)
     if destination.exists():
         raise RuntimeError('bundle destination already exists')
     package = source_package()

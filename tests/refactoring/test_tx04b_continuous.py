@@ -13,13 +13,13 @@ from test_local_runtime import document, event as runtime_event
 from test_paper_execution import submit as paper_submit
 from test_strategy_runtime import (T, BTC, book, budget, deliver, ledger_at, matcher_for,
                                    registration, runtime, spec, trade)
-from vibetrading.feed_recovery import EngineCursor, RecoveryFrame
-from vibetrading.hot_path import HotPathStore
-from vibetrading.local_config import LocalRuntimePlan
-from vibetrading.local_engine import EngineBudgets, EngineError, LocalMarketEngine
-from vibetrading.models import OrderDestination, OrderIntent, Side
-from vibetrading.strategy_runtime import PaperStrategyRuntime
-from vibetrading.trading_contracts import ActionKind, ExecutionAction, TradingMode
+from feeds.feed_recovery import EngineCursor, RecoveryFrame
+from market.hot_path import HotPathStore
+from runtime.local_config import LocalRuntimePlan
+from market.local_engine import EngineBudgets, EngineError, LocalMarketEngine
+from core.models import OrderDestination, OrderIntent, Side
+from runtime.strategy_runtime import PaperStrategyRuntime
+from execution.trading_contracts import ActionKind, ExecutionAction, TradingMode
 
 
 def engine_budgets():
@@ -81,7 +81,7 @@ async def test_engine_watchdog_tick_callback_validates_epoch_and_closes_cleanly(
 
 @pytest.mark.asyncio
 async def test_run_engine_wires_paper_advance_only_when_paper_selected(tmp_path, monkeypatch):
-    import vibetrading.local_runtime as runtime_module
+    import runtime.local_runtime as runtime_module
 
     plan = LocalRuntimePlan.from_document(document(tmp_path))
     instrument = runtime_event(1).instrument

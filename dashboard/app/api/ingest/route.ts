@@ -1,4 +1,5 @@
 import { database, ingestAuthorized, reply } from "../../../lib/server";
+import { sanitizeObservability, validObservability } from "../../../lib/observability";
 
 export async function POST(request: Request) {
   if (!await ingestAuthorized(request)) return reply({ error: "unauthorized" }, 401);
@@ -7,11 +8,19 @@ export async function POST(request: Request) {
   if (text.length > 2_000_000) return reply({ error: "payload too large" }, 413);
   let data;
   try { data = JSON.parse(text); } catch { return reply({ error: "invalid JSON" }, 400); }
+  if (data.observability === undefined) data.observability = {
+    pnl: [], latency: [], latency_status: "NOT_CONFIGURED", latency_error: null,
+    native_status: "NOT_CONFIGURED", native_error: null,
+    etf_status: "NOT_CONFIGURED", etf_error: null,
+    end_to_end_ms: null, end_to_end_status: "SEGMENTED",
+  };
+  data.observability = sanitizeObservability(data.observability);
   if (data.schema_version !== 1 || !Number.isSafeInteger(data.generated_ms) ||
       !Array.isArray(data.markets) || data.markets.length > 512 ||
       !Array.isArray(data.orders) || data.orders.length > 1000 ||
       !Array.isArray(data.strategies) || data.strategies.length > 100 ||
       !Array.isArray(data.timefolio) || data.timefolio.length > 50 ||
+      !validObservability(data.observability) ||
       Math.abs(Date.now() - data.generated_ms) > 120_000) return reply({ error: "invalid snapshot" }, 400);
   const db = database();
   const now = Date.now();
@@ -25,12 +34,15 @@ export async function POST(request: Request) {
       .bind(order.id, order.section, order.updated_ms, JSON.stringify(order)));
   }
   const bucket = Math.floor(data.generated_ms / 60_000) * 60_000;
-  for (const strategy of data.strategies) {
-    if (typeof strategy.id === "string" && strategy.realized_pnl != null) statements.push(db.prepare(`INSERT OR IGNORE INTO pnl_samples VALUES (?, ?, ?)`)
-      .bind(strategy.id, bucket, JSON.stringify({ ...strategy, ts: bucket })));
+  for (const row of data.observability.pnl) {
+    statements.push(db.prepare(`INSERT INTO pnl_samples VALUES (?, ?, ?) ON CONFLICT(strategy_id,bucket) DO UPDATE
+      SET payload=excluded.payload
+      WHERE COALESCE(json_extract(pnl_samples.payload, '$.source_generated_ms'), 0)
+        < json_extract(excluded.payload, '$.source_generated_ms')`).bind(row.key, bucket,
+          JSON.stringify({ ...row, ts: bucket, source_generated_ms: data.generated_ms })));
   }
   // Bounded housekeeping; market ticks are deliberately not archived here.
-  if (bucket % 600_000 < 60_000) statements.push(db.prepare("DELETE FROM pnl_samples WHERE bucket < ?").bind(now - 30 * 86400_000));
+  if (bucket % 600_000 < 60_000) statements.push(db.prepare("DELETE FROM pnl_samples WHERE bucket < ?").bind(now - 24 * 3600_000));
   // D1 batch query counts stay below the per-request limit.
   for (let offset = 1; offset < statements.length; offset += 80) await db.batch(statements.slice(offset, offset + 80));
   await statements[0].run();

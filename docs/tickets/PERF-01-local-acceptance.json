@@ -1,0 +1,457 @@
+{
+  "ticket": "PERF-01",
+  "result": "PASS",
+  "acceptance": "ACCEPTED_LOCAL",
+  "profile_result": "PASS_LOCAL_CAPACITY",
+  "timestamp": "2026-10-31T03:38:00.995414+09:00",
+  "actual_commit_sha": "8c08f9996a25a2cdf947f1ec33225d04209c9b8f",
+  "runtime_source_commit": "2fe70d2fb2a5caa0d6e99fbb3d2a05f08813ef61",
+  "base_accepted_qa_source": "542dadc5250db5d6b43141aa0fe70440faa2e23e",
+  "runtime_source149_sha256": "acc56cd077bd3156a3d2f10aab7ff0d4c3af08381886d99cfdd8f0c7c4c90451",
+  "runtime_source_count": 149,
+  "runtime_bytes_equal_tested_snapshot_and_measured_image": true,
+  "functional_repair_commits": [
+    "992bb757ba4b9c6cf60d47ebe1e58b796b11e225",
+    "2fe70d2fb2a5caa0d6e99fbb3d2a05f08813ef61"
+  ],
+  "source_scope": [
+    "src/feeds/local_pipeline.py",
+    "src/runtime/local_transport.py",
+    "src/runtime/selected_execution.py"
+  ],
+  "worker_model": "gpt-6-luna",
+  "lead_model_auth": "unchanged sol lead",
+  "external_worker_calls": 0,
+  "worker_policy": "Prior measured cache-inclusive stop carried forward; bounded isolated native packets; no full-ticket savings counterfactual claimed.",
+  "tests": {
+    "full": 3171,
+    "guarded_leases": 25,
+    "distinct_required_python": 3196,
+    "required_skipped": 0,
+    "required_deselected": 0,
+    "external_live_data_deselected": 2,
+    "capped_focused": 225,
+    "heartbeat_focused": 132,
+    "native_freshness_focused": 30,
+    "inventory_focused": 32,
+    "auxiliary_focused": 1,
+    "focused_counts_overlap_full_suite": true,
+    "warnings": "Two unchanged inherited cgi/fork deprecations"
+  },
+  "all_final_independent_test_exits": 0,
+  "test_source_provenance": "Full-test launcher source_head names precommit HEAD992bb75; final-tested-inputs records actual bytes, all149 exactly equal runtime2fe70d2. Older heartbeat-only QA receipt is historical, not final source acceptance.",
+  "capacity_checks": {
+    "ENOSPC_EIO_prefix_restart_corrupt_tail": true,
+    "actual_group_wait_and_batch_record_byte_counts": true,
+    "complete_scripted_native_inventory_and_owner_cut": true,
+    "core_baseline_burst_variableACK_and_A1_counts": true,
+    "core_progress_during_orchestrated_disconnect_window": true,
+    "dashboard_disconnect_60s_and_recovery": true,
+    "effective_2cpu_3_8gib_cgroup_and_bounded_sampler": true,
+    "grouped_two_leg_workload": true,
+    "idle_timefolio_blank_chromium": true,
+    "local_storage_telegram_60s": true,
+    "persistent_non_tmpfs_durability_media": true,
+    "six_sources_five_venues_and_paper_policy": true,
+    "slow_fsync_injected_pipeline_event": true,
+    "telemetry_actual_sampled_histograms": true,
+    "two_tls_viewers_private_ingest_no_public_writes": true
+  },
+  "measured_image": "sha256:ed45038d4e48b44e2d528dad560ff77b07afe8841223f2c923099262190e1ccf",
+  "workload_configuration": {
+    "config_sha256": "b1e641c7fd9541d59dc3d0c995ee7bd021d3f8456ee12048bb31dbf7bb6dc263",
+    "files_sha256": "3d6909b03a49303625e95df960591d426cd05f872b0f963c6e204f00be4144a7",
+    "workload": {
+      "ack_delay_ms": -1,
+      "action_every": 3,
+      "burst_chunk_records": 16,
+      "burst_events": 1000,
+      "capacity": true,
+      "grouped": true,
+      "interval_ms": 1000,
+      "samples": 100,
+      "scenario": "all"
+    }
+  },
+  "host_hash": "f4d5d82d57fdd6bb29999ae5f8d0108a8f92ed303cc54a951d32d78f94f004ba",
+  "host": {
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.41",
+    "python": "3.12.15",
+    "cpu_max": "200000 100000",
+    "affinity": [
+      0,
+      1
+    ],
+    "memory_max_bytes": 4080218112,
+    "persistent_ext4_volume": true,
+    "network": "none",
+    "read_only_root": true,
+    "uid": 10001,
+    "all_capabilities_dropped": true
+  },
+  "event_counts": {
+    "accepted_durable_live_applied_strategy_evaluated_each": 1202,
+    "auxiliary_durable_applied_checkpointed": 507,
+    "t5_calls": 800,
+    "successful_scripted_responses": 800,
+    "two_leg_ack_groups": 400,
+    "native_pending_intents_per_owner": 400
+  },
+  "causal_span_quantiles": [
+    {
+      "n_completed": 1000,
+      "p50_ns": 326824646,
+      "p95_ns": 1591219841,
+      "p999_ns": 3710235347,
+      "p99_ns": 2497224822,
+      "phase_id": "baseline_burst1000",
+      "product_id": "binance:crypto_perp:BTCUSDT",
+      "source_id": "binance-perp",
+      "stage": "T0_to_T3_strategy_eval",
+      "status": "EVALUATED"
+    },
+    {
+      "n_completed": 334,
+      "p50_ns": 347853349,
+      "p95_ns": 1680160507,
+      "p999_ns": 3006696048,
+      "p99_ns": 2419955288,
+      "phase_id": "baseline_burst1000",
+      "product_id": "binance:crypto_perp:BTCUSDT",
+      "source_id": "binance-perp",
+      "stage": "T0_to_T5_transport_request",
+      "status": "INVOKED"
+    },
+    {
+      "n_completed": 100,
+      "p50_ns": 19740542,
+      "p95_ns": 37438743,
+      "p999_ns": 58682818,
+      "p99_ns": 54726029,
+      "phase_id": "baseline_first100",
+      "product_id": "binance:crypto_perp:BTCUSDT",
+      "source_id": "binance-perp",
+      "stage": "T0_to_T3_strategy_eval",
+      "status": "EVALUATED"
+    },
+    {
+      "n_completed": 33,
+      "p50_ns": 52385755,
+      "p95_ns": 80385766,
+      "p999_ns": 85306971,
+      "p99_ns": 85306971,
+      "phase_id": "baseline_first100",
+      "product_id": "binance:crypto_perp:BTCUSDT",
+      "source_id": "binance-perp",
+      "stage": "T0_to_T5_transport_request",
+      "status": "INVOKED"
+    },
+    {
+      "n_completed": 1,
+      "p50_ns": 42821468,
+      "p95_ns": 42821468,
+      "p999_ns": 42821468,
+      "p99_ns": 42821468,
+      "phase_id": "slow_fsync_injected_20ms",
+      "product_id": "binance:crypto_perp:BTCUSDT",
+      "source_id": "binance-perp",
+      "stage": "T0_to_T3_strategy_eval",
+      "status": "EVALUATED"
+    },
+    {
+      "n_completed": 100,
+      "p50_ns": 23787459,
+      "p95_ns": 46977540,
+      "p999_ns": 107532982,
+      "p99_ns": 104852863,
+      "phase_id": "variable_ack_100",
+      "product_id": "binance:crypto_perp:BTCUSDT",
+      "source_id": "binance-perp",
+      "stage": "T0_to_T3_strategy_eval",
+      "status": "EVALUATED"
+    },
+    {
+      "n_completed": 33,
+      "p50_ns": 110659647,
+      "p95_ns": 195667036,
+      "p999_ns": 202351212,
+      "p99_ns": 202351212,
+      "phase_id": "variable_ack_100",
+      "product_id": "binance:crypto_perp:BTCUSDT",
+      "source_id": "binance-perp",
+      "stage": "T0_to_T5_transport_request",
+      "status": "INVOKED"
+    },
+    {
+      "n_completed": 1,
+      "p50_ns": 322599307,
+      "p95_ns": 322599307,
+      "p999_ns": 322599307,
+      "p99_ns": 322599307,
+      "phase_id": "viewer_bootstrap",
+      "product_id": "binance:crypto_perp:BTCUSDT",
+      "source_id": "binance-perp",
+      "stage": "T0_to_T3_strategy_eval",
+      "status": "EVALUATED"
+    }
+  ],
+  "numeric_targets": "EXCEEDED_NONBLOCKING_REFERENCE",
+  "trace": {
+    "rows": 19763,
+    "omitted": 0,
+    "single_python_pid_clock": true,
+    "sample_count_each": 1,
+    "raw_stage_quantile_groups_recomputed": 96,
+    "causal_event_spans_recomputed": 1602
+  },
+  "observed_limits": {
+    "supported_offered_burst": "1000 events in16-record pulses, drain between pulses; not1000/s",
+    "64_record_pulse": "OBSERVED_CAPACITY_LIMIT: unchanged5s group deadline safely stopped at933durable/920applied/612T5 at failure capture; preserved v6",
+    "virtual_silence": "300s virtual only;600s profile lease; separate actual QA tests prove B-gap/dependent blocking",
+    "native_transports": "credential-free scripted Binance/Bybit concrete adapters, no live venue capacity claim",
+    "mixed_feed_inputs": "actual main Binance parser; auxiliary typed native-equivalent six-venue inputs; publication policy unchanged",
+    "viewer": "two actual authenticated local TLS API polling clients; in-memory SQLite, no SSR/public gateway",
+    "browser": "actual idle Chromium blank page, no real contest page/account interaction",
+    "cloud": "actual ArchiveMaintenance local backend stalled60s, not WAN/cloud-provider capacity",
+    "corrupt_temporary_tail_loss": "UNKNOWN, invalidated source; healthy A1 loss_indicator0"
+  },
+  "resources": {
+    "cgroup_cpu_stat_delta": {
+      "burst_usec": 0,
+      "nr_bursts": 0,
+      "nr_periods": 1965,
+      "nr_throttled": 0,
+      "system_usec": 33596140,
+      "throttled_usec": 0,
+      "usage_usec": 147629399,
+      "user_usec": 114033259
+    },
+    "cgroup_cpu_usage_usec_delta": 147629399,
+    "cgroup_io_stat_delta": {
+      "8:48": {
+        "dbytes": 0,
+        "dios": 0,
+        "rbytes": 131072,
+        "rios": 1,
+        "wbytes": 230395904,
+        "wios": 29076
+      }
+    },
+    "cgroup_memory_event_delta": {
+      "high": 0,
+      "low": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_group_kill": 0,
+      "oom_kill": 0
+    },
+    "cgroup_memory_peak_bytes": 472137728,
+    "python_cpu_ns_per_input_event": 120291624.6375,
+    "python_process_cpu_ns": 144349949565,
+    "python_process_io_after": {
+      "cancelled_write_bytes": 110592,
+      "rchar": 7561782263,
+      "read_bytes": 131072,
+      "syscr": 2273232,
+      "syscw": 93392,
+      "wchar": 241872600,
+      "write_bytes": 230350848
+    },
+    "python_process_io_before": {
+      "cancelled_write_bytes": 0,
+      "rchar": 17123650,
+      "read_bytes": 0,
+      "syscr": 1896,
+      "syscw": 14,
+      "wchar": 12861,
+      "write_bytes": 0
+    },
+    "python_process_io_delta": {
+      "cancelled_write_bytes": 110592,
+      "rchar": 7544658613,
+      "read_bytes": 131072,
+      "syscr": 2271336,
+      "syscw": 93378,
+      "wchar": 241859739,
+      "write_bytes": 230350848
+    },
+    "resource_sample_count": 1771,
+    "resource_samples_omitted": 0,
+    "sampler_process_rss_max_kib": 254348
+  },
+  "fd_sample_peak": 88,
+  "postmeasurement_reporting_correction": {
+    "captured_process_write_bytes_delta": 230350848,
+    "correction": "New device key was absent in initial empty per-device map and was filtered out by the old derived-delta type check. Actual end counters plus independent process write-byte delta confirm disk writes. Raw counters/spans untouched.",
+    "hotpath_ast_unchanged": true,
+    "kernel_io_field_reference": "https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html#io-interface-files",
+    "measurement_script_sha256": "2b3d3a1265d59f5a0c8aa1632c7ea56375831e76d76171bbb1efa336e2c6491e",
+    "no_new_runtime_measurement": true,
+    "postprocess_script_sha256": "9df5949d24594d2b24f0f9d078019089e5850583f6e1aeaf049e1a65ac0bab0f",
+    "raw_report": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-capacity-v7-data/perf01-run-kkfet2f4/perf01-report.json",
+    "raw_report_sha256": "d592456037d56c7d0a466b9cee674300cc6b23cb7a29a7a9b008c8f068322050",
+    "raw_trace_unchanged": true
+  },
+  "actual_runtime_rerun_after_reporting_only_correction": false,
+  "postprocessing_verification": "Existing/new-device delta independently recomputed; only main postprocessing/exit changed, hotpath AST unchanged; raw report/trace preserved.",
+  "scope_and_decisions": "docs/tickets/PERF-01-findings.md",
+  "findings_sha256": "3e80880b2989402c303f1e66b687bedd90f66602f56dfd84e782940690f3da03",
+  "historical_heartbeat_qa": "docs/tickets/PERF-01-heartbeat-qa.json",
+  "artifacts": {
+    "PERF01-final-full.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-final-full.result.json",
+      "sha256": "531297180e842ae53d81e1d0fa270aa540ee903315b2cd3498dcc3abe7b171cb"
+    },
+    "PERF01-final-full.stdout.log": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-final-full.stdout.log",
+      "sha256": "d1a2480e49672044fac4f2e2bed75596e662832e7b9217974805db8316d33970"
+    },
+    "PERF01-final-full.junit.xml": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-final-full.junit.xml",
+      "sha256": "082ff685c9fa77e162ed184a68d35631924b3b4ba7debe39dd1a328428c74eb1"
+    },
+    "PERF01-final-leases.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-final-leases.result.json",
+      "sha256": "973e003d35f3a3f5e7f977fd3d8a43063d7eeef477a58cace1350aa0df9fa4fd"
+    },
+    "PERF01-final-leases.stdout.log": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-final-leases.stdout.log",
+      "sha256": "4495e1e84fbe16bf5ce103944e1a2f5dfc3e3ec8282e9fb043c9b963db1c2fd2"
+    },
+    "PERF01-final-leases.junit.xml": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-final-leases.junit.xml",
+      "sha256": "25f6af2dffdd247f972410e81f0f02c16fa921544423e2c87502e677e14e9047"
+    },
+    "PERF01-final-tested-inputs.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-final-tested-inputs.json",
+      "sha256": "ee8bb4c1d7c8bbd6039eaa37355590a1bae4d1991a1689b718e7bfcfeb3c8c98"
+    },
+    "PERF01-revalidated-source.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-revalidated-source.json",
+      "sha256": "a4c8690fe51ce845666acf262e75ee86c928c380e933629483e38a9d67e82aa6"
+    },
+    "PERF01-final-code-files.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-final-code-files.json",
+      "sha256": "f722077e83bd6a29f2e14b85f50085b8b0973cfe59c73d5bdd9dda89db19327b"
+    },
+    "PERF01-capped-final-validation.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-capped-final-validation.result.json",
+      "sha256": "264e086f378a2a08e2e64dbf8480aaaf4bb717986a2dedb0355eecb428c0a7ab"
+    },
+    "PERF01-capped-final-validation.stdout": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-capped-final-validation.stdout",
+      "sha256": "ba70c93f4e44802d278b6d98c2b39a3706264e8da2b8f995bd9bcade2f9b575c"
+    },
+    "PERF01-capacity-v7.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-capacity-v7.result.json",
+      "sha256": "f5cb3442359118e0d5ea0ed7afa2339e3e92ec048fbd57f0a19ffc9fb9c5f79c"
+    },
+    "PERF01-capacity-v7.stdout": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-capacity-v7.stdout",
+      "sha256": "bf42518a73bc6d55ea418191ea8d58f611a04bce852a37ba6b5e03269c12618c"
+    },
+    "PERF01-image-e0e01df5c6a4.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-image-e0e01df5c6a4.json",
+      "sha256": "5793a624f6719ffe3df7c12a296a90d04f9df069bd79c715322b016097aebe67"
+    },
+    "PERF01-capacity-v7-recomputed.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-capacity-v7-recomputed.json",
+      "sha256": "6a1eafd79c0b73b65a5a008883981fdd3154bd5153d4d2b49c5e37662a2a1de4"
+    },
+    "PERF01-capacity-v7-independent.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-capacity-v7-independent.json",
+      "sha256": "f05adbcad8403e0de4496e0c7bc7541fc38c13b5bc2b31ddb2c651f6abda7984"
+    },
+    "PERF01-capacity-v7-data/perf01-run-kkfet2f4/perf01-report.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-capacity-v7-data/perf01-run-kkfet2f4/perf01-report.json",
+      "sha256": "d592456037d56c7d0a466b9cee674300cc6b23cb7a29a7a9b008c8f068322050"
+    },
+    "PERF01-capacity-v7-data/perf01-run-kkfet2f4/perf01-trace.jsonl": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-capacity-v7-data/perf01-run-kkfet2f4/perf01-trace.jsonl",
+      "sha256": "a29a71543d5a687bcf8796b35c2a3567c758aca630e093cb675873ed810253ca"
+    },
+    "PERF01-benchmark-measured-v7.py": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-benchmark-measured-v7.py",
+      "sha256": "2b3d3a1265d59f5a0c8aa1632c7ea56375831e76d76171bbb1efa336e2c6491e"
+    },
+    "PERF01-lead-postprocess-correction.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-lead-postprocess-correction.json",
+      "sha256": "add7e8a6c48be5e6d816ba8d9ed20c90089be75ba759bf75b79343f051d9d6c2"
+    },
+    "PERF01-lead-postprocess-correction.diff": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-lead-postprocess-correction.diff",
+      "sha256": "7f1956a115f5c637238fa72cfc9a1c1fd8fac1a7b492933590bef2c2529df86d"
+    },
+    "recompute_perf01_v7.py": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/recompute_perf01_v7.py",
+      "sha256": "217817e0ee892bdb9a88c88d23cf28ca1b03b3b93609cf020ff77cd1e6bf207e"
+    },
+    "verify_perf01_report.py": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/verify_perf01_report.py",
+      "sha256": "68326c3777c067cab308ece9045b520f25430a2ba3e04e8ff7b517043f5f2017"
+    },
+    "run_perf01_capacity.py": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/run_perf01_capacity.py",
+      "sha256": "01fbbe43fa13ea1d8316e1481775b89a432b0935917898227dd7a790f03f5820"
+    },
+    "PERF01-heartbeat-paired.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-heartbeat-paired.json",
+      "sha256": "ee789c98a534715615d287739abd3c7831fa7c996ce433a4b4a1aebc1c2e3cb7"
+    },
+    "PERF01-heartbeat-worker-handoff.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-heartbeat-worker-handoff.json",
+      "sha256": "40e52b9858787ba531174a73f29777ed75e2837e85354aa242cccc05be963bf9"
+    },
+    "PERF01-inventory-worker-handoff.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-inventory-worker-handoff.json",
+      "sha256": "5f2844a82859a458837aedfbec23a24ff1651e630694bdd4abf04171d0f166d4"
+    },
+    "PERF01-native-freshness-handoff.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-native-freshness-handoff.json",
+      "sha256": "3ed676d693c2858ac15b5e67171d6b674781d0943ab31a0ccc35e581d55d6b65"
+    },
+    "PERF01-LEAD-freshness.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-LEAD-freshness.result.json",
+      "sha256": "3326739a7036689711016d545652cf0ac74a25d02b0f62939cbf4223119c68ab"
+    },
+    "PERF01-LEAD-inventory.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-LEAD-inventory.result.json",
+      "sha256": "af570785981d07aded48cc6885017e7e3d3a8c7caf3188f11a0570883596d2be"
+    },
+    "PERF01-lead-heartbeat.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-lead-heartbeat.result.json",
+      "sha256": "6f3b7947213a3962846fde6aed4b71039ff1611e92705f0814ec088c7f4cd24d"
+    },
+    "PERF01-lead-aux-postrepair.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-lead-aux-postrepair.result.json",
+      "sha256": "1974441adaa1dd3df4f1c371120b16596d258aaa9ed83b43a1f713e3f5fdf1dd"
+    },
+    "PERF01-LEAD-viewer-final-syntax.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-LEAD-viewer-final-syntax.result.json",
+      "sha256": "52f71c6522d0cf8f1d1449dde6c6a5fd87457fab4db1b873cd84c3f05a15dac4"
+    },
+    "PERF01-capacity-v6.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01-capacity-v6.result.json",
+      "sha256": "255e664bd2fc9a641b1aeb542cfafeae1395ceda0f226446a684e5b41c64f3df"
+    }
+  },
+  "git_diagnostics_at_acceptance": {
+    "worktree": {
+      "exit": 0,
+      "diagnostics": ""
+    },
+    "staged": {
+      "exit": 0,
+      "diagnostics": ""
+    }
+  },
+  "immutable04_sha256": "dc87aacc4be82eedd0c7cd85d653cc4e17dcc152ee5b718a8bb2eec2954af5ee",
+  "release_and_production_gates": "UNCHANGED_NOT_VERIFIED_FOR_NEW_RELEASE",
+  "safety": "LOCAL/PAPER/FAKE only; no live account/order/cancel, broker-fee reception, production server/TLS/DNS changes, public dashboard activation, original-data deletion, push, merge, deployment, paid route or package installation.",
+  "next_ready_ticket": "REL-01",
+  "requested_three_ticket_batch_complete": true,
+  "private_acceptance_receipt": {
+    "path": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01.acceptance.json",
+    "sha256": "570c2755ebd39cd4e78ef7ccd1a831a3a99a24cef591a4e687411cb657816d3e"
+  }
+}

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from vibetrading.session_alerts import KST, session_state
+from operations.session_alerts import KST, session_state
 
 
 def _kst(year: int, month: int, day: int, hour: int, minute: int = 0) -> datetime:

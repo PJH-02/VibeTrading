@@ -6,12 +6,11 @@ import os
 
 import pytest
 
-from vibetrading.dedup import BoundedDedup
-from vibetrading.feed_recovery import EngineCursor
-from vibetrading.hot_path import HotPathStore, PreparedHistory
-from vibetrading.market_checkpoint import CheckpointCodec, CheckpointError, CheckpointProducer
-from vibetrading.models import (AssetClass, Bar1mEvent, BookUpdateType, IndexQuoteEvent,
-                               InstrumentId, OrderBookEvent, OrderBookLevel, TradeEvent, Venue)
+from core.dedup import BoundedDedup
+from feeds.feed_recovery import EngineCursor
+from market.hot_path import HotPathStore, PreparedHistory
+from storage.market_checkpoint import CheckpointCodec, CheckpointError, CheckpointProducer
+from core.models import AssetClass, Bar1mEvent, BookUpdateType, IndexQuoteEvent, InstrumentId, OrderBookEvent, OrderBookLevel, TradeEvent, Venue
 
 
 NOW = 1_792_281_600_000_000_000
@@ -86,7 +85,7 @@ def rewrite(payload, change):
 @pytest.fixture
 def frozen_clock(monkeypatch):
     clock = [MONOTONIC/1_000_000_000]
-    monkeypatch.setattr('vibetrading.dedup.monotonic', lambda:clock[0])
+    monkeypatch.setattr("core.dedup.monotonic", lambda:clock[0])
     return clock
 
 
@@ -283,7 +282,7 @@ def test_atomic_write_failure_does_not_report_success_or_leave_temporary_files(t
         calls.append(fd)
         if len(calls) == failed_sync:raise OSError('injected fsync failure')
         original(fd)
-    monkeypatch.setattr('vibetrading.market_checkpoint.os.fsync', fail)
+    monkeypatch.setattr("storage.market_checkpoint.os.fsync", fail)
     with pytest.raises(OSError):serializer.write(path, payload)
     assert path.read_bytes() == (payload if failed_sync == 3 else old)
     assert sorted(item.name for item in tmp_path.iterdir()) == ['checkpoint.json']

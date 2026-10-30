@@ -8,10 +8,10 @@ from pathlib import Path
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SETTINGS_SOURCE = REPO_ROOT / "src" / "vibetrading" / "settings.py"
-HEALTH_SOURCE = REPO_ROOT / "src" / "vibetrading" / "health.py"
-FV_MM_RUNNER_SOURCE = REPO_ROOT / "src" / "vibetrading" / "fv_mm" / "runner.py"
-FV_PILOT_RUNNER_SOURCE = REPO_ROOT / "src" / "vibetrading" / "fv_pilot" / "runner.py"
+SETTINGS_SOURCE = REPO_ROOT / "src" / "runtime" / "settings.py"
+HEALTH_SOURCE = REPO_ROOT / "src" / "operations" / "health.py"
+FV_MM_RUNNER_SOURCE = REPO_ROOT / "docs/archive/MOV-05-legacy-oracles/vibetrading" / "fv_mm" / "runner.py"
+FV_PILOT_RUNNER_SOURCE = REPO_ROOT / "docs/archive/MOV-05-legacy-oracles/vibetrading" / "fv_pilot" / "runner.py"
 PILOT_FV_MM_SELECTED = ("types.py", "market.py", "journal.py", "calibration.py")
 
 

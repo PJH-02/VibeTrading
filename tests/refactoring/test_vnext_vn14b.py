@@ -11,11 +11,10 @@ import pytest
 from test_execution_owner import build_owner
 from test_local_transport import budgets
 from test_outbox_isolation import _controller
-from vibetrading.feed_recovery import EngineCursor
-from vibetrading.local_transport import (LocalTransportServer, TransportError, encode_frame,
-    read_frame, request_command, LocalTransportClient)
-from vibetrading.telegram import TelegramController, TelegramRateLimit
-from vibetrading.telegram_state import TelegramState
+from feeds.feed_recovery import EngineCursor
+from runtime.local_transport import LocalTransportServer, TransportError, encode_frame, read_frame, request_command, LocalTransportClient
+from operations.telegram import TelegramController, TelegramRateLimit
+from operations.telegram_state import TelegramState
 
 
 def update(text='halt strategy strategy', **changes):
@@ -122,7 +121,7 @@ async def test_fresh_resume_verifies_owner_readiness_in_transaction_and_duplicat
 @pytest.mark.asyncio
 @pytest.mark.parametrize('initially_stale', [True,False])
 async def test_resume_uses_the_epoch_vector_bound_in_payload_before_readiness_callback(tmp_path, initially_stale):
-    from vibetrading.runtime_control import GateBlocked
+    from runtime.runtime_control import GateBlocked
 
     owner, _, ready, _ = build_owner(tmp_path)
     try:
@@ -193,7 +192,7 @@ async def test_expired_gateway_retry_returns_original_receipt_without_new_ttl(tm
             item = update()
             await bot._handle(None, item)
             before = owner.control.snapshot('strategy')
-            monkeypatch.setattr('vibetrading.telegram.time.time_ns', lambda:(item['message']['date']+1000)*1_000_000_000)
+            monkeypatch.setattr("operations.telegram.time.time_ns", lambda:(item['message']['date']+1000)*1_000_000_000)
             await bot._handle(None, item)
             assert owner.control.snapshot('strategy') == before
             assert owner.ledger._db.execute('SELECT COUNT(*) FROM owner_commands').fetchone()[0] == 1

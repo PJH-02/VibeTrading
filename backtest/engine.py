@@ -17,19 +17,7 @@ from typing import Dict, Iterator, List, Optional, Tuple
 
 from shared.fill_logic import FillResult, get_fill_simulator
 from shared.config import get_settings
-from shared.models import (
-    Candle,
-    Fill,
-    Market,
-    Order,
-    OrderSide,
-    OrderType,
-    Position,
-    Signal,
-    SignalAction,
-    TradingMode,
-    TeamType,
-)
+from strategies.legacy.models import Candle, Fill, Market, Order, OrderSide, OrderType, Position, Signal, SignalAction, TradingMode, TeamType
 from services.execution.broker_stub import BrokerStub
 from services.signal_gen.engine import SignalGenerationEngine
 

@@ -17,12 +17,11 @@ from test_strategy_runtime import (T, BTC, book, budget, deliver, ledger_at,
                                    matcher_for, runtime, trade)
 from test_vn13_file_registration import configured, strategy_files
 from test_runtime_checkpoint_integration import append, codec, producer
-from vibetrading.feed_recovery import EngineCursor, RecoveryFrame
-from vibetrading.local_engine import EngineBudgets, LocalMarketEngine
-from vibetrading.models import OrderDestination, OrderIntent, Side, SignalAction
-from vibetrading.runtime_checkpoint import RuntimeCheckpoint
-from vibetrading.trading_contracts import (ActionKind, ExecutionAction,
-                                           TradingMode)
+from feeds.feed_recovery import EngineCursor, RecoveryFrame
+from market.local_engine import EngineBudgets, LocalMarketEngine
+from core.models import OrderDestination, OrderIntent, Side, SignalAction
+from runtime.runtime_checkpoint import RuntimeCheckpoint
+from execution.trading_contracts import ActionKind, ExecutionAction, TradingMode
 
 SID = "tx05_e2e_strategy"
 BAD_SID = "tx05_bad_file"
@@ -35,7 +34,7 @@ CONFIG = {"quantity": "2", "limit_price": "99",
 def strategy_source(strategy_id=SID):
     """A real file-backed stateful strategy with an explicit checkpoint hook."""
     return f'''from decimal import Decimal as D
-from vibetrading.models import Signal, SignalAction
+from core.models import Signal, SignalAction
 
 STRATEGY_ID = {strategy_id!r}
 SUBSCRIPTIONS = [{{"instrument_key": {BTC.key!r}, "event_type": "order_book"}}]
@@ -84,7 +83,7 @@ def fault_source(strategy_id, failure):
                 '            valid_until_ts_ns=event.receive_ts_ns + 100_000,\n'
                 '            source_event_id=event.event_id)]')
     return f'''from decimal import Decimal as D
-from vibetrading.models import Signal, SignalAction
+from core.models import Signal, SignalAction
 
 STRATEGY_ID = {strategy_id!r}
 SUBSCRIPTIONS = [{{"instrument_key": {BTC.key!r}, "event_type": "order_book"}}]
@@ -101,7 +100,7 @@ def create_strategy():
 
 def healthy_source(strategy_id=GOOD_SID):
     return f'''from decimal import Decimal as D
-from vibetrading.models import Signal, SignalAction
+from core.models import Signal, SignalAction
 
 STRATEGY_ID = {strategy_id!r}
 SUBSCRIPTIONS = [{{"instrument_key": {BTC.key!r}, "event_type": "order_book"}}]
@@ -121,7 +120,7 @@ def create_strategy():
 
 
 def loaded(name):
-    return importlib.import_module("vibetrading.strategies." + name)
+    return importlib.import_module("strategies." + name)
 
 
 def actions_for(ledger, *, job_id=JOB_ID):

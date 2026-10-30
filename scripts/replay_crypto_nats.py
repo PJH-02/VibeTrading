@@ -68,8 +68,8 @@ def load_trace(path: Path, report_path: Path):
 
 
 async def replay(args, trace, inspection):
-    from vibetrading.bus import NatsJetStreamBus, dumps
-    from vibetrading.settings import RuntimeSettings
+    from runtime.bus import NatsJetStreamBus, dumps
+    from runtime.settings import RuntimeSettings
     settings = RuntimeSettings.from_env(args.env)
     if settings.nats.url != TEST_NATS_URL:
         raise RuntimeError('only disposable r2-load-nats endpoint is allowed')

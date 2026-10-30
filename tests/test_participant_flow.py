@@ -3,12 +3,12 @@ from pathlib import Path
 
 import pyarrow.parquet as pq
 
-from vibetrading.bus import InMemoryEventBus
-from vibetrading.models import EventType
-from vibetrading.parquet_store import ParquetBatchWriter
-from vibetrading.providers.kis import kis_participant_flow_events
-from vibetrading.settings import RuntimeSettings
-from vibetrading.sqlite_store import RuntimeStore
+from runtime.bus import InMemoryEventBus
+from core.models import EventType
+from storage.parquet_store import ParquetBatchWriter
+from feeds.providers.kis import kis_participant_flow_events
+from runtime.settings import RuntimeSettings
+from storage.sqlite_store import RuntimeStore
 
 
 def test_kis_participant_flow_preserves_buy_sell_and_net_values(tmp_path: Path) -> None:

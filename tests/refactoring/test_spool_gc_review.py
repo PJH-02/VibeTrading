@@ -8,12 +8,12 @@ from types import SimpleNamespace
 import pytest
 
 from test_retained_storage import item, write_source, capture, budgets, observation, trade, wire
-from vibetrading.archive import ArchiveMaintenance
-from vibetrading.local_storage import LocalSpoolStorage
-from vibetrading.market_spool import SpoolCursor
-from vibetrading.settings import RuntimeSettings
-from vibetrading.sqlite_store import RuntimeStore
-from vibetrading.storage_backend import LocalStorageBackend,sha256_file
+from storage.archive import ArchiveMaintenance
+from storage.local_storage import LocalSpoolStorage
+from storage.market_spool import SpoolCursor
+from runtime.settings import RuntimeSettings
+from storage.sqlite_store import RuntimeStore
+from storage.storage_backend import LocalStorageBackend, sha256_file
 
 
 @pytest.fixture(params=("legacy","compact"))
@@ -197,7 +197,7 @@ def test_independent_intent_parent_rebinding_cannot_overwrite_spool_checkpoint(s
 
 
 def test_independent_evidence_iterable_capacity_is_checked_before_materialization(setup):
-    from vibetrading.market_spool import read_spool_records
+    from storage.market_spool import read_spool_records
     s=setup();accepted(s)
     record=next(read_spool_records(s.source.spool_root,producer_id=s.source.producer,
         incarnation=s.source.incarnation,**s.source.limits.reader_kwargs))

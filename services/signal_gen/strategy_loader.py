@@ -6,6 +6,6 @@ The canonical implementation and cache live in
 
 import sys
 
-from vibetrading.strategies.legacy import candle_loader as _canonical
+from strategies.legacy import candle_loader as _canonical
 
 sys.modules[__name__] = _canonical

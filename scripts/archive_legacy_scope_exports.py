@@ -7,8 +7,8 @@ import json
 import time
 from pathlib import Path
 
-from vibetrading.settings import get_settings
-from vibetrading.storage_backend import archive_backend, sha256_file
+from runtime.settings import get_settings
+from storage.storage_backend import archive_backend, sha256_file
 
 settings = get_settings()
 backend = archive_backend(settings)

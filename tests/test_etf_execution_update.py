@@ -7,10 +7,10 @@ from decimal import Decimal
 import pandas as pd
 import pytest
 
-from vibetrading.etf_csv_history import CsvStrategyHistory, ETF_HISTORY_ROLES, CSV_FILES
-from vibetrading.etf_journal import EtfJournal
-from vibetrading.etf_trading import EtfTradingLoop
-from vibetrading.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
+from storage.etf_csv_history import CsvStrategyHistory, ETF_HISTORY_ROLES, CSV_FILES
+from portfolio.etf_journal import EtfJournal
+from runtime.etf_trading import EtfTradingLoop
+from core.models import AssetClass, InstrumentId, OrderDestination, OrderIntent, Side, Venue
 
 
 class AccountBroker:
@@ -169,7 +169,7 @@ def test_missing_leverage_or_inverse_history_is_not_a_complete_reference_bundle(
 
 
 def test_execution_vehicles_have_independent_prior_prices_and_cannot_drive_signals(tmp_path):
-    from vibetrading.etf_history import EtfHistory
+    from strategies.kr.etf_history import EtfHistory
     reference = make_references(tmp_path/'history')
     history = EtfHistory(None,tmp_path/'warmup')
     history.day = '2026-09-30'
@@ -193,7 +193,7 @@ def test_execution_vehicles_have_independent_prior_prices_and_cannot_drive_signa
     ('KD',1,1.,{'229200'}),('KD',-1,1.,{'251340'}),
 ])
 async def test_kp_leverage_and_kd_short_route_to_actual_vehicles(tmp_path,strategy,direction,leverage,expected,acquire_owner):
-    from vibetrading.etf_history import EtfHistory
+    from strategies.kr.etf_history import EtfHistory
     reference = make_references(tmp_path/'history')
     history = EtfHistory(None,tmp_path/'warmup')
     history.day = '2026-09-30'
@@ -229,8 +229,8 @@ async def test_kp_leverage_and_kd_short_route_to_actual_vehicles(tmp_path,strate
 @pytest.mark.asyncio
 @pytest.mark.parametrize('symbol',['122630','251340'])
 async def test_live_vehicle_minutes_are_kept_without_changing_base_signals(symbol):
-    from vibetrading.models import Bar1mEvent
-    from vibetrading.providers.kiwoom import KST
+    from core.models import Bar1mEvent
+    from feeds.providers.kiwoom import KST
     from datetime import datetime
     now = datetime.now(KST)
     close = now.replace(hour=9,minute=30,second=0,microsecond=0)

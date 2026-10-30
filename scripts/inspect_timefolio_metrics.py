@@ -3,7 +3,7 @@ import asyncio
 import json
 import os
 import re
-from vibetrading.timefolio.client import AsyncTimefolioBrowserManager, TimefolioCredentials
+from timefolio.client import AsyncTimefolioBrowserManager, TimefolioCredentials
 
 
 async def main():

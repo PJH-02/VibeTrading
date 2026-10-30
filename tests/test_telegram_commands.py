@@ -9,9 +9,9 @@ from zoneinfo import ZoneInfo
 import aiohttp
 import pytest
 
-from vibetrading.etf_journal import EtfJournal
-from vibetrading.telegram_trade import trade_report
-from vibetrading.kis_execution import KisCashBroker
+from portfolio.etf_journal import EtfJournal
+from operations.telegram_trade import trade_report
+from execution.kis_execution import KisCashBroker
 from test_telegram_status import _controller
 
 
@@ -51,7 +51,7 @@ async def test_reply_failure_retries_before_advancing_update(tmp_path, monkeypat
         if len(handled)==1: raise aiohttp.ClientConnectionError('offline')
     async def sleep(delay): pass
     bot._api=api; bot._handle=handle
-    monkeypatch.setattr('vibetrading.telegram.asyncio.sleep',sleep)
+    monkeypatch.setattr("operations.telegram.asyncio.sleep",sleep)
     with pytest.raises(asyncio.CancelledError): await bot._poll_loop(None,25)
     assert len(handled)==2 and offsets==[0,43]
 
@@ -93,7 +93,7 @@ async def test_polling_runs_even_when_nats_never_connects(tmp_path,monkeypatch):
         async def connect(self,**kwargs):
             await asyncio.Event().wait()
         async def close(self): pass
-    monkeypatch.setattr('vibetrading.telegram.NatsJetStreamBus',Bus)
+    monkeypatch.setattr("operations.telegram.NatsJetStreamBus",Bus)
     async def poll(*args): reached.append(True)
     async def idle(*args): await asyncio.Event().wait()
     bot._poll_loop=poll; bot._crypto_health_loop=idle; bot._mock_notifications_loop=idle
@@ -149,7 +149,7 @@ def test_close_report_wins_over_nightly_zero_balance_reset(tmp_path):
 
 @pytest.mark.asyncio
 async def test_account_refresh_preserves_close_without_reading_reset_balance(tmp_path):
-    from vibetrading.etf_trading import EtfTradingLoop
+    from runtime.etf_trading import EtfTradingLoop
     loop=EtfTradingLoop.__new__(EtfTradingLoop)
     loop.journal=EtfJournal(tmp_path/'journal.sqlite3')
     data={'day':'2026-10-14','net_pnl':'-135','fees':'40'}

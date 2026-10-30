@@ -11,8 +11,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from vibetrading.local_events import FactsEventBudgets, LocalFactsEventBus
-from vibetrading.telegram import TelegramController
+from storage.local_events import FactsEventBudgets, LocalFactsEventBus
+from operations.telegram import TelegramController
 
 
 def budgets(**updates):
@@ -48,7 +48,7 @@ def cursor(path,durable='fixture'):
 
 
 def test_checkpoint_pin_blocks_new_writes_and_restarts_without_wal_growth(tmp_path):
-    from vibetrading.local_events import _FactsSession, checkpoint_storage_reserve
+    from storage.local_events import _FactsSession, checkpoint_storage_reserve
     source=tmp_path/'facts.sqlite3';checkpoint=tmp_path/'events.sqlite3'
     facts(source)
     session=_FactsSession(source,checkpoint,budgets())
@@ -81,7 +81,7 @@ def test_checkpoint_pin_blocks_new_writes_and_restarts_without_wal_growth(tmp_pa
 
 
 def test_checkpoint_oversize_wal_is_rejected_before_opening_writer(tmp_path):
-    from vibetrading.local_events import _FactsSession
+    from storage.local_events import _FactsSession
     source=tmp_path/'facts.sqlite3';checkpoint=tmp_path/'events.sqlite3'
     facts(source)
     wal=checkpoint.with_name(checkpoint.name+'-wal')
@@ -92,10 +92,10 @@ def test_checkpoint_oversize_wal_is_rejected_before_opening_writer(tmp_path):
 
 
 def test_checkpoint_space_reservation_precedes_database_creation(tmp_path,monkeypatch):
-    from vibetrading.local_events import _FactsSession
+    from storage.local_events import _FactsSession
     source=tmp_path/'facts.sqlite3';checkpoint=tmp_path/'events.sqlite3'
     facts(source)
-    monkeypatch.setattr('vibetrading.local_events.shutil.disk_usage',lambda _path:SimpleNamespace(free=1))
+    monkeypatch.setattr("storage.local_events.shutil.disk_usage",lambda _path:SimpleNamespace(free=1))
     with pytest.raises(RuntimeError,match='free space'):
         _FactsSession(source,checkpoint,budgets())
     assert not checkpoint.exists()
@@ -112,7 +112,7 @@ def no_nats(monkeypatch):
     def unavailable(*args,**kwargs):
         raise AssertionError('local facts cannot construct or connect NATS')
     monkeypatch.setattr('nats.connect',unavailable)
-    monkeypatch.setattr('vibetrading.telegram.NatsJetStreamBus',unavailable)
+    monkeypatch.setattr("operations.telegram.NatsJetStreamBus",unavailable)
 
 
 @pytest.mark.asyncio
@@ -321,7 +321,7 @@ async def test_telegram_run_uses_injected_bus_without_nats_constructor(tmp_path,
     async def wait(*args):await asyncio.Event().wait()
     bot._poll_loop=stop
     bot._event_bridge_loop=bot._crypto_health_loop=bot._market_health_loop=bot._mock_notifications_loop=bot._sender_loop=wait
-    monkeypatch.setattr('vibetrading.telegram.aiohttp.ClientSession',Session)
+    monkeypatch.setattr("operations.telegram.aiohttp.ClientSession",Session)
     with pytest.raises(RuntimeError,match='fixture shutdown'):
         await bot.run()
     assert event_bus.closed
@@ -449,7 +449,7 @@ async def test_bus_factory_recovers_when_facts_appear_after_missing_source_start
     async def short_sleep(seconds):
         await original_sleep(min(seconds,.01))
     monkeypatch.setattr(bot,'_event_bridge',bridge)
-    monkeypatch.setattr('vibetrading.telegram.asyncio.sleep',short_sleep)
+    monkeypatch.setattr("operations.telegram.asyncio.sleep",short_sleep)
     task=asyncio.create_task(bot._event_bridge_loop(None))
     try:
         await asyncio.wait_for(ready.wait(),timeout=2)

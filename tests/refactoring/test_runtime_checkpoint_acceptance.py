@@ -8,11 +8,11 @@ import pytest
 
 from test_checkpoint_startup import producer, append
 from test_strategy_runtime import (T, BTC, ledger_at, matcher_for, runtime, registration, book)
-from vibetrading.hot_path import HotPathStore
-from vibetrading.local_engine import LocalMarketEngine, EngineBudgets
-from vibetrading.market_checkpoint import CheckpointCodec
-from vibetrading.runtime_checkpoint import RuntimeCheckpoint
-from vibetrading.etf_trading import EtfTradingLoop, EtfDispatchBlocked
+from market.hot_path import HotPathStore
+from market.local_engine import LocalMarketEngine, EngineBudgets
+from storage.market_checkpoint import CheckpointCodec
+from runtime.runtime_checkpoint import RuntimeCheckpoint
+from runtime.etf_trading import EtfTradingLoop, EtfDispatchBlocked
 
 
 def fixture(root, *, fresh, now=None, corrupt_restore=None, no_callback=False, two_accounts=False):
@@ -277,7 +277,7 @@ async def test_readiness_cannot_mutate_restored_plugin_behind_cached_proof(tmp_p
 
 def legacy_etf(root, initialization_calls):
     import asyncio
-    from vibetrading.etf_journal import EtfJournal
+    from portfolio.etf_journal import EtfJournal
     etf = EtfTradingLoop.__new__(EtfTradingLoop)
     etf.journal = EtfJournal(root / "legacy-etf.sqlite")
     etf.journal.initialize(Decimal(3000), "hashed-mock-identity")
@@ -334,7 +334,7 @@ async def test_real_legacy_etf_journal_and_paper_share_recovery_boundary(tmp_pat
 
 @pytest.mark.asyncio
 async def test_real_driver_requires_explicit_readiness_before_setup(tmp_path):
-    from vibetrading.local_runtime import run_engine
+    from runtime.local_runtime import run_engine
     source = fixture(tmp_path, fresh=True)
     try:
         with pytest.raises(ValueError, match="(?i)readiness"):
@@ -348,9 +348,9 @@ async def test_real_driver_requires_explicit_readiness_before_setup(tmp_path):
 @pytest.mark.parametrize("corrupt", [False, True])
 async def test_real_driver_starts_transport_and_etf_only_after_group_ready(tmp_path, monkeypatch, corrupt):
     from dataclasses import asdict
-    import vibetrading.local_runtime as driver
-    import vibetrading.local_observation as observations
-    import vibetrading.local_snapshot as snapshots
+    import runtime.local_runtime as driver
+    import operations.local_observation as observations
+    import market.local_snapshot as snapshots
     source = fixture(tmp_path, fresh=True)
     etf_source = legacy_etf(tmp_path, [])
     input_book(source, 1)
@@ -500,7 +500,7 @@ async def test_two_real_account_journals_restore_together_or_fence_together(tmp_
                 await target.manager.restore(target.engine, [target.item], paper_runtime=target.host,
                                              readiness=lambda *args: True)
             assert target.manager.state == "QUARANTINED"
-            from vibetrading.local_engine import EngineError
+            from market.local_engine import EngineError
             with pytest.raises(EngineError, match="engine_closed"):
                 input_book(target, 2)
             target.host.advance(T+100)

@@ -3,10 +3,10 @@ import time
 from decimal import Decimal
 
 from test_telegram_status import _controller
-from vibetrading.etf_journal import EtfJournal
-from vibetrading.telegram import TelegramController
-from vibetrading.telegram_trade import trade_report
-from vibetrading.trade_reporting import adjusted_report, daily_report_view
+from portfolio.etf_journal import EtfJournal
+from operations.telegram import TelegramController
+from operations.telegram_trade import trade_report
+from operations.trade_reporting import adjusted_report, daily_report_view
 
 
 def fixture(tmp_path):

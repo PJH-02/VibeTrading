@@ -9,11 +9,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from vibetrading import market_spool
-from vibetrading.market_spool import (
-    MarketSpool, SpoolCorruption, SpoolCursor, SpoolError, SpoolReader, SpoolRotateRequired,
-    read_spool_records, scan_spool,
-)
+from storage import market_spool
+from storage.market_spool import MarketSpool, SpoolCorruption, SpoolCursor, SpoolError, SpoolReader, SpoolRotateRequired, read_spool_records, scan_spool
 
 
 def limits(**updates):

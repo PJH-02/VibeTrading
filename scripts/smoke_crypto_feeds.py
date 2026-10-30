@@ -8,9 +8,9 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-from vibetrading.models import Venue
-from vibetrading.hot_path import HotPathStore
-from vibetrading.providers.crypto_perp import CryptoPerpCollector
+from core.models import Venue
+from market.hot_path import HotPathStore
+from feeds.providers import create_perp_collector
 
 
 class CountingBus:
@@ -48,7 +48,7 @@ async def main() -> int:
     args=parser.parse_args()
     bus=CountingBus(args.capture_path)
     try:
-        await CryptoPerpCollector(Venue(args.venue)).run(bus,duration_sec=args.duration_sec)
+        await create_perp_collector(Venue(args.venue)).run(bus,duration_sec=args.duration_sec)
         status="ok"
     except Exception as exc:
         status=f"{type(exc).__name__}: {exc}"

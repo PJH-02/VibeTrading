@@ -7,12 +7,12 @@ import numpy as np
 import pandas as pd
 import pytest
 
-import vibetrading.etf_history as etf_history_module
-from vibetrading.etf_history import EtfHistory
-from vibetrading.etf_trading import intraday_decision as legacy_intraday_decision
-from vibetrading.strategies.kr import kd, kp
-from vibetrading.strategies.kr._intraday import intraday_decision as pure_intraday_decision
-from vibetrading.strategies.kr.c3 import open_decision
+import strategies.kr.etf_history as etf_history_module
+from strategies.kr.etf_history import EtfHistory
+from runtime.etf_trading import intraday_decision as legacy_intraday_decision
+from strategies.kr import kd, kp
+from strategies.kr._intraday import intraday_decision as pure_intraday_decision
+from strategies.kr.c3 import open_decision
 
 
 ORACLE = runpy.run_path(
@@ -224,7 +224,7 @@ def test_etf_history_c3_delegates_exact_inputs_to_pure_open_decision(monkeypatch
         return real_open_decision(z, mis, sigma)
 
     monkeypatch.setattr(etf_history_module, 'open_decision', spy)
-    monkeypatch.setattr('vibetrading.etf_csv_sync.latest_completed_session',
+    monkeypatch.setattr("feeds.etf_csv_sync.latest_completed_session",
                         lambda name, now, grace_minutes=10: str(history.us.index.max().date()))
     leverage, detail = history.c3(100., 200.)
     assert set(captured) == {'z', 'mis', 'sigma'}

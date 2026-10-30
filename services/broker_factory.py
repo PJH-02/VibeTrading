@@ -13,7 +13,7 @@ import logging
 from typing import Optional
 
 from shared.config import get_settings
-from shared.models import Market
+from strategies.legacy.models import Market
 from services.data_feed.base import DataFeedProvider
 from services.execution.base import BrokerAdapter
 

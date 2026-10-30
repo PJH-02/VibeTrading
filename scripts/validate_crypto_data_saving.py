@@ -10,7 +10,7 @@ import asyncio
 from datetime import datetime, timezone
 from decimal import Decimal
 
-from shared.models import Candle, Market
+from strategies.legacy.models import Candle, Market
 from services.data_feed.crypto_feed import CryptoDataFeed
 import services.data_feed.crypto_feed as crypto_feed_module
 

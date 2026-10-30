@@ -4,11 +4,11 @@ import argparse
 import asyncio
 from collections import Counter
 
-from vibetrading.collection_timing import MINUTE_NS
-from vibetrading.models import EventType
-from vibetrading.providers.binance import BinanceCollector
-from vibetrading.providers.hyperliquid import HyperliquidCollector
-from vibetrading.universe_config import configured_binance_securities, configured_hyperliquid_securities
+from feeds.collection_timing import MINUTE_NS
+from core.models import EventType
+from feeds.providers.binance import BinanceCollector
+from feeds.providers.hyperliquid import HyperliquidCollector
+from feeds.universe_config import configured_binance_securities, configured_hyperliquid_securities
 
 
 class CountingBus:

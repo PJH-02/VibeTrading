@@ -22,9 +22,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from vibetrading.settings import get_settings
-from vibetrading.sqlite_store import RuntimeStore
-from vibetrading.storage_backend import archive_backend
+from runtime.settings import get_settings
+from storage.sqlite_store import RuntimeStore
+from storage.storage_backend import archive_backend
 
 
 def sha256_file(path: Path) -> str:

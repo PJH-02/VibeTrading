@@ -4,12 +4,13 @@ from decimal import Decimal
 
 import pytest
 
-from vibetrading.bus import InMemoryEventBus, subject_for_event
-from vibetrading.bybit_execution import BybitAudit, BybitExecutionProbe, _market_trigger_price
-from vibetrading.hot_path import HotPathStore
-from vibetrading.market_source_status import source_status
-from vibetrading.models import BookUpdateType, OrderBookEvent, OrderBookLevel, Venue
-from vibetrading.providers.crypto_perp import CryptoPerpCollector, _instrument
+from runtime.bus import InMemoryEventBus, subject_for_event
+from execution.bybit_execution import BybitAudit, BybitExecutionProbe, _market_trigger_price
+from market.hot_path import HotPathStore
+from market.market_source_status import source_status
+from core.models import BookUpdateType, OrderBookEvent, OrderBookLevel, Venue
+from feeds.providers import create_perp_collector
+from feeds.providers.perp_common import _instrument
 
 
 def test_market_trigger_quote_keeps_postonly_buy_non_crossing():
@@ -21,13 +22,13 @@ def test_market_trigger_quote_keeps_postonly_buy_non_crossing():
 def test_book_original_frame_reaches_parquet(tmp_path):
     import pyarrow.parquet as pq
 
-    from vibetrading.parquet_store import ParquetBatchWriter
-    from vibetrading.settings import RuntimeSettings
-    from vibetrading.sqlite_store import RuntimeStore
+    from storage.parquet_store import ParquetBatchWriter
+    from runtime.settings import RuntimeSettings
+    from storage.sqlite_store import RuntimeStore
 
     async def collect():
         bus = InMemoryEventBus()
-        await CryptoPerpCollector(Venue.BYBIT, ("BTCUSDT",))._book(
+        await create_perp_collector(Venue.BYBIT, ("BTCUSDT",))._book(
             bus, "BTCUSDT", 1, [["100", "2"]], [["101", "3"]],
             BookUpdateType.SNAPSHOT, 10, raw_payload='{"topic":"orderbook.50.BTCUSDT"}',
         )
@@ -50,7 +51,7 @@ def test_book_original_frame_reaches_parquet(tmp_path):
 def test_raw_crypto_book_and_live_book_gap(tmp_path):
     async def scenario():
         bus = InMemoryEventBus()
-        collector = CryptoPerpCollector(Venue.BITGET, ("BTCUSDT",))
+        collector = create_perp_collector(Venue.BITGET, ("BTCUSDT",))
         await collector._book(bus, "BTCUSDT", 1, [["100", "2"]], [["101", "3"]],
                               BookUpdateType.SNAPSHOT, 10, channel="books")
         await collector._book(bus, "BTCUSDT", 2, [["100", "0"], ["99", "4"]], [],

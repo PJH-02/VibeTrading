@@ -7,8 +7,8 @@ import json
 import os
 from pathlib import Path
 
-from vibetrading.settings import get_settings
-from vibetrading.storage_backend import archive_backend
+from runtime.settings import get_settings
+from storage.storage_backend import archive_backend
 
 SHA = '33b552ff03bcc3caa72671f1995c7ed7ff699d48e7fc2e8bf69142db3ca4e84e'
 SIZE = 1436606464

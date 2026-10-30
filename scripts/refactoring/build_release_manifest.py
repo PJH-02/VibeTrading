@@ -10,6 +10,28 @@ from pathlib import Path
 
 
 PACKAGE = "vibetrading"
+DOMAIN_PACKAGES = ("core", "feeds", "market", "storage", "strategies", "execution",
+                   "portfolio", "runtime", "operations", "timefolio")
+
+
+def canonical_source_hashes(root: Path) -> dict[str, str]:
+    """Hash actual flat-domain sources; never substitute the old monolith."""
+    sources = {}
+    if (root / "src").is_symlink():
+        raise ValueError("canonical source root symlink rejected")
+    for name in DOMAIN_PACKAGES:
+        package = root / "src" / name
+        if package.is_symlink():
+            raise ValueError("canonical package symlink rejected")
+        if not package.is_dir():
+            raise FileNotFoundError(f"canonical package missing: {name}")
+        for path in sorted(package.rglob("*")):
+            if path.is_symlink() or any(parent.is_symlink() for parent in path.parents if parent != root):
+                raise ValueError("canonical source symlink rejected")
+            if not path.is_file() or path.suffix != ".py":
+                continue
+            sources[path.relative_to(root).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
+    return sources
 
 
 def source_package(root: Path) -> Path:
@@ -28,14 +50,27 @@ def source_package(root: Path) -> Path:
 def build(root: Path, snapshot: dict) -> dict:
     baseline = json.loads((root/"docs/refactoring/baseline_manifest.json").read_text(encoding="utf-8"))
     before = baseline["files"]
-    package = source_package(root)
     sources = {}
     changed = {}
-    for path in sorted(package.rglob("*.py")):
-        if "__pycache__" in path.parts:
-            continue
-        name = (Path(PACKAGE)/path.relative_to(package)).as_posix()
-        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    if (root / "src" / "runtime").is_dir():
+        # Canonical flat domains are the release inventory; a legacy
+        # vibetrading package is neither required nor consulted here.
+        flat_sources = canonical_source_hashes(root)
+    else:
+        flat_sources = {}
+        package = source_package(root)
+        for path in sorted(package.rglob("*.py")):
+            if "__pycache__" in path.parts:
+                continue
+            name = (Path(PACKAGE)/path.relative_to(package)).as_posix()
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+            sources[name] = digest
+            old = before.get(name)
+            if isinstance(old, dict):
+                old = old.get("sha256")
+            if old != digest:
+                changed[name] = {"before_sha256":old,"after_sha256":digest}
+    for name, digest in flat_sources.items():
         sources[name] = digest
         old = before.get(name)
         if isinstance(old, dict):

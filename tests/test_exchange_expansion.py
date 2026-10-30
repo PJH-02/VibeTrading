@@ -11,17 +11,17 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from eth_account import Account
 from eth_account.messages import encode_typed_data
 
-from vibetrading.bus import InMemoryEventBus
-from vibetrading.collection_timing import CollectionContext
-from vibetrading.extended_brokers import ArcusBrokerAdapter, GrvtBrokerAdapter, GRVT_ORDER_TYPES, OrderOutcomeUnknown
-from vibetrading.hot_path import HotPathStore
-from vibetrading.market_policy import MarketDataPolicyBus
-from vibetrading.models import OrderIntent, OrderDestination, Side, Venue
-from vibetrading.providers.crypto_perp import _instrument
-from vibetrading.providers.extended_perp import ExtendedPerpCollector
-from vibetrading.providers.hyperliquid import HyperliquidCollector
-from vibetrading.runtime import _CollectorReadinessBus
-from vibetrading.settings import RuntimeSettings
+from runtime.bus import InMemoryEventBus
+from feeds.collection_timing import CollectionContext
+from execution.extended_brokers import ArcusBrokerAdapter, GrvtBrokerAdapter, GRVT_ORDER_TYPES, OrderOutcomeUnknown
+from market.hot_path import HotPathStore
+from market.market_policy import MarketDataPolicyBus
+from core.models import OrderIntent, OrderDestination, Side, Venue
+from feeds.providers.perp_common import _instrument
+from feeds.providers import create_perp_collector
+from feeds.providers.hyperliquid import HyperliquidCollector
+from runtime.runtime import _CollectorReadinessBus
+from runtime.settings import RuntimeSettings
 
 
 def settings(tmp_path, **env):
@@ -60,12 +60,12 @@ def test_native_identifiers_and_quote_currency_are_not_fabricated():
     assert _instrument(Venue.GRVT,'BTCUSDT').raw_symbol=='BTC_USDT_Perp'
     assert _instrument(Venue.ARCUS,'BTCUSDT').raw_symbol=='BTC-USD'
     assert _instrument(Venue.ARCUS,'BTCUSDT').currency=='USD'
-    with pytest.raises(ValueError): ExtendedPerpCollector(Venue.ARCUS,('SKHYUSDT',))
+    with pytest.raises(ValueError): create_perp_collector(Venue.ARCUS,('SKHYUSDT',))
 
 
 def test_arcus_snapshot_boundary_duplicate_and_real_gap():
     async def scenario():
-        c=ExtendedPerpCollector(Venue.ARCUS,('BTCUSDT',)); b=InMemoryEventBus()
+        c=create_perp_collector(Venue.ARCUS,('BTCUSDT',)); b=InMemoryEventBus()
         async def send(seq,kind='channel_data',bids=None):
             m={'type':kind,'channel':'l2OrderbookUpdates','id':'BTC-USD',
                 'contents':{'lastSequenceId':seq,'globalSequenceId':seq*100,'bids':bids or [['100','1']],'asks':[['101','2']]}}
@@ -84,7 +84,7 @@ def test_arcus_snapshot_boundary_duplicate_and_real_gap():
 
 def test_grvt_ack_baseline_nanoseconds_and_gap():
     async def scenario():
-        c=ExtendedPerpCollector(Venue.GRVT,('BTCUSDT',)); b=InMemoryEventBus()
+        c=create_perp_collector(Venue.GRVT,('BTCUSDT',)); b=InMemoryEventBus()
         await c._grvt_message(b,{'result':{'stream':'v1.book.d','subs':['BTC_USDT_Perp@100'],
             'first_sequence_number':['123']}},'ack')
         async def send(seq,previous):
@@ -106,7 +106,7 @@ def test_grvt_ack_baseline_nanoseconds_and_gap():
 
 def test_arcus_missing_timestamp_stays_null_and_trade_side_unknown():
     async def scenario():
-        c=ExtendedPerpCollector(Venue.ARCUS); b=InMemoryEventBus()
+        c=create_perp_collector(Venue.ARCUS); b=InMemoryEventBus()
         await c._arcus_message(b,{'channel':'trades','id':'BTC-USD','contents':[
             {'tradeId':'fill-1','price':'100','size':'1','timestamp':1700000000000001}]},'raw')
         assert b.messages[0].data['source_ts_ns']==1700000000000001000
@@ -117,11 +117,11 @@ def test_arcus_missing_timestamp_stays_null_and_trade_side_unknown():
 
 @pytest.mark.parametrize('venue',[Venue.ARCUS,Venue.GRVT])
 def test_new_venues_pass_explicit_policy(venue):
-    c=ExtendedPerpCollector(venue)
+    c=create_perp_collector(venue)
     async def scenario():
         b=InMemoryEventBus()
-        await c._book(b,'BTCUSDT',None,[['100','1']],[['101','1']],__import__('vibetrading.models',fromlist=['BookUpdateType']).BookUpdateType.SNAPSHOT,1)
-        from vibetrading.models import event_from_dict
+        await c._book(b,'BTCUSDT',None,[['100','1']],[['101','1']],__import__("core.models",fromlist=['BookUpdateType']).BookUpdateType.SNAPSHOT,1)
+        from core.models import event_from_dict
         assert MarketDataPolicyBus(b)._allowed(event_from_dict(b.messages[0].data))
     asyncio.run(scenario())
 
@@ -208,7 +208,7 @@ def test_ambiguous_order_transport_failure_never_retried(tmp_path):
 
 
 def test_split_disk_guard_checks_nats_even_with_free_300gb(tmp_path,monkeypatch):
-    import vibetrading.storage_guard as module
+    import storage.storage_guard as module
     env=settings(tmp_path,STORAGE_DATA_DISK_ROOT='/large',STORAGE_NATS_DISK_ROOT='/small',STORAGE_STATE_DISK_ROOT='/large')
     def usage(path): return SimpleNamespace(total=300*1024**3,free=(1 if str(path)=='/small' else 280)*1024**3)
     monkeypatch.setattr(module.shutil,'disk_usage',usage)

@@ -2,3 +2,21 @@
 docs/refactoring/runs/20261020-production/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 docs/refactoring/runs/20261020-vnext/vn00-package/*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 docs/refactoring/vnext/*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+docs/refactoring/runs/20261018-stage-assignment/*_oracle.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Historical oracle archives and a touched CRLF source retain exact source bytes.
+docs/archive/MOV-05-legacy-oracles/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/strategies/legacy/candle_loader.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Preserve historical documentation bytes, including original CRLF.
+docs/archive/CLN-01-history/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/market/hot_path.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/runtime/etf_trading.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/strategies/kr/etf_history.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Preserve line endings in the STR-02 contract and legacy startup guards.
+src/strategies/contract.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/runtime/strategy_runner.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/timefolio/runner.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+src/execution/kis_execution.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+src/runtime/real_runner.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

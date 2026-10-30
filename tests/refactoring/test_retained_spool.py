@@ -9,10 +9,7 @@ import struct
 
 import pytest
 
-from vibetrading.market_spool import (
-    MarketSpool, RetainedPrefix, SpoolCorruption, SpoolCursor, SpoolError, SpoolReader,
-    SpoolRotateRequired, capture_retained_prefix, read_spool_records, scan_spool,
-)
+from storage.market_spool import MarketSpool, RetainedPrefix, SpoolCorruption, SpoolCursor, SpoolError, SpoolReader, SpoolRotateRequired, capture_retained_prefix, read_spool_records, scan_spool
 
 
 PRODUCER = "retained-collector"

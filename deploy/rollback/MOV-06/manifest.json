@@ -1,0 +1,55 @@
+{
+  "source_commit": "a6b3505130ae1a6c4f30ca24cbfb2dfb566bc931",
+  "primary": "deploy/primary-compose.yml",
+  "files": {
+    "docker-compose.yml": {
+      "archive": "deploy/rollback/MOV-06/docker-compose.yml",
+      "sha256": "03c07aa230960a1864803bfbe51b6f3f1976208f91166888c817ea3132384566",
+      "status": "HISTORICAL_NATS_ROLLBACK_ONLY",
+      "restore": "Restore bytes to original repository-relative path against original pinned images and original config; no automatic execution."
+    },
+    "deploy/crypto-profile.yml": {
+      "archive": "deploy/rollback/MOV-06/deploy/crypto-profile.yml",
+      "sha256": "51c80c7e732bdaef09a8249ccc2a08563202ba9125a1e73a188de4731085f0eb",
+      "status": "HISTORICAL_NATS_ROLLBACK_ONLY",
+      "restore": "Restore bytes to original repository-relative path against original pinned images and original config; no automatic execution."
+    },
+    "deploy/ls-market-profile.yml": {
+      "archive": "deploy/rollback/MOV-06/deploy/ls-market-profile.yml",
+      "sha256": "25eb12fdf05fe3e69192d81139e50bd083323442459b415ef9809cad81587d3f",
+      "status": "HISTORICAL_NATS_ROLLBACK_ONLY",
+      "restore": "Restore bytes to original repository-relative path against original pinned images and original config; no automatic execution."
+    },
+    "deploy/release1-overlay.yml": {
+      "archive": "deploy/rollback/MOV-06/deploy/release1-overlay.yml",
+      "sha256": "a84b732916f8a3c6cf8a0c5ca5e907db54db52a8753d30e27eb4df8f617c34b9",
+      "status": "HISTORICAL_NATS_ROLLBACK_ONLY",
+      "restore": "Restore bytes to original repository-relative path against original pinned images and original config; no automatic execution."
+    },
+    "deploy/dashboard-compose.yml": {
+      "archive": "deploy/rollback/MOV-06/deploy/dashboard-compose.yml",
+      "sha256": "404b2b9bbc3bf1459dc6ab988c3d8eec159d3963bc3c7e634ac4fcc8862f3e62",
+      "status": "HISTORICAL_NATS_ROLLBACK_ONLY",
+      "restore": "Restore bytes to original repository-relative path against original pinned images and original config; no automatic execution."
+    },
+    "deploy/vibetrading.service": {
+      "archive": "deploy/rollback/MOV-06/deploy/vibetrading.service",
+      "sha256": "629c2aafbfb2d163e76b500c33c4b27c34594fba27d574d60122f0b293754774",
+      "status": "HISTORICAL_NATS_ROLLBACK_ONLY",
+      "restore": "Restore bytes to original repository-relative path against original pinned images and original config; no automatic execution."
+    },
+    "deploy/vibetrading.cron.example": {
+      "archive": "deploy/rollback/MOV-06/deploy/vibetrading.cron.example",
+      "sha256": "b3d38984f3c1dc252fdde71035d5a408b16880ab7c91b41f0558f1374200729a",
+      "status": "HISTORICAL_NATS_ROLLBACK_ONLY",
+      "restore": "Restore bytes to original repository-relative path against original pinned images and original config; no automatic execution."
+    },
+    "deploy/Dockerfile.crypto-ledger": {
+      "archive": "deploy/rollback/MOV-06/deploy/Dockerfile.crypto-ledger",
+      "sha256": "0b076c9ef655c5caca6a83830fdf030c78ad0d46220fdbee2a6b41e91560ada2",
+      "status": "HISTORICAL_NATS_ROLLBACK_ONLY",
+      "restore": "Restore bytes to original repository-relative path against original pinned images and original config; no automatic execution."
+    }
+  },
+  "not_authorized": "No restore/deploy/server operation executed. Original docker-compose.yml and systemd/cron remain historical only. New primary is explicit opt-in; no NATS default."
+}
