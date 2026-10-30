@@ -394,6 +394,12 @@ Validate mode/capability/identity/feed/time/risk/nonce
 - Arcus `extended_brokers` has signed order; selected cancel/private reconciliation may need bridge. Hyperliquid SDK Signing/nonce composition exists but generic `perp_execution` with injected `Transport` is **not proof of production network runtime**.
 - For selected path capabilities check `submit`, `cancel`, `status`, `open_orders`, `fill/fee/funding`, `positions/balance`, `private_ws` or safe bounded polling, `reconcile`, `reconnect`, `instrument_metadata`, client ID/nonce, rate limit, `reduce_only/TIF`. Missing => `BLOCKED`, not silent stub.
 
+### QA-01에서 확인한 native 피드백 사실 계약 (2026-10-30)
+
+`ExecutionOwner.deliver_feedback`의 `StrategyOrderContext.execution`에는 현재 원장의 정확한 cut과 일치하는 검증된 snapshot이 있을 때만 `native_available_balances`(통화→정확한 문자열 금액), `native_available_quality`(`VALID`/`SYNTHETIC`), `native_available_observed_ns`, `native_available_local_ledger_version`을 제공한다. 누락·오래됨·다른 native 계좌·버전 불일치는 금액을 제공하지 않고 `UNAVAILABLE`로 표시한다. 기존 `filled_quantity`, `remaining_quantity`, `strategy_position`, `account_journal_position`, `account_version`은 동일한 최신 local cut을 사용하며, 관측되지 않은 `native_physical_position`은 None/UNAVAILABLE로 유지한다. 이 순수 읽기 snapshot은 주문 권한을 부여하거나 native 조회를 실행하지 않으며, mutation 전 사실·위험·권한 재검사는 별도로 유지한다.
+
+로컬 `CryptoDummyAdapter`의 Owner 통합은 명시적 `FULL_NOTIONAL_USDT_V1` synthetic fixture에 한한다. sandbox/offline·USDT linear perpetual·multiplier 1 및 검증된 scope/version/available을 요구하고, 기존 전체 notional+설정 fee 예약을 그대로 사용한다. 실제 venue의 margin/authentication 지원으로 해석하지 않으며 LIVE·inverse·funding·reduce-only 지원은 추가하지 않는다.
+
 ## ARCH-PERP. Perp Equity·Margin·Funding·PnL
 
 - Product info must include venue/segment/contract multiplier/settlement currency, linear/inverse, quantity/tick, min order/position, fee schedules, margin/position modes, funding indices, account currency. 전략에 제공되는 `account_position`은 검증된 실제 계좌 Fact이고 `strategy_attributed_fill/position`은 별도 귀속 Projection이다. 두 값은 서로 다른 권위/의미를 갖고, 특히 netting 계좌에서 귀속 Projection을 거래소의 실제 독립 포지션으로 표현하면 안 된다.

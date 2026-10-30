@@ -15,6 +15,7 @@ import inspect
 import json
 import sqlite3
 import time
+from types import SimpleNamespace
 from typing import Callable
 from datetime import datetime, timezone
 
@@ -509,23 +510,53 @@ class ExecutionOwner:
                     or self.clock() - observed > max_age):
                 raise GateBlocked("Bounded synthetic fixture account facts are missing, stale or unversioned")
             row = products.get(action.intent.instrument.raw_symbol) if isinstance(products, Mapping) else None
+            linear_fixture = route.mode_family == "linear"
+            expected_kind = "linear_perpetual" if linear_fixture else "cash"
             if (not isinstance(row, Mapping)
                     or row.get("scope_key") != route.account_scope.key
                     or row.get("venue") != route.venue
                     or row.get("product") != route.product
                     or row.get("environment") != route.environment
                     or row.get("symbol") != action.intent.instrument.raw_symbol
-                    or row.get("kind") != "cash"
+                    or row.get("kind") != expected_kind
                     or row.get("settlement_currency") != currency):
                 raise GateBlocked("Synthetic fixture product facts do not match the selected route/currency")
+            risk_model = None
+            if linear_fixture:
+                instrument = action.intent.instrument
+                if (route.product != "linear_perpetual"
+                        or instrument.asset_class is not AssetClass.CRYPTO_PERP
+                        or instrument.currency != "USDT"
+                        or currency != "USDT"
+                        or row.get("settlement_currency") != "USDT"
+                        or facts.get("synthetic_risk_model") != "FULL_NOTIONAL_USDT_V1"):
+                    raise GateBlocked("Synthetic linear fixtures require FULL_NOTIONAL_USDT_V1 USDT perpetual facts")
+                multiplier = row.get("multiplier")
+                if isinstance(multiplier, (bool, float)) or not isinstance(multiplier, (str, int, Decimal)):
+                    raise GateBlocked("Synthetic linear fixture multiplier must be the exact decimal one")
+                try:
+                    multiplier = positive_decimal(multiplier, "synthetic linear multiplier")
+                except (ValueError, ArithmeticError) as error:
+                    raise GateBlocked("Synthetic linear fixture multiplier must be the exact decimal one") from error
+                if multiplier != Decimal(1):
+                    raise GateBlocked("Synthetic linear fixture multiplier must be the exact decimal one")
+                risk_model = "FULL_NOTIONAL_USDT_V1"
             try:
                 for field in ("tick_size", "lot_size", "min_notional"):
                     positive_decimal(row.get(field), "synthetic product " + field)
             except (ValueError, ArithmeticError) as error:
                 raise GateBlocked("Synthetic product minimums and execution costs are incomplete") from error
+            synthetic_account = dict(account_facts)
+            if linear_fixture:
+                # This is an explicitly synthetic full-notional collateral
+                # ceiling, shaped only for the existing Owner capacity gate.
+                # It is not authenticated native margin or account evidence.
+                synthetic_account["quality"] = "SYNTHETIC"
+                synthetic_account["synthetic_risk_model"] = risk_model
+                synthetic_account["reported"] = {"available": account_facts.get("available")}
             return {"quality": "SYNTHETIC", "multiplier": Decimal(1),
-                    "taker_fee_rate": fee_rate, "native": dict(account_facts),
-                    "product": dict(row),
+                    "taker_fee_rate": fee_rate, "native": synthetic_account,
+                    "product": dict(row), "synthetic_risk_model": risk_model,
                     "physical_positions": account_facts.get("physical_positions")}
         if binding.route.mode_family == "linear":
             result = validate_native_account_facts(
@@ -536,14 +567,27 @@ class ExecutionOwner:
             if result["quality"] != "VALID":
                 raise GateBlocked("Native linear risk facts unavailable: " + str(result["reason"]))
             local_cut = result["facts"].get("local_ledger_version")
+            raw_local_cut = (account.get("local_ledger_version")
+                             if isinstance(account, Mapping) else None)
+            current_local_cut = self.ledger.account_version()
             if (local_cut is not None
-                    and (type(local_cut) is not int or local_cut != self.ledger.account_version())):
+                    and (type(local_cut) is not int or local_cut != current_local_cut)):
+                raise GateBlocked("Native linear account snapshot is stale against local fill version")
+            if (raw_local_cut is not None
+                    and (type(raw_local_cut) is not int or raw_local_cut != current_local_cut)):
                 raise GateBlocked("Native linear account snapshot is stale against local fill version")
             product = result["facts"]["products"].get(action.intent.instrument.raw_symbol)
             if product is None:
                 raise GateBlocked("Native product facts do not cover the selected symbol")
+            native = dict(result["facts"])
+            # The generic validator intentionally omits optional envelope fields.
+            # Preserve an explicitly supplied exact local cut for later read-only
+            # feedback; legacy providers without it remain usable for pretrade
+            # checks but cannot claim current feedback availability.
+            if raw_local_cut is not None:
+                native["local_ledger_version"] = raw_local_cut
             return {"multiplier": product["multiplier"], "taker_fee_rate": fee_rate,
-                    "native": result["facts"]}
+                    "native": native}
         # Cash account proof remains factual and does not invent a margin model.
         if not isinstance(account, Mapping) or not isinstance(products, Mapping):
             raise GateBlocked("Native cash account/product facts are unavailable")
@@ -737,6 +781,70 @@ class ExecutionOwner:
         }
         return document
 
+    def _feedback_available_facts(self, strategy_id, durable, intent):
+        """Return only a current-cut, read-only account available fact."""
+        unavailable = {
+            "native_available_quality": "UNAVAILABLE",
+            "native_available_observed_ns": None,
+            "native_available_local_ledger_version": None,
+        }
+        if (not isinstance(durable, Mapping) or durable.get("state") in {"UNKNOWN", "LEGACY_UNKNOWN"}
+                or durable.get("strategy_id") != strategy_id
+                or not isinstance(durable.get("route_id"), str)
+                or not isinstance(intent, OrderIntent)):
+            return unavailable
+        dispatch = self._source_dispatch.get(strategy_id)
+        registry = dispatch.get("registry") if isinstance(dispatch, Mapping) else None
+        if registry is None:
+            return unavailable
+        try:
+            binding = registry.binding(durable["route_id"])
+            if (binding.route.route_id != durable["route_id"]
+                    or binding.route.account_scope.key != self.ledger.scope.key
+                    or binding.route.native_account_id != self.ledger.native_account_id):
+                return unavailable
+            before = self.ledger.account_version()
+            result = self._native_facts(binding, SimpleNamespace(intent=intent))
+            after = self.ledger.account_version()
+            if before != after:
+                return unavailable
+            native = result.get("native")
+            if not isinstance(native, Mapping):
+                return unavailable
+            quality = result.get("quality", "VALID")
+            if quality == "SYNTHETIC":
+                # _native_facts already validates the synthetic fixture's
+                # integer account_version against the same local ledger cut.
+                local_cut = native.get("account_version")
+                available = native.get("available")
+                currency = native.get("currency")
+                observed = native.get("observed_ns")
+            else:
+                local_cut = native.get("local_ledger_version")
+                reported = native.get("reported")
+                available = reported.get("available") if isinstance(reported, Mapping) else None
+                currency = native.get("currency")
+                observed = native.get("observed_ns")
+                quality = "VALID"
+            if (type(local_cut) is not int or local_cut != before or local_cut != after
+                    or not isinstance(currency, str) or not currency or len(currency) > 16
+                    or isinstance(observed, bool) or not isinstance(observed, int)
+                    or observed <= 0 or observed > self.clock()
+                    or isinstance(available, (bool, float))
+                    or not isinstance(available, (str, int, Decimal))):
+                return unavailable
+            amount = positive_decimal(available, "feedback available balance", zero=True)
+            return {
+                "native_available_balances": {currency: str(amount)},
+                "native_available_quality": quality,
+                "native_available_observed_ns": observed,
+                "native_available_local_ledger_version": local_cut,
+            }
+        except Exception:
+            # Feedback is descriptive only. It cannot authorize or mutate an
+            # order, and any failure leaves the available fact explicitly absent.
+            return unavailable
+
     async def deliver_feedback(self, strategy_id, callback, *, limit=64):
         """Claim durably, then deliver typed immutable facts to the source once."""
         if not callable(callback):
@@ -768,23 +876,33 @@ class ExecutionOwner:
                 None if raw.get("fee") is None else Decimal(raw["fee"]),
                 raw.get("fee_currency"), raw.get("metadata", {}))
             durable = self.ledger.find(raw["order_id"])
+            intent = (None if durable is None else
+                      OrderIntent.model_validate_json(durable["payload"]))
+            available_facts = self._feedback_available_facts(strategy_id, durable, intent)
+            # A synchronous provider can reenter the single-writer ledger while
+            # a fact snapshot is being read. Build the descriptive context from
+            # the same post-read durable/account cut as its balance evidence.
+            durable = self.ledger.find(raw["order_id"])
+            intent = (None if durable is None else
+                      OrderIntent.model_validate_json(durable["payload"]))
             execution = {
                 "owner_scope": self.ledger.scope.key, "strategy_id": strategy_id,
                 "order_state": None if durable is None else durable["state"],
                 "filled_quantity": None if durable is None else durable["filled"],
                 "remaining_quantity": None if durable is None else str(exact_difference(
-                    Decimal(OrderIntent.model_validate_json(durable["payload"]).quantity),
+                    Decimal(intent.quantity),
                     Decimal(durable["filled"]))),
                 "strategy_position": None if durable is None else str(self.ledger.strategy_position(
-                    strategy_id, OrderIntent.model_validate_json(durable["payload"]).instrument.key)),
+                    strategy_id, intent.instrument.key)),
                 "account_journal_position": None if durable is None else str(self.ledger.position(
-                    OrderIntent.model_validate_json(durable["payload"]).instrument.key)),
+                    intent.instrument.key)),
                 "native_physical_position": None,
                 "native_physical_position_quality": "UNAVAILABLE",
                 "unknown_or_unreconciled": durable is None or durable["state"] in {"UNKNOWN", "LEGACY_UNKNOWN"},
                 "account_version": self.ledger.account_version(),
                 "fee_provenance": "explicit fill fact; configured fee policy remains separate",
                 "broker_fee_amount_received": False,
+                **available_facts,
             }
             quality = raw.get("metadata", {}).get("fact_quality", "VALID")
             context = StrategyOrderContext(None, execution, self.clock(),

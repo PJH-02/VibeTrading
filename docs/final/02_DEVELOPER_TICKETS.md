@@ -485,6 +485,10 @@ StrategyFile.on_event/on_order_event → Explicit ActionPlan
 
 **2026-10-30 독립 QA 발견에 따른 한정 수정 범위:** 로컬 fake-browser 회귀에서 Timefolio UNKNOWN 이후 추가 주문·재시작 중복 및 Decimal 결과 영속화 오류가 재현되었다. 기존 안전 계약을 충족하기 위해 `src/timefolio/runner.py`, `src/storage/sqlite_store.py`의 기존 intent 저장/SQLite transaction 경계만 수정할 수 있다. 상세 허용 범위·불변조건·회귀는 [QA-01-timefolio-repair.md](../tickets/QA-01-timefolio-repair.md)를 따른다. 새 계층/서비스/스키마·경제 정책·실계좌 동작을 추가하지 않으며, UNKNOWN/미완료 pre-submit claim은 durable-before-browser 및 재시작·동시 실행에서 fail closed로 유지한다. 이는 안전 수락 기준의 축소가 아니며 수정 후 focused+full QA를 재실행한다.
 
+**동일 QA의 Dummy Crypto 연결 보정:** `QA-BROKER-01`의 실제 `CryptoDummyAdapter`→공통 Owner 검증에서 synthetic cash 전용 조건이 USDT linear fixture를 거부함을 재현했다. [QA-01-dummy-crypto-owner.md](../tickets/QA-01-dummy-crypto-owner.md)의 명시적 sandbox/offline·USDT·1x 전액 담보 fixture에 한해 기존 `execution_owner.py::_native_facts` 분기를 확장하고, 기존 전액 notional+fee 예약·버전 재검사·LIVE 차단 및 SYNTHETIC provenance를 그대로 검증한다. 기존 실제 venue/native margin 검증이나 경제 정책은 변경하지 않는다.
+
+**동일 QA의 native OrderEvent 사실 투영 보정:** [QA-01-native-feedback-facts.md](../tickets/QA-01-native-feedback-facts.md)에 따라 기존 `ExecutionOwner.deliver_feedback`가 정확한 현재 ledger cut에 묶인 이미 검증된 동기 snapshot의 available balance만 읽기 전용으로 전략에 전달하도록 한정 보강한다. 오래되거나 scope/version이 맞지 않는 값과 미관측 physical position은 UNAVAILABLE로 유지하며, 주문 경제 판단·수량·가격·영속성·권한 부여는 변경하지 않는다.
+
 **추가 P0 QA 배터리 — 기존 테스트 파일에 병합 우선**
 
 | Case ID | 단위 구성(credential-free) | PASS/FAIL 판정 및 구체 증거 |
