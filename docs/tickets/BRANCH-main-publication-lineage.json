@@ -1,0 +1,360 @@
+{
+  "purpose": "Publication lineage after preexisting remote history rewrite; historical acceptance receipts and immutable04 are preserved.",
+  "prepared_at": "2026-10-30T18:41:34.457401+00:00",
+  "user_authorization": "2026-10-31: commit/push all changes, reconcile codex/move-core-feeds with main, PR and make main contain all changes.",
+  "prepublication_local_head": "4d0c605e3246df429d77a11c078392ec48da99f2",
+  "prepublication_local_tree": "09e000dc9a45593c9ba18c6b026f5e30152281a2",
+  "remote_main_before": "785ce7bc369619bd8d78e735460bba622107443d",
+  "remote_worker_branch_before": "029e9a9f960b962d58e949d3041a31167748796b",
+  "old_cap06_commit": "593c22bdf30df21c642c7e51a19d5c5125015b27",
+  "cap06_exact_tree_before_replay": "d3a5149783cdfd806c1069c48dd6bab3a05b530a",
+  "remote_cap06_exact_tree_before_replay": "d3a5149783cdfd806c1069c48dd6bab3a05b530a",
+  "replayed_unpublished_commits": [
+    {
+      "original_commit": "a353fbb65f0d5681e7e827adfaeef8e5bda4b3fc",
+      "published_commit": "debd81cdc95321e8e9121dde2ad4bdef173d960a",
+      "identical_tree": "25034e332f02771de2bcf9a87ed5985514240584",
+      "subject": "feat(observability): add bounded local latency and strategy PnL"
+    },
+    {
+      "original_commit": "2fdf1927a7098e077530698c1e29ab28c6297bac",
+      "published_commit": "709f404024a0bc8ae6a4b8803ea2ef3a2a34034e",
+      "identical_tree": "71f7915b6deb3ce15589358f5a24e4f106410152",
+      "subject": "docs(obs-01): record independent local acceptance"
+    },
+    {
+      "original_commit": "61e17079228aadbe073988d1dc801be79fbb0dfb",
+      "published_commit": "bb5fbae1650aac11ee8d62d744db7a06892f0880",
+      "identical_tree": "98020f799edea1425b585c0f20d92b2d3e445130",
+      "subject": "refactor(cleanup): retire frozen strategies and duplicate KIS owner"
+    },
+    {
+      "original_commit": "16942f5ddf1a4c237f207c7f7fcc6e6929c3f368",
+      "published_commit": "21e5d56efc988759c70cb90688580462aa445983",
+      "identical_tree": "5fdf7f89ff52b36fc041254fc987ec652629f56f",
+      "subject": "docs(cleanup): record CLN-02 independent local acceptance"
+    },
+    {
+      "original_commit": "ef5947ee480545ba8599155b884b0a4c83da87de",
+      "published_commit": "b7f33648d444e876875e2d4cd3bd0120389f3bd7",
+      "identical_tree": "58d6c37bbe7d6d008eeef03a2323ba3fd7341f74",
+      "subject": "refactor(SIMPLIFY): reuse canonical exact arithmetic helpers"
+    },
+    {
+      "original_commit": "d766ebca94a8a50bbe0f16fb2bcbe9d53e219bfb",
+      "published_commit": "75bd2500d308d0f7509136dd6a247278980ce3aa",
+      "identical_tree": "2ca666a3bf491a4e3bbea48d792878c5dd7a76eb",
+      "subject": "feat(dashboard): isolate authenticated read-only public access"
+    },
+    {
+      "original_commit": "26809c778e9d04ac3f9cddb3abbbf99668045007",
+      "published_commit": "6b0e5e57499b119905f7eb3cc77edca3fcd5248a",
+      "identical_tree": "19b2f2b6c442c112a57d4a91a6d60b3928077632",
+      "subject": "test(SIMPLIFY): separate worker initialization from callback bounds"
+    },
+    {
+      "original_commit": "772d24ea00ce4ee31753b444b33519fee385cb70",
+      "published_commit": "008ebeb3968b8d0ef9cd3ce9c7cc1106aac957c2",
+      "identical_tree": "3daf30bc7f75b2e698385d298344d974cc0ef957",
+      "subject": "fix(dashboard): reject credential redirects and preserve strict module checks"
+    },
+    {
+      "original_commit": "eff3412cf105587423756f057438e49187366bda",
+      "published_commit": "78972a2627be348fc71586830ec97dd90399a3fd",
+      "identical_tree": "11303a08d0bbd6bb4ff3d4f8248071fd19ec741e",
+      "subject": "test(dashboard): tamper with authenticated bytes in forgery checks"
+    },
+    {
+      "original_commit": "9940c8e9c9b505cc34cccf0cb3105775d923027d",
+      "published_commit": "7c417f4c4274fdbb0cff6e0c01396369e33afb72",
+      "identical_tree": "1d359fcd67533310f4004fb4166aaa40598cd1bf",
+      "subject": "docs(refactor): accept SIM-01 and WEB-01 local verification"
+    },
+    {
+      "original_commit": "ab248ab315ee9207838db1d2b324610169a26cb8",
+      "published_commit": "feae3c5934ac10bb2c458669b07c9925207b7b10",
+      "identical_tree": "df42af0ece88e27b04b5bf0c2366bef929bc0a22",
+      "subject": "docs(architecture): align current guides with final flat source candidate"
+    },
+    {
+      "original_commit": "67a1daeeb2db7a5ff07ba61fa602ccfa2ba6ef49",
+      "published_commit": "4ba89b761363b309f898973f4e722542ae72821f",
+      "identical_tree": "66e16664afea0d22981a020a927cf8ded7547401",
+      "subject": "docs(cleanup): accept CLN-03 independent documentation checks"
+    },
+    {
+      "original_commit": "62871467bb574907d24d799a148b6bcb820f798c",
+      "published_commit": "433113881b24b49d420852c81d6f1656cbed97b9",
+      "identical_tree": "775c6212c6c4a150f6c937b41518fc88ad560373",
+      "subject": "fix(timefolio): durably fence uncertain browser intents and verify source isolation"
+    },
+    {
+      "original_commit": "542dadc5250db5d6b43141aa0fe70440faa2e23e",
+      "published_commit": "871db81db4e7d91eab3fc4cec52e415ab1cebeaa",
+      "identical_tree": "c6be9c21a8ae82efd57ddc6424cad31b3915fa1d",
+      "subject": "fix(execution): verify synthetic linear owner and current-cut feedback facts"
+    },
+    {
+      "original_commit": "b3d2088d6e6ef4949b1f938a2f1ed92cac298c8b",
+      "published_commit": "cbaed82eda24dd2c9478439677906939faaa0e74",
+      "identical_tree": "9f2022b6042d9ab3ba6f4dbc92210026f135c272",
+      "subject": "docs(qa): accept independent full local product and image verification"
+    },
+    {
+      "original_commit": "faa0552136f24f0a2cbbe4c38871f2b14cc0db3d",
+      "published_commit": "8f8e21e93adc03f5bdbda9d9113be31c6fbe2346",
+      "identical_tree": "c9fb2f73419c05361e2ea87675b6f4d0c24a1087",
+      "subject": "docs(qa): link executed scenario and canonical adapter evidence"
+    },
+    {
+      "original_commit": "992bb757ba4b9c6cf60d47ebe1e58b796b11e225",
+      "published_commit": "0f1a9ad5c67049919b959cd9f6802f827d605761",
+      "identical_tree": "ca3d9be798a68314157e16a8eaa5122ac47e4af5",
+      "subject": "fix(feeds): isolate heartbeat receipts during durable delivery"
+    },
+    {
+      "original_commit": "2fe70d2fb2a5caa0d6e99fbb3d2a05f08813ef61",
+      "published_commit": "cb2a028e833e8766df622eb4e44f6b006bdae4c8",
+      "identical_tree": "bc10b1f7c9d9e66310a76503624dfc64a2cb39c7",
+      "subject": "fix(execution): refresh native proofs before durable dispatch work"
+    },
+    {
+      "original_commit": "8c08f9996a25a2cdf947f1ec33225d04209c9b8f",
+      "published_commit": "bd439e7e676c4fd7e8bd51fd65ec740f17965c3a",
+      "identical_tree": "f3939a8e3d6732917322a8ab66610c5322f72cc2",
+      "subject": "feat(perf): profile bounded multi-source durable and native execution paths"
+    },
+    {
+      "original_commit": "4d0c605e3246df429d77a11c078392ec48da99f2",
+      "published_commit": "79f283aff3216c71a507060c50c0ba0713e36761",
+      "identical_tree": "09e000dc9a45593c9ba18c6b026f5e30152281a2",
+      "subject": "docs(perf): accept bounded Linux profile and close three-ticket batch"
+    }
+  ],
+  "accepted_ticket_commit_lineage": [
+    {
+      "task_id": "OPS-01",
+      "acceptance_recorded_commit": "9ab1d7f9899179c442eaa533353c8ee552f88b79",
+      "published_commit": "82d063d00cba6ff39e3d2759a935f85063bdcf52",
+      "original_tree": "783574108a5cebf3d642e8a7090971b9ff8e2b58",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "MOV-00",
+      "acceptance_recorded_commit": "7c595d1a33c5ddb7aded82d6fec86439bc2b7d2d",
+      "published_commit": "01db9e8cd62fc5960b2ee6aae48defad3652239d",
+      "original_tree": "2dcc68672b9a3aece1e48c9830ab043725286959",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "MOV-01",
+      "acceptance_recorded_commit": "ec08b222642b2f64cc43a528327b513c112bcf0e",
+      "published_commit": "27f7b403c7300031b740348f2ae0e7f64924a9f8",
+      "original_tree": "22ccba626c750810cf06a00e6a63e57518b39c60",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "MOV-02",
+      "acceptance_recorded_commit": "0ed95ef488cc0a8bdf30877579d2cb702d79169c",
+      "published_commit": "c9aaca1677017f41771b536fce6a332284b7d453",
+      "original_tree": "f2d2eea3b8647fe24ed5dae4fc83a63663019c79",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "MOV-03",
+      "acceptance_recorded_commit": "f49d97da8f4e07edc74fe61b8654e5136666d513",
+      "published_commit": "1083b3f364f1d737cb6494f646f87e3110644ffb",
+      "original_tree": "b9bd036e800b9a99cd468c19bbc1cf0dac37483e",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "MOV-04",
+      "acceptance_recorded_commit": "7f0814f864325f4a1fe2ff3361cf9dbc6c250207",
+      "published_commit": "70c945177edaef6b3dc2560914959193ec1e1bb3",
+      "original_tree": "6b9397889186d654afa8c4111c099d2b87ec72f1",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "MOV-05",
+      "acceptance_recorded_commit": "47e11a56b707e8df972d2b81c4ba292fcdf63acf",
+      "published_commit": "286d314ecdf622e7c39469d6e13c58379f822088",
+      "original_tree": "9afacb1388c19d0d9e0219d4a92eed51f31d85a3",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "MOV-06",
+      "acceptance_recorded_commit": "38e38aa78dbc08bac0bc3ffca980da10b9f5f836",
+      "published_commit": "7241b166a1501639fc79bdd940ceeb1af860d6ac",
+      "original_tree": "d0ba1a947926c0e8215f85ddca25cef2fbffe82e",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "MOV-07",
+      "acceptance_recorded_commit": "4bb5e255920df1db6ce77298835f2588116c2609",
+      "published_commit": "7451a26f9ceae594073252e351565fca7b7b0735",
+      "original_tree": "e26b8765f8a5bfc264426aa9abfe08b60ab32a9e",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "CLN-01",
+      "acceptance_recorded_commit": "6789d51d119ade81de8768c18ba23a611da42e84",
+      "published_commit": "d967b0b30302ba9cc932b7af0e39721dddcf2f90",
+      "original_tree": "bff315ac62a5385a897397b69e01cb42eda5c5d7",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "CLN-02",
+      "acceptance_recorded_commit": "61e17079228aadbe073988d1dc801be79fbb0dfb",
+      "published_commit": "bb5fbae1650aac11ee8d62d744db7a06892f0880",
+      "original_tree": "98020f799edea1425b585c0f20d92b2d3e445130",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "CLN-03",
+      "acceptance_recorded_commit": "ab248ab315ee9207838db1d2b324610169a26cb8",
+      "published_commit": "feae3c5934ac10bb2c458669b07c9925207b7b10",
+      "original_tree": "df42af0ece88e27b04b5bf0c2366bef929bc0a22",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "CAP-00",
+      "acceptance_recorded_commit": "6a914585e503ca8e0b1f2ebe297fe16d0693c448",
+      "published_commit": "349e0e34b638626f03f265fecb2b4d337dd6516c",
+      "original_tree": "224c3c786cc0f52af73f9de57ec98997ff9548c2",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "STR-01",
+      "acceptance_recorded_commit": "3f2b87fe2524ae73357245b10247a474c0936356",
+      "published_commit": "bd466a59f242f9521bab9b9fc576e6381d534e56",
+      "original_tree": "d5c841d165227e1126fbdba8c76f1d509dc2ba32",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "CAP-01",
+      "acceptance_recorded_commit": "82128a3a00d615421eaa43d87d0283426d26cb09",
+      "published_commit": "0c9501d7c1bfcd47048d627af306fb6bc5fef202",
+      "original_tree": "27f1285429373c5c694ccf383d74c68679078170",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "CAP-02",
+      "acceptance_recorded_commit": "2e642aa1fe06398e308d922ae04ec8c83217f3a2",
+      "published_commit": "b9ef0b618da6e7c3d62cfa84748f7c12be8ea8c9",
+      "original_tree": "807f5e540feb1784866d8adc221047a48c96f5c9",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "CAP-03",
+      "acceptance_recorded_commit": "0f9303025338174b3069c0b04b6eec9f7b274e33",
+      "published_commit": "98dd2cca77f638b908f98ae3015a30cb97419053",
+      "original_tree": "56b428c8e9c058290cd12985e8482917e7e3fe6d",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "CAP-04",
+      "acceptance_recorded_commit": "f8b515ce44cdf2a78c2d49918f5b0c9e63888f68",
+      "published_commit": "4582558c44d9523df41f73f60383ae325398ccd8",
+      "original_tree": "7bf49505cdf5d0aef9ca4a4e469a907270b50f56",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "CAP-05",
+      "acceptance_recorded_commit": "1d25032b31958099b81dbf226f6176a8cd2f9081",
+      "published_commit": "ee024c09d397c5b32a26ca7d7013ecc22dbb21e3",
+      "original_tree": "33c95bbb709d1edfb7f5b175260439382c266ed3",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "CAP-06",
+      "acceptance_recorded_commit": "6d52bf3801ba17e9df8c04b555d2731479706f0a",
+      "published_commit": "8c13ce35c344600a3d8c2e36605be75f0ca3b0bc",
+      "original_tree": "8fb123240d720c539e1c15f736747cfb636faffd",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "QA-01",
+      "acceptance_recorded_commit": "542dadc5250db5d6b43141aa0fe70440faa2e23e",
+      "published_commit": "871db81db4e7d91eab3fc4cec52e415ab1cebeaa",
+      "original_tree": "c6be9c21a8ae82efd57ddc6424cad31b3915fa1d",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "PERF-01",
+      "acceptance_recorded_commit": "8c08f9996a25a2cdf947f1ec33225d04209c9b8f",
+      "published_commit": "bd439e7e676c4fd7e8bd51fd65ec740f17965c3a",
+      "original_tree": "f3939a8e3d6732917322a8ab66610c5322f72cc2",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "STR-02",
+      "acceptance_recorded_commit": "f9e830c67330de171647f746d4a25a4e8f70fd22",
+      "published_commit": "a9f70fbf66f7b6072102086029e11f4c5db67d31",
+      "original_tree": "ce48f54de01863ae67a1b6cf941f50049431f9f0",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "VEN-01",
+      "acceptance_recorded_commit": "58545cbe6785507be7f4506bc6a32533dd0dc911",
+      "published_commit": "d34ec6b7e07d54a9a372a35003824b3581da2c68",
+      "original_tree": "af0e4c48b3bd23d1ae14e41eabc2c6dd4a603a6c",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "EXEC-01",
+      "acceptance_recorded_commit": "a71770dcb0eb932e4f6f1023e09316f1fc25a02e",
+      "published_commit": "aded67049a8d0e1fe1eab44771a0b2f3c8e51d0a",
+      "original_tree": "a1874499695393fa36038df82ae1616c1ccc7264",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "SIM-01",
+      "acceptance_recorded_commit": "26809c778e9d04ac3f9cddb3abbbf99668045007",
+      "published_commit": "6b0e5e57499b119905f7eb3cc77edca3fcd5248a",
+      "original_tree": "19b2f2b6c442c112a57d4a91a6d60b3928077632",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "FEED-01",
+      "acceptance_recorded_commit": "6eafe31edae8dfb19cde2a6fcab5a9ae33e1e493",
+      "published_commit": "7b23e29ec70d178675aab3b6759d19b84883aab9",
+      "original_tree": "f9514afe0e9800c51372836ec0fc8b6f82716b10",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "OBS-01",
+      "acceptance_recorded_commit": "a353fbb65f0d5681e7e827adfaeef8e5bda4b3fc",
+      "published_commit": "debd81cdc95321e8e9121dde2ad4bdef173d960a",
+      "original_tree": "25034e332f02771de2bcf9a87ed5985514240584",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    },
+    {
+      "task_id": "WEB-01",
+      "acceptance_recorded_commit": "eff3412cf105587423756f057438e49187366bda",
+      "published_commit": "78972a2627be348fc71586830ec97dd90399a3fd",
+      "original_tree": "11303a08d0bbd6bb4ff3d4f8248071fd19ec741e",
+      "proof": "EXACT_TREE_AND_SUBJECT"
+    }
+  ],
+  "main_integration_commit": "4eca794f07cfd49236718a09d38e93022f7aeeb2",
+  "main_integration_tree": "09e000dc9a45593c9ba18c6b026f5e30152281a2",
+  "all20_replayed_trees_identical": true,
+  "main_integration_changes_product_content": false,
+  "acceptance_receipts_policy": "Original recorded SHAs retain their measurement meaning. Use this exact-tree mapping to find rewritten publication commits; do not rewrite or rehash historical receipts.",
+  "final_runtime_source_commit": "cb2a028e833e8766df622eb4e44f6b006bdae4c8",
+  "verification": {
+    "existing_independent_required_python": 3196,
+    "existing_capped_focused": 225,
+    "rerun_after_history_only_integration": false,
+    "basis": "All20 commit trees and complete integrated tree are byte-for-byte identical to previously accepted source; publication adds this documentation only.",
+    "high_confidence_secret_signature_findings_in20commit_changed_files": 0,
+    "scanner_limit": "Limited signature check, not exhaustive credential discovery; no credential values printed."
+  },
+  "branch_plan": "Normal fast-forward push of reconciled work branch, GitHub PR merge with expected head SHA, then fast-forward work branch to merge commit so main/work branch compare0ahead0behind. No forced remote update.",
+  "production_activation": false,
+  "task_acceptance_counts_unchanged": {
+    "accepted": 30,
+    "total": 35
+  },
+  "private_pre_sync_bundle": "/home/pjh/.local/state/codex-opencode/runs/branch-main-sync-20261031/before-sync.bundle"
+}
