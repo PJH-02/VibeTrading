@@ -38,16 +38,13 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 27,
-    "in_progress": 0,
+    "accepted": 28,
+    "in_progress": 1,
     "blocked": 0,
-    "not_started": 6,
+    "not_started": 4,
     "external_not_authorized": 2
   },
-  "next_ready_candidate": [
-    "CLN-03",
-    "QA-01"
-  ],
+  "next_ready_candidate": [],
   "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
   "gate_results": {
     "REPOSITORY_CONSOLIDATED": "NOT_VERIFIED_FOR_NEW_RELEASE",
@@ -431,8 +428,8 @@
     ],
     "missing_required_local_code_blocks_feature_release": true
   },
-  "active_task_id": null,
-  "last_accepted_task_id": "WEB-01",
+  "active_task_id": "QA-01",
+  "last_accepted_task_id": "CLN-03",
   "stop_requested": false,
   "tickets": [
     {
@@ -911,7 +908,7 @@
     {
       "task_id": "CLN-03",
       "wave": "W4",
-      "status": "NOT_STARTED",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "CLN-01",
         "CLN-02",
@@ -924,13 +921,15 @@
       "risk_review": "AUTO_CHECK_PLUS_BOUNDARY_REVIEW",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "base_sha": "9940c8e9c9b505cc34cccf0cb3105775d923027d",
+      "actual_commit_sha": "ab248ab315ee9207838db1d2b324610169a26cb8",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/CLN03.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
-      "definition_heading_id": "CLN-03"
+      "definition_heading_id": "CLN-03",
+      "acceptance_receipt_sha256": "fbb15e61adbdf783f9b5d1bde9b0bf8fba46abcd86e04d79560438085608f1da",
+      "implementation_packet": "docs/tickets/CLN-03-doc-consistency.md"
     },
     {
       "task_id": "CAP-00",
@@ -1657,7 +1656,7 @@
     {
       "task_id": "QA-01",
       "wave": "W5",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "depends_on": [
         "MOV-07",
         "CLN-02",
@@ -1680,7 +1679,7 @@
       "risk_review": "CRITICAL_CODEX",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
+      "base_sha": "ab248ab315ee9207838db1d2b324610169a26cb8",
       "actual_commit_sha": null,
       "acceptance_receipt": null,
       "test_exit": null,
@@ -1698,7 +1697,8 @@
           "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-03-05-20261026T064113Z/MOV-05.acceptance.json",
           "details": "Timefolio runner NatsJetStreamBus/default md.> source retained move-only; separate NATS-free data integration gates and real browser/live activation remain unverified."
         }
-      ]
+      ],
+      "implementation_packet": "docs/tickets/QA-01-integration.md"
     },
     {
       "task_id": "PERF-01",
@@ -2653,28 +2653,18 @@
   "active_batch": {
     "requested_tasks": 3,
     "tasks": [
-      "CLN-02",
-      "SIM-01",
-      "WEB-01"
+      "CLN-03",
+      "QA-01",
+      "PERF-01"
     ],
-    "status": "COMPLETED_REQUESTED_THREE_TICKETS",
-    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030",
-    "worker_policy": "external GLM/DeepSeek measured; stopped after cache-inclusive overhead exceeded comparison; sol lead + native gpt-6-luna fallback",
+    "status": "IN_PROGRESS",
     "accepted": [
-      "CLN-02",
-      "SIM-01",
-      "WEB-01"
+      "CLN-03"
     ],
-    "target_os": "Ubuntu Linux",
+    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030",
+    "worker_policy": "Carry forward measured external cache-inclusive stop; sol unchanged + native gpt-6-luna; no new external calls; no exact cost savings claimed",
     "push_authorized": false,
-    "worker_models": [
-      "sol lead unchanged",
-      "opencode/deepseek-v4.1-flash-free (stopped for measured cache-inclusive overhead)",
-      "gpt-6-luna"
-    ],
-    "completed_utc": "2026-10-29T21:14:31.046577+00:00",
-    "ssl_status": "LOCAL_TEST_ONLY",
-    "public_url_activated": false
+    "target_os": "Ubuntu Linux"
   },
   "completed_batches": [
     {
@@ -2870,6 +2860,32 @@
       "push_authorized": false,
       "completed_utc": "2026-10-29T15:59:12.455582+00:00",
       "source_commit": "a353fbb65f0d5681e7e827adfaeef8e5bda4b3fc"
+    },
+    {
+      "requested_tasks": 3,
+      "tasks": [
+        "CLN-02",
+        "SIM-01",
+        "WEB-01"
+      ],
+      "status": "COMPLETED_REQUESTED_THREE_TICKETS",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CLN02-SIM01-WEB01-20261030",
+      "worker_policy": "external GLM/DeepSeek measured; stopped after cache-inclusive overhead exceeded comparison; sol lead + native gpt-6-luna fallback",
+      "accepted": [
+        "CLN-02",
+        "SIM-01",
+        "WEB-01"
+      ],
+      "target_os": "Ubuntu Linux",
+      "push_authorized": false,
+      "worker_models": [
+        "sol lead unchanged",
+        "opencode/deepseek-v4.1-flash-free (stopped for measured cache-inclusive overhead)",
+        "gpt-6-luna"
+      ],
+      "completed_utc": "2026-10-29T21:14:31.046577+00:00",
+      "ssl_status": "LOCAL_TEST_ONLY",
+      "public_url_activated": false
     }
   ],
   "worker_policy_latest": {
