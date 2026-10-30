@@ -483,6 +483,8 @@ StrategyFile.on_event/on_order_event → Explicit ActionPlan
 - **선행**: 기존 DAG 그대로 (`MOV-07/CLN-02/SIM-01/STR-01/02/VEN-01/EXEC-01/CAP-00~06`). **담당**: Deterministic Linux CI + 독립 승인자. **권위**: ARCH-DATA-4 + VEN-PROT-01~04 및 기존 P0 안전/Release 전부. **쓰기**: 기존 `tests/**`의 관련 Scope, fixture, compact receipt만. 새 서비스/Strategy 알파 구현 금지.
 - **기본 계약(변경 없음)**: R04/R05 Golden, VN/TX 2,480 baseline historical only, C3/KP/KD/KIS Mock2 exact parity, full pytest/CLI/wheel/Compose, UDS→Spool→State→Strategy→Paper/selected Owner, live mutation 0, UNKNOWN+late fill+crash cut+cloud/GC safety. 기존 MM 전략 소유 Bid/Ask→partial→inventory facts→전략 리프라이스만, CAP-05 양 Crypto Adapter 두 leg/local E2E를 별도로 필수 통과.
 
+**2026-10-30 독립 QA 발견에 따른 한정 수정 범위:** 로컬 fake-browser 회귀에서 Timefolio UNKNOWN 이후 추가 주문·재시작 중복 및 Decimal 결과 영속화 오류가 재현되었다. 기존 안전 계약을 충족하기 위해 `src/timefolio/runner.py`, `src/storage/sqlite_store.py`의 기존 intent 저장/SQLite transaction 경계만 수정할 수 있다. 상세 허용 범위·불변조건·회귀는 [QA-01-timefolio-repair.md](../tickets/QA-01-timefolio-repair.md)를 따른다. 새 계층/서비스/스키마·경제 정책·실계좌 동작을 추가하지 않으며, UNKNOWN/미완료 pre-submit claim은 durable-before-browser 및 재시작·동시 실행에서 fail closed로 유지한다. 이는 안전 수락 기준의 축소가 아니며 수정 후 focused+full QA를 재실행한다.
+
 **추가 P0 QA 배터리 — 기존 테스트 파일에 병합 우선**
 
 | Case ID | 단위 구성(credential-free) | PASS/FAIL 판정 및 구체 증거 |

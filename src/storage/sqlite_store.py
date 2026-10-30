@@ -7,11 +7,12 @@ import sqlite3
 import threading
 import time
 import uuid
+from decimal import Decimal, InvalidOperation
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Callable, Iterable, Iterator
 
-from core.models import OrderIntent
+from core.models import OrderDestination, OrderIntent, OrderIntentStatus
 from runtime.settings import RuntimeSettings, get_settings
 
 
@@ -900,6 +901,160 @@ class RuntimeStore:
         now=time.time_ns(); self._write("INSERT OR IGNORE INTO order_intents VALUES(?,?,?,?,?,?,?,?,?)",(intent.intent_id,intent.job_id,intent.signal_id,intent.destination.value,intent.client_order_id,intent.status.value,json.dumps(intent.model_dump(mode='json')),intent.created_ts_ns,now))
     def update_order_intent(self, intent_id: str, status: str, payload: dict[str, Any] | None = None) -> None:
         row=self._conn.execute("SELECT payload FROM order_intents WHERE intent_id=?",(intent_id,)).fetchone(); body=json.loads(row[0]) if row else {}; body.update(payload or {}); body['status']=status; self._write("UPDATE order_intents SET status=?,payload=?,updated_ts_ns=? WHERE intent_id=?",(status,json.dumps(body),time.time_ns(),intent_id))
+    def claim_timefolio_intent(self, intent: OrderIntent, account_id: str) -> dict[str, Any]:
+        """Durably fence one Timefolio mutation before browser interaction."""
+        if intent.destination is not OrderDestination.TIMEFOLIO:
+            raise ValueError("Timefolio claim requires a TIMEFOLIO intent")
+        if type(account_id) is not str or not account_id.strip():
+            raise ValueError("Timefolio claim requires a nonempty account id")
+        payload = intent.model_dump(mode="json")
+        metadata = payload.get("metadata")
+        if not isinstance(metadata, dict) or type(metadata.get("account_id")) is not str or metadata["account_id"] != account_id:
+            raise ValueError("Timefolio claim account does not match intent scope")
+        payload["status"] = OrderIntentStatus.UNKNOWN.value
+        encoded = json.dumps(payload, ensure_ascii=False)
+        now = time.time_ns()
+        with self.transaction() as conn:
+            existing = conn.execute(
+                "SELECT status FROM order_intents WHERE intent_id=?", (intent.intent_id,)
+            ).fetchone()
+            if existing is not None:
+                return {"claimed": False, "reason": "timefolio_intent_already_recorded",
+                        "status": str(existing["status"])}
+            unresolved = conn.execute(
+                "SELECT intent_id,payload,status FROM order_intents "
+                "WHERE destination=? AND status IN (?,?,?,?)",
+                (OrderDestination.TIMEFOLIO.value, OrderIntentStatus.CREATED.value,
+                 OrderIntentStatus.SUBMITTED.value,
+                 OrderIntentStatus.ACCEPTED.value, OrderIntentStatus.UNKNOWN.value),
+            )
+            for row in unresolved:
+                try:
+                    old_payload = json.loads(row["payload"])
+                    if not isinstance(old_payload, dict) or old_payload.get("status") != row["status"]:
+                        raise ValueError("unresolved payload/column status mismatch")
+                    old_metadata = old_payload.get("metadata")
+                    if not isinstance(old_metadata, dict):
+                        raise ValueError("unresolved metadata is missing")
+                    old_account = old_metadata.get("account_id")
+                    if type(old_account) is not str or not old_account.strip():
+                        raise ValueError("unresolved account scope is invalid")
+                except (TypeError, ValueError):
+                    # An unreadable or unscoped unresolved row is a global fail-closed fence.
+                    return {"claimed": False, "reason": "timefolio_unreadable_unresolved_intent",
+                            "status": str(row["status"])}
+                if old_account == account_id:
+                    # Legacy runners wrote CREATED before browser preparation; a crash
+                    # could follow a submit click, so never infer that it was unsent.
+                    return {"claimed": False, "reason": "timefolio_account_has_unresolved_intent",
+                            "intent_id": str(row["intent_id"]), "status": str(row["status"])}
+            conn.execute(
+                "INSERT INTO order_intents VALUES(?,?,?,?,?,?,?,?,?)",
+                (intent.intent_id, intent.job_id, intent.signal_id, intent.destination.value,
+                 intent.client_order_id, OrderIntentStatus.UNKNOWN.value, encoded,
+                 intent.created_ts_ns, now),
+            )
+        return {"claimed": True, "reason": "timefolio_claimed_unknown",
+                "intent_id": intent.intent_id, "status": OrderIntentStatus.UNKNOWN.value}
+
+    def record_timefolio_result(self, intent_id: str, result: Any) -> str:
+        """Record a browser result without clearing uncertainty on malformed facts."""
+        raw_status = str(getattr(result, "status", "UNKNOWN")).upper()
+        raw_filled = getattr(result, "filled", False)
+        raw_accepted = getattr(result, "accepted", False)
+        raw_pending = getattr(result, "pending", False)
+        flags_valid = all(type(value) is bool for value in (raw_filled, raw_accepted, raw_pending))
+        filled = raw_filled if type(raw_filled) is bool else False
+        accepted = raw_accepted if type(raw_accepted) is bool else False
+        pending = raw_pending if type(raw_pending) is bool else False
+        if flags_valid and raw_status == "FILLED" and filled and accepted and not pending:
+            stored_status = OrderIntentStatus.FILLED.value
+        elif flags_valid and raw_status == "ACCEPTED" and accepted and not filled:
+            stored_status = OrderIntentStatus.ACCEPTED.value
+        elif flags_valid and raw_status == "REJECTED" and not (filled or accepted or pending):
+            stored_status = OrderIntentStatus.REJECTED.value
+        else:
+            stored_status = OrderIntentStatus.UNKNOWN.value
+        observation = {
+            "status": raw_status,
+            "ticker": str(getattr(result, "ticker", "")),
+            "side": str(getattr(result, "side", "")),
+            "weight_pct": str(getattr(result, "weight_pct", "")),
+            "result": str(getattr(result, "result", "")),
+            "filled": raw_filled if type(raw_filled) is bool else str(raw_filled),
+            "accepted": raw_accepted if type(raw_accepted) is bool else str(raw_accepted),
+            "pending": raw_pending if type(raw_pending) is bool else str(raw_pending),
+        }
+        with self.transaction() as conn:
+            row = conn.execute(
+                "SELECT destination,status,payload FROM order_intents WHERE intent_id=?",
+                (intent_id,),
+            ).fetchone()
+            if row is None or row["destination"] != OrderDestination.TIMEFOLIO.value:
+                return OrderIntentStatus.UNKNOWN.value
+            # Do not overwrite an operator resolution or a prior factual result.
+            if row["status"] != OrderIntentStatus.UNKNOWN.value:
+                return str(row["status"])
+            try:
+                body = json.loads(row["payload"])
+                metadata = body.get("metadata") if isinstance(body, dict) else None
+                account_id = metadata.get("account_id") if isinstance(metadata, dict) else None
+                if (not isinstance(body, dict) or body.get("status") != row["status"]
+                        or type(account_id) is not str or not account_id.strip()):
+                    return OrderIntentStatus.UNKNOWN.value
+                expected = self._timefolio_intent_identity(body)
+                observed = self._timefolio_result_identity(observation)
+            except (TypeError, ValueError, InvalidOperation):
+                return OrderIntentStatus.UNKNOWN.value
+            if expected is None or expected != observed:
+                stored_status = OrderIntentStatus.UNKNOWN.value
+            body["timefolio"] = observation
+            body["status"] = stored_status
+            conn.execute(
+                "UPDATE order_intents SET status=?,payload=?,updated_ts_ns=? WHERE intent_id=?",
+                (stored_status, json.dumps(body, ensure_ascii=False), time.time_ns(), intent_id),
+            )
+        return stored_status
+
+    @staticmethod
+    def _timefolio_ticker(value: Any) -> str | None:
+        if type(value) is not str:
+            return None
+        ticker = value.strip().upper().removeprefix("A")
+        if not ticker.isdigit() or len(ticker) > 6:
+            return None
+        return ticker.zfill(6)
+
+    @classmethod
+    def _timefolio_intent_identity(cls, body: dict[str, Any]) -> tuple[str, str, Decimal] | None:
+        instrument = body.get("instrument")
+        if not isinstance(instrument, dict):
+            return None
+        ticker = cls._timefolio_ticker(instrument.get("raw_symbol"))
+        side = body.get("side")
+        if ticker is None or side not in {"buy", "sell"}:
+            return None
+        raw_weight = body.get("weight_pct")
+        if raw_weight is None:
+            return None
+        weight = Decimal(str(raw_weight))
+        if not weight.is_finite():
+            return None
+        # AsyncTimefolioBrowserManager preserves the established 0.01..100 clamp.
+        expected_weight = max(Decimal("0.01"), min(Decimal("100"), weight))
+        return ticker, str(side), expected_weight
+
+    @classmethod
+    def _timefolio_result_identity(cls, observation: dict[str, Any]) -> tuple[str, str, Decimal] | None:
+        ticker = cls._timefolio_ticker(observation.get("ticker"))
+        side = observation.get("side")
+        if ticker is None or side not in {"buy", "sell"}:
+            return None
+        weight = Decimal(str(observation.get("weight_pct")))
+        if not weight.is_finite():
+            return None
+        return ticker, side, weight
+
     def set_kill_switch(self, scope: str, active: bool, reason: str, updated_by: str) -> None:
         self._write("INSERT OR REPLACE INTO kill_switch VALUES(?,?,?,?,?)",(scope,int(active),reason,updated_by,time.time_ns()))
     def is_killed(self, scope: str) -> bool:

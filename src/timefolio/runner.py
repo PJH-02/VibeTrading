@@ -195,14 +195,30 @@ class TimefolioStrategyRunner:
             exec_config,
             side=side,
             weight_pct=weight,
+            persist=not self.config.submit,
         )
         try:
             await self.bus.publish_order_intent(intent)
         except Exception:
             logger.exception("failed to publish Timefolio intent event")
         if failures:
-            self.store.update_order_intent(intent.intent_id, OrderIntentStatus.BLOCKED.value, {"failures": failures})
+            if not self.config.submit:
+                self.store.update_order_intent(intent.intent_id, OrderIntentStatus.BLOCKED.value, {"failures": failures})
             return {"status": "BLOCKED", "signal_id": signal.signal_id, "intent_id": intent.intent_id, "failures": failures}
+
+        if self.config.submit:
+            claim = getattr(self.store, "claim_timefolio_intent", None)
+            if not callable(claim):
+                return {"status": "BLOCKED", "signal_id": signal.signal_id, "intent_id": intent.intent_id,
+                        "reason": "timefolio_durable_claim_unavailable"}
+            try:
+                claim_result = claim(intent, self.config.account_id)
+            except Exception:
+                return {"status": "BLOCKED", "signal_id": signal.signal_id, "intent_id": intent.intent_id,
+                        "reason": "timefolio_durable_claim_failed"}
+            if not claim_result.get("claimed"):
+                return {"status": "BLOCKED", "signal_id": signal.signal_id, "intent_id": intent.intent_id,
+                        "reason": str(claim_result.get("reason") or "timefolio_claim_rejected")}
 
         order_result = await manager.prepare_order(
             self.config.account_id,
@@ -215,21 +231,45 @@ class TimefolioStrategyRunner:
                 submit=self.config.submit,
             ),
         )
-        self._record_result(intent.intent_id, order_result)
+        recorded_status = self._record_result(intent.intent_id, order_result)
         return {
-            "status": order_result.status,
+            "status": recorded_status,
             "signal_id": signal.signal_id,
             "intent_id": intent.intent_id,
             "ticker": ticker,
             "result": order_result.result,
         }
 
-    def _record_result(self, intent_id: str, result: TimefolioOrderResult) -> None:
+    def _record_result(self, intent_id: str, result: TimefolioOrderResult) -> str:
+        if self.config.submit:
+            record = getattr(self.store, "record_timefolio_result", None)
+            if not callable(record):
+                return OrderIntentStatus.UNKNOWN.value.upper()
+            try:
+                stored = record(intent_id, result)
+            except Exception:
+                # The durable pre-browser UNKNOWN claim remains the safety fence.
+                return OrderIntentStatus.UNKNOWN.value.upper()
+            return str(stored).upper()
         status = {
             "ACCEPTED": OrderIntentStatus.ACCEPTED,
             "FILLED": OrderIntentStatus.FILLED,
             "REJECTED": OrderIntentStatus.REJECTED,
             "UNKNOWN": OrderIntentStatus.UNKNOWN,
         }.get(result.status, OrderIntentStatus.UNKNOWN)
-        self.store.update_order_intent(intent_id, status.value, {"timefolio": result.__dict__})
+        self.store.update_order_intent(intent_id, status.value, {"timefolio": self._result_payload(result)})
+        return status.value.upper()
+
+    @staticmethod
+    def _result_payload(result: TimefolioOrderResult) -> dict[str, Any]:
+        return {
+            "status": str(result.status),
+            "ticker": str(result.ticker),
+            "side": str(result.side),
+            "weight_pct": str(result.weight_pct),
+            "result": str(result.result),
+            "filled": bool(result.filled),
+            "accepted": bool(result.accepted),
+            "pending": bool(result.pending),
+        }
 
