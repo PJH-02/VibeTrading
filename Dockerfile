@@ -21,6 +21,7 @@ ENV VIBETRADING_BUILD_REVISION=${VIBETRADING_BUILD_REVISION} \
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 USER root
 WORKDIR /app
+RUN python -c 'from pathlib import Path; import shutil,sysconfig; p=Path(sysconfig.get_path("purelib")); [shutil.rmtree(x) if x.is_dir() else x.unlink() for pattern in ("__editable__*vibetrading*", "vibetrading-*.dist-info") for x in p.glob(pattern)]'
 COPY requirements.txt .
 RUN if [ "$VIBETRADING_REUSE_APP_BASE" = "1" ]; then \
         python -m pip check && python -c 'import yaml,pydantic,playwright; print("verified cached base dependencies")'; \

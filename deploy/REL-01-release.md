@@ -23,6 +23,9 @@ daemon image ID before and after the build. This avoids BuildKit interpreting a
 bare `sha256:<image-id>` FROM argument as a registry image name. Cache tag
 collisions fail; existing unrelated tags are never overwritten. See Docker's
 [tag-by-ID documentation](https://docs.docker.com/reference/cli/docker/image/tag/).
+Source-overlay images remove inherited editable installation metadata for this
+project before copying the canonical source. Runtime imports use `/app/src`;
+wheel identity is verified separately from the actual wheel archive.
 Missing cached images/dependencies are hard failures; this workflow does not
 fetch or install them. Review
 `release-role-inventory.json` before choosing a profile. Root Compose, historical
