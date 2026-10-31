@@ -38,13 +38,15 @@
   },
   "new_task_counts": {
     "total": 35,
-    "accepted": 30,
-    "in_progress": 1,
+    "accepted": 31,
+    "in_progress": 0,
     "blocked": 0,
     "not_started": 2,
     "external_not_authorized": 2
   },
-  "next_ready_candidate": [],
+  "next_ready_candidate": [
+    "DEP-01"
+  ],
   "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
   "gate_results": {
     "REPOSITORY_CONSOLIDATED": "NOT_VERIFIED_FOR_NEW_RELEASE",
@@ -428,8 +430,8 @@
     ],
     "missing_required_local_code_blocks_feature_release": true
   },
-  "active_task_id": "REL-01",
-  "last_accepted_task_id": "PERF-01",
+  "active_task_id": null,
+  "last_accepted_task_id": "REL-01",
   "stop_requested": false,
   "tickets": [
     {
@@ -1784,7 +1786,7 @@
     {
       "task_id": "REL-01",
       "wave": "W6",
-      "status": "IN_PROGRESS",
+      "status": "ACCEPTED_LOCAL",
       "depends_on": [
         "QA-01",
         "PERF-01",
@@ -1795,9 +1797,9 @@
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
       "base_sha": "e5379b2599099ea213ac666dc177e839df224207",
-      "actual_commit_sha": null,
-      "acceptance_receipt": null,
-      "test_exit": null,
+      "actual_commit_sha": "3cf62a7f5b21da8da172e2b4439d7cdeea4af7fa",
+      "acceptance_receipt": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01.acceptance.json",
+      "test_exit": 0,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
       "definition_heading_id": "REL-01",
@@ -1805,10 +1807,15 @@
         {
           "id": "HISTORICAL-RELEASE-INPUTS",
           "source_receipt": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.acceptance.json",
-          "evidence": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.domain-evidence.json"
+          "evidence": "/home/pjh/.local/state/codex-opencode/runs/three-move-tickets-20261026T040416Z/MOV-02.domain-evidence.json",
+          "resolution": "Root Docker/Compose, selected primary/order overlay, historical14roles, systemd/cron and rollback files hashed/classified; actual4role image and7Compose checks PASS; current production remains external/unobserved."
         }
       ],
-      "implementation_packet": "docs/tickets/REL-01-offline-release.md"
+      "implementation_packet": "docs/tickets/REL-01-offline-release.md",
+      "acceptance_receipt_sha256": "ca4a7eb470968124970796fab5017f68164108fc6b22031243f1a221cb20dc69",
+      "public_acceptance_receipt": "docs/tickets/REL-01-local-acceptance.json",
+      "candidate_manifest": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01-frozen-release-v2.json",
+      "candidate_manifest_sha256": "757d39197cc444833ef72bf47ef30e9dfec7712318e631cd5986709ceb3c591f"
     },
     {
       "task_id": "DEP-01",
@@ -2616,6 +2623,14 @@
       "reason": "Requested CLN03/QA01/PERF01 batch complete: final3196 required Linux +225 capped checks; raw19763rows/800scriptedT5 independently verified. PONG and native proof headroom repairs retain A1/fail-closed guards. Numeric latency exceeded nonblocking references;64pulse offered-load limit recorded; accepted16pulse profile. Original v7 I/O derived-counter metadata corrected offline with raw evidence preserved. No production gate promotion/push.",
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/CLN03-QA01-PERF01-20261030/PERF01.acceptance.json",
       "receipt_sha256": "570c2755ebd39cd4e78ef7ccd1a831a3a99a24cef591a4e687411cb657816d3e"
+    },
+    {
+      "date": "2026-10-31",
+      "task_id": "REL-01",
+      "reason": "Independent3233 required Linux/108focused + exact4Linuximages/149source10config each/7resolvedCompose/realblankChromium + byte-identical wheel and cache reuse PASS. No runtime source changes, rollback retained, external gates unchanged. Proceed DEP01 authorized batch.",
+      "actual_commit_sha": "3cf62a7f5b21da8da172e2b4439d7cdeea4af7fa",
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01.acceptance.json",
+      "receipt_sha256": "ca4a7eb470968124970796fab5017f68164108fc6b22031243f1a221cb20dc69"
     }
   ],
   "requirements_revision": {
@@ -2721,7 +2736,9 @@
       "REL-01",
       "DEP-01"
     ],
-    "accepted": [],
+    "accepted": [
+      "REL-01"
+    ],
     "status": "IN_PROGRESS",
     "artifacts": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031",
     "worker_policy": "Previous external cost stop carried forward; sol lead unchanged + native gpt-6-luna",
