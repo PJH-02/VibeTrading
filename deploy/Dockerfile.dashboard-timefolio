@@ -1,8 +1,28 @@
 ARG DASHBOARD_APP_IMAGE
 FROM ${DASHBOARD_APP_IMAGE}
+ARG VIBETRADING_BUILD_REVISION=unknown
+ARG VIBETRADING_SOURCE_SHA256=unknown
+ARG VIBETRADING_CONFIG_SHA256=unknown
+ARG VIBETRADING_INPUT_SHA256=unknown
+ARG VIBETRADING_BASE_ID=unknown
+ARG VIBETRADING_IMAGE_CLASS=browser
+LABEL org.opencontainers.image.revision=${VIBETRADING_BUILD_REVISION} \
+      org.vibetrading.config-hash=${VIBETRADING_CONFIG_SHA256} \
+      org.vibetrading.source-sha256=${VIBETRADING_SOURCE_SHA256} \
+      org.vibetrading.config-sha256=${VIBETRADING_CONFIG_SHA256} \
+      org.vibetrading.input-sha256=${VIBETRADING_INPUT_SHA256} \
+      org.vibetrading.base-id=${VIBETRADING_BASE_ID} \
+      org.vibetrading.image-class=${VIBETRADING_IMAGE_CLASS}
 USER root
 ENV PLAYWRIGHT_BROWSERS_PATH=/opt/dashboard-browsers
-RUN python -m playwright install --with-deps chromium --only-shell \
-    && rm -rf /var/lib/apt/lists/*
+RUN rm -rf /app/src /app/config /app/vibetrading /app/strategies /app/services /app/shared /app/strategy /app/backtest
+COPY --chown=10001:10001 src /app/src
+COPY --chown=10001:10001 pyproject.toml requirements.txt main.py /app/
+COPY --chown=10001:10001 config /app/config
+ENV PYTHONPATH=/app/src
+ARG REUSE_CACHED_BROWSER=0
+RUN if [ "$REUSE_CACHED_BROWSER" = "1" ]; then \
+        python -c 'from pathlib import Path; p=Path("/opt/dashboard-browsers"); found=[x for pat in ("**/chrome-headless-shell", "**/headless_shell", "**/chrome") for x in p.glob(pat) if x.is_file() and __import__("os").access(x,__import__("os").X_OK)]; assert found, "no executable cached Chromium"'; \
+    else python -m playwright install --with-deps chromium --only-shell && rm -rf /var/lib/apt/lists/*; fi
 USER vibetrading
 CMD ["python", "-m", "operations.dashboard.timefolio_monitor"]

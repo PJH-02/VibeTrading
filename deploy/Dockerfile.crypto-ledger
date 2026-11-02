@@ -1,5 +1,22 @@
-# Current overlay inherits only a separately verified canonical image.
-# The old pinned 20260928 overlay is byte-preserved under rollback/MOV-06.
+# Ledger must extend this release's freshly built crypto image so source and
+# dependency identity cannot inherit a stale image.
 ARG VIBETRADING_CRYPTO_IMAGE
-FROM ${VIBETRADING_CRYPTO_IMAGE}
+ARG VIBETRADING_BASE_IMAGE=${VIBETRADING_CRYPTO_IMAGE}
+FROM ${VIBETRADING_BASE_IMAGE}
+ARG VIBETRADING_BUILD_REVISION=unknown
+ARG VIBETRADING_SOURCE_SHA256=unknown
+ARG VIBETRADING_CONFIG_SHA256=unknown
+ARG VIBETRADING_INPUT_SHA256=unknown
+ARG VIBETRADING_BASE_ID=unknown
+ARG VIBETRADING_IMAGE_CLASS=ledger
+LABEL org.opencontainers.image.revision=${VIBETRADING_BUILD_REVISION} \
+      org.vibetrading.config-hash=${VIBETRADING_CONFIG_SHA256} \
+      org.vibetrading.source-sha256=${VIBETRADING_SOURCE_SHA256} \
+      org.vibetrading.config-sha256=${VIBETRADING_CONFIG_SHA256} \
+      org.vibetrading.input-sha256=${VIBETRADING_INPUT_SHA256} \
+      org.vibetrading.base-id=${VIBETRADING_BASE_ID} \
+      org.vibetrading.image-class=${VIBETRADING_IMAGE_CLASS}
+ENV VIBETRADING_BUILD_REVISION=${VIBETRADING_BUILD_REVISION} \
+    VIBETRADING_BUILD_CONFIG_HASH=${VIBETRADING_CONFIG_SHA256}
 USER 10001:10001
+CMD ["python", "-m", "runtime.cli", "status"]

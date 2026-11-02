@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "state": "LOCAL_CANDIDATE_ONLY_DEPLOY_BLOCKED",
+  "production_inventory": "UNKNOWN_CURRENT_HOST; historical 2026-10-18 snapshot must be consumed as historical evidence only",
+  "historical_14_role_mapping": [
+    {"name":"vibetrading-etf-mock-1","mapping":"BLOCKED_UNMAPPED_LEGACY_ETF_EXECUTION"},
+    {"name":"vibetrading-telegram-1","mapping":"primary:telegram; HISTORICAL_UNVERIFIED"},
+    {"name":"vibetrading-etf-csv-sync-1","mapping":"BLOCKED_UNMAPPED_LEGACY_CSV_SYNC"},
+    {"name":"vibetrading-collectors-1","mapping":"primary:collector; HISTORICAL_UNVERIFIED"},
+    {"name":"vibetrading-crypto-collector-arcus-1","mapping":"BLOCKED_LEGACY_crypto-profile:crypto-collector-arcus"},
+    {"name":"vibetrading-crypto-collector-binance-1","mapping":"BLOCKED_LEGACY_crypto-profile:crypto-collector-binance"},
+    {"name":"vibetrading-crypto-collector-grvt-1","mapping":"BLOCKED_LEGACY_crypto-profile:crypto-collector-grvt"},
+    {"name":"vibetrading-monitor-timefolio-1","mapping":"dashboard-compose:timefolio; READ_ONLY_HISTORICAL_UNVERIFIED"},
+    {"name":"vibetrading-monitor-bridge-1","mapping":"dashboard-compose:bridge; READ_ONLY_HISTORICAL_UNVERIFIED"},
+    {"name":"vibetrading-crypto-maintenance-1","mapping":"BLOCKED_LEGACY_crypto-profile:crypto-maintenance"},
+    {"name":"vibetrading-crypto-storage-1","mapping":"BLOCKED_LEGACY_crypto-profile:crypto-storage"},
+    {"name":"vibetrading-maintenance-1","mapping":"BLOCKED_UNMAPPED_LEGACY_MAINTENANCE"},
+    {"name":"vibetrading-storage-1","mapping":"BLOCKED_UNMAPPED_LEGACY_STORAGE"},
+    {"name":"vibetrading-nats-1","mapping":"BLOCKED_ROLLBACK_ONLY_NATS"}
+  ],
+  "profiles": {
+    "primary": {
+      "compose": "deploy/primary-compose.yml",
+      "status": "NATS_FREE_LOCAL_ONLY",
+      "roles": ["runtime-check", "collector", "engine", "storage", "telegram", "dashboard"],
+      "activation": "BLOCKED_PENDING_LOCAL_MEASUREMENTS_AND_USER_APPROVAL"
+    },
+    "crypto-profile": {"compose": "deploy/crypto-profile.yml", "status": "LEGACY_UNVERIFIED", "activation": "BLOCKED"},
+    "dashboard-compose": {"compose": "deploy/dashboard-compose.yml", "status": "LEGACY_READ_ONLY_MONITOR_REVIEW_REQUIRED", "activation": "BLOCKED"},
+    "ls-market-profile": {"compose": "deploy/ls-market-profile.yml", "status": "OPTIONAL_UNVERIFIED", "activation": "BLOCKED"},
+    "release1-overlay": {"compose": "deploy/release1-overlay.yml", "status": "LEGACY_OVERLAY_UNVERIFIED", "activation": "BLOCKED"},
+    "root-compose": {"compose": "docker-compose.yml", "status": "ROLLBACK_ONLY", "activation": "BLOCKED"}
+  },
+  "timefolio": {
+    "submission": {"compose": "deploy/timefolio-order-compose.yml", "submit": false, "status": "BLOCKED"},
+    "monitor": {"compose": "deploy/dashboard-compose.yml", "read_only": true, "status": "UNVERIFIED"},
+    "browser_path": "/opt/dashboard-browsers"
+  },
+  "secrets": "NAMES_ONLY; values are external and excluded from release inputs",
+  "mount_identity": "NOT_OBSERVED; DEPLOY_BLOCKED",
+  "rollback": "deploy/rollback/MOV-06 is immutable historical input; no runtime DB rollback implied"
+}

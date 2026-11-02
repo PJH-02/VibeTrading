@@ -1,0 +1,271 @@
+{
+  "ticket": "REL-01",
+  "result": "PASS",
+  "acceptance": "ACCEPTED_LOCAL",
+  "timestamp": "2026-10-31T11:49:32.920245+09:00",
+  "actual_commit_sha": "3cf62a7f5b21da8da172e2b4439d7cdeea4af7fa",
+  "base_sha": "e5379b2599099ea213ac666dc177e839df224207",
+  "source_count": 149,
+  "source_sha256": "6105d6e1704b2c082172f8755a5368b963487e34317e170f9b52429da9beddbe",
+  "config_sha256": "4863cf4f6d53a5fcbaf031a4980060513406414c0e821d621692fd2a28bd4e7d",
+  "input_sha256": "6bbd2cb3c452a5733754002c9852bc8992034cfaf6cec275aadaeadb5f9efbb0",
+  "frozen_manifest_sha256": "757d39197cc444833ef72bf47ef30e9dfec7712318e631cd5986709ceb3c591f",
+  "candidate_file_count": 545,
+  "source_layout": "ten flat src domain packages",
+  "role_projections": 36,
+  "historical_server_roles": 14,
+  "historical_server_observed_utc": "2026-10-18T03:06:20.824057+00:00",
+  "current_production_inventory": "UNKNOWN_EXTERNAL_NOT_AUTHORIZED",
+  "deployment_activated": false,
+  "primary": "NATS_FREE_OPT_IN_LOCAL",
+  "legacy_nats": "ROLLBACK_ONLY_PRESERVED",
+  "image_ids": {
+    "app": "sha256:e10d9a4e24d6f23fa6b5abec79d21cf392777c2fba7df579641a19a4bd795f8f",
+    "browser": "sha256:eef81a36df628491fa43b7c449bb407dba9cdf45367e2dd60f0259265a1c5fa9",
+    "crypto": "sha256:0606c9c307e50912dfe348a355162c6d1e557e43ebfb8e2f64b867909a1d0386",
+    "ledger": "sha256:28880d9ebbc463adb088f7e9e771fc0b82f8a54d360c125e95ca998902ea842e"
+  },
+  "image_base_ids": {
+    "app": "sha256:6c4e4b372064c5d647d59c41ef556b4c3e5ac4d5cb59312b64b5b6f13da99651",
+    "browser": "sha256:e10d9a4e24d6f23fa6b5abec79d21cf392777c2fba7df579641a19a4bd795f8f",
+    "crypto": "sha256:6c4e4b372064c5d647d59c41ef556b4c3e5ac4d5cb59312b64b5b6f13da99651",
+    "ledger": "sha256:0606c9c307e50912dfe348a355162c6d1e557e43ebfb8e2f64b867909a1d0386"
+  },
+  "dependency_versions_pinned_by_cached_image_ids": {
+    "app": 108,
+    "browser": 108,
+    "crypto": 108,
+    "ledger": 108
+  },
+  "dependency_lock_limit": "requirements.txt alone is not a resolved lock; immutable measured cache IDs plus actual installed version inventory pin this local artifact",
+  "tests": {
+    "full_python": 3208,
+    "guarded_leases": 25,
+    "distinct_required_python": 3233,
+    "focused_including_11_lead_cases": 108,
+    "public_new_release_tests": 37,
+    "required_skipped": 0,
+    "required_deselected": 0,
+    "external_live_data_deselected": 2,
+    "inherited_deprecation_warnings": 2,
+    "all_acceptance_exits": 0
+  },
+  "image_verification": {
+    "app": {
+      "image_id": "sha256:e10d9a4e24d6f23fa6b5abec79d21cf392777c2fba7df579641a19a4bd795f8f",
+      "exit": 0,
+      "result": {
+        "source_files_exact": 149,
+        "config_files_exact": 10,
+        "domain_imports": 10,
+        "cold_source_modules": 149,
+        "cli_help_checks": 3,
+        "isolated_cwd": "/tmp",
+        "uid": 10001,
+        "retired_namespace_absent": true
+      },
+      "configured_command": [
+        "python",
+        "-m",
+        "runtime.cli",
+        "status"
+      ]
+    },
+    "browser": {
+      "image_id": "sha256:eef81a36df628491fa43b7c449bb407dba9cdf45367e2dd60f0259265a1c5fa9",
+      "exit": 0,
+      "result": {
+        "source_files_exact": 149,
+        "config_files_exact": 10,
+        "domain_imports": 10,
+        "cold_source_modules": 149,
+        "cli_help_checks": 3,
+        "isolated_cwd": "/tmp",
+        "uid": 10001,
+        "retired_namespace_absent": true
+      },
+      "configured_command": [
+        "python",
+        "-m",
+        "operations.dashboard.timefolio_monitor"
+      ],
+      "browser_actual_blank_exit": 0
+    },
+    "crypto": {
+      "image_id": "sha256:0606c9c307e50912dfe348a355162c6d1e557e43ebfb8e2f64b867909a1d0386",
+      "exit": 0,
+      "result": {
+        "source_files_exact": 149,
+        "config_files_exact": 10,
+        "domain_imports": 10,
+        "cold_source_modules": 149,
+        "cli_help_checks": 3,
+        "isolated_cwd": "/tmp",
+        "uid": 10001,
+        "retired_namespace_absent": true
+      },
+      "configured_command": [
+        "python",
+        "-m",
+        "runtime.cli",
+        "status"
+      ]
+    },
+    "ledger": {
+      "image_id": "sha256:28880d9ebbc463adb088f7e9e771fc0b82f8a54d360c125e95ca998902ea842e",
+      "exit": 0,
+      "result": {
+        "source_files_exact": 149,
+        "config_files_exact": 10,
+        "domain_imports": 10,
+        "cold_source_modules": 149,
+        "cli_help_checks": 3,
+        "isolated_cwd": "/tmp",
+        "uid": 10001,
+        "retired_namespace_absent": true
+      },
+      "configured_command": [
+        "python",
+        "-m",
+        "runtime.cli",
+        "status"
+      ]
+    }
+  },
+  "compose_matrix_count": 7,
+  "wheel": {
+    "builds": [
+      {
+        "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/wheel-build-1/dist/vibetrading-0.0.0-py3-none-any.whl",
+        "sha256": "68816d8705f6bf3f70431b8378f872d11f517883e3fe58340051d6291f1a40dc",
+        "record_sha256": "72ba7f1c0bbb76ffe2173fda0c7fe1f99e50590734be59982c279ee3a42f6d00",
+        "source_files": 149,
+        "source_date_epoch": "1793385776"
+      },
+      {
+        "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/wheel-build-2/dist/vibetrading-0.0.0-py3-none-any.whl",
+        "sha256": "68816d8705f6bf3f70431b8378f872d11f517883e3fe58340051d6291f1a40dc",
+        "record_sha256": "72ba7f1c0bbb76ffe2173fda0c7fe1f99e50590734be59982c279ee3a42f6d00",
+        "source_files": 149,
+        "source_date_epoch": "1793385776"
+      }
+    ],
+    "reproducible_identical_bytes": true,
+    "all149_source_bytes_verified": true,
+    "all_record_hashes_and_sizes_verified": true,
+    "dependencies_installed": false
+  },
+  "wheel_cold_import_count": 149,
+  "wheel_reproducible_identical_bytes": true,
+  "image_reproducibility": "same frozen input selects same cached immutable IDs with byte-identical manifest; no no-cache reproducible OCI claim",
+  "runtime_source_changes": false,
+  "worker_model": "gpt-6-luna",
+  "external_worker_calls": 0,
+  "worker_repairs": 2,
+  "lead_model_auth": "unchanged sol lead",
+  "lead_corrections": "CLI wheel archive roundtrip/fresh dependency metadata; BuildKit cache-ID aliases; removal of inherited own-project editable metadata in image layers. Substantive implementation remains bounded worker output.",
+  "prior_failed_probes": {
+    "bare_image_id_FROM": "BuildKit interpreted as registry name; lookup denied, no image pulled; fixed by ID-derived local cache alias checked before/after build",
+    "initial_image_namespace_probe": "Rejected inherited editable namespace hooks; fixed in image assembly; final all4 clean",
+    "lead_test_harness": "Two initial fixture assumptions and bad-wheel test setup corrected; final actual108 and full3233 pass"
+  },
+  "safety": "No trading-provider/account/order/cancel access, broker-fee reception, server SSH/service changes, Compose up, image push/pull, package installation, original-data deletion or production activation/deployment.",
+  "artifact_root": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031",
+  "artifacts": {
+    "REL01-frozen-release-v2.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01-frozen-release-v2.json",
+      "sha256": "7bcd4bf7b7effb04def4f635c86c001cea941a0f2d1c0cb0913930ebc6487ead"
+    },
+    "REL01v2-cli-freeze.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01v2-cli-freeze.result.json",
+      "sha256": "c68c9b00a2eaaab54ad1007b0acebb0688e98e2d3ff03bbf54a01266a22cba04"
+    },
+    "REL01v2-cli-build.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01v2-cli-build.result.json",
+      "sha256": "47279bd58abd17cef019ae665b24c62ccfb3824940e8dd8b3969fa0c874b8ba2"
+    },
+    "REL01v2-cli-verify.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01v2-cli-verify.result.json",
+      "sha256": "3ad7b74a583837375ffe1edc5f59461291072d85315c2ba004be0f72340da4b5"
+    },
+    "REL01v2-cli-rebuild.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01v2-cli-rebuild.result.json",
+      "sha256": "ee132cc0f09c75db86580377ffc0adace451a55437016010fadb2a0aa2fddd1c"
+    },
+    "REL01-final-v2-image-evidence.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01-final-v2-image-evidence.json",
+      "sha256": "8e6185d758c2d72e163fedf550c80b6f9802ea7e68a7f083ea8802ee38cea393"
+    },
+    "REL01-final-v2-compose-evidence.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01-final-v2-compose-evidence.json",
+      "sha256": "7635be29d0a57261d24e11e2f9c40e0be9f0bc200d23bed1768dc486b9b36c14"
+    },
+    "REL01-final-full.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01-final-full.result.json",
+      "sha256": "c775875fed493897c2897438fa2ddced54c3bfb54b55ed8a5d283c14ada31492"
+    },
+    "REL01-final-full.stdout.log": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01-final-full.stdout.log",
+      "sha256": "f1aa2b25ee7af532f71f5be136adb26f08d0735319ef13ef1bebddc49b09710a"
+    },
+    "REL01-final-full.junit.xml": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01-final-full.junit.xml",
+      "sha256": "e0093444a3c61de6c97ec43667a115da309f0469fb33a648877d7cf325210cfc"
+    },
+    "REL01-leases.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01-leases.result.json",
+      "sha256": "6cabd8795c108ccbf6034dbe30a4a54e7fa78c12cd888348c6a450660759da8b"
+    },
+    "REL01-leases.junit.xml": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01-leases.junit.xml",
+      "sha256": "f335ef9cb9b9deb9dc576a8f131b73c015895d7fb8a04b334e480a859dd6af13"
+    },
+    "REL01-LEAD-focused-v4.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01-LEAD-focused-v4.result.json",
+      "sha256": "bd24e4ebce5158d048c185e142b5bf266e2fcde541fbe7d2a1c3ba52ad52909f"
+    },
+    "REL01-LEAD-focused-v4.junit.xml": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01-LEAD-focused-v4.junit.xml",
+      "sha256": "deea392838da75abb033198b3deca86a2a5a8fd16bca934bec6a58b1222ff00d"
+    },
+    "REL01-wheel-evidence.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01-wheel-evidence.json",
+      "sha256": "9628d19ca8ffd01938e5c12e2e3b13df4ca7e0f79bd6f16e042830ef76005e7b"
+    },
+    "REL01-wheel-offrepo-imports.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01-wheel-offrepo-imports.result.json",
+      "sha256": "ad58ca14ad6d7f1c14abbf342c9fdf069f29b3783d6951274bad38b779e4360c"
+    },
+    "REL01-worker-final-provenance.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01-worker-final-provenance.json",
+      "sha256": "6561f24f5979aee61b5e0a56a3c4ccee4aa043fbddcc74fa0fc84674e24a498f"
+    },
+    "REL01-lead-small-corrections.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01-lead-small-corrections.json",
+      "sha256": "4f905d60fad3d792c9112eea73034fd5fa38ea5596c28685d1a2d7c9d8b6d033"
+    },
+    "REL01-staged-whitespace-correction.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01-staged-whitespace-correction.json",
+      "sha256": "8f0202957eb0676670c16faebbe6e4ca6705bcc81bef64e44f364287d2f1a21f"
+    },
+    "REL01-FROM-id-probe.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01-FROM-id-probe.result.json",
+      "sha256": "403a8b33df704f9c39b844aa0821b57f157e6f0a28d891ab8abccb5075c67839"
+    },
+    "REL01-final-app-exact-image.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01-final-app-exact-image.result.json",
+      "sha256": "1d5e0428ac067f0ad8bb3286b202adb9fb122129e6090830bf023d3f84eab9ce"
+    },
+    "REL01-repair2-final3.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01-repair2-final3.result.json",
+      "sha256": "2d7f3881c919d36ca3119087a249b590b5b725db64304cd0e2171b7c6355bd81"
+    }
+  },
+  "immutable04_sha256": "dc87aacc4be82eedd0c7cd85d653cc4e17dcc152ee5b718a8bb2eec2954af5ee",
+  "release_production_gate_promotion": false,
+  "next_task": "DEP-01",
+  "private_receipt": {
+    "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/REL01.acceptance.json",
+    "sha256": "ca4a7eb470968124970796fab5017f68164108fc6b22031243f1a221cb20dc69"
+  }
+}
