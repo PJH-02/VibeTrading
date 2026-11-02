@@ -9,6 +9,7 @@ import struct
 
 import pytest
 
+from storage import market_spool
 from storage.market_spool import MarketSpool, RetainedPrefix, SpoolCorruption, SpoolCursor, SpoolError, SpoolReader, SpoolRotateRequired, capture_retained_prefix, read_spool_records, scan_spool
 
 
@@ -76,6 +77,39 @@ def reader(root: Path, proof, after, **updates):
                        retained_prefix=proof, **read_limits(**updates))
 
 
+def race_inventory_stat(monkeypatch, target_name):
+    original_scandir = market_spool.os.scandir
+    raced = []
+
+    class Entry:
+        def __init__(self, entry):
+            self._entry = entry
+            self.name = entry.name
+
+        def stat(self, *, follow_symlinks=True):
+            if self.name == target_name:
+                raced.append(self.name)
+                raise FileNotFoundError(self.name)
+            return self._entry.stat(follow_symlinks=follow_symlinks)
+
+    class Scan:
+        def __init__(self, scan):
+            self._scan = scan
+
+        def __enter__(self):
+            self._scan.__enter__()
+            return self
+
+        def __exit__(self, *args):
+            return self._scan.__exit__(*args)
+
+        def __iter__(self):
+            return (Entry(entry) for entry in self._scan)
+
+    monkeypatch.setattr(market_spool.os, "scandir", lambda path: Scan(original_scandir(path)))
+    return raced
+
+
 PAYLOADS = [b"one", b"two", b"three", b"four", b"five"]
 
 
@@ -86,6 +120,21 @@ def test_default_v1_scan_fields_and_reader_behavior_are_unchanged(tmp_path):
     assert report.segment_count == report.record_count == report.last_sequence == 4
     assert [row.payload for row in read_spool_records(
         tmp_path, producer_id=PRODUCER, incarnation=INCARNATION, **read_limits())] == PAYLOADS[:4]
+
+
+def test_retained_incremental_reader_tolerates_only_checkpoint_temp_stat_race(tmp_path, monkeypatch):
+    full = tmp_path / "full"
+    trimmed = tmp_path / "trimmed"
+    build_full(full, PAYLOADS[:4])
+    proof = capture(full, 2)
+    trimmed_copy(full, trimmed, 2)
+    live = reader(trimmed, proof, SpoolCursor(PRODUCER, INCARNATION, 1))
+    (trimmed / "checkpoint.json.tmp").write_bytes(b"temporary checkpoint")
+    raced = race_inventory_stat(monkeypatch, "checkpoint.json.tmp")
+
+    assert [row.payload for row in live.read_batch(max_records=8, max_bytes=8192)] == PAYLOADS[1:4]
+    assert raced == ["checkpoint.json.tmp"]
+    assert live.cursor.sequence == live.durable_cursor.sequence == 4
 
 
 def test_capture_is_read_only_and_roundtrips_with_external_pins(tmp_path):

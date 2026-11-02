@@ -44,11 +44,15 @@ class DeliveryBudgets:
     poll_seconds: float
     reconnect_backoff_cap_seconds: float
     io_timeout_seconds: float
+    max_inflight_records: int = 1
 
     def __post_init__(self):
         for value in (self.max_batch_records, self.max_batch_bytes):
             if type(value) is not int or value <= 0:
                 raise ValueError("delivery budgets require explicit positive integers")
+        if (type(self.max_inflight_records) is not int or self.max_inflight_records <= 0
+                or self.max_inflight_records > self.max_batch_records):
+            raise ValueError("delivery in-flight records must be positive and fit the batch")
         for value in (self.poll_seconds, self.reconnect_backoff_cap_seconds, self.io_timeout_seconds):
             if isinstance(value, bool) or not math.isfinite(value) or value <= 0:
                 raise ValueError("delivery timing budgets must be positive and finite")
@@ -273,31 +277,67 @@ class SpoolingMarketPublisher:
                 self._drain_idle_pongs(transport)
                 await asyncio.sleep(self.delivery_budgets.poll_seconds)
                 continue
-            for record in records:
-                if (record.cursor.sequence!=self._last_applied+1
-                        or (record.cursor.producer,record.cursor.incarnation)!=(self.producer,self.incarnation)):
-                    raise DeliveryIntegrityError("spool delivery cursor is non-contiguous")
-                frame=RecoveryFrame(EngineCursor(record.cursor.producer,record.cursor.incarnation,
-                                                 record.cursor.sequence),record.payload)
-                self._delivery_inflight_records=1
-                self._delivery_stage="live_send"
-                if not transport.try_send(frame):
-                    raise RuntimeError("durable delivery send failed")
+            window=self.delivery_budgets.max_inflight_records
+            for offset in range(0,len(records),window):
+                chunk=records[offset:offset+window]
+                frames=[]
+                for record in chunk:
+                    if (record.cursor.sequence!=self._last_applied+len(frames)+1
+                            or (record.cursor.producer,record.cursor.incarnation)!=(self.producer,self.incarnation)):
+                        raise DeliveryIntegrityError("spool delivery cursor is non-contiguous")
+                    frames.append(RecoveryFrame(EngineCursor(record.cursor.producer,record.cursor.incarnation,
+                                                              record.cursor.sequence),record.payload))
                 deadline=asyncio.get_running_loop().time()+self.delivery_budgets.io_timeout_seconds
-                self._delivery_stage="live_received_ack"
-                received=await self._receive_delivery_ack(transport,deadline)
-                if (received.phase!="RECEIVED" or received.cursor!=frame.cursor
-                        or received.digest!=frame.digest):
-                    raise RuntimeError("durable delivery receipt mismatch")
-                self._delivery_stage="live_applied_ack"
-                receipt=await self._receive_delivery_ack(transport,deadline)
+                self._delivery_inflight_records=len(frames)
+                self._delivery_stage="live_send"
+                for frame in frames:
+                    if asyncio.get_running_loop().time()>=deadline or not transport.try_send(frame):
+                        raise RuntimeError("durable delivery send failed or chunk deadline exceeded")
+                await self._wait_delivery_chunk(transport,frames,deadline,replay=False)
                 self._delivery_inflight_records=0
-                if receipt.phase!="APPLIED" or receipt.cursor!=frame.cursor or receipt.digest!=frame.digest:
-                    raise RuntimeError("durable delivery acknowledgement mismatch")
                 self._delivery_stage="live_accounting"
-                self._last_applied=frame.cursor.sequence
-                self._applied+=1
+                self._last_applied=frames[-1].cursor.sequence
+                self._applied+=len(frames)
                 self._track_delivery_lag()
+
+    async def _wait_delivery_chunk(self,transport,frames,deadline,*,replay):
+        """Validate one bounded ACK window without moving past APPLIED prefix."""
+        expected={(frame.cursor.producer,frame.cursor.incarnation,frame.cursor.sequence):frame
+                  for frame in frames}
+        received=set()
+        applied_index=0
+        received_index=0
+        while applied_index<len(frames):
+            if replay:
+                self._delivery_stage="replay_applied_ack"
+            elif applied_index==0 and received_index<len(frames):
+                self._delivery_stage="live_received_ack"
+            else:
+                self._delivery_stage="live_applied_ack"
+            ack=await self._receive_delivery_ack(transport,deadline)
+            key=(getattr(getattr(ack,"cursor",None),"producer",None),
+                 getattr(getattr(ack,"cursor",None),"incarnation",None),
+                 getattr(getattr(ack,"cursor",None),"sequence",None))
+            frame=expected.get(key)
+            if frame is None or getattr(ack,"digest",None)!=frame.digest:
+                raise RuntimeError("durable delivery acknowledgement cursor or digest mismatch")
+            if replay:
+                if ack.phase!="APPLIED" or frame.cursor!=frames[applied_index].cursor:
+                    raise RuntimeError("durable replay acknowledgement is not an ordered APPLIED prefix")
+                applied_index+=1
+                continue
+            if ack.phase=="RECEIVED":
+                if (key in received or received_index>=len(frames)
+                        or frame.cursor!=frames[received_index].cursor):
+                    raise RuntimeError("durable delivery receipt is duplicate or out of order")
+                received.add(key)
+                received_index+=1
+            elif ack.phase=="APPLIED":
+                if (frame.cursor!=frames[applied_index].cursor or key not in received):
+                    raise RuntimeError("durable delivery APPLIED is duplicate, unreceived or out of order")
+                applied_index+=1
+            else:
+                raise RuntimeError("unexpected durable delivery acknowledgement phase")
 
     async def _receive_delivery_ack(self, transport, deadline):
         """Wait for a non-heartbeat receipt without extending the record deadline."""
@@ -366,25 +406,27 @@ class SpoolingMarketPublisher:
                             records=await loop.run_in_executor(self._executor,self._read_delivery_batch,limit)
                             if not records:
                                 raise DeliveryIntegrityError("spool replay ended before fixed high-water")
-                            for record in records:
-                                if (record.cursor.sequence!=checkpoint.sequence+1
-                                        or record.cursor.sequence>durable.sequence
-                                        or (record.cursor.producer,record.cursor.incarnation)!=(self.producer,self.incarnation)):
-                                    raise DeliveryIntegrityError("spool replay crossed fixed high-water or cursor")
-                                frame=RecoveryFrame(EngineCursor(record.cursor.producer,record.cursor.incarnation,
-                                                                 record.cursor.sequence),record.payload)
-                                digest=frame.digest
-                                self._delivery_inflight_records=1
-                                self._delivery_stage="replay_send"
-                                if not transport.try_send(frame,replay=True):
-                                    raise RuntimeError("durable replay send failed")
-                                self._delivery_stage="replay_applied_ack"
+                            window=self.delivery_budgets.max_inflight_records
+                            for offset in range(0,len(records),window):
+                                chunk=records[offset:offset+window]
+                                frames=[]
+                                for record in chunk:
+                                    if (record.cursor.sequence!=checkpoint.sequence+len(frames)+1
+                                            or record.cursor.sequence>durable.sequence
+                                            or (record.cursor.producer,record.cursor.incarnation)!=(self.producer,self.incarnation)):
+                                        raise DeliveryIntegrityError("spool replay crossed fixed high-water or cursor")
+                                    frames.append(RecoveryFrame(EngineCursor(record.cursor.producer,record.cursor.incarnation,
+                                                                             record.cursor.sequence),record.payload))
                                 deadline=asyncio.get_running_loop().time()+self.delivery_budgets.io_timeout_seconds
-                                receipt=await self._receive_delivery_ack(transport,deadline)
+                                self._delivery_inflight_records=len(frames)
+                                self._delivery_stage="replay_send"
+                                for frame in frames:
+                                    if asyncio.get_running_loop().time()>=deadline or not transport.try_send(frame,replay=True):
+                                        raise RuntimeError("durable replay send failed or chunk deadline exceeded")
+                                await self._wait_delivery_chunk(transport,frames,deadline,replay=True)
                                 self._delivery_inflight_records=0
-                                if receipt.phase!="APPLIED" or receipt.cursor!=frame.cursor or receipt.digest!=frame.digest:
-                                    raise RuntimeError("durable replay acknowledgement mismatch")
-                                checkpoint=frame.cursor
+                                checkpoint=frames[-1].cursor
+                                digest=frames[-1].digest
                                 self._last_applied=checkpoint.sequence
                                 self._track_delivery_lag()
                         high_water=checkpoint

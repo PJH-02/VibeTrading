@@ -347,6 +347,264 @@ async def test_delivery_waits_through_received_for_two_live_applied_receipts(tmp
 
 
 @pytest.mark.asyncio
+async def test_opt_in_delivery_window_sends_live_chunk_before_waiting_and_correlates_interleaved_acks(tmp_path):
+    producer,incarnation='collector','window-run'
+    spool_args=dict(max_disk_bytes=65536,max_records=64,max_frame_bytes=512,max_header_bytes=128,
+                    segment_max_bytes=4096,segment_max_records=32,segment_max_age_seconds=60)
+    def spool_factory():return MarketSpool(tmp_path,producer,incarnation,**spool_args)
+    def reader_factory(cursor):
+        return SpoolReader(tmp_path,producer,incarnation,after=SpoolCursor(
+            cursor.producer,cursor.incarnation,cursor.sequence),
+            max_disk_bytes=spool_args['max_disk_bytes'],max_records=spool_args['max_records'],
+            max_frame_bytes=spool_args['max_frame_bytes'],max_header_bytes=spool_args['max_header_bytes'])
+
+    class WindowPeer:
+        def __init__(self):self.sent=[];self.chunk=[];self.acks=asyncio.Queue();self.max_chunk=0;self.max_chunk_bytes=0
+        async def connect(self):pass
+        async def request_resume(self,target):
+            return TransportAck('RESUMED',target,hashlib.sha256(b'').hexdigest())
+        def try_send(self,item,*,replay=False):
+            assert not replay
+            self.sent.append(item);self.chunk.append(item);self.max_chunk=max(self.max_chunk,len(self.chunk))
+            if len(self.chunk)==2:
+                self.max_chunk_bytes=max(self.max_chunk_bytes,sum(len(frame.payload) for frame in self.chunk))
+                for frame in self.chunk:
+                    self.acks.put_nowait(TransportAck('RECEIVED',frame.cursor,frame.digest))
+                for frame in self.chunk:
+                    self.acks.put_nowait(TransportAck('APPLIED',frame.cursor,frame.digest))
+                self.chunk=[]
+            return True
+        async def receive_ack(self):return await self.acks.get()
+        async def close(self):pass
+
+    peer=WindowPeer()
+    publisher=SpoolingMarketPublisher(producer=producer,incarnation=incarnation,
+        spool_factory=spool_factory,transport=None,budgets=PipelineBudgets(8,4096,512,8,1),env={},
+        on_invalid=lambda *_:None,resume_existing=True,
+        delivery_budgets=DeliveryBudgets(2,2048,.001,.01,.5,max_inflight_records=2),
+        reader_factory=reader_factory,transport_factory=lambda:peer)
+    try:
+        await publisher.connect()
+        for _ in range(4):publisher.accept_payload(b'x'*300)
+        await until(lambda:publisher.stats['applied']==4 or publisher.stats['invalid'])
+        assert peer.max_chunk==2
+        assert peer.max_chunk_bytes==600<=publisher.delivery_budgets.max_batch_bytes
+        assert [frame.cursor.sequence for frame in peer.sent]==[1,2,3,4]
+        assert publisher.stats['last_applied_sequence']==publisher.stats['last_durable_sequence']==4
+        assert not publisher.stats['invalid']
+    finally:
+        await publisher.close()
+
+
+@pytest.mark.asyncio
+async def test_opt_in_delivery_window_replays_chunks_to_fixed_high_water_before_commit(tmp_path):
+    producer,incarnation='collector','replay-window'
+    spool_args=dict(max_disk_bytes=65536,max_records=64,max_frame_bytes=512,max_header_bytes=128,
+                    segment_max_bytes=4096,segment_max_records=32,segment_max_age_seconds=60)
+    seed=MarketSpool(tmp_path,producer,incarnation,**spool_args)
+    for number in range(4):seed.append(f'replay-{number}'.encode())
+    high=seed.flush();seed.close()
+    def spool_factory():return MarketSpool(tmp_path,producer,incarnation,**spool_args)
+    def reader_factory(cursor):
+        return SpoolReader(tmp_path,producer,incarnation,after=SpoolCursor(
+            cursor.producer,cursor.incarnation,cursor.sequence),
+            max_disk_bytes=spool_args['max_disk_bytes'],max_records=spool_args['max_records'],
+            max_frame_bytes=spool_args['max_frame_bytes'],max_header_bytes=spool_args['max_header_bytes'])
+
+    class ReplayWindowPeer:
+        def __init__(self):self.sent=[];self.chunk=[];self.acks=asyncio.Queue();self.commits=[]
+        async def connect(self):pass
+        async def request_resume(self,target):return TransportAck('REJECTED',target,hashlib.sha256(b'').hexdigest())
+        async def query_cursor(self,target):return TransportAck('QUERY',EngineCursor(producer,incarnation,0),hashlib.sha256(b'').hexdigest())
+        def try_send(self,item,*,replay=False):
+            assert replay
+            self.sent.append(item);self.chunk.append(item)
+            if len(self.chunk)==2:
+                for frame in self.chunk:
+                    self.acks.put_nowait(TransportAck('APPLIED',frame.cursor,frame.digest))
+                self.chunk=[]
+            return True
+        async def receive_ack(self):return await self.acks.get()
+        async def commit_recovery(self,cursor,digest):
+            self.commits.append((cursor,digest))
+            return cursor.sequence==high.sequence and digest==self.sent[-1].digest
+        async def close(self):pass
+
+    peer=ReplayWindowPeer()
+    publisher=SpoolingMarketPublisher(producer=producer,incarnation=incarnation,
+        spool_factory=spool_factory,transport=None,budgets=PipelineBudgets(8,4096,512,8,1),env={},
+        on_invalid=lambda *_:None,resume_existing=True,
+        delivery_budgets=DeliveryBudgets(4,2048,.001,.01,.5,max_inflight_records=2),
+        reader_factory=reader_factory,transport_factory=lambda:peer)
+    try:
+        await publisher.connect()
+        await until(lambda:publisher.stats['delivery_state']=='LIVE' or publisher.stats['invalid'])
+        assert [frame.cursor.sequence for frame in peer.sent]==[1,2,3,4]
+        assert all(peer.sent[index].cursor.sequence<high.sequence+1 for index in range(len(peer.sent)))
+        assert peer.commits==[(EngineCursor(producer,incarnation,4),peer.sent[-1].digest)]
+        assert publisher.stats['last_applied_sequence']==4
+        assert publisher.stats['applied']==0  # Replay retains its state-only statistic meaning.
+        assert not publisher.stats['invalid']
+    finally:
+        await publisher.close()
+
+
+@pytest.mark.asyncio
+async def test_window_timeout_recovers_applied_prefix_by_query_and_replays_only_suffix(tmp_path):
+    producer,incarnation='collector','window-reconnect'
+    spool_args=dict(max_disk_bytes=65536,max_records=64,max_frame_bytes=512,max_header_bytes=128,
+                    segment_max_bytes=4096,segment_max_records=32,segment_max_age_seconds=60)
+    def spool_factory():return MarketSpool(tmp_path,producer,incarnation,**spool_args)
+    def reader_factory(cursor):
+        return SpoolReader(tmp_path,producer,incarnation,after=SpoolCursor(
+            cursor.producer,cursor.incarnation,cursor.sequence),
+            max_disk_bytes=spool_args['max_disk_bytes'],max_records=spool_args['max_records'],
+            max_frame_bytes=spool_args['max_frame_bytes'],max_header_bytes=spool_args['max_header_bytes'])
+
+    class Peer:
+        def __init__(self,number):self.number=number;self.sent=[];self.chunk=[];self.acks=asyncio.Queue()
+        async def connect(self):pass
+        async def request_resume(self,target):
+            if self.number==0:return TransportAck('RESUMED',target,hashlib.sha256(b'').hexdigest())
+            return TransportAck('REJECTED',target,hashlib.sha256(b'').hexdigest())
+        async def query_cursor(self,target):
+            cursor=EngineCursor(producer,incarnation,3)
+            return TransportAck('QUERY',cursor,hashlib.sha256(b'live-2').hexdigest())
+        def try_send(self,frame,*,replay=False):
+            self.sent.append((frame,replay));self.chunk.append(frame)
+            if replay:
+                self.acks.put_nowait(TransportAck('APPLIED',frame.cursor,frame.digest))
+            elif len(self.chunk)==2:
+                current,self.chunk=self.chunk,[]
+                for item in current:self.acks.put_nowait(TransportAck('RECEIVED',item.cursor,item.digest))
+                if current[0].cursor.sequence==1:
+                    for item in current:self.acks.put_nowait(TransportAck('APPLIED',item.cursor,item.digest))
+                else:
+                    item=current[0]
+                    self.acks.put_nowait(TransportAck('APPLIED',item.cursor,item.digest))
+            return True
+        async def receive_ack(self):return await self.acks.get()
+        async def commit_recovery(self,cursor,digest):
+            return cursor.sequence==4 and digest==hashlib.sha256(b'live-3').hexdigest()
+        async def close(self):pass
+
+    peers=[]
+    def make_peer():
+        peer=Peer(len(peers));peers.append(peer);return peer
+    publisher=SpoolingMarketPublisher(producer=producer,incarnation=incarnation,
+        spool_factory=spool_factory,transport=None,budgets=PipelineBudgets(8,4096,512,8,1),env={},
+        on_invalid=lambda *_:None,resume_existing=True,
+        delivery_budgets=DeliveryBudgets(4,2048,.001,.005,.04,max_inflight_records=2),
+        reader_factory=reader_factory,transport_factory=make_peer)
+    try:
+        await publisher.connect()
+        for number in range(4):publisher.accept_payload(f'live-{number}'.encode())
+        await until(lambda:len(peers)>1 and publisher.stats['delivery_state']=='LIVE'
+                     or publisher.stats['invalid'])
+        assert len(peers)>=2 and not publisher.stats['invalid']
+        assert [frame.cursor.sequence for frame,_ in peers[0].sent]==[1,2,3,4]
+        assert [(frame.cursor.sequence,replay) for frame,replay in peers[1].sent]==[(4,True)]
+        assert publisher.stats['last_durable_sequence']==publisher.stats['last_applied_sequence']==4
+        assert publisher.stats['applied']==2  # Replay never increments the live-only counter.
+        assert publisher.stats['delivery_catchup_overshoot_records']==0
+    finally:
+        await publisher.close()
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize('fault',['bad_digest','duplicate','unknown','out_of_order','unexpected',
+    'missing','pong','send_reject','duplicate_received','unreceived'])
+async def test_delivery_window_faults_preserve_prior_applied_prefix_and_reconnect(fault,tmp_path):
+    producer,incarnation='collector','fault-window'
+    spool_args=dict(max_disk_bytes=65536,max_records=64,max_frame_bytes=512,max_header_bytes=128,
+                    segment_max_bytes=4096,segment_max_records=32,segment_max_age_seconds=60)
+    def spool_factory():return MarketSpool(tmp_path,producer,incarnation,**spool_args)
+    def reader_factory(cursor):
+        return SpoolReader(tmp_path,producer,incarnation,after=SpoolCursor(
+            cursor.producer,cursor.incarnation,cursor.sequence),
+            max_disk_bytes=spool_args['max_disk_bytes'],max_records=spool_args['max_records'],
+            max_frame_bytes=spool_args['max_frame_bytes'],max_header_bytes=spool_args['max_header_bytes'])
+
+    class FaultPeer:
+        def __init__(self,*,blocked=False):
+            self.sent=[];self.chunk=[];self.acks=asyncio.Queue();self.blocked=blocked
+            self.started=asyncio.Event();self.release=asyncio.Event();self.pong=False
+        async def connect(self):
+            self.started.set()
+            if self.blocked:await self.release.wait()
+        async def request_resume(self,target):return TransportAck('RESUMED',target,hashlib.sha256(b'').hexdigest())
+        def try_send(self,frame,*,replay=False):
+            assert not replay
+            if fault=='send_reject' and len(self.sent)>=2:return False
+            self.sent.append(frame);self.chunk.append(frame)
+            if len(self.chunk)==2:
+                current,self.chunk=self.chunk,[]
+                if fault!='unreceived' or len(self.sent)==2:
+                    for item in current:
+                        self.acks.put_nowait(TransportAck('RECEIVED',item.cursor,item.digest))
+                if len(self.sent)==2:
+                    for item in current:self.acks.put_nowait(TransportAck('APPLIED',item.cursor,item.digest))
+                elif fault=='duplicate_received':
+                    item=current[0];self.acks.put_nowait(TransportAck('RECEIVED',item.cursor,item.digest))
+                elif fault=='unreceived':
+                    item=current[0];self.acks.put_nowait(TransportAck('APPLIED',item.cursor,item.digest))
+                elif fault=='bad_digest':
+                    item=current[0];self.acks.put_nowait(TransportAck('APPLIED',item.cursor,'0'*64))
+                elif fault=='duplicate':
+                    item=current[0]
+                    self.acks.put_nowait(TransportAck('APPLIED',item.cursor,item.digest))
+                    self.acks.put_nowait(TransportAck('APPLIED',item.cursor,item.digest))
+                elif fault=='unknown':
+                    self.acks.put_nowait(TransportAck('RECEIVED',EngineCursor(producer,incarnation,99),'0'*64))
+                elif fault=='out_of_order':
+                    for item in reversed(current):self.acks.put_nowait(TransportAck('APPLIED',item.cursor,item.digest))
+                elif fault=='unexpected':
+                    item=current[0];self.acks.put_nowait(TransportAck('GAP',item.cursor,item.digest))
+                elif fault=='missing':
+                    item=current[0];self.acks.put_nowait(TransportAck('APPLIED',item.cursor,item.digest))
+                elif fault=='pong':self.pong=True
+            return True
+        async def receive_ack(self):
+            if self.pong:
+                await asyncio.sleep(0)
+                return TransportAck('PONG',EngineCursor(producer,incarnation,0),hashlib.sha256(b'').hexdigest())
+            return await self.acks.get()
+        async def close(self):pass
+
+    peers=[]
+    def make_peer():
+        peer=FaultPeer(blocked=bool(peers));peers.append(peer);return peer
+    publisher=SpoolingMarketPublisher(producer=producer,incarnation=incarnation,
+        spool_factory=spool_factory,transport=None,budgets=PipelineBudgets(8,4096,512,8,1),env={},
+        on_invalid=lambda *_:None,resume_existing=True,
+        delivery_budgets=DeliveryBudgets(4,2048,.001,.005,.05,max_inflight_records=2),
+        reader_factory=reader_factory,transport_factory=make_peer)
+    try:
+        await publisher.connect()
+        for number in range(4):publisher.accept_payload(f'fault-{number}'.encode())
+        await until(lambda:len(peers)>1 and peers[1].started.is_set())
+        assert publisher.stats['last_durable_sequence']==4
+        assert publisher.stats['last_applied_sequence']==2
+        assert publisher.stats['durable_applied_lag_records']==2
+        assert publisher.stats['delivery_inflight_records']==0
+        if fault in {'duplicate_received','unreceived'}:
+            assert publisher.stats['last_delivery_error_type']=='RuntimeError'
+        expected_sent=[1,2] if fault=='send_reject' else [1,2,3,4]
+        assert [frame.cursor.sequence for frame in peers[0].sent]==expected_sent
+    finally:
+        if len(peers)>1:peers[1].release.set()
+        await publisher.close()
+
+
+def test_delivery_window_budget_defaults_and_rejects_unsafe_values():
+    base=DeliveryBudgets(4,2048,.001,.01,.5)
+    assert base.max_inflight_records==1
+    with pytest.raises(ValueError):DeliveryBudgets(4,2048,.001,.01,.5,0)
+    with pytest.raises(ValueError):DeliveryBudgets(4,2048,.001,.01,.5,True)
+    with pytest.raises(ValueError):DeliveryBudgets(4,2048,.001,.01,.5,5)
+
+
+@pytest.mark.asyncio
 async def test_existing_spool_rejected_checkpoint_does_not_emit_old_or_new_frames():
     def factory():
         spool=Spool();spool.appended_cursor=EngineCursor('collector','run',7)

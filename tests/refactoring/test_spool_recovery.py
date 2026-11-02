@@ -52,6 +52,40 @@ def bytes_on_disk(root):
     return {path.name: path.read_bytes() for path in root.iterdir() if path.name != "writer.lock"}
 
 
+def race_inventory_stat(monkeypatch, target_name):
+    """Make one enumerated entry disappear exactly when inventory stats it."""
+    original_scandir = market_spool.os.scandir
+    raced = []
+
+    class Entry:
+        def __init__(self, entry):
+            self._entry = entry
+            self.name = entry.name
+
+        def stat(self, *, follow_symlinks=True):
+            if self.name == target_name:
+                raced.append(self.name)
+                raise FileNotFoundError(self.name)
+            return self._entry.stat(follow_symlinks=follow_symlinks)
+
+    class Scan:
+        def __init__(self, scan):
+            self._scan = scan
+
+        def __enter__(self):
+            self._scan.__enter__()
+            return self
+
+        def __exit__(self, *args):
+            return self._scan.__exit__(*args)
+
+        def __iter__(self):
+            return (Entry(entry) for entry in self._scan)
+
+    monkeypatch.setattr(market_spool.os, "scandir", lambda path: Scan(original_scandir(path)))
+    return raced
+
+
 def test_appended_is_not_durable_and_raw_bytes_survive_seal_restart_without_nats(tmp_path, monkeypatch):
     calls = []
     def unavailable(*args, **kwargs):
@@ -360,6 +394,78 @@ def test_incremental_reader_excludes_uncheckpointed_active_tail(tmp_path):
     spool.flush()
     assert tuple(row.payload for row in reader.read_batch(max_records=8, max_bytes=8192)) == (b"appended",)
     spool.close()
+
+
+def test_incremental_reader_tolerates_only_checkpoint_temp_stat_race_and_keeps_old_boundary(
+        tmp_path, monkeypatch):
+    spool = writer(tmp_path)
+    spool.append(b"durable"); spool.flush()
+    reader = incremental(tmp_path)
+    spool.append(b"not-yet-durable")
+    (tmp_path / "checkpoint.json.tmp").write_bytes(b"temporary checkpoint")
+    raced = race_inventory_stat(monkeypatch, "checkpoint.json.tmp")
+
+    assert tuple(row.payload for row in reader.read_batch(max_records=8, max_bytes=8192)) == (b"durable",)
+    assert raced == ["checkpoint.json.tmp"]
+    assert reader.cursor.sequence == reader.durable_cursor.sequence == 1
+    assert reader.read_batch(max_records=8, max_bytes=8192) == ()
+    assert reader.cursor.sequence == 1
+    abort_without_flush(spool)
+
+
+def test_incremental_inventory_still_counts_a_present_checkpoint_temp(tmp_path):
+    spool = writer(tmp_path)
+    spool.append(b"durable"); spool.flush()
+    temp = tmp_path / "checkpoint.json.tmp"
+    temp.write_bytes(b"temporary checkpoint")
+    total, _, _, checkpoint_temp = market_spool._inventory(tmp_path, 1024 * 1024, 32)
+    expected = sum(path.stat().st_size for path in tmp_path.iterdir())
+    assert checkpoint_temp is True
+    assert total == expected
+    abort_without_flush(spool)
+
+
+@pytest.mark.parametrize("entry_kind", ("directory", "symlink"))
+def test_incremental_reader_rejects_nonregular_checkpoint_temp(tmp_path, entry_kind):
+    spool = writer(tmp_path)
+    spool.append(b"durable"); spool.flush()
+    reader = incremental(tmp_path)
+    temp = tmp_path / "checkpoint.json.tmp"
+    if entry_kind == "directory":
+        temp.mkdir()
+    else:
+        target = tmp_path.parent / (tmp_path.name + "-symlink-target")
+        target.write_bytes(b"target")
+        temp.symlink_to(target)
+
+    with pytest.raises(SpoolCorruption, match="unexpected spool entry"):
+        reader.read_batch(max_records=8, max_bytes=8192)
+    assert reader.cursor.sequence == 0
+    abort_without_flush(spool)
+
+
+def test_incremental_reader_does_not_tolerate_missing_segment_stat(tmp_path, monkeypatch):
+    spool = writer(tmp_path)
+    spool.append(b"durable"); spool.flush()
+    reader = incremental(tmp_path)
+    segment_name = next(tmp_path.glob("*.active")).name
+    raced = race_inventory_stat(monkeypatch, segment_name)
+
+    with pytest.raises(SpoolCorruption, match="incremental spool read failed"):
+        reader.read_batch(max_records=8, max_bytes=8192)
+    assert raced == [segment_name]
+    assert reader.cursor.sequence == 0
+    with pytest.raises(SpoolError, match="fail-closed"):
+        reader.read_batch(max_records=8, max_bytes=8192)
+    abort_without_flush(spool)
+
+
+def test_nonretained_startup_still_reports_unfinished_checkpoint(tmp_path):
+    spool = writer(tmp_path)
+    spool.append(b"durable"); spool.flush(); spool.close()
+    (tmp_path / "checkpoint.json.tmp").write_bytes(b"unfinished")
+
+    assert "unfinished_checkpoint" in report(tmp_path).uncertainty_reason
 
 
 @pytest.mark.parametrize("change", ("regression", "incarnation", "partial_durable_tail", "checksum"))

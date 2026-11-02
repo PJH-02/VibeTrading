@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "ticket": "CUT-01",
+  "state": "IN_PROGRESS_PRE_CUT_REPAIR",
+  "recorded_utc": "2026-11-02T14:18:00.390470+00:00",
+  "frozen_source_sha": "36b34b757ff5a831801ab2641fab889775bfcd35",
+  "base_head": "972fb679583549e6c3ca8c49dd3795298673e62c",
+  "manifest_sha256": "a4199ecda434f2cad82b8b552de7b66a2203e4ac6cb05d47e77c4594220a2c37",
+  "app_image_id": "sha256:e8a21cdf276189e15a3ba44393ea8556ad8281c647ec9f695d9ac2ad2c77631a",
+  "worker": {
+    "lead_auth_unchanged": true,
+    "native": "gpt-6-luna",
+    "external_calls": 0
+  },
+  "full_server_switched": false,
+  "operational_verified": false,
+  "ret01_complete": false,
+  "real_orders": 0,
+  "original_data_deletions": 0,
+  "env_keys_changed": false,
+  "general_cleanup_started": false,
+  "gates": [
+    {
+      "id": "CUT-IMAGE",
+      "group": "identity",
+      "status": "PASS",
+      "reason": "Actual server canonical149imports/config10/CLI2 verified from exact accepted app image",
+      "recorded_utc": "2026-11-02T14:18:00.390470+00:00",
+      "frozen_sha": "36b34b757ff5a831801ab2641fab889775bfcd35"
+    },
+    {
+      "id": "CUT-CAPACITY",
+      "group": "feeds",
+      "status": "PASS",
+      "reason": "Three real public encoded-ingress samples each >1800seconds; measured frames/peaks frozen",
+      "recorded_utc": "2026-11-02T14:18:00.390470+00:00",
+      "frozen_sha": "36b34b757ff5a831801ab2641fab889775bfcd35"
+    },
+    {
+      "id": "CUT-MOUNTS",
+      "group": "mounts",
+      "status": "PASS",
+      "reason": "Third data-device identity+marker accepted; omitted /data fails before ensure_dirs",
+      "recorded_utc": "2026-11-02T14:18:00.390470+00:00",
+      "frozen_sha": "36b34b757ff5a831801ab2641fab889775bfcd35"
+    },
+    {
+      "id": "CUT-MOCK-POSITIONS",
+      "group": "accounts",
+      "status": "PASS",
+      "reason": "Existing MOCK/MOCK2 cached-token GET positions match journal; no refresh/orders; not all-open-order truth",
+      "recorded_utc": "2026-11-02T14:18:00.390470+00:00",
+      "frozen_sha": "36b34b757ff5a831801ab2641fab889775bfcd35"
+    },
+    {
+      "id": "CUT-FULL-CATALOGUE-BACKUP",
+      "group": "backup",
+      "status": "NOT_RUN",
+      "reason": "ETF/gaps backup+second restore passed; full domestic integrity/secondrestore and crypto snapshot pending; original owners retained",
+      "recorded_utc": "2026-11-02T14:18:00.390470+00:00",
+      "frozen_sha": "36b34b757ff5a831801ab2641fab889775bfcd35"
+    },
+    {
+      "id": "CUT-INGRESS-V1",
+      "group": "runtime",
+      "status": "FAIL",
+      "reason": "Actual trial Arcus admission bound exhausted; exact predicate not captured, noOOM; only newgroup stopped",
+      "recorded_utc": "2026-11-02T14:18:00.390470+00:00",
+      "frozen_sha": "36b34b757ff5a831801ab2641fab889775bfcd35"
+    },
+    {
+      "id": "CUT-PREFIX-V1",
+      "group": "storage",
+      "status": "PASS",
+      "reason": "3238 durable records contiguous through storage progress;619Parquet files hash+rows verified; not failed nondurable admissions",
+      "recorded_utc": "2026-11-02T14:18:00.390470+00:00",
+      "frozen_sha": "36b34b757ff5a831801ab2641fab889775bfcd35"
+    },
+    {
+      "id": "CUT-ENVELOPE-HYPOTHESIS",
+      "group": "diagnosis",
+      "status": "PASS",
+      "reason": "Corrected synthetic harness under.2CPU192MiB met2530.6/s then530.1/s,9326durable; FAKE ACK/control30ms flush; not operational proof",
+      "recorded_utc": "2026-11-02T14:18:00.390470+00:00",
+      "frozen_sha": "36b34b757ff5a831801ab2641fab889775bfcd35"
+    },
+    {
+      "id": "CUT-RUNTIME-V2",
+      "group": "runtime",
+      "status": "FAIL",
+      "reason": "Actual second trial storage falsely reports corruption when checkpoint.json.tmp disappears during atomic publication. Narrow repair ticket active. All new roles stopped; old14 retained. Arcus durable delivery backlog also requires further performance verification.",
+      "recorded_utc": "2026-11-02T14:18:00.390470+00:00",
+      "frozen_sha": "36b34b757ff5a831801ab2641fab889775bfcd35"
+    },
+    {
+      "id": "CUT-EXISTING-CLOUD",
+      "group": "cloud",
+      "status": "PASS",
+      "reason": "Existing maintenance archive-only settings+ROsecret mounts HEAD/fullGET145496bytes exactSHA; noPUT/delete; newpipelineCloud not verified",
+      "recorded_utc": "2026-11-02T14:18:00.390470+00:00",
+      "frozen_sha": "36b34b757ff5a831801ab2641fab889775bfcd35"
+    },
+    {
+      "id": "CUT-OPERATIONAL",
+      "group": "operation",
+      "status": "NOT_RUN",
+      "reason": "No production owner switch, current open-orders/UNKNOWN and rollback compatibility not yet fully proven; actual KR intraday and24x7 windows pending",
+      "recorded_utc": "2026-11-02T14:18:00.390470+00:00",
+      "frozen_sha": "36b34b757ff5a831801ab2641fab889775bfcd35"
+    },
+    {
+      "id": "RET-DEPENDENCIES",
+      "group": "retirement",
+      "status": "BLOCKED",
+      "reason": "Old14 roles active; actual NATS11connections; rollback/retention authority and unique-data/remote-prefix conditions unmet. Retired0.",
+      "recorded_utc": "2026-11-02T14:18:00.390470+00:00",
+      "frozen_sha": "36b34b757ff5a831801ab2641fab889775bfcd35"
+    }
+  ],
+  "private_receipt_path": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/release_verification.json",
+  "private_receipt_sha256": "226b61d708f023254ab8fd8350813117fcde4e856e7cb81ac6985746cca57abd",
+  "repair_state": "SOURCE_FIXED_PENDING_FROZEN_FULL_REGRESSION_AND_IMAGE_BUILD",
+  "source_review": {
+    "checkpoint_race": "incremental-only exact checkpoint temporary disappearance; strict startup, record segment/type/byte guards retained",
+    "delivery_window": "opt-in default1; bounded window with exact ordered APPLIED and aggregate market/control preflight",
+    "lead_test_fixture_adjustments": [
+      "regular-file st_mode for synthetic DirEntry",
+      "symlink target outside spool",
+      "duplicate RECEIVED bounds guard and unreceived APPLIED negative cases"
+    ],
+    "focused_independent_tests": 266,
+    "focused_actual_exit": 0,
+    "real_uds_independent_case": "three publishers, window32,192 synthesized events each,9 crypto instruments,576exact APPLIED,zero trading queue",
+    "full_regression": "initial5failures preserved; related synthetic stat fixture fixed; CAP04 comparisons21/21 pass on base and current; final frozen-source rerun pending",
+    "evidence_path": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/CUT01-final-focused.result.json"
+  }
+}

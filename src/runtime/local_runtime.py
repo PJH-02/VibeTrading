@@ -35,6 +35,8 @@ def validate_runtime(plan,settings):
     if sys.platform!='linux':raise RuntimeError('production local runtime requires Linux UDS')
     if settings.env.get('VIBETRADING_ENFORCE_MOUNTS','').lower()!='true':
         raise RuntimeError('local runtime requires enforced storage mount identities')
+    engine=EngineBudgets(**plan.engine)
+    _validate_delivery_window_capacity(plan,engine)
     from .runtime_paths import validate_runtime_paths
     from storage.local_storage import StorageBudgets, fact_storage_reserve
     from storage.local_events import FactsEventBudgets, checkpoint_storage_reserve
@@ -68,7 +70,6 @@ def validate_runtime(plan,settings):
         reserved[device]=reserved.get(device,0)+item.limits.max_disk_bytes
         if reserved[device]+plan.disk_reserve_bytes>shutil.disk_usage(ancestor).free:
             raise RuntimeError('combined spool budgets exceed free volume space and reserve')
-    engine=EngineBudgets(**plan.engine)
     if len(plan.producers)>engine.max_producers or engine.max_frame_bytes<max(p.pipeline.max_frame_bytes for p in plan.producers):
         raise RuntimeError('engine producer/frame budgets cannot cover configured collectors')
     if snapshot.max_instruments<engine.max_instruments:
@@ -76,6 +77,41 @@ def validate_runtime(plan,settings):
     if plan.etf_enabled and settings.env.get('ETF_EXECUTION_GUARDS','').lower()!='true':
         raise RuntimeError('local ETF requires dispatch guards')
     return engine
+
+
+def _validate_delivery_window_capacity(plan,engine):
+    """Preflight aggregate finite transport/engine headroom for opt-in windows."""
+    if not any(item.delivery is not None and item.delivery.max_inflight_records>1
+               for item in plan.producers):
+        return
+    transport=plan.transport
+    aggregate_records=aggregate_payload_bytes=aggregate_wire_bytes=0
+    control_header_bytes=transport.max_header_bytes+4
+    for item in plan.producers:
+        delivery=item.delivery
+        if delivery is None:
+            # The legacy publisher may fill its owned budget before its ACK
+            # worker releases records. Bound that whole possible flight.
+            count=min(item.pipeline.max_records,transport.max_records)
+            payload=min(item.pipeline.max_bytes,count*item.pipeline.max_frame_bytes)
+        else:
+            count=delivery.max_inflight_records
+            payload=min(count*item.pipeline.max_frame_bytes,delivery.max_batch_bytes)
+        wire=payload+count*control_header_bytes
+        if count>transport.max_records or wire>transport.max_bytes:
+            raise RuntimeError('producer delivery window exceeds transport market budget')
+        required_ack_records=2*count+8
+        required_ack_bytes=required_ack_records*control_header_bytes
+        if (transport.max_control_records<required_ack_records
+                or transport.max_control_bytes<required_ack_bytes):
+            raise RuntimeError('producer delivery window exceeds bounded ACK headroom')
+        aggregate_records+=count
+        aggregate_payload_bytes+=payload
+        aggregate_wire_bytes+=wire
+    if aggregate_records>transport.max_records or aggregate_records>engine.max_records:
+        raise RuntimeError('aggregate delivery windows exceed transport or engine record capacity')
+    if aggregate_payload_bytes>engine.max_bytes or aggregate_wire_bytes>transport.max_bytes:
+        raise RuntimeError('aggregate delivery windows exceed transport or engine byte capacity')
 
 
 def _scan(item):

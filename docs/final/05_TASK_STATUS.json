@@ -39,10 +39,10 @@
   "new_task_counts": {
     "total": 35,
     "accepted": 32,
-    "in_progress": 0,
+    "in_progress": 1,
     "blocked": 0,
-    "not_started": 1,
-    "external_not_authorized": 2
+    "not_started": 2,
+    "external_not_authorized": 0
   },
   "next_ready_candidate": [],
   "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
@@ -428,7 +428,7 @@
     ],
     "missing_required_local_code_blocks_feature_release": true
   },
-  "active_task_id": null,
+  "active_task_id": "CUT-01",
   "last_accepted_task_id": "DEP-01",
   "stop_requested": false,
   "tickets": [
@@ -1841,25 +1841,44 @@
     {
       "task_id": "CUT-01",
       "wave": "W7",
-      "status": "EXTERNAL_NOT_AUTHORIZED",
+      "status": "IN_PROGRESS",
       "depends_on": [
         "DEP-01"
       ],
       "risk_review": "CRITICAL_CODEX",
       "required_for_offline_release": false,
       "may_need_scope_decision": false,
-      "base_sha": null,
+      "base_sha": "972fb679583549e6c3ca8c49dd3795298673e62c",
       "actual_commit_sha": null,
       "acceptance_receipt": null,
       "test_exit": null,
-      "blocking_reasons": [],
+      "blocking_reasons": [
+        "Checkpoint-temp race and bounded delivery source repairs reviewed; final immutable-source regression/new-image/server validation pending",
+        "Full catalogue backup integrity/second restore still pending",
+        "Current account open-orders/UNKNOWN/owner handoff, newCloud/recovery/rollback, representative intraday and24x7 observation remain unverified"
+      ],
       "definition_file": "02_DEVELOPER_TICKETS.md",
-      "definition_heading_id": "CUT-01"
+      "definition_heading_id": "CUT-01",
+      "user_authorization": {
+        "date": "2026-11-02",
+        "scope": "Existing single server deployment/preflight/feed/PAPER/shadow/account-owner verification using existing env; env rotation and general repository cleanup postponed",
+        "server_changes_authorized": true,
+        "live_order_activation": "NOT_ARMED_REQUIRES_EXACT_SCOPE",
+        "original_data_deletion": false
+      },
+      "implementation_packet": "docs/tickets/CUT-01-server-execution.md",
+      "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102",
+      "progress_receipt": "docs/tickets/CUT-01-progress.json",
+      "execution_stage": "PRE_CUT_SOURCE_FIXED_PENDING_FROZEN_VALIDATION",
+      "repair_packets": [
+        "docs/tickets/CUT-01-checkpoint-race.md",
+        "docs/tickets/CUT-01-delivery-window.md"
+      ]
     },
     {
       "task_id": "RET-01",
       "wave": "W7",
-      "status": "EXTERNAL_NOT_AUTHORIZED",
+      "status": "NOT_STARTED",
       "depends_on": [
         "CUT-01"
       ],
@@ -1870,9 +1889,16 @@
       "actual_commit_sha": null,
       "acceptance_receipt": null,
       "test_exit": null,
-      "blocking_reasons": [],
+      "blocking_reasons": [
+        "Requires CUT-01 OPERATIONAL_VERIFIED plus actual production-caller/rollback/unique-data/retained-readback proofs"
+      ],
       "definition_file": "02_DEVELOPER_TICKETS.md",
-      "definition_heading_id": "RET-01"
+      "definition_heading_id": "RET-01",
+      "user_authorization": {
+        "date": "2026-11-02",
+        "scope": "Conditional RET-01 after all prerequisites; preserve original data; general unnecessary-file cleanup postponed"
+      },
+      "implementation_packet": "docs/tickets/RET-01-conditional-retirement.md"
     },
     {
       "task_id": "STR-02",
@@ -2642,6 +2668,12 @@
       "actual_commit_sha": "36b34b757ff5a831801ab2641fab889775bfcd35",
       "receipt": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01.acceptance.json",
       "receipt_sha256": "e3baa254946ebe572aaa7842a41538b94caf714217020ed9e907c1f33ae2104a"
+    },
+    {
+      "date": "2026-11-02",
+      "task_id": "CUT-01",
+      "base_sha": "972fb679583549e6c3ca8c49dd3795298673e62c",
+      "reason": "User explicitly authorizes CUT-01 server deployment/verification then conditional RET-01. Existing env retained; general cleanup/key rotation postponed. Do not infer economic route or live order arming; operational/retention prerequisites remain evidence gates."
     }
   ],
   "requirements_revision": {
@@ -2744,24 +2776,20 @@
   "active_batch": {
     "requested_tasks": 2,
     "tasks": [
-      "REL-01",
-      "DEP-01"
+      "CUT-01",
+      "RET-01"
     ],
-    "accepted": [
-      "REL-01",
-      "DEP-01"
-    ],
-    "status": "COMPLETED_REQUESTED_TWO_TICKETS",
-    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031",
-    "worker_policy": "Previous external cost stop carried forward; sol lead unchanged + native gpt-6-luna",
-    "target_os": "Ubuntu Linux",
-    "push_authorized": true,
-    "merge_authorized": true,
-    "merge_authorized_on": "2026-11-02",
-    "requested_final_target": "main via reviewed pull request",
-    "completed_at": "2026-11-02T13:26:05.004173+09:00",
-    "final_frozen_source_sha": "36b34b757ff5a831801ab2641fab889775bfcd35",
-    "final_frozen_manifest_sha256": "a4199ecda434f2cad82b8b552de7b66a2203e4ac6cb05d47e77c4594220a2c37"
+    "accepted": [],
+    "status": "PRE_CUT_SOURCE_FIXED_PENDING_FROZEN_VALIDATION",
+    "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102",
+    "target_os": "Ubuntu Linux single server",
+    "worker_policy": "Carry forward measured external worker cost stop; unchanged lead, native gpt-6-luna only if bounded coding helper is needed",
+    "server_deployment_authorized": true,
+    "retirement_authorized_conditionally": true,
+    "env_rotation_authorized_now": false,
+    "general_repository_cleanup_authorized_now": false,
+    "live_orders": "NOT_ARMED",
+    "started_utc": "2026-11-02T12:55:00.823193+00:00"
   },
   "completed_batches": [
     {
