@@ -1,0 +1,17 @@
+{
+  "evidence_class": "LOCAL_FAKE",
+  "observed_ns": 0,
+  "source_sha256": "REPLACE_WITH_FROZEN_SOURCE_SHA256",
+  "manifest_sha256": "REPLACE_WITH_FROZEN_MANIFEST_SHA256",
+  "artifacts": {
+    "mounts": {"path": "/private/evidence/mounts.json", "sha256": "REPLACE_WITH_SHA256"},
+    "owner": {"path": "/private/evidence/owner.json", "sha256": "REPLACE_WITH_SHA256"},
+    "sqlite": {"path": "/private/evidence/sqlite.json", "sha256": "REPLACE_WITH_SHA256"},
+    "latest_truth": {"path": "/private/evidence/latest-truth.json", "sha256": "REPLACE_WITH_SHA256"},
+    "disk": {"path": "/private/evidence/disk.json", "sha256": "REPLACE_WITH_SHA256"},
+    "spool": {"path": "/private/evidence/spool.json", "sha256": "REPLACE_WITH_SHA256"},
+    "health": {"path": "/private/evidence/health.json", "sha256": "REPLACE_WITH_SHA256"},
+    "paper_data": {"path": "/private/evidence/paper-data.json", "sha256": "REPLACE_WITH_SHA256"},
+    "kill_switch": {"path": "/private/evidence/kill-switch.json", "sha256": "REPLACE_WITH_SHA256"}
+  }
+}

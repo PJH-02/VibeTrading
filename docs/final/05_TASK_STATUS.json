@@ -39,14 +39,12 @@
   "new_task_counts": {
     "total": 35,
     "accepted": 31,
-    "in_progress": 0,
+    "in_progress": 1,
     "blocked": 0,
-    "not_started": 2,
+    "not_started": 1,
     "external_not_authorized": 2
   },
-  "next_ready_candidate": [
-    "DEP-01"
-  ],
+  "next_ready_candidate": [],
   "next_ready_policy": "Only ready after local baseline HEAD/working tree and 5-document presence verified. All prerequisites must be ACCEPTED_LOCAL and external actions need user authorization.",
   "gate_results": {
     "REPOSITORY_CONSOLIDATED": "NOT_VERIFIED_FOR_NEW_RELEASE",
@@ -430,7 +428,7 @@
     ],
     "missing_required_local_code_blocks_feature_release": true
   },
-  "active_task_id": null,
+  "active_task_id": "DEP-01",
   "last_accepted_task_id": "REL-01",
   "stop_requested": false,
   "tickets": [
@@ -1820,20 +1818,21 @@
     {
       "task_id": "DEP-01",
       "wave": "W6",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "depends_on": [
         "REL-01"
       ],
       "risk_review": "CRITICAL_CODEX",
       "required_for_offline_release": true,
       "may_need_scope_decision": false,
-      "base_sha": null,
+      "base_sha": "0cc4a3c5f9f7974a3370e611f32d5c5affdd20f6",
       "actual_commit_sha": null,
       "acceptance_receipt": null,
       "test_exit": null,
       "blocking_reasons": [],
       "definition_file": "02_DEVELOPER_TICKETS.md",
-      "definition_heading_id": "DEP-01"
+      "definition_heading_id": "DEP-01",
+      "implementation_packet": "docs/tickets/DEP-01-integrated-preflight.md"
     },
     {
       "task_id": "CUT-01",
@@ -2744,7 +2743,9 @@
     "worker_policy": "Previous external cost stop carried forward; sol lead unchanged + native gpt-6-luna",
     "target_os": "Ubuntu Linux",
     "push_authorized": true,
-    "merge_authorized": false
+    "merge_authorized": true,
+    "merge_authorized_on": "2026-11-02",
+    "requested_final_target": "main via reviewed pull request"
   },
   "completed_batches": [
     {
