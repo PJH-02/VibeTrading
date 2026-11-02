@@ -1,0 +1,377 @@
+{
+  "ticket": "DEP-01",
+  "result": "PASS",
+  "acceptance": "ACCEPTED_LOCAL",
+  "timestamp": "2026-11-02T13:26:05.004173+09:00",
+  "base_sha": "0cc4a3c5f9f7974a3370e611f32d5c5affdd20f6",
+  "actual_commit_sha": "36b34b757ff5a831801ab2641fab889775bfcd35",
+  "frozen_manifest_sha256": "a4199ecda434f2cad82b8b552de7b66a2203e4ac6cb05d47e77c4594220a2c37",
+  "candidate_file_count": 549,
+  "source_count": 149,
+  "source_sha256": "6105d6e1704b2c082172f8755a5368b963487e34317e170f9b52429da9beddbe",
+  "config_sha256": "4863cf4f6d53a5fcbaf031a4980060513406414c0e821d621692fd2a28bd4e7d",
+  "input_sha256": "500a61f02aa74328bc85ad1d386ec139184bb16173750d16bf9330b64edf49dc",
+  "target_os": "Ubuntu Linux",
+  "role_projections": 36,
+  "historical_server_roles": 14,
+  "current_production_inventory": "UNKNOWN_EXTERNAL_NOT_AUTHORIZED",
+  "modes": [
+    "plan",
+    "preflight",
+    "install-blocked",
+    "verify",
+    "activate",
+    "rollback"
+  ],
+  "one_install": true,
+  "production_activation": "BLOCKED_CUT01_EXTERNAL_APPROVAL_REQUIRED",
+  "database_restore": "PROHIBITED_BINARY_ROLLBACK_PLAN_ONLY",
+  "all_operational_gate_groups": [
+    "disk",
+    "health",
+    "kill_switch",
+    "latest_truth",
+    "mounts",
+    "owner",
+    "paper_data",
+    "spool",
+    "sqlite"
+  ],
+  "integration": {
+    "evidence_class": "LOCAL_PAPER_FAKE",
+    "real_bind_mounts": true,
+    "cpu_affinity": [
+      0,
+      1
+    ],
+    "address_space_limit_bytes": 4080218931,
+    "sqlite_schema_version": 4,
+    "live_wal_newest_fill_snapshot_and_second_new_copy_restore": true,
+    "source_unchanged_during_backup": true,
+    "paper_callbacks": 1,
+    "paper_fills": 1,
+    "durable_spool_records": 2,
+    "telegram_fake_closed_calls": 1,
+    "separate_process_owner_fencing": true,
+    "latest_known_fill_count_preserved": 2,
+    "new_fill_blocks_stale_rollback": true,
+    "stage_tamper_latches_p0": true,
+    "forbidden_activation": 0,
+    "roles_started": false
+  },
+  "fault_drills_before_mutation": {
+    "ACCOUNT-CUT": {
+      "exception_type": "ValueError",
+      "stage_unchanged": true,
+      "status": "PASS_BLOCKED_BEFORE_MUTATION"
+    },
+    "DISK-RESERVE": {
+      "exception_type": "ValueError",
+      "stage_unchanged": true,
+      "status": "PASS_BLOCKED_BEFORE_MUTATION"
+    },
+    "KILL-GLOBAL-MISSING": {
+      "exception_type": "ValueError",
+      "stage_unchanged": true,
+      "status": "PASS_BLOCKED_BEFORE_MUTATION"
+    },
+    "OLD-OWNER-ACTIVE": {
+      "exception_type": "ValueError",
+      "stage_unchanged": true,
+      "status": "PASS_BLOCKED_BEFORE_MUTATION"
+    },
+    "OLD-OWNER-CROSS-PROCESS": {
+      "distinct_process": true,
+      "stage_unchanged": true,
+      "status": "PASS_BLOCKED_BEFORE_MUTATION"
+    },
+    "PRE-EMPTY-MOUNT": {
+      "exception_type": "RuntimeError",
+      "stage_unchanged": true,
+      "status": "PASS_BLOCKED_BEFORE_MUTATION"
+    },
+    "PRE-IMAGE-MISMATCH": {
+      "exception_type": "ValueError",
+      "stage_unchanged": true,
+      "status": "PASS_BLOCKED_BEFORE_MUTATION"
+    },
+    "PRE-NATS-ONLY": {
+      "exception_type": "ValueError",
+      "stage_unchanged": true,
+      "status": "PASS_BLOCKED_BEFORE_MUTATION"
+    },
+    "PRE-STALE-CMD": {
+      "exception_type": "ValueError",
+      "stage_unchanged": true,
+      "status": "PASS_BLOCKED_BEFORE_MUTATION"
+    },
+    "PRE-TIMEFOLIO": {
+      "exception_type": "ValueError",
+      "stage_unchanged": true,
+      "status": "PASS_BLOCKED_BEFORE_MUTATION"
+    },
+    "SPOOL-PREFIX": {
+      "exception_type": "ValueError",
+      "stage_unchanged": true,
+      "status": "PASS_BLOCKED_BEFORE_MUTATION"
+    },
+    "STALE-TRUTH": {
+      "exception_type": "ValueError",
+      "stage_unchanged": true,
+      "status": "PASS_BLOCKED_BEFORE_MUTATION"
+    },
+    "WRONG-BACKUP-HASH": {
+      "exception_type": "ValueError",
+      "stage_unchanged": true,
+      "status": "PASS_BLOCKED_BEFORE_MUTATION"
+    }
+  },
+  "additional_faults": {
+    "PRE-ROOT-STRATEGIES-SHADOW": "PASS_actual_ignored_root_shadow_clean_Git_probe",
+    "staged_source_tamper": "PASS_P0_and_install_rollback_blocked",
+    "late_known_fill": "PASS_no_database_rewind"
+  },
+  "tests": {
+    "full_linux_python": 3220,
+    "guarded_leases": 25,
+    "distinct_required_python": 3245,
+    "focused": 75,
+    "public_new_dep_cases": 12,
+    "required_skipped": 0,
+    "required_deselected": 0,
+    "external_live_data_deselected": 2,
+    "inherited_deprecation_warnings": 2,
+    "final_acceptance_exits": 0
+  },
+  "initial_full_execution": {
+    "result": "FAIL",
+    "passed": 3218,
+    "failed": 2,
+    "artifact": "DEP01-final-full.junit.xml",
+    "failures": [
+      "isolated process restart 2s deadline",
+      "100 synthetic decoder frames within 0.1s delivered58"
+    ],
+    "context": "Overlapped Docker Desktop cold start and image builds; retained unchanged source and original limits. Both exact failed cases then passed in1.73s; final full run executed without parallel Docker builds. No runtime guard/test deadline relaxed."
+  },
+  "image_ids": {
+    "app": "sha256:e8a21cdf276189e15a3ba44393ea8556ad8281c647ec9f695d9ac2ad2c77631a",
+    "browser": "sha256:e686e2248d71756cd4738575332a37d3469c0693265da86fdb133c310031f700",
+    "crypto": "sha256:ef5d13b97a1efcbb2985ea548453e61789038c3a4e8106484af3e83d1aeded09",
+    "ledger": "sha256:6c5a466dd618d80aa3a1ae6a9e19c0a419dd14f7f78b5042dc4e12dd13f671ec"
+  },
+  "image_verification": {
+    "app": {
+      "image_id": "sha256:e8a21cdf276189e15a3ba44393ea8556ad8281c647ec9f695d9ac2ad2c77631a",
+      "exit": 0,
+      "result": {
+        "source_files_exact": 149,
+        "config_files_exact": 10,
+        "domain_imports": 10,
+        "cold_source_modules": 149,
+        "cli_help_checks": 3,
+        "isolated_cwd": "/tmp",
+        "uid": 10001,
+        "retired_namespace_absent": true
+      },
+      "configured_command": [
+        "python",
+        "-m",
+        "runtime.cli",
+        "status"
+      ]
+    },
+    "browser": {
+      "image_id": "sha256:e686e2248d71756cd4738575332a37d3469c0693265da86fdb133c310031f700",
+      "exit": 0,
+      "result": {
+        "source_files_exact": 149,
+        "config_files_exact": 10,
+        "domain_imports": 10,
+        "cold_source_modules": 149,
+        "cli_help_checks": 3,
+        "isolated_cwd": "/tmp",
+        "uid": 10001,
+        "retired_namespace_absent": true
+      },
+      "configured_command": [
+        "python",
+        "-m",
+        "operations.dashboard.timefolio_monitor"
+      ],
+      "browser_actual_blank_exit": 0
+    },
+    "crypto": {
+      "image_id": "sha256:ef5d13b97a1efcbb2985ea548453e61789038c3a4e8106484af3e83d1aeded09",
+      "exit": 0,
+      "result": {
+        "source_files_exact": 149,
+        "config_files_exact": 10,
+        "domain_imports": 10,
+        "cold_source_modules": 149,
+        "cli_help_checks": 3,
+        "isolated_cwd": "/tmp",
+        "uid": 10001,
+        "retired_namespace_absent": true
+      },
+      "configured_command": [
+        "python",
+        "-m",
+        "runtime.cli",
+        "status"
+      ]
+    },
+    "ledger": {
+      "image_id": "sha256:6c5a466dd618d80aa3a1ae6a9e19c0a419dd14f7f78b5042dc4e12dd13f671ec",
+      "exit": 0,
+      "result": {
+        "source_files_exact": 149,
+        "config_files_exact": 10,
+        "domain_imports": 10,
+        "cold_source_modules": 149,
+        "cli_help_checks": 3,
+        "isolated_cwd": "/tmp",
+        "uid": 10001,
+        "retired_namespace_absent": true
+      },
+      "configured_command": [
+        "python",
+        "-m",
+        "runtime.cli",
+        "status"
+      ]
+    }
+  },
+  "compose_combinations": 7,
+  "wheel_sha256": "68816d8705f6bf3f70431b8378f872d11f517883e3fe58340051d6291f1a40dc",
+  "worker": {
+    "provider_model": "Codex-native gpt-6-luna",
+    "external_opencode_freellmapi_calls_this_batch": 0,
+    "lead_model_auth_unchanged": true,
+    "repair_delegations": 2,
+    "independent_acceptance_by": "Codex lead",
+    "small_lead_corrections": "production-host report status consistency; negative test name/EOF; independent public probe/fault harness"
+  },
+  "runtime_src_changes": 0,
+  "immutable04_sha256": "dc87aacc4be82eedd0c7cd85d653cc4e17dcc152ee5b718a8bb2eec2954af5ee",
+  "external_observations": {
+    "production_host": "EXTERNAL_ONLY",
+    "noncooperating_other_host_owners": "EXTERNAL_ONLY",
+    "cloud_provider_readback": "EXTERNAL_ONLY",
+    "Timefolio_order_arming": "BLOCKED",
+    "live_orders": 0,
+    "server_deploy": false
+  },
+  "release_production_gate_promotion": false,
+  "frozen_artifact_note": "Artifact pins clean implementation snapshot before acceptance receipt/status commit; acceptance metadata does not relabel or mutate immutable image/source inputs.",
+  "evidence": {
+    "DEP01-frozen-release.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-frozen-release.json",
+      "sha256": "4b0501242cd7024154ba6b5bcf95d64af696e96e048999df75637a9af5746767"
+    },
+    "DEP01-cli-freeze.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-cli-freeze.result.json",
+      "sha256": "4871814250529a41cf3502e2f05ff7d709a6f94921cdea139e54ef964ce70212"
+    },
+    "DEP01-cli-build.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-cli-build.result.json",
+      "sha256": "3da1846fb4cc439113a170a1d2fc714c9148c57e20c08f8f5c3be9091ef1d641"
+    },
+    "DEP01-cli-verify.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-cli-verify.result.json",
+      "sha256": "71bf45f996931b9ba54aa905295ba5b7f14d43e973f9e82526f773258cbcb049"
+    },
+    "DEP01-final-full-stable.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-final-full-stable.result.json",
+      "sha256": "a0ce47d5ee391dc8c22119bc7c8241019b2752741a80a1bcd36f6e2f1da00131"
+    },
+    "DEP01-final-full-stable.junit.xml": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-final-full-stable.junit.xml",
+      "sha256": "8480e9c5a3398cc30a7d790912b6ddba7e7fe1910dff27b1ae2ce7078b4565b9"
+    },
+    "DEP01-final-leases.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-final-leases.result.json",
+      "sha256": "d85ca976285e5d56cfabc26da4bc766f963a7b72ba70d51c199d0ac36f937381"
+    },
+    "DEP01-final-leases.junit.xml": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-final-leases.junit.xml",
+      "sha256": "990c756071bb62bffcc3a534a6a9411e42b7ac06a19d34187215f16727077eef"
+    },
+    "DEP01-lead-focused.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-lead-focused.result.json",
+      "sha256": "1544c52267c27ad1784f71dc7ed2da1f8ce85c2bb72785e1a5e980a700c001e6"
+    },
+    "DEP01-lead-focused.junit.xml": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-lead-focused.junit.xml",
+      "sha256": "bc51a33cfc19f04a5b13ee03643e2fcf753c2e9f71bb4b9d14aceeee92d65225"
+    },
+    "DEP01-final-full.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-final-full.result.json",
+      "sha256": "34d5c56dee06b06587791417ae6aabea4e0c79c09f1fb30e245d938bd93c562a"
+    },
+    "DEP01-final-full.junit.xml": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-final-full.junit.xml",
+      "sha256": "97089889e52f73d04a553cd378ba9a3b60268cfc448bfb57d169114e6c439efa"
+    },
+    "DEP01-deadline-recheck.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-deadline-recheck.result.json",
+      "sha256": "bc53b3fc003755a16d4787101d3d1b038d78b9c89eccb451b8daca733f53934d"
+    },
+    "DEP01-deadline-recheck.junit.xml": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-deadline-recheck.junit.xml",
+      "sha256": "4154a20785b5987f402677f476a6a7784cd61ef06c95ca528fba665b3eabe131"
+    },
+    "DEP01-final-native.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-final-native.result.json",
+      "sha256": "943fa8931cb3f8b7ff1876018c31f154f668f95437e8451013b9317e68953d9e"
+    },
+    "DEP01-final-tamper.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-final-tamper.result.json",
+      "sha256": "15fecf136f436c1486d16169de610e16e712b6dcb901e3e73cf1fb2e704bb31f"
+    },
+    "DEP01-shadow-final-tool.result.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-shadow-final-tool.result.json",
+      "sha256": "d068df99629737fe62d781214d6986f916c24a35f046598e778b01461e5a82f5"
+    },
+    "DEP01-final-image-evidence.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-final-image-evidence.json",
+      "sha256": "7abfefab6bcb991a7a1086bdfe9e0bfb8c06cb49ed508a48147d80ed990e51d4"
+    },
+    "DEP01-final-compose-evidence.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-final-compose-evidence.json",
+      "sha256": "6a677a402e6aeea0a82de2c19ef6e54e219752d2468ee3088235402c4c63d8a6"
+    },
+    "DEP01-worker-final-provenance.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-worker-final-provenance.json",
+      "sha256": "6fec60c786a4a70b6185b1babcef53bd585fca210788d826d1b936c8872c5b9c"
+    },
+    "DEP01-lead-small-corrections.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-lead-small-corrections.json",
+      "sha256": "02b21d4e6b13334b281cb4979e1aac3eb4e53d9b819ec41450eea89ea508c75a"
+    },
+    "DEP01-final-native-data/evidence/lead-integration.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-final-native-data/evidence/lead-integration.json",
+      "sha256": "8e07ffd877cb17078ec05e24ed2db1bdd8e3deeb46f19d29bfb464cf0f45b60f"
+    },
+    "DEP01-final-native-data/evidence/verified.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-final-native-data/evidence/verified.json",
+      "sha256": "825ca9615b3c187892fa1b40a89c81ad0d73b234e363da8fadf80a7414aa312c"
+    },
+    "DEP01-final-native-data/evidence/wal-snapshot.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-final-native-data/evidence/wal-snapshot.json",
+      "sha256": "7abb631d2491f85717d2581c88614c0145d7d9cd876ca01798fb427a00a0720f"
+    },
+    "DEP01-final-native-data/evidence/rollback-P0-blocked.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-final-native-data/evidence/rollback-P0-blocked.json",
+      "sha256": "fc5f087a3011404e8e03c73d536c9500629f02c11f57207e59807dfa353af584"
+    },
+    "DEP01-final-tamper-data/evidence/lead-integration.json": {
+      "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01-final-tamper-data/evidence/lead-integration.json",
+      "sha256": "a6329695e943efeb97a7ae0025f88d7855844473da21b312db82eb45f154cced"
+    }
+  },
+  "private_receipt": {
+    "path": "/home/pjh/.local/state/codex-opencode/runs/REL01-DEP01-20261031/DEP01.acceptance.json",
+    "sha256": "e3baa254946ebe572aaa7842a41538b94caf714217020ed9e907c1f33ae2104a"
+  }
+}
