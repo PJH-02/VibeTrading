@@ -1864,12 +1864,13 @@
         "scope": "Existing single server deployment/preflight/feed/PAPER/shadow/account-owner verification using existing env; env rotation and general repository cleanup postponed",
         "server_changes_authorized": true,
         "live_order_activation": "NOT_ARMED_REQUIRES_EXACT_SCOPE",
-        "original_data_deletion": false
+        "original_data_deletion": false,
+        "trial_followup": "User requests stop after one-hour trial start; no agent hour monitoring/automatic reconnect. User will resume manually for result retrieval."
       },
       "implementation_packet": "docs/tickets/CUT-01-server-execution.md",
       "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102",
       "progress_receipt": "docs/tickets/CUT-01-progress.json",
-      "execution_stage": "PUBLIC_GAP_REPAIR_FOCUSED_PASS_PENDING_FROZEN_FULL_IMAGES_AND_FRESH_SERVER_TRIAL",
+      "execution_stage": "MODULE_BOOT_IDENTITY_FIXED_PENDING_FINAL_IMAGES_AND_ONE_HOUR_TRIAL",
       "repair_packets": [
         "docs/tickets/CUT-01-checkpoint-race.md",
         "docs/tickets/CUT-01-delivery-window.md",

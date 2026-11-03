@@ -314,7 +314,9 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
+    # Keep launcher-bound scope types canonical when invoked with ``python -m``.
+    from runtime.data_only_runtime import main as _canonical_main
     try:
-        raise SystemExit(main())
+        raise SystemExit(_canonical_main())
     except KeyboardInterrupt:
         raise SystemExit(130)

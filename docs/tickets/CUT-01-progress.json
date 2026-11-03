@@ -2,7 +2,7 @@
   "schema_version": 1,
   "ticket": "CUT-01",
   "state": "IN_PROGRESS_PUBLIC_GAP_REPAIR",
-  "recorded_utc": "2026-11-03T07:16:15.682607+00:00",
+  "recorded_utc": "2026-11-03T07:36:02.756471+00:00",
   "frozen_source_sha": "9a67ed7510d201efcfb6e530d6ceeb168e256a99",
   "base_head": "972fb679583549e6c3ca8c49dd3795298673e62c",
   "manifest_sha256": "88ce5fb75ae1d09998de398a1eb1810741705b04504621743b626ae94d687974",
@@ -167,7 +167,7 @@
   ],
   "private_receipt_path": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/release_verification.json",
   "private_receipt_sha256": "226b61d708f023254ab8fd8350813117fcde4e856e7cb81ac6985746cca57abd",
-  "repair_state": "PUBLIC_OBSERVATION_GAP_REPLAY_FOCUSED323PASS_PENDING_FROZEN_FULL_IMAGES",
+  "repair_state": "CANONICAL_MODULE_BOOT_FIX_FOCUSED237PASS_PENDING_FROZEN_FULL_AND_REAL_CLI_SMOKE",
   "source_review": {
     "checkpoint_race": "incremental-only exact checkpoint temporary disappearance; strict startup, record segment/type/byte guards retained",
     "delivery_window": "opt-in default1; bounded window with exact ordered APPLIED and aggregate market/control preflight",
@@ -277,5 +277,15 @@
       "evidence": "n9-crypto-backup-status-1.stdout"
     },
     "remaining": "Latest account cut at any eventual owner switch; retained external immutable-index/data coverage and operational recovery remain separate gates; original owners/data retained"
+  },
+  "entrypoint_repair": {
+    "affected": "runtime.data_only_runtime -m bootstrap only",
+    "repro_actual_exit": 1,
+    "reason": "__main__ scope type differs from canonical module imported by run_engine",
+    "fix": "canonical entrypoint delegation; existing strict scope validation retained",
+    "focused_passed": 237,
+    "focused_actual_exit": 0,
+    "previous_742_images": "Installed only; no trial roles started; superseded pending rebuilt image",
+    "real_cli_uds_smoke": "PENDING"
   }
 }

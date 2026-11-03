@@ -502,3 +502,37 @@ def test_public_readiness_rejects_ordinary_engine_and_scope_substitution(tmp_pat
         spool.close()
         asyncio.run(engine.close())
         asyncio.run(ordinary.close())
+
+
+def test_module_entrypoint_preserves_canonical_readiness_identity(tmp_path, monkeypatch):
+    import runpy
+    import sys
+    import warnings
+    import runtime.local_runtime as runtime
+    plan, settings, spool, engine = setup(tmp_path)
+    calls = []
+    async def checked_engine(p, s, *, recovery_readiness, observation_only):
+        assert observation_only is True
+        assembly._validate_run_engine_observation(p, s, recovery_readiness)
+        calls.append((p, s))
+    monkeypatch.setattr(assembly.LocalRuntimePlan, "load", lambda *_: plan)
+    monkeypatch.setattr(assembly.RuntimeSettings, "ensure_dirs", lambda *_: None)
+    monkeypatch.setattr(runtime, "validate_runtime", lambda *_: None)
+    monkeypatch.setattr(assembly, "validate_runtime", lambda *_: None)
+    monkeypatch.setattr(runtime, "run_engine", checked_engine)
+    monkeypatch.setattr(assembly, "run_engine", checked_engine)
+    for key, value in {"VIBETRADING_ENFORCE_MOUNTS": "true",
+            "VIBETRADING_DATA_ROOT": str(settings.data_root),
+            "VIBETRADING_STATE_DIR": str(settings.state_dir),
+            "LIVE_ORDER_ENABLED": "false", "TIMEFOLIO_LIVE_SUBMIT_ENABLED": "false"}.items():
+        monkeypatch.setenv(key, value)
+    monkeypatch.setattr(sys, "argv", ["runtime.data_only_runtime", "--config", str(tmp_path / "operator.json")])
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", RuntimeWarning)
+            with pytest.raises(SystemExit) as result:
+                runpy.run_module("runtime.data_only_runtime", run_name="__main__")
+        assert result.value.code == 0 and len(calls) == 1
+    finally:
+        spool.close()
+        asyncio.run(engine.close())
