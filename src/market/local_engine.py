@@ -983,10 +983,13 @@ class LocalMarketEngine:
             generation = feed.generation
             event = self._decode(frame, feed)
             if event.event_type == EventType.DATA_GAP:
-                self.invalidate(frame.cursor.producer, "market_data_gap")
+                if not self._observation_only:
+                    self.invalidate(frame.cursor.producer, "market_data_gap")
                 state_started=True
                 self._apply_state(event, FeedMode.INVALID,source_id=frame.cursor.producer)
                 self._commit_cursor(frame, feed, False)
+                if self._observation_only:
+                    feed.last_live_ns = self.clock()
                 return AppliedReceipt(frame.cursor, frame.digest)
             phase = FeedMode.REPLAY if event.ingest_mode == "backfill" else FeedMode.LIVE
             selected = _sync(self.trading_filter, event)

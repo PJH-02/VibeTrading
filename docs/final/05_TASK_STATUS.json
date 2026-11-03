@@ -1853,7 +1853,7 @@
       "acceptance_receipt": null,
       "test_exit": null,
       "blocking_reasons": [
-        "V5 actualtrial failed at~275 observation seconds (305s inclcleanup): ArcusBTC freshness guard before plannedrestart. Cause measured as derived history memory/CPU pressure. Bounded public projection+Mapping import repair accepted with223focused/3357full/25lease tests and14000retained-event state/fingerprint parity; newV6 onehourtrial pending.",
+        "V6 startup not confirmed; sustained Arcus delivery lag30561records/54s at107s despite engine50MiB/.21CPU under.6cap. At150s ingressheadroomguard FAILED, Arcus exit1/noOOM, own5rolesstopped/original14preserved. Need exact delivery errors before next trial; no onehour PASS claimed.",
         "Allfour preserved DB snapshot/restore integrity proofs PASS; finalowner-fenced currentcut and externalretainedindex/data coverage still required before fullswitch",
         "Actual newCloud/retainedprefix, owner fencing, rollback, representative KRintraday and24x7 operation remain unverified; RETprerequisites unmet"
       ],
@@ -1870,7 +1870,7 @@
       "implementation_packet": "docs/tickets/CUT-01-server-execution.md",
       "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102",
       "progress_receipt": "docs/tickets/CUT-01-progress.json",
-      "execution_stage": "NEW_V6_PUBLIC_ONE_HOUR_TRIAL_READY",
+      "execution_stage": "PUBLIC_LIVE_GAP_FIX_RELEASE_VERIFICATION",
       "repair_packets": [
         "docs/tickets/CUT-01-checkpoint-race.md",
         "docs/tickets/CUT-01-delivery-window.md",
@@ -1879,16 +1879,16 @@
         "docs/tickets/CUT-01-data-only-runtime-adoption.md",
         "docs/tickets/CUT-01-public-boundary-repair.md",
         "docs/tickets/CUT-01-public-gap-replay.md",
-        "docs/tickets/CUT-01-public-projection-budget.md"
+        "docs/tickets/CUT-01-public-projection-budget.md",
+        "docs/tickets/CUT-01-public-live-gap-continuity.md"
       ],
       "trial_start": {
-        "unit": "vibetrading-cut01-shadow-v5-20261103",
-        "source_sha": "d2d6dc7f18c9fc0ed13106e5fead3db61e5cfa18",
-        "started_utc": "2026-11-03T08:00:55.238445+00:00",
-        "expected_observation_end_utc": "2026-11-03T09:00:55.238445+00:00",
-        "result_receipt": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/v5-final-trial-start.stdout",
-        "lead_stops_after_start": true,
-        "manual_resume_required": true,
+        "unit": "vibetrading-cut01-shadow-v6-20261103",
+        "source_sha": "993f7008ee0677280335b7e9fa06ad6c0ce12201",
+        "started_utc": "2026-11-03T12:27:23.614816+00:00",
+        "result": "FAIL_STARTUP_NOT_CONFIRMED",
+        "all_new_roles_stopped": true,
+        "result_receipt": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/v6-unconfirmed-owned-stop.stdout",
         "operational_verified": false
       }
     },

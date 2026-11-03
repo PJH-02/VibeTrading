@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "ticket": "CUT-01",
-  "state": "IN_PROGRESS_NEW_V6_ONE_HOUR_TRIAL_READY",
-  "recorded_utc": "2026-11-03T12:24:52.647275+00:00",
+  "state": "IN_PROGRESS_V6_STARTUP_FAILED_DELIVERY_DIAGNOSIS",
+  "recorded_utc": "2026-11-03T12:32:39.896822+00:00",
   "frozen_source_sha": "993f7008ee0677280335b7e9fa06ad6c0ce12201",
   "base_head": "972fb679583549e6c3ca8c49dd3795298673e62c",
   "manifest_sha256": "b943e9e02dffd37a6542bc0f65dbbc9aed8d4e21ead08ca7bc53470fdd314d67",
@@ -173,7 +173,7 @@
       "reason": "SOURCE_FRESHNESS_GUARD ArcusBTC after304.8s includingcleanup; ownrolesexit130/noOOM, original14retained; engine restart neverreached. Root examining pre-stop samples rather than finalshutdown snapshot."
     }
   ],
-  "repair_state": "V7_SOURCE_RELEASE_SERVER_PREFLIGHT_ACCEPTED",
+  "repair_state": "LIVE_GAP_CONTINUITY_FIX_INDEPENDENT_FOCUSED_PASS",
   "source_review": {
     "checkpoint_race": "incremental-only exact checkpoint temporary disappearance; strict startup, record segment/type/byte guards retained",
     "delivery_window": "opt-in default1; bounded window with exact ordered APPLIED and aggregate market/control preflight",
@@ -366,26 +366,20 @@
     "operational_verified": false
   },
   "server_trial": {
-    "actual_start_exit": 0,
-    "agent_monitoring": "STOP_AFTER_START_USER_WILL_RESUME_MANUALLY",
-    "cleanup": "Supervisor finally plus owned-label/image/mount verified ExecStopPost; no original roles stopped",
-    "confirmed_utc": "2026-11-03T08:01:49.219827+00:00",
-    "economic_profile": "PUBLIC_OBSERVATION_ONLY_NO_CREDENTIALS",
-    "engine_only_restart_after_seconds": 600,
-    "expected_observation_end_utc": "2026-11-03T09:00:55.238445+00:00",
-    "image_id": "sha256:cf65d86e2164efddcf9f437add84345d627ab2c9c1e8e2e95ea8f805370b631f",
-    "initial_running_roles": 5,
-    "initial_valid_markets": 9,
-    "one_hour_observation_seconds": 3600,
-    "operational_verified": false,
-    "ops_input_hashes": {
-      "shadow_supervisor_v5.py": "ea17213fde441af413c6ca1fc4b5e4f4a099dd8711c4b22480a977b442ed8efc",
-      "stop_owned_v5.py": "4c526004723a2b7450bc5ccac4ac53a4e0d52a56e239a26d7286e3976399d6e9"
-    },
-    "result": "STARTED_INITIAL_PUBLIC_FEEDS_CONFIRMED",
-    "source_head": "d2d6dc7f18c9fc0ed13106e5fead3db61e5cfa18",
-    "started_utc": "2026-11-03T08:00:55.238445+00:00",
-    "unit": "vibetrading-cut01-shadow-v5-20261103"
+    "trial": "v6",
+    "source_head": "993f7008ee0677280335b7e9fa06ad6c0ce12201",
+    "result": "FAIL_STARTUP_NOT_CONFIRMED",
+    "reason": "INGRESS_HEADROOM_GUARD;STOP_ERROR:cut01-shadow-v6-arcus-perp",
+    "observation_started_utc": "2026-11-03T12:27:23.614816+00:00",
+    "observed_seconds": 150.1302029537037,
+    "healthy_nine_markets_confirmed": false,
+    "full_one_hour_completed": false,
+    "own_roles_all_stopped": true,
+    "arcus_exit": 1,
+    "other_role_exits": 130,
+    "original_roles_stopped": 0,
+    "receipt": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/v6-unconfirmed-owned-stop.stdout",
+    "operational_verified": false
   },
   "measured_v5_repair": {
     "actual_trial_result": "FAIL_ARCUS_BOOK_FRESHNESS_BEFORE_RESTART",
@@ -412,6 +406,18 @@
     "release_proof": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/V7-source-local-acceptance.json",
     "default_to_repaired_fingerprint_parity": true,
     "next_trial": "v6 fresh data/config roots; engine .6CPU/384MiB; storage .35CPU/512MiB; collectors .2CPU/192MiB each; all freshness/queue/safety limits unchanged",
+    "operational_verified": false
+  },
+  "live_gap_continuity_repair": {
+    "packet": "docs/tickets/CUT-01-public-live-gap-continuity.md",
+    "root_actual_retained_bug_reproduced": "Arcusseq5930Gapcommits/seq5931Gaprejectedlive_input_before_verified_handoff; real7757prefix readRO/netnone/nooriginalmounts",
+    "source_changed": "only strictpublicobserver liveGap feedstate/lease; canonicalHotPathINVALID andC/digestpreserved; ordinarybehaviorunchanged",
+    "worker": "native gpt-6.1-sol externalcalls0",
+    "worker_tests": 215,
+    "worker_exit": 0,
+    "root_independent_tests": 215,
+    "root_exit": 0,
+    "diff_check_exit": 0,
     "operational_verified": false
   }
 }
