@@ -1853,7 +1853,7 @@
       "acceptance_receipt": null,
       "test_exit": null,
       "blocking_reasons": [
-        "V5 actualtrial failed at~305s: ArcusBTC freshness guard; engine restart not reached. Own5roles stoppedcleanly/noOOM; original14running. Source/retainedprefix/queue/CPU cause underdiagnosis.",
+        "V5 actualtrial failed at~275 observation seconds (305s inclcleanup): ArcusBTC freshness guard before plannedrestart. Cause measured as derived history memory/CPU pressure. Bounded public projection+Mapping import repair accepted with223focused/3357full/25lease tests and14000retained-event state/fingerprint parity; newV6 onehourtrial pending.",
         "Allfour preserved DB snapshot/restore integrity proofs PASS; finalowner-fenced currentcut and externalretainedindex/data coverage still required before fullswitch",
         "Actual newCloud/retainedprefix, owner fencing, rollback, representative KRintraday and24x7 operation remain unverified; RETprerequisites unmet"
       ],
@@ -1870,7 +1870,7 @@
       "implementation_packet": "docs/tickets/CUT-01-server-execution.md",
       "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102",
       "progress_receipt": "docs/tickets/CUT-01-progress.json",
-      "execution_stage": "V5_TRIAL_FAILED_ARCUS_FRESHNESS_UNDER_DIAGNOSIS",
+      "execution_stage": "NEW_V6_PUBLIC_ONE_HOUR_TRIAL_READY",
       "repair_packets": [
         "docs/tickets/CUT-01-checkpoint-race.md",
         "docs/tickets/CUT-01-delivery-window.md",
@@ -1878,7 +1878,8 @@
         "docs/tickets/CUT-01-arcus-book-resync.md",
         "docs/tickets/CUT-01-data-only-runtime-adoption.md",
         "docs/tickets/CUT-01-public-boundary-repair.md",
-        "docs/tickets/CUT-01-public-gap-replay.md"
+        "docs/tickets/CUT-01-public-gap-replay.md",
+        "docs/tickets/CUT-01-public-projection-budget.md"
       ],
       "trial_start": {
         "unit": "vibetrading-cut01-shadow-v5-20261103",
