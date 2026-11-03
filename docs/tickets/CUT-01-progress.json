@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
   "ticket": "CUT-01",
-  "state": "IN_PROGRESS_V6_STARTUP_FAILED_DELIVERY_DIAGNOSIS",
-  "recorded_utc": "2026-11-03T12:32:39.896822+00:00",
-  "frozen_source_sha": "993f7008ee0677280335b7e9fa06ad6c0ce12201",
+  "state": "IN_PROGRESS_FRESH_V7_ONE_HOUR_TRIAL_READY",
+  "recorded_utc": "2026-11-03T12:51:21.012206+00:00",
+  "frozen_source_sha": "111fa0a9ec4e71b311ff1c3e38f790f8611e82ae",
   "base_head": "972fb679583549e6c3ca8c49dd3795298673e62c",
-  "manifest_sha256": "b943e9e02dffd37a6542bc0f65dbbc9aed8d4e21ead08ca7bc53470fdd314d67",
-  "app_image_id": "sha256:bff21239c96d14db50a98d970ae916b77ba1deb2ad095f70b1b719ded20e5b81",
+  "manifest_sha256": "012e37794d189c74710a0eba4c78dfc4bb66a705b30385c784273995f7a26cf2",
+  "app_image_id": "sha256:0876cf2f41bcd75e953a5bff41bc49d01ffb5897681bbc295c62ffd3b5ad37ab",
   "worker": {
     "lead_auth_unchanged": true,
     "native": "gpt-6.1-sol bounded repair after gpt-6-luna usage limit; lead/auth unchanged",
@@ -170,10 +170,11 @@
       "status": "FAIL",
       "frozen_sha": "d2d6dc7f18c9fc0ed13106e5fead3db61e5cfa18",
       "recorded_utc": "2026-11-03T08:01:49.222654+00:00",
-      "reason": "SOURCE_FRESHNESS_GUARD ArcusBTC after304.8s includingcleanup; ownrolesexit130/noOOM, original14retained; engine restart neverreached. Root examining pre-stop samples rather than finalshutdown snapshot."
+      "reason": "V5 actualtrial failed Arcus freshness guard ~275observationsec beforeengine restart; nohourPASS; allownrolesstopped/original14retained",
+      "result_receipt": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/v5-trial-final-results.stdout"
     }
   ],
-  "repair_state": "LIVE_GAP_CONTINUITY_FIX_INDEPENDENT_FOCUSED_PASS",
+  "repair_state": "V8_SOURCE_RELEASE_UBUNTU_RETAINED_TRACE_PREFLIGHT_PASS",
   "source_review": {
     "checkpoint_race": "incremental-only exact checkpoint temporary disappearance; strict startup, record segment/type/byte guards retained",
     "delivery_window": "opt-in default1; bounded window with exact ordered APPLIED and aggregate market/control preflight",
@@ -231,6 +232,37 @@
         "actual_module_engine_uds_boot": "PASS local realLinuximage netnone fakecapacityfixture no providers, SIGINT130"
       },
       "superseded_reason": "V5 realtrial Arcus freshness failure; measured downstream projection/CPU repair, no historical data removed"
+    },
+    {
+      "source_head": "993f7008ee0677280335b7e9fa06ad6c0ce12201",
+      "manifest_sha256": "b943e9e02dffd37a6542bc0f65dbbc9aed8d4e21ead08ca7bc53470fdd314d67",
+      "app_image_id": "sha256:bff21239c96d14db50a98d970ae916b77ba1deb2ad095f70b1b719ded20e5b81",
+      "release_proof": {
+        "source_head": "993f7008ee0677280335b7e9fa06ad6c0ce12201",
+        "manifest_sha256": "b943e9e02dffd37a6542bc0f65dbbc9aed8d4e21ead08ca7bc53470fdd314d67",
+        "source_modules": 150,
+        "full_passed": 3357,
+        "full_deselected": 2,
+        "separate_leases_passed": 25,
+        "focused_independent_passed": 223,
+        "actual_test_exits": [
+          0,
+          0,
+          0
+        ],
+        "wheel_sha256": "5537a9cd57486ae52fbb0135720a2fdb5390ee8cfce8743944c2fa43d0706b51",
+        "wheel_identical_twice": true,
+        "four_images_cold_verified": true,
+        "compose_combinations_passed": 7,
+        "server_import": "PASS",
+        "actual_server_cold_four_images": "PASS source150/config10/CLI4 perrole UID10001 netnone",
+        "actual_module_engine_uds_boot": "PASS localLinux netnone fakecapacityfixture providers0 SIGINT130",
+        "provider": "Native gpt-6.1-sol bounded implementation, root independent acceptance; externalcalls0",
+        "receipt": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/V7-source-local-acceptance.json",
+        "fresh_server_trial_config_check": "PASS actualruntime.data_only_runtime --check exit0",
+        "operational_verified": false
+      },
+      "superseded_reason": "V6 startup failed after publicliveGap invalidated transportfeed. Exactretained5930Gap->5931failure reproduced and narrowobserver repair independentlyaccepted; originaldata preserved"
     }
   ],
   "current_source_review": {
@@ -250,7 +282,7 @@
     ],
     "worker": "gpt-6-luna bounded work plus root mechanical adoption/review; externalcalls0",
     "source_modules": 150,
-    "operational_limitation": "Full cold replay across historical DataGap remains failclosed; active recovery may replay freshsnapshot suffix after exact committedGapC. New collector boot uses freshincarnation+freshroot; original diagnostic streams retained.",
+    "operational_limitation": "Strict callbackfree publicobservation applies factualGap andinvalidatesHotPathbook/history whilekeepingdeliveryLIVE; freshnativeSnapshot required forbookVALID. OrdinaryeconomicliveGap stillinvalidatesfeed/defaultreplayGap rejects. Fullhour/restart/Cloud/ownercut/rollback/representativeoperation gates stillrequired.",
     "boundary_repair": {
       "public_settings": "strict allowlist/no dotenv/no secret-file expansion/no processenvmutation/check mount enforcement",
       "invalid_timestamp": "invalid-path metadata None when unrepresentable; raw+gap retained",
@@ -270,32 +302,63 @@
       "fingerprints": "identical old/default andnew Mapping on14000actual retainedpublicevents",
       "input_retention": "unchanged fullraw/Parquet/source native fullbounds",
       "review": "PASS scoped source diff, netless independent tests/fullimmutable source andwheel/images; realhourtrial required"
+    },
+    "public_live_gap_continuity": {
+      "packet": "docs/tickets/CUT-01-public-live-gap-continuity.md",
+      "root_actual_retained_bug_reproduced": "Arcusseq5930Gapcommits/seq5931Gaprejectedlive_input_before_verified_handoff; real7757prefix readRO/netnone/nooriginalmounts",
+      "source_changed": "only strictpublicobserver liveGap feedstate/lease; canonicalHotPathINVALID andC/digestpreserved; ordinarybehaviorunchanged",
+      "worker": "native gpt-6.1-sol externalcalls0",
+      "worker_tests": 215,
+      "worker_exit": 0,
+      "root_independent_tests": 215,
+      "root_exit": 0,
+      "diff_check_exit": 0,
+      "operational_verified": false,
+      "source_head": "111fa0a9ec4e71b311ff1c3e38f790f8611e82ae",
+      "full_tests": 3360,
+      "separate_leases": 25,
+      "all_actual_exits": 0,
+      "release_manifest_sha256": "012e37794d189c74710a0eba4c78dfc4bb66a705b30385c784273995f7a26cf2",
+      "release_proof": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/V8-source-local-acceptance.json",
+      "retained_old_bug_reproduction": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/diag-v7-old-bug-reproduction.stdout",
+      "server_retained_trace": {
+        "accepted": 7757,
+        "total": 7757,
+        "gaps": 9,
+        "errors": 0,
+        "generation_before": 2,
+        "generation_after": 2,
+        "cold_prefix_state_and_fingerprints_equal": true,
+        "input_writes": 0,
+        "original_mounts": false,
+        "external_network": false,
+        "receipt": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/v8-retained-live-gap-proof.stdout"
+      }
     }
   },
   "current_release_proof": {
-    "source_head": "993f7008ee0677280335b7e9fa06ad6c0ce12201",
-    "manifest_sha256": "b943e9e02dffd37a6542bc0f65dbbc9aed8d4e21ead08ca7bc53470fdd314d67",
-    "source_modules": 150,
-    "full_passed": 3357,
+    "result": "PASS_LOCAL_IMMUTABLE_RELEASE",
+    "source_head": "111fa0a9ec4e71b311ff1c3e38f790f8611e82ae",
+    "manifest_sha256": "012e37794d189c74710a0eba4c78dfc4bb66a705b30385c784273995f7a26cf2",
+    "source_files": 150,
+    "full_tests": 3360,
     "full_deselected": 2,
-    "separate_leases_passed": 25,
-    "focused_independent_passed": 223,
-    "actual_test_exits": [
-      0,
-      0,
-      0
-    ],
-    "wheel_sha256": "5537a9cd57486ae52fbb0135720a2fdb5390ee8cfce8743944c2fa43d0706b51",
+    "lease_tests": 25,
+    "independent_focused_tests": 215,
+    "all_actual_exits": 0,
     "wheel_identical_twice": true,
-    "four_images_cold_verified": true,
-    "compose_combinations_passed": 7,
-    "server_import": "PASS",
-    "actual_server_cold_four_images": "PASS source150/config10/CLI4 perrole UID10001 netnone",
-    "actual_module_engine_uds_boot": "PASS localLinux netnone fakecapacityfixture providers0 SIGINT130",
-    "provider": "Native gpt-6.1-sol bounded implementation, root independent acceptance; externalcalls0",
-    "receipt": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/V7-source-local-acceptance.json",
-    "fresh_server_trial_config_check": "PASS actualruntime.data_only_runtime --check exit0",
-    "operational_verified": false
+    "wheel_sha256": "3854379177613c2cd5efbbac137a8748292f245e9f46b9f4bc373f5abb67f8a7",
+    "images_local_cold": 4,
+    "compose_combinations": 7,
+    "actual_cli_boot": "PASS localLinux netnone fakecapacityfixture/provider0 SIGINT130",
+    "worker": "nativeSol boundedwork; independentrootacceptance; externalcalls0",
+    "server_import": "PASS actualexit0",
+    "operational_verified": false,
+    "server_cold_four_images": "PASS source150/config10/CLI4 eachrole/UID10001/netnone",
+    "actual_server_cold_receipt": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/v8-server-four-image-proof.stdout",
+    "retained_actual_trace_proof": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/v8-retained-live-gap-proof.stdout",
+    "retained_trace_result": "7757/7757 liveframes,9gaps,C/digest andcoldprefix latestbooks/fingerprints identical; generation2unchanged; q0/errors0; readRO/nooriginalmounts/netnone",
+    "fresh_server_trial_config_check": "PASS actualruntime.data_only_runtime --check exit0"
   },
   "public_gap_repair": {
     "root_independent_repro": "Real Arcus3symbol/spool: firstGap C5, nextGap6 prevents default suffix replay; reproduced and retained",
@@ -418,6 +481,26 @@
     "root_independent_tests": 215,
     "root_exit": 0,
     "diff_check_exit": 0,
-    "operational_verified": false
+    "operational_verified": false,
+    "source_head": "111fa0a9ec4e71b311ff1c3e38f790f8611e82ae",
+    "full_tests": 3360,
+    "separate_leases": 25,
+    "all_actual_exits": 0,
+    "release_manifest_sha256": "012e37794d189c74710a0eba4c78dfc4bb66a705b30385c784273995f7a26cf2",
+    "release_proof": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/V8-source-local-acceptance.json",
+    "retained_old_bug_reproduction": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/diag-v7-old-bug-reproduction.stdout",
+    "server_retained_trace": {
+      "accepted": 7757,
+      "total": 7757,
+      "gaps": 9,
+      "errors": 0,
+      "generation_before": 2,
+      "generation_after": 2,
+      "cold_prefix_state_and_fingerprints_equal": true,
+      "input_writes": 0,
+      "original_mounts": false,
+      "external_network": false,
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/v8-retained-live-gap-proof.stdout"
+    }
   }
 }

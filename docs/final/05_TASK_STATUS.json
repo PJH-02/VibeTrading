@@ -1853,7 +1853,7 @@
       "acceptance_receipt": null,
       "test_exit": null,
       "blocking_reasons": [
-        "V6 startup not confirmed; sustained Arcus delivery lag30561records/54s at107s despite engine50MiB/.21CPU under.6cap. At150s ingressheadroomguard FAILED, Arcus exit1/noOOM, own5rolesstopped/original14preserved. Need exact delivery errors before next trial; no onehour PASS claimed.",
+        "PublicliveGap fixaccepted actualUbuntu retained7757/7757frames,9Gaps,generation2stable/coldprefix state+fingerprints equal/q0. Independent215/full3360+25leasesPASS, all4actualUbuntuimages/configcheckPASS. FreshV7 onehour/restarttrial pending; nooperationalPASS.",
         "Allfour preserved DB snapshot/restore integrity proofs PASS; finalowner-fenced currentcut and externalretainedindex/data coverage still required before fullswitch",
         "Actual newCloud/retainedprefix, owner fencing, rollback, representative KRintraday and24x7 operation remain unverified; RETprerequisites unmet"
       ],
@@ -1870,7 +1870,7 @@
       "implementation_packet": "docs/tickets/CUT-01-server-execution.md",
       "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102",
       "progress_receipt": "docs/tickets/CUT-01-progress.json",
-      "execution_stage": "PUBLIC_LIVE_GAP_FIX_RELEASE_VERIFICATION",
+      "execution_stage": "FRESH_V7_PUBLIC_ONE_HOUR_TRIAL_READY",
       "repair_packets": [
         "docs/tickets/CUT-01-checkpoint-race.md",
         "docs/tickets/CUT-01-delivery-window.md",
