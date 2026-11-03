@@ -1,0 +1,571 @@
+{
+  "schema_version": 1,
+  "ticket": "CUT-01",
+  "state": "IN_PROGRESS_V7_FAILED_AUDIT_AND_SOURCE_SYNC_COMPLETE",
+  "recorded_utc": "2026-11-03T13:12:38.266361+00:00",
+  "frozen_source_sha": "111fa0a9ec4e71b311ff1c3e38f790f8611e82ae",
+  "base_head": "972fb679583549e6c3ca8c49dd3795298673e62c",
+  "manifest_sha256": "012e37794d189c74710a0eba4c78dfc4bb66a705b30385c784273995f7a26cf2",
+  "app_image_id": "sha256:0876cf2f41bcd75e953a5bff41bc49d01ffb5897681bbc295c62ffd3b5ad37ab",
+  "worker": {
+    "lead_auth_unchanged": true,
+    "native": "gpt-6.1-sol bounded repair after gpt-6-luna usage limit; lead/auth unchanged",
+    "external_calls": 0
+  },
+  "full_server_switched": false,
+  "operational_verified": false,
+  "ret01_complete": false,
+  "real_orders": 0,
+  "original_data_deletions": 0,
+  "env_keys_changed": false,
+  "general_cleanup_started": false,
+  "gates": [
+    {
+      "id": "CUT-IMAGE",
+      "group": "identity",
+      "status": "PASS",
+      "reason": "LatestV8/111fa0a all4Ubuntuimages source150/config10 exact; actualexitedV7containers5 samebytes; localimmutable3360+25tests and7ComposePASS. Candidate install not operationalcutover.",
+      "recorded_utc": "2026-11-03T07:56:21.293677+00:00",
+      "frozen_sha": "d2d6dc7f18c9fc0ed13106e5fead3db61e5cfa18"
+    },
+    {
+      "id": "CUT-CAPACITY",
+      "group": "feeds",
+      "status": "PASS",
+      "reason": "Corrected9a Arcus1875s actualcapacity and originalBinance/GRVT >1800s profiles; exact provider/model/encoder/admission lineage tofinalV6 verified; actualdelivery/recovery/soak remainsseparate",
+      "recorded_utc": "2026-11-03T07:56:21.293677+00:00",
+      "frozen_sha": "d2d6dc7f18c9fc0ed13106e5fead3db61e5cfa18"
+    },
+    {
+      "id": "CUT-MOUNTS",
+      "group": "mounts",
+      "status": "PASS",
+      "reason": "Third data-device identity+marker accepted; omitted /data fails before ensure_dirs",
+      "recorded_utc": "2026-11-02T14:18:00.390470+00:00",
+      "frozen_sha": "36b34b757ff5a831801ab2641fab889775bfcd35"
+    },
+    {
+      "id": "CUT-MOCK-POSITIONS",
+      "group": "accounts",
+      "status": "PASS",
+      "reason": "Cachedtoken MOCK/MOCK2 balance+complete currentdayorder GET; flatpositionsmatchjournal, remainingorders0; localstates22complete15rejected noUNKNOWN in readwindow; no tokenissue/orders. Old owner not fenced; requires fresh cut at switch.",
+      "recorded_utc": "2026-11-03T04:57:33.286364+00:00",
+      "frozen_sha": "9a67ed7510d201efcfb6e530d6ceeb168e256a99"
+    },
+    {
+      "id": "CUT-FULL-CATALOGUE-BACKUP",
+      "group": "backup",
+      "status": "IN_PROGRESS",
+      "reason": "Domestic16GB fullintegrity+secondrestore+remote/localsamehash PASS; crypto7.6GB sourcecut/fullintegrity+secondrestore/samehash PASS; Nov3 ETFjournal/gaps freshsourcecut+fullrestore PASS. Finalowner-fenced currentcut/externalretainedindexcoverage remain before fullswitch.",
+      "recorded_utc": "2026-11-03T07:56:21.293677+00:00",
+      "frozen_sha": "36b34b757ff5a831801ab2641fab889775bfcd35"
+    },
+    {
+      "id": "CUT-INGRESS-V1",
+      "group": "runtime",
+      "status": "FAIL",
+      "reason": "Actual trial Arcus admission bound exhausted; exact predicate not captured, noOOM; only newgroup stopped",
+      "recorded_utc": "2026-11-02T14:18:00.390470+00:00",
+      "frozen_sha": "36b34b757ff5a831801ab2641fab889775bfcd35"
+    },
+    {
+      "id": "CUT-PREFIX-V1",
+      "group": "storage",
+      "status": "PASS",
+      "reason": "3238 durable records contiguous through storage progress;619Parquet files hash+rows verified; not failed nondurable admissions",
+      "recorded_utc": "2026-11-02T14:18:00.390470+00:00",
+      "frozen_sha": "36b34b757ff5a831801ab2641fab889775bfcd35"
+    },
+    {
+      "id": "CUT-ENVELOPE-HYPOTHESIS",
+      "group": "diagnosis",
+      "status": "PASS",
+      "reason": "Corrected synthetic harness under.2CPU192MiB met2530.6/s then530.1/s,9326durable; FAKE ACK/control30ms flush; not operational proof",
+      "recorded_utc": "2026-11-02T14:18:00.390470+00:00",
+      "frozen_sha": "36b34b757ff5a831801ab2641fab889775bfcd35"
+    },
+    {
+      "id": "CUT-RUNTIME-V2",
+      "group": "runtime",
+      "status": "FAIL",
+      "reason": "Actual second trial storage falsely reports corruption when checkpoint.json.tmp disappears during atomic publication. Narrow repair ticket active. All new roles stopped; old14 retained. Arcus durable delivery backlog also requires further performance verification.",
+      "recorded_utc": "2026-11-02T14:18:00.390470+00:00",
+      "frozen_sha": "36b34b757ff5a831801ab2641fab889775bfcd35"
+    },
+    {
+      "id": "CUT-EXISTING-CLOUD",
+      "group": "cloud",
+      "status": "PASS",
+      "reason": "Existing maintenance archive-only settings+ROsecret mounts HEAD/fullGET145496bytes exactSHA; noPUT/delete; newpipelineCloud not verified",
+      "recorded_utc": "2026-11-02T14:18:00.390470+00:00",
+      "frozen_sha": "36b34b757ff5a831801ab2641fab889775bfcd35"
+    },
+    {
+      "id": "CUT-OPERATIONAL",
+      "group": "operation",
+      "status": "NOT_RUN",
+      "reason": "No production owner switch, current open-orders/UNKNOWN and rollback compatibility not yet fully proven; actual KR intraday and24x7 windows pending",
+      "recorded_utc": "2026-11-02T14:18:00.390470+00:00",
+      "frozen_sha": "36b34b757ff5a831801ab2641fab889775bfcd35"
+    },
+    {
+      "id": "RET-DEPENDENCIES",
+      "group": "retirement",
+      "status": "BLOCKED",
+      "reason": "Old14 roles active; actual NATS11connections; rollback/retention authority and unique-data/remote-prefix conditions unmet. Retired0.",
+      "recorded_utc": "2026-11-02T14:18:00.390470+00:00",
+      "frozen_sha": "36b34b757ff5a831801ab2641fab889775bfcd35"
+    },
+    {
+      "id": "CUT-AA-REGRESSION",
+      "group": "source",
+      "status": "PASS",
+      "reason": "Immutable AA full3244pass/2deselected +separate25lease pass; exact4images/wheel and actual server cold proof passed",
+      "frozen_sha": "aa12a22bb4fd59a60452c13ce73b1e7513e8bb17",
+      "recorded_utc": "2026-11-03T03:39:59.815395+00:00"
+    },
+    {
+      "id": "CUT-V2-RECOVERY",
+      "group": "storage",
+      "status": "PASS",
+      "reason": "33772 durable retained V2 records recovered through storage; source spool hashes unchanged; original databases not mounted",
+      "frozen_sha": "aa12a22bb4fd59a60452c13ce73b1e7513e8bb17",
+      "recorded_utc": "2026-11-03T03:39:59.815395+00:00"
+    },
+    {
+      "id": "CUT-RUNTIME-V3",
+      "group": "runtime",
+      "status": "FAIL",
+      "reason": "Cold replay succeeded; Arcus recovery required explicit readiness and remained WARM; freshness guard stopped only newgroup; old14 preserved",
+      "frozen_sha": "aa12a22bb4fd59a60452c13ce73b1e7513e8bb17",
+      "recorded_utc": "2026-11-03T03:39:59.815395+00:00"
+    },
+    {
+      "id": "CUT-RUNTIME-V4",
+      "group": "runtime",
+      "status": "FAIL",
+      "reason": "State-only replay of preserved Arcus native crossed book rejected; pinned ETH native506131407 with contiguous prior/generation1. No weakened engine checks. All new trial roles stopped; old14 preserved.",
+      "frozen_sha": "aa12a22bb4fd59a60452c13ce73b1e7513e8bb17",
+      "recorded_utc": "2026-11-03T03:39:59.815395+00:00"
+    },
+    {
+      "id": "CUT-N9-SOURCE-RELEASE",
+      "group": "source",
+      "status": "PASS",
+      "reason": "Immutable source150 full3286+25leases PASS; reproduciblewheel+RECORD, fourimagescold/help/labels/sourcebytes and7Compose parse pass. Not operational acceptance.",
+      "frozen_sha": "9a67ed7510d201efcfb6e530d6ceeb168e256a99",
+      "recorded_utc": "2026-11-03T04:47:20.184942+00:00"
+    },
+    {
+      "id": "CUT-N9B-ARCuS-CAPACITY",
+      "group": "feeds",
+      "status": "PASS",
+      "reason": "Actual1875.009351s/481986records714361108bytes;478821normalbooks918trades;peak1588rps2356404Bps;max19518bytes;containerexit0noOOM;3terminaldisconnectGap, no midrun native cross in this window; not full soak",
+      "frozen_sha": "9a67ed7510d201efcfb6e530d6ceeb168e256a99",
+      "recorded_utc": "2026-11-03T07:16:15.682607+00:00"
+    },
+    {
+      "id": "CUT-FINAL-ONE-HOUR-PUBLIC-TRIAL",
+      "group": "runtime",
+      "status": "FAIL",
+      "frozen_sha": "d2d6dc7f18c9fc0ed13106e5fead3db61e5cfa18",
+      "recorded_utc": "2026-11-03T08:01:49.222654+00:00",
+      "reason": "V5 actualtrial failed Arcus freshness guard ~275observationsec beforeengine restart; nohourPASS; allownrolesstopped/original14retained",
+      "result_receipt": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/v5-trial-final-results.stdout"
+    },
+    {
+      "id": "CUT-V7-ONE-HOUR-PUBLIC-TRIAL",
+      "group": "runtime",
+      "status": "FAIL",
+      "frozen_sha": "111fa0a9ec4e71b311ff1c3e38f790f8611e82ae",
+      "recorded_utc": "2026-11-03T12:52:12.688818+00:00",
+      "reason": "Arcus continuousbookinvalid/freshnessguard at~128s, final153.23s inclcleanup; generation2/no deliveryreconnecterror beforestop butdurable-appliedlag4210; GRVTexit1websocketreset; own5exited/noOOM/original14retained; restart600sNOT_RUN",
+      "result_receipt": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/v7-failure-audit-20261103.stdout"
+    }
+  ],
+  "repair_state": "PREVIOUS_FIXES_VERIFIED_SUSTAINED_DELIVERY_UNRESOLVED",
+  "source_review": {
+    "checkpoint_race": "incremental-only exact checkpoint temporary disappearance; strict startup, record segment/type/byte guards retained",
+    "delivery_window": "opt-in default1; bounded window with exact ordered APPLIED and aggregate market/control preflight",
+    "lead_test_fixture_adjustments": [
+      "regular-file st_mode for synthetic DirEntry",
+      "symlink target outside spool",
+      "duplicate RECEIVED bounds guard and unreceived APPLIED negative cases"
+    ],
+    "focused_independent_tests": 266,
+    "focused_actual_exit": 0,
+    "real_uds_independent_case": "three publishers, window32,192 synthesized events each,9 crypto instruments,576exact APPLIED,zero trading queue",
+    "full_regression": "initial5failures preserved; related synthetic stat fixture fixed; CAP04 comparisons21/21 pass on base and current; final frozen-source rerun pending",
+    "evidence_path": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/CUT01-final-focused.result.json"
+  },
+  "previous_frozen_releases": [
+    {
+      "source_sha": "36b34b757ff5a831801ab2641fab889775bfcd35",
+      "manifest_sha256": "a4199ecda434f2cad82b8b552de7b66a2203e4ac6cb05d47e77c4594220a2c37",
+      "app_image_id": "sha256:e8a21cdf276189e15a3ba44393ea8556ad8281c647ec9f695d9ac2ad2c77631a"
+    },
+    {
+      "source_sha": "aa12a22bb4fd59a60452c13ce73b1e7513e8bb17",
+      "manifest_sha256": "5766b66d344f12ca87d80715e4fca63335872e9a5f398501f596d2520abbf205",
+      "app_image_id": "sha256:09df17d5a7136874906952967953b70293d023911f99de8de08c23e5beda347c"
+    },
+    {
+      "source_sha": "9a67ed7510d201efcfb6e530d6ceeb168e256a99",
+      "manifest_sha256": "88ce5fb75ae1d09998de398a1eb1810741705b04504621743b626ae94d687974",
+      "app_image_id": "sha256:0bf57edcc570574d6496cf0add3167a058a6e3356b9bda85404f5da33198d873"
+    },
+    {
+      "source_head": "d2d6dc7f18c9fc0ed13106e5fead3db61e5cfa18",
+      "manifest_sha256": "3d9fa7633657fe8861c27bbf2bfbba1b41de6b22878756a5fa60419b0cc1b59f",
+      "app_image_id": "sha256:cf65d86e2164efddcf9f437add84345d627ab2c9c1e8e2e95ea8f805370b631f",
+      "release_proof": {
+        "source_modules": 150,
+        "full_passed": 3352,
+        "full_deselected": 2,
+        "separate_leases_passed": 25,
+        "actual_test_exits": [
+          0,
+          0
+        ],
+        "wheel_sha256": "bddae00e487ff236131e7fe892e1b692df70637036177db80c727a9984308453",
+        "wheel_identical_twice": true,
+        "four_images_cold_verified": true,
+        "cli_help_checks_per_image": 4,
+        "blank_chromium_local_only": true,
+        "compose_combinations_passed": 7,
+        "source_head": "d2d6dc7f18c9fc0ed13106e5fead3db61e5cfa18",
+        "manifest_sha256": "3d9fa7633657fe8861c27bbf2bfbba1b41de6b22878756a5fa60419b0cc1b59f",
+        "server_import": "PASS",
+        "provider": "gpt-6-luna bounded implementation; root independent acceptance; externalcalls0",
+        "actual_server_cold_four_images": "PASS 150source/config10/CLI4 eachrole",
+        "actual_module_engine_uds_boot": "PASS local realLinuximage netnone fakecapacityfixture no providers, SIGINT130"
+      },
+      "superseded_reason": "V5 realtrial Arcus freshness failure; measured downstream projection/CPU repair, no historical data removed"
+    },
+    {
+      "source_head": "993f7008ee0677280335b7e9fa06ad6c0ce12201",
+      "manifest_sha256": "b943e9e02dffd37a6542bc0f65dbbc9aed8d4e21ead08ca7bc53470fdd314d67",
+      "app_image_id": "sha256:bff21239c96d14db50a98d970ae916b77ba1deb2ad095f70b1b719ded20e5b81",
+      "release_proof": {
+        "source_head": "993f7008ee0677280335b7e9fa06ad6c0ce12201",
+        "manifest_sha256": "b943e9e02dffd37a6542bc0f65dbbc9aed8d4e21ead08ca7bc53470fdd314d67",
+        "source_modules": 150,
+        "full_passed": 3357,
+        "full_deselected": 2,
+        "separate_leases_passed": 25,
+        "focused_independent_passed": 223,
+        "actual_test_exits": [
+          0,
+          0,
+          0
+        ],
+        "wheel_sha256": "5537a9cd57486ae52fbb0135720a2fdb5390ee8cfce8743944c2fa43d0706b51",
+        "wheel_identical_twice": true,
+        "four_images_cold_verified": true,
+        "compose_combinations_passed": 7,
+        "server_import": "PASS",
+        "actual_server_cold_four_images": "PASS source150/config10/CLI4 perrole UID10001 netnone",
+        "actual_module_engine_uds_boot": "PASS localLinux netnone fakecapacityfixture providers0 SIGINT130",
+        "provider": "Native gpt-6.1-sol bounded implementation, root independent acceptance; externalcalls0",
+        "receipt": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/V7-source-local-acceptance.json",
+        "fresh_server_trial_config_check": "PASS actualruntime.data_only_runtime --check exit0",
+        "operational_verified": false
+      },
+      "superseded_reason": "V6 startup failed after publicliveGap invalidated transportfeed. Exactretained5930Gap->5931failure reproduced and narrowobserver repair independentlyaccepted; originaldata preserved"
+    }
+  ],
+  "current_source_review": {
+    "arcus": "Venue-owned bounded reconstruction; invalid raw fastFalse+DataGap and typed reconnect; original-kind/nativeID retained; shared engine checks unchanged",
+    "data_only": "Canonical explicit public-only module, exact capturedH/digest/published checkpoint and zero economic queue proof; ordinary local runtime default unchanged",
+    "independent_tests": [
+      {
+        "label": "CUT01-arcus-independent-v2",
+        "passed": 174,
+        "exit": 0
+      },
+      {
+        "label": "CUT01-runtime-adoption-v2",
+        "passed": 176,
+        "exit": 0
+      }
+    ],
+    "worker": "gpt-6-luna bounded work plus root mechanical adoption/review; externalcalls0",
+    "source_modules": 150,
+    "operational_limitation": "Strict callbackfree publicobservation applies factualGap andinvalidatesHotPathbook/history whilekeepingdeliveryLIVE; freshnativeSnapshot required forbookVALID. OrdinaryeconomicliveGap stillinvalidatesfeed/defaultreplayGap rejects. Fullhour/restart/Cloud/ownercut/rollback/representativeoperation gates stillrequired.",
+    "boundary_repair": {
+      "public_settings": "strict allowlist/no dotenv/no secret-file expansion/no processenvmutation/check mount enforcement",
+      "invalid_timestamp": "invalid-path metadata None when unrepresentable; raw+gap retained",
+      "proof_failure": "owned inode removed if directoryfsync fails after replace",
+      "compatibility": "stale raw generation0 and mid-stream message retained",
+      "lead_independent_passed": 239,
+      "lead_exit": 0,
+      "worker_passed": 136,
+      "worker_exit": 0,
+      "earlier_C3_full": "exit1 preserved:24fail3251pass; CLIenvleak+Arcuscompat repaired; isolatedCAP04 17pass",
+      "C3_separate_leases": 25
+    },
+    "public_projection_budget": {
+      "packet": "docs/tickets/CUT-01-public-projection-budget.md",
+      "source_head": "993f7008ee0677280335b7e9fa06ad6c0ce12201",
+      "only_public_observer_store": "books1/trades40/index1; ordinary economic capacities unchanged",
+      "fingerprints": "identical old/default andnew Mapping on14000actual retainedpublicevents",
+      "input_retention": "unchanged fullraw/Parquet/source native fullbounds",
+      "review": "PASS scoped source diff, netless independent tests/fullimmutable source andwheel/images; realhourtrial required"
+    },
+    "public_live_gap_continuity": {
+      "packet": "docs/tickets/CUT-01-public-live-gap-continuity.md",
+      "root_actual_retained_bug_reproduced": "Arcusseq5930Gapcommits/seq5931Gaprejectedlive_input_before_verified_handoff; real7757prefix readRO/netnone/nooriginalmounts",
+      "source_changed": "only strictpublicobserver liveGap feedstate/lease; canonicalHotPathINVALID andC/digestpreserved; ordinarybehaviorunchanged",
+      "worker": "native gpt-6.1-sol externalcalls0",
+      "worker_tests": 215,
+      "worker_exit": 0,
+      "root_independent_tests": 215,
+      "root_exit": 0,
+      "diff_check_exit": 0,
+      "operational_verified": false,
+      "source_head": "111fa0a9ec4e71b311ff1c3e38f790f8611e82ae",
+      "full_tests": 3360,
+      "separate_leases": 25,
+      "all_actual_exits": 0,
+      "release_manifest_sha256": "012e37794d189c74710a0eba4c78dfc4bb66a705b30385c784273995f7a26cf2",
+      "release_proof": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/V8-source-local-acceptance.json",
+      "retained_old_bug_reproduction": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/diag-v7-old-bug-reproduction.stdout",
+      "server_retained_trace": {
+        "accepted": 7757,
+        "total": 7757,
+        "gaps": 9,
+        "errors": 0,
+        "generation_before": 2,
+        "generation_after": 2,
+        "cold_prefix_state_and_fingerprints_equal": true,
+        "input_writes": 0,
+        "original_mounts": false,
+        "external_network": false,
+        "receipt": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/v8-retained-live-gap-proof.stdout"
+      }
+    }
+  },
+  "current_release_proof": {
+    "result": "PASS_LOCAL_IMMUTABLE_RELEASE",
+    "source_head": "111fa0a9ec4e71b311ff1c3e38f790f8611e82ae",
+    "manifest_sha256": "012e37794d189c74710a0eba4c78dfc4bb66a705b30385c784273995f7a26cf2",
+    "source_files": 150,
+    "full_tests": 3360,
+    "full_deselected": 2,
+    "lease_tests": 25,
+    "independent_focused_tests": 215,
+    "all_actual_exits": 0,
+    "wheel_identical_twice": true,
+    "wheel_sha256": "3854379177613c2cd5efbbac137a8748292f245e9f46b9f4bc373f5abb67f8a7",
+    "images_local_cold": 4,
+    "compose_combinations": 7,
+    "actual_cli_boot": "PASS localLinux netnone fakecapacityfixture/provider0 SIGINT130",
+    "worker": "nativeSol boundedwork; independentrootacceptance; externalcalls0",
+    "server_import": "PASS actualexit0",
+    "operational_verified": false,
+    "server_cold_four_images": "PASS source150/config10/CLI4 eachrole/UID10001/netnone",
+    "actual_server_cold_receipt": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/v8-server-four-image-proof.stdout",
+    "retained_actual_trace_proof": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/v8-retained-live-gap-proof.stdout",
+    "retained_trace_result": "7757/7757 liveframes,9gaps,C/digest andcoldprefix latestbooks/fingerprints identical; generation2unchanged; q0/errors0; readRO/nooriginalmounts/netnone",
+    "fresh_server_trial_config_check": "PASS actualruntime.data_only_runtime --check exit0"
+  },
+  "public_gap_repair": {
+    "root_independent_repro": "Real Arcus3symbol/spool: firstGap C5, nextGap6 prevents default suffix replay; reproduced and retained",
+    "architecture": "Explicit strict public observation-only engine, no economic callbacks/tick/filter/queue; gap frames remain factual invalidations, exactprefix preserved, fresh native snapshots restore actual quality. Default/economic gap replay guard unchanged. Python ownership guards are not OS security boundary.",
+    "luna_partial_work": "3source files, no tests; usage limit inspected before Sol boundedrepair1",
+    "sol_worker_tests": 305,
+    "sol_worker_exit": 0,
+    "lead_independent_tests": 323,
+    "lead_exit": 0,
+    "proofs": "Real LinuxUDS zero/C5 recovery, 3native symbols, exact cursors/digests, invalid quotes hidden, source isolation, callback mutation guards, default rejection retained",
+    "source_modules": 150
+  },
+  "backup_verification": {
+    "domestic": {
+      "first_and_second_integrity": "ok",
+      "same_sha256": "5375b80ef6145d8e4d8af20719ee08b5d92b07319e3e2cd0015cab4ac441c5e6",
+      "remote_preserved_snapshot_sha_matched": true,
+      "facts_equal": true,
+      "source_cut_fact_receipt_recovered": false,
+      "original_writes": 0,
+      "evidence": "snapshot-local-verification-v3.progress.json"
+    },
+    "crypto": {
+      "source_cut_utc": "2026-11-03T05:04:34.939860+00:00",
+      "first_and_second_integrity": "ok",
+      "same_sha256": "680a53ab149a8bf3a6e73ebf362bb18d1d0f45d4d1d49b93ebabe5b1170b8248",
+      "facts_equal": true,
+      "source_cut_facts_durably_recorded": true,
+      "actual_unit_exit": 0,
+      "original_writes": 0,
+      "evidence": "n9-crypto-backup-status-1.stdout"
+    },
+    "remaining": "Latest account cut at any eventual owner switch; retained external immutable-index/data coverage and operational recovery remain separate gates; original owners/data retained"
+  },
+  "entrypoint_repair": {
+    "affected": "runtime.data_only_runtime -m bootstrap only",
+    "repro_actual_exit": 1,
+    "reason": "__main__ scope type differs from canonical module imported by run_engine",
+    "fix": "canonical entrypoint delegation; existing strict scope validation retained",
+    "focused_passed": 237,
+    "focused_actual_exit": 0,
+    "previous_742_images": "Installed only; no trial roles started; superseded pending rebuilt image",
+    "real_cli_uds_smoke": "PASS_ACTUAL_MODULE_ENGINE_BOOT_AND_SIGINT",
+    "full_passed": 3352,
+    "leases_passed": 25,
+    "actual_exits": [
+      0,
+      0
+    ]
+  },
+  "historical_initial_pre_cut_receipt": {
+    "path": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/release_verification.json",
+    "sha256": "226b61d708f023254ab8fd8350813117fcde4e856e7cb81ac6985746cca57abd"
+  },
+  "private_source_receipt": {
+    "path": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/V6-source-local-acceptance.json",
+    "sha256": "5fee3afc7ce0936adb312af6954a6783da9adceb817eb7bcceb8718054b4f7ef"
+  },
+  "trial_policy": {
+    "server_trial_seconds": 3600,
+    "engine_only_restart_after_seconds": 600,
+    "fresh_root": "data-v5",
+    "same_running_producer_incarnation_during_engine_restart": true,
+    "background_guarded_and_owned_cleanup": true,
+    "lead_stops_after_start": true,
+    "manual_user_resume_for_result": true,
+    "no_automatic_reconnect_or_ai_monitoring": true,
+    "operational_verified": false
+  },
+  "server_trial": {
+    "actual_start_exit": 0,
+    "agent_monitoring": "STOP_AFTER_START_USER_WILL_RESUME_MANUALLY",
+    "cleanup": "Supervisor finally plus owned-label/image/mount verified ExecStopPost; no original roles stopped",
+    "confirmed_utc": "2026-11-03T12:52:12.812133+00:00",
+    "economic_profile": "PUBLIC_OBSERVATION_ONLY_NO_CREDENTIALS",
+    "engine_only_restart_after_seconds": 600,
+    "expected_observation_end_utc": "2026-11-03T13:51:40.823172+00:00",
+    "image_id": "sha256:0876cf2f41bcd75e953a5bff41bc49d01ffb5897681bbc295c62ffd3b5ad37ab",
+    "initial_running_roles": 5,
+    "initial_valid_markets": 9,
+    "one_hour_observation_seconds": 3600,
+    "operational_verified": false,
+    "ops_input_hashes": {
+      "shadow_supervisor_v7.py": "afe9ce85b1f94f33a26ee2a501ea24f6f8fa26fbce04d6c6e2f312693770bb97",
+      "stop_owned_v7.py": "f5fd7f920ca3154f18b0b31a808c11b2fe98e2235b089fc4be58339ce6b7a7fc"
+    },
+    "result": "FAIL",
+    "source_head": "111fa0a9ec4e71b311ff1c3e38f790f8611e82ae",
+    "started_utc": "2026-11-03T12:51:40.823172+00:00",
+    "unit": "vibetrading-cut01-shadow-v7-20261103",
+    "actual_result": "FAIL_SOURCE_FRESHNESS_GUARD",
+    "actual_reason": "SOURCE_FRESHNESS_GUARD:arcus:crypto_perp:BTCUSDT;STOP_ERROR:cut01-shadow-v7-grvt-perp",
+    "observation_seconds_including_cleanup": 153.22585013508797,
+    "engine_restart_test_reached": false,
+    "one_hour_completed": false,
+    "all_new_roles_exited": true,
+    "grvt_exit": 1,
+    "other_role_exits": 130,
+    "oom_killed": false,
+    "original_roles_stopped": 0,
+    "result_receipt": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/v7-failure-audit-20261103.stdout"
+  },
+  "measured_v5_repair": {
+    "actual_trial_result": "FAIL_ARCUS_BOOK_FRESHNESS_BEFORE_RESTART",
+    "scope": "public observation projection bounds1/40/1 +runtimeMappingABC import only; defaulteconomiccapacity/fingerprintalgorithm/rawsource unchanged",
+    "real_trace_records": 14000,
+    "trace_sha256": "564a6c53532d90196467e94f9d67c169a981a93a2ad71b9561accc03243440b6",
+    "same_latest_books_sha256": "4c14cfa5d5859997910bca1e73b8a95d900675650a3a3dec20e4d3bae55d6c14",
+    "before_peak_rss_kib": 352808,
+    "after_peak_rss_kib": 96872,
+    "before_cpu_seconds": 15.355887591999998,
+    "after_cpu_seconds": 11.629959621000001,
+    "actual_abc_fingerprint_parity": true,
+    "worker_passed": 223,
+    "worker_exit": 0,
+    "lead_passed": 223,
+    "lead_exit": 0,
+    "external_worker_calls": 0,
+    "source_head": "993f7008ee0677280335b7e9fa06ad6c0ce12201",
+    "full_tests": 3357,
+    "separate_lease_tests": 25,
+    "independent_focused_tests": 223,
+    "all_test_exits": 0,
+    "release_manifest_sha256": "b943e9e02dffd37a6542bc0f65dbbc9aed8d4e21ead08ca7bc53470fdd314d67",
+    "release_proof": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/V7-source-local-acceptance.json",
+    "default_to_repaired_fingerprint_parity": true,
+    "next_trial": "v6 fresh data/config roots; engine .6CPU/384MiB; storage .35CPU/512MiB; collectors .2CPU/192MiB each; all freshness/queue/safety limits unchanged",
+    "operational_verified": false
+  },
+  "live_gap_continuity_repair": {
+    "packet": "docs/tickets/CUT-01-public-live-gap-continuity.md",
+    "root_actual_retained_bug_reproduced": "Arcusseq5930Gapcommits/seq5931Gaprejectedlive_input_before_verified_handoff; real7757prefix readRO/netnone/nooriginalmounts",
+    "source_changed": "only strictpublicobserver liveGap feedstate/lease; canonicalHotPathINVALID andC/digestpreserved; ordinarybehaviorunchanged",
+    "worker": "native gpt-6.1-sol externalcalls0",
+    "worker_tests": 215,
+    "worker_exit": 0,
+    "root_independent_tests": 215,
+    "root_exit": 0,
+    "diff_check_exit": 0,
+    "operational_verified": false,
+    "source_head": "111fa0a9ec4e71b311ff1c3e38f790f8611e82ae",
+    "full_tests": 3360,
+    "separate_leases": 25,
+    "all_actual_exits": 0,
+    "release_manifest_sha256": "012e37794d189c74710a0eba4c78dfc4bb66a705b30385c784273995f7a26cf2",
+    "release_proof": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/V8-source-local-acceptance.json",
+    "retained_old_bug_reproduction": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/diag-v7-old-bug-reproduction.stdout",
+    "server_retained_trace": {
+      "accepted": 7757,
+      "total": 7757,
+      "gaps": 9,
+      "errors": 0,
+      "generation_before": 2,
+      "generation_after": 2,
+      "cold_prefix_state_and_fingerprints_equal": true,
+      "input_writes": 0,
+      "original_mounts": false,
+      "external_network": false,
+      "receipt": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/v8-retained-live-gap-proof.stdout"
+    }
+  },
+  "server_audit": {
+    "report": "docs/reports/CUT-01_SERVER_AUDIT_20261103.md",
+    "source_diff_product_files": 0,
+    "candidate_images_compared": 4,
+    "actual_candidate_containers_compared": 5,
+    "source_files_per_image": 150,
+    "config_files_per_image": 10,
+    "server_public_runtime_files_captured": 8,
+    "snapshot": "deploy/CUT-01/server-snapshot-20261103-v7/manifest.json",
+    "current_trial_running": false,
+    "source_install": {
+      "all_file_sha256_readback_exact": true,
+      "base_git_sha": "a6836cf28aa38288f57136d49071319fe84b4bee",
+      "bundle_manifest_sha256": "4dc05c6d385d341e9772b30a9e3d003f375e9f72e8833ae976c013b34086304e",
+      "env_key_changes": 0,
+      "existing_file_overwrites": 0,
+      "file_count": 849,
+      "git_commit_sha": null,
+      "observed_utc": "2026-11-03T13:10:21.528848+00:00",
+      "operational_cutover": false,
+      "original14_identities_unchanged": true,
+      "original_data_writes": 0,
+      "product_source_sha": "111fa0a9ec4e71b311ff1c3e38f790f8611e82ae",
+      "result": "PASS_INSTALLED_AND_FULL_READBACK_MATCH",
+      "runtime_tree_sha256": "1785fa60953ddb7111d1c7cdbe7cd9e82310f3334067a77ed39e88ae6b672769",
+      "service_starts": 0,
+      "service_stops": 0,
+      "source_bytes": 9974205,
+      "source_directory": "/srv/vibetrading-crypto-state/cut01-20261102/releases/source-sync-20261103-1785fa60953d",
+      "uid10001_all849_read_exact": true,
+      "directory_permission_receipt": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/source-sync-directory-permissions.stdout"
+    },
+    "open_issues": [
+      "V7 Arcus sustaineddelivery bottleneck notquantitativelyisolated",
+      "GRVTpeerreset/cleanupordering notclassified",
+      "Runner inspecterror conflatesnotcreated; capturedforevidence, not approvedreuse"
+    ],
+    "new_trial_started_during_audit": false
+  }
+}

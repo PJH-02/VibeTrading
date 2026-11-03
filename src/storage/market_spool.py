@@ -13,6 +13,7 @@ import json
 import os
 from pathlib import Path
 import re
+import stat
 import struct
 import threading
 import time
@@ -386,7 +387,22 @@ def _json(data: dict) -> bytes:
     return json.dumps(data, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
 
-def _inventory(root: Path, max_disk_bytes: int, max_records: int) -> tuple[int, int, int | None, bool]:
+def _inventory_entry_size(entry, *, tolerate_checkpoint_temp_disappearance: bool) -> int | None:
+    """Return a regular no-follow entry size, optionally tolerating one rename race."""
+    try:
+        entry_stat = entry.stat(follow_symlinks=False)
+    except FileNotFoundError:
+        if tolerate_checkpoint_temp_disappearance and entry.name == _CHECKPOINT_TEMP:
+            return None
+        raise
+    if not stat.S_ISREG(entry_stat.st_mode):
+        raise SpoolCorruption(f"unexpected spool entry: {entry.name}")
+    return entry_stat.st_size
+
+
+def _inventory(root: Path, max_disk_bytes: int, max_records: int, *,
+               tolerate_checkpoint_temp_disappearance: bool = False
+               ) -> tuple[int, int, int | None, bool]:
     """Constant-memory directory inventory; no list of historical records."""
     total = count = largest = 0
     active = None
@@ -395,9 +411,13 @@ def _inventory(root: Path, max_disk_bytes: int, max_records: int) -> tuple[int, 
         return 0, 0, None, False
     with os.scandir(root) as entries:
         for entry in entries:
-            if not entry.is_file(follow_symlinks=False):
-                raise SpoolCorruption(f"unexpected spool entry: {entry.name}")
-            total += entry.stat(follow_symlinks=False).st_size
+            entry_size = _inventory_entry_size(
+                entry,
+                tolerate_checkpoint_temp_disappearance=tolerate_checkpoint_temp_disappearance,
+            )
+            if entry_size is None:
+                continue
+            total += entry_size
             if total > max_disk_bytes:
                 raise SpoolError("spool disk byte limit exceeded")
             if entry.name in {"writer.lock", _CHECKPOINT, _CHECKPOINT_TEMP}:
@@ -421,7 +441,9 @@ def _inventory(root: Path, max_disk_bytes: int, max_records: int) -> tuple[int, 
 
 
 def _inventory_retained(root: Path, max_disk_bytes: int, first_retained_segment: int,
-                        max_records: int) -> tuple[int, int, int | None, bool, list[int]]:
+                        max_records: int, *,
+                        tolerate_checkpoint_temp_disappearance: bool = False
+                        ) -> tuple[int, int, int | None, bool, list[int]]:
     """Bounded O(segment-count) metadata inventory for a trimmed v2 spool.
 
     Segment IDs are absolute; ``max_records`` bounds both the retained record
@@ -435,9 +457,13 @@ def _inventory_retained(root: Path, max_disk_bytes: int, first_retained_segment:
         raise SpoolCorruption("retained spool directory is missing")
     with os.scandir(root) as scan:
         for entry in scan:
-            if not entry.is_file(follow_symlinks=False):
-                raise SpoolCorruption(f"unexpected spool entry: {entry.name}")
-            total += entry.stat(follow_symlinks=False).st_size
+            entry_size = _inventory_entry_size(
+                entry,
+                tolerate_checkpoint_temp_disappearance=tolerate_checkpoint_temp_disappearance,
+            )
+            if entry_size is None:
+                continue
+            total += entry_size
             if total > max_disk_bytes:
                 raise SpoolError("spool disk byte limit exceeded")
             if entry.name in {"writer.lock", _CHECKPOINT, _CHECKPOINT_TEMP}:
@@ -1007,7 +1033,10 @@ class SpoolReader:
                 durable = _checkpoint(self.root, self.producer_id, self.incarnation, self.max_header_bytes)
                 if durable < self._durable_sequence or durable < sequence:
                     raise SpoolCorruption("durable checkpoint regressed")
-                _, segments, _, _ = _inventory(self.root, self.max_disk_bytes, self.max_records)
+                _, segments, _, _ = _inventory(
+                    self.root, self.max_disk_bytes, self.max_records,
+                    tolerate_checkpoint_temp_disappearance=True,
+                )
                 # A concurrent writer may be preparing the next checkpoint. Its
                 # old published checkpoint remains the only authorization boundary.
                 if durable > self.max_records:
@@ -1028,7 +1057,9 @@ class SpoolReader:
                 if durable - proof.base_sequence > self.max_records:
                     raise SpoolCorruption("retained durable sequence exceeds the record limit")
                 _, segments, _, _, _ = _inventory_retained(
-                    self.root, self.max_disk_bytes, proof.first_retained_segment, self.max_records)
+                    self.root, self.max_disk_bytes, proof.first_retained_segment, self.max_records,
+                    tolerate_checkpoint_temp_disappearance=True,
+                )
             self._durable_sequence = durable
             while sequence < durable and len(records) < max_records:
                 if number > segments:

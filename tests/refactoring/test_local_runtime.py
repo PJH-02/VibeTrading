@@ -85,6 +85,89 @@ def delivery_document(tmp_path):
     return doc
 
 
+def window_document(tmp_path, *, window=2):
+    tmp_path.mkdir(parents=True,exist_ok=True)
+    doc=delivery_document(tmp_path)
+    doc['producers'][0]['delivery']['max_inflight_records']=window
+    return doc
+
+
+def test_delivery_window_preflight_rejects_per_source_transport_and_ack_shortfalls_before_paths(
+        tmp_path,monkeypatch):
+    import runtime.local_runtime as runtime
+    from types import SimpleNamespace
+    from runtime.local_config import LocalRuntimePlan
+    cases=(('transport_records',lambda d:d['transport'].__setitem__('max_records',1)),
+           ('transport_bytes',lambda d:d['transport'].__setitem__('max_bytes',9000)),
+           ('ack_records',lambda d:d['transport'].__setitem__('max_control_records',11)),
+           ('ack_bytes',lambda d:d['transport'].__setitem__('max_control_bytes',12335)))
+    monkeypatch.setattr('runtime.runtime_paths.validate_runtime_paths',lambda *args,**kwargs:None)
+    for name,change in cases:
+        root=tmp_path/name
+        doc=window_document(root)
+        change(doc)
+        plan=LocalRuntimePlan.from_document(doc)
+        settings=SimpleNamespace(env={'VIBETRADING_ENFORCE_MOUNTS':'true'},
+            state_dir=root/'state',data_root=root)
+        with pytest.raises(RuntimeError,match='window|headroom|budget'):
+            runtime.validate_runtime(plan,settings)
+        assert not plan.producers[0].spool_root.exists()
+        assert not settings.state_dir.exists()
+
+
+def test_delivery_window_preflight_rejects_aggregate_transport_and_engine_headroom_before_paths(
+        tmp_path,monkeypatch):
+    import runtime.local_runtime as runtime
+    from types import SimpleNamespace
+    from runtime.local_config import LocalRuntimePlan
+    cases=(('transport_records',{'transport':{'max_records':3}}),
+           ('engine_records',{'engine':{'max_records':3}}),
+           ('engine_bytes',{'engine':{'max_bytes':16000}}),
+           ('transport_bytes',{'transport':{'max_bytes':15000}}))
+    monkeypatch.setattr('runtime.runtime_paths.validate_runtime_paths',lambda *args,**kwargs:None)
+    for name,limits_update in cases:
+        root=tmp_path/name
+        doc=window_document(root)
+        first=doc['producers'][0]
+        second=dict(first)
+        second.update(producer='second',incarnation='run-2',spool_root=str(root/'spool-second'))
+        evidence=root/'second-measurement.json'
+        identity={'producer':'second','provider':'kiwoom','symbols':'069500'}
+        evidence.write_text(json.dumps({'scope':'production_encoded_ingress','sample_seconds':1801,
+            'peak_records_per_second':1.0,'peak_encoded_bytes_per_second':2000.0,'identity':identity}))
+        second['capacity']=dict(first['capacity'],evidence_file=str(evidence),
+            evidence_sha256=hashlib.sha256(evidence.read_bytes()).hexdigest())
+        doc['producers'].append(second)
+        doc['transport']['max_sessions']=2
+        doc['engine']['max_producers']=2
+        for section,values in limits_update.items():doc[section].update(values)
+        plan=LocalRuntimePlan.from_document(doc)
+        settings=SimpleNamespace(env={'VIBETRADING_ENFORCE_MOUNTS':'true'},
+            state_dir=root/'state',data_root=root)
+        with pytest.raises(RuntimeError,match='aggregate delivery windows'):
+            runtime.validate_runtime(plan,settings)
+        assert not plan.producers[0].spool_root.exists()
+        assert not plan.producers[1].spool_root.exists()
+        assert not settings.state_dir.exists()
+
+
+def test_delivery_window_default_one_preserves_existing_runtime_headroom_rules(tmp_path,monkeypatch):
+    import runtime.local_runtime as runtime
+    from types import SimpleNamespace
+    from runtime.local_config import LocalRuntimePlan
+    doc=delivery_document(tmp_path)
+    doc['transport']['max_control_records']=1
+    doc['transport']['max_control_bytes']=1024
+    plan=LocalRuntimePlan.from_document(doc)
+    monkeypatch.setattr('runtime.runtime_paths.validate_runtime_paths',lambda *args,**kwargs:None)
+    settings=SimpleNamespace(env={'VIBETRADING_ENFORCE_MOUNTS':'true'},
+        state_dir=tmp_path/'state',data_root=tmp_path)
+    runtime.validate_runtime(plan,settings)
+    assert plan.producers[0].delivery.max_inflight_records==1
+    assert not plan.producers[0].spool_root.exists()
+    assert not settings.state_dir.exists()
+
+
 def test_durable_delivery_is_explicit_and_bounded_by_producer_capacity(tmp_path):
     plan=LocalRuntimePlan.from_document(delivery_document(tmp_path))
     assert isinstance(plan.producers[0].delivery,DeliveryBudgets)

@@ -22,7 +22,7 @@ from types import SimpleNamespace
 from feeds.feed_recovery import EngineCursor, RecoveryFrame
 from market.hot_path import HotPathStore
 from .local_config import LocalRuntimePlan
-from market.local_engine import EngineBudgets, LocalMarketEngine
+from market.local_engine import EngineBudgets, LocalMarketEngine, _observation_noop
 from feeds.local_pipeline import SpoolingMarketPublisher
 from .local_transport import AppliedReceipt, LocalTransportClient, LocalTransportServer
 from market.market_apply_order import ApplyOrder
@@ -35,6 +35,8 @@ def validate_runtime(plan,settings):
     if sys.platform!='linux':raise RuntimeError('production local runtime requires Linux UDS')
     if settings.env.get('VIBETRADING_ENFORCE_MOUNTS','').lower()!='true':
         raise RuntimeError('local runtime requires enforced storage mount identities')
+    engine=EngineBudgets(**plan.engine)
+    _validate_delivery_window_capacity(plan,engine)
     from .runtime_paths import validate_runtime_paths
     from storage.local_storage import StorageBudgets, fact_storage_reserve
     from storage.local_events import FactsEventBudgets, checkpoint_storage_reserve
@@ -68,7 +70,6 @@ def validate_runtime(plan,settings):
         reserved[device]=reserved.get(device,0)+item.limits.max_disk_bytes
         if reserved[device]+plan.disk_reserve_bytes>shutil.disk_usage(ancestor).free:
             raise RuntimeError('combined spool budgets exceed free volume space and reserve')
-    engine=EngineBudgets(**plan.engine)
     if len(plan.producers)>engine.max_producers or engine.max_frame_bytes<max(p.pipeline.max_frame_bytes for p in plan.producers):
         raise RuntimeError('engine producer/frame budgets cannot cover configured collectors')
     if snapshot.max_instruments<engine.max_instruments:
@@ -76,6 +77,41 @@ def validate_runtime(plan,settings):
     if plan.etf_enabled and settings.env.get('ETF_EXECUTION_GUARDS','').lower()!='true':
         raise RuntimeError('local ETF requires dispatch guards')
     return engine
+
+
+def _validate_delivery_window_capacity(plan,engine):
+    """Preflight aggregate finite transport/engine headroom for opt-in windows."""
+    if not any(item.delivery is not None and item.delivery.max_inflight_records>1
+               for item in plan.producers):
+        return
+    transport=plan.transport
+    aggregate_records=aggregate_payload_bytes=aggregate_wire_bytes=0
+    control_header_bytes=transport.max_header_bytes+4
+    for item in plan.producers:
+        delivery=item.delivery
+        if delivery is None:
+            # The legacy publisher may fill its owned budget before its ACK
+            # worker releases records. Bound that whole possible flight.
+            count=min(item.pipeline.max_records,transport.max_records)
+            payload=min(item.pipeline.max_bytes,count*item.pipeline.max_frame_bytes)
+        else:
+            count=delivery.max_inflight_records
+            payload=min(count*item.pipeline.max_frame_bytes,delivery.max_batch_bytes)
+        wire=payload+count*control_header_bytes
+        if count>transport.max_records or wire>transport.max_bytes:
+            raise RuntimeError('producer delivery window exceeds transport market budget')
+        required_ack_records=2*count+8
+        required_ack_bytes=required_ack_records*control_header_bytes
+        if (transport.max_control_records<required_ack_records
+                or transport.max_control_bytes<required_ack_bytes):
+            raise RuntimeError('producer delivery window exceeds bounded ACK headroom')
+        aggregate_records+=count
+        aggregate_payload_bytes+=payload
+        aggregate_wire_bytes+=wire
+    if aggregate_records>transport.max_records or aggregate_records>engine.max_records:
+        raise RuntimeError('aggregate delivery windows exceed transport or engine record capacity')
+    if aggregate_payload_bytes>engine.max_bytes or aggregate_wire_bytes>transport.max_bytes:
+        raise RuntimeError('aggregate delivery windows exceed transport or engine byte capacity')
 
 
 def _scan(item):
@@ -436,7 +472,20 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
                      recovery_readiness=None,checkpoint_path=None,checkpoint_codec=None,
                      checkpoint_engine_incarnation=None,checkpoint_readiness=None,checkpoint_apply_order=None,
                      checkpoint_journal=None,runtime_checkpoint=None,on_command=None,
-                     timefolio_config=None,timefolio_producers=None,timefolio_duration=None):
+                     timefolio_config=None,timefolio_producers=None,timefolio_duration=None,
+                     observation_only=False):
+    if type(observation_only) is not bool:
+        raise TypeError('observation_only must be a strict boolean')
+    if observation_only:
+        if any(value is not None for value in (
+                etf_factory,paper_runtime,paper_feed_dependencies,selected_action_builders,
+                native_selection_bindings,checkpoint_path,checkpoint_codec,
+                checkpoint_engine_incarnation,checkpoint_readiness,checkpoint_apply_order,
+                checkpoint_journal,runtime_checkpoint,on_command,timefolio_config,
+                timefolio_producers,timefolio_duration)):
+            raise ValueError('observation-only runtime rejects all strategy and economic assembly inputs')
+        from .data_only_runtime import _validate_run_engine_observation
+        _validate_run_engine_observation(plan,settings,recovery_readiness)
     from .selected_execution import (NativeSelectionBinding, NativeSelectionDispatcher,
                                      activate_paper_selections)
     selections=tuple(getattr(plan,'strategy_selections',()))
@@ -573,8 +622,9 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
     timefolio_providers={item.provider for item in plan.producers
         if timefolio_producers is not None and item.producer in timefolio_producers}
     engine=LocalMarketEngine(producer_providers={p.producer:p.provider for p in plan.producers},
-        budgets=EngineBudgets(**plan.engine),on_invalidate=invalid,
-        hot_path=paper_runtime.hot_path if paper_runtime is not None else HotPathStore(),
+        budgets=EngineBudgets(**plan.engine),on_invalidate=_observation_noop if observation_only else invalid,
+        hot_path=(paper_runtime.hot_path if paper_runtime is not None else
+            HotPathStore(max_books=1,max_trades=40,max_index_quotes=1) if observation_only else HotPathStore()),
         # Coupled restore installs market/plugin state with no callback attached.
         # The selected Paper callback is published only after every proof.
         post_apply_callbacks=(() if runtime_checkpoint is not None else
@@ -582,10 +632,11 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
             tuple(dispatcher.enqueue_applied for dispatcher in native_dispatchers)),
         on_tick=(getattr(paper_runtime,"advance",None) if paper_runtime is not None else None),
         snapshot_clock=time.time_ns,
-        trading_filter=(lambda event:event.provider=='kiwoom' and event.instrument.asset_class==AssetClass.ETF)
+        trading_filter=(None if observation_only else ((lambda event:event.provider=='kiwoom' and event.instrument.asset_class==AssetClass.ETF)
             if plan.etf_enabled else (lambda event:event.provider in timefolio_providers
                 and event.instrument.asset_class!=AssetClass.CRYPTO_PERP)
-            if timefolio_config is not None else lambda event:False)
+            if timefolio_config is not None else lambda event:False)),
+        observation_only=observation_only)
     def recovery_commit(high_water,digest):
         if checkpoint_enabled or journal_restored:
             receipt=engine.query_cursor(high_water.producer)

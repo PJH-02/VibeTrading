@@ -1,0 +1,176 @@
+{
+  "allowed_uid": 10001,
+  "disk_reserve_bytes": 8589934592,
+  "endpoint": "/data/run/market",
+  "engine": {
+    "feed_lease_ns": 15000000000,
+    "max_age_ns": 5000000000,
+    "max_bytes": 67108864,
+    "max_digests_per_feed": 4096,
+    "max_frame_bytes": 524288,
+    "max_instruments": 16,
+    "max_producers": 3,
+    "max_records": 512,
+    "max_state_callbacks": 4,
+    "tick_seconds": 0.01
+  },
+  "etf_enabled": false,
+  "events": {
+    "max_bytes": 67108864,
+    "max_checkpoint_bytes": 8388608,
+    "max_consumers": 8,
+    "max_frame_bytes": 524288,
+    "max_nak_seconds": 60,
+    "max_records": 20000,
+    "poll_seconds": 0.01,
+    "query_timeout_seconds": 2
+  },
+  "observation": null,
+  "producers": [
+    {
+      "capacity": {
+        "evidence_file": "/run/config/capacity/binance-perp.json",
+        "evidence_sha256": "2c1ef395644327b484263cc41ac54d899e396b24492700cb7666366a7f40188f",
+        "headroom": 1.25,
+        "outage_seconds": 1801,
+        "peak_encoded_bytes_per_second": 3802806.0,
+        "peak_records_per_second": 1489.0
+      },
+      "delivery": {
+        "io_timeout_seconds": 5,
+        "max_batch_bytes": 8388608,
+        "max_batch_records": 256,
+        "max_inflight_records": 32,
+        "poll_seconds": 0.01,
+        "reconnect_backoff_cap_seconds": 5
+      },
+      "incarnation": "cut01-20261103-v7",
+      "pipeline": {
+        "batch_records": 256,
+        "group_sync_ms": 5,
+        "max_bytes": 33554432,
+        "max_frame_bytes": 524288,
+        "max_records": 4096
+      },
+      "producer": "binance-perp",
+      "provider": "binance-perp",
+      "spool": {
+        "max_disk_bytes": 34359738368,
+        "max_frame_bytes": 1048576,
+        "max_header_bytes": 1024,
+        "max_records": 100000000,
+        "segment_max_age_seconds": 60,
+        "segment_max_bytes": 67108864,
+        "segment_max_records": 50000
+      },
+      "spool_root": "/data/spool/binance-perp",
+      "symbols": "@crypto"
+    },
+    {
+      "capacity": {
+        "evidence_file": "/run/config/capacity/arcus-perp.json",
+        "evidence_sha256": "1d648ae3fce51d5ce2db6f5463bd2f7ca4c34dda2d4b6c7465998dd9f62dc98f",
+        "headroom": 1.25,
+        "outage_seconds": 1801,
+        "peak_encoded_bytes_per_second": 2356404.0,
+        "peak_records_per_second": 1588.0
+      },
+      "delivery": {
+        "io_timeout_seconds": 5,
+        "max_batch_bytes": 8388608,
+        "max_batch_records": 256,
+        "max_inflight_records": 32,
+        "poll_seconds": 0.01,
+        "reconnect_backoff_cap_seconds": 5
+      },
+      "incarnation": "cut01-20261103-v7",
+      "pipeline": {
+        "batch_records": 256,
+        "group_sync_ms": 5,
+        "max_bytes": 33554432,
+        "max_frame_bytes": 524288,
+        "max_records": 4096
+      },
+      "producer": "arcus-perp",
+      "provider": "arcus-perp",
+      "spool": {
+        "max_disk_bytes": 68719476736,
+        "max_frame_bytes": 1048576,
+        "max_header_bytes": 1024,
+        "max_records": 100000000,
+        "segment_max_age_seconds": 60,
+        "segment_max_bytes": 67108864,
+        "segment_max_records": 50000
+      },
+      "spool_root": "/data/spool/arcus-perp",
+      "symbols": "@crypto"
+    },
+    {
+      "capacity": {
+        "evidence_file": "/run/config/capacity/grvt-perp.json",
+        "evidence_sha256": "cdb792956a52b01a4d59fb75e24732254dac959d6375fb45e9919b87361f4d80",
+        "headroom": 1.25,
+        "outage_seconds": 1801,
+        "peak_encoded_bytes_per_second": 326523.0,
+        "peak_records_per_second": 174.0
+      },
+      "delivery": {
+        "io_timeout_seconds": 5,
+        "max_batch_bytes": 8388608,
+        "max_batch_records": 256,
+        "max_inflight_records": 32,
+        "poll_seconds": 0.01,
+        "reconnect_backoff_cap_seconds": 5
+      },
+      "incarnation": "cut01-20261103-v7",
+      "pipeline": {
+        "batch_records": 256,
+        "group_sync_ms": 5,
+        "max_bytes": 33554432,
+        "max_frame_bytes": 524288,
+        "max_records": 4096
+      },
+      "producer": "grvt-perp",
+      "provider": "grvt-perp",
+      "spool": {
+        "max_disk_bytes": 17179869184,
+        "max_frame_bytes": 1048576,
+        "max_header_bytes": 1024,
+        "max_records": 100000000,
+        "segment_max_age_seconds": 60,
+        "segment_max_bytes": 67108864,
+        "segment_max_records": 50000
+      },
+      "spool_root": "/data/spool/grvt-perp",
+      "symbols": "@crypto"
+    }
+  ],
+  "schema_version": 1,
+  "snapshot": {
+    "book_depth": 20,
+    "interval_seconds": 1,
+    "max_age_seconds": 5,
+    "max_bytes": 4194304,
+    "max_instruments": 16
+  },
+  "storage": {
+    "batch_bytes": 16777216,
+    "batch_records": 500,
+    "max_fact_db_bytes": 1073741824,
+    "max_fact_rows": 2000000,
+    "max_payload_bytes": 524288,
+    "max_writer_buffer_bytes": 33554432,
+    "poll_interval_ms": 10
+  },
+  "transport": {
+    "io_timeout_seconds": 5,
+    "max_age_seconds": 5,
+    "max_bytes": 33554432,
+    "max_control_bytes": 2097152,
+    "max_control_records": 128,
+    "max_frame_bytes": 524288,
+    "max_header_bytes": 1024,
+    "max_records": 512,
+    "max_sessions": 3
+  }
+}

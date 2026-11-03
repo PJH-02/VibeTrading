@@ -1,0 +1,57 @@
+{
+  "purpose": "Exact captured public DATA_ONLY V7 server trial configuration/operators; static evidence, no automatic activation",
+  "observed_utc": "2026-11-03T12:55:46.647506+00:00",
+  "product_source_sha": "111fa0a9ec4e71b311ff1c3e38f790f8611e82ae",
+  "release_manifest_sha256": "012e37794d189c74710a0eba4c78dfc4bb66a705b30385c784273995f7a26cf2",
+  "credentials_included": false,
+  "files": [
+    {
+      "path": "tools/shadow_supervisor_v7.py",
+      "sha256": "afe9ce85b1f94f33a26ee2a501ea24f6f8fa26fbce04d6c6e2f312693770bb97",
+      "bytes": 11790,
+      "server_path": "/srv/vibetrading-crypto-state/cut01-20261102/tools/shadow_supervisor_v7.py"
+    },
+    {
+      "path": "tools/stop_owned_v7.py",
+      "sha256": "f5fd7f920ca3154f18b0b31a808c11b2fe98e2235b089fc4be58339ce6b7a7fc",
+      "bytes": 1837,
+      "server_path": "/srv/vibetrading-crypto-state/cut01-20261102/tools/stop_owned_v7.py"
+    },
+    {
+      "path": "tools/collector_progress_v7.py",
+      "sha256": "85980252acaf62c6dd3b696c09d4afb88fc89eb81bde51cf090240d3e45a24fb",
+      "bytes": 2930,
+      "server_path": "/srv/vibetrading-crypto-state/cut01-20261102/tools/collector_progress_v7.py"
+    },
+    {
+      "path": "config-v7/local.json",
+      "sha256": "a31bb254ba37a2e5f4c985a1270cb1aa0fe9474992121d097c981b5937abaa71",
+      "bytes": 5128,
+      "server_path": "/srv/vibetrading-crypto-state/cut01-20261102/config-v7/local.json"
+    },
+    {
+      "path": "config-v7/mounts.json",
+      "sha256": "34c318f3bd33f1679735484e65a5b69113caf92c72912d9553fd427de903a0b8",
+      "bytes": 329,
+      "server_path": "/srv/vibetrading-crypto-state/cut01-20261102/config-v7/mounts.json"
+    },
+    {
+      "path": "config-v7/capacity/arcus-perp.json",
+      "sha256": "1d648ae3fce51d5ce2db6f5463bd2f7ca4c34dda2d4b6c7465998dd9f62dc98f",
+      "bytes": 1171,
+      "server_path": "/srv/vibetrading-crypto-state/cut01-20261102/config-v7/capacity/arcus-perp.json"
+    },
+    {
+      "path": "config-v7/capacity/binance-perp.json",
+      "sha256": "2c1ef395644327b484263cc41ac54d899e396b24492700cb7666366a7f40188f",
+      "bytes": 952,
+      "server_path": "/srv/vibetrading-crypto-state/cut01-20261102/config-v7/capacity/binance-perp.json"
+    },
+    {
+      "path": "config-v7/capacity/grvt-perp.json",
+      "sha256": "cdb792956a52b01a4d59fb75e24732254dac959d6375fb45e9919b87361f4d80",
+      "bytes": 939,
+      "server_path": "/srv/vibetrading-crypto-state/cut01-20261102/config-v7/capacity/grvt-perp.json"
+    }
+  ]
+}

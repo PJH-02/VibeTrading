@@ -107,6 +107,16 @@ def _pairs(values):
     return result
 
 
+def _observation_noop(*_args):
+    """Fixed invalidation callback for the explicit public observer."""
+    return None
+
+
+def _observation_deny_trading(_event):
+    """Identity-stable filter that never queues market events for consumers."""
+    return False
+
+
 class LocalMarketEngine:
     def __init__(self, *, producer_providers: Mapping[str, str], budgets: EngineBudgets,
                  on_invalidate: Callable[[str, str], None],
@@ -115,7 +125,10 @@ class LocalMarketEngine:
                  snapshot_clock: Callable[[], int] | None = None,
                  trading_filter: Callable[[BaseMarketEvent], bool] | None = None,
                  fresh_starts: Mapping[str, str] | None = None, verified_fresh_start: bool = False,
+                 observation_only: bool = False,
                  clock: Callable[[], int] = time.monotonic_ns):
+        if type(observation_only) is not bool:
+            raise TypeError("observation_only must be a strict boolean")
         if (not isinstance(producer_providers, Mapping) or not producer_providers
                 or len(producer_providers) > budgets.max_producers):
             raise ValueError("An explicit bounded producer/provider allowlist is required")
@@ -123,6 +136,14 @@ class LocalMarketEngine:
             if any(not isinstance(value, str) or not value or len(value.encode("utf-8")) > 128
                    for value in (producer, provider)):
                 raise ValueError("Producer and provider identities must be bounded exact strings")
+        if observation_only and (
+                any(provider not in {"binance-perp", "arcus-perp", "grvt-perp"}
+                    for provider in producer_providers.values())
+                or type(hot_path) is not HotPathStore or state_callbacks != ()
+                or post_apply_callbacks != () or on_tick is not None or trading_filter is not None
+                or on_invalidate is not _observation_noop or fresh_starts is not None
+                or verified_fresh_start is not False):
+            raise ValueError("observation-only engines require the callback-free canonical public HotPath scope")
         if (not isinstance(state_callbacks, tuple) or len(state_callbacks) > budgets.max_state_callbacks
                 or bool(hot_path is not None) == bool(state_callbacks)):
             raise ValueError("Supply exactly one state authority: hot_path or bounded state_callbacks")
@@ -139,12 +160,19 @@ class LocalMarketEngine:
             raise TypeError("Engine callbacks must be synchronous")
         if trading_filter is not None and (not callable(trading_filter) or inspect.iscoroutinefunction(trading_filter)):
             raise TypeError("Trading filter must be synchronous")
+        self._observation_only = observation_only
+        self._observation_fault = False
+        self._observation_providers = (tuple(sorted(producer_providers.items()))
+                                      if observation_only else ())
+        self._observation_hot_path = hot_path if observation_only else None
         self.budgets, self.on_invalidate, self.hot_path = budgets, on_invalidate, hot_path
         self.state_callbacks, self.clock = state_callbacks, clock
         self.post_apply_callbacks = post_apply_callbacks
         self.on_tick = on_tick
         self.snapshot_clock = snapshot_clock or time.time_ns
-        self.trading_filter = trading_filter or (lambda event: event.instrument.asset_class == AssetClass.ETF)
+        self._observation_filter = _observation_deny_trading if observation_only else None
+        self.trading_filter = (_observation_deny_trading if observation_only else
+            trading_filter or (lambda event: event.instrument.asset_class == AssetClass.ETF))
         self._feeds = {producer: _Feed(provider) for producer, provider in producer_providers.items()}
         self._queue = deque()
         self._queue_bytes = 0
@@ -176,6 +204,27 @@ class LocalMarketEngine:
                 self.begin_recovery(initial, initial, verified_checkpoint=True)
                 self.handoff(initial, initial, verified=True, ready=True, lease_ns=budgets.feed_lease_ns)
         self._constructing = False
+
+    @property
+    def observation_only(self) -> bool:
+        """True only for the explicit no-callback public observation engine."""
+        return self._observation_only
+
+    def _assert_observation_only(self) -> None:
+        if not self._observation_only:
+            return
+        if (self._observation_fault or type(self.hot_path) is not HotPathStore
+                or self.hot_path is not self._observation_hot_path
+                or self.on_invalidate is not _observation_noop
+                or type(self.state_callbacks) is not tuple or self.state_callbacks
+                or type(self.post_apply_callbacks) is not tuple or self.post_apply_callbacks
+                or self.on_tick is not None or self.trading_filter is not self._observation_filter
+                or tuple(sorted((name, feed.provider) for name, feed in self._feeds.items()))
+                    != self._observation_providers
+                or type(self._queue) is not deque or self._queue or self._queue_bytes != 0):
+            self._observation_fault = True
+            self._had_fault = True
+            raise EngineError("observation_only_invariant_changed")
 
     @contextmanager
     def _owner_operation(self, *, exclusive=False):
@@ -220,6 +269,7 @@ class LocalMarketEngine:
             self._invalidate_feed(producer, reason, fault=fault)
 
     def _invalidate_feed(self, producer: str, reason: str, *, fault: bool):
+        self._assert_observation_only()
         if fault:
             self._had_fault = True
         selected = [producer] if producer in self._feeds else list(self._feeds)
@@ -241,16 +291,19 @@ class LocalMarketEngine:
                 self._had_fault = True
 
     def invalidate(self, producer: str, reason: str):
+        self._assert_observation_only()
         self._invalidate(producer, reason, fault=True)
 
     def on_gap(self, cursor: EngineCursor, reason: str):
         self.invalidate(cursor.producer, "transport_gap:" + reason[:256])
 
     def begin_recovery(self, checkpoint: EngineCursor, high_water: EngineCursor, *, verified_checkpoint: bool):
+        self._assert_observation_only()
         with self._owner_operation(exclusive=True):
             return self._begin_recovery(checkpoint, high_water, verified_checkpoint=verified_checkpoint)
 
     def _begin_recovery(self, checkpoint, high_water, *, verified_checkpoint):
+        self._assert_observation_only()
         if self._replay_order:
             raise EngineError("checkpoint_apply_order_not_consumed")
         feed = self._feed(checkpoint)
@@ -292,6 +345,7 @@ class LocalMarketEngine:
 
     def begin_delivery_recovery(self, high_water: EngineCursor) -> AppliedReceipt:
         """Arm the retained state cursor through a producer's fixed durable H."""
+        self._assert_observation_only()
         _cursor(high_water)
         checkpoint=self.query_cursor(high_water.producer)
         if ((checkpoint.cursor.producer,checkpoint.cursor.incarnation)!=(high_water.producer,high_water.incarnation)
@@ -302,12 +356,14 @@ class LocalMarketEngine:
 
     def handoff(self, checkpoint: EngineCursor, high_water: EngineCursor, *, verified: bool,
                 ready: bool, lease_ns: int) -> EngineCursor:
+        self._assert_observation_only()
         with self._owner_operation(exclusive=True):
             if self._checkpoint_restored:
                 raise EngineError("checkpoint_readiness_validator_required")
             return self._handoff(checkpoint, high_water, verified=verified, ready=ready, lease_ns=lease_ns)
 
     def _handoff(self, checkpoint, high_water, *, verified, ready, lease_ns):
+        self._assert_observation_only()
         feed = self._feed(checkpoint)
         if (self._closed or verified is not True or ready is not True
                 or checkpoint != feed.checkpoint or high_water != feed.high_water
@@ -339,10 +395,12 @@ class LocalMarketEngine:
         Root calls this only after restoring all state and initializing account
         gates. It is not an automatic recovery route after a live GAP or error.
         """
+        self._assert_observation_only()
         with self._owner_operation(exclusive=True):
             return self._arm_initial_resume(checkpoint, high_water)
 
     def _arm_initial_resume(self, checkpoint, high_water):
+        self._assert_observation_only()
         feed = self._feed(checkpoint)
         _cursor(high_water)
         if (self._closed or self._had_fault or feed.ever_live or feed.initial_proof is not None
@@ -358,10 +416,12 @@ class LocalMarketEngine:
 
     def initial_resume(self, checkpoint: EngineCursor) -> bool:
         """Consume only an exact armed initial H; retries never renew a lease."""
+        self._assert_observation_only()
         with self._owner_operation(exclusive=True):
             return self._initial_resume(checkpoint)
 
     def _initial_resume(self, checkpoint):
+        self._assert_observation_only()
         try:
             self.check_health()
             feed = self._feed(checkpoint)
@@ -389,6 +449,7 @@ class LocalMarketEngine:
         return all(feed.mode == FeedMode.LIVE for feed in self._feeds.values()) or self._initial_proofs_ready()
 
     def request_resume(self, checkpoint: EngineCursor) -> bool:
+        self._assert_observation_only()
         try:
             self.check_health()
             feed = self._feed(checkpoint)
@@ -398,6 +459,7 @@ class LocalMarketEngine:
 
     def query_cursor(self, producer: str) -> AppliedReceipt:
         """Return the current state cursor and its content proof for recovery."""
+        self._assert_observation_only()
         feed = self._feeds.get(producer)
         if (feed is None or feed.applied is None or self._closed or feed.state_poisoned
                 or not feed.state_checkpoint_verified):
@@ -705,6 +767,7 @@ class LocalMarketEngine:
     def commit_recovery(self, high_water: EngineCursor, digest: str, *, ready: bool,
                         lease_ns: int | None = None) -> bool:
         """Commit only the exact replayed H after an external readiness proof."""
+        self._assert_observation_only()
         if self._checkpoint_restored:
             raise EngineError("checkpoint_readiness_validator_required")
         feed = self._feed(high_water)
@@ -776,6 +839,7 @@ class LocalMarketEngine:
         return feed, False
 
     def _apply_state(self, event, phase, *, source_id=""):
+        self._assert_observation_only()
         self._require_owned_store_cursor()
         if self.hot_path is not None:
             started=time.monotonic_ns()
@@ -855,6 +919,7 @@ class LocalMarketEngine:
                 feed.mode = FeedMode.WARMING
 
     def apply_replay(self, frame: RecoveryFrame) -> AppliedReceipt:
+        self._assert_observation_only()
         with self._owner_operation(exclusive=True):
             self._require_owned_store_cursor()
             try:
@@ -867,6 +932,7 @@ class LocalMarketEngine:
             return receipt
 
     def _apply_replay(self, frame):
+        self._assert_observation_only()
         state_started=False
         try:
             feed, duplicate = self._frame(frame, replay=True)
@@ -875,7 +941,7 @@ class LocalMarketEngine:
                     raise EngineError("checkpoint_apply_order_cursor_or_digest_mismatch")
                 generation = feed.generation
                 event = self._decode(frame, feed)
-                if event.event_type == EventType.DATA_GAP:
+                if event.event_type == EventType.DATA_GAP and not self._observation_only:
                     raise EngineError("gap_inside_replay_range")
                 state_started=True
                 self._apply_state(event, FeedMode.REPLAY,source_id=frame.cursor.producer)
@@ -893,6 +959,7 @@ class LocalMarketEngine:
             raise
 
     def on_frame(self, frame: RecoveryFrame) -> AppliedReceipt:
+        self._assert_observation_only()
         with self._owner_operation(exclusive=True):
             self._require_owned_store_cursor()
             try:
@@ -905,6 +972,7 @@ class LocalMarketEngine:
             return receipt
 
     def _on_frame(self, frame):
+        self._assert_observation_only()
         state_started=False
         feed=None
         try:
@@ -915,10 +983,13 @@ class LocalMarketEngine:
             generation = feed.generation
             event = self._decode(frame, feed)
             if event.event_type == EventType.DATA_GAP:
-                self.invalidate(frame.cursor.producer, "market_data_gap")
+                if not self._observation_only:
+                    self.invalidate(frame.cursor.producer, "market_data_gap")
                 state_started=True
                 self._apply_state(event, FeedMode.INVALID,source_id=frame.cursor.producer)
                 self._commit_cursor(frame, feed, False)
+                if self._observation_only:
+                    feed.last_live_ns = self.clock()
                 return AppliedReceipt(frame.cursor, frame.digest)
             phase = FeedMode.REPLAY if event.ingest_mode == "backfill" else FeedMode.LIVE
             selected = _sync(self.trading_filter, event)
@@ -972,6 +1043,7 @@ class LocalMarketEngine:
         isolated shared-runtime stream: each strategy checks its own inputs.
         It never grants readiness to a strategy or repairs an invalid feed.
         """
+        self._assert_observation_only()
         required = tuple(self._feeds) if required_producers is None else required_producers
         if (not isinstance(required, tuple) or len(set(required)) != len(required)
                 or any(name not in self._feeds for name in required)):
@@ -981,6 +1053,7 @@ class LocalMarketEngine:
         self._consumer_active = True
         try:
             while not self._closed:
+                self._assert_observation_only()
                 self.check_health()
                 if self._source_error is not None:
                     raise EngineError("local_market_source_invalid") from self._source_error
@@ -1008,6 +1081,7 @@ class LocalMarketEngine:
             self._consumer_active = False
 
     async def start(self):
+        self._assert_observation_only()
         with self._owner_operation(exclusive=True):
             if self._closed or self._watchdog is not None:
                 raise EngineError("engine_not_startable")
@@ -1017,6 +1091,7 @@ class LocalMarketEngine:
     async def _watch(self):
         while True:
             await asyncio.sleep(self.budgets.tick_seconds)
+            self._assert_observation_only()
             self.check_health()
             if self.on_tick is not None:
                 epoch = self.snapshot_clock()
@@ -1025,6 +1100,21 @@ class LocalMarketEngine:
                 _sync(self.on_tick, epoch)
 
     async def close(self):
+        if self._observation_only:
+            try:
+                self._assert_observation_only()
+            except EngineError:
+                # A mutated observer fails closed but remains cleanly closable.
+                with self._owner_operation(exclusive=True):
+                    self._closed = True
+                    for feed in self._feeds.values():
+                        feed.mode, feed.reason = FeedMode.INVALID, "observation_only_invariant_changed"
+                        feed.generation += 1
+                    self._ready.set()
+                if self._watchdog:
+                    self._watchdog.cancel()
+                    await asyncio.gather(self._watchdog, return_exceptions=True)
+                return
         with self._owner_operation(exclusive=True):
             if self._closed:
                 return

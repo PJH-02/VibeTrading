@@ -202,7 +202,7 @@ def test_independent_inventory_enforces_capacity_before_accumulating_all_entries
     class Entry:
         def __init__(self,n): self.name=f"{n:020d}.sealed"
         def is_file(self,**kwargs): return True
-        def stat(self,**kwargs): return SimpleNamespace(st_size=1)
+        def stat(self,**kwargs): return SimpleNamespace(st_size=1,st_mode=0o100600)
     class Inventory:
         def __enter__(self): return self
         def __exit__(self,*args): return False
