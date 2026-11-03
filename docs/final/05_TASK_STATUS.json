@@ -1853,8 +1853,8 @@
       "acceptance_receipt": null,
       "test_exit": null,
       "blocking_reasons": [
-        "Checkpoint-temp race and bounded delivery source repairs reviewed; final immutable-source regression/new-image/server validation pending",
-        "Full catalogue backup integrity/second restore still pending",
+        "AA immutable regression/images/server proof passed; new Arcus/DATA_ONLY source150 focused174+176pass pending full immutable regression/images and actual public trial",
+        "Preserved domestic backup remote/local SHA matches; full integrity/secondrestore pending after prior deadlines; crypto snapshot not started",
         "Current account open-orders/UNKNOWN/owner handoff, newCloud/recovery/rollback, representative intraday and24x7 observation remain unverified"
       ],
       "definition_file": "02_DEVELOPER_TICKETS.md",
@@ -1869,10 +1869,13 @@
       "implementation_packet": "docs/tickets/CUT-01-server-execution.md",
       "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102",
       "progress_receipt": "docs/tickets/CUT-01-progress.json",
-      "execution_stage": "PRE_CUT_SOURCE_FIXED_PENDING_FROZEN_VALIDATION",
+      "execution_stage": "ARCUS_AND_DATA_ONLY_FOCUSED_PASS_PENDING_NEW_FROZEN_RELEASE",
       "repair_packets": [
         "docs/tickets/CUT-01-checkpoint-race.md",
-        "docs/tickets/CUT-01-delivery-window.md"
+        "docs/tickets/CUT-01-delivery-window.md",
+        "docs/tickets/CUT-01-data-only-readiness.md",
+        "docs/tickets/CUT-01-arcus-book-resync.md",
+        "docs/tickets/CUT-01-data-only-runtime-adoption.md"
       ]
     },
     {
