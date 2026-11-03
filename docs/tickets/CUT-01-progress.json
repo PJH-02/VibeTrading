@@ -557,7 +557,9 @@
       "service_starts": 0,
       "service_stops": 0,
       "source_bytes": 9974205,
-      "source_directory": "/srv/vibetrading-crypto-state/cut01-20261102/releases/source-sync-20261103-1785fa60953d"
+      "source_directory": "/srv/vibetrading-crypto-state/cut01-20261102/releases/source-sync-20261103-1785fa60953d",
+      "uid10001_all849_read_exact": true,
+      "directory_permission_receipt": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/source-sync-directory-permissions.stdout"
     },
     "open_issues": [
       "V7 Arcus sustaineddelivery bottleneck notquantitativelyisolated",

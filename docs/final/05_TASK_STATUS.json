@@ -1902,7 +1902,8 @@
         "server_directory": "/srv/vibetrading-crypto-state/cut01-20261102/releases/source-sync-20261103-1785fa60953d",
         "result": "PASS_INSTALLED_AND_FULL_READBACK_MATCH",
         "product_source_sha": "111fa0a9ec4e71b311ff1c3e38f790f8611e82ae",
-        "operational_cutover": false
+        "operational_cutover": false,
+        "uid10001_all849_read_exact": true
       }
     },
     {

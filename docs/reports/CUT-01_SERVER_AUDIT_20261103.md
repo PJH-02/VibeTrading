@@ -85,6 +85,7 @@ V7의 당초 종료 예정 시각은 22:51:40이었다. 실제로는 이미 조�
 | I-17 | V7 정리 중 GRVT가 exit 1, `STOP_ERROR` 기록 | 기록된 traceback은 WebSocket `ConnectionClosedError`/peer reset. Arcus freshness 주 실패 이후 정리 구간과 겹침 | 주 실패와 종료 오류를 분리해 기록. StopPost는 소유권 확인 후 모든 새 역할 종료 확인 | **종료는 확인, 원인 분류 미완료.** 독립 GRVT 오류인지 종료 경합인지 정확한 시점 대조 필요. 정상 종료 통과라고 쓰지 않음 |
 | I-18 | 시험 종료 실행기의 정적 감사에서 오류 분류 부족 발견 | `docker inspect`의 모든 실패를 `not_created`로 취급. 실제 미생성뿐 아니라 daemon/권한 오류도 이 분기로 처리 가능 | 향후 재사용 전에 존재하지 않음과 조회 오류를 구분하고 조회 실패는 미확인으로 보고하도록 보완 필요 | **정적 결함 확인/미수정.** V7의 5개 컨테이너는 이번 별도 조회로 exited를 확인했으므로 현재 종료 사실은 이 분기에 의존하지 않음 |
 | I-19 | 이번 소스 패키지 설치의 첫 검증 시도 실패 | 전송 도구가 먼저 읽은 tar manifest를 일반 반복에서 다시 열거해 파일 목록 검증 assertion 발생 | 로컬에서 중복 열거를 재현하고 `t.next` 기반 순회로 수정. 실제 849개 항목 dry-read 후 재전송. 서버의 첫 대상 디렉터리가 비어 있음을 확인한 뒤에만 재사용 | **전송 도구 수정·재검증.** 최초 시도는 exit 1, 소스 파일 기록 0. 최종 설치 결과는 7절 영수증으로 별도 판정 |
+| I-20 | 이번 소스 설치 후 비root 읽기 검사 실패 | 새 패키지의 일부 하위 디렉터리 그룹이 root로 생성돼 UID/GID 10001의 경로 접근을 차단 | 새로 설치한 release 디렉터리 내부의 소유 그룹/접근 권한만 정리. 기존 데이터·운영 경로 권한은 변경하지 않음 | **수정·검증 완료.** 실제 UID/GID 10001로 849개 파일 전체 읽기/hash 재대조 exit 0. 제품 코드 변경 없음 |
 
 ## 5. 최신 V7 실패의 확인된 사실과 미확정 부분
 
@@ -141,6 +142,7 @@ V7의 당초 종료 예정 시각은 22:51:40이었다. 실제로는 이미 조�
 | 서버 설치 디렉터리 | `/srv/vibetrading-crypto-state/cut01-20261102/releases/source-sync-20261103-1785fa60953d` |
 | 패키지 manifest SHA-256 | `4dc05c6d385d341e9772b30a9e3d003f375e9f72e8833ae976c013b34086304e` |
 | 서버 설치 영수증 | `/srv/vibetrading-crypto-state/cut01-20261102/evidence/source-sync-20261103.json` |
+| 비root 읽기 검증 | 실제 UID/GID 10001로 849개 전체 재읽기/hash 일치, exit 0 |
 | 설치 판정 | **PASS: 11-03 22:10:21 KST 설치 후 849개 파일 전체 재읽기 SHA-256 일치** |
 
 이 패키지는 이번 소스 대조·인계를 위한 설치다. 현재 자동 실행되는 기존 운영 세대와 동일하다고 주장하지 않는다. 운영 전체 전환을 진행하려면 6절의 남은 CUT gate가 필요하다.
@@ -166,7 +168,7 @@ V7의 당초 종료 예정 시각은 22:51:40이었다. 실제로는 이미 조�
 | Gap 버그 실제 재현·수정 대조 | `diag-v7-gap-frames.stdout`, `diag-v7-old-bug-reproduction.stdout`, `v8-retained-live-gap-proof.stdout` |
 | 최신 회귀/릴리스 | `V8-source-local-acceptance.json`, `v8-test-artifacts/V8-full.result.json`, `v8-test-artifacts/V8-leases.result.json`, `v8-server-four-image-proof.stdout` |
 | 이번 현재 상태·소스 대조 | `audit-server-local-20261103.stdout`, `audit-stopped-sources-20261103.stdout`, `v7-failure-audit-20261103.stdout` |
-| 소스 설치 검증 | `source-sync-deploy-20261103.result.json`(최초 실패), `source-sync-empty-stage-check.stdout`, `source-sync-deploy-20261103-v2.stdout`(최종 영수증) |
+| 소스 설치 검증 | `source-sync-deploy-20261103.result.json`(최초 실패), `source-sync-empty-stage-check.stdout`, `source-sync-deploy-20261103-v2.stdout`(설치 영수증), `source-sync-directory-permissions.stdout`(비root 849개 읽기), `source-sync-finalize-20261103-v2.stdout`(최종 문서/커밋 대조) |
 | 계좌/백업/기존 Cloud | `n9-current-mock-orders-get-only.stdout`, `snapshot-local-verification-v3.progress.json`, `n9-crypto-backup-status-1.stdout`, `current-account-backup-nov3.stdout`, `existing-cloud-runtime-readback.stdout` |
 
 제품 변경은 7개 소스 파일에 810줄 추가/81줄 삭제이며, 기준은 `972fb679..111fa0a`다. 테스트 10개 파일과 수정 티켓을 포함한다. 주요 커밋:
