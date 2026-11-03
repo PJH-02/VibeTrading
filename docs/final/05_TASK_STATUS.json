@@ -1853,7 +1853,7 @@
       "acceptance_receipt": null,
       "test_exit": null,
       "blocking_reasons": [
-        "PublicliveGap fixaccepted actualUbuntu retained7757/7757frames,9Gaps,generation2stable/coldprefix state+fingerprints equal/q0. Independent215/full3360+25leasesPASS, all4actualUbuntuimages/configcheckPASS. FreshV7 onehour/restarttrial pending; nooperationalPASS.",
+        "V7 FAILED ~128s freshnessguard/153.23s inclcleanup: ArcusD-C lag4210 despiteLIVEgeneration2/nodeliveryerrors andengine~49MB/CPUheadroom. DetailedCPU/IO/ACKbottleneck notisolated; GRVTWebSocketreset exit1 incleanup. Own5exited/noOOM/original14preserved. No activehourtrial; auditrecorded,849sourcefilesinstalled/readbackexact, no fulloperationalacceptance.",
         "Allfour preserved DB snapshot/restore integrity proofs PASS; finalowner-fenced currentcut and externalretainedindex/data coverage still required before fullswitch",
         "Actual newCloud/retainedprefix, owner fencing, rollback, representative KRintraday and24x7 operation remain unverified; RETprerequisites unmet"
       ],
@@ -1870,7 +1870,7 @@
       "implementation_packet": "docs/tickets/CUT-01-server-execution.md",
       "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102",
       "progress_receipt": "docs/tickets/CUT-01-progress.json",
-      "execution_stage": "FRESH_V7_PUBLIC_ONE_HOUR_TRIAL_READY",
+      "execution_stage": "V7_FAILED_AUDIT_SOURCE_SYNC_COMPLETE_AWAITING_SCOPED_DIAGNOSIS",
       "repair_packets": [
         "docs/tickets/CUT-01-checkpoint-race.md",
         "docs/tickets/CUT-01-delivery-window.md",
@@ -1883,13 +1883,26 @@
         "docs/tickets/CUT-01-public-live-gap-continuity.md"
       ],
       "trial_start": {
-        "unit": "vibetrading-cut01-shadow-v6-20261103",
-        "source_sha": "993f7008ee0677280335b7e9fa06ad6c0ce12201",
-        "started_utc": "2026-11-03T12:27:23.614816+00:00",
-        "result": "FAIL_STARTUP_NOT_CONFIRMED",
-        "all_new_roles_stopped": true,
-        "result_receipt": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/v6-unconfirmed-owned-stop.stdout",
-        "operational_verified": false
+        "unit": "vibetrading-cut01-shadow-v7-20261103",
+        "source_sha": "111fa0a9ec4e71b311ff1c3e38f790f8611e82ae",
+        "started_utc": "2026-11-03T12:51:40.823172+00:00",
+        "expected_observation_end_utc": "2026-11-03T13:51:40.823172+00:00",
+        "result_receipt": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/v7-failure-audit-20261103.stdout",
+        "lead_stops_after_start": true,
+        "manual_resume_required": true,
+        "operational_verified": false,
+        "actual_result": "FAIL",
+        "one_hour_completed": false,
+        "all_new_roles_exited": true
+      },
+      "audit_report": "docs/reports/CUT-01_SERVER_AUDIT_20261103.md",
+      "source_sync": {
+        "runtime_tree_sha256": "1785fa60953ddb7111d1c7cdbe7cd9e82310f3334067a77ed39e88ae6b672769",
+        "file_count": 849,
+        "server_directory": "/srv/vibetrading-crypto-state/cut01-20261102/releases/source-sync-20261103-1785fa60953d",
+        "result": "PASS_INSTALLED_AND_FULL_READBACK_MATCH",
+        "product_source_sha": "111fa0a9ec4e71b311ff1c3e38f790f8611e82ae",
+        "operational_cutover": false
       }
     },
     {

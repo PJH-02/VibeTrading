@@ -1,0 +1,17 @@
+{
+  "mounts": [
+    {
+      "device": "253:32",
+      "filesystem": "ext4",
+      "path": "/data",
+      "volume_id": "CUT01-20261103-V7-PUBLIC-OBSERVATION-253-32",
+      "writable": true
+    }
+  ],
+  "path_bindings": {
+    "data_root": "/data",
+    "parquet_root": "/data",
+    "state_dir": "/data"
+  },
+  "schema_version": 1
+}
