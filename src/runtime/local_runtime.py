@@ -22,7 +22,7 @@ from types import SimpleNamespace
 from feeds.feed_recovery import EngineCursor, RecoveryFrame
 from market.hot_path import HotPathStore
 from .local_config import LocalRuntimePlan
-from market.local_engine import EngineBudgets, LocalMarketEngine
+from market.local_engine import EngineBudgets, LocalMarketEngine, _observation_noop
 from feeds.local_pipeline import SpoolingMarketPublisher
 from .local_transport import AppliedReceipt, LocalTransportClient, LocalTransportServer
 from market.market_apply_order import ApplyOrder
@@ -472,7 +472,20 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
                      recovery_readiness=None,checkpoint_path=None,checkpoint_codec=None,
                      checkpoint_engine_incarnation=None,checkpoint_readiness=None,checkpoint_apply_order=None,
                      checkpoint_journal=None,runtime_checkpoint=None,on_command=None,
-                     timefolio_config=None,timefolio_producers=None,timefolio_duration=None):
+                     timefolio_config=None,timefolio_producers=None,timefolio_duration=None,
+                     observation_only=False):
+    if type(observation_only) is not bool:
+        raise TypeError('observation_only must be a strict boolean')
+    if observation_only:
+        if any(value is not None for value in (
+                etf_factory,paper_runtime,paper_feed_dependencies,selected_action_builders,
+                native_selection_bindings,checkpoint_path,checkpoint_codec,
+                checkpoint_engine_incarnation,checkpoint_readiness,checkpoint_apply_order,
+                checkpoint_journal,runtime_checkpoint,on_command,timefolio_config,
+                timefolio_producers,timefolio_duration)):
+            raise ValueError('observation-only runtime rejects all strategy and economic assembly inputs')
+        from .data_only_runtime import _validate_run_engine_observation
+        _validate_run_engine_observation(plan,settings,recovery_readiness)
     from .selected_execution import (NativeSelectionBinding, NativeSelectionDispatcher,
                                      activate_paper_selections)
     selections=tuple(getattr(plan,'strategy_selections',()))
@@ -609,7 +622,7 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
     timefolio_providers={item.provider for item in plan.producers
         if timefolio_producers is not None and item.producer in timefolio_producers}
     engine=LocalMarketEngine(producer_providers={p.producer:p.provider for p in plan.producers},
-        budgets=EngineBudgets(**plan.engine),on_invalidate=invalid,
+        budgets=EngineBudgets(**plan.engine),on_invalidate=_observation_noop if observation_only else invalid,
         hot_path=paper_runtime.hot_path if paper_runtime is not None else HotPathStore(),
         # Coupled restore installs market/plugin state with no callback attached.
         # The selected Paper callback is published only after every proof.
@@ -618,10 +631,11 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
             tuple(dispatcher.enqueue_applied for dispatcher in native_dispatchers)),
         on_tick=(getattr(paper_runtime,"advance",None) if paper_runtime is not None else None),
         snapshot_clock=time.time_ns,
-        trading_filter=(lambda event:event.provider=='kiwoom' and event.instrument.asset_class==AssetClass.ETF)
+        trading_filter=(None if observation_only else ((lambda event:event.provider=='kiwoom' and event.instrument.asset_class==AssetClass.ETF)
             if plan.etf_enabled else (lambda event:event.provider in timefolio_providers
                 and event.instrument.asset_class!=AssetClass.CRYPTO_PERP)
-            if timefolio_config is not None else lambda event:False)
+            if timefolio_config is not None else lambda event:False)),
+        observation_only=observation_only)
     def recovery_commit(high_water,digest):
         if checkpoint_enabled or journal_restored:
             receipt=engine.query_cursor(high_water.producer)

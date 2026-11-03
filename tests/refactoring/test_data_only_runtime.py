@@ -12,7 +12,7 @@ import pytest
 from feeds.feed_recovery import EngineCursor, RecoveryFrame
 from feeds.local_pipeline import DeliveryBudgets, PipelineBudgets
 from market.hot_path import HotPathStore
-from market.local_engine import EngineBudgets, LocalMarketEngine
+from market.local_engine import EngineBudgets, LocalMarketEngine, _observation_noop
 from runtime.local_config import LocalRuntimePlan
 from runtime.settings import (ArchiveSettings, NatsSettings, ParquetSettings,
     RuntimeSettings, StorageGuardSettings)
@@ -83,7 +83,7 @@ def setup(tmp_path, *, durable=0):
         spool.flush()
     budgets = EngineBudgets(**plan.engine)
     engine = LocalMarketEngine(producer_providers={PRODUCER: PROVIDER}, budgets=budgets,
-        on_invalidate=lambda *_: None, hot_path=HotPathStore(), trading_filter=lambda _: False)
+        on_invalidate=_observation_noop, hot_path=HotPathStore(), observation_only=True)
     return plan, settings, spool, engine
 
 
@@ -101,7 +101,8 @@ def capture_callback(monkeypatch, plan, settings):
     captured = {}
     monkeypatch.setattr(assembly, "validate_runtime", lambda *_: object())
     monkeypatch.setattr(RuntimeSettings, "ensure_dirs", lambda _: None)
-    async def fake_run_engine(_plan, _settings, *, recovery_readiness):
+    async def fake_run_engine(_plan, _settings, *, recovery_readiness, observation_only):
+        assert observation_only is True
         captured["callback"] = recovery_readiness
         return recovery_readiness
     monkeypatch.setattr(assembly, "run_engine", fake_run_engine)
@@ -451,3 +452,53 @@ def test_cli_check_requires_mount_enforcement_before_runtime_validation(tmp_path
     finally:
         spool.close()
         asyncio.run(engine.close())
+
+
+@pytest.mark.parametrize("keyword", ["etf_factory", "paper_runtime", "paper_feed_dependencies",
+    "selected_action_builders", "native_selection_bindings", "checkpoint_path", "checkpoint_codec",
+    "checkpoint_engine_incarnation", "checkpoint_readiness", "checkpoint_apply_order",
+    "checkpoint_journal", "runtime_checkpoint", "on_command", "timefolio_config",
+    "timefolio_producers", "timefolio_duration"])
+def test_observation_runtime_rejects_economic_inputs_before_import_or_activation(tmp_path, monkeypatch, keyword):
+    import builtins
+    from runtime.local_runtime import run_engine
+    plan, settings, spool, engine = setup(tmp_path)
+    original_import = builtins.__import__
+    def guard_import(name, *args, **kwargs):
+        if name.endswith("selected_execution"):
+            pytest.fail("economic assembly imported before input rejection")
+        return original_import(name, *args, **kwargs)
+    callback = assembly._readiness(assembly._ValidatedScope(plan, settings))
+    monkeypatch.setattr(builtins, "__import__", guard_import)
+    try:
+        with pytest.raises(ValueError, match="economic assembly inputs"):
+            asyncio.run(run_engine(plan, settings, observation_only=True,
+                recovery_readiness=callback, **{keyword: object()}))
+    finally:
+        spool.close()
+        asyncio.run(engine.close())
+
+
+def test_public_readiness_rejects_ordinary_engine_and_scope_substitution(tmp_path):
+    from runtime.local_runtime import run_engine
+    plan, settings, spool, engine = setup(tmp_path)
+    ordinary = LocalMarketEngine(producer_providers={PRODUCER: PROVIDER},
+        budgets=EngineBudgets(**plan.engine), on_invalidate=lambda *_: None,
+        hot_path=HotPathStore(), trading_filter=lambda _: False)
+    try:
+        spool.flush()
+        high = EngineCursor(PRODUCER, INCARNATION, 0)
+        ordinary.begin_recovery(high, high, verified_checkpoint=True)
+        callback = assembly._readiness(assembly._ValidatedScope(plan, settings))
+        assert callback(ordinary, high, EMPTY) is False
+        with pytest.raises(ValueError, match="launcher-bound"):
+            asyncio.run(run_engine(replace(plan), settings, observation_only=True,
+                recovery_readiness=callback))
+        with pytest.raises(TypeError, match="strict boolean"):
+            asyncio.run(run_engine(plan, settings, observation_only=1))
+        with pytest.raises((AttributeError, TypeError)):
+            engine.observation_only = False
+    finally:
+        spool.close()
+        asyncio.run(engine.close())
+        asyncio.run(ordinary.close())

@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
   "ticket": "CUT-01",
-  "state": "IN_PROGRESS_PRE_CUT_ARCUS_REPAIR",
-  "recorded_utc": "2026-11-03T03:47:42.549501+00:00",
-  "frozen_source_sha": "aa12a22bb4fd59a60452c13ce73b1e7513e8bb17",
+  "state": "IN_PROGRESS_PUBLIC_GAP_REPAIR",
+  "recorded_utc": "2026-11-03T07:16:15.682607+00:00",
+  "frozen_source_sha": "9a67ed7510d201efcfb6e530d6ceeb168e256a99",
   "base_head": "972fb679583549e6c3ca8c49dd3795298673e62c",
-  "manifest_sha256": "5766b66d344f12ca87d80715e4fca63335872e9a5f398501f596d2520abbf205",
-  "app_image_id": "sha256:09df17d5a7136874906952967953b70293d023911f99de8de08c23e5beda347c",
+  "manifest_sha256": "88ce5fb75ae1d09998de398a1eb1810741705b04504621743b626ae94d687974",
+  "app_image_id": "sha256:0bf57edcc570574d6496cf0add3167a058a6e3356b9bda85404f5da33198d873",
   "worker": {
     "lead_auth_unchanged": true,
-    "native": "gpt-6-luna",
+    "native": "gpt-6.1-sol bounded repair after gpt-6-luna usage limit; lead/auth unchanged",
     "external_calls": 0
   },
   "full_server_switched": false,
@@ -47,17 +47,17 @@
     {
       "id": "CUT-MOCK-POSITIONS",
       "group": "accounts",
-      "status": "STALE",
-      "reason": "Historical cached-token MOCK/MOCK2 GET positions only; not current intraday/open-order/UNKNOWN truth",
-      "recorded_utc": "2026-11-02T14:18:00.390470+00:00",
-      "frozen_sha": "36b34b757ff5a831801ab2641fab889775bfcd35"
+      "status": "PASS",
+      "reason": "Cachedtoken MOCK/MOCK2 balance+complete currentdayorder GET; flatpositionsmatchjournal, remainingorders0; localstates22complete15rejected noUNKNOWN in readwindow; no tokenissue/orders. Old owner not fenced; requires fresh cut at switch.",
+      "recorded_utc": "2026-11-03T04:57:33.286364+00:00",
+      "frozen_sha": "9a67ed7510d201efcfb6e530d6ceeb168e256a99"
     },
     {
       "id": "CUT-FULL-CATALOGUE-BACKUP",
       "group": "backup",
       "status": "IN_PROGRESS",
-      "reason": "Remote backup unit hit4h timeout. ETF/gaps secondrestore passed. Preserved16GB domestic copy transferred; remote/local SHA5375b80e matches. First local integrity hit30m deadline, no corruption verdict; resumed4GiB-cache verification and secondrestore pending. Crypto snapshot not started. Original data unchanged.",
-      "recorded_utc": "2026-11-02T14:18:00.390470+00:00",
+      "reason": "Domestic preserved snapshot fullintegrity+secondrestore+remote/local SHA pass; crypto sourcecut+fullintegrity+secondrestore+samehash pass; ETF/gaps earlier pass. Finalcurrentaccountcut/externalimmutableindexcoverage pending before fullswitch.",
+      "recorded_utc": "2026-11-03T07:16:15.682607+00:00",
       "frozen_sha": "36b34b757ff5a831801ab2641fab889775bfcd35"
     },
     {
@@ -147,11 +147,27 @@
       "reason": "State-only replay of preserved Arcus native crossed book rejected; pinned ETH native506131407 with contiguous prior/generation1. No weakened engine checks. All new trial roles stopped; old14 preserved.",
       "frozen_sha": "aa12a22bb4fd59a60452c13ce73b1e7513e8bb17",
       "recorded_utc": "2026-11-03T03:39:59.815395+00:00"
+    },
+    {
+      "id": "CUT-N9-SOURCE-RELEASE",
+      "group": "source",
+      "status": "PASS",
+      "reason": "Immutable source150 full3286+25leases PASS; reproduciblewheel+RECORD, fourimagescold/help/labels/sourcebytes and7Compose parse pass. Not operational acceptance.",
+      "frozen_sha": "9a67ed7510d201efcfb6e530d6ceeb168e256a99",
+      "recorded_utc": "2026-11-03T04:47:20.184942+00:00"
+    },
+    {
+      "id": "CUT-N9B-ARCuS-CAPACITY",
+      "group": "feeds",
+      "status": "PASS",
+      "reason": "Actual1875.009351s/481986records714361108bytes;478821normalbooks918trades;peak1588rps2356404Bps;max19518bytes;containerexit0noOOM;3terminaldisconnectGap, no midrun native cross in this window; not full soak",
+      "frozen_sha": "9a67ed7510d201efcfb6e530d6ceeb168e256a99",
+      "recorded_utc": "2026-11-03T07:16:15.682607+00:00"
     }
   ],
   "private_receipt_path": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/release_verification.json",
   "private_receipt_sha256": "226b61d708f023254ab8fd8350813117fcde4e856e7cb81ac6985746cca57abd",
-  "repair_state": "PUBLIC_BOUNDARY_REPAIR_FOCUSED_PASS239_PENDING_NEW_FROZEN_FULL_REGRESSION",
+  "repair_state": "PUBLIC_OBSERVATION_GAP_REPLAY_FOCUSED323PASS_PENDING_FROZEN_FULL_IMAGES",
   "source_review": {
     "checkpoint_race": "incremental-only exact checkpoint temporary disappearance; strict startup, record segment/type/byte guards retained",
     "delivery_window": "opt-in default1; bounded window with exact ordered APPLIED and aggregate market/control preflight",
@@ -171,6 +187,11 @@
       "source_sha": "36b34b757ff5a831801ab2641fab889775bfcd35",
       "manifest_sha256": "a4199ecda434f2cad82b8b552de7b66a2203e4ac6cb05d47e77c4594220a2c37",
       "app_image_id": "sha256:e8a21cdf276189e15a3ba44393ea8556ad8281c647ec9f695d9ac2ad2c77631a"
+    },
+    {
+      "source_sha": "aa12a22bb4fd59a60452c13ce73b1e7513e8bb17",
+      "manifest_sha256": "5766b66d344f12ca87d80715e4fca63335872e9a5f398501f596d2520abbf205",
+      "app_image_id": "sha256:09df17d5a7136874906952967953b70293d023911f99de8de08c23e5beda347c"
     }
   ],
   "current_source_review": {
@@ -203,5 +224,58 @@
       "earlier_C3_full": "exit1 preserved:24fail3251pass; CLIenvleak+Arcuscompat repaired; isolatedCAP04 17pass",
       "C3_separate_leases": 25
     }
+  },
+  "current_release_proof": {
+    "source_modules": 150,
+    "full_passed": 3286,
+    "full_deselected": 2,
+    "separate_leases_passed": 25,
+    "actual_test_exits": [
+      0,
+      0
+    ],
+    "wheel_sha256": "f35485bf108087107922e2de456f210f752860ffafefac8b93af6f3ffc9bf0dd",
+    "wheel_identical_twice": true,
+    "four_images_cold_verified": true,
+    "cli_help_checks_per_image": 4,
+    "blank_chromium_local_only": true,
+    "compose_combinations_passed": 7,
+    "source_head": "9a67ed7510d201efcfb6e530d6ceeb168e256a99",
+    "manifest_sha256": "88ce5fb75ae1d09998de398a1eb1810741705b04504621743b626ae94d687974",
+    "server_import": "IN_PROGRESS",
+    "provider": "gpt-6-luna bounded implementation; root independent acceptance; externalcalls0"
+  },
+  "public_gap_repair": {
+    "root_independent_repro": "Real Arcus3symbol/spool: firstGap C5, nextGap6 prevents default suffix replay; reproduced and retained",
+    "architecture": "Explicit strict public observation-only engine, no economic callbacks/tick/filter/queue; gap frames remain factual invalidations, exactprefix preserved, fresh native snapshots restore actual quality. Default/economic gap replay guard unchanged. Python ownership guards are not OS security boundary.",
+    "luna_partial_work": "3source files, no tests; usage limit inspected before Sol boundedrepair1",
+    "sol_worker_tests": 305,
+    "sol_worker_exit": 0,
+    "lead_independent_tests": 323,
+    "lead_exit": 0,
+    "proofs": "Real LinuxUDS zero/C5 recovery, 3native symbols, exact cursors/digests, invalid quotes hidden, source isolation, callback mutation guards, default rejection retained",
+    "source_modules": 150
+  },
+  "backup_verification": {
+    "domestic": {
+      "first_and_second_integrity": "ok",
+      "same_sha256": "5375b80ef6145d8e4d8af20719ee08b5d92b07319e3e2cd0015cab4ac441c5e6",
+      "remote_preserved_snapshot_sha_matched": true,
+      "facts_equal": true,
+      "source_cut_fact_receipt_recovered": false,
+      "original_writes": 0,
+      "evidence": "snapshot-local-verification-v3.progress.json"
+    },
+    "crypto": {
+      "source_cut_utc": "2026-11-03T05:04:34.939860+00:00",
+      "first_and_second_integrity": "ok",
+      "same_sha256": "680a53ab149a8bf3a6e73ebf362bb18d1d0f45d4d1d49b93ebabe5b1170b8248",
+      "facts_equal": true,
+      "source_cut_facts_durably_recorded": true,
+      "actual_unit_exit": 0,
+      "original_writes": 0,
+      "evidence": "n9-crypto-backup-status-1.stdout"
+    },
+    "remaining": "Latest account cut at any eventual owner switch; retained external immutable-index/data coverage and operational recovery remain separate gates; original owners/data retained"
   }
 }

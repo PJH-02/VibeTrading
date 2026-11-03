@@ -17,6 +17,7 @@ import re
 import stat
 import time
 from collections.abc import Mapping
+from dataclasses import dataclass
 
 from feeds.feed_recovery import EngineCursor
 from market.local_engine import LocalMarketEngine
@@ -102,12 +103,11 @@ def _public_settings_from_env(environ: Mapping[str, str] | None = None) -> Runti
         telegram_user_id=None)
 
 
+@dataclass(frozen=True, slots=True)
 class _ValidatedScope:
     """Identity-bound evidence that the public profile passed launcher checks."""
-    __slots__ = ("plan", "settings")
-
-    def __init__(self, plan, settings):
-        self.plan, self.settings = plan, settings
+    plan: LocalRuntimePlan
+    settings: RuntimeSettings
 
 
 def validate_public_data_only(plan: LocalRuntimePlan, settings: RuntimeSettings) -> None:
@@ -137,20 +137,29 @@ def _producer_checkpoint(item, high: EngineCursor) -> bool:
     return type(durable) is int and durable >= high.sequence
 
 
-def _readiness(scope: _ValidatedScope, *, clock=time.time_ns):
-    if type(scope) is not _ValidatedScope:
-        raise TypeError("readiness is available only from the validated DATA_ONLY launcher")
-    plan, settings = scope.plan, scope.settings
-    validate_public_data_only(plan, settings)
-    inventory = {item.producer: item for item in plan.producers}
-    proof_directory = "data-only-trials"
+class _PublicDataOnlyReadiness:
+    """Architecture guard bound to one validated plan/settings pair; not a security sandbox."""
+    __slots__ = ("scope", "clock")
 
-    def prove(engine, high_water, digest):
+    def __init__(self, scope: _ValidatedScope, clock):
+        if type(scope) is not _ValidatedScope or not callable(clock):
+            raise TypeError("readiness is available only from the validated DATA_ONLY launcher")
+        self.scope, self.clock = scope, clock
+
+    def __call__(self, engine, high_water, digest):
+        scope = self.scope
+        plan, settings = scope.plan, scope.settings
+        validate_public_data_only(plan, settings)
+        inventory = {item.producer: item for item in plan.producers}
+        proof_directory = "data-only-trials"
         try:
             if (type(engine) is not LocalMarketEngine or type(high_water) is not EngineCursor
                     or type(high_water.sequence) is not int or high_water.sequence < 0
                     or type(digest) is not str or _HEX64.fullmatch(digest) is None
                     or high_water.producer not in inventory):
+                return False
+            engine._assert_observation_only()
+            if engine.observation_only is not True:
                 return False
             item = inventory[high_water.producer]
             if (high_water.producer != item.producer or high_water.incarnation != item.incarnation):
@@ -167,7 +176,7 @@ def _readiness(scope: _ValidatedScope, *, clock=time.time_ns):
                 return False
             if not _producer_checkpoint(item, high_water):
                 return False
-            stamp = clock()
+            stamp = self.clock()
             document = {"mode": "DATA_ONLY", "producer": item.producer,
                         "incarnation": item.incarnation, "sequence": high_water.sequence,
                         "digest": digest, "verified_at_utc": datetime.fromtimestamp(
@@ -246,7 +255,22 @@ def _readiness(scope: _ValidatedScope, *, clock=time.time_ns):
         except (Exception,):
             return False
 
-    return prove
+
+def _readiness(scope: _ValidatedScope, *, clock=time.time_ns):
+    if type(scope) is not _ValidatedScope:
+        raise TypeError("readiness is available only from the validated DATA_ONLY launcher")
+    validate_public_data_only(scope.plan, scope.settings)
+    return _PublicDataOnlyReadiness(scope, clock)
+
+
+def _validate_run_engine_observation(plan, settings, recovery_readiness):
+    """Pre-import validation for the sole approved DATA_ONLY engine assembly."""
+    validate_public_data_only(plan, settings)
+    if (type(recovery_readiness) is not _PublicDataOnlyReadiness
+            or type(recovery_readiness.scope) is not _ValidatedScope
+            or recovery_readiness.scope.plan is not plan
+            or recovery_readiness.scope.settings is not settings):
+        raise ValueError("observation-only runtime requires launcher-bound public readiness")
 
 
 async def run_public_data_only(plan: LocalRuntimePlan, settings: RuntimeSettings):
@@ -257,7 +281,7 @@ async def run_public_data_only(plan: LocalRuntimePlan, settings: RuntimeSettings
     # RuntimeSettings.ensure_dirs repeats mount validation immediately before mkdir.
     settings.ensure_dirs()
     callback = _readiness(_ValidatedScope(plan, settings))
-    return await run_engine(plan, settings, recovery_readiness=callback)
+    return await run_engine(plan, settings, recovery_readiness=callback, observation_only=True)
 
 
 def _require_mount_enforcement(settings: RuntimeSettings) -> None:
