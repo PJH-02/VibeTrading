@@ -2,7 +2,7 @@
   "schema_version": 1,
   "ticket": "CUT-01",
   "state": "IN_PROGRESS_PRE_CUT_ARCUS_REPAIR",
-  "recorded_utc": "2026-11-03T03:39:59.815395+00:00",
+  "recorded_utc": "2026-11-03T03:47:42.549501+00:00",
   "frozen_source_sha": "aa12a22bb4fd59a60452c13ce73b1e7513e8bb17",
   "base_head": "972fb679583549e6c3ca8c49dd3795298673e62c",
   "manifest_sha256": "5766b66d344f12ca87d80715e4fca63335872e9a5f398501f596d2520abbf205",
@@ -151,7 +151,7 @@
   ],
   "private_receipt_path": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/release_verification.json",
   "private_receipt_sha256": "226b61d708f023254ab8fd8350813117fcde4e856e7cb81ac6985746cca57abd",
-  "repair_state": "ARCUS_AND_CANONICAL_DATA_ONLY_FOCUSED_PASS_PENDING_IMMUTABLE_FULL_VALIDATION",
+  "repair_state": "PUBLIC_BOUNDARY_REPAIR_FOCUSED_PASS239_PENDING_NEW_FROZEN_FULL_REGRESSION",
   "source_review": {
     "checkpoint_race": "incremental-only exact checkpoint temporary disappearance; strict startup, record segment/type/byte guards retained",
     "delivery_window": "opt-in default1; bounded window with exact ordered APPLIED and aggregate market/control preflight",
@@ -190,6 +190,18 @@
     ],
     "worker": "gpt-6-luna bounded work plus root mechanical adoption/review; externalcalls0",
     "source_modules": 150,
-    "operational_limitation": "Full cold replay across historical DataGap remains failclosed; active recovery may replay freshsnapshot suffix after exact committedGapC. New collector boot uses freshincarnation+freshroot; original diagnostic streams retained."
+    "operational_limitation": "Full cold replay across historical DataGap remains failclosed; active recovery may replay freshsnapshot suffix after exact committedGapC. New collector boot uses freshincarnation+freshroot; original diagnostic streams retained.",
+    "boundary_repair": {
+      "public_settings": "strict allowlist/no dotenv/no secret-file expansion/no processenvmutation/check mount enforcement",
+      "invalid_timestamp": "invalid-path metadata None when unrepresentable; raw+gap retained",
+      "proof_failure": "owned inode removed if directoryfsync fails after replace",
+      "compatibility": "stale raw generation0 and mid-stream message retained",
+      "lead_independent_passed": 239,
+      "lead_exit": 0,
+      "worker_passed": 136,
+      "worker_exit": 0,
+      "earlier_C3_full": "exit1 preserved:24fail3251pass; CLIenvleak+Arcuscompat repaired; isolatedCAP04 17pass",
+      "C3_separate_leases": 25
+    }
   }
 }

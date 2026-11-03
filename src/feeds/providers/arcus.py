@@ -22,6 +22,7 @@ _MAX_BOOK_LEVELS = 4096
 _MAX_NATIVE_LEVELS = 1000
 _MIN_RECONNECT_SECONDS = 1.0
 _MAX_RECONNECT_SECONDS = 30.0
+_MAX_SOURCE_TIMESTAMP_US = (2**63 - 1) // 1000
 
 
 class ArcusBookResync(RuntimeError):
@@ -177,6 +178,19 @@ class ArcusPerpCollector(PerpCollectorBase):
             parsed.append((price, size))
         return parsed
 
+    @staticmethod
+    def _invalid_path_timestamp(source):
+        """Normalize unsafe timestamp metadata without losing raw book evidence."""
+        if source is None or isinstance(source, bool):
+            return None
+        try:
+            timestamp = int(source)
+        except (TypeError, ValueError, OverflowError):
+            return None
+        if timestamp < 0 or timestamp > _MAX_SOURCE_TIMESTAMP_US:
+            return None
+        return timestamp
+
     def _bounded_sides(self, bids, asks):
         # Retain only the best 1000 levels, matching HotPathStore's finite book.
         if len(bids) > _MAX_NATIVE_LEVELS:
@@ -195,7 +209,8 @@ class ArcusPerpCollector(PerpCollectorBase):
         bids = parsed_bids if parsed_bids is not None else []
         asks = parsed_asks if parsed_asks is not None else []
         generation = self.book_generation.get(symbol, 0)
-        await bus.publish_market_event(OrderBookEvent(**self._common(symbol, source),
+        await bus.publish_market_event(OrderBookEvent(**self._common(
+            symbol, self._invalid_path_timestamp(source)),
             update_type=kind,
             bids=[OrderBookLevel(price=p, quantity=q) for p, q in bids],
             asks=[OrderBookLevel(price=p, quantity=q) for p, q in asks],
@@ -222,20 +237,19 @@ class ArcusPerpCollector(PerpCollectorBase):
         last = self.last_book.get(symbol)
         if not is_snapshot and last is not None and seq <= last:
             # Preserve the old stale/duplicate raw-only behavior without moving state.
-            generation = self.book_generation.get(symbol, 0)
             await bus.publish_market_event(OrderBookEvent(**self._common(symbol, source),
                 update_type=kind,
                 bids=[OrderBookLevel(price=p, quantity=q) for p, q in bids_update],
                 asks=[OrderBookLevel(price=p, quantity=q) for p, q in asks_update],
                 depth=max(len(bids_update), len(asks_update)), channel='l2OrderbookUpdates',
-                final_update_id=seq, sync_generation=generation, fast=False, raw_payload=raw))
+                final_update_id=seq, sync_generation=0, fast=False, raw_payload=raw))
             return
 
         if (not is_snapshot and last is not None and symbol not in self._first_delta_after_snapshot
                 and seq != last + 1):
             await self._publish_invalid_book(bus, symbol, source, kind, seq,
                 data.get('bids', []), data.get('asks', []), 'l2OrderbookUpdates', raw,
-                f'Arcus midstream sequence gap last={last} current={seq}')
+                f'Arcus mid-stream sequence gap last={last} current={seq}')
 
         if is_snapshot:
             bids, asks = {}, {}

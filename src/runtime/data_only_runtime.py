@@ -10,21 +10,96 @@ import asyncio
 from datetime import datetime, timezone
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import re
 import stat
 import time
+from collections.abc import Mapping
 
 from feeds.feed_recovery import EngineCursor
 from market.local_engine import LocalMarketEngine
 from runtime.local_config import LocalRuntimePlan
 from runtime.local_runtime import run_engine, validate_runtime
-from runtime.settings import RuntimeSettings
+from runtime.settings import (ArchiveSettings, DEFAULT_DATA_ROOT, NatsSettings,
+    ParquetSettings, PROJECT_ROOT, RuntimeSettings, StorageGuardSettings)
 
 
 _HEX64 = re.compile(r"[0-9a-f]{64}\Z")
 _PUBLIC_PROVIDERS = frozenset({"binance-perp", "arcus-perp", "grvt-perp"})
+_PUBLIC_ENV_KEYS = frozenset({
+    "VIBETRADING_DATA_ROOT", "VIBETRADING_STATE_DIR", "VIBETRADING_LOG_DIR",
+    "PARQUET_DATA_ROOT", "VIBETRADING_ENFORCE_MOUNTS",
+    "VIBETRADING_STORAGE_MOUNTS_FILE", "DASHBOARD_TELEMETRY_DIR",
+    "DASHBOARD_TELEMETRY_INTERVAL_SECONDS", "LIVE_ORDER_ENABLED",
+    "TIMEFOLIO_LIVE_SUBMIT_ENABLED",
+})
+
+
+def _public_bool(environ: Mapping[str, str], name: str, *, default: bool = False) -> bool:
+    value = environ.get(name)
+    if value is None or value == "":
+        return default
+    normalized = value.strip().lower()
+    if normalized in {"1", "true", "yes", "on"}:
+        return True
+    if normalized in {"0", "false", "no", "off"}:
+        return False
+    raise ValueError(name + " must be an explicit boolean")
+
+
+def _public_path(environ: Mapping[str, str], name: str, default: Path) -> Path:
+    value = environ.get(name)
+    if value is None or value == "":
+        return default
+    path = Path(value)
+    if not path.is_absolute():
+        raise ValueError(name + " requires an absolute path")
+    return path
+
+
+def _public_settings_from_env(environ: Mapping[str, str] | None = None) -> RuntimeSettings:
+    """Build inert public-feed settings from a strict env allowlist.
+
+    This intentionally bypasses dotenv loading, generic provider parsing, and
+    archive credential-file expansion in RuntimeSettings.from_env.
+    """
+    source = os.environ if environ is None else environ
+    if not isinstance(source, Mapping):
+        raise TypeError("public settings require an environment mapping")
+    values = {key: source[key] for key in _PUBLIC_ENV_KEYS if key in source}
+    root = PROJECT_ROOT
+    data_root = _public_path(values, "VIBETRADING_DATA_ROOT", DEFAULT_DATA_ROOT)
+    state_dir = _public_path(values, "VIBETRADING_STATE_DIR", data_root / "state")
+    log_dir = _public_path(values, "VIBETRADING_LOG_DIR", data_root / "logs")
+    parquet_root = _public_path(values, "PARQUET_DATA_ROOT", data_root / "market_data")
+    if "VIBETRADING_STORAGE_MOUNTS_FILE" in values:
+        _public_path(values, "VIBETRADING_STORAGE_MOUNTS_FILE", root)
+    if "DASHBOARD_TELEMETRY_DIR" in values:
+        _public_path(values, "DASHBOARD_TELEMETRY_DIR", root)
+    if "DASHBOARD_TELEMETRY_INTERVAL_SECONDS" in values:
+        try:
+            interval = float(values["DASHBOARD_TELEMETRY_INTERVAL_SECONDS"])
+        except (TypeError, ValueError, OverflowError) as error:
+            raise ValueError("DASHBOARD_TELEMETRY_INTERVAL_SECONDS must be finite and positive") from error
+        if not math.isfinite(interval) or interval <= 0:
+            raise ValueError("DASHBOARD_TELEMETRY_INTERVAL_SECONDS must be finite and positive")
+        values["DASHBOARD_TELEMETRY_INTERVAL_SECONDS"] = str(interval)
+    enforce_mounts = _public_bool(values, "VIBETRADING_ENFORCE_MOUNTS")
+    live_enabled = _public_bool(values, "LIVE_ORDER_ENABLED")
+    timefolio_enabled = _public_bool(values, "TIMEFOLIO_LIVE_SUBMIT_ENABLED")
+    values["VIBETRADING_ENFORCE_MOUNTS"] = "true" if enforce_mounts else "false"
+    values["LIVE_ORDER_ENABLED"] = "true" if live_enabled else "false"
+    values["TIMEFOLIO_LIVE_SUBMIT_ENABLED"] = "true" if timefolio_enabled else "false"
+    values["VIBETRADING_RUNTIME"] = "local"
+    return RuntimeSettings(env=values, project_root=root, data_root=data_root,
+        state_dir=state_dir, log_dir=log_dir,
+        external_config_dir=root / "config" / "hyperliquid", nats=NatsSettings(),
+        parquet=ParquetSettings(data_root=parquet_root), archive=ArchiveSettings(),
+        storage_guard=StorageGuardSettings(), providers={}, max_strategy_jobs=1,
+        live_order_enabled=live_enabled, timefolio_live_submit_enabled=timefolio_enabled,
+        telegram_user_id=None)
 
 
 class _ValidatedScope:
@@ -126,6 +201,8 @@ def _readiness(scope: _ValidatedScope, *, clock=time.time_ns):
                 fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
                              0o600, dir_fd=proof_fd)
                 try:
+                    temporary_stat = os.fstat(fd)
+                    temporary_identity = (temporary_stat.st_dev, temporary_stat.st_ino)
                     view = memoryview(payload)
                     while view:
                         count = os.write(fd, view)
@@ -138,14 +215,28 @@ def _readiness(scope: _ValidatedScope, *, clock=time.time_ns):
                     raise
                 finally:
                     os.close(fd)
+                replaced = False
                 try:
                     os.replace(temporary, filename, src_dir_fd=proof_fd, dst_dir_fd=proof_fd)
+                    replaced = True
                     os.fsync(proof_fd)
                 except BaseException:
-                    try:
-                        os.unlink(temporary, dir_fd=proof_fd)
-                    except FileNotFoundError:
-                        pass
+                    if replaced:
+                        try:
+                            current = os.stat(filename, dir_fd=proof_fd, follow_symlinks=False)
+                            if (current.st_dev, current.st_ino) == temporary_identity:
+                                os.unlink(filename, dir_fd=proof_fd)
+                                try:
+                                    os.fsync(proof_fd)
+                                except OSError:
+                                    pass
+                        except FileNotFoundError:
+                            pass
+                    else:
+                        try:
+                            os.unlink(temporary, dir_fd=proof_fd)
+                        except FileNotFoundError:
+                            pass
                     raise
             finally:
                 if proof_fd is not None:
@@ -161,13 +252,17 @@ def _readiness(scope: _ValidatedScope, *, clock=time.time_ns):
 async def run_public_data_only(plan: LocalRuntimePlan, settings: RuntimeSettings):
     """Validate reviewed mounts and runtime budgets before creating any path."""
     validate_public_data_only(plan, settings)
-    if settings.env.get("VIBETRADING_ENFORCE_MOUNTS", "").lower() != "true":
-        raise RuntimeError("DATA_ONLY requires enforced reviewed storage mounts")
+    _require_mount_enforcement(settings)
     validate_runtime(plan, settings)
     # RuntimeSettings.ensure_dirs repeats mount validation immediately before mkdir.
     settings.ensure_dirs()
     callback = _readiness(_ValidatedScope(plan, settings))
     return await run_engine(plan, settings, recovery_readiness=callback)
+
+
+def _require_mount_enforcement(settings: RuntimeSettings) -> None:
+    if settings.env.get("VIBETRADING_ENFORCE_MOUNTS", "").lower() != "true":
+        raise RuntimeError("DATA_ONLY requires enforced reviewed storage mounts")
 
 
 def launch_public_data_only(plan: LocalRuntimePlan, settings: RuntimeSettings):
@@ -181,10 +276,10 @@ def main(argv=None):
     parser.add_argument("--config", type=Path, required=True)
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args(argv)
-    os.environ["VIBETRADING_RUNTIME"] = "local"
     plan = LocalRuntimePlan.load(args.config)
-    settings = RuntimeSettings.from_env()
+    settings = _public_settings_from_env()
     validate_public_data_only(plan, settings)
+    _require_mount_enforcement(settings)
     if args.check:
         validate_runtime(plan, settings)
         print(json.dumps({"mode": "DATA_ONLY", "economic_activation": False,

@@ -302,6 +302,27 @@ def test_empty_crossed_and_malformed_snapshot_retain_kind_raw_and_gap():
     asyncio.run(scenario())
 
 
+@pytest.mark.parametrize("timestamp", ["not-a-timestamp", float("nan"), 10**1000, None])
+def test_invalid_book_timestamp_keeps_raw_rejection_and_gap(timestamp):
+    async def scenario():
+        collector, bus = ArcusPerpCollector(("ETHUSDT",)), CaptureBus()
+        await parse(collector, bus, snapshot(506131406))
+        bad = delta(506131407, asks=[["2253.22", "103.9146142"],
+                                     ["2252.86", "0.4793693"]])
+        bad["contents"]["timestamp"] = timestamp
+        raw = wire(bad)
+        with pytest.raises(ArcusBookResync, match="crossed"):
+            await collector._arcus_message(bus, bad, raw)
+        rejected, gap = bus.events[-2:]
+        assert rejected.event_type == EventType.ORDER_BOOK
+        assert rejected.update_type == BookUpdateType.DELTA
+        assert rejected.fast is False and rejected.raw_payload == raw
+        assert rejected.source_ts_ns is None
+        assert gap.event_type == EventType.DATA_GAP
+        assert "crossed" in gap.reason
+    asyncio.run(scenario())
+
+
 def test_midstream_gap_resync_but_stale_duplicate_remains_raw_only():
     async def scenario():
         collector, bus = ArcusPerpCollector(("ETHUSDT",)), CaptureBus()
@@ -313,7 +334,7 @@ def test_midstream_gap_resync_but_stale_duplicate_remains_raw_only():
         assert len(bus.events) == before + 1
         assert bus.events[-1].fast is False and bus.events[-1].event_type == EventType.ORDER_BOOK
         bad = delta(13, bids=[["2253.11", "2"]])
-        with pytest.raises(ArcusBookResync, match="midstream sequence gap"):
+        with pytest.raises(ArcusBookResync, match="mid-stream sequence gap"):
             await collector._arcus_message(bus, bad, wire(bad))
         assert bus.events[-2].fast is False and bus.events[-2].update_type == BookUpdateType.DELTA
         assert bus.events[-1].event_type == EventType.DATA_GAP

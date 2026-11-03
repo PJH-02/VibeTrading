@@ -16,6 +16,7 @@ from market.local_engine import EngineBudgets, LocalMarketEngine
 from runtime.local_config import LocalRuntimePlan
 from runtime.settings import (ArchiveSettings, NatsSettings, ParquetSettings,
     RuntimeSettings, StorageGuardSettings)
+import runtime.settings as runtime_settings
 from runtime.local_transport import TransportBudgets
 from storage.market_spool import MarketSpool, SpoolReader
 from core.models import AssetClass, InstrumentId, TradeEvent, Venue
@@ -314,9 +315,102 @@ def test_readiness_scope_rejects_unvalidated_fake_plan(tmp_path):
         assembly._readiness(object())
 
 
+def test_public_settings_allowlist_never_opens_dotenv_or_secret_file(tmp_path, monkeypatch):
+    project = tmp_path / "project"
+    project.mkdir()
+    dotenv = project / ".env"
+    dotenv.write_text("ARCHIVE_SECRET_KEY_FILE=/unopened/secret\n")
+    secret = tmp_path / "secret-key"
+    secret.write_text("sentinel-secret")
+    monkeypatch.setattr(assembly, "PROJECT_ROOT", project)
+    monkeypatch.setattr(assembly, "DEFAULT_DATA_ROOT", project / "runtime_data")
+    monkeypatch.setattr(runtime_settings, "dotenv_values",
+        lambda *_args, **_kwargs: pytest.fail("public settings loaded dotenv"))
+    original_read_text = Path.read_text
+    def reject_secret_read(path, *args, **kwargs):
+        if path == secret:
+            pytest.fail("public settings opened archive secret file")
+        return original_read_text(path, *args, **kwargs)
+    monkeypatch.setattr(Path, "read_text", reject_secret_read)
+
+    data_root = tmp_path / "data-root"
+    telemetry = tmp_path / "telemetry"
+    settings = assembly._public_settings_from_env({
+        "VIBETRADING_DATA_ROOT": str(data_root),
+        "VIBETRADING_STATE_DIR": str(tmp_path / "state"),
+        "VIBETRADING_LOG_DIR": str(tmp_path / "logs"),
+        "PARQUET_DATA_ROOT": str(tmp_path / "parquet"),
+        "VIBETRADING_ENFORCE_MOUNTS": "1",
+        "VIBETRADING_STORAGE_MOUNTS_FILE": str(tmp_path / "mounts.json"),
+        "DASHBOARD_TELEMETRY_DIR": str(telemetry),
+        "DASHBOARD_TELEMETRY_INTERVAL_SECONDS": "3.5",
+        "LIVE_ORDER_ENABLED": "false",
+        "TIMEFOLIO_LIVE_SUBMIT_ENABLED": "0",
+        "ARCHIVE_SECRET_KEY_FILE": str(secret),
+        "ARCUS_API_KEY": "must-not-enter-settings",
+    })
+    assert settings.data_root == data_root
+    assert settings.state_dir == tmp_path / "state"
+    assert settings.log_dir == tmp_path / "logs"
+    assert settings.parquet.data_root == tmp_path / "parquet"
+    assert settings.env["VIBETRADING_ENFORCE_MOUNTS"] == "true"
+    assert settings.env["DASHBOARD_TELEMETRY_DIR"] == str(telemetry)
+    assert settings.env["DASHBOARD_TELEMETRY_INTERVAL_SECONDS"] == "3.5"
+    assert set(settings.env) <= assembly._PUBLIC_ENV_KEYS | {"VIBETRADING_RUNTIME"}
+    assert settings.env["VIBETRADING_RUNTIME"] == "local"
+    assert settings.archive.access_key is settings.archive.secret_key is None
+    assert settings.providers == {} and settings.telegram_user_id is None
+    assert settings.live_order_enabled is False and settings.timefolio_live_submit_enabled is False
+
+
+@pytest.mark.parametrize("flag", ["LIVE_ORDER_ENABLED", "TIMEFOLIO_LIVE_SUBMIT_ENABLED"])
+def test_public_settings_preserve_and_reject_requested_economic_activation(tmp_path, flag):
+    plan, _, spool, engine = setup(tmp_path)
+    try:
+        settings = assembly._public_settings_from_env({flag: "true"})
+        assert getattr(settings, "live_order_enabled" if flag == "LIVE_ORDER_ENABLED"
+            else "timefolio_live_submit_enabled") is True
+        with pytest.raises(ValueError, match="DATA_ONLY"):
+            assembly.validate_public_data_only(plan, settings)
+    finally:
+        spool.close()
+        asyncio.run(engine.close())
+
+
+@pytest.mark.parametrize("name", ["VIBETRADING_DATA_ROOT", "DASHBOARD_TELEMETRY_DIR"])
+def test_public_settings_reject_relative_paths(name):
+    with pytest.raises(ValueError, match="absolute path"):
+        assembly._public_settings_from_env({name: "relative/path"})
+
+
+def test_readiness_directory_fsync_failure_leaves_no_ready_slot(tmp_path, monkeypatch):
+    plan, settings, spool, engine = setup(tmp_path)
+    try:
+        spool.flush()
+        high = EngineCursor(PRODUCER, INCARNATION, 0)
+        engine.begin_recovery(high, high, verified_checkpoint=True)
+        callback = capture_callback(monkeypatch, plan, settings)
+        real_fsync = assembly.os.fsync
+        def fail_directory_fsync(fd):
+            import stat
+            if stat.S_ISDIR(assembly.os.fstat(fd).st_mode):
+                raise OSError("synthetic directory fsync failure")
+            return real_fsync(fd)
+        with monkeypatch.context() as local:
+            local.setattr(assembly.os, "fsync", fail_directory_fsync)
+            assert callback(engine, high, EMPTY) is False
+        proof_dir = settings.state_dir / "data-only-trials"
+        assert proof_dir.is_dir()
+        assert list(proof_dir.glob("proof-*.json")) == []
+        assert list(proof_dir.iterdir()) == []
+    finally:
+        spool.close()
+        asyncio.run(engine.close())
+
+
 def test_cli_help_exits_before_settings_or_plan_load(monkeypatch):
     import runtime.data_only_runtime as module
-    monkeypatch.setattr(module.RuntimeSettings, "from_env", lambda: pytest.fail("help read environment"))
+    monkeypatch.setattr(module, "_public_settings_from_env", lambda: pytest.fail("help read environment"))
     monkeypatch.setattr(module.LocalRuntimePlan, "load", lambda *_: pytest.fail("help read plan"))
     with pytest.raises(SystemExit) as outcome:
         module.main(["--help"])
@@ -327,14 +421,33 @@ def test_cli_check_validates_without_ensure_dirs_or_engine_start(tmp_path, monke
     plan, settings, spool, engine = setup(tmp_path)
     seen = []
     monkeypatch.setattr(assembly.LocalRuntimePlan, "load", lambda *_: plan)
-    monkeypatch.setattr(assembly.RuntimeSettings, "from_env", lambda: settings)
+    monkeypatch.setattr(assembly, "_public_settings_from_env", lambda: settings)
     monkeypatch.setattr(assembly, "validate_runtime", lambda p, s: seen.append((p, s)))
     monkeypatch.setattr(assembly.RuntimeSettings, "ensure_dirs", lambda *_: pytest.fail("check created data dirs"))
     monkeypatch.setattr(assembly, "launch_public_data_only", lambda *_: pytest.fail("check launched engine"))
+    monkeypatch.setenv("VIBETRADING_RUNTIME", "preserve-this-value")
     try:
         assert assembly.main(["--config", str(tmp_path / "operator-plan.json"), "--check"]) == 0
         assert seen == [(plan, settings)]
+        assert __import__("os").environ["VIBETRADING_RUNTIME"] == "preserve-this-value"
         assert json.loads(capsys.readouterr().out)["economic_activation"] is False
+    finally:
+        spool.close()
+        asyncio.run(engine.close())
+
+
+def test_cli_check_requires_mount_enforcement_before_runtime_validation(tmp_path, monkeypatch):
+    plan, settings, spool, engine = setup(tmp_path)
+    settings = replace(settings, env={"VIBETRADING_ENFORCE_MOUNTS": "false"})
+    monkeypatch.setattr(assembly.LocalRuntimePlan, "load", lambda *_: plan)
+    monkeypatch.setattr(assembly, "_public_settings_from_env", lambda: settings)
+    monkeypatch.setattr(assembly, "validate_runtime",
+        lambda *_: pytest.fail("runtime validation ran without enforced mounts"))
+    monkeypatch.setattr(assembly.RuntimeSettings, "ensure_dirs",
+        lambda *_: pytest.fail("check created runtime directories"))
+    try:
+        with pytest.raises(RuntimeError, match="enforced reviewed storage mounts"):
+            assembly.main(["--config", str(tmp_path / "operator-plan.json"), "--check"])
     finally:
         spool.close()
         asyncio.run(engine.close())
