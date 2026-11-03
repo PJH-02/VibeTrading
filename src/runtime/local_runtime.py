@@ -623,7 +623,8 @@ async def run_engine(plan,settings,*,etf_factory=None,paper_runtime=None,paper_f
         if timefolio_producers is not None and item.producer in timefolio_producers}
     engine=LocalMarketEngine(producer_providers={p.producer:p.provider for p in plan.producers},
         budgets=EngineBudgets(**plan.engine),on_invalidate=_observation_noop if observation_only else invalid,
-        hot_path=paper_runtime.hot_path if paper_runtime is not None else HotPathStore(),
+        hot_path=(paper_runtime.hot_path if paper_runtime is not None else
+            HotPathStore(max_books=1,max_trades=40,max_index_quotes=1) if observation_only else HotPathStore()),
         # Coupled restore installs market/plugin state with no callback attached.
         # The selected Paper callback is published only after every proof.
         post_apply_callbacks=(() if runtime_checkpoint is not None else

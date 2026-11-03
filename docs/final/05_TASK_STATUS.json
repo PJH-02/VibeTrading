@@ -1853,7 +1853,7 @@
       "acceptance_receipt": null,
       "test_exit": null,
       "blocking_reasons": [
-        "Finald2d6dc7 independentfull3352+25leases, reproduciblewheel/source150, fourimages/7Compose/realCLIboot and actualservercold proof PASS; onehourpublic/restarttrial results pending",
+        "V5 actualtrial failed at~305s: ArcusBTC freshness guard; engine restart not reached. Own5roles stoppedcleanly/noOOM; original14running. Source/retainedprefix/queue/CPU cause underdiagnosis.",
         "Allfour preserved DB snapshot/restore integrity proofs PASS; finalowner-fenced currentcut and externalretainedindex/data coverage still required before fullswitch",
         "Actual newCloud/retainedprefix, owner fencing, rollback, representative KRintraday and24x7 operation remain unverified; RETprerequisites unmet"
       ],
@@ -1870,7 +1870,7 @@
       "implementation_packet": "docs/tickets/CUT-01-server-execution.md",
       "artifacts": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102",
       "progress_receipt": "docs/tickets/CUT-01-progress.json",
-      "execution_stage": "FINAL_SOURCE_VERIFIED_ONE_HOUR_TRIAL_PREFLIGHT",
+      "execution_stage": "V5_TRIAL_FAILED_ARCUS_FRESHNESS_UNDER_DIAGNOSIS",
       "repair_packets": [
         "docs/tickets/CUT-01-checkpoint-race.md",
         "docs/tickets/CUT-01-delivery-window.md",
@@ -1879,7 +1879,17 @@
         "docs/tickets/CUT-01-data-only-runtime-adoption.md",
         "docs/tickets/CUT-01-public-boundary-repair.md",
         "docs/tickets/CUT-01-public-gap-replay.md"
-      ]
+      ],
+      "trial_start": {
+        "unit": "vibetrading-cut01-shadow-v5-20261103",
+        "source_sha": "d2d6dc7f18c9fc0ed13106e5fead3db61e5cfa18",
+        "started_utc": "2026-11-03T08:00:55.238445+00:00",
+        "expected_observation_end_utc": "2026-11-03T09:00:55.238445+00:00",
+        "result_receipt": "/home/pjh/.local/state/codex-opencode/runs/CUT01-RET01-20261102/v5-final-trial-start.stdout",
+        "lead_stops_after_start": true,
+        "manual_resume_required": true,
+        "operational_verified": false
+      }
     },
     {
       "task_id": "RET-01",
